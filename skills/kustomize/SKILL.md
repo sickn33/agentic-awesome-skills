@@ -250,8 +250,6 @@ configMapGenerator:
 # kustomization.yaml
 secretGenerator:
   - name: myapp-secrets
-    literals:
-      - api-key=secret123
     files:
       - tls.crt
       - tls.key
@@ -359,6 +357,10 @@ resources:
   - https://raw.githubusercontent.com/org/repo/main/deployment.yaml
 ```
 
+## Render and secret boundaries
+
+Do not commit real TLS keys or generated Secret YAML: base64 is not encryption. Use an approved secret delivery/encryption mechanism and private temporary output. A namespace transform does not create that namespace; supply an explicit Namespace resource where needed. Remote bases must use reviewed immutable refs; do not enable plugins/exec or remote resources from untrusted input. Helm inflation needs the installed tool’s explicit supported Helm enablement. Select the authorized cluster/context/namespace, render/validate/diff first and run only the requested apply or delete; the command list is alternatives, not a sequence.
+
 ## Commands
 
 ```bash
@@ -437,13 +439,13 @@ replacements:
 
 ### Issue: Label Selector Mismatch
 **Problem**: commonLabels breaks selectors
-**Solution**: Use includeSelectors: false or exclude specific resources
+**Solution**: For versions supporting the labels transformer, use explicit selector behavior and inspect the rendered diff; do not mutate immutable Deployment selectors unintentionally.
 
 ```yaml
-commonLabels:
-  app: myapp
-configurations:
-  - labelExclusions.yaml
+labels:
+  - pairs:
+      app: myapp
+    includeSelectors: false
 ```
 
 ## Best Practices

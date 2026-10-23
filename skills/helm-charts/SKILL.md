@@ -36,6 +36,10 @@ Use this skill when:
 - kubectl configured with cluster access
 - Basic Kubernetes knowledge
 
+## Release and template scope
+
+Confirm cluster/context/namespace/release and exact chart/dependency versions before writes. These snippets omit Service/Secret/application files and are not a complete deployable chart; supply referenced assets and review rendered output. Helm hooks/tests execute containers and can run migrations; rollback/uninstall cannot undo database/external effects automatically. Dry-run/debug/template/get-values output may expose secrets. Use protected secret references, reviewed charts/images and valid version constraints/Chart.lock; render/lint/schema-check before an authorized staged rollout and verify readiness beyond successful release metadata.
+
 ## Chart Structure
 
 ```

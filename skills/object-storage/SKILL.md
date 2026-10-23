@@ -38,6 +38,10 @@ Configure and manage object storage solutions including AWS S3, MinIO (self-host
 - IAM credentials with appropriate S3 permissions
 - Network access to the object storage endpoint
 
+## Scope and recovery
+
+Confirm account, endpoint, region and exact bucket/prefix; use sync --dryrun before any --delete operation. Deletion, lifecycle expiry and noncurrent-version removal can destroy recovery copies. The bucket policy combines incompatible public-read and VPC-only goals: the explicit VPC deny wins, may block console/admin access, and the encryption-header deny rejects uploads that rely solely on bucket defaults. Design these as separate reviewed policies rather than pasting the sample wholesale. Preserve block-public-access unless deliberate public publication is approved. Presigned URLs are bearer credentials. MinIO examples are local single-host labs, not HA; use TLS and restricted access for remote use, unique secrets, pinned images and checksum-verified architecture-matched clients. Command-line access keys can appear in process/history output; use a protected credential workflow. GCS-specific procedures are not included despite the description.
+
 ## AWS S3 CLI Operations
 
 ### Bucket Management
@@ -244,10 +248,10 @@ aws s3api put-bucket-logging --bucket my-app-assets-prod --bucket-logging-status
 docker run -d \
   --name minio \
   --restart unless-stopped \
-  -p 9000:9000 \
-  -p 9001:9001 \
+  -p 127.0.0.1:9000:9000 \
+  -p 127.0.0.1:9001:9001 \
   -e MINIO_ROOT_USER=minioadmin \
-  -e MINIO_ROOT_PASSWORD=minio-secret-key-change-me \
+  --env-file /secure/path/minio.env \
   -v /data/minio:/data \
   minio/minio server /data --console-address ":9001"
 ```
@@ -263,11 +267,11 @@ services:
     command: server /data{1...4} --console-address ":9001"
     environment:
       MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minio-secret-key-change-me
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set a unique secret}
       MINIO_BROWSER_REDIRECT_URL: https://minio-console.example.com
     ports:
-      - "9000:9000"
-      - "9001:9001"
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
     volumes:
       - minio-data1:/data1
       - minio-data2:/data2

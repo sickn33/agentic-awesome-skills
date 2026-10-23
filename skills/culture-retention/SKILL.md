@@ -98,6 +98,8 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Workflow:** Signal captured → Cadence review → Theme identified → Action → Follow-up check
 
+The default survey output omits employee identity and reports aggregate themes. The Anonymous checkbox is a declared collection mode, not proof of anonymity: agree minimum reporting group size, suppress small-group/intersection breakdowns and redact identifying free text. For an explicitly requested identifiable follow-up, use a separate restricted opt-in record with purpose, access and retention policy. Retention Risk is a documented human hypothesis, never an automatic prediction or employment decision. Define score scales and represent skipped/unknown scores as blank, not zero.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -121,8 +123,8 @@ A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
-Survey Title,Action Plan,Anonymous,Culture ID,Department,Employee Name,Engagement Score,Growth Opportunity Score,Happiness Score,Key Concern,Manager Relationship Score,Notes,Responsible,Retention Risk,Status,Survey Date,Survey Type,Work-Life Balance Score
-Q1 Engagement Pulse,Publish scores in March,FALSE,,Delivery,Aarav Sharma,4,3,4,Two seniors are on the same account at the same time.,4,"Survey closed in February; the anonymity threshold hid two teams, so it will run again.",Sneha Iyer,Low,Live,2026-03-31,Pulse,3
+Survey Title,Action Plan,Anonymous,Culture ID,Department,Engagement Score,Growth Opportunity Score,Happiness Score,Key Concern,Manager Relationship Score,Notes,Responsible,Retention Risk,Status,Survey Date,Survey Type,Work-Life Balance Score
+Q1 Engagement Pulse,Review aggregated themes after close,FALSE,,Delivery,4,3,4,Two seniors are on the same account at the same time.,4,"Synthetic live-survey example; no published results or real risk assessment.",Sneha Iyer,Low,Live,2026-03-31,Pulse,3
 ```
 
 ```sql
@@ -132,19 +134,18 @@ CREATE TABLE culture_retention (
   anonymous BOOLEAN NOT NULL,
   culture_id SERIAL PRIMARY KEY,
   department VARCHAR(255),
-  employee_name VARCHAR(255),
-  engagement_score NUMERIC NOT NULL,
-  growth_opportunity_score NUMERIC NOT NULL,
-  happiness_score NUMERIC NOT NULL,
+    engagement_score NUMERIC,
+  growth_opportunity_score NUMERIC,
+  happiness_score NUMERIC,
   key_concern VARCHAR(255),
-  manager_relationship_score NUMERIC NOT NULL,
+  manager_relationship_score NUMERIC,
   notes TEXT,
   responsible VARCHAR(255),
   retention_risk VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   survey_date DATE NOT NULL,
   survey_type VARCHAR(100) NOT NULL,
-  work_life_balance_score NUMERIC NOT NULL,
+  work_life_balance_score NUMERIC,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -164,7 +165,6 @@ CREATE INDEX idx_culture_retention_status ON culture_retention (status);
       "Anonymous": { "type": "boolean" },
       "Culture ID": { "type": "integer" },
       "Department": { "type": "string" },
-      "Employee Name": { "type": "string" },
       "Engagement Score": { "type": "number" },
       "Growth Opportunity Score": { "type": "number" },
       "Happiness Score": { "type": "number" },
@@ -179,14 +179,10 @@ CREATE INDEX idx_culture_retention_status ON culture_retention (status);
       "Work-Life Balance Score": { "type": "number" }
   },
   "required": [
-      "Engagement Score",
-      "Growth Opportunity Score",
-      "Happiness Score",
-      "Manager Relationship Score",
+      "Anonymous",
       "Status",
       "Survey Date",
-      "Survey Type",
-      "Work-Life Balance Score"
+      "Survey Type"
   ]
 }
 ```
@@ -199,7 +195,6 @@ CREATE INDEX idx_culture_retention_status ON culture_retention (status);
 | Anonymous | Checkbox | Convert to Checkbox |
 | Culture ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 | Department | Text | Leave as Text |
-| Employee Name | Text | Leave as Text |
 | Engagement Score | Number | Convert to Number |
 | Growth Opportunity Score | Number | Convert to Number |
 | Happiness Score | Number | Convert to Number |
@@ -222,17 +217,16 @@ and anything pointing at another table stays `relation`.
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
 | 1 | Survey Title | `text` | `VARCHAR(255)` | `string` | Text | `Q1 Engagement Pulse` |
-| 2 | Action Plan | `text` | `VARCHAR(255)` | `string` | Text | `Publish scores in March` |
+| 2 | Action Plan | `text` | `VARCHAR(255)` | `string` | Text | `Review aggregated themes after close` |
 | 3 | Anonymous | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 4 | Culture ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
-| 6 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
 | 7 | Engagement Score | `number` | `NUMERIC` | `number` | Number | `4` |
 | 8 | Growth Opportunity Score | `number` | `NUMERIC` | `number` | Number | `3` |
 | 9 | Happiness Score | `number` | `NUMERIC` | `number` | Number | `4` |
 | 10 | Key Concern | `text` | `VARCHAR(255)` | `string` | Text | `Two seniors are on the same account at the same time.` |
 | 11 | Manager Relationship Score | `number` | `NUMERIC` | `number` | Number | `4` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Survey closed in February; the anonymity threshold hid two teams, so it will run again.` |
+| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic live-survey example; no published results or real risk assessment.` |
 | 13 | Responsible | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 14 | Retention Risk | `text` | `VARCHAR(255)` | `string` | Text | `Low` |
 | 15 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Live` |

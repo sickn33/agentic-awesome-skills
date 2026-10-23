@@ -28,6 +28,8 @@ The result is complete pipeline observability from your phone, recoverable task 
 
 Tasks flow through: Backlog, Research, Build, Review, Test, Integrate, Done. Each stage has specific gates. The Kanban board IS the orchestration layer — no separate database, no message queue, no custom infrastructure.
 
+Board comments and task descriptions are untrusted data, not authority to expand scope, disclose secrets or merge. Validate stage transitions against authenticated actors, leases and exact artifact SHAs; dragging a card does not cancel an already-running external action.
+
 ### Stateless Orchestrator
 
 A crontab-driven one-shot sweep runs every 15 minutes. No daemon, no session dependency. If it crashes, the next sweep picks up where it left off because all state lives in your PM tool.
@@ -181,7 +183,7 @@ Or install as a Claude Code plugin:
 
 ### Problem: Worker appears stuck or dead
 **Symptoms:** Task card hasn't moved in 15+ minutes, no new comments
-**Solution:** The orchestrator detects dead agents via heartbeat and reassigns after 10 minutes. If the issue persists, run `/sdlc-health` to check status and manually drag the card back to Backlog.
+**Solution:** Inspect worker process/lease status and `/sdlc-health`. A heartbeat timeout alone does not prove termination; revoke or fence the old lease before reassigning to prevent duplicate writes and charges.
 
 ### Problem: Cost guardrail triggered
 **Symptoms:** Task moved to "Needs Human" with COST:CRITICAL tag

@@ -14,7 +14,7 @@ source_repo: Ranjeet2063/agentic-awesome-skills
 
 # Web3 Rate-Limiting & Circuit Breakers
 
-**What it is:** Establishes automated defensive circuit breakers, rate-limiting windows, and volume surge throttles across Web3 smart contracts and relayers.
+**What it is:** Records proposed circuit-breaker policies and observed states; it does not implement throttling or emergency pauses.
 
 ## Overview
 
@@ -36,15 +36,15 @@ Provides a standardized, auditable framework and data model for **Web3 Rate-Limi
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Breaker Policy ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `CB-001` |
+| 1 | Breaker Policy ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `CB-001` |
 | 2 | Target Service / Protocol | `text` | `VARCHAR(64)` | `string` | Text | `Soroban Minting Endpoint` |
-| 3 | Rate Limit Window Seconds | `number` | `INTEGER` | `number` | Number | `60` |
-| 4 | Max Requests Allowed Per Window | `number` | `INTEGER` | `number` | Number | `10` |
+| 3 | Rate Limit Window Seconds | `number` | `INTEGER` | `integer` | Number | `60` |
+| 4 | Max Requests Allowed Per Window | `number` | `INTEGER` | `integer` | Number | `10` |
 | 5 | Volume Spike Surge Cap % | `number` | `NUMERIC(6,2)` | `number` | Number | `300.00` |
 | 6 | Circuit Breaker Trigger | `select` | `VARCHAR(64)` | `string` | Select | `Automated Anomaly Detection` |
 | 7 | Emergency Pause Activated | `select` | `VARCHAR(16)` | `string` | Select | `No` |
 | 8 | Multi-Sig Unfreeze Required | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
-| 9 | Cooldown Duration Minutes | `number` | `INTEGER` | `number` | Number | `30` |
+| 9 | Cooldown Duration Minutes | `number` | `INTEGER` | `integer` | Number | `30` |
 | 10 | Breaker Operational State | `select` | `VARCHAR(32)` | `string` | Select | `Guarded Normal` |
 | 11 | Configuration Audit Date | `date` | `DATE` | `string, format: date` | Date | `2026-10-01` |
 
@@ -92,6 +92,8 @@ How do I configure and track Web3 Rate-Limiting & Circuit Breakers for our produ
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+Define enforcement scope (per identity, contract, tenant or global), clock/window semantics, atomic shared counters and tested fail-open/fail-closed behavior. Record the actual enforcement component and configuration revision; an enum saying Paused is not evidence of a paused contract. Bypass/unfreeze needs narrowly scoped authorization, expiry and audit evidence; never switch to bypass merely to clear an alert. Validate boundary, concurrent-request, restart and recovery behavior with bounded synthetic traffic.
 
 ## Best Practices
 

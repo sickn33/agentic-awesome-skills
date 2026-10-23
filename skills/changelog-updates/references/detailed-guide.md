@@ -215,10 +215,10 @@ We follow [Semantic Versioning](https://semver.org/):
   Check the migration guide before upgrading.
 
 - **Minor versions (2.3.0)**: New features, backward compatible.
-  Safe to upgrade.
+  Intended to be backward compatible; review and test before deployment.
 
 - **Patch versions (2.3.1)**: Bug fixes only.
-  Always safe to upgrade.
+  Intended to be backward compatible; review and test before deployment.
 ```
 
 ### Version Pinning Guidance
@@ -359,8 +359,8 @@ def old_method(self, user_id):
 
 ```http
 HTTP/1.1 200 OK
-Deprecation: Sun, 15 Sep 2024 00:00:00 GMT
-Sunset: Sun, 15 Mar 2025 00:00:00 GMT
+Deprecation: @1726358400
+Sunset: Sat, 15 Mar 2025 00:00:00 GMT
 Link: <https://docs.example.com/migrate-v3>; rel="deprecation"
 
 {
@@ -538,3 +538,7 @@ The [Product] Team
 - **developer-community**: Community communication channels
 - **developer-metrics**: Measuring changelog engagement
 - **technical-content-strategy**: Changelog as content
+
+## Evidence and publication limits
+
+All product names, dates, issue numbers, metrics, release schedules, testimonials and thanks counts in the templates are illustrative. Derive notes from the actual base-to-release diff and verified behavior; list scope, benchmark environment and uncertainty for performance numbers. Replace placeholder links with real checked resources or omit them. Do not announce a shipped release from a commit message alone: verify intended artifact/version availability. Drafting notes does not authorize publishing a release, sending email or changing a deprecation schedule. Follow the project’s release policy and existing authorization. Semantic versioning expresses compatibility intent, not zero regression risk; these npm range examples assume stable major versions. The Deprecation header uses an RFC 9745 Structured Field date (`@` plus epoch seconds), unlike Sunset’s HTTP-date; neither guarantees the eventual response status. Companion audience skills are optional prerequisites; use confirmed audience facts if unavailable.

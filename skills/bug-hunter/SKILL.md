@@ -281,7 +281,7 @@ for (let i = 0; i < array.length; i++) {
 
 ```javascript
 // Bug
-if (count == 0) { // true for "", [], null
+if (count == 0) { // true for "" and []; false for null
   
 // Fix
 if (count === 0) { // only true for 0
@@ -382,3 +382,5 @@ After fixing, document it:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Log only allowlisted non-secret diagnostics; userData, auth payloads and full responses may contain tokens or private records. Reproduce in an authorized isolated environment before adding logging. Use a clean throwaway checkout for `git bisect`, record the actual good/bad revisions and run `git bisect reset` afterward; preserve user changes. Prefer the smallest evidence-backed fix over blanket deletion/rewriting and distinguish example test output from observed results.

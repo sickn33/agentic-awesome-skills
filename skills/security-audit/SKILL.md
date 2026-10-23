@@ -2,12 +2,21 @@
 name: security-audit
 description: "Comprehensive security auditing workflow covering web application testing, API security, penetration testing, vulnerability scanning, and security hardening."
 category: workflow-bundle
-risk: safe
+risk: offensive
 source: personal
 date_added: "2026-02-27"
 ---
 
 # Security Auditing Workflow Bundle
+
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
+
+## Mandatory confirmation gate
+
+Before each active security action, state the exact target URL, IP, account, or resource, the written-authorization confirmation, permitted scope, exact command, expected effect and limits. Without confirmation, remain read-only and provide defensive guidance only. Wait for explicit confirmation in the current conversation before executing it. Existing scope does not authorize expanding targets or techniques.
 
 ## Overview
 
@@ -22,6 +31,8 @@ Use this workflow when:
 - Scanning for vulnerabilities
 - Hardening application security
 - Compliance security assessments
+
+Before active testing, obtain written authorization naming exact targets, accounts, techniques, time window, request/concurrency/byte limits, prohibited actions and stop conditions. Select approved phases rather than launching every referenced skill. Use owned test fixtures for injections, exploitation and account actions; never extract real customer data or persist access to prove impact. Static source/dependency review may proceed within authorized read scope. Separate suspected scanner signals from reproduced findings, preserve redacted evidence and record untested scope.
 
 ## Workflow Phases
 
@@ -180,7 +191,7 @@ Use @security-scanning-security-hardening to harden application security
 
 ## Security Testing Checklist
 
-### OWASP Top 10
+### Vulnerability coverage (historical OWASP-style checklist)
 - [ ] Injection (SQL, NoSQL, OS, LDAP)
 - [ ] Broken Authentication
 - [ ] Sensitive Data Exposure

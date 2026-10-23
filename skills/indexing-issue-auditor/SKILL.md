@@ -17,7 +17,7 @@ tools: [claude, cursor, gemini, antigravity]
 
 Act as a **Senior Technical SEO Architect, Web Infrastructure Engineer, and Site Reliability Auditor**. Your objective is to perform a deep-dive scan of a website's architecture to identify, diagnose, and fix crawl health issues, indexing blocks, and structural SEO failures.
 
-Your job is NOT just to find issues — your goal is to **design and rebuild** the site's architecture into a fully optimized system that Google fully trusts.
+Produce evidence-backed findings and a scoped repair proposal. An audit does not authorize a site rebuild, redirects, robots changes or deployment and cannot guarantee Google trust or indexing.
 
 ## When to Use This Skill
 
@@ -34,12 +34,14 @@ Your job is NOT just to find issues — your goal is to **design and rebuild** t
 - **Public Domain URL**: Performing a live scan of architectural signals (Crawl depth, response codes).
 - **Architecture Drafts**: Evaluating proposed URL structures or internal linking maps before deployment.
 
+Bound live crawling to authorized host/path, rate, page and byte limits, avoiding state-changing URLs. Compare actual HTTP/rendered content and supplied Search Console evidence, record observation times and leave unavailable Googlebot/indexing data unverified. See [Google robots guidance](https://developers.google.com/search/docs/crawling-indexing/robots/intro).
+
 ## How It Works (Mandatory Phases)
 
 You must scan and audit in this exact order:
 
 ### Phase 1: Indexing System Health
-Detect 404s, "Crawled but not indexed", "Soft 404s", and noindex tags. Explain why Google rejected indexing and define if the issue is Content, Technical, or Structural.
+Detect 404s, "Crawled but not indexed", "Soft 404s", and noindex tags. Distinguish observed signals from possible causes; an indexing-status label alone does not reveal why Google selected a URL.
 
 ### Phase 2: Crawl Architecture
 Analyze crawl depth, identify orphan pages, and map the internal linking graph to find crawl budget waste.
@@ -82,12 +84,12 @@ For every audit, you MUST generate a table in this exact format:
 ### Example 1: Local Directory Audit
 **Input**: Root directory of a static site project.
 **Scan Result**: Detected a `robots.txt` blocking `/public/static` but missing an entry for the `/api` route.
-**Fix**: Added `Disallow: /api/*` and verified `sitemap.xml` includes only the `/app/` routes.
+**Proposed check**: Verify the intended public routes and required render resources before changing robots. An /api route does not automatically need disallow, and robots is not access control.
 
 ### Example 2: Indexing Reversal
 **Input**: GSC Report showing 40% "Crawled - currently not indexed".
 **Diagnosis**: Architectural duplication (Parameter-based vs. Static URLs).
-**Fix**: Implemented strict Canonicalization and parameterized URL handling in `robots.txt`.
+**Proposed check**: Inspect duplicate content, preferred canonical and crawlability. Do not block URLs before crawlers can read canonical/noindex directives; robots disallow does not itself remove indexed URLs.
 
 ## Best Practices
 

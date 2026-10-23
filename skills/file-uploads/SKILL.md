@@ -3,7 +3,7 @@ name: file-uploads
 description: Expert at handling file uploads and cloud storage. Covers S3,
   Cloudflare R2, presigned URLs, multipart uploads, and image optimization.
   Knows how to handle large files without blocking.
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -26,6 +26,8 @@ Prefers presigned URLs over server proxying.
 - Use presigned URLs for direct uploads
 - Stream large files, never buffer
 - Validate on upload, optimize after
+
+Treat code as independent TypeScript fragments requiring actual SDK imports, storage clients and handlers. Magic-byte detection is not malware scanning or proof of a safe image: decode/re-encode approved formats with bounded dimensions/resources, quarantine until validation and serve with safe content headers from a separate origin where appropriate. Authenticate/authorize both presign creation and object access, bind tenant/key/expiry and avoid user-controlled storage paths. For a hard upload range use a provider-supported signed policy such as S3 POST content-length-range or equivalent enforcement; verify actual uploaded size server-side. ContentLength alone is not a cross-provider size limit.
 
 ## Sharp Edges
 
@@ -108,7 +110,7 @@ if (file.size > 10 * 1024 * 1024) {
 const command = new PutObjectCommand({
   Bucket: BUCKET,
   Key: key,
-  ContentLength: expectedSize, // Enforce size
+  ContentLength: expectedSize, // Declared size; not a universal upload-size policy
 });
 
 ### User-controlled filename allows path traversal
@@ -172,7 +174,7 @@ Symptoms:
 
 Why this breaks:
 Presigned URLs grant temporary access. If cached or shared,
-access extends beyond intended scope.
+the bearer URL may be usable by unintended parties during its validity; cached file bytes can persist after URL expiry.
 
 Recommended fix:
 

@@ -36,6 +36,8 @@ Specialized workflow for creating WordPress plugins with proper architecture, ho
    - Auto-generated Inspector controls
 
 
+AI generation examples require a configured compatible provider, explicit content-sharing/cost authorization and capability checks. Queue/deduplicate work rather than triggering repeated inference on every save; feature detection alone is not availability or permission. The ability callback generates text only and must enforce the site's quota/authorization policy.
+
 ## Workflow Phases
 
 ### Phase 1: Plugin Setup
@@ -58,7 +60,7 @@ Plugin Name: My Plugin
 Plugin URI: https://example.com/my-plugin
 Description: A WordPress 7.0 compatible plugin with AI and RTC support
 Version: 1.0.0
-Requires at least: 6.0
+Requires at least: 7.0
 Requires PHP: 7.4
 Author: Developer Name
 License: GPL2+
@@ -130,22 +132,24 @@ Use @wordpress-penetration-testing to understand WordPress hooks
 #### DataViews Example
 ```javascript
 import { DataViews } from '@wordpress/dataviews';
+import { useState } from '@wordpress/element';
 
 const MyPluginDataView = () => {
-    const data = [/* records */];
+    const data = [/* records with stable id values */];
     const fields = [
         { id: 'title', label: 'Title', sortable: true },
         { id: 'status', label: 'Status', filterBy: true }
     ];
-    const view = {
+    const [view, handleViewChange] = useState({
         type: 'table',
         perPage: 10,
         sort: { field: 'title', direction: 'asc' }
-    };
+    });
 
     return (
         <DataViews
             data={data}
+            getItemId={(item) => String(item.id)}
             fields={fields}
             view={view}
             onChangeView={handleViewChange}
@@ -163,7 +167,7 @@ Use @frontend-developer to create WordPress admin interface
 
 #### Skills to Invoke
 - `database-design` - Database design
-- `postgresql` - Database patterns
+- Use WordPress `$wpdb` and supported MySQL/MariaDB schema conventions
 
 #### Actions
 1. Create custom tables
@@ -262,6 +266,13 @@ function my_plugin_generate_ai_summary($post_id, $post) {
         return;
     }
 
+    if (!current_user_can('edit_post', $post_id) || get_post_status($post_id) !== 'publish') {
+        return;
+    }
+    // Require an explicit per-post opt-in before sending content to a paid external provider.
+    if (get_post_meta($post_id, '_ai_summary_opt_in', true) !== 'yes') {
+        return;
+    }
     $content = strip_tags($post->post_content);
     if (empty($content)) {
         return;
@@ -306,7 +317,7 @@ add_action('wp_abilities_api_init', function() {
             'type' => 'object',
             'properties' => [
                 'content' => ['type' => 'string'],
-                'length' => ['type' => 'integer', 'default' => 2]
+                'length' => ['type' => 'integer', 'minimum' => 1, 'maximum' => 5, 'default' => 2]
             ],
             'required' => ['content']
         ],
@@ -326,7 +337,7 @@ add_action('wp_abilities_api_init', function() {
 // Handler callback
 function my_plugin_generate_summary_cb($input) {
     $content = isset($input['content']) ? $input['content'] : '';
-    $length = isset($input['length']) ? absint($input['length']) : 2;
+    $length = isset($input['length']) ? max(1, min(5, absint($input['length']))) : 2;
 
     if (empty($content)) {
         return new WP_Error('empty_content', 'No content provided');
@@ -370,7 +381,7 @@ if (function_exists('register_block_type')) {
 
             $post = get_post($post_id);
 
-            if (!$post) {
+            if (!$post || !is_post_publicly_viewable($post)) {
                 return '';
             }
 
@@ -393,13 +404,13 @@ if (function_exists('register_block_type')) {
 
 #### Disable Collaboration (if needed)
 ```javascript
-// Disable RTC for specific post types
+// Registry inspection only: returning [] would disable providers globally, not per post type
 import { addFilter } from '@wordpress/hooks';
 
 addFilter(
     'sync.providers',
     'my-plugin/disable-collab',
-    () => []
+    (providers) => providers // inspect the actual provider registry before changing it
 );
 ```
 

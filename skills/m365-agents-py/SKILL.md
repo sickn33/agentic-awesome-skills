@@ -59,6 +59,8 @@ COPILOTSTUDIOAGENT__TENANTID=<tenant-id>
 COPILOTSTUDIOAGENT__AGENTAPPID=<app-id>
 ```
 
+Snippets require a version-pinned SDK and the setup/imports shown across sections; duplicate /me handlers are alternatives, not meant to be registered together. Use synthetic messages and authorized identities; preserve middleware verification and do not expose secrets, private turns or tokens through logs/cloud tracing. Configure the Azure OpenAI model field with your actual deployment name, not an assumed public model ID.
+
 ## Core Workflow: aiohttp-hosted AgentApplication
 
 ```python
@@ -66,6 +68,7 @@ import logging
 from os import environ
 
 from dotenv import load_dotenv
+import aiohttp
 from aiohttp.web import Request, Response, Application, run_app
 
 from microsoft_agents.activity import load_configuration_from_env
@@ -99,7 +102,10 @@ ADAPTER = CloudAdapter(connection_manager=CONNECTION_MANAGER)
 AUTHORIZATION = Authorization(STORAGE, CONNECTION_MANAGER, **agents_sdk_config)
 
 # Create AgentApplication
-AGENT_APP = AgentApplicationTurnState
+ApplicationType = AgentApplication[TurnState]
+AGENT_APP = ApplicationType(
+    storage=STORAGE, adapter=ADAPTER, authorization=AUTHORIZATION, **agents_sdk_config
+)
 
 
 @AGENT_APP.conversation_update("membersAdded")
@@ -141,9 +147,12 @@ import re
 from microsoft_agents.hosting.core import (
     AgentApplication, TurnState, TurnContext, MessageFactory
 )
-from microsoft_agents.activity import ActivityTypes
+from microsoft_agents.activity import Activity, ActivityTypes
 
-AGENT_APP = AgentApplicationTurnState
+ApplicationType = AgentApplication[TurnState]
+AGENT_APP = ApplicationType(
+    storage=STORAGE, adapter=ADAPTER, authorization=AUTHORIZATION, **agents_sdk_config
+)
 
 # Welcome handler
 @AGENT_APP.conversation_update("membersAdded")
@@ -305,16 +314,23 @@ async def main():
         tenant_id=environ.get("COPILOTSTUDIOAGENT__TENANTID"),
     )
     
+    if not token:
+        raise RuntimeError("Token acquisition failed")
     copilot_client = CopilotClient(settings, token)
     
     # Start conversation
+    conversation_id = None
     act = copilot_client.start_conversation(True)
     async for action in act:
+        if action.conversation:
+            conversation_id = action.conversation.id
         if action.text:
             print(action.text)
     
     # Ask question
-    replies = copilot_client.ask_question("Hello!", action.conversation.id)
+    if not conversation_id:
+        raise RuntimeError("No conversation ID returned")
+    replies = copilot_client.ask_question("Hello!", conversation_id)
     async for reply in replies:
         if reply.type == ActivityTypes.message:
             print(reply.text)

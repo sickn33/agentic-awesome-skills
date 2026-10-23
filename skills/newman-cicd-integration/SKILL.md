@@ -27,11 +27,15 @@ Before generating a config, determine:
 2. **Collection source** — local file in repo, or Postman API URL?
 3. **Environment** — local env file in repo, or env vars injected by CI secrets?
 4. **Reporters needed** — JUnit XML (for CI test results panel), HTML report, or both?
-5. **Node.js version** preference (default: 18)
+5. **Node.js version** preference (choose a currently supported version compatible with Newman)
 6. **Trigger** — on every push, pull request, schedule, or after deploy?
 7. **Fail build on test failure?** — almost always yes; confirm
 
 ---
+
+## CI trust and credential handling
+
+Review collection scripts and target URLs before executing: Postman scripts and requests can exfiltrate secrets or mutate services. Run only authorized sandbox collections; never expose production credentials to untrusted pull requests. Pin dependencies/actions using the project’s reviewed lockfile/commit policy instead of copying moving global installs unchanged. OS environment variables do not automatically populate Postman variables: supply a protected temporary environment JSON via `-e` or an explicitly reviewed runner integration. Avoid real secret command arguments, shell tracing and request/response-rich public HTML artifacts; redact reports, restrict access/retention and remove temporary secrets. Required test failures must remain failures.
 
 ## Platform Templates
 
@@ -56,7 +60,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
 
       - name: Install Newman
         run: |
@@ -101,7 +105,7 @@ stages:
 
 api-tests:
   stage: test
-  image: node:18-alpine
+  image: node:22-alpine
   before_script:
     - npm install -g newman newman-reporter-htmlextra
   script:
@@ -109,7 +113,6 @@ api-tests:
       newman run ./collections/my-api.json \
         -e ./environments/staging.json \
         --env-var "BASE_URL=$BASE_URL" \
-        --env-var "API_KEY=$API_KEY" \
         -r cli,junit,htmlextra \
         --reporter-junit-export results/junit.xml \
         --reporter-htmlextra-export results/report.html
@@ -134,7 +137,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'NodeJS-18'   // Configure in Global Tool Configuration
+    nodejs 'NodeJS-22'   // Configure in Global Tool Configuration
   }
 
   stages {
@@ -190,7 +193,7 @@ pool:
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x'
+      versionSpec: '22.x'
     displayName: 'Set up Node.js'
 
   - script: |
@@ -200,7 +203,6 @@ steps:
   - script: |
       newman run ./collections/my-api.json \
         -e ./environments/staging.json \
-        --env-var "API_KEY=$(API_KEY)" \
         -r cli,junit,htmlextra \
         --reporter-junit-export $(System.DefaultWorkingDirectory)/results/junit.xml \
         --reporter-htmlextra-export $(System.DefaultWorkingDirectory)/results/report.html
@@ -232,7 +234,7 @@ version: 2.1
 jobs:
   api-tests:
     docker:
-      - image: cimg/node:18.0
+      - image: cimg/node:22.0
     steps:
       - checkout
       - run:
@@ -244,7 +246,6 @@ jobs:
             mkdir -p results
             newman run ./collections/my-api.json \
               -e ./environments/staging.json \
-              --env-var "API_KEY=$API_KEY" \
               -r cli,junit,htmlextra \
               --reporter-junit-export results/junit.xml \
               --reporter-htmlextra-export results/report.html
@@ -270,7 +271,7 @@ Always inject sensitive values as CI environment variables/secrets:
 - Jenkins: `Manage Jenkins > Credentials`
 - Azure DevOps: `Pipelines > Variables`
 
-Reference in Newman via `--env-var "KEY=$SECRET_NAME"` or pre-set in the environment file.
+Materialize a protected temporary Newman environment file using a trusted secret provider, then pass only its path with `-e`. Do not put actual secret values in --env-var process arguments. The examples assume that protected file has been prepared; remove it after the job and redact reports.
 
 ### Store collection and environment files in the repo
 ```

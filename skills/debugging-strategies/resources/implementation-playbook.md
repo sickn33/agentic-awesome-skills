@@ -231,7 +231,7 @@ logger = logging.getLogger(__name__)
 def fetch_user(user_id):
     logger.debug(f'Fetching user: {user_id}')
     user = db.query(User).get(user_id)
-    logger.debug(f'Found user: {user}')
+    logger.debug('User lookup complete; record omitted')
     return user
 
 # Profile performance
@@ -450,7 +450,7 @@ afterEach(() => {
    - Metrics/monitoring
 
 2. **Reproduce locally**
-   - Use production data (anonymized)
+   - Prefer synthetic fixtures; use minimized, authorized production-derived data only with verified privacy controls
    - Match environment
    - Follow exact steps
 
@@ -463,7 +463,7 @@ afterEach(() => {
 
 ## Best Practices
 
-1. **Reproduce First**: Can't fix what you can't reproduce
+1. **Reproduce When Feasible**: Use reliable incident evidence and explicitly label unconfirmed hypotheses
 2. **Isolate the Problem**: Remove complexity until minimal case
 3. **Read Error Messages**: They're usually helpful
 4. **Check Recent Changes**: Most bugs are recent
@@ -498,10 +498,10 @@ afterEach(() => {
 - [ ] Environment variables
 - [ ] File paths (absolute vs relative)
 - [ ] Cache issues (clear cache)
-- [ ] Stale data (refresh database)
+- [ ] Stale data (inspect read-only evidence before an authorized refresh)
 ```
 
-## Resources
+## Upstream resource suggestions (not bundled)
 
 - **references/debugging-tools-guide.md**: Comprehensive tool documentation
 - **references/performance-profiling.md**: Performance debugging guide
@@ -509,3 +509,5 @@ afterEach(() => {
 - **assets/debugging-checklist.md**: Quick reference checklist
 - **assets/common-bugs.md**: Common bug patterns
 - **scripts/debug-helper.ts**: Debugging utility functions
+
+Debugging snippets are independent fragments, not complete compilable programs. Instrumentation, heap snapshots and logs can expose secrets/personal data or pause/terminate a process; obtain production scope and bound capture frequency/storage. A single heap increase is not proof of a leak. The Go pprof import only registers handlers: an explicitly loopback-bound, controlled HTTP server is still needed, and profile file/start errors must be checked. TypeScript decorator syntax requires matching compiler configuration. The debugger program/outFiles paths must match the actual build output. Bisect needs a clean isolated checkout and a reliable good/bad test. Feature-flag changes and monitoring are production mutations too.

@@ -8,7 +8,7 @@ date_added: "2026-05-31"
 
 # Yield Intelligence
 
-Passive income analysis across US Treasuries, dividend ETFs, REITs, and preferred stocks. Given a target monthly income and investment amount, returns a ranked opportunity table and optimal allocation.
+Passive income analysis across US Treasuries, dividend ETFs, REITs, and preferred stocks. Given a target monthly income and investment amount, returns a research comparison and clearly labeled allocation scenarios; it does not establish an optimal portfolio.
 
 ## When to Use This Skill
 
@@ -59,33 +59,15 @@ Ask if not provided:
 
 Research or use current yields for these four classes:
 
-| Asset Class | Benchmarks | Typical Yield Range |
-|---|---|---|
-| US Treasuries | 1-yr, 5-yr, 10-yr, 30-yr | 4.0–5.5% |
-| Dividend ETFs | SCHD, VYM, JEPI, JEPQ | 3.5–10% |
-| REITs | O, MAIN, STAG | 4–12% |
-| Preferred Stocks | PFF, PFFD | 5–7% |
+Record current issuer/Treasury primary-source data with as-of dates. Compare like measures: Treasury yield-to-maturity, fund SEC yield and trailing distribution yield differ. Separate income from return of capital and do not annualize a single unusual distribution as a reliable forecast. MAIN is a business development company, not a REIT; classify instruments correctly.
 
-### Step 3 — Score and Rank
+### Step 3 — Compare risks explicitly
 
-Score each opportunity: **yield × (1 − risk_penalty) × liquidity_factor**
+Use duration, credit/default, equity drawdown, call/reinvestment, currency, liquidity, fees and concentration. An arbitrary yield-times-penalty formula is not a calibrated risk-adjusted return measure; do not label Treasuries zero risk or infer principal stability from yield.
 
-| Category | Risk Penalty |
-|---|---|
-| US Treasuries | 0.00 |
-| Investment-grade dividend ETF | 0.05 |
-| REIT / preferred | 0.15 |
-| High-yield / speculative | 0.25 |
+### Step 4 — Build scenarios
 
-### Step 4 — Build Allocation
-
-Given monthly target **T** and available capital **C**:
-1. Sort opportunities by risk-adjusted score (descending)
-2. Assign 30–40% to highest-conviction position
-3. Diversify remaining 60–70% across 3–5 positions
-4. Verify: `Σ(allocation_i × yield_i × C) ≥ T × 12`
-
-Conservative portfolios: cap any single position at 25%.
+Given annualized yield assumptions `y_i`, weights `w_i` summing to one and capital C, modeled gross annual income is `C * Σ(w_i * y_i)`. Monthly equivalent divides that by 12; actual payment dates may be irregular and income can fall. State tax/fee/inflation assumptions and compare a lower-income/distribution-cut scenario. If the target is infeasible within the user’s constraints, show the shortfall rather than concentrating in the highest yield. No trade execution or guarantee follows from this calculation.
 
 ### Step 5 — Present Results
 
@@ -102,9 +84,9 @@ OPPORTUNITY SCAN
 │ [Top pick]       │  X.X% │  Low │     $XXX     │
 └──────────────────┴───────┴──────┴──────────────┘
 
-RECOMMENDED ALLOCATION ($[Z] capital)
+ILLUSTRATIVE ALLOCATION ($[Z] capital)
   [Asset A]  40%  →  $[amount]  →  $[X]/month
-  Total monthly income: $[X]/month ✓
+  Modeled monthly equivalent: $[X], before tax/fees; not guaranteed
 ```
 
 ## Best Practices

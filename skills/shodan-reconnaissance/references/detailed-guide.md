@@ -26,6 +26,8 @@ Provide systematic methodologies for leveraging Shodan as a reconnaissance tool 
 - **Exported Data**: JSON/CSV files for further analysis
 
 
+Shodan indexes publicly reachable observations; RFC1918 ranges are not a view into a private LAN. 203.0.113.0/24 below is a documentation placeholder and returns no real authorized inventory. Organization/hostname/certificate matches do not prove ownership or permission; intersect results with the approved public inventory before active validation. Banner/CVE data may be stale or inferred, and transport can be UDP; do not certify vulnerabilities or label every port TCP from a search hit. Search totals count matching banners, and a single page is incomplete. Review current CLI help and plan credits; the historical cost tables below are illustrative, not current guarantees.
+
 ## Core Workflow
 
 ### 1. Setup and Configuration
@@ -36,7 +38,7 @@ Provide systematic methodologies for leveraging Shodan as a reconnaissance tool 
 pip install shodan
 
 # Or easy_install
-easy_install shodan
+# easy_install is obsolete; use a reviewed package in an isolated environment.
 
 # On BlackArch/Arch Linux
 sudo pacman -S python-shodan
@@ -45,7 +47,7 @@ sudo pacman -S python-shodan
 #### Initialize API Key
 ```bash
 # Set your API key
-shodan init YOUR_API_KEY
+# Use the Python SDK with SHODAN_API_KEY injected through an approved secret manager; init takes the secret in argv and stores local state.
 
 # Verify setup
 shodan info
@@ -87,7 +89,7 @@ shodan host 1.1.1.1
 #### Check if Host is Honeypot
 ```bash
 # Get honeypot probability score
-shodan honeyscore 192.168.1.100
+shodan honeyscore AUTHORIZED_PUBLIC_IP
 
 # Output: Not a honeypot
 #         Score: 0.3
@@ -132,7 +134,7 @@ shodan download results.json.gz "apache country:US"
 shodan download --limit 5000 results.json.gz "nginx"
 
 # Download all available results
-shodan download --limit -1 all_results.json.gz "query"
+shodan download --limit 100 all_results.json.gz "query"
 ```
 
 #### Parse Downloaded Data
@@ -152,7 +154,7 @@ shodan parse --fields ip_str,port,org --separator , results.json.gz > results.cs
 #### Network Filters
 ```
 ip:1.2.3.4                  # Specific IP address
-net:192.168.0.0/24          # Network range (CIDR)
+net:203.0.113.0/24          # Network range (CIDR)
 hostname:example.com        # Hostname contains
 port:22                     # Specific port
 asn:AS15169                 # Autonomous System Number
@@ -203,13 +205,13 @@ screenshot.label:webcam     # Screenshot type
 #### Submit Scan
 ```bash
 # Scan single IP (1 credit per IP)
-shodan scan submit 192.168.1.100
+shodan scan submit AUTHORIZED_PUBLIC_IP
 
 # Scan with verbose output (shows scan ID)
-shodan scan submit --verbose 192.168.1.100
+shodan scan submit --verbose AUTHORIZED_PUBLIC_IP
 
 # Scan and save results
-shodan scan submit --filename scan_results.json.gz 192.168.1.100
+shodan scan submit --filename scan_results.json.gz AUTHORIZED_PUBLIC_IP
 ```
 
 #### Monitor Scan Status
@@ -221,7 +223,7 @@ shodan scan list
 shodan scan status SCAN_ID
 
 # Download scan results later
-shodan download --limit -1 results.json.gz scan:SCAN_ID
+shodan download --limit 100 results.json.gz scan:SCAN_ID
 ```
 
 #### Available Scan Protocols
@@ -258,22 +260,15 @@ shodan stats --facets country,org -O stats.csv apache
 ### 8. REST API Usage
 
 #### Direct API Calls
-```bash
-# Get API info
-curl -s "https://api.shodan.io/api-info?key=YOUR_KEY" | jq
 
-# Host lookup
-curl -s "https://api.shodan.io/shodan/host/1.1.1.1?key=YOUR_KEY" | jq
-
-# Search query
-curl -s "https://api.shodan.io/shodan/host/search?key=YOUR_KEY&query=apache" | jq
-```
+Prefer the SDK with non-echoed environment credentials. Do not put API keys in literal URLs or command arguments; protect proxy/access logs because the service API uses a key query parameter.
 
 #### Python Library
 ```python
 import shodan
+import os
 
-api = shodan.Shodan('YOUR_API_KEY')
+api = shodan.Shodan(os.environ["SHODAN_API_KEY"])
 
 # Search
 results = api.search('apache')
@@ -336,7 +331,7 @@ for item in host['data']:
 |---------|-------|
 | Target org recon | `org:"Company Name"` |
 | Domain enumeration | `hostname:example.com` |
-| Network range scan | `net:192.168.0.0/24` |
+| Network range scan | `net:203.0.113.0/24` |
 | SSL cert search | `ssl.cert.subject.cn:*.target.com` |
 | Vulnerable servers | `vuln:CVE-2021-44228 country:US` |
 | Exposed admin panels | `http.title:"admin" port:443` |
@@ -358,7 +353,7 @@ for item in host['data']:
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| No API Key Configured | Key not initialized | Run `shodan init YOUR_API_KEY` then verify with `shodan info` |
+| No API Key Configured | Key not initialized | Run `# Use the Python SDK with SHODAN_API_KEY injected through an approved secret manager; init takes the secret in argv and stores local state.` then verify with `shodan info` |
 | Query Credits Exhausted | Monthly credits consumed | Use credit-free queries (no filters), wait for reset, or upgrade |
 | Host Recently Crawled | Cannot re-scan IP within 24h | Use `shodan host IP` for existing data, or wait 24 hours |
 | Rate Limit Exceeded | >1 request/second | Add `time.sleep(1)` between API requests |

@@ -75,7 +75,8 @@ usermod -s /bin/zsh jsmith
 # Change the user's home directory and move existing files
 usermod -d /home/jsmith-new -m jsmith
 
-# Lock a user account (disable login without deleting)
+# Lock the password only; SSH keys/other authentication may still work.
+# Full deprovisioning requires separately reviewing expiry, sessions and keys.
 usermod -L jsmith
 
 # Unlock a user account
@@ -180,8 +181,9 @@ Defaults logfile="/var/log/sudo.log"
 # Require password re-entry every 5 minutes (default is 15)
 Defaults timestamp_timeout=5
 
-# Require password for sudo even if user has NOPASSWD elsewhere
-Defaults:jsmith !authenticate
+# !authenticate DISABLES password authentication; do not use it to require passwords.
+# Remove conflicting NOPASSWD grants and review explicit PASSWD command tags
+# with visudo; verify effective behavior using sudo -l and a separate test session.
 ```
 
 ```bash
@@ -237,7 +239,9 @@ setfacl -b /opt/shared/
 
 ## PAM Configuration
 
-```bash
+The settings below are fragments for the named configuration files, not shell commands or a complete PAM stack. Use distro-supported profile tooling, preserve recovery access and validate authentication in a separate session. Do not append faillock lines without the required ordering/control flow.
+
+```text
 # PAM config files are in /etc/pam.d/
 # Each file controls auth for a specific service (sshd, login, sudo, etc.)
 
@@ -310,8 +314,11 @@ echo '%linux\ admins ALL=(ALL) ALL' > /etc/sudoers.d/ad-admins
 
 ### Bulk User Creation from CSV
 
+Illustrative simple CSV only: reject headers/empty rows, option-like usernames, unapproved groups and shells before running. Use a proper CSV parser for quoting/commas. Add fail-fast handling and stop on any useradd/chpasswd/chage failure; never continue as if provisioned. Docker group/CLI access and broad sudo are effectively privileged, not restricted application access. Do not grant these examples without explicit role authorization.
+
 ```bash
 #!/bin/bash
+set -euo pipefail
 # bulk-create-users.sh
 # CSV format: username,fullname,groups,shell
 # Example: jsmith,Jane Smith,developers;docker,/bin/bash
@@ -336,7 +343,10 @@ while IFS=',' read -r username fullname groups shell; do
   echo "$username:$temp_pass" | chpasswd
   chage -d 0 "$username"   # Force password change at first login
 
-  echo "CREATED: $username (groups: $group_list) temp-pass: $temp_pass"
+  # Deliver the temporary secret only through an approved private channel.
+  # Never print it to terminal logs, CI output or the report.
+  unset temp_pass
+  echo "CREATED: $username (groups: $group_list)"
 done < "$CSV_FILE"
 ```
 
@@ -352,8 +362,8 @@ getent group sudo wheel 2>/dev/null
 # Find accounts that have never logged in
 lastlog | awk '$0 ~ /Never logged in/ { print $1 }'
 
-# Find accounts with empty passwords
-awk -F: '($2 == "" || $2 == "!") { print $1 }' /etc/shadow 2>/dev/null
+# Find empty password fields; ! indicates a locked field, not an empty password.
+awk -F: '$2 == "" { print $1 }' /etc/shadow 2>/dev/null
 ```
 
 ## Troubleshooting

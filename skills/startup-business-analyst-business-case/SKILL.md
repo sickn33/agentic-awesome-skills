@@ -30,6 +30,8 @@ Generate a comprehensive, investor-ready business case document covering market 
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 
+Treat page counts, time estimates, team sizes, funding allocation and runway as illustrative. Separate observed traction from forecasts, label every assumption and missing input, and date/cite current market evidence. Do not invent founders, customer wins, partnerships, IP, metrics or investor commitments to fill the template. Financial projections need consistent cash-flow assumptions and scenarios; a polished document is not verified investment or legal advice. Slash commands and companion skills are optional client capabilities, not guaranteed tools.
+
 ## What This Command Does
 
 Create a complete business case including:
@@ -484,7 +486,7 @@ What materials do you have?
 ## Notes
 
 - Business case creation takes 1-2 hours
-- Result is investor-grade document
+- Result is a draft requiring factual, financial and audience review
 - Can be used for pitch deck development
 - Update quarterly or for funding rounds
 - Customize sections based on audience

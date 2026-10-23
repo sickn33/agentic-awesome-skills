@@ -29,6 +29,10 @@ Deploy, manage, and scale Compute Engine virtual machines on Google Cloud Platfo
 - Provisioning GPU-attached VMs for ML training or rendering pipelines
 - Cost-optimizing non-critical workloads with preemptible or spot VMs
 
+## Target, billable effects and recovery
+
+Confirm project/account/zone, instance identity, costs and approved shutdown/resize scope. Review startup scripts as privileged code and pin trusted images; inspect service-account IAM rather than assuming cloud-platform scope is least privilege. Public IPs/firewall tags expose services only when matching rules exist; prefer required private access. The sample nginx startup does not define `/healthz`, so implement/test that route before attaching the shown MIG health check. Instance images/snapshots can contain secrets and are not application-consistent backups without appropriate quiescing. Shared-core table CPU values describe approximate baseline entitlement, not whole guest-visible vCPU topology.
+
 ## Prerequisites
 
 - Google Cloud SDK (`gcloud`) installed and authenticated
@@ -302,7 +306,7 @@ gcloud compute instances get-serial-port-output web-server --zone=us-central1-a
 | Startup script not running | Syntax errors or wrong metadata key | Check serial output; ensure key is `startup-script` not `startup_script` |
 | Cannot SSH | Firewall blocks port 22 or OS Login misconfigured | Add firewall rule for `tcp:22`; verify `enable-oslogin` metadata |
 | Preempted too often | Zone resource pressure | Use Spot VM with `STOP` action; spread across zones in a MIG |
-| Disk out of space | Boot disk too small | Use `gcloud compute disks resize`; enable `--storage-auto-increase` for data disks |
+| Disk out of space | Boot disk too small | Review the intended disk and snapshot, use supported disk resize, then expand the guest partition/filesystem as needed; do not assume a Cloud SQL storage-auto-increase flag exists for Compute disks |
 | MIG not healing | Health check misconfigured or initial delay too short | Verify health check path returns 200; increase `--initial-delay` |
 
 ## Related Skills

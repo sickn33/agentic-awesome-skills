@@ -18,6 +18,8 @@ Use this skill when you need generates Robot Framework tests in keyword-driven s
 
 For TestMu AI cloud execution, see [reference/cloud-integration.md](https://github.com/LambdaTest/agent-skills/tree/main/robot-framework-skill/reference/cloud-integration.md) and [shared/testmu-cloud-reference.md](https://github.com/LambdaTest/agent-skills/tree/main/robot-framework-skill/../shared/testmu-cloud-reference.md).
 
+The playbook/cloud references are external, not bundled. Verify installed Robot/SeleniumLibrary/RequestsLibrary versions, imports (Collections for Create Dictionary), variables and actual capabilities schema. Use a fresh session per authentication test so successful login state cannot contaminate failure cases. Cloud credentials/session URLs, screenshots and Robot logs may expose secrets/PII; redact reports, authorize remote test-data transfer and costs, and use isolated synthetic accounts. POST examples create real data: define fixture ownership and cleanup before running.
+
 ## Core Patterns
 
 ### Basic Test (tests/login.robot)
@@ -25,8 +27,8 @@ For TestMu AI cloud execution, see [reference/cloud-integration.md](https://gith
 ```robot
 *** Settings ***
 Library    SeleniumLibrary
-Suite Setup    Open Browser    ${BASE_URL}    chrome
-Suite Teardown    Close All Browsers
+Test Setup    Open Browser    ${BASE_URL}    chrome
+Test Teardown    Close Browser
 
 *** Variables ***
 ${BASE_URL}    http://localhost:3000
@@ -38,7 +40,7 @@ Login With Valid Credentials
     Go To    ${BASE_URL}/login
     Wait Until Element Is Visible    id:email    10s
     Input Text    id:email    ${EMAIL}
-    Input Text    id:password    ${PASSWORD}
+    Input Password    id:password    ${PASSWORD}
     Click Button    css:button[type='submit']
     Wait Until Element Is Visible    css:.dashboard    10s
     Page Should Contain    Welcome
@@ -47,7 +49,7 @@ Login With Valid Credentials
 Login With Invalid Credentials Shows Error
     Go To    ${BASE_URL}/login
     Input Text    id:email    wrong@test.com
-    Input Text    id:password    wrong
+    Input Password    id:password    wrong
     Click Button    css:button[type='submit']
     Wait Until Element Is Visible    css:.error    5s
     Element Should Contain    css:.error    Invalid credentials
@@ -61,7 +63,7 @@ Login As User
     [Arguments]    ${email}    ${password}
     Go To    ${BASE_URL}/login
     Input Text    id:email    ${email}
-    Input Text    id:password    ${password}
+    Input Password    id:password    ${password}
     Click Button    css:button[type='submit']
 
 Verify Dashboard Is Displayed

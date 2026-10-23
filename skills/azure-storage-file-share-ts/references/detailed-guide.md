@@ -8,8 +8,7 @@
 npm install @azure/storage-file-share @azure/identity
 ```
 
-**Current Version**: 12.x
-**Node.js**: >= 18.0.0
+Examples use the 12.x API family; pin the reviewed package and supported runtime, then verify current authentication/API support.
 
 
 ## Environment Variables
@@ -85,6 +84,8 @@ ShareServiceClient (account level)
         └── ShareFileClient (file level)
 ```
 
+
+Verify account/share/file/version and authorized scope before overwrites, clearRange or deletion. Keep account keys/SAS URLs private and prefer supported least-privilege identity flows. OAuth support, token intent and privileged backup semantics depend on SDK/service version and roles; verify them before using DefaultAzureCredential. Nested directory creation is not recursive: create/verify parents individually. Buffer/string examples are bounded small-file Node examples, and lengths must be byte counts for non-ASCII text.
 
 ## Share Operations
 
@@ -282,8 +283,9 @@ const sourceUrl = "https://account.file.core.windows.net/share/source.txt";
 const destFileClient = shareClient.rootDirectoryClient.getFileClient("destination.txt");
 
 // Start copy operation
-const copyPoller = await destFileClient.startCopyFromURL(sourceUrl);
-await copyPoller.pollUntilDone();
+const copyResult = await destFileClient.startCopyFromURL(sourceUrl);
+// This returns a response, not a poller. Record copyResult.copyId and inspect
+// getProperties().copyStatus/copyId with a bounded deadline until terminal state.
 ```
 
 
@@ -360,10 +362,12 @@ const snapshotFileClient = snapshotShareClient.rootDirectoryClient.getFileClient
 const content = await snapshotFileClient.downloadToBuffer();
 ```
 
-### Delete Snapshot
+### Delete One Verified Snapshot
+
+Do not delete the base share with deleteSnapshots: include to remove one snapshot: that deletes the share and all snapshots. Bind deletion to the exact approved snapshot client.
 
 ```typescript
-await shareClient.delete({ deleteSnapshots: "include" });
+await snapshotShareClient.delete();
 ```
 
 
@@ -401,7 +405,7 @@ import { ShareSASPermissions, generateFileSASQueryParameters } from "@azure/stor
 const sasToken = generateFileSASQueryParameters(
   {
     shareName: "my-share",
-    permissions: ShareSASPermissions.parse("rcwdl"), // read, create, write, delete, list
+    permissions: ShareSASPermissions.parse("rl"), // read/list example; grant writes/deletes only when requested
     expiresOn: new Date(Date.now() + 24 * 3600 * 1000), // 24 hours
   },
   sharedKeyCredential

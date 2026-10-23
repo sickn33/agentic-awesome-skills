@@ -24,11 +24,11 @@ This skill provides a systematic approach to testing React Native applications o
 ## 🚀 Workflow
 
 ### 1. Device Calibration
-Before interacting, always verify the screen resolution to ensure tap coordinates are accurate.
+Select the authorized emulator serial with `adb devices -l`; pass `-s SERIAL` to every command when multiple devices exist. Before interacting, inspect current display geometry and UI bounds to ensure tap coordinates are accurate.
 ```bash
 adb shell wm size
 ```
-*Note: Layouts are often scaled. Use the physical size returned as the base for coordinate calculations.*
+*Note: Size overrides, density, rotation and insets affect input coordinates. Prefer fresh UI bounds on the actual selected display rather than deriving coordinates solely from physical size.*
 
 ### 2. UI Inspection (State Discovery)
 Use the `uiautomator` dump to find the exact bounds of UI elements (buttons, inputs).
@@ -60,7 +60,7 @@ adb logcat -d | grep "ReactNativeJS" | tail -n 20
 Always store generated files in the `artifacts/` folder to satisfy project organization rules.
 
 ## 💡 Best Practices
-- **Wait for Animations**: Always add a short sleep (e.g., 1-2s) between interaction and verification.
+- **Wait for State**: Poll for the expected UI state with a bounded timeout; a fixed delay alone is not verification.
 - **Center Taps**: Calculate the arithmetic mean of `[x1,y1][x2,y2]` for the most reliable tap target.
 - **Log Markers**: Use distinct log messages in the code (e.g., `✅ Action Successful`) to make `grep` verification easy.
 - **Fail Fast**: If a `uiautomator dump` fails or doesn't find the expected text, stop and troubleshoot rather than blind-tapping.
@@ -69,3 +69,7 @@ Always store generated files in the `artifacts/` folder to satisfy project organ
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Bundled helper example
+
+From this skill’s directory, after selecting the authorized emulator, run `ANDROID_SERIAL=emulator-5554 bash scripts/verify_ui.sh login-screen`. Replace the example serial with the verified device. The inert, non-executable helper captures `artifacts/view.xml`, `artifacts/login-screen.png` and recent JS logs; it does not assert that the login flow passed. Inspect the captured state against the expected UI and keep artifacts private when they contain personal data.

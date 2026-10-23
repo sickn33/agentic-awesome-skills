@@ -1,7 +1,7 @@
 ---
 name: odoo-ecommerce-configurator
 description: "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow."
-risk: safe
+risk: critical
 source: "self"
 date_added: "2026-03-04"
 ---
@@ -25,6 +25,8 @@ This skill helps you set up and optimize an Odoo-powered online store. It covers
 2. **Configure**: Receive step-by-step Odoo eCommerce setup with menu paths.
 3. **Optimize**: Get SEO, conversion, and catalog best practices.
 
+Menu paths are illustrative and version/module-dependent. Use a duplicate test database and sandbox credentials; publication, live payments, carrier bookings and outbound marketing require explicit scope. Verify provider webhook signing/replay handling and payment states using [Odoo Stripe guidance](https://www.odoo.com/documentation/17.0/applications/finance/payment_providers/stripe.html). Do not send abandoned-cart messages without applicable consent or imply scarcity without inventory evidence.
+
 ## Examples
 
 ### Example 1: Publish a Product to the Website
@@ -34,7 +36,7 @@ Menu: Website → eCommerce → Products → Select Product
 
 Fields to complete for a great product listing:
   Name:               Ergonomic Mesh Office Chair  (keyword-rich)
-  Internal Reference: CHAIR-MESH-001               (required for inventory)
+  Internal Reference: CHAIR-MESH-001               (recommended integration identifier)
   Sales Price:        $299.00
   Website Description (website tab): 150–300 words of unique content
 
@@ -61,8 +63,8 @@ Menu: Website → Configuration → Payment Providers → Stripe → Configure
 State: Test  (use Test mode until fully validated, then switch to Enabled)
 
 Credentials (from your Stripe Dashboard → Developers → API Keys):
-  Publishable Key: pk_live_XXXXXXXX
-  Secret Key:      sk_live_XXXXXXXX  (store securely; never expose client-side)
+  Publishable Key: pk_test_XXXXXXXX
+  Secret Key:      sk_test_XXXXXXXX  (store securely; never expose client-side)
 
 Payment Journal: Bank (USD)
 Capture Mode:    Automatic  (charge card immediately on order confirmation)
@@ -71,7 +73,8 @@ Capture Mode:    Automatic  (charge card immediately on order confirmation)
 Webhook:
   Add Odoo's webhook URL in Stripe Dashboard → Webhooks
   URL: https://yourstore.com/payment/stripe/webhook
-  Events: payment_intent.succeeded, payment_intent.payment_failed
+  Use Odoo Generate your webhook and the exact events/signing configuration
+  required by the installed Stripe module; do not assume this short event list is complete.
 ```
 
 ### Example 3: Set Up Flat Rate Shipping with Free Threshold
@@ -111,7 +114,7 @@ Actions:
   1. Wait 1 hour
   2. Send Email: "You left something behind!"  (use a recovery email template)
   3. Wait 24 hours
-  4. Send Email: "Last chance — items selling fast"
+  4. Send an accurate reminder only when marketing consent and current cart state permit it
 
 Note: Some Odoo hosting plans may require "Email Marketing" app enabled.
 ```
@@ -119,16 +122,16 @@ Note: Some Odoo hosting plans may require "Email Marketing" app enabled.
 ## Best Practices
 
 - ✅ **Do:** Use **Product Variants** (color, size) instead of duplicate products — cleaner catalog and shared inventory tracking.
-- ✅ **Do:** Enable **HTTPS** (SSL certificate) via your hosting provider and set HSTS in Website → Settings → Security.
+- ✅ **Do:** Configure HTTPS and reviewed HSTS at the actual hosting/reverse-proxy layer; do not assume a universal Odoo menu exists.
 - ✅ **Do:** Set up **Abandoned Cart Recovery** using Marketing Automation or a scheduled email sequence.
 - ✅ **Do:** Add a **Stripe webhook** so Odoo is notified of payment events in real time — without it, failed payments may not update correctly.
 - ❌ **Don't:** Leave the payment provider in **Test mode** in production — no real charges will be processed.
-- ❌ **Don't:** Publish products without an **Internal Reference (SKU)** — it breaks inventory tracking and order fulfillment.
-- ❌ **Don't:** Use the same Stripe key for Test and Production environments — always rotate to live keys before going live.
+- ✅ **Do:** Use unique SKUs where integrations/business processes require them; an absent Internal Reference does not universally break Odoo inventory.
+- ❌ **Don't:** Mix sandbox and live credentials. Switch to the authorized live account only after review; changing mode is distinct from rotating a key.
 
 ## Limitations
 
 - **Carrier integration** (live UPS/FedEx rate calculation) requires the specific carrier connector module (e.g., `delivery_ups`) and a carrier account API key.
-- Does not cover **multi-website** configuration — running separate storefronts with different pricelists and languages requires Enterprise.
+- Multi-website, subscription and automation availability depends on the actual Odoo version, edition and installed modules; verify it rather than inferring entitlement from this guide.
 - **B2B eCommerce** (customer login required, custom catalog and prices per customer) has additional configuration steps not fully covered here.
 - Odoo eCommerce does not support **subscription billing** natively — that requires the Enterprise **Subscriptions** module.

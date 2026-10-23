@@ -76,7 +76,7 @@ Use this outline template:
 
 ## Hook (2-3 sentences)
 - State the problem or opportunity
-- Establish credibility ("We migrated 10,000 repos...")
+- Establish credibility with verified experience; never invent migrations, client counts or results
 - Promise what the reader will learn
 
 ## Context (optional)
@@ -128,6 +128,8 @@ Every code example must:
 
 ### Code Example Structure
 
+The following is an editorial template: `your-library` and its Client API are placeholders, not a real installable SDK. Replace them with a pinned, verified package/API, use `.mjs` or configure ESM, and test in an isolated environment before calling the result copy-paste ready.
+
 ```markdown
 First, install the dependencies:
 
@@ -135,10 +137,10 @@ First, install the dependencies:
 npm install your-library axios
 \`\`\`
 
-Now create a file called `fetch-data.js`:
+Now create a file called `fetch-data.mjs`:
 
 \`\`\`javascript
-// fetch-data.js
+// fetch-data.mjs
 import { Client } from 'your-library';
 import axios from 'axios';
 
@@ -166,7 +168,8 @@ fetchUserData('user_123')
 Run it:
 
 \`\`\`bash
-YOUR_API_KEY=sk_test_xxx node fetch-data.js
+# Inject YOUR_API_KEY through a secret manager or non-echoed input first.
+node fetch-data.mjs
 \`\`\`
 
 Expected output:
@@ -196,10 +199,10 @@ Run through before publishing:
 
 | Check | How to Verify |
 |-------|---------------|
-| **Code runs** | Copy-paste every snippet and run it |
+| **Code runs** | Inspect code/dependencies first, then test authorized snippets in an isolated fixture/environment |
 | **Versions match** | Are you using the current library version? |
 | **Links work** | Click every link |
-| **Commands work** | Run every CLI command |
+| **Commands work** | Inspect side effects first; run only within authorized scope and use fixtures for destructive/costly actions |
 | **Screenshots current** | Do UI screenshots match the current product? |
 | **No deprecated APIs** | Check if any APIs used are deprecated |
 | **Security review** | No hardcoded secrets, SQL injection, etc. |

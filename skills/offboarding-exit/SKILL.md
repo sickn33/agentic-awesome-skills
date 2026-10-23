@@ -106,7 +106,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -142,7 +142,7 @@ CREATE TABLE offboarding_exit (
   accounts_to_close NUMERIC NOT NULL,
   final_settlement_done BOOLEAN NOT NULL,
   exit_interview_done BOOLEAN NOT NULL,
-  rehire_eligible BOOLEAN NOT NULL,
+  rehire_eligible BOOLEAN,
   status VARCHAR(100) NOT NULL,
   exit_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -183,6 +183,11 @@ CREATE INDEX idx_offboarding_exit_status ON offboarding_exit (status);
       "Notice Date",
       "Last Working Day",
       "Accounts to Close",
+      "Knowledge Transfer Done",
+      "Assets Returned",
+      "Access Removed",
+      "Final Settlement Done",
+      "Exit Interview Done",
       "Status"
   ]
 }
@@ -296,7 +301,7 @@ Our last three exits were handled differently by three different people.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not revoke access itself, terminate employment or provide legal advice on the exit.
+- Does not revoke access itself, terminate employment or provide legal advice on the exit. Access Removed needs per-account evidence and an owner/date; a checkbox or account count alone does not prove revocation. Rehire eligibility may remain unknown until an authorized decision; do not infer it from departure type.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes
@@ -328,9 +333,9 @@ Our last three exits were handled differently by three different people.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
+- [notification-reminder-hub](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

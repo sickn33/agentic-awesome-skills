@@ -290,3 +290,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Model scores are probabilistic signals, not a guarantee that content is safe. Missing/malformed analyses or service errors are unassessed, not severity zero; choose a documented fail-closed/escalation policy for the application. Authorize transfer of sensitive text/images, minimize retention and bound batch concurrency. Blocklist changes affect live moderation and require the intended resource/list scope.

@@ -16,6 +16,10 @@ Mailtrap sends live email over **Email API** (REST) or **SMTP**. Two **streams**
 
 Use when integrating, configuring, or troubleshooting Mailtrap live email sending with Email API, SMTP, transactional streams, bulk streams, or batch requests.
 
+## Sending authority and delivery checks
+
+Live send examples deliver externally. Before any send, confirm the approved sender, exact recipient list, final content/template variables, stream and message count. Integration or troubleshooting alone does not authorize sending. Use the sandbox for tests unless live delivery is requested; do not treat example recipients as real targets. Keep tokens out of logged process arguments (use protected header stdin/config or the SDK), redact responses, and check delivery state before retrying an uncertain POST to avoid duplicate mail. Account limits and suppression behavior require current docs; do not bypass unsubscribes or suppressions.
+
 ## How to integrate (preference order)
 
 **Preferred order:**

@@ -18,12 +18,14 @@ Automate Dropbox operations including file upload/download, search, folder manag
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection; an endpoint alone does not authenticate Dropbox. Use the supported setup/auth flow within requested scope.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `dropbox`
 3. If connection is not ACTIVE, follow the returned auth link to complete Dropbox OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Historical slugs/limits/defaults below need current schema verification. Verify account/root namespace, exact file/version, destination and approved audience before mutations, overwrite, ownership transfer or sharing. Existing links may be broader than the requested audience: inspect permissions before reusing. Reconcile asynchronous/unknown writes using their original job IDs before retrying.
 
 ## Core Workflows
 
@@ -118,7 +120,7 @@ Automate Dropbox operations including file upload/download, search, folder manag
 8. `DROPBOX_CHECK_MOVE_BATCH` / `DROPBOX_CHECK_FOLDER_BATCH` - Poll async batch job status [Required for batch ops]
 
 **Key parameters**:
-- `path`: Target path (must start with `/`, case-sensitive)
+- `path`: Target path (normally starts with `/`; path comparison is case-insensitive)
 - `from_path` / `to_path`: Source and destination for move/copy operations
 - `autorename`: `true` to auto-rename on conflict
 - `entries`: Array of `{from_path, to_path}` for batch moves; array of paths for batch creates
@@ -126,7 +128,7 @@ Automate Dropbox operations including file upload/download, search, folder manag
 - `allow_ownership_transfer`: Set `true` if move changes ownership
 
 **Pitfalls**:
-- All paths are case-sensitive and must start with `/`
+- Dropbox paths are case-insensitive and normally start with `/`; opaque IDs remain case-sensitive
 - Paths must NOT end with `/` or whitespace
 - Batch operations may be asynchronous; poll with `DROPBOX_CHECK_MOVE_BATCH` or `DROPBOX_CHECK_FOLDER_BATCH`
 - `DROPBOX_FILES_MOVE_BATCH` (v1) has "all or nothing" behavior - if any entry fails, entire batch fails
@@ -183,7 +185,7 @@ Several Dropbox operations run asynchronously:
 ### Path Formats
 - All paths must start with `/` (except empty string for root in some endpoints)
 - Paths must NOT end with `/` or contain trailing whitespace
-- Paths are case-sensitive for write operations
+- Paths are case-insensitive; preserve the exact case of opaque file IDs
 - `path_display` from API may differ in casing from user input; always prefer API-returned paths
 
 ### Rate Limits

@@ -35,6 +35,8 @@ Avoid API routes when:
 
 ## File Structure
 
+Confirm the installed Expo/EAS version and configure web output for server routes. Fragments are incomplete demos: header presence and nonempty password fields do not authenticate anyone. Implement token verification, per-user authorization, body/schema/size limits and rate/cost limits before exposing database or paid AI proxy routes. Keep secrets out of EXPO_PUBLIC variables/client imports. Native callers need the configured server origin; do not assume a relative URL works identically on every platform. Validate webhook signatures over the required raw body and deduplicate events. Bound upstream requests, check response.ok and return only approved fields; the weather endpoint is illustrative, not a verified API contract.
+
 API routes live in the `app` directory with `+api.ts` suffix:
 
 ```
@@ -107,10 +109,10 @@ export function GET(request: Request) {
 ### Headers
 
 ```ts
-export function GET(request: Request) {
+export async function GET(request: Request) {
   const auth = request.headers.get("Authorization");
 
-  if (!auth) {
+  if (!auth || !(await verifyAccessToken(auth))) { // implement signature/issuer/audience/expiry checks
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -203,7 +205,10 @@ export async function POST(request: Request) {
 Start the development server with API routes:
 
 ```bash
-npx expo serve
+npx expo start
+# To test an exported production bundle instead:
+# npx expo export --platform web
+# npx expo serve
 ```
 
 This starts a local server at `http://localhost:8081` with full API route support.
@@ -230,13 +235,14 @@ eas login
 eas deploy
 ```
 
-This builds and deploys your API routes to EAS Hosting (Cloudflare Workers).
+Export the configured server web output first, then deploy that artifact with the supported EAS CLI; deployment is a separate authorized public action.
 
 ### Environment Variables for Production
 
 ```bash
 # Create a secret
-eas env:create --name OPENAI_API_KEY --value sk-xxx --environment production
+eas env:create --name OPENAI_API_KEY --environment production
+# Use the supported interactive secret input; never pass real keys in command arguments.
 
 # Or use the Expo dashboard
 ```
@@ -333,8 +339,8 @@ export async function requireAuth(request: Request) {
     });
   }
 
-  // Verify token...
-  return { userId: "123" };
+  // Implement with the application identity provider; fail closed until implemented.
+  throw new Error("Token verification must be implemented; never return a fabricated user");
 }
 
 // app/api/protected+api.ts

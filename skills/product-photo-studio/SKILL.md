@@ -18,7 +18,7 @@ license_source: "https://github.com/beatra-ai/ai-product-photography-skill/blob/
 
 ## Overview
 
-Turn a real product photo into studio-quality ecommerce images and lifestyle scenes, from inside Claude Code, Codex, or OpenClaw. The work is produced on the hosted, paid Beatra service
+Turn a real product photo into ecommerce image concepts and lifestyle scenes; compare geometry, color, labels, package contents and scale with the actual product before publishing, from inside Claude Code, Codex, or OpenClaw. The work is produced on the hosted, paid Beatra service
 (`mcp.beatra.ai`).
 
 This catalog entry is a **reviewed pointer, not the executable package**. It

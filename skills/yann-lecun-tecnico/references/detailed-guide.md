@@ -4,14 +4,13 @@
 
 ## Overview
 
-Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e código PyTorch completo.
+Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e exemplos didáticos PyTorch.
 
 
 ## How It Works
 
 > Este módulo é carregado pelo agente yann-lecun principal quando a conversa
-> exige profundidade técnica. Você continua sendo LeCun — apenas com acesso
-> a todo o arsenal técnico.
+> exige profundidade técnica. Explique as ideias atribuídas a LeCun e aos respectivos coautores; não se apresente como a pessoa real nem invente opiniões ou experiências pessoais.
 
 ---
 
@@ -59,13 +58,13 @@ for i in range(output_height):
 ```
 
 O insight central: **features não precisam ser handcrafted**. Aprendem por gradiente.
-Em 2012, AlexNet provou. Eu dizia isso desde 1989.
+Em 2012, AlexNet provou. A história e as atribuições devem ser conferidas nas publicações originais.
 
 
 ## Backpropagation: A Equação Central
 
 ```
-delta_L = dL/da_L  (gradiente na camada de saída)
+delta_L = (dL/da_L) * f'(z_L)  (gradiente em relação à pré-ativação)
 delta_l = (W_{l+1}^T * delta_{l+1}) * f'(z_l)
 dL/dW_l = delta_l * a_{l-1}^T
 dL/db_l = delta_l
@@ -77,7 +76,7 @@ Implementável eficientemente em GPUs por ser sequência de multiplicações de 
 
 ## Self-Supervised Learning: Objetivos E Formalização
 
-**Variante generativa (MAE, BERT)**:
+**Variante generativa (exemplo de reconstrução contínua, como MAE)**:
 ```
 L_gen = E[||f_theta(x_masked) - x_target||^2]
 
@@ -94,7 +93,7 @@ L_contrastive = -log( exp(sim(z_i, z_j) / tau) /
 
 ```
 
-Problema das contrastivas: precisam de "negatives" — batch grande. Motivou BYOL e JEPA.
+SimCLR usa negativos e se beneficia de batches grandes; outros métodos empregam filas ou dispensam negativos explícitos. BYOL e JEPA têm mecanismos e objetivos diferentes.
 
 ---
 
@@ -118,12 +117,12 @@ s_hat_y = g_phi(s_x)       # prevê representação de y dado x
 
 L_JEPA = ||s_y - s_hat_y||^2    # MSE no espaço de representações
 
-## Prevenção De Colapso: Target Encoder Usa Momentum (Ema)
+## EMA participa do projeto; não garante, sozinha, evitar colapso
 
 theta_bar <- m * theta_bar + (1-m) * theta   # m ~ 0.996
 ```
 
-**Por que JEPA supera geração de pixels/tokens**:
+**Comparação conceitual de objetivos — não prova de superioridade universal**:
 
 | Abordagem | Prevê | Capacidade gasta em | Semântica |
 |-----------|-------|---------------------|-----------|
@@ -133,102 +132,20 @@ theta_bar <- m * theta_bar + (1-m) * theta   # m ~ 0.996
 | **JEPA** | **Representação abstrata** | **Relações semânticas** | **Eficientemente** |
 
 
-## I-Jepa: Pseudocódigo Pytorch Completo
+## I-JEPA: Esquema Conceitual, Não Implementação Completa
 
-```python
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import copy
+O exemplo anterior estava truncado e usava funções/variáveis não definidas. Para implementar I-JEPA, use a arquitetura e máscaras da implementação oficial revisada; não execute este esquema como PyTorch:
 
-class IJEPA(nn.Module):
-    """
-    I-JEPA: Image Joint Embedding Predictive Architecture
-    Assran et al. 2023 — CVPR
-    """
-    def __init__(self, encoder, predictor, momentum=0.996):
-        super().__init__()
-        self.context_encoder = encoder
-        self.target_encoder = copy.deepcopy(encoder)
-        self.predictor = predictor
-        self.momentum = momentum
-
-        for param in self.target_encoder.parameters():
-            param.requires_grad = False
-
-    @torch.no_grad()
-    def update_target_encoder(self):
-        """EMA update"""
-        for param_ctx, param_tgt in zip(
-            self.context_encoder.parameters(),
-            self.target_encoder.parameters()
-        ):
-            param_tgt.data = (
-                self.momentum * param_tgt.data +
-                (1 - self.momentum) * param_ctx.data
-            )
-
-    def forward(self, images):
-        context_patches, target_patches, masks = self.create_masks(images)
-        context_embeds = self.context_encoder(context_patches, masks)
-
-        with torch.no_grad():
-            target_embeds = self.target_encoder(target_patches)
-
-        predicted_embeds = self.predictor(context_embeds, target_positions)
-        loss = F.mse_loss(predicted_embeds, target_embeds.detach())
-        return loss
-
-    def create_masks(self, images, num_target_blocks=4, context_scale=0.85):
-        """
-        Estratégia I-JEPA:
-        - Múltiplos blocos alvo aleatórios (alto aspect ratio)
-        - Contexto: imagem com blocos alvo mascarados
-        """
-        B, C, H, W = images.shape
-        patch_size = 16
-        n_patches_h = H // patch_size
-        n_patches_w = W // patch_size
-
-        target_masks = generate_random_blocks(
-            n_patches_h, n_patches_w,
-            num_blocks=num_target_blocks,
-            scale_range=(0.15, 0.2),
-            aspect_ratio_range=(0.75, 1.5)
-        )
-        context_mask = ~targe
-
-## V-Jepa: Extensão Temporal
-
-```python
-
-
-## Prever Representação De Frames Futuros Em Posições Mascaradas
-
-L_V_JEPA = E[||f_target(video_masked) - g(f_ctx(video_ctx), positions)||^2]
-
-
-## Sem Nenhum Label.
-
+```text
+1. Codificar a imagem completa com o target encoder sem gradientes.
+2. Selecionar embeddings dos blocos-alvo com suas posições.
+3. Codificar apenas patches de contexto, sem vazar conteúdo-alvo.
+4. Predizer os embeddings-alvo a partir do contexto e posições-alvo.
+5. Calcular a perda sobre alvos selecionados e normalizados conforme o modelo.
+6. Atualizar contexto/preditor por gradiente e target por EMA.
 ```
 
-## Hierarquia De Encoders
-
-Level 0: pixels -> patches -> representações locais (bordas, texturas)
-Level 1: patches -> regiões -> representações de objetos
-Level 2: regiões -> cena -> representações de relações espaciais
-Level 3: cena -> temporal -> representações de eventos
-
-## Cada Nível Tem Seu Próprio Jepa:
-
-L_total = sum_l lambda_l * L_JEPA_l
-
-## Resultado: World Model Hierárquico Multi-Escala
-
-```
-
----
-
+Valide shapes, índices, ausência de vazamento e variância dos embeddings. EMA sozinha não prova ausência de colapso; máscaras, arquitetura e normalização importam. V-JEPA estende a predição de features a vídeo com máscaras espaço-temporais; não se reduz à previsão causal de frames futuros. Uma hierarquia de world models é uma proposta arquitetural, não uma propriedade demonstrada de todo JEPA.
 
 ## Seção Ami — Advanced Machinery Of Intelligence
 
@@ -294,20 +211,9 @@ E(s) = alpha * intrinsic_cost(s) + beta * task_cost(s)
 - Modo deliberativo: simula múltiplos futuros, escolhe mínimo custo
 
 
-## Ami Vs Llms
+## AMI e LLMs: Escopo da Comparação
 
-| Feature | LLM | AMI |
-|---------|-----|-----|
-| Objetivo | Prever próximo token | Minimizar erro em representação |
-| World model | Nenhum | Módulo dedicado central |
-| Planning | Texto sobre planning | Planning real com simulação |
-| Memória | Context window (fixo) | Memória episódica atualizável |
-| Objetivos | Apenas treinamento | Cost module configurável |
-| Input | Texto | Multi-modal (video, audio, propriocepção) |
-| Causalidade | Correlacional | Causal (dinâmicas do mundo) |
-
----
-
+A proposta AMI separa percepção, modelo de mundo, custos, memória, configurador e ator. É uma arquitetura de pesquisa, não um sistema completo implementado por este documento. LLMs variam em modalidades, ferramentas, memória e planejamento; não é correto afirmar que todos são apenas texto, não possuem nenhuma representação de mundo ou não podem planejar. Predição de features também não demonstra causalidade por si só.
 
 ## Seção Ebm — Energy-Based Models
 
@@ -354,13 +260,14 @@ class EnergyBasedModel(nn.Module):
         reg = 0.1 * (E_pos.pow(2).mean() + E_neg.pow(2).mean())
         return loss + reg
 
-## Ebms Capturam Isso Naturalmente — São Sobre Compatibilidade, Não Probabilidade."
+## Exemplo didático: negativos, amostragem e estabilidade ainda precisam ser definidos.
 
 ```
 
 **JEPA como EBM no espaço de representações**:
 ```
-E(x, y) = ||f_theta(x) - g_phi(f_theta_bar(y))||^2
+E(x, y) = ||stopgrad(f_target(y)) - g_phi(f_context(x), pos_y)||^2
+```
 
 ## Simclr Simplificado
 
@@ -431,7 +338,7 @@ def get_ssl_augmentations(size=224):
 class LeNet5Modern(nn.Module):
     """
     LeNet-5 (LeCun et al. 1998) reimplementada em PyTorch moderno.
-    Esta arquitetura rodou em produção no Bank of America em 1993.
+    Esta é uma aproximação didática moderna, não uma reprodução exata do LeNet-5 original.
     ~60,000 parâmetros. Mesmos princípios de modelos modernos com bilhões.
     """
     def __init__(self, num_classes=10):
@@ -453,7 +360,7 @@ class LeNet5Modern(nn.Module):
         )
 
     def forward(self, x):
-        x = self.features(x)    # [B, 120, 1, 1]
+        x = self.features(x)    # [B, 120, 1, 1] para entrada [B, 1, 28, 28]
         x = x.view(x.size(0), -1)
         return self.classifier(x)
 ```
@@ -468,8 +375,8 @@ class LeNet5Modern(nn.Module):
 
 ## Jepa Papers
 
-- Assran et al. (2023). "Self-Supervised Learning from Images with a JEPA" — CVPR 2023 (I-JEPA)
-- Bardes et al. (2024). "V-JEPA: Self-Supervised Learning of Video Representations" — NeurIPS 2023
+- Assran et al. (2023). "Self-Supervised Learning from Images with a JEPA" — [I-JEPA, 2023](https://arxiv.org/abs/2301.08243)
+- Bardes et al. (2024). "Revisiting Feature Prediction for Learning Visual Representations from Video" — [2024 preprint](https://arxiv.org/abs/2404.08471)
 - LeCun (2016). "Predictive Learning" — NIPS Keynote (The Cake Analogy)
 
 ## Ssl Relevantes
@@ -480,8 +387,10 @@ class LeNet5Modern(nn.Module):
 
 ## Energy-Based Models
 
-- LeCun et al. (2006). "A Tutorial on Energy-Based Learning" — ICLR Workshop
+- LeCun et al. (2006). "A Tutorial on Energy-Based Learning" — tutorial, 2006 (verifique a edição bibliográfica antes de citar)
 - LeCun (2021). "Energy-Based Models for Autonomous and Predictive Learning" — ICLR Keynote
+
+Os fragmentos PyTorch exigem imports e tensores do formato indicado; não incluem dados, otimizador ou loop de treino. A perda SimCLR tem custo de memória O(B²); valide B≥2, temperatura positiva e shapes iguais. O exemplo EBM não define uma distribuição negativa nem um amostrador e não é um algoritmo de treino completo. Não faça download, execute checkpoints/código remoto ou inicie treino em GPU compartilhada sem escopo autorizado.
 
 ## Best Practices
 

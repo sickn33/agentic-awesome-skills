@@ -28,6 +28,10 @@ Comprehensive techniques for acquiring, analyzing, and extracting artifacts from
 
 ## Memory Acquisition
 
+Confirm authorization for the exact host/VM and sensitive-memory acquisition before collection. Dumps can contain passwords, private keys and personal records: store encrypted/restricted, hash originals, record tool/version/time and chain of custody, and analyze copies offline. Do not upload dumps or credential outputs to external services without explicit disclosure authority. Credential-extraction plugins are a separate sensitive step, not routine triage.
+
+Acquisition can pause/crash or perturb a live system. Use a trusted OS-compatible tool, verify output capacity and document completeness; `/dev/mem` is often restricted and `/proc/kcore` is a sparse virtual view, not a portable substitute for a validated physical capture. Legacy macOS tools may not support the target hardware/OS. No capture command here is universally safe.
+
 ### Live Acquisition Tools
 
 #### Windows
@@ -82,6 +86,8 @@ virsh dump <domain> memory.raw --memory-only
 ```
 
 ## Volatility 3 Framework
+
+Verify available plugins and their options using the installed version's help. Some names below are legacy/version-specific; do not assume every Volatility 2 plugin or dump flag exists in Volatility 3. Structure snippets are conceptual and OS-build-dependent. YARA matches, process-list differences and executable memory are leads requiring correlation, not standalone proof of malware.
 
 ### Installation and Setup
 
@@ -470,28 +476,22 @@ floss pid.1234.dmp
 ## Best Practices
 
 ### Acquisition Best Practices
-
 1. **Minimize footprint**: Use lightweight acquisition tools
 2. **Document everything**: Record time, tool, and hash of capture
 3. **Verify integrity**: Hash memory dump immediately after capture
 4. **Chain of custody**: Maintain proper forensic handling
-
 ### Analysis Best Practices
-
 1. **Start broad**: Get overview before deep diving
 2. **Cross-reference**: Use multiple plugins for same data
 3. **Timeline correlation**: Correlate memory findings with disk/network
 4. **Document findings**: Keep detailed notes and screenshots
 5. **Validate results**: Verify findings through multiple methods
-
 ### Common Pitfalls
-
 - **Stale data**: Memory is volatile, analyze promptly
 - **Incomplete dumps**: Verify dump size matches expected RAM
 - **Symbol issues**: Ensure correct symbol files for OS version
 - **Smear**: Memory may change during acquisition
 - **Encryption**: Some data may be encrypted in memory
-
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

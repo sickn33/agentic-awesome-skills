@@ -4,6 +4,8 @@
 
 ## Installation
 
+SDK/CLI APIs and minimum runtimes evolve: choose a supported pinned SDK+CLI pair and verify current language/runtime requirements, permission result types and available models from official documentation before adapting these historical examples. Run in a disposable restricted working directory with only required credentials and network access. Built-in tools, MCP servers and imported skills can read/write/execute; a prompt or a pre-tool hook is not an OS sandbox. Budget model calls and redact debug logs/session data.
+
 | Language | Package | Install |
 |----------|---------|---------|
 | Node.js | `@github/copilot-sdk` | `npm install @github/copilot-sdk` |
@@ -36,6 +38,7 @@ await client.stop();
 
 ```python
 import asyncio
+import sys
 from copilot import CopilotClient
 
 async def main():
@@ -43,6 +46,8 @@ async def main():
     await client.start()
     session = await client.create_session({"model": "gpt-4.1"})
     response = await session.send_and_wait({"prompt": "What is 2 + 2?"})
+    if response is None:
+        raise RuntimeError("No final assistant response")
     print(response.data.content)
     await client.stop()
 
@@ -230,6 +235,8 @@ const session = await client.createSession({
 ---
 
 
+The weather tools return fixed synthetic data; label them mocks rather than presenting their values as live weather. Hook allow decisions below are illustrative only; do not globally permit every non-shell tool.
+
 ## MCP Server Integration
 
 Connect to MCP servers for pre-built tool capabilities.
@@ -409,20 +416,16 @@ const session = await client.createSession({
 
 ## Permission & Input Handlers
 
-Handle tool permissions and user input requests programmatically:
+Handle tool permissions and user input requests programmatically. Never authorize shell text with `startsWith("git")`: git config/hooks/aliases and shell operators can execute arbitrary code. Unknown categories fail closed; display exact arguments, target and effect. `permissionUI`/`inputUI` below are application components to implement, not SDK functions:
 
 ```typescript
 const session = await client.createSession({
+    // Pseudocode adapters: implement against the pinned SDK’s request/result types.
     onPermissionRequest: async (request) => {
-        // Auto-approve git commands only
-        if (request.kind === "shell") {
-            return { approved: request.command.startsWith("git") };
-        }
-        return { approved: true };
+        return await permissionUI.confirmExactRequest(request); // deny on timeout/unknown
     },
     onUserInputRequest: async (request) => {
-        // Handle ask_user tool calls
-        return { response: "yes" };
+        return await inputUI.askUser(request); // actual human answer; never automatic "yes"
     },
 });
 ```

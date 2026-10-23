@@ -280,3 +280,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Verify signatures and batch/character limits against the pinned SDK and resource API version before using these fragments. Translating text transmits it to the configured cloud service; authorize sensitive content transfer and redact logs. Handle partial item errors, bounded retries and quota limits; constructing a client is not evidence of successful translation.

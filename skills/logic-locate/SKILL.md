@@ -50,3 +50,5 @@ Use lazy loading per `../_shared/common.md` §13:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+The `../_shared/` files referenced above are not bundled. Do not claim their scoring, L-code taxonomy, templates or source coverage were applied. The local guide can support a standalone logic-location review: state the inspected scope, quote the concrete source location, explain the observed symptom and consequence, propose a proportionate remedy and list uninspected paths. Do not invent source attributions or framework codes. Obtain the missing material before any step that depends on it.

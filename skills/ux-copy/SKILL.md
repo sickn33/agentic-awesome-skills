@@ -26,7 +26,7 @@ Use this skill when you need generate UX microcopy (button labels, error message
 Context: **$0**
 Description: $ARGUMENTS
 
-> **Read `engine/UX-WRITING.md` first** — it's the rule set this skill applies: buttons
+> **Read `engine/UX-WRITING.md` if it exists in the target project** (not bundled here) — it's the rule set this skill applies: buttons
 > name the action (not "Submit"), errors help instead of blame, empty states invite,
 > money copy stays calm, one term per concept. Korean/CJK projects: see §W8 for the
 > clear-calm-human "Toss feel" (존댓말 일관성, 사용자 관점 "내 계좌", 군더더기 빼기).
@@ -34,7 +34,7 @@ Description: $ARGUMENTS
 ## Instructions
 
 1. Read the design language reference:
-   - `DESIGN-LANGUAGE.md` sections on Microcopy Tone Guide and UX Writing
+   - If present, `DESIGN-LANGUAGE.md` sections on Microcopy Tone Guide and UX Writing. Otherwise use the project’s supplied voice spec and existing copy; do not invent unavailable rules.
 
 2. Apply the voice principles:
 
@@ -85,14 +85,14 @@ Bad:  "Operation completed successfully"
 ```
 - Max 2 lines
 - Include "Undo" link for reversible destructive actions
-- Info toasts: 3 seconds. Action toasts: 5 seconds.
+- Treat toast durations as design defaults; essential recovery actions need a persistent or user-controlled path.
 
 #### Form Labels & Helpers
 ```
 Label: Noun phrase ("Email address", "Password")
 Placeholder: Example or hint ("name@example.com")
 Helper: Format guidance ("Must be at least 8 characters")
-Error: Specific issue ("This email is already registered")
+Error: Specific issue when safe to disclose; on public account flows avoid revealing whether an address is registered.
 ```
 
 #### Confirmation Dialogs
@@ -100,7 +100,7 @@ Error: Specific issue ("This email is already registered")
 Title: [Question about the action]
 Body: [Consequence explanation]
 Primary: [Action verb] ("Delete", "Confirm")
-Secondary: "Close" (not "Cancel" — avoids confusion)
+Secondary: "Cancel" when it cancels the pending action; "Close" only when it simply dismisses information.
 ```
 
 3. Generate copy for the requested context, providing:

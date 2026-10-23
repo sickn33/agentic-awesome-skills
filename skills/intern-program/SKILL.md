@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Intern Name,Department,Supervisor,Mentor,School or University,Program Type,Start Date,End Date,Duration (Days),Stipend,Currency,Learning Goals,Weekly Log Link,Mid-term Score,Final Score,Certificate Issued,Offer for Full-Time,Converted to Employee,Status,Intern ID
-Karan Malhotra,Delivery,Sneha Iyer,Rohit Verma,Anna University,Internship,2026-06-01,2026-11-30,30,25000.00,INR,Ship one feature end to end,https://example.com/log,4,4.2,FALSE,FALSE,Aarav Sharma,In Progress,
+Karan Malhotra,Delivery,Sneha Iyer,Rohit Verma,Anna University,Internship,2026-06-01,2026-11-30,183,25000.00,INR,Ship one feature end to end,https://example.com/log,4,,FALSE,FALSE,,In Progress,
 ```
 
 ```sql
@@ -135,13 +135,13 @@ CREATE TABLE intern_program (
   program_type VARCHAR(100) NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
-  duration_days NUMERIC NOT NULL,
-  stipend NUMERIC(14,2) NOT NULL,
+  duration_days INTEGER NOT NULL CHECK (duration_days >= 0),
+  stipend NUMERIC(14,2) NOT NULL CHECK (stipend >= 0),
   currency VARCHAR(255),
   learning_goals VARCHAR(255),
   weekly_log_link TEXT,
-  mid_term_score NUMERIC NOT NULL,
-  final_score NUMERIC NOT NULL,
+  mid_term_score NUMERIC,
+  final_score NUMERIC,
   certificate_issued BOOLEAN NOT NULL,
   offer_for_full_time BOOLEAN NOT NULL,
   converted_to_employee VARCHAR(255),
@@ -169,8 +169,8 @@ CREATE INDEX idx_intern_program_status ON intern_program (status);
       "Program Type": { "type": "string" },
       "Start Date": { "type": "string", "format": "date" },
       "End Date": { "type": "string", "format": "date" },
-      "Duration (Days)": { "type": "number" },
-      "Stipend": { "type": "number" },
+      "Duration (Days)": { "type": "integer", "minimum": 0 },
+      "Stipend": { "type": "number", "minimum": 0 },
       "Currency": { "type": "string" },
       "Learning Goals": { "type": "string" },
       "Weekly Log Link": { "type": "string", "format": "uri" },
@@ -183,13 +183,13 @@ CREATE INDEX idx_intern_program_status ON intern_program (status);
       "Intern ID": { "type": "integer" }
   },
   "required": [
+      "Certificate Issued",
+      "Offer for Full-Time",
       "Program Type",
       "Start Date",
       "End Date",
       "Duration (Days)",
       "Stipend",
-      "Mid-term Score",
-      "Final Score",
       "Status"
   ]
 }
@@ -222,6 +222,8 @@ CREATE INDEX idx_intern_program_status ON intern_program (status);
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Use inclusive calendar days for Duration (Days): end date minus start date plus one; this is not attendance or payable workdays. Review scores are optional until performed, and require a documented scale. Leave Converted to Employee empty until an actual conversion exists; if it refers to an employee register, map it to that record’s stable ID/relation rather than another person’s display name. Stipend needs a defined payment period and currency; it does not establish lawful pay or worker classification.
 
 ## Field Reference
 
@@ -339,7 +341,7 @@ We take 5 interns each summer and track everything in a notebook.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

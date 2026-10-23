@@ -35,9 +35,9 @@ Fix Google Search Console coverage issues, canonical problems, sitemap errors, a
 | Excluded by noindex | `noindex` tag present | Remove noindex if page should be indexed |
 | Duplicate, Google chose different canonical | Google prefers a different URL than you specified | Align canonical with the URL Google naturally picks |
 | Alternative page with proper canonical | Correct — non-preferred duplicate pointing to canonical | Expected behavior, not a problem |
-| Not found 404 | Page deleted or URL changed | Add redirect or restore page |
+| Not found 404 | URL has no current resource | Keep 404/410 for intentionally removed content; redirect only to a relevant replacement |
 | Discovered – not indexed | Google knows it exists but hasn't crawled it | Improve internal linking + crawl budget |
-| Page with redirect | Redirect chain or redirect to wrong target | Shorten redirect chain, verify destination |
+| Page with redirect | URL redirects, often intentionally | Confirm the intended final destination; the redirected URL itself is normally not indexed |
 
 ---
 
@@ -57,9 +57,10 @@ export const metadata = {
 ### Next.js App Router (generateMetadata)
 ```js
 export async function generateMetadata({ params }) {
+  const { slug } = await params; // Promise in current App Router; await also accepts older object form
   return {
     alternates: {
-      canonical: `https://www.yourdomain.com/blog/${params.slug}`,
+      canonical: `https://www.yourdomain.com/blog/${slug}`,
     },
   };
 }
@@ -149,7 +150,7 @@ export default async function sitemap() {
 
 ## Step 4 — Static Rendering Verification
 
-Pages must be statically generated (or SSR with metadata in HTML) for Google to see SEO tags.
+Server-rendered/static metadata reduces rendering dependencies, but Google can render JavaScript; static generation is not a general indexing requirement. Inspect the actual response and rendered page.
 
 ```bash
 # Check build output — pages should show ● (static) not λ (dynamic)
@@ -261,3 +262,5 @@ export default function robots() {
 - Does not guarantee Google will index a page; final indexing decisions remain with the search engine.
 - Requires access to the codebase, deployed URLs, and ideally Google Search Console data for confident diagnosis.
 - Treat recommendations that change URL structure, redirects, or canonical policy as production-impacting and review them before deployment.
+
+Relative canonical paths are valid when Next.js `metadataBase` resolves them to the intended absolute URL. Validate the final rendered canonical, status and indexability; a GSC exclusion label alone is not a defect or proof that a proposed fix will cause indexing. Sitemap `lastModified` must reflect real content changes, not the current build time. See Google JavaScript SEO guidance and the installed Next.js metadata API.

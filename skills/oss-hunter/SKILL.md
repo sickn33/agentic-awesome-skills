@@ -27,7 +27,7 @@ Ask your agent:
 When hunting for contributions, the agent follows this multi-stage protocol:
 
 ### Phase 1: Repository Discovery
-Use `web_search` or `gh api` to find trending repositories.
+Use available web search or `gh api` to discover candidates. The bundled helper finds recently pushed high-star repositories sorted by stars; this is not GitHub Trending or evidence of recent star growth. It lists issues only, not root-cause/mergeability analysis.
 Focus on:
 - Stars > 1000
 - Recent activity (pushed within 24 hours)

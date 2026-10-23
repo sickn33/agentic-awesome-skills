@@ -30,6 +30,8 @@ Use this skill when:
 - Querying logs with label-based filtering
 - Preferring lighter-weight alternative to ELK
 
+Promtail reached EOL on March 2, 2026; use [Grafana Alloy or another supported client](https://grafana.com/docs/loki/latest/send-data/promtail/) for new deployments. The 2.9/schema v11/loki-stack examples below are historical and must be migrated with the installed Loki/chart version, not pasted into current production. Retention for boltdb-shipper needs the appropriate compactor setup; table_manager settings alone do not prove expiry. Keep auth-disabled Loki loopback/private behind an authenticated gateway and restrict sensitive host log access. Persist shipper positions to avoid replay on container recreation. Docker discovery requires approved socket access, absent from the Compose fragment; do not grant it blindly. line_length must be explicitly extracted/computed before unwrap, parse errors need filtering and zero-denominator rates need a defined no-data policy. Validate alert delivery and resource limits before raising ingestion quotas.
+
 ## Prerequisites
 
 - Docker or Kubernetes
@@ -290,7 +292,7 @@ spec:
 ### Metric Queries
 
 ```logql
-# Count logs per second
+# Count logs in the five-minute window (use rate for per-second)
 count_over_time({job="application"}[5m])
 
 # Rate of errors
@@ -337,7 +339,7 @@ pipeline_stages:
   # Add labels from parsed fields
   - labels:
       level:
-      user_id:
+      # Keep user_id as parsed content/structured metadata, not an indexed label.
 
   # Modify timestamp
   - timestamp:

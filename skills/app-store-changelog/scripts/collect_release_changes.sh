@@ -3,11 +3,16 @@ set -euo pipefail
 
 since_ref="${1:-}"
 until_ref="${2:-HEAD}"
+until_ref="$(git rev-parse --verify --end-of-options "${until_ref}^{commit}")"
 
 if [[ -z "${since_ref}" ]]; then
-  if git describe --tags --abbrev=0 >/dev/null 2>&1; then
-    since_ref="$(git describe --tags --abbrev=0)"
+  if git describe --tags --abbrev=0 "${until_ref}" >/dev/null 2>&1; then
+    since_ref="$(git describe --tags --abbrev=0 "${until_ref}")"
   fi
+fi
+
+if [[ -n "${since_ref}" ]]; then
+  since_ref="$(git rev-parse --verify --end-of-options "${since_ref}^{commit}")"
 fi
 
 range=""
@@ -27,7 +32,7 @@ else
 fi
 
 printf "\n== Commits ==\n"
-git log --reverse --date=short --pretty=format:'%h|%ad|%s' ${range}
+git log --reverse --date=short --pretty=format:'%h|%ad|%s' "${range}"
 
 printf "\n\n== Files Touched ==\n"
-git log --reverse --name-only --pretty=format:'--- %h %s' ${range} | sed '/^$/d'
+git log --reverse --name-only --pretty=format:'--- %h %s' "${range}" | sed '/^$/d'

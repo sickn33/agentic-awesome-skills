@@ -1,0 +1,141 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "example-stop-001",
+  "product_direction": "Ship an AI support agent that replies to customers in production within two days, based on the founder's interview impressions.",
+  "mode": "standard_gate",
+  "stage": "idea",
+  "actor_boundary": {
+    "target_population": [
+      "Support teams handling customer requests"
+    ],
+    "operator": "Support team member",
+    "beneficiary": "Support team and customers receiving correct replies",
+    "machine_actor": "AI support agent",
+    "affected_people": [
+      "Customers receiving support replies"
+    ],
+    "excluded_groups": [
+      "Internal-only support drafting workflows"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Product Co.",
+    "project_owner": "Support experience team",
+    "issuer": "Example Product Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Customers receiving support replies",
+      "effect": "Unreviewed AI replies could give incorrect guidance and create escalation or recovery burden."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [
+      "Acceptable risk of customer-facing AI replies"
+    ],
+    "machine_supported_inputs": [
+      "Traceable support-failure artifacts",
+      "Observed customer reactions to human-reviewed drafts"
+    ],
+    "not_mechanized": [
+      "Risk tolerance for unreviewed customer-facing replies"
+    ],
+    "approval_gates": [
+      {
+        "gate_id": "risk-owner-reframe-approval",
+        "accountable_owner": "Product owner",
+        "condition": "Before the reframed question enters a new review."
+      }
+    ]
+  },
+  "unresolved_assumptions": [
+    "Whether any customer wants unreviewed AI replies rather than faster human-reviewed drafting."
+  ],
+  "combined_verdict": "stop_reframe",
+  "weakest_flow": "evidence",
+  "strongest_signal": "The founder can name three interviewees who complained about support load.",
+  "riskiest_claim": "Customers will accept AI-written replies without human review.",
+  "main_uncertainty": "Whether any real customer wants unreviewed AI replies at all.",
+  "confidence_level": "very_low",
+  "evidence_tier": "t0",
+  "main_trade_off": "Two days of build speed against untraceable evidence and customer-facing risk.",
+  "human_owned_decision": "risk",
+  "human_decision_record_id": "decision-example-002",
+  "evidence_receipt_ids": [
+    "founder-impressions-001"
+  ],
+  "reviews": {
+    "user": {
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "strongest_signal": "Interviewees describe support load as painful.",
+      "weakest_assumption": "Complaints about load imply acceptance of AI replies.",
+      "missing_evidence": "Any observed customer reaction to an AI-written reply.",
+      "disconfirming_evidence": "Customers escalate or churn when replies feel automated.",
+      "stop_condition": "No interviewee can describe a concrete recent support failure."
+    },
+    "evidence": {
+      "verdict": "stop_reframe",
+      "evidence_tier": "t0",
+      "strongest_signal": "Only the founder's memory of three conversations exists.",
+      "weakest_assumption": "Impressions recalled after the fact count as demand evidence.",
+      "missing_evidence": "Recordings, notes, tickets, or any traceable source artifact.",
+      "disconfirming_evidence": "Written notes contradict the recalled enthusiasm.",
+      "stop_condition": "No source artifact can be produced for any claimed conversation.",
+      "stop_reason_class": "core_evidence"
+    },
+    "business": {
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "strongest_signal": "Support cost is a plausible recurring expense to displace.",
+      "weakest_assumption": "Willingness to pay follows from willingness to complain.",
+      "missing_evidence": "Any pricing signal or budget owner for this problem.",
+      "disconfirming_evidence": "Prospects expect AI support to be free.",
+      "stop_condition": "No budget owner can be named for the purchase."
+    }
+  },
+  "next_smallest_action": "Rewrite the product question, then collect five traceable support-failure artifacts before any build step.",
+  "execution_boundary": {
+    "may_do": [
+      "Collect and file traceable evidence artifacts.",
+      "Draft the reframed product question for review."
+    ],
+    "must_not_do": [
+      "Write any product code.",
+      "Contact customers with an AI-written reply.",
+      "Commit to the two-day ship date."
+    ],
+    "must_ask": [
+      "Which named budget owner will confirm the reframed problem is worth paying for?"
+    ]
+  },
+  "human_approval_gates": [
+    {
+      "gate_id": "risk-owner-reframe-approval",
+      "accountable_owner": "Product owner",
+      "condition": "Before the reframed question enters a new review."
+    }
+  ],
+  "high_risk_actions": [
+    {
+      "action": "Send customer-facing AI replies without human review.",
+      "approval_gate": {
+        "gate_id": "risk-owner-reframe-approval",
+        "accountable_owner": "Product owner",
+        "condition": "Blocked until the reframed direction passes a new review with tier t2 or stronger evidence."
+      },
+      "rollback_plan": "Disable AI replies and route all tickets back to the human queue."
+    }
+  ],
+  "stop_conditions": [
+    "Any build work starts before the reframed question passes a new review.",
+    "Evidence collection substitutes recalled impressions for artifacts again."
+  ],
+  "context_pack_required": false,
+  "reframed_question": "Which recurring, traceable support failure costs a named budget owner enough that they would pay for a reviewed-by-human AI drafting workflow?"
+}

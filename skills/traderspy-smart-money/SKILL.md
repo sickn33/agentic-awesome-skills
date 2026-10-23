@@ -55,7 +55,7 @@ user asks about "BTC positions", pass `symbol: "BTC"` — the filter matches bot
 **Position rows**: `side` LONG / SHORT, `size` in coins, `entryPrice`, `markPrice`, `leverage`,
 `unrealizedPnl` (open rows) or `pnl` + `roi` (closed rows), `openTime` / `closeTime`, `isOpen`,
 `lastEvent` (`increase`, `partial_close`, or null when the last change was the open itself). Notional ≈ `size × markPrice`; use
-notional, not row count, when you say "whales are net long".
+notional, not row count, for the observed sample. Verify contract size/units for each instrument before aggregation; a leaderboard sample does not establish whole-market net exposure.
 
 **Freshness.** Binance and Bybit snapshots refresh every 5–15 minutes, Hyperliquid every 15 minutes
 plus live fills, OKX every 10–60 minutes. On a free-tier key the feed is delayed 15 minutes — if
@@ -83,7 +83,7 @@ losing".
 ## Workflows
 
 **"What are whales doing in SOL?"** → `get_positions` with `symbol`, `status: open`, `limit` 50.
-Sum notional by side, name the largest two or three accounts with entry and leverage, and note
+Paginate within an explicit budget if a universe-wide aggregate is required; otherwise label the first 50 rows as a sample. Sum comparable notionals by side, name the largest two or three accounts with entry and leverage, and note
 how recent the newest entries are. If open rows are few, add `status: closed` for the last day to
 show whether they have been exiting.
 

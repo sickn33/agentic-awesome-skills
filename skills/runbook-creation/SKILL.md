@@ -150,7 +150,9 @@ kubectl scale deployment worker --replicas=0 -n production
 
 **Expected output:** Deployments scaled to 0 pods.
 
-### Step 3 — Confirm Write Quiesce
+### Step 3 — Fence the Old Primary and Confirm Write Quiescence
+
+Before promotion, use the documented failover manager/fencing mechanism to ensure the old primary cannot accept writes, including after network recovery. Scaling two deployments and observing zero active queries is not proof of fencing or absence of other writers. If the primary is unreachable and fencing cannot be confirmed, stop and escalate; do not risk two primaries. Capture original replica counts/configuration for restoration.
 
 ```bash
 psql -h primary.db.internal -U dba -d postgres -c \
@@ -207,7 +209,7 @@ kubectl scale deployment worker --replicas=4 -n production
 
 ## Rollback
 
-If the promoted replica has issues, restore from the most recent backup:
+Promotion is not undone by restoring a backup. Establish the authoritative primary, fence other writers and obtain a DBA-approved data-recovery/rejoin plan. The following restores a separate RDS instance and may lose writes since the snapshot; it is not an automatic rollback for the self-managed PostgreSQL example:
 
 ```bash
 # Restore latest automated snapshot (RDS example)
@@ -222,6 +224,8 @@ If unresolved after 15 minutes:
 - **Primary:** @dba-lead — +1-555-0101
 - **Secondary:** @platform-oncall — +1-555-0102
 ````
+
+The shell fragments assume Linux/GNU date, curl, jq/openssl and authorized cluster/cloud access. Use bounded timeouts for network probes and protect collected logs/queries; a fresh temporary directory does not make raw incident data safe to publish.
 
 ## Automation Scripts for Common Operations
 
@@ -241,7 +245,9 @@ SERVICES=(
 EXIT_CODE=0
 
 for url in "${SERVICES[@]}"; do
-  HTTP_CODE=$(curl -so /dev/null -w '%{http_code}' --max-time 5 "$url" 2>/dev/null || echo "000")
+  if ! HTTP_CODE=$(curl -so /dev/null -w '%{http_code}' --max-time 5 "$url" 2>/dev/null); then
+    HTTP_CODE=000
+  fi
   if [ "$HTTP_CODE" -eq 200 ]; then
     printf "  OK    %s\n" "$url"
   else
@@ -261,8 +267,9 @@ exit $EXIT_CODE
 set -euo pipefail
 
 INCIDENT_ID="${1:?Usage: collect-logs.sh <incident-id>}"
-OUTDIR="/tmp/incident-${INCIDENT_ID}"
-mkdir -p "$OUTDIR"
+[[ "$INCIDENT_ID" =~ ^[A-Za-z0-9_-]+$ ]] || exit 2
+umask 077
+OUTDIR=$(mktemp -d "${TMPDIR:-/tmp}/incident-${INCIDENT_ID}.XXXXXX")
 
 echo "Collecting logs for incident $INCIDENT_ID..."
 
@@ -285,7 +292,7 @@ psql -h db.internal -U dba -d postgres -c \
 kubectl top pods -n production > "${OUTDIR}/pod-resources.log" 2>&1
 
 echo "Logs saved to $OUTDIR"
-tar czf "${OUTDIR}.tar.gz" -C /tmp "incident-${INCIDENT_ID}"
+tar czf "${OUTDIR}.tar.gz" -C "$(dirname "$OUTDIR")" "$(basename "$OUTDIR")"
 echo "Archive: ${OUTDIR}.tar.gz"
 ```
 
@@ -307,8 +314,12 @@ TODAY=$(date +%s)
 EXIT_CODE=0
 
 for domain in "${DOMAINS[@]}"; do
-  EXPIRY=$(echo | openssl s_client -servername "$domain" -connect "${domain}:443" 2>/dev/null \
-    | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+  if ! EXPIRY=$(echo | openssl s_client -servername "$domain" -connect "${domain}:443" 2>/dev/null \
+    | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2); then
+    printf "  FAIL  %s certificate unavailable\n" "$domain"
+    EXIT_CODE=1
+    continue
+  fi
   EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s 2>/dev/null || echo 0)
   DAYS_LEFT=$(( (EXPIRY_EPOCH - TODAY) / 86400 ))
 
@@ -333,15 +344,12 @@ set -euo pipefail
 echo "=== Disk Usage Before ==="
 df -h /
 
-# Remove old journal logs (> 7 days)
-journalctl --vacuum-time=7d 2>/dev/null || true
-
-# Clean Docker artifacts
-docker system prune -f --volumes 2>/dev/null || true
-
-# Remove old log files
-find /var/log -name "*.gz" -mtime +7 -delete 2>/dev/null || true
-find /tmp -type f -mtime +3 -delete 2>/dev/null || true
+# Inventory first; no deletion in this diagnostic example.
+journalctl --disk-usage
+docker system df
+find /var/log -type f -name "*.gz" -mtime +7 -print
+# Use service-specific approved retention and reviewed exact paths for cleanup.
+# Do not prune volumes or globally delete /tmp; backups/log evidence may be needed.
 
 echo "=== Disk Usage After ==="
 df -h /

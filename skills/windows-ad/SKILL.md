@@ -104,6 +104,6 @@ bloodhound-python -d domain.local -u user -p pass -c All -ns <DC>
 ## Limitations
 
 - Domain attacks can destabilize production AD; stage in labs first.
-- Relay attacks need signing-disabled targets; modern defaults block many paths.
+- Relay feasibility depends on the target protocol’s signing, channel-binding and authentication protections; one signing setting is not a universal relay verdict. Record the actual service and protection state rather than assuming a path works.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).

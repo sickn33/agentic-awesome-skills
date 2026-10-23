@@ -38,9 +38,7 @@ _Source: [connerkward/screenstudio-alternative-skill](https://github.com/connerk
 
 # screenstudio-alt
 
-The skill's code lives in this directory (`polish.py`, `render.py`, `studio.py`,
-`events-log.swift`, test fixtures, etc.). Published publicly as
-`connerkward/screen-studio-alternative` via the publish-skill skill.
+This AAS tree contains this guide only. The listed Python/Swift scripts, fixtures, shell wrappers and studio UI are not bundled. Obtain and review the exact upstream source/license revision before installing or invoking them; discover the actual paths and CLI options. The following describes upstream components, not tools this entry installed.
 
 Two components:
 
@@ -76,6 +74,10 @@ existing dailies corpus.
   aspect, frame styling. Always-smooth synthetic cursor + click ripple + real recorded
   click sound (CC0 #735771). Export uses render.py. Free port, local. (Keystroke overlay
   exists in the engine but is off by default.)
+
+## Capture and output boundaries
+
+An existing screen recording does not authorize new screen/audio/input logging. Confirm the selected surfaces, duration and destination before capture; secure-input filtering is not a complete secret-redaction guarantee. Minimize/private-store event logs, review footage and overlays for sensitive content, and use new output files. Uploading or publishing requires the corresponding user authorization. Report actual output dimensions, duration and tracks rather than upstream sharpness/performance claims.
 
 ## Easy path
 

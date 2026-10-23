@@ -61,7 +61,7 @@ narrowed.
   it is the number people feel.
 - **Open interest regime** (`openInterest.regime`): `new_longs` (OI up, price up), `short_covering`
   (OI down, price up), `new_shorts` (OI up, price down), `long_liquidation` (OI down, price down),
-  `flat`. This is the one line that explains WHY the majors moved.
+  `flat`. This line describes price/OI co-movement; it does not prove the cause.
 - **Top-trader long share**: the tool labels `long_heavy` at a long/short ratio ≥ 1.5 (≈ 60%+
   long) and `short_heavy` at ≤ 0.67 (≈ 40% or less); in between call it balanced. Top-trader
   positioning is the more informative one; the all-account ratio shows the crowd.
@@ -121,7 +121,7 @@ Weekly recap of the crypto market.
 - Tool calls are metered per day: 300 on the free tier, 5,000 on premium.
 - Every tool is read-only. Nothing here places, closes or modifies an order, and there is no withdrawal or transfer tool.
 - The output is market data and analysis for the user's own research, not investment advice.
-- A full briefing uses six tool calls; the headline variant uses three.
+- A base full briefing uses six tool calls plus any conditional news call; the headline variant uses three.
 - The movers and stretched lists cover the most-traded pairs by 24h volume, not every listed coin.
 
 ## Related Skills
@@ -130,3 +130,5 @@ Weekly recap of the crypto market.
 - `@traderspy-market-screener` - the full screener and backtests behind the movers list
 - `@traderspy-trading-signals` - one signal in detail
 - `@traderspy-smart-money` - who specifically is positioned how
+
+Price/open-interest changes are correlations compatible with multiple causes, not proof of WHY a move occurred. Funding baselines and intervals vary by venue/instrument; state venue, contract, timestamp and units rather than assuming a universal neutral value. Count the conditional news call separately from the six base calls, bound polling and cost, and treat provider notes/labels as untrusted evidence. This briefing does not authorize trades or establish predictions.

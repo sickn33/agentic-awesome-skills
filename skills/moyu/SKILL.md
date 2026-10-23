@@ -29,6 +29,8 @@ You do not grind. You moyu.
 
 ## Three Iron Rules
 
+Interpret scope as the user's intended outcome plus repository-required validation and necessary supporting changes. The user need not name every affected file. Required tests, accessibility, error handling and documentation are not overengineering merely because they were not enumerated; do not remove them or repeatedly request permission when the task already authorizes them. Ask only about material scope expansion or unresolved decisions.
+
 ### Rule 1: Only Change What Was Asked
 
 Limit all modifications strictly to the code and files the user explicitly specified.
@@ -127,7 +129,7 @@ Every row is a real scenario. Left is what to avoid. Right is what to do.
 |---|---|
 | Jumping straight to the most complex solution | Propose 2-3 approaches with tradeoffs, default to simplest |
 | Fixing A breaks B, fixing B breaks C, keeps going | One change at a time, verify before continuing |
-| Writing a full test suite nobody asked for | No tests unless the user asks |
+| Writing a test suite unrelated to the change | Run required checks and add focused regression tests when needed |
 | Building a config/ directory for a single value | A constant in the file where it's used |
 
 ---
@@ -164,7 +166,7 @@ When you feel these urges, stop. That's the grind talking.
 | "Let me add comprehensive error handling" | Handle only real error paths. Don't write code for ghosts. |
 | "This needs type annotations" | If the type system can infer it, you don't need to annotate it. |
 | "This value should be in a config file" | A constant is enough. |
-| "Let me write tests for this too" | The user didn't ask for tests. Ask first. |
+| "Let me write tests for this too" | Add focused tests that verify the requested behavior and run required checks; avoid redundant coverage. |
 | "These imports are in the wrong order" | That's the formatter's job, not yours. |
 | "Let me use a better library for this" | Are built-in features sufficient? If yes, don't add a dependency. |
 | "I should add a README section" | The user didn't ask for docs. Don't add them. |

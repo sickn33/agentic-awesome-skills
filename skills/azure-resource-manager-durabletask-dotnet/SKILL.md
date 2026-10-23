@@ -21,8 +21,7 @@ dotnet add package Azure.ResourceManager.DurableTask
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**: Stable v1.0.0 (2025-11-03), Preview v1.0.0-beta.1 (2025-04-24)
-**API Version**: 2025-11-01
+These snippets target the historical 1.0 API shape; they are not a claim about the latest version. Pin a reviewed package version and check its generated types and API version against [Microsoft's SDK reference](https://learn.microsoft.com/en-us/dotnet/api/azure.resourcemanager.durabletask.durabletaskschedulerresource?view=azure-dotnet) before adapting the examples.
 
 ## Environment Variables
 
@@ -297,11 +296,11 @@ try
 }
 catch (RequestFailedException ex) when (ex.Status == 409)
 {
-    Console.WriteLine("Scheduler already exists");
+    Console.WriteLine($"Conflict: {ex.ErrorCode}; inspect the actual resource/operation state.");
 }
 catch (RequestFailedException ex) when (ex.Status == 404)
 {
-    Console.WriteLine("Resource group not found");
+    Console.WriteLine($"Not found: {ex.ErrorCode}; inspect the target resource ID.");
 }
 catch (RequestFailedException ex)
 {
@@ -357,9 +356,8 @@ var taskHub = taskHubOp.Value;
 
 Console.WriteLine($"Task Hub: {taskHub.Data.Name}");
 
-// Cleanup
-await taskHub.DeleteAsync(WaitUntil.Completed);
-await scheduler.DeleteAsync(WaitUntil.Completed);
+// Optional cleanup is intentionally separate: delete only resources created by
+// this task, after verifying their IDs and obtaining the required authorization.
 ```
 
 ## Related SDKs

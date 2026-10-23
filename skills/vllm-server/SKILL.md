@@ -31,6 +31,10 @@ Use this skill when:
 - Running multi-GPU inference with tensor or pipeline parallelism
 - Deploying quantized models to reduce GPU memory requirements
 
+## Version and exposure boundary
+
+Pin a reviewed vLLM release, model revision and container digest. Validate the exact release’s Python/CUDA/hardware requirements and flags; the versions, memory figures and model/quantization examples below are historical sketches, not fit guarantees. Model weights, activations and KV cache must fit together. Keep examples loopback-only; remote service needs approved authentication, TLS, quotas and network policy. Never use the sample key as a real secret.
+
 ## Prerequisites
 
 - NVIDIA GPU(s) with CUDA 12.1+ (A100/H100 recommended for production)
@@ -46,7 +50,7 @@ pip install vllm
 
 # Serve a model (OpenAI-compatible API)
 vllm serve meta-llama/Llama-3.1-8B-Instruct \
-  --host 0.0.0.0 \
+  --host 127.0.0.1 \
   --port 8000 \
   --api-key your-secret-key
 
@@ -65,7 +69,7 @@ curl http://localhost:8000/v1/chat/completions \
 ```bash
 docker run --runtime nvidia --gpus all \
   -v ~/.cache/huggingface:/root/.cache/huggingface \
-  -p 8000:8000 \
+  -p 127.0.0.1:8000:8000 \
   --ipc=host \
   vllm/vllm-openai:latest \
   --model meta-llama/Llama-3.1-8B-Instruct \
@@ -85,7 +89,7 @@ services:
     volumes:
       - model-cache:/root/.cache/huggingface
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     ipc: host
     command: >
       --model meta-llama/Llama-3.1-70B-Instruct
@@ -156,14 +160,14 @@ vllm serve meta-llama/Llama-3.1-8B-Instruct \
 
 ```bash
 # Maximize throughput for batch workloads
-vllm serve <model> \
-  --max-num-seqs 256 \          # max concurrent sequences
-  --max-num-batched-tokens 8192 \ # tokens per batch
-  --gpu-memory-utilization 0.95 \ # use 95% VRAM
+vllm serve REPLACE_WITH_REVIEWED_MODEL \
+  --max-num-seqs 256 \
+  --max-num-batched-tokens 8192 \
+  --gpu-memory-utilization 0.95 \
   --swap-space 4                  # CPU swap (GiB)
 
 # Minimize latency for interactive use
-vllm serve <model> \
+vllm serve REPLACE_WITH_REVIEWED_MODEL \
   --max-num-seqs 32 \
   --enforce-eager              # disable CUDA graph capture
 ```

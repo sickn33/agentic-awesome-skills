@@ -64,6 +64,8 @@ work should be *repeatable, budgeted, and auditable*.
 - Cloud providers read standard env vars from the shell;
   `terminal(command="nika doctor")` diagnoses and prints exact fix commands
 
+Confirm the installed Nika version and its actual CLI schema; the 0.98/0.99 examples and provider/model IDs below are historical, not verified current API promises. Hermes terminal/process wrappers are host-specific pseudocode. A mock model does not make arbitrary workflows offline: shell, fetch and MCP tasks can still access networks or mutate files. Inspect every task/tool argument and secret/data destination before mock or real execution, and restrict scope/credentials. Workflows with model calls are repeatable definitions, not deterministic outputs. Budget protection can overshoot and does not cover arbitrary tool-side charges. Redact traces before sharing; a valid hash chain does not authenticate the truth or completeness of recorded events. The skill MIT notice and engine AGPL claim refer to distinct artifacts and must be verified independently before redistribution.
+
 ## How to Run
 
 Prove the toolchain offline first (no key, no network):
@@ -109,7 +111,7 @@ terminal(command="nika check flow.nika.yaml --json", workdir="~/project")
 ```
 
 Findings carry `NIKA-XXXX` codes that explain themselves via
-`nika explain NIKA-XXXX`. Exit 0 = green, safe to run. Fix findings before
+`nika explain NIKA-XXXX`. Exit 0 means the implemented static checks passed; it is not permission or proof that execution is safe. Fix findings before
 running — never suppress them.
 
 ### Authoring a workflow

@@ -87,6 +87,8 @@ BatchClient batchClient = new BatchClientBuilder()
 
 ## Pool Operations
 
+Confirm account/tenant, pool/job IDs, SKU/image availability, resource limits and cost before writes. Image examples are not proof the pool supports that image; select from current Batch supported images. Task command lines are not implicitly run in a shell; use the appropriate explicit shell only for reviewed fixed commands (Linux examples below differ from Windows `cmd /c`). Never interpolate untrusted task input into shell text. Set bounded allocation/task/poll deadlines, inspect per-task failures/exit codes and restrict identities. Delete/reboot/terminate only authorized resources after preserving output.
+
 ### Create Pool
 
 ```java
@@ -217,7 +219,7 @@ deletePoller.waitForCompletion();
 ### Create Single Task
 
 ```java
-BatchTaskCreateParameters task = new BatchTaskCreateParameters("task1", "echo 'Hello World'");
+BatchTaskCreateParameters task = new BatchTaskCreateParameters("task1", "/bin/bash -c 'echo Hello World'");
 batchClient.createTask("myJobId", task);
 ```
 
@@ -240,20 +242,20 @@ batchClient.createTask("myJobId", new BatchTaskCreateParameters("task2", "cmd /c
 
 ```java
 List<BatchTaskCreateParameters> taskList = Arrays.asList(
-    new BatchTaskCreateParameters("task1", "echo Task 1"),
-    new BatchTaskCreateParameters("task2", "echo Task 2"),
-    new BatchTaskCreateParameters("task3", "echo Task 3")
+    new BatchTaskCreateParameters("task1", "/bin/bash -c 'echo Task 1'"),
+    new BatchTaskCreateParameters("task2", "/bin/bash -c 'echo Task 2'"),
+    new BatchTaskCreateParameters("task3", "/bin/bash -c 'echo Task 3'")
 );
 BatchTaskGroup taskGroup = new BatchTaskGroup(taskList);
 BatchCreateTaskCollectionResult result = batchClient.createTaskCollection("myJobId", taskGroup);
 ```
 
-### Create Many Tasks (no limit)
+### Create Many Tasks (SDK batching; service quotas still apply)
 
 ```java
 List<BatchTaskCreateParameters> tasks = new ArrayList<>();
 for (int i = 0; i < 1000; i++) {
-    tasks.add(new BatchTaskCreateParameters("task" + i, "echo Task " + i));
+    tasks.add(new BatchTaskCreateParameters("task" + i, "/bin/bash -c 'echo Task " + i + "'"));
 }
 batchClient.createTasks("myJobId", tasks);
 ```

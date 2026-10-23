@@ -18,7 +18,7 @@ Automate Discord operations through Composio's Discord/Discordbot toolkits via R
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The endpoint must be connected and authenticated according to the host; each service connection still needs its own authorized account and scopes.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `discordbot` (bot operations) or `discord` (user operations)
@@ -199,3 +199,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Resolve the intended guild/channel/recipient and content before sending messages, DMs or webhook posts; only send when the user authorized communication. Role changes require an approved permission scope: never grant ADMINISTRATOR as a convenience. Suppress unintended mentions with the available allowed-mentions controls. Keep webhook tokens private and inspect state before retrying a send with an unknown result.

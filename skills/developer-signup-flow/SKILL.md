@@ -34,7 +34,7 @@ Review the `/devmarketing-skills/skills/developer-audience-context` skill to und
 
 For developer tools, GitHub OAuth should be your primary option. Here's why:
 
-1. **Identity verification built-in** - Active GitHub accounts have commit history, repos, and social proof
+1. **Account authentication** - OAuth authenticates a GitHub account; public activity does not verify a person, employer or business entitlement
 2. **Scope familiarity** - Developers understand GitHub's permission model
 3. **Profile data** - You get username, email, and can infer experience level from public activity
 4. **Trust signal** - GitHub is where developers already live
@@ -83,7 +83,7 @@ Email+password signup should exist but not dominate. It serves:
 
 **If you support email signup:**
 - Allow signup with just email—send magic link, don't require password creation
-- Never require email verification before showing the dashboard
+- A read-only preview may precede verification; verify ownership before account linking, secrets, paid resources or sensitive workspace access
 - Offer "Set password later" for developers who prefer magic links
 
 ## Reducing Form Fields
@@ -135,13 +135,13 @@ For each field you want to add, answer:
 - What decision does this field enable that can't wait?
 - What's the conversion cost of this field?
 
-Research suggests each additional required field reduces conversion by 5-10%.
+Measure field impact in your own funnel; no universal per-field conversion penalty is established here.
 
 ## API Key Generation UX
 
 ### Immediate Key Generation
 
-Developers sign up to write code. Show them an API key immediately.
+Developers sign up to write code. Offer a scoped sandbox key after identity and abuse controls; test credentials remain secrets even when they cannot move real money.
 
 **Good implementation (Stripe):**
 1. OAuth complete
@@ -170,7 +170,7 @@ sk_test_xxxxxxxxxxxxxxxxxxxx  [Copy]
 - Show key in monospace font
 - Include one-click copy button
 - Show key in context (code example)
-- Test keys visible by default
+- Reveal newly created sandbox keys only in an authenticated session; exclude all keys from analytics, replay, logs and URLs; support rotation and revocation
 - Production keys behind "reveal" click
 - Never require downloading keys to a file
 
@@ -207,7 +207,7 @@ Ask one question, then customize the experience:
 
 ### Framework/Language Detection
 
-If GitHub OAuth is used, check public repos for language patterns:
+With disclosed, optional personalization and least-privilege scopes, public repository language patterns may suggest a preference; let developers override it:
 
 ```
 Primary language: Python (45% of repos)
@@ -335,9 +335,11 @@ Test in this order (highest impact first):
 5. Default quickstart language
 6. Welcome email timing
 
+The numeric benchmarks above are illustrative planning targets, not sourced industry measurements.
+
 ## Examples from Real Developer Tools
 
-### Excellent Signup: Vercel
+### Illustrative Signup Pattern: Vercel-style
 
 1. "Continue with GitHub" dominates
 2. OAuth completes in one click
@@ -345,7 +347,7 @@ Test in this order (highest impact first):
 4. No questions asked
 5. First deploy possible within 60 seconds
 
-### Excellent Signup: Stripe
+### Illustrative Signup Pattern: Stripe-style
 
 1. Email-based but minimal
 2. No email verification before dashboard

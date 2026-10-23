@@ -44,12 +44,14 @@ Lines:
 Early Payment Discount (Odoo 16+):
   Discount %: 2
   Discount Days: 10
-  Balance Sheet Accounts:
-    - Gain: 4900 Early Payment Discounts Granted
-    - Loss: 5900 Early Payment Discounts Received
+  Tax reduction: Select the localization-approved treatment
+
+Accounting → Configuration → Settings → Default Accounts:
+  Cash Discount Gain account: [localization-approved account]
+  Cash Discount Loss account: [localization-approved account]
 ```
 
-> **Note (v16+):** Use the built-in **Early Payment Discount** field instead of the old split-line workaround. Odoo now posts the discount automatically when the customer pays within the discount window and generates correct accounting entries.
+> **Note (v16+):** Use the built-in **Early Payment Discount** field instead of the old split-line workaround. Configure the discount accounts and tax treatment, then test both early and late payments; automatic entries depend on the configuration and reconciliation workflow.
 
 ### Example 2: Fiscal Position for EU VAT (B2B Intra-Community)
 
@@ -58,12 +60,12 @@ Menu: Accounting → Configuration → Fiscal Positions → New
 
 Name: EU Intra-Community B2B
 Auto-detection: ON
-  - Country Group: Europe
-  - VAT Required: YES (customer must have EU VAT number)
+  - Country Group: [validated EU member-state group, not all of Europe]
+  - VAT Required: YES (also validate registration and transaction eligibility)
 
 Tax Mapping:
-  Tax on Sales (21% VAT) → 0% Intra-Community VAT
-  Tax on Purchases      → 0% Reverse Charge
+  Domestic tax → localization-approved intra-community tax
+  Purchase tax → localization-approved reverse-charge tax with required reporting tags
 
 Account Mapping:
   (Leave empty unless your localization requires account remapping)
@@ -103,4 +105,6 @@ Action:
 - Does not cover **multi-currency revaluation** or foreign exchange gain/loss accounting in depth.
 - **Country-specific e-invoicing** (CFDI, FatturaPA, SAF-T) requires additional localization modules — use `@odoo-l10n-compliance` for those.
 - Payroll accounting integration (salary journals, deduction accounts) is not covered here — use `@odoo-hr-payroll-setup`.
-- Odoo Community Edition does not include the full **lock dates** feature; some controls are Enterprise-only.
+- Menu labels, lock-date controls and fields vary by version, edition and installed modules. Establish those inputs before providing exact navigation.
+- These are configuration examples, not tax advice. A qualified accountant must approve accounts, tax eligibility and reporting treatment before live posting; zero VAT alone does not implement reverse-charge reporting.
+- See [Odoo 17 cash discount configuration](https://www.odoo.com/documentation/17.0/applications/finance/accounting/customer_invoices/cash_discounts.html).

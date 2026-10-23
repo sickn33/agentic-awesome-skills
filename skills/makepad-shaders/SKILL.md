@@ -42,7 +42,7 @@ Refer to the local files for detailed documentation:
 
 ## Advanced Patterns
 
-For production-ready shader patterns, see the `_base/` directory:
+The upstream `_base/` and community pattern collections are not bundled. The table below is an upstream navigation list, not evidence these examples exist locally:
 
 | Pattern | Description |
 |---------|-------------|
@@ -67,7 +67,7 @@ Community contributions: `./community/`
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
    - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
-   - Still answer based on SKILL.md patterns + built-in knowledge
+   - Use the inline patterns only as version-dependent sketches and label uncertain API details; do not claim unavailable documentation was checked
 3. If reference file exists, incorporate its content into the answer
 
 ## Key Patterns

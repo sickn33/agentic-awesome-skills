@@ -195,6 +195,10 @@ Skills: bullmq-specialist, upstash-qstash
 Skills: clickhouse-io, dbt-transformation-patterns
 ```
 
+## Operational boundaries
+
+Select only needed phases and read the actual specialized skill before use. For migrations, identify the exact database/account, backup and tested restore path, lock/downtime effects and rollback or forward-repair plan. Rehearse against representative nonproduction data and verify row counts/invariants and application compatibility. Use least-privileged credentials and synthetic seeds; do not export private production records as test data. Query-plan commands that execute statements need the same scope as those statements. A configured backup is not a verified restore.
+
 ## Quality Gates
 
 - [ ] Schema designed and reviewed

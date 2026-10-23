@@ -98,6 +98,8 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Workflow:** Mentee goal → Match → Sessions → Mid review → Close with rating
 
+Session and end dates may be unknown for proposed pairs or completed programmes; omit them rather than inventing dates. Validate actual sessions occur on/after start and before an actual end; counts must be nonnegative whole sessions. Record whether End Date is planned or actual. Agree matching consent and feedback access; a private development note or informal rating must not become an automatic performance decision.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -122,21 +124,21 @@ that need a number, date or currency format applied.
 
 ```csv
 Mentorship Pair,Department,End Date,Focus Area,Last Session,Mentee Goal,Mentee Name,Mentor Name,Mentorship ID,Next Session,Overall Rating,Progress Notes,Sessions Completed,Sessions Planned,Start Date,Status
-Priya Nair + Rohit Verma,Delivery,2026-11-27,Stakeholder management and commercial conversations.,2026-01-08,Lead two client calls end to end this quarter.,Priya Nair,Rohit Verma,,2026-01-22,4,Two of four goals on track. Delegation still needs work.,5,12,2026-02-02,Active
+Priya Nair + Rohit Verma,Delivery,2026-11-27,Stakeholder management and commercial conversations.,2026-03-08,Lead two client calls end to end this quarter.,Priya Nair,Rohit Verma,,2026-03-22,4,Two of four goals on track. Delegation still needs work.,5,12,2026-02-02,Active
 ```
 
 ```sql
 CREATE TABLE mentorship_program (
   mentorship_pair VARCHAR(255),
   department VARCHAR(255),
-  end_date DATE NOT NULL,
+  end_date DATE,
   focus_area VARCHAR(255),
-  last_session DATE NOT NULL,
+  last_session DATE,
   mentee_goal VARCHAR(255),
   mentee_name VARCHAR(255),  -- relation -> target record
   mentor_name VARCHAR(255),  -- relation -> target record
   mentorship_id SERIAL PRIMARY KEY,
-  next_session DATE NOT NULL,
+  next_session DATE,
   overall_rating VARCHAR(255),
   progress_notes TEXT,
   sessions_completed NUMERIC NOT NULL,
@@ -175,9 +177,6 @@ CREATE INDEX idx_mentorship_program_status ON mentorship_program (status);
       "Status": { "type": "string" }
   },
   "required": [
-      "End Date",
-      "Last Session",
-      "Next Session",
       "Sessions Completed",
       "Sessions Planned",
       "Start Date",
@@ -218,12 +217,12 @@ and anything pointing at another table stays `relation`.
 | 2 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 3 | End Date | `date` | `DATE` | `string, format: date` | Date | `2026-11-27` |
 | 4 | Focus Area | `text` | `VARCHAR(255)` | `string` | Text | `Stakeholder management and commercial conversations.` |
-| 5 | Last Session | `date` | `DATE` | `string, format: date` | Date | `2026-01-08` |
+| 5 | Last Session | `date` | `DATE` | `string, format: date` | Date | `2026-03-08` |
 | 6 | Mentee Goal | `text` | `VARCHAR(255)` | `string` | Text | `Lead two client calls end to end this quarter.` |
 | 7 | Mentee Name | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `Priya Nair` |
 | 8 | Mentor Name | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `Rohit Verma` |
 | 9 | Mentorship ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
-| 10 | Next Session | `date` | `DATE` | `string, format: date` | Date | `2026-01-22` |
+| 10 | Next Session | `date` | `DATE` | `string, format: date` | Date | `2026-03-22` |
 | 11 | Overall Rating | `text` | `VARCHAR(255)` | `string` | Text | `4` |
 | 12 | Progress Notes | `long_text` | `TEXT` | `string` | Text | `Two of four goals on track. Delegation still needs work.` |
 | 13 | Sessions Completed | `number` | `NUMERIC` | `number` | Number | `5` |
@@ -317,7 +316,7 @@ We want to run mentoring for people joining the delivery team.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

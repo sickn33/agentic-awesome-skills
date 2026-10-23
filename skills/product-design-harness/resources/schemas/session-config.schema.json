@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/session-config.schema.json",
+  "title": "UX3 Session Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "working_language",
+    "canonical_identifiers",
+    "fallback_language"
+  ],
+  "properties": {
+    "working_language": {
+      "type": "string",
+      "enum": ["en", "zh-TW", "zh-CN", "ja", "ko", "es", "fr", "de", "pt"]
+    },
+    "canonical_identifiers": {
+      "type": "string",
+      "const": "en"
+    },
+    "fallback_language": {
+      "type": "string",
+      "const": "en"
+    }
+  }
+}

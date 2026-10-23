@@ -188,7 +188,7 @@ Drop a message in #help or mention @moderators
 | Role | How to Get | Permissions |
 |------|------------|-------------|
 | **New Member** | Auto on join | Limited channels |
-| **Member** | Verify or time-based | Full access |
+| **Member** | Verify or time-based | Intended member channels only; no moderation/admin rights |
 | **Contributor** | PR merged, active helper | Badge, special channel |
 | **Moderator** | Invited | Moderation powers |
 | **Admin** | Core team | Full access |
@@ -273,7 +273,7 @@ Schedule regular engagement:
 ## Reporting
 
 DM any @moderator or use the report feature.
-All reports are confidential.
+Limit reports to authorized moderators on a need-to-know basis. Explain retention, investigation/escalation needs and platform access limits; do not promise absolute confidentiality.
 ```
 
 ### Moderation Playbook
@@ -364,6 +364,8 @@ Identify and empower super-users:
 
 ---
 
+The health thresholds above are illustrative targets, not validated industry benchmarks. Define active/retained, observation windows, timezone/support coverage and cohort denominators before comparing them. Moderation severity may justify skipping warning stages; document evidence, conflict-of-interest handling and an appeal route.
+
 ## Automation
 
 ### Useful Bots (Discord)
@@ -375,6 +377,8 @@ Identify and empower super-users:
 | **Ticket Tool** | Support ticket system |
 | **GitHub Bot** | Repo activity notifications |
 | **YAGPDB** | Advanced moderation, custom commands |
+
+Installing bots, granting permissions, scheduling posts, sending DMs/pings and changing member access require authorization for the server, recipient and operation. Minimize bot scopes/data collection and support opt-outs; drafting a community plan does not send anything.
 
 ### Automation Ideas
 

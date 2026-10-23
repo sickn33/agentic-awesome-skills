@@ -79,7 +79,7 @@ pip install semgrep
 semgrep --config=auto --error
 
 # SonarQube with Docker
-docker run -d --name sonarqube -p 9000:9000 sonarqube:latest
+docker run -d --name sonarqube -p 127.0.0.1:9000:9000 sonarqube:REPLACE_WITH_REVIEWED_VERSION
 
 # CodeQL CLI setup
 gh extension install github/gh-codeql
@@ -93,6 +93,8 @@ codeql database create mydb --language=python
 - CodeQL Setup Guide - Query development and workflows
 
 ## Templates & Assets
+
+The following templates, scripts and referenced Semgrep rules are not bundled in this tree. Obtain and inspect actual upstream material before using dependent commands; do not claim they ran from this catalog. Historical action refs and tool versions below require maintained immutable replacements.
 
 - semgrep-config.yml - Production-ready Semgrep configuration
 - sonarqube-settings.xml - SonarQube quality profile template
@@ -163,6 +165,7 @@ rules:
     pattern: jwt.encode($DATA, "...", ...)
     message: JWT secret should not be hardcoded
     severity: ERROR
+    languages: [python]
 ```
 
 ### Compliance Scanning
@@ -176,7 +179,7 @@ semgrep --config p/pci-dss --json -o pci-scan-results.json
 ### High False Positive Rate
 - Review and tune rule sensitivity
 - Add path filters to exclude test files
-- Use nostmt metadata for noisy patterns
+- Use documented rule/path exclusions only for evidence-backed false positives; record rationale and expiry
 - Create organization-specific rule exceptions
 
 ### Performance Issues

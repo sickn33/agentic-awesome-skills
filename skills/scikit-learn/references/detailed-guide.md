@@ -11,15 +11,17 @@ This skill provides comprehensive guidance for machine learning tasks using scik
 
 ```bash
 # Install scikit-learn using uv
-uv uv pip install scikit-learn
+uv pip install scikit-learn
 
 # Optional: Install visualization dependencies
-uv uv pip install matplotlib seaborn
+uv pip install matplotlib seaborn
 
 # Commonly used with
-uv uv pip install pandas numpy
+uv pip install pandas numpy
 ```
 
+
+Use a supported pinned sklearn version; `sparse_output` requires1.2+. Dense one-hot output below fits GradientBoostingClassifier but can exhaust memory at high cardinality: bound categories/data size or choose an estimator with compatible sparse input. HalvingGridSearchCV and IterativeImputer require their experimental enable imports in versions where still experimental. Split by time/group where needed rather than applying random stratification universally, and fit preprocessing only within training folds. Treat pickle/joblib models as executable trusted artifacts, never load untrusted model files.
 
 ## Quick Start
 
@@ -71,7 +73,7 @@ numeric_transformer = Pipeline([
 
 categorical_transformer = Pipeline([
     ('imputer', SimpleImputer(strategy='most_frequent')),
-    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+    ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
 ])
 
 # Combine transformers
@@ -125,7 +127,7 @@ Discover patterns in unlabeled data through clustering and dimensionality reduct
 
 **Dimensionality reduction:**
 - **Linear**: PCA, TruncatedSVD, NMF
-- **Manifold learning**: t-SNE, UMAP, Isomap, LLE
+- **Manifold learning**: t-SNE, Isomap, LLE; UMAP is a separate `umap-learn` package, not core scikit-learn
 - **Feature extraction**: FastICA, LatentDirichletAllocation
 
 **When to use:**
@@ -222,7 +224,7 @@ Build reproducible, production-ready ML workflows.
 
 ## Reference Documentation
 
-This skill includes comprehensive reference files for deep dives into specific topics:
+Only this detailed guide is bundled here. The historical per-topic filenames below describe upstream material that is absent from this catalog tree; use official documentation or provide/review those files before relying on them:
 
 ### Quick Reference
 **File:** `references/quick_reference.md`
@@ -348,16 +350,20 @@ This skill includes comprehensive reference files for deep dives into specific t
 
 2. **Find optimal number of clusters**
    ```python
+   import numpy as np
    from sklearn.cluster import KMeans
    from sklearn.metrics import silhouette_score
 
    scores = []
-   for k in range(2, 11):
+   candidates = range(2, min(11, len(X_scaled)))
+   if len(X_scaled) < 3:
+       raise ValueError("Need at least three samples for silhouette comparison")
+   for k in candidates:
        kmeans = KMeans(n_clusters=k, random_state=42)
        labels = kmeans.fit_predict(X_scaled)
        scores.append(silhouette_score(X_scaled, labels))
 
-   optimal_k = range(2, 11)[np.argmax(scores)]
+   optimal_k = list(candidates)[np.argmax(scores)]
    ```
 
 3. **Apply clustering**
@@ -368,6 +374,7 @@ This skill includes comprehensive reference files for deep dives into specific t
 
 4. **Visualize with dimensionality reduction**
    ```python
+   import matplotlib.pyplot as plt
    from sklearn.decomposition import PCA
 
    pca = PCA(n_components=2)

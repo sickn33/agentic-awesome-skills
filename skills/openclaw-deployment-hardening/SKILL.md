@@ -32,7 +32,7 @@ Add mandatory controls to CI before artifacts are promoted:
 4. SBOM generation and artifact signing.
 5. Policy check that blocks deploy when controls fail.
 
-Example CI step order:
+Example CI step order (run in a CI shell that stops on failure, with reviewed/pinned tools and an image already built and its reviewed sha256 digest supplied as IMAGE_DIGEST):
 
 ```bash
 # Build
@@ -40,11 +40,14 @@ npm ci
 npm run build
 
 # Security gates
-trivy fs .
-trivy image my-registry/openclaw:${GIT_SHA}
-syft my-registry/openclaw:${GIT_SHA} -o spdx-json > sbom.json
-cosign sign --key cosign.key my-registry/openclaw:${GIT_SHA}
+trivy fs --scanners vuln,secret --severity HIGH,CRITICAL --exit-code 1 .
+trivy image --severity HIGH,CRITICAL --exit-code 1 "my-registry/openclaw@${IMAGE_DIGEST}"
+syft "my-registry/openclaw@${IMAGE_DIGEST}" -o spdx-json > sbom.json
+# Keep signing keys out of source; sign the exact digest scanned above.
+cosign sign --key /secure/path/cosign.key "my-registry/openclaw@${IMAGE_DIGEST}"
 ```
+
+Trivy reports findings without failing by default; explicit `--exit-code` makes the examples gates. Pin and record the scanned digest, use that same digest for SBOM/signing/promotion, and verify signatures against an explicitly trusted key or identity. These commands do not implement the full pipeline alone. See [Trivy exit-code behavior](https://trivy.dev/docs/latest/configuration/others/).
 
 ## Lock Down Container Runtime
 

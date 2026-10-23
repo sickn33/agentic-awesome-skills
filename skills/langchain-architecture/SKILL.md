@@ -98,6 +98,10 @@ Hooks for logging, monitoring, and debugging.
 - Error handling
 - Custom metrics collection
 
+## Version and execution scope
+
+The inline code uses legacy LangChain APIs/imports. LangChain v1 moved legacy chains and related functionality into langchain-classic; do not install latest and assume these snippets run unchanged. For new code use the official v1 migration guide and supported agent/state APIs: https://docs.langchain.com/oss/python/migrate/langchain-v1 . Pin compatible provider packages and verify their imports. Tools below are placeholders, not real database/email integrations; never report an email sent without a verified authorized side effect. Bound iterations, tokens and paid tools; isolate tenant memory and treat retrieved text as untrusted. Logs must redact prompts, results and credentials.
+
 ## Quick Start
 
 ```python
@@ -176,7 +180,7 @@ def search_database(query: str) -> str:
 def send_email(recipient: str, content: str) -> str:
     """Send an email to specified recipient."""
     # Email sending logic
-    return f"Email sent to {recipient}"
+    raise NotImplementedError("Configure an authorized email adapter and verify delivery before reporting success")
 
 tools = [search_database, send_email]
 
@@ -256,19 +260,19 @@ from langchain.callbacks.base import BaseCallbackHandler
 
 class CustomCallbackHandler(BaseCallbackHandler):
     def on_llm_start(self, serialized, prompts, **kwargs):
-        print(f"LLM started with prompts: {prompts}")
+        print("LLM started")
 
     def on_llm_end(self, response, **kwargs):
-        print(f"LLM ended with response: {response}")
+        print("LLM ended")
 
     def on_llm_error(self, error, **kwargs):
         print(f"LLM error: {error}")
 
     def on_chain_start(self, serialized, inputs, **kwargs):
-        print(f"Chain started with inputs: {inputs}")
+        print("Chain started")
 
     def on_agent_action(self, action, **kwargs):
-        print(f"Agent taking action: {action}")
+        print("Agent action selected")
 
 # Use callback
 agent.run("query", callbacks=[CustomCallbackHandler()])
@@ -290,7 +294,8 @@ def test_agent_tool_selection():
     result = agent.run("test query")
 
     # Verify correct tool was selected
-    assert "search_database" in str(mock_llm.predict.call_args)
+    # Assert the actual selected tool invocation with a compatible fake model/tool spy;
+    # call arguments to the model only show the prompt, not tool execution.
 
 def test_memory_persistence():
     memory = ConversationBufferMemory()

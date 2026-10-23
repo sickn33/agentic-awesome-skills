@@ -24,12 +24,12 @@ user-invocable: true
 
 Generate a focused `CLAUDE.md` inside a target folder, plus an `AGENTS.md` symlink pointing at it. The file gives any future agent (Claude Code, Codex, etc.) the folder-specific context the global `CLAUDE.md` doesn't cover.
 
-Background reference: `library/claude-code/claude-and-agents-md.md`.
+The background reference library/claude-code/claude-and-agents-md.md is not bundled in this catalog copy.
 
 ## Process
 
 ### Step 1: Confirm the target folder + sanity-check it deserves a file
-Ask the user which folder. Use absolute path under `~/Documents/code/workspace/`.
+Ask the user which folder. Use the user-authorized absolute folder; do not assume the upstream author's home-directory layout.
 
 **Only create a file if the folder has context needed across multiple sessions** — active evolving work, specific conventions, ongoing decisions. A folder of static reference files does NOT need one (agents can read on demand). If unsure, ask the user.
 
@@ -74,7 +74,7 @@ cd <folder> && ln -s CLAUDE.md AGENTS.md
 Verify with `ls -la CLAUDE.md AGENTS.md`.
 
 ### Step 7: Commit only when asked
-Do NOT stage or push unless the user says to. When they do: `git add -A`, commit with a `Day N:` style message, push.
+Do NOT stage or push unless the user says to. When they do, stage only the reviewed instruction files with explicit pathspecs, follow repository commit conventions and push only when authorized.
 
 ## Rules
 
@@ -83,11 +83,11 @@ Do NOT stage or push unless the user says to. When they do: `git add -A`, commit
 - **Folder-scoped only.** Don't duplicate the global `CLAUDE.md` (personality, dates, ports, etc.). Only include what's specific to this folder.
 - **No file trees, no directory dumps, no stack details the code already shows.** Anything an agent can derive from `ls` or `grep` rots fast and wastes tokens. Pin decisions, rules, and context — not structure.
 - **Constraints vs Conventions.** Hard "MUST NOT" rules go in Constraints (explicit negatives). "Usually do X" patterns go in Conventions. Splitting these improves adherence.
-- **No absolute ALWAYS/NEVER without explicit exceptions.** Edge cases make absolute rules get ignored. "Never commit secrets EXCEPT `.env.example`" beats "never commit secrets."
+- **No absolute ALWAYS/NEVER without explicit exceptions.** Edge cases make absolute rules get ignored. An .env.example is safe only when verified to contain placeholders; its filename is never an exception allowing real secrets.
 - **Never summarize or auto-shorten the file.** Context collapse degrades it. Grow deliberately, prune manually. If the user asks to trim, do it by hand.
-- **Maintenance loop.** When the user corrects the agent on something this file should have prevented, add the rule to the file immediately. Don't wait.
+- **Maintenance loop.** Persist a correction only when instruction-file maintenance is within the user-authorized scope; a conversational correction alone need not authorize durable preference storage.
 - **No emojis unless the user uses them** (status markers ✅ 🟡 are the exception — they're already conventions).
-- **Symlink, not copy.** `AGENTS.md` must be a symlink so edits stay in sync.
+- **Client-compatible synchronization.** Inspect existing AGENTS.md/CLAUDE.md and client symlink/import behavior first. Never replace either file or dangling link automatically; use a symlink only when supported and approved, otherwise keep separately scoped guidance consistent.
 - **Flag gaps honestly.** If the user's edits introduce contradictions (e.g. "sell X" in one section and "never sell X" in another), call it out before they ask.
 
 ## Limitations

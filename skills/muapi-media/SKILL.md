@@ -73,7 +73,7 @@ file. The catalog lookup is read-only:
 ```bash
 workdir=$(mktemp -d "${TMPDIR:-/tmp}/muapi-media.XXXXXX")
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   --header "Accept: application/json" \
   "https://api.muapi.ai/api/v1/models" \
   --output "$workdir/models.json"
@@ -92,7 +92,7 @@ not copy a payload from a different model just because the names look similar:
 ```bash
 export MUAPI_MODEL="<model name from the catalog>"
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   --header "Accept: application/json" \
   "https://api.muapi.ai/api/v1/models/${MUAPI_MODEL}" \
   --output "$workdir/model.json"
@@ -140,7 +140,7 @@ model_endpoint=$(jq -er --arg name "$MUAPI_MODEL" '
   | select(type == "string" and startswith("/api/v1/"))
 ' "$workdir/models.json")
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   --request POST \
   "https://api.muapi.ai${model_endpoint}" \
   --header @- \
@@ -168,7 +168,7 @@ selected model's output schema when extracting the result URL:
 result_url="https://api.muapi.ai/api/v1/predictions/${request_id}/result"
 
 for attempt in $(seq 1 120); do
-  curl --fail --silent --show-error \
+  curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
     "$result_url" \
     --header @- \
     --output "$workdir/result.json" <<EOF
@@ -213,7 +213,7 @@ output_url=$(jq -er '
   | select(type == "string" and startswith("https://"))
 ' "$workdir/result.json")
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   "$output_url" \
   --output "$workdir/output.bin"
 
@@ -231,7 +231,7 @@ user-controlled URL. Never execute a downloaded file as code.
 ### Read-only model discovery
 
 ```bash
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   "https://api.muapi.ai/api/v1/models" \
   | jq -r '.models[] | [.name, .category, .endpoint] | @tsv'
 ```

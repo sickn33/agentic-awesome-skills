@@ -43,7 +43,7 @@ export VERCEL_TOKEN
 Look for any variable that looks like a Vercel token (Vercel tokens typically start with `vca_`):
 
 ```bash
-grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
+sed -nE 's/^([A-Z0-9_]*VERCEL[A-Z0-9_]*)=.*/\1/p' .env 2>/dev/null
 ```
 
 Inspect the output to identify which variable holds the token, then export it as `VERCEL_TOKEN`:
@@ -56,7 +56,7 @@ export VERCEL_TOKEN
 
 ### D) No token found — ask the user
 
-If none of the above yield a token, ask the user to provide one. They can create a Vercel access token at vercel.com/account/tokens.
+If none of the above yield a token, ask the user to configure one in approved local secret storage, never paste it into chat. They can create a Vercel access token at vercel.com/account/tokens.
 
 ---
 
@@ -81,7 +81,7 @@ Similarly, check for the project ID and team scope. These let the CLI target the
 [ -n "${VERCEL_ORG_ID:-}" ] && printf 'VERCEL_ORG_ID is set\n'
 
 # Or check .env
-grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
+sed -nE 's/^([A-Z0-9_]*VERCEL[A-Z0-9_]*)=.*/\1/p' .env 2>/dev/null
 ```
 
 **If you have a project URL** (e.g. `https://vercel.com/my-team/my-project`), extract the team slug:
@@ -283,6 +283,8 @@ vercel domains add <domain> --scope <team-slug>
 vercel domains add <domain> <project> --scope <team-slug>
 ```
 
+Static plan prices/allocations below are historical examples; verify current official plan terms before recommending or making a change. Preview deployments can still expose code/data or incur cost: confirm the target project/team and deployment authority before submission; `-y` is not user permission.
+
 ## Stripe Projects Plan Changes
 
 If this project is managed by Stripe Projects. **Ask the user before running any paid or destructive plan change** — upgrades bill a real card, downgrades remove seats.
@@ -309,7 +311,7 @@ Full details: https://vercel.com/docs/plans/pro-plan
 - **Default to preview deployments.** Only deploy to production when explicitly asked.
 - **Ask before pushing to git.** Never push commits without the user's approval.
 - **Do not modify `.vercel/` files directly.** The CLI manages this directory. Reading them (e.g. to verify `orgId`) is fine.
-- **Do not curl/fetch deployed URLs to verify.** Just return the link to the user.
+- **Verify the exact deployment** after readiness: inspect status and perform an authorized read-only HTTP/browser check of its returned URL. A queued/no-wait deployment is not verified live completion.
 - **Use `--format json`** when structured output will help with follow-up steps.
 - **Use `-y`** on commands that prompt for confirmation to avoid interactive blocking.
 
@@ -320,8 +322,8 @@ Full details: https://vercel.com/docs/plans/pro-plan
 Check the environment and any `.env` files present:
 
 ```bash
-env | grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)'
-grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
+env | sed -nE 's/^([A-Z0-9_]*VERCEL[A-Z0-9_]*)=.*/\1/p'
+sed -nE 's/^([A-Z0-9_]*VERCEL[A-Z0-9_]*)=.*/\1/p' .env 2>/dev/null
 ```
 
 ### Authentication error
@@ -329,7 +331,7 @@ grep -Eio '^[A-Z0-9_]*VERCEL[A-Z0-9_]*(?==)' .env 2>/dev/null
 If the CLI fails with `Authentication required`:
 - The token may be expired or invalid.
 - Verify: `vercel whoami` (uses `VERCEL_TOKEN` from environment).
-- Ask the user for a fresh token.
+- Ask the user to rotate/configure a token through approved private storage, without sharing its value.
 
 ### Wrong team
 

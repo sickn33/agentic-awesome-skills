@@ -48,7 +48,7 @@ module storageLoop 'modules/storage.bicep' = [for account in storageAccounts: {
 | `InvalidTemplate` error | Syntax error in ARM JSON or Bicep | Run `az bicep build` to check for compile errors |
 | `ResourceNotFound` during deployment | Resource dependency not declared | Add `dependsOn` or use implicit references in Bicep |
 | `DeploymentFailed` with quota error | Subscription quota exceeded | Request quota increase or use a different region |
-| `AuthorizationFailed` | Insufficient RBAC permissions | Assign Contributor role on the target resource group |
+| `AuthorizationFailed` | Insufficient RBAC permissions | Inspect the denied action and assign only necessary permissions within authorized scope; do not default to Contributor |
 | Parameter file secrets in source control | Secrets stored as plain text | Use Key Vault references in parameter files |
 | Deployment takes very long | Large number of resources deployed serially | Use `dependsOn` carefully to allow parallel deployment |
 | `What-If` shows unexpected deletions | Complete mode instead of Incremental | Use `--mode Incremental` (the default) to avoid deleting unmanaged resources |

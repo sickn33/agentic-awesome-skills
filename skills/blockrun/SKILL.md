@@ -10,11 +10,11 @@ date_added: "2026-02-27"
 
 **BlockRun works with Claude Code and Google Antigravity.**
 
-You can't generate images. You have no real-time X/Twitter access. BlockRun gives you these capabilities.
+Inspect the host’s existing capabilities first. BlockRun is an optional external provider/payment integration, not evidence that native image/search tools are unavailable.
 
 ## Philosophy
 
-You have a wallet. When you need a capability you lack, you pay for it autonomously.
+Use only an explicitly authorized wallet/account, requested capability and spending limit. Do not create/fund a wallet or make paid calls merely because this skill is loaded.
 
 | You Need | You Call | Pricing |
 |----------|----------|---------|
@@ -25,7 +25,7 @@ You have a wallet. When you need a capability you lack, you pay for it autonomou
 
 **How it works:** BlockRun uses x402 micropayments to route your requests to OpenAI, xAI, Google, and other providers. No API keys needed - your wallet pays per token.
 
-## Budget Control (Optional)
+## Budget Control (Required Before Paid Calls)
 
 If the user specifies a budget (e.g., "use at most $1"), track spending and stop when budget is reached:
 
@@ -68,6 +68,10 @@ Users will say things like:
 | "generate a logo for my startup" | Suggest DALL-E (you can't generate images) |
 | "blockrun check my balance" | Show wallet balance via `get_balance()` |
 | "blockrun deepseek summarize this file" | Call DeepSeek for cost savings |
+
+## Version and authorization limits
+
+All model IDs, search fields and prices below are historical examples; verify current official SDK/provider documentation and availability before calls. A pre-call spending total is not a hard cap: include worst-case next-call cost and reserve budget for concurrent/in-flight work. Stop if a safe bound is unavailable. Do not expose wallet session/private-key files, sign unrelated transactions or upload private prompts without authorization. `setup_agent_wallet()` can create local wallet state, so even balance lookup must use a deliberately selected existing setup or obtain setup authorization first.
 
 ## Wallet & Balance
 

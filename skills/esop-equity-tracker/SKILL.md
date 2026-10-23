@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Grant Title,Employee Name,Grant Date,Shares Granted,Strike Price,Currency,Vesting Start,Vesting Schedule,Cliff (Months),Shares Vested,Shares Exercised,Confidential,Status,Grant ID
-2026 ESOP Grant,Aarav Sharma,2026-01-01,2400,450.00,INR,2026-01-01,"4 years monthly, 12 month cliff, 25% on the first anniversary.",12,600,600,Internal,Granted,
+2026 ESOP Grant,Aarav Sharma,2026-01-01,2400,450.00,INR,2026-01-01,"4 years monthly, 12 month cliff, 25% on the first anniversary.",12,0,0,Restricted,Granted,
 ```
 
 ```sql
@@ -206,6 +206,8 @@ CREATE INDEX idx_esop_equity_tracker_status ON esop_equity_tracker (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+The example is an option-grant register at grant date, with zero vested/exercised shares. Later balances need an explicit as-of date and source grant/event evidence. This template does not derive vesting dates, acceleration, cancellations or valuations from schedule prose. Adapt strike-price/exercise fields for instruments such as RSUs rather than forcing option semantics.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
@@ -219,8 +221,8 @@ and anything pointing at another table stays `relation`.
 | 7 | Vesting Start | `date` | `DATE` | `string, format: date` | Date | `2026-01-01` |
 | 8 | Vesting Schedule | `text` | `VARCHAR(255)` | `string` | Text | `4 years monthly, 12 month cliff, 25% on the first anniversary.` |
 | 9 | Cliff (Months) | `number` | `NUMERIC` | `number` | Number | `12` |
-| 10 | Shares Vested | `number` | `NUMERIC` | `number` | Number | `600` |
-| 11 | Shares Exercised | `number` | `NUMERIC` | `number` | Number | `600` |
+| 10 | Shares Vested | `number` | `NUMERIC` | `number` | Number | `0` |
+| 11 | Shares Exercised | `number` | `NUMERIC` | `number` | Number | `0` |
 | 12 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
 | 13 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Granted` |
 | 14 | Grant ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
@@ -316,7 +318,7 @@ Nobody can answer when a specific grant fully vests.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

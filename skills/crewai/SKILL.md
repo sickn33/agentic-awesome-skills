@@ -1,7 +1,6 @@
 ---
 name: crewai
-description: Expert in CrewAI - the leading role-based multi-agent framework
-  used by 60% of Fortune 500 companies.
+description: Design role-based agents, tasks, crews, and flows with CrewAI.
 risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
@@ -9,8 +8,7 @@ date_added: 2026-02-27
 
 # CrewAI
 
-Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500
-companies. Covers agent design with roles and goals, task definition, crew orchestration,
+Design role-based agent workflows with CrewAI. Covers agent design with roles and goals, task definition, crew orchestration,
 process types (sequential, hierarchical, parallel), memory systems, and flows for complex
 workflows. Essential for building collaborative AI agent teams.
 
@@ -76,6 +74,8 @@ hierarchical processes.
 - Enterprise deployments
 
 ## Patterns
+
+These fragments are architecture sketches, not a complete executable project: several tasks, storage classes, model imports and helper methods must be defined. Pin the framework and use its matching API documentation before compiling. Delegate/run crews only within authorized scope and budget; tool/model calls and embedding memory may send data to external providers. Limit tool privileges and retries, keep secrets out of verbose logs, and treat agent/retrieval output as untrusted data. A local `published` status below is not proof of actual publication.
 
 ### Basic Crew with YAML Config
 
@@ -383,7 +383,10 @@ from crewai import tool
 @tool("Database Query")
 def query_database(sql: str) -> str:
     """Execute SQL query and return results."""
-    return db.execute(sql)
+    # Do not execute model-supplied SQL directly.
+    # Implement an allowlisted read-only query API with bound parameters,
+    # row/time limits and a least-privilege connection before enabling this tool.
+    raise NotImplementedError("Provide a reviewed, parameterized query interface")
 
 # Assign tools to agents
 researcher = Agent(

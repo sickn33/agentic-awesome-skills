@@ -16,6 +16,10 @@ license_source: "https://github.com/davidondrej/skills/blob/main/LICENSE"
 
 # Agent `/goal` Loop
 
+## Host-specific authority
+
+Treat the platform names, slash syntax, auth tiers and lifecycle states below as historical examples. Inspect the current host tools/help before setting or controlling goals; do not infer support from another client. Create a persistent goal only on explicit user request, and set a token budget only when explicitly supplied. A correction/status message is not automatically a pause request; use the host's actual semantics. Never mark completion merely because budget is nearly exhausted, and do not interpret a timeout or missing answer as approval. Delegating to a second chat/agent needs actual authorization and must preserve the selected model constraints.
+
 ## What `/goal` is
 
 `/goal` is a slash command that turns an agent prompt into a **persistent agent** looping `plan → act → test → review → iterate` until a stop condition is met, the user pauses, or the token budget runs out. Internally called the "Ralph loop."

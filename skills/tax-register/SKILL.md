@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Keep the tax register as a record of periods, amounts and filing status, and let the accountant or filing tool do the calculation.
 
-**Why this one:** Tax mistakes are calculation errors, and calculations belong in software. This should hold the record and the status, not the arithmetic.
+**Why this one:** A register tracks evidence and status; it does not determine tax treatment, eligibility, rates or filing obligations. An accountant must validate those inputs as well as arithmetic.
 
 **Workflow:** Period opened → Source data recorded → Amount entered → Filed → Reconciled
 
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Tax Record,Tax Type,Tax Period,Period Start,Period End,Tax Collected on Sales,Tax Paid on Purchases,Withholding Tax Deducted,Withholding Tax Paid to Us,Net Tax Payable,Currency,Filing Due Date,Filed Date,Payment Date,Filing Reference,Prepared By,Reviewed By,Days to Due,Status,Notes,Tax ID
-TAX-2026-03,GST,2026-03,2026-03-01,2026-03-31,354000.00,82000.00,2700.00,2700.00,272000.00,INR,2026-01-15,2026-01-15,2026-01-15,TAX-2026-03-Q1,Ananya Rao,Sneha Iyer,21,Filed,Filed with the accountant; working papers saved.,
+TAX-2026-03,GST,2026-03,2026-03-01,2026-03-31,354000.00,82000.00,2700.00,2700.00,272000.00,INR,2026-04-15,2026-04-15,2026-04-15,TAX-2026-03-Q1,Example Preparer,Example Reviewer,0,Filed,Filed with the accountant; working papers saved.,
 ```
 
 ```sql
@@ -137,14 +137,14 @@ CREATE TABLE tax_register (
   withholding_tax_deducted NUMERIC(14,2) NOT NULL,
   withholding_tax_paid_to_us NUMERIC(14,2) NOT NULL,
   net_tax_payable NUMERIC(14,2) NOT NULL,
-  currency VARCHAR(255),
+  currency VARCHAR(255) NOT NULL,
   filing_due_date DATE NOT NULL,
-  filed_date DATE NOT NULL,
-  payment_date DATE NOT NULL,
+  filed_date DATE,
+  payment_date DATE,
   filing_reference VARCHAR(255),
   prepared_by VARCHAR(255),
   reviewed_by VARCHAR(255),
-  days_to_due NUMERIC NOT NULL,
+  days_to_due INTEGER,
   status VARCHAR(100) NOT NULL,
   notes TEXT,
   tax_id SERIAL PRIMARY KEY,
@@ -179,7 +179,7 @@ CREATE INDEX idx_tax_register_status ON tax_register (status);
       "Filing Reference": { "type": "string" },
       "Prepared By": { "type": "string" },
       "Reviewed By": { "type": "string" },
-      "Days to Due": { "type": "number" },
+      "Days to Due": { "type": "integer" },
       "Status": { "type": "string" },
       "Notes": { "type": "string" },
       "Tax ID": { "type": "integer" }
@@ -193,10 +193,8 @@ CREATE INDEX idx_tax_register_status ON tax_register (status);
       "Withholding Tax Deducted",
       "Withholding Tax Paid to Us",
       "Net Tax Payable",
+      "Currency",
       "Filing Due Date",
-      "Filed Date",
-      "Payment Date",
-      "Days to Due",
       "Status"
   ]
 }
@@ -246,16 +244,18 @@ and anything pointing at another table stays `relation`.
 | 9 | Withholding Tax Paid to Us | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `2700.00` |
 | 10 | Net Tax Payable | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `272000.00` |
 | 11 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
-| 12 | Filing Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 13 | Filed Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 14 | Payment Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 12 | Filing Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-15` |
+| 13 | Filed Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-15` |
+| 14 | Payment Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-15` |
 | 15 | Filing Reference | `text` | `VARCHAR(255)` | `string` | Text | `TAX-2026-03-Q1` |
-| 16 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
-| 17 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
-| 18 | Days to Due | `number` | `NUMERIC` | `number` | Number | `21` |
+| 16 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Example Preparer` |
+| 17 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
+| 18 | Days to Due | `integer` | `INTEGER` | `integer` | Number | `0` |
 | 19 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Filed` |
 | 20 | Notes | `long_text` | `TEXT` | `string` | Text | `Filed with the accountant; working papers saved.` |
 | 21 | Tax ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+The example dates and amounts are synthetic, not a statutory GST deadline or validated tax calculation. Its as-of date is 2026-04-15, so days to due is 0. Derive days to due as filing due date minus an explicitly recorded as-of date; do not store a permanently fixed countdown. Filed and payment dates remain blank until those events occur. Record the entity, jurisdiction, tax scheme, currency and official deadline source before using the register. Keep withholding deducted from suppliers separate from withholding credited to the business; net payable must come from reconciled accountant-approved working papers, not a universal subtraction of these columns.
 
 ## Select Options
 

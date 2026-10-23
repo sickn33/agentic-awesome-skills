@@ -45,6 +45,8 @@ All pods run in namespace `crs`. Key services:
 | Analysis | patcher, seed-gen, program-model, pov-reproducer |
 | Interface | competition-api, ui |
 
+Confirm the cluster context and installed Buttercup version; crs, labels, queue names and health paths below are deployment assumptions. diagnosis.sh and deployment/collect-logs.sh are not bundled here; do not invent or run substitute helpers. Read-only diagnostics may still expose credentials/records or add load. Select the correct container and redact logs/CLIENT LIST/OTEL variables before sharing; avoid dumping all environment values. Namespace scoping does not constrain node-level commands. Use XPENDING for delivered-unacknowledged group messages and XINFO GROUPS for lag; XLEN counts retained entries. Do not restart or change Redis durability settings as part of diagnosis without a separate scoped recovery plan.
+
 ## Triage Workflow
 
 Always start with triage. Run these three commands first:
@@ -175,7 +177,7 @@ Buttercup uses Redis streams with consumer groups. Queue names:
 | Delete Task | orchestrator_delete_task_queue |
 
 ```bash
-# Check stream length (pending messages)
+# Check retained stream length (not consumer-group pending count)
 kubectl exec -n crs <redis-pod> -- redis-cli XLEN fuzzer_build_queue
 
 # Check consumer group lag

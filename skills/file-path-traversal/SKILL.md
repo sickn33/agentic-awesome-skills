@@ -163,6 +163,8 @@ C:\boot.ini
 
 #### Bypass Extension Validation
 
+Historical/parser-specific examples only: extra extensions do not by themselves make an existing file readable, and modern runtimes reject null-byte/invalid encoding tricks. Validate against the exact version; do not claim a bypass from a payload string alone.
+
 ```bash
 # Null byte injection (older PHP versions)
 ../../../etc/passwd%00.jpg
@@ -322,6 +324,8 @@ wfuzz -c -z file,traversal.txt \
 
 ### Phase 8: LFI to RCE Escalation
 
+Requires separately authorized code-execution scope in a disposable lab. Reading an arbitrary file does not imply PHP inclusion; wrappers depend on runtime configuration/extensions. Modern environments often do not expose request headers in `/proc/self/environ`. Stop once the authorized proof is sufficient rather than escalating by default.
+
 #### Log Poisoning
 
 ```bash
@@ -400,43 +404,21 @@ php://filter/convert.base64-encode/resource=index.php
 
 Secure coding practices:
 
-```php
-// PHP: Use basename() to strip paths
-$filename = basename($_GET['file']);
-$path = "/var/www/files/" . $filename;
-
-// PHP: Validate against whitelist
-$allowed = ['report.pdf', 'manual.pdf', 'guide.pdf'];
-if (in_array($_GET['file'], $allowed)) {
-    include("/var/www/files/" . $_GET['file']);
-}
-
-// PHP: Canonicalize and verify base path
-$base = "/var/www/files/";
-$realBase = realpath($base);
-$userPath = $base . $_GET['file'];
-$realUserPath = realpath($userPath);
-
-if ($realUserPath && strpos($realUserPath, $realBase) === 0) {
-    include($realUserPath);
-}
-```
+Prefer server-side opaque IDs mapped to known readable documents. Do not use `include` to return user-selected files: it can execute PHP. A basename filter or string-prefix check alone is not sufficient; sibling directories such as `files-backup` share the `files` prefix. Apply object-level authorization as well as containment.
 
 ```python
-# Python: Use os.path.realpath() and validate
-import os
+from pathlib import Path
 
 def safe_file_access(base_dir, filename):
-    # Resolve to absolute path
-    base = os.path.realpath(base_dir)
-    file_path = os.path.realpath(os.path.join(base, filename))
-    
-    # Verify file is within base directory
-    if file_path.startswith(base):
-        return open(file_path, 'r').read()
-    else:
-        raise Exception("Access denied")
+    # Existing-file sketch; filename must already have passed authorization.
+    base = Path(base_dir).resolve(strict=True)
+    candidate = (base / filename).resolve(strict=True)
+    if not candidate.is_relative_to(base) or not candidate.is_file():
+        raise PermissionError("Access denied")
+    return candidate.read_text(encoding="utf-8")
 ```
+
+Resolution followed by open can race if an attacker can modify directories or symlinks. This sketch requires a trusted immutable directory tree; for hostile mutable filesystems, use platform-specific descriptor-relative, no-follow traversal/open semantics or isolate storage. Test sibling-prefix, absolute-path, encoded traversal, symlink and race boundaries in a disposable fixture.
 
 ## Quick Reference
 

@@ -14,101 +14,32 @@ Build production-ready ReactFlow applications with hierarchical navigation, perf
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
-## Complete Example
+## Minimal Controlled Graph Example
 
-```typescript
-import React, { useState, useCallback, useMemo, useRef } from 'react';
-import ReactFlow, { Node, Edge, useReactFlow } from 'reactflow';
-import dagre from 'dagre';
-import { debounce } from 'lodash';
+Target React Flow v12 (`@xyflow/react`); use matching docs for older reactflow v11 projects. This is a starting component, not an implementation of hierarchy/history/persistence.
 
-interface GraphState {
-  nodes: Node[];
-  edges: Edge[];
-  selectedNodeId: string | null;
-  expandedNodeIds: Set<string>;
-  history: GraphState[];
-  historyIndex: number;
-}
+```tsx
+import { ReactFlow, useNodesState, useEdgesState, addEdge, type Connection } from '@xyflow/react';
+import { useCallback } from 'react';
+import '@xyflow/react/dist/style.css';
 
+const initialNodes = [
+  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Start' } },
+  { id: '2', position: { x: 250, y: 0 }, data: { label: 'Next' } },
+];
 export default function InteractiveGraph() {
-  const [state, setState] = useState<GraphState>({
-    nodes: [],
-    edges: [],
-    selectedNodeId: null,
-    expandedNodeIds: new Set(),
-    history: [],
-    historyIndex: 0,
-  });
-
-  const { fitView } = useReactFlow();
-  const layoutCacheRef = useRef<Map<string, Node[]>>(new Map());
-
-  // Memoized styled edges
-  const styledEdges = useMemo(() => {
-    return state.edges.map(edge => ({
-      ...edge,
-      style: {
-        ...edge.style,
-        strokeWidth: state.selectedNodeId === edge.source || state.selectedNodeId === edge.target ? 3 : 2,
-        stroke: state.selectedNodeId === edge.source || state.selectedNodeId === edge.target ? '#3b82f6' : '#94a3b8',
-      },
-      animated: state.selectedNodeId === edge.source || state.selectedNodeId === edge.target,
-    }));
-  }, [state.edges, state.selectedNodeId]);
-
-  // Debounced layout calculation
-  const debouncedLayout = useMemo(
-    () => debounce((nodes: Node[], edges: Edge[]) => {
-      const cacheKey = generateLayoutCacheKey(nodes, edges);
-
-      if (layoutCacheRef.current.has(cacheKey)) {
-        return layoutCacheRef.current.get(cacheKey)!;
-      }
-
-      const layouted = applyDagreLayout(nodes, edges);
-      layoutCacheRef.current.set(cacheKey, layouted);
-
-      return layouted;
-    }, 150),
-    []
-  );
-
-  const handleNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    setState(prev => ({
-      ...prev,
-      selectedNodeId: node.id,
-    }));
-  }, []);
-
-  const handleToggleExpand = useCallback((nodeId: string) => {
-    setState(prev => {
-      const newExpanded = new Set(prev.expandedNodeIds);
-      if (newExpanded.has(nodeId)) {
-        newExpanded.delete(nodeId);
-      } else {
-        newExpanded.add(nodeId);
-      }
-
-      return {
-        ...prev,
-        expandedNodeIds: newExpanded,
-      };
-    });
-  }, []);
-
-  return (
-    <ReactFlow
-      nodes={state.nodes}
-      edges={styledEdges}
-      onNodeClick={handleNodeClick}
-      fitView
-    />
-  );
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const onConnect = useCallback((connection: Connection) =>
+    setEdges(previous => addEdge(connection, previous)), [setEdges]);
+  return <div style={{ width: '100%', height: 500 }}>
+    <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange} onConnect={onConnect} fitView />
+  </div>;
 }
 ```
 
-This comprehensive skill provides everything needed to build production-ready ReactFlow applications with hierarchical navigation, performance optimization, and advanced state management patterns.
+Install the reviewed compatible package version in the host project and run its typecheck/browser checks. Hooks such as useReactFlow need a ReactFlowProvider ancestor outside the component invoking them; the minimal example avoids that hook. No compile or browser execution is asserted here.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

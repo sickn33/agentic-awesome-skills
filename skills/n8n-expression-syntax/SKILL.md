@@ -10,6 +10,10 @@ date_added: "2026-03-06"
 
 Expert guide for writing correct n8n expressions in workflows.
 
+## Execution and data scope
+
+EXAMPLES.md and COMMON_MISTAKES.md referenced below/in the guide are not bundled. `$json` in expression parameters represents the current input item, not a completed current node output; inspect actual execution data and item linking before referencing another node. Code-node APIs differ between per-item and all-items modes. Use credentials for secrets: the guide's `$env` examples can expose values and may be disabled. Avoid putting secrets/personal webhook data into messages or logs. Encode URL path/query components, guard missing arrays/objects and validate untrusted values before downstream actions. Test expressions with synthetic input; preview success is not authorization to send Slack/email messages.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.

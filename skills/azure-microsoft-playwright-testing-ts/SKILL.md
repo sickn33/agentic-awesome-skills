@@ -310,3 +310,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Remote browsers may reach endpoints exposed through `exposeNetwork` and can upload traces/screenshots containing secrets. Scope the staging hosts, test credentials, artifact retention and worker/cost budget before connecting; loopback access is a network capability, not isolation. Never expose cloud credentials to untrusted fork code or run production writes from these tests.

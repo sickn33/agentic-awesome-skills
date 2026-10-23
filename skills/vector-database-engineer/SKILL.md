@@ -54,7 +54,7 @@ Expert in vector databases, embedding strategies, and semantic search implementa
 
 ## Best Practices
 
-- Choose embedding dimensions based on use case (384-1536)
+- Use the chosen model’s documented output dimensions; confirm database/index support and reindex on incompatible model changes
 - Implement proper chunking with overlap
 - Use metadata filtering to reduce search space
 - Monitor embedding drift over time

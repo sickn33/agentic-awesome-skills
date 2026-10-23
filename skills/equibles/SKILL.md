@@ -29,6 +29,8 @@ The same data is available through a hosted MCP server and a JSON REST API. This
 
 ## Access and Authentication
 
+Confirm the current official API schema and plan before use; listed prices/limits and tool names are versioned guidance. Use an existing authorized connection; account setup is separate. Data is research evidence, not a trade recommendation. Cross-check material figures against the linked SEC filing, including amendments and units. Shell header expansion can expose credentials in process arguments: prefer the Python helper or a protected curl config, and never enable verbose tracing.
+
 ### MCP server (preferred when the client supports it)
 
 - Endpoint: `https://mcp.equibles.com/mcp` (Streamable HTTP), listed in the official MCP registry as `io.github.daniel3303/equibles`.
@@ -130,18 +132,21 @@ HEADERS = {"Authorization": f"Bearer {os.environ['EQUIBLES_API_KEY']}"}
 def equibles_get(path, **params):
     resp = requests.get(f"{BASE_URL}{path}", params=params, headers=HEADERS, timeout=30)
     if resp.status_code == 429:
-        raise RuntimeError("Daily request allowance used up; it resets at 00:00 UTC.")
+        raise RuntimeError("Rate limit reached; inspect Retry-After and current plan limits.")
     resp.raise_for_status()
     return resp.json()
 
 def equibles_get_all(path, page_size=100, **params):
     rows, offset = [], 0
-    while True:
+    for _ in range(100):  # bound cost and avoid malformed endless pagination
         body = equibles_get(path, limit=page_size, offset=offset, **params)
         rows += body["data"]
         if not body["meta"]["hasMore"]:
             return rows
+        if not body["data"]:
+            raise RuntimeError("Empty page claims more results; stop and inspect pagination")
         offset += page_size
+    raise RuntimeError("Page budget reached; narrow the query")
 
 prices = equibles_get_all("/stocks/AAPL/prices", startDate="2026-01-01")
 for bar in prices[:5]:

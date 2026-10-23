@@ -8,6 +8,8 @@
 #!/bin/bash
 # cert-monitor.sh - Monitor certificate expiration across hosts
 
+set -o pipefail
+STATUS=0
 WARN_DAYS=30
 CRIT_DAYS=7
 HOSTS=(
@@ -17,26 +19,33 @@ HOSTS=(
 )
 
 for host in "${HOSTS[@]}"; do
-  expiry=$(echo | openssl s_client -connect "$host" -servername "${host%%:*}" 2>/dev/null | \
+  expiry=$(echo | timeout 10 openssl s_client -connect "$host" -servername "${host%%:*}" 2>/dev/null | \
     openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
 
   if [ -z "$expiry" ]; then
-    echo "ERROR: Cannot connect to $host"
+    echo "ERROR: Cannot read certificate from $host"
+    STATUS=1
     continue
   fi
 
-  expiry_epoch=$(date -d "$expiry" +%s)
+  if ! expiry_epoch=$(date -d "$expiry" +%s); then
+    STATUS=1
+    continue
+  fi
   now_epoch=$(date +%s)
   days_left=$(( (expiry_epoch - now_epoch) / 86400 ))
 
   if [ "$days_left" -le "$CRIT_DAYS" ]; then
+    STATUS=1
     echo "CRITICAL: $host expires in $days_left days ($expiry)"
   elif [ "$days_left" -le "$WARN_DAYS" ]; then
+    STATUS=1
     echo "WARNING: $host expires in $days_left days ($expiry)"
   else
     echo "OK: $host expires in $days_left days ($expiry)"
   fi
 done
+exit "$STATUS"
 ```
 
 ### Prometheus cert-manager Metrics
@@ -72,7 +81,7 @@ groups:
 | "Too many certificates already issued" | Let's Encrypt rate limit hit | Use staging endpoint for testing; wait for rate limit reset |
 | cert-manager challenge stuck pending | Ingress or DNS misconfigured | Check `kubectl describe challenge`; verify DNS records |
 | Mixed content warnings | HTTP resources on HTTPS page | Update all asset URLs to HTTPS; use CSP headers |
-| OCSP stapling not working | Resolver not configured | Add `resolver` directive in nginx; verify outbound DNS |
+| OCSP stapling not working | Resolver not configured | Check whether the issuing CA supports OCSP before changing resolver/network settings |
 | Intermediate cert missing | Incomplete chain served | Use `fullchain.pem` not `cert.pem`; verify with `openssl s_client -showcerts` |
 | TLS handshake failure | Client doesn't support offered ciphers | Add TLS 1.2 support; check cipher suite compatibility |
 
@@ -82,8 +91,8 @@ groups:
 - Automate renewal with systemd timers or cert-manager
 - Monitor expiration dates with alerting (30-day and 7-day warnings)
 - Use only TLS 1.2 and TLS 1.3
-- Enable HSTS with long max-age and includeSubDomains
-- Enable OCSP stapling to improve handshake performance
+- Stage HSTS after verifying HTTPS coverage and rollback consequences; subdomains/preload require separate review
+- Configure OCSP stapling only when supported by the issuing CA; Let's Encrypt OCSP has ended
 - Use ECDSA keys for better performance where possible
 - Test configuration with SSL Labs (ssllabs.com/ssltest)
 - Keep private keys secure with proper file permissions (0600)

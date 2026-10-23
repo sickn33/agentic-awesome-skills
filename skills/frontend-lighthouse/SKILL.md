@@ -19,11 +19,11 @@ license_source: "https://github.com/stareezy-1/frontend-architecture-skill/blob/
 > Portable skill — readable by Claude Code, OpenCode, Codex, Cursor, Windsurf, and others.
 > This skill describes a **CI performance gate** — a Lighthouse CI config plus a workflow — not a
 > component library or a visual style. It pairs with the **frontend-seo** and
-> **frontend-architecture** skills: SEO writes the metadata, Lighthouse proves it ships fast.
+> **frontend-architecture** skills: SEO writes the metadata, Lighthouse supplies a reproducible lab performance signal.
 
 The goal: every pull request is **blocked unless the production build meets explicit Core Web
 Vitals budgets and category score floors**. Budgets live in **one** `lighthouserc.cjs`, runs are
-**median-of-N** so the gate doesn't flake, and the same config runs locally and in CI.
+**median-of-N** to reduce noise, and the same config runs locally and in CI.
 
 ## When to Use This Skill
 
@@ -34,12 +34,14 @@ Vitals budgets and category score floors**. Budgets live in **one** `lighthouser
 
 ---
 
+Lighthouse category scores and navigation lab metrics are not field Core Web Vitals certification or complete accessibility/SEO verification. Configure the job as a required check in branch protection for actual blocking; a workflow alone does not enforce that. Required checks with path filters can remain pending, so align trigger policy with repository rules. Build/audit code from PRs only with read-only credentials, bounded runtime and no production secrets; reports may contain page content/URLs.
+
 ## 0. The five core ideas
 
 1. **One config, one source of truth.** All budgets and assertions live in a single `lighthouserc.cjs`. Named constants for each budget — no magic numbers buried in assertion objects.
 2. **Gate the production build, never dev.** Lighthouse runs against `build` + `start` (the real, optimized output). Dev-server numbers are meaningless for a budget.
-3. **Median-of-N kills flakiness.** Run 3+ times and assert on the median run, so per-run jitter (cold caches, CI noise) never red-flags a healthy build.
-4. **Budgets encode Google's "good" thresholds.** LCP ≤ 2500 ms, INP ≤ 200 ms (gated via the TBT lab proxy), CLS ≤ 0.1 — the values that earn green scores, not "needs improvement".
+3. **Multiple runs reduce noise.** Run 3+ times and assert on the median run, to reduce per-run jitter; repeated runs do not eliminate CI noise.
+4. **Separate lab budgets from field thresholds.** Use LCP/CLS lab budgets plus a chosen TBT budget; field INP ≤200 ms needs separate representative field monitoring. Lab category scores do not certify field CWV.
 5. **Blocking in CI, visible as artifacts.** A GitHub Action runs the gate on every PR touching the app and uploads the HTML/JSON reports so failures are debuggable.
 
 ---
@@ -47,10 +49,11 @@ Vitals budgets and category score floors**. Budgets live in **one** `lighthouser
 ## 1. Files this skill adds
 
 ```
-apps/web/                          (or your app root)
-├── lighthouserc.cjs               ← the gate: budgets + assertions + collect settings
-├── package.json                   ← "lhci": "lhci autorun --config=./lighthouserc.cjs"
-└── .github/workflows/lighthouse.yml  ← PR-blocking CI job (build → start → lhci → upload)
+repository/
+├── .github/workflows/lighthouse.yml  ← workflow must be at repository root
+└── apps/web/                        ← or your app root
+    ├── lighthouserc.cjs              ← budgets, assertions and collect settings
+    └── package.json                 ← "lhci": "lhci autorun --config=./lighthouserc.cjs"
 ```
 
 Plus a dev dependency: `@lhci/cli`.
@@ -76,9 +79,8 @@ with a comment explaining the threshold — never a bare number inside an assert
  *   - Interaction to Next Paint (INP) ≤ 200 ms
  *
  * INP is a *field* metric with no direct lab audit, so in the lab we gate on
- * Total Blocking Time (TBT) — Lighthouse's recommended lab proxy — at the same
- * budget, and assert the experimental INP audit directly as a warning where the
- * build exposes it.
+ * Total Blocking Time (TBT) with a separately selected budget. There is no
+ * experimental INP audit assumed here; measure INP with field instrumentation.
  *
  * Collection runs against the *production* server (build + start) on Lighthouse's
  * default mobile (Moto G4 / slow 4G) emulation.
@@ -96,7 +98,7 @@ const MARKETING_URLS = [`${BASE_URL}/`];
  * These are the values that earn the best Lighthouse scores.
  */
 const LCP_BUDGET_MS = 2500; // good
-const INP_BUDGET_MS = 200; // good (TBT lab proxy)
+const TBT_BUDGET_MS = 200; // Chosen lab budget; not an INP measurement
 const CLS_BUDGET = 0.1; // good
 
 module.exports = {
@@ -123,27 +125,21 @@ module.exports = {
       },
     },
     assert: {
-      // Median across runs is the value compared against each budget.
-      aggregationMethod: "median-run",
+      // Per-audit median aggregation is configured on each assertion.
+      // Set aggregationMethod per assertion below.
       assertions: {
         // --- Core Web Vitals budgets (the contract) ---------------------
         "largest-contentful-paint": [
           "error",
-          { maxNumericValue: LCP_BUDGET_MS },
+          { maxNumericValue: LCP_BUDGET_MS, aggregationMethod: "median" },
         ],
-        "cumulative-layout-shift": ["error", { maxNumericValue: CLS_BUDGET }],
-        "total-blocking-time": ["error", { maxNumericValue: INP_BUDGET_MS }],
-        // Direct INP audit where the Lighthouse build exposes it (else ignored).
-        "interaction-to-next-paint": [
-          "warn",
-          { maxNumericValue: INP_BUDGET_MS },
-        ],
-
+        "cumulative-layout-shift": ["error", { maxNumericValue: CLS_BUDGET, aggregationMethod: "median" }],
+        "total-blocking-time": ["error", { maxNumericValue: TBT_BUDGET_MS, aggregationMethod: "median" }],
         // --- Category floors (target top Lighthouse scores) -------------
-        "categories:performance": ["error", { minScore: 0.9 }],
-        "categories:seo": ["error", { minScore: 0.95 }],
-        "categories:accessibility": ["error", { minScore: 0.95 }],
-        "categories:best-practices": ["error", { minScore: 0.9 }],
+        "categories:performance": ["error", { minScore: 0.9, aggregationMethod: "median" }],
+        "categories:seo": ["error", { minScore: 0.95, aggregationMethod: "median" }],
+        "categories:accessibility": ["error", { minScore: 0.95, aggregationMethod: "median" }],
+        "categories:best-practices": ["error", { minScore: 0.9, aggregationMethod: "median" }],
       },
     },
     upload: {
@@ -158,9 +154,9 @@ module.exports = {
 **Hard rules:**
 
 - Every budget is a named constant with a unit in its name (`LCP_BUDGET_MS`) and a comment.
-- `aggregationMethod: "median-run"` is non-negotiable — single-run gates flake constantly.
+- `aggregationMethod: "median"` is non-negotiable — single-run gates flake constantly.
 - `numberOfRuns` ≥ 3 (odd numbers give a clean median).
-- Assert on TBT for INP in the lab; treat the experimental `interaction-to-next-paint` audit as a `warn`, not an `error` (it isn't present in every Lighthouse build).
+- TBT is a lab diagnostic correlated with responsiveness, not an INP threshold guarantee. Do not configure a nonexistent INP audit; measure field INP separately.
 - Keep `onlyCategories` to exactly what you gate — fewer audits, faster, less noise.
 
 ---
@@ -172,7 +168,7 @@ module.exports = {
 | `largest-contentful-paint`  | `error`  | ≤ 2500 ms | Google "good" LCP                                     |
 | `cumulative-layout-shift`   | `error`  | ≤ 0.1     | Google "good" CLS                                     |
 | `total-blocking-time`       | `error`  | ≤ 200 ms  | INP lab proxy                                         |
-| `interaction-to-next-paint` | `warn`   | ≤ 200 ms  | not in all builds; don't hard-fail on a missing audit |
+| Field INP | separate monitoring | ≤ 200 ms | Not supplied by default Lighthouse navigation audit |
 | `categories:performance`    | `error`  | ≥ 0.9     | top (green) band                                      |
 | `categories:seo`            | `error`  | ≥ 0.95    | SEO is cheap to keep perfect                          |
 | `categories:accessibility`  | `error`  | ≥ 0.95    | a11y regressions must block                           |
@@ -220,6 +216,9 @@ on:
     paths:
       - "apps/web/**"
       - ".github/workflows/lighthouse.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
 
 permissions:
   contents: read
@@ -292,8 +291,8 @@ folder instead of `startServerCommand` — Lighthouse serves it internally.
 
 ## 7. Debugging failing or flaky runs
 
-- **Flaky LCP/TBT** → raise `numberOfRuns` (5), confirm `median-run`, and make sure nothing else is competing for CPU on the runner.
-- **`interaction-to-next-paint` errors** → it should be `warn`, not `error`; the audit is missing in some Lighthouse versions.
+- **Flaky LCP/TBT** → raise `numberOfRuns` (5), confirm `median`, and make sure nothing else is competing for CPU on the runner.
+- **Unknown audit errors** → remove unsupported audit assertions after checking the pinned Lighthouse audit list; warn does not make a missing audit valid.
 - **"server not ready" timeout** → fix `startServerReadyPattern` to match the framework's actual ready log, and raise `startServerReadyTimeout`.
 - **Real regressions** → open the uploaded report artifact, read the failed audit's "Opportunities"/"Diagnostics", fix the cause (oversized image, render-blocking JS, layout shift from unsized media) — don't just bump the budget.
 - **Desktop vs mobile divergence** → run both form factors; mobile is the stricter gate and should be the default.
@@ -304,9 +303,9 @@ folder instead of `startServerCommand` — Lighthouse serves it internally.
 
 - [ ] All budgets are named constants with units and comments — no magic numbers in assertions.
 - [ ] Gate runs against the **production** build, never the dev server.
-- [ ] `aggregationMethod: "median-run"` with `numberOfRuns` ≥ 3.
-- [ ] CWV budgets at Google "good" thresholds (LCP ≤ 2500, TBT ≤ 200, CLS ≤ 0.1).
-- [ ] INP gated via TBT (`error`); experimental INP audit is `warn`.
+- [ ] `aggregationMethod: "median"` with `numberOfRuns` ≥ 3.
+- [ ] Lab budgets explicitly named (LCP ≤2500, chosen TBT ≤200, CLS ≤0.1), with separate field CWV monitoring.
+- [ ] TBT is a separately named lab budget; field INP is measured separately.
 - [ ] Category floors set as `error` (perf ≥ 0.9, SEO/a11y ≥ 0.95, best-practices ≥ 0.9).
 - [ ] `onlyCategories` lists exactly the gated categories.
 - [ ] CI triggers on the app path **and** the workflow file; reports upload with `if: always()`.

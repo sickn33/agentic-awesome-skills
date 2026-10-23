@@ -81,9 +81,9 @@ WHERE LOWER(event_name) LIKE '%signup%'
 ORDER BY created_at;
 ```
 
-The audit scores this 17/100 (grade F) and flags 7 findings:
-- CRITICAL: comma-join produces a Cartesian product (can turn a $0.02 query into a $200 query)
-- HIGH: `SELECT *` forces full column scan (30-90% wasted bytes on wide tables)
+Illustrative candidate findings (no engine was run and no score/cost was measured):
+- CRITICAL: comma-join without a join predicate produces a Cartesian product; actual impact needs plan/cardinality evidence
+- HIGH: `SELECT *` may read unnecessary columns depending on engine/plan
 - HIGH: leading-wildcard `LIKE '%signup%'` defeats indexes
 - HIGH: `LOWER(event_name)` defeats indexes (non-sargable)
 - HIGH: `NOT IN (SELECT ...)` — NULL semantics hazard
@@ -93,7 +93,7 @@ The audit scores this 17/100 (grade F) and flags 7 findings:
 ### Example 2: A clean, sargable query
 
 ```sql
--- This scores 90+/100 (grade A) — no findings
+-- Illustrative bounded query, not a measured score or proof of no findings
 SELECT id, email, created_at
 FROM users
 WHERE created_at >= TIMESTAMP '2026-01-01'
@@ -101,6 +101,8 @@ WHERE created_at >= TIMESTAMP '2026-01-01'
 ORDER BY id
 LIMIT 100;
 ```
+
+Rules are heuristic candidates: expression/trigram indexes, partition pruning, small tables and intended CROSS JOIN/UNION semantics can change the verdict. Preserve result equivalence (including NULL/duplicate behavior), inspect EXPLAIN/warehouse dry-run and actual billing before recommending changes. EXPLAIN ANALYZE executes queries and needs separate data/cost authorization. A health score is not measured savings.
 
 ## The 20 rules (ruleset v1.0.0)
 
@@ -137,4 +139,4 @@ cd scripts && node test.js   # 26 tests, zero dependencies
 
 - This is a **static** analyzer. It finds anti-patterns in the *text* of SQL; it does not read query plans, row counts, or billing. A flagged query on a 100-row table is cheap; the same query on a billion-row table is the problem the rule exists to prevent.
 - The fact-table heuristic (SQL015) keys off table *names* (`*_events`, `*_log`) and is advisory, not definitive.
-- It does not execute SQL — safe to run on any `.sql` file.
+- The intended analyzer reads SQL text rather than executing it; review the pinned engine/dependencies before running and keep private SQL local unless external processing is authorized.

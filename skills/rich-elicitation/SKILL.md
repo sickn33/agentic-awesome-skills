@@ -188,7 +188,7 @@ Q2: What's the primary goal?
 
 This skill is pure reasoning — it issues no shell commands, reads no files, makes no network requests, and mutates no state. Risk level is `none`.
 
-No `npm run security:docs` review is required for this skill.
+Repository validation requirements still apply; this skill cannot exempt itself from mandatory checks.
 
 ---
 
@@ -211,3 +211,5 @@ No `npm run security:docs` review is required for this skill.
 ## Related Skills
 
 - `@ask-user-questions` — Single-round elicitation with recommended options. Use that skill for simpler tasks; use rich-elicitation when answers to early questions open up new meaningful choices.
+
+Use whichever question tool the host actually provides, or concise plain-text questions. The round cap does not convert a missing authorization, target scope, identity fact or safety requirement into permission; continue only work independent of those missing inputs. Reuse prior user answers and stop asking once a reasonable scoped result can be produced.

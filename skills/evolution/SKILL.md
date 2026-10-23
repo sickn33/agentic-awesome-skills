@@ -1,6 +1,6 @@
 ---
 name: evolution
-description: "This skill enables makepad-skills to self-improve continuously during development."
+description: "This skill provides a reviewable workflow for maintaining makepad-skills during development. It does not install automatic evolution by itself."
 risk: critical
 source: community
 date_added: "2026-03-06"
@@ -8,7 +8,7 @@ date_added: "2026-03-06"
 
 # Makepad Skills Evolution
 
-This skill enables makepad-skills to self-improve continuously during development.
+This skill provides a reviewable workflow for maintaining makepad-skills during development. It does not install automatic evolution by itself.
 
 ## When to Use
 - You are maintaining `makepad-skills` and want the skill library to improve itself during development.
@@ -29,9 +29,11 @@ This skill enables makepad-skills to self-improve continuously during developmen
 
 ---
 
+Only update the explicitly requested skill repository. A discovered lesson alone does not authorize persistent memory edits, installed-skill changes, hooks, commits or remote publication. Keep reusable evidence separate from project secrets and private source.
+
 ## Hooks-Based Auto-Triggering
 
-For reliable automatic triggering, use Claude Code hooks. Install with `--with-hooks`:
+Hook files are not bundled in this catalog copy. If hook setup is requested, obtain a reviewed immutable upstream revision, inspect the installer and every hook it fetches, and preserve existing host settings. The following historical installer URL is a source pointer, not permission to run mutable remote code. Install with `--with-hooks` only after that review:
 
 ```bash
 # Install makepad-skills with hooks enabled
@@ -39,7 +41,8 @@ tmpdir="$(mktemp -d)"
 trap 'rm -rf "$tmpdir"' EXIT
 curl -fsSLo "$tmpdir/makepad-skills-install.sh" https://raw.githubusercontent.com/ZhangHanDong/makepad-skills/main/install.sh
 cat "$tmpdir/makepad-skills-install.sh"  # review the full installer before executing
-bash "$tmpdir/makepad-skills-install.sh" --with-hooks
+# Execute only the reviewed revision after explicit hook-install authorization:
+# bash "$tmpdir/makepad-skills-install.sh" --with-hooks
 ```
 
 This will install hooks to `.claude/hooks/` and configure `.claude/settings.json`:
@@ -234,21 +237,21 @@ git push origin evolution/add-loading-pattern
 
 ## Self-Correction
 
-When skill content causes errors, automatically correct it.
+When skill content appears to cause errors, confirm the cause and prepare a focused correction within the authorized maintenance scope.
 
 ### Trigger Conditions
 
 ```
 User follows skill advice → Code fails to compile/run → Claude identifies skill was wrong
                                                       ↓
-                                         AUTO: Correct skill immediately
+                                         Prepare evidence-backed correction for review
 ```
 
 ### Correction Flow
 
 1. **Detect** - Skill advice led to an error
 2. **Verify** - Confirm the skill content is wrong
-3. **Correct** - Update the skill file with fix
+3. **Correct** - Update the authorized source skill with the verified fix; do not silently edit installed or unrelated skills
 
 ### Correction Marker Format
 
@@ -292,7 +295,7 @@ Provide version-specific guidance for different Makepad branches.
 
 | Branch | Status | Notes |
 |--------|--------|-------|
-| main | Stable | Production ready |
+| main | Verify at the selected revision | Branch name alone does not establish stability |
 | dev | Active | Latest features, may break |
 | rik | Legacy | Older API style |
 
@@ -417,7 +420,7 @@ After each Makepad development session, consider:
 - [ ] Did I learn something about packaging/deployment?
 - [ ] Would any of this help other Makepad developers?
 
-If yes to any, evolve the appropriate skill!
+If yes to any, propose an evidence-backed update; perform it only within the user's requested maintenance scope.
 
 ## References
 

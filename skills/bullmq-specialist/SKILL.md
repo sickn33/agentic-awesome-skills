@@ -2,7 +2,7 @@
 name: bullmq-specialist
 description: BullMQ expert for Redis-backed job queues, background processing,
   and reliable async execution in Node.js/TypeScript applications.
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -14,7 +14,7 @@ reliable async execution in Node.js/TypeScript applications.
 
 ## Principles
 
-- Jobs are fire-and-forget from the producer side - let the queue handle delivery
+- Await durable queue insertion and handle failures before acknowledging a request; worker completion can happen asynchronously
 - Always set explicit job options - defaults rarely match your use case
 - Idempotency is your responsibility - jobs may run more than once
 - Backoff strategies prevent thundering herds - exponential beats linear
@@ -145,6 +145,8 @@ await queue.removeRepeatable('daily-digest', {
   tz: 'America/New_York',
 });
 
+BullMQ sibling children are eligible to run in parallel; their array order does not sequence inventory, payment and notification. Model dependent stages as nested dependencies or a state machine, and make each external effect idempotent. The snippets are fragments, not production-ready code: supply sendEmail/app/queue definitions, protect Bull Board with authentication/authorization and redact job payload/errors. Share eligible Redis connections deliberately; workers need maxRetriesPerRequest null while HTTP producers should fail promptly. Close QueueEvents/FlowProducer and externally owned connections on shutdown. See [connections](https://docs.bullmq.io/guide/connections) and [flows](https://docs.bullmq.io/guide/flows).
+
 ### Job Flows and Dependencies
 
 Complex multi-step job processing with parent-child relationships
@@ -260,13 +262,11 @@ Workers should gracefully shut down on SIGTERM/SIGINT
 
 Message: Worker file without graceful shutdown handling. Jobs may be orphaned on deployment.
 
-### Awaiting queue.add in request handler
+### Unawaited queue.add in request handler
 
-Severity: INFO
+Severity: ERROR
 
-Queue additions should be fire-and-forget in request handlers
-
-Message: Queue.add awaited in request handler. Consider fire-and-forget for faster response.
+Await queue insertion before reporting acceptance. Bound producer retries/timeouts so an unavailable Redis does not leave HTTP requests hanging; worker retry settings are different.
 
 ### Potentially large data in job payload
 

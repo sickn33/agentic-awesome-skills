@@ -46,15 +46,17 @@ Run the ten-command sweep, checking **errors and saturation first** (easiest to 
 ```bash
 uptime                 # load trend (includes uninterruptible I/O on Linux)
 dmesg | tail           # kernel errors: oom-killer, SYN flooding, hardware
-vmstat 1               # r > CPU count = CPU saturation; si/so = swapping; wa = disk
-mpstat -P ALL 1        # per-CPU imbalance (single hot CPU = single-threaded app)
-pidstat 1              # per-process CPU over time
-iostat -xz 1           # await (app-suffered latency), avgqu-sz, %util
+vmstat 1 5             # r > CPU count = CPU saturation; si/so = swapping; wa = disk
+mpstat -P ALL 1 5      # per-CPU imbalance (single hot CPU = single-threaded app)
+pidstat 1 5            # per-process CPU over time
+iostat -xz 1 5         # await (app-suffered latency), avgqu-sz, %util
 free -m                # memory; buffers/cache near zero hurts
-sar -n DEV 1           # NIC throughput vs link limit
-sar -n TCP,ETCP 1      # active/passive connections, retransmits
-top                    # spot variable load
+sar -n DEV 1 5         # NIC throughput vs link limit
+sar -n TCP,ETCP 1 5    # active/passive connections, retransmits
+top -b -n 1            # spot variable load
 ```
+
+Use finite samples as above; sequential windows are an approximate triage, not guaranteed simultaneous 60-second coverage. Interpret `free` using available memory and reclaim behavior, not free memory alone; minor faults do not by themselves prove disk paging. Mark resources unmeasured or unresolved rather than exonerating them without relevant interval evidence.
 
 ### Step 2: USE Sweep (resource-oriented)
 

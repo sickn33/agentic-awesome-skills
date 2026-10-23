@@ -14,6 +14,10 @@ Management plane SDK for provisioning and managing Microsoft Playwright Testing 
 > - **This SDK (Azure.ResourceManager.Playwright)**: Create workspaces, manage quotas, check name availability
 > - **Test Execution SDK (Azure.Developer.MicrosoftPlaywrightTesting.NUnit)**: Run Playwright tests at scale on cloud browsers
 
+## Version and provisioning boundary
+
+These are historical SDK fragments, not verified current package/service versions. Confirm the current Microsoft service lifecycle, package migration guidance and target resource provider before provisioning; stop if the named service is retired or unavailable. Select a production credential deliberately for the deployment environment rather than assuming every DefaultAzureCredential source is intended. Confirm subscription/resource group/region, budget and deletion scope; resource creation is billable and does not authorize remote test execution or uploading private test artifacts.
+
 ## Installation
 
 ```bash
@@ -21,7 +25,7 @@ dotnet add package Azure.ResourceManager.Playwright
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**: Stable v1.0.0, Preview v1.0.0-beta.1
+**Example version context**: v1.0.0 / v1.0.0-beta.1 are historical references; verify the supported package before use.
 
 ## Environment Variables
 

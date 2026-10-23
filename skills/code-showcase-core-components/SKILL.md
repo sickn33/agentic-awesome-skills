@@ -16,6 +16,8 @@ license_source: https://github.com/ChrisWiles/claude-code-showcase/blob/main/LIC
 Use this skill when you need core component library and design system patterns. Use when building UI, using design tokens, or working with the component library.
 
 
+This entry describes the upstream project's component API/token names, not a bundled component library or universal React Native API. Verify actual exports, tokens and props in the target repository before using snippets. CardProps/variantStyles, handlers and imported components are illustrative dependencies; token use alone does not prove contrast, labeling or behavior.
+
 ## Design System Overview
 
 Use components from your core library instead of raw platform components. This ensures consistent styling and behavior.

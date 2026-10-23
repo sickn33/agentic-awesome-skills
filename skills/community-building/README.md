@@ -83,6 +83,8 @@ COMMUNITY: jobs, events, content
 
 ## Health Metrics
 
+Illustrative starting targets; define cohorts/windows and calibrate against the community baseline.
+
 | Metric | Healthy | Warning |
 |--------|---------|---------|
 | Response time | <24h | >72h |

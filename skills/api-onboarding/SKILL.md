@@ -20,7 +20,7 @@ The time between a developer discovering your API and successfully making their 
 
 ## Overview
 
-Time-to-First-API-Call (TTFAC) is the single most predictive metric for developer adoption. Developers who succeed quickly become active users. Developers who struggle leave—often silently.
+Time-to-First-API-Call (TTFAC) is a useful onboarding metric to compare with activation and retention. Developers who succeed quickly become active users. Developers who struggle leave—often silently.
 
 This skill covers:
 - Measuring and optimizing TTFAC
@@ -28,6 +28,8 @@ This skill covers:
 - Creating effective sandbox environments
 - Building interactive documentation
 - Identifying and fixing common failure points
+
+Examples are illustrative API/SDK sketches. Sandbox status must be enforced server-side with isolated keys/accounts; a caller-controlled sandbox boolean is not a security boundary. Test card numbers are provider-specific and only valid in the documented test environment. Confirm provider behavior instead of claiming universal success. Instrument consented, pseudonymous event IDs and stable start/success definitions; include abandoned attempts and exclude API keys, payloads, replay captures and personal data. Package-download counts do not establish an individual SDK installation.
 
 ## Before You Start
 
@@ -52,7 +54,7 @@ Time-to-First-API-Call measures the elapsed time from a developer's first intera
 5. **Execution time**: Running first request
 6. **Success time**: Receiving successful response
 
-### TTFAC Benchmarks
+### Illustrative TTFAC Targets
 
 | Rating | TTFAC | Developer Experience |
 |--------|-------|---------------------|
@@ -84,7 +86,7 @@ analytics.track('first_successful_call');
 
 ## Authentication Simplification
 
-Authentication is the #1 source of onboarding friction. Simplify ruthlessly.
+Measure authentication friction in your own funnel. Preserve the security and abuse controls required by the product.
 
 ### The Ideal Auth Flow
 
@@ -118,7 +120,7 @@ Make keys visible on dashboard home.
    - Token exchange
    - Token refresh handling
 ```
-For getting started, provide simple API keys.
+Choose auth for the threat model; delegated user access may require OAuth from the first call. Provide a mock/demo flow when production authentication cannot safely be simplified.
 
 **The Verification Gauntlet**
 ```
@@ -143,8 +145,8 @@ Minimize friction for first API call.
 
 **Pre-populate Examples**
 ```
-✅ # Your API key is pre-filled in these examples
-   curl -H "Authorization: Bearer sk_test_YOUR_KEY" ...
+✅ # Secret supplied by the approved environment, not embedded in copied docs
+   curl -H "Authorization: Bearer $API_KEY" https://sandbox-api.example.com/status
 ```
 
 **Delay Production Requirements**
@@ -167,7 +169,7 @@ A sandbox removes the fear of "breaking something" and lets developers experimen
 
 **Reset Capability**: Easy way to start fresh
 
-**Generous Limits**: Don't rate-limit experimentation
+**Bounded Limits**: Provide documented sandbox quotas, rate limits, isolation and reset controls.
 
 ### Sandbox Implementation Patterns
 
@@ -235,7 +237,7 @@ Let developers make API calls without leaving the browser.
 ### "Try It" Functionality
 
 **Essential Features:**
-- Pre-authenticated (use their sandbox key automatically)
+- Authenticated with short-lived, least-privilege sandbox credentials; never expose server secrets
 - Pre-filled with working example data
 - Editable request parameters
 - Real API responses (not mocked)
@@ -315,16 +317,16 @@ api.on('request_error', (error, request) => {
 
 ### Most Common First-Call Failures
 
-**1. Authentication Errors (40% of first-call failures)**
+**1. Authentication Errors**
 ```
 Problem: Wrong key, malformed header, missing auth
 Fix:
 - Clearer error messages: "API key should start with 'sk_test_'"
-- Pre-filled code examples with actual key
+- Copyable examples that reference secret environment variables
 - Auth header format shown with example
 ```
 
-**2. Request Format Errors (25%)**
+**2. Request Format Errors**
 ```
 Problem: Wrong content type, malformed JSON, missing fields
 Fix:
@@ -333,7 +335,7 @@ Fix:
 - Show exactly what was expected vs. received
 ```
 
-**3. Environment/Setup Errors (20%)**
+**3. Environment/Setup Errors**
 ```
 Problem: SDK not installed, wrong SDK version, missing dependencies
 Fix:
@@ -342,16 +344,16 @@ Fix:
 - Quick environment check script
 ```
 
-**4. Rate Limiting (10%)**
+**4. Rate Limiting**
 ```
 Problem: Aggressive rate limits during exploration
 Fix:
-- Generous sandbox limits (or none)
+- Documented sandbox limits with predictable retry guidance
 - Clear rate limit errors with retry-after
-- Don't count failed requests against limits
+- Keep abuse protection for failed authentication and malformed-request floods
 ```
 
-**5. Networking Errors (5%)**
+**5. Networking Errors**
 ```
 Problem: Firewall, proxy, SSL issues
 Fix:
@@ -407,11 +409,11 @@ Perform this audit quarterly (or after any onboarding changes):
 
 | Friction | Impact | Priority |
 |----------|--------|----------|
-| Must verify email before API key | High | Fix immediately |
+| Must verify email before API key | Context-dependent | Test a safe demo alternative before removing verification |
 | API key buried in settings | High | Fix immediately |
 | No copy button on code examples | Medium | Fix this quarter |
 | Quickstart assumes specific OS | Medium | Fix this quarter |
-| Example uses outdated SDK version | Low | Fix when updating docs |
+| Example uses unsupported SDK version | Assess security/compatibility | Update promptly if unsafe or broken |
 
 ## Onboarding Optimization Framework
 

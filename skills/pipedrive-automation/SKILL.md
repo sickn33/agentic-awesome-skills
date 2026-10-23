@@ -18,12 +18,14 @@ Automate Pipedrive CRM workflows including deal management, contact and organiza
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection; adding an endpoint alone does not authenticate Pipedrive. Use the supported host setup/authentication flow only within requested scope.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `pipedrive`
 3. If connection is not ACTIVE, follow the returned auth link to complete Pipedrive OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Historical tools, field types and pagination defaults below require current schema discovery. Verify the actual account, entity, visibility, currency and timezone before requested mutations; do not create contacts merely because an ambiguous name search returned no match. Limit retrieved personal data and notes, and reconcile unknown write outcomes before retrying.
 
 ## Core Workflows
 
@@ -165,7 +167,7 @@ Always resolve display names to numeric IDs before operations:
 - **Stage name -> stage_id**: `PIPEDRIVE_GET_ALL_STAGES` with `pipeline_id` then match by name
 
 ### Pagination
-Most list endpoints use offset-based pagination:
+Pagination depends on API/tool version; follow the discovered cursor or offset contract. Historical offset-based examples:
 - Use `start` (offset) and `limit` (page size) parameters
 - Check `additional_data.pagination.more_items_in_collection` to know if more pages exist
 - Use `additional_data.pagination.next_start` as the `start` value for the next page

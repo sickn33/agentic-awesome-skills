@@ -2,12 +2,14 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples target @xyflow/react v12. Fragments need host React imports/types and measured node sizes; they are not one complete application. Import the stylesheet and give the graph container a nonzero size as in the root. Validate node IDs, endpoints and hierarchy from external data; render labels as text and never trust imported HTML/URLs.
+
 ## Quick Start
 
 Create basic interactive graph:
 
 ```tsx
-import ReactFlow, { Node, Edge } from "reactflow";
+import { ReactFlow, type Node, type Edge } from "@xyflow/react";
 
 const nodes: Node[] = [
   { id: "1", position: { x: 0, y: 0 }, data: { label: "Node 1" } },
@@ -46,79 +48,37 @@ interface TreeNode extends Node {
 #### Incremental Node Building
 
 ```typescript
-const buildVisibleNodes = useCallback(
-  (allNodes: TreeNode[], expandedIds: Set<string>, otherDeps: any[]) => {
-    const visibleNodes = new Map<string, TreeNode>();
-    const visibleEdges = new Map<string, TreeEdge>();
+function buildVisibleGraph(allNodes: TreeNode[], allEdges: Edge[], expandedIds: Set<string>) {
+  const children = new Map<string, TreeNode[]>();
+  const ids = new Set(allNodes.map(node => node.id));
+  if (ids.size !== allNodes.length) throw new Error('Duplicate node IDs');
+  for (const node of allNodes) {
+    if (node.parentId && !ids.has(node.parentId)) throw new Error('Missing parent');
+    if (node.parentId) children.set(node.parentId, [...(children.get(node.parentId) ?? []), node]);
+  }
+  const visible = new Map<string, TreeNode>();
+  const stack = allNodes.filter(node => !node.parentId).reverse();
+  while (stack.length) {
+    const node = stack.pop()!;
+    if (visible.has(node.id)) continue;
+    visible.set(node.id, node);
+    if (expandedIds.has(node.id)) stack.push(...(children.get(node.id) ?? []).slice().reverse());
+  }
+  return { nodes: [...visible.values()],
+    edges: allEdges.filter(edge => visible.has(edge.source) && visible.has(edge.target)) };
+}
+// Validate the parent graph for cycles before use; cyclic/orphaned imports are errors,
+// not roots to silently omit. Parent grouping uses relative coordinates, unlike a flat layout.
 
-    // Start with root nodes
-    const rootNodes = allNodes.filter((n) => n.data.level === 0);
-
-    // Recursively add visible nodes
-    const addVisibleChildren = (node: TreeNode) => {
-      visibleNodes.set(node.id, node);
-
-      if (expandedIds.has(node.id)) {
-        const children = allNodes.filter((n) => n.parentNode === node.id);
-        children.forEach((child) => addVisibleChildren(child));
-      }
-    };
-
-    rootNodes.forEach((root) => addVisibleChildren(root));
-
-    return {
-      nodes: Array.from(visibleNodes.values()),
-      edges: Array.from(visibleEdges.values()),
-    };
-  },
-  [],
-);
 ```
 
 ### Performance Optimization
 
 Handle large datasets with incremental rendering and memoization.
 
-#### Incremental Rendering
+#### Derived Visibility
 
-```typescript
-const useIncrementalGraph = (
-  allNodes: Node[],
-  allEdges: Edge[],
-  expandedList: string[],
-) => {
-  const prevExpandedListRef = useRef<Set<string>>(new Set());
-  const prevOtherDepsRef = useRef<any[]>([]);
-
-  const { visibleNodes, visibleEdges } = useMemo(() => {
-    const currentExpandedSet = new Set(expandedList);
-    const prevExpandedSet = prevExpandedListRef.current;
-
-    // Check if expanded list changed
-    const expandedChanged = !areSetsEqual(currentExpandedSet, prevExpandedSet);
-
-    // Check if other dependencies changed
-    const otherDepsChanged = !arraysEqual(otherDeps, prevOtherDepsRef.current);
-
-    if (expandedChanged && !otherDepsChanged) {
-      // Only expanded list changed - incremental update
-      return buildIncrementalUpdate(
-        cachedVisibleNodesRef.current,
-        cachedVisibleEdgesRef.current,
-        allNodes,
-        allEdges,
-        currentExpandedSet,
-        prevExpandedSet,
-      );
-    } else {
-      // Full rebuild needed
-      return buildFullGraph(allNodes, allEdges, currentExpandedSet);
-    }
-  }, [allNodes, allEdges, expandedList, ...otherDeps]);
-
-  return { visibleNodes, visibleEdges };
-};
-```
+Start with a correct complete rebuild: `useMemo(() => buildVisibleGraph(allNodes, allEdges, new Set(expandedList)), [allNodes, allEdges, expandedList])`. The previous incremental sketch used undefined caches/dependencies and did not update its previous-state refs; it is not a working algorithm. Add incremental invalidation only after profiling and tests for changed nodes, edges, ancestry, expand/collapse and deleted selection. Never mutate refs inside useMemo to emulate a committed history.
 
 #### Memoization Patterns
 
@@ -157,79 +117,9 @@ const styledEdges = useMemo(() => {
 
 Complex node/edge state patterns with undo/redo and persistence.
 
-#### Reducer Pattern
+#### Snapshot History
 
-```typescript
-type GraphAction =
-  | { type: "SELECT_NODE"; payload: string }
-  | { type: "SELECT_EDGE"; payload: string }
-  | { type: "TOGGLE_EXPAND"; payload: string }
-  | { type: "UPDATE_NODES"; payload: Node[] }
-  | { type: "UPDATE_EDGES"; payload: Edge[] }
-  | { type: "UNDO" }
-  | { type: "REDO" };
-
-const graphReducer = (state: GraphState, action: GraphAction): GraphState => {
-  switch (action.type) {
-    case "SELECT_NODE":
-      return {
-        ...state,
-        selectedNodeId: action.payload,
-        selectedEdgeId: null,
-      };
-
-    case "TOGGLE_EXPAND":
-      const newExpanded = new Set(state.expandedNodeIds);
-      if (newExpanded.has(action.payload)) {
-        newExpanded.delete(action.payload);
-      } else {
-        newExpanded.add(action.payload);
-      }
-      return {
-        ...state,
-        expandedNodeIds: newExpanded,
-        isDirty: true,
-      };
-
-    default:
-      return state;
-  }
-};
-```
-
-#### History Management
-
-```typescript
-const useHistoryManager = (
-  state: GraphState,
-  dispatch: Dispatch<GraphAction>,
-) => {
-  const canUndo = state.historyIndex > 0;
-  const canRedo = state.historyIndex < state.history.length - 1;
-
-  const undo = useCallback(() => {
-    if (canUndo) {
-      const newIndex = state.historyIndex - 1;
-      const historyEntry = state.history[newIndex];
-
-      dispatch({
-        type: "RESTORE_FROM_HISTORY",
-        payload: {
-          ...historyEntry,
-          historyIndex: newIndex,
-        },
-      });
-    }
-  }, [canUndo, state.historyIndex, state.history]);
-
-  const saveToHistory = useCallback(() => {
-    dispatch({ type: "SAVE_TO_HISTORY" });
-  }, [dispatch]);
-
-  return { canUndo, canRedo, undo, redo, saveToHistory };
-};
-```
-
+Store bounded immutable snapshots of nodes, edges and expanded IDs, not recursive GraphState objects containing their own history. On an edit after undo, truncate the redo branch and append the new snapshot; implement undo/redo by moving a cursor within bounds. Serialize Sets explicitly as arrays, validate imports, and persist only with an authorized destination. Selection-only changes need not create undo entries. The original reducer omitted its advertised history actions, so no complete history implementation is bundled.
 
 ## Advanced Features
 
@@ -278,7 +168,10 @@ const applyLayout = (nodes: Node[], edges: Edge[]) => {
 };
 
 // Debounce layout calculations
-const debouncedLayout = useMemo(() => debounce(applyLayout, 150), []);
+const debouncedLayout = useMemo(() => debounce((nodes: Node[], edges: Edge[]) => {
+  setNodes(applyLayout(nodes, edges)); // Apply the delayed result, not debounce's return value
+}, 150), [setNodes]);
+useEffect(() => () => debouncedLayout.cancel(), [debouncedLayout]);
 ```
 
 ### Focus Mode
@@ -351,96 +244,9 @@ const navigateToSearchResult = (nodeId: string) => {
 ```
 
 
-## Performance Tools
+## Performance Evidence
 
-### Graph Performance Analyzer
-
-Create a performance analysis script:
-
-```javascript
-// scripts/graph-analyzer.js
-class GraphAnalyzer {
-  analyzeCode(content, filePath) {
-    const analysis = {
-      metrics: {
-        nodeCount: this.countNodes(content),
-        edgeCount: this.countEdges(content),
-        renderTime: this.estimateRenderTime(content),
-        memoryUsage: this.estimateMemoryUsage(content),
-        complexity: this.calculateComplexity(content),
-      },
-      issues: [],
-      optimizations: [],
-      patterns: this.detectPatterns(content),
-    };
-
-    // Detect performance issues
-    this.detectPerformanceIssues(analysis);
-
-    // Suggest optimizations
-    this.suggestOptimizations(analysis);
-
-    return analysis;
-  }
-
-  countNodes(content) {
-    const nodePatterns = [
-      /nodes:\s*\[.*?\]/gs,
-      /const\s+\w+\s*=\s*\[.*?id:.*?position:/gs,
-    ];
-
-    let totalCount = 0;
-    nodePatterns.forEach((pattern) => {
-      const matches = content.match(pattern);
-      if (matches) {
-        matches.forEach((match) => {
-          const nodeMatches = match.match(/id:\s*['"`][^'"`]+['"`]/g);
-          if (nodeMatches) {
-            totalCount += nodeMatches.length;
-          }
-        });
-      }
-    });
-
-    return totalCount;
-  }
-
-  estimateRenderTime(content) {
-    const nodeCount = this.countNodes(content);
-    const edgeCount = this.countEdges(content);
-
-    // Base render time estimation (ms)
-    const baseTime = 5;
-    const nodeTime = nodeCount * 0.1;
-    const edgeTime = edgeCount * 0.05;
-
-    return baseTime + nodeTime + edgeTime;
-  }
-
-  detectPerformanceIssues(analysis) {
-    const { metrics } = analysis;
-
-    if (metrics.nodeCount > 500) {
-      analysis.issues.push({
-        type: "HIGH_NODE_COUNT",
-        severity: "high",
-        message: `Too many nodes (${metrics.nodeCount}). Consider virtualization.`,
-        suggestion: "Implement virtualization or reduce visible nodes",
-      });
-    }
-
-    if (metrics.renderTime > 16) {
-      analysis.issues.push({
-        type: "SLOW_RENDER",
-        severity: "high",
-        message: `Render time (${metrics.renderTime.toFixed(2)}ms) exceeds 60fps.`,
-        suggestion: "Optimize with memoization and incremental rendering",
-      });
-    }
-  }
-}
-```
-
+Measure React commits and browser frame/layout timing on the actual graph, node renderer, viewport and device. Count nodes/edges from runtime data; regexes cannot estimate render milliseconds or heap usage. Record warmup, interaction, visible/total graph size, baseline/head and measurements. The removed analyzer skeleton had missing methods and arbitrary timing coefficients; no graph-analyzer.js is bundled.
 
 ## Best Practices
 
@@ -478,7 +284,7 @@ useEffect(() => {
 
 ```typescript
 // Use useRef for objects that shouldn't trigger re-renders
-const autoSaveDataRef = useRef({
+const autoSaveDataRef = useRef<{ nodes: Node[]; edges: Edge[]; lastSaved: number }>({
   nodes: [],
   edges: [],
   lastSaved: Date.now(),
@@ -492,6 +298,8 @@ const updateAutoSaveData = (newNodes: Node[], newEdges: Edge[]) => {
 };
 ```
 
+
+Layout cache keys must include graph topology, dimensions, layout options and hierarchy, not just node IDs; bound/evict entries and cancel pending layout on unmount. Dagre coordinates here assume fixed 200×100 flat nodes; use measured sizes and convert child positions to parent-relative coordinates when grouping. After expanding search ancestors, wait until nodes are committed/measured before fitView, and validate breadcrumb traversal against cycles. Custom memo comparators must compare every prop used by rendering; stable useMemo/useCallback alone does not prove a speedup.
 
 ## Common Problems & Solutions
 

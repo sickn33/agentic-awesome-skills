@@ -110,6 +110,8 @@ result = client.users.get("invalid-id")
 # Or worse: raises generic Exception with stack trace
 ```
 
+Retries must be bounded, respect Retry-After and cancellation, and avoid replaying non-idempotent writes without a stable idempotency key. Preserve server request/operation IDs for uncertain outcomes; redact tokens, personal data and full payloads from errors/debug/replay fixtures. Validate tenant/authorization server-side. A convenient send example is not permission to message its sample recipient.
+
 ### Principle 4: Sensible Defaults
 
 Default values should work for most cases without configuration.
@@ -144,13 +146,13 @@ Every error message should answer:
 ```
 AuthenticationError: Invalid API key provided.
 
-The API key 'sk_test_abc...' (test key) cannot be used for
-production requests.
+A test credential was supplied to a production endpoint.
+Credential values are redacted from errors and logs.
 
 To fix this:
 1. Go to https://dashboard.example.com/keys
 2. Copy your production API key (starts with 'sk_live_')
-3. Update your environment variable: MY_API_KEY=sk_live_...
+3. Update the approved secret source without printing the credential.
 
 Docs: https://docs.example.com/authentication
 ```
@@ -166,6 +168,7 @@ Create specific error types that developers can catch:
 
 ```python
 from myapi.errors import (
+    MyAPIError,
     AuthenticationError,  # Invalid/missing credentials
     AuthorizationError,   # Valid creds, insufficient permissions
     ValidationError,      # Invalid input data
@@ -177,11 +180,11 @@ from myapi.errors import (
 try:
     client.users.get(user_id)
 except NotFoundError as e:
-    # Handle missing user specifically
+    pass  # Replace with scoped missing-user handling
 except AuthenticationError as e:
-    # Handle auth issues specifically
+    raise  # Ask the caller to correct authentication
 except MyAPIError as e:
-    # Catch-all for other API errors
+    raise  # Preserve other API errors without leaking credentials
 ```
 
 ### Include Context in Errors
@@ -203,7 +206,7 @@ throw new ValidationError({
 
 ## Type Safety
 
-Type safety is documentation that never goes stale.
+Types document intended contracts, but runtime API/schema drift and unknown input still need validation and contract tests.
 
 ### TypeScript Best Practices
 
@@ -338,7 +341,7 @@ def send_message(self, body: str, to: str, **kwargs) -> Message:
 Follow semver strictly:
 - **MAJOR**: Breaking changes (removal, signature changes)
 - **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes (backward compatible)
+- **PATCH**: Backward-compatible bug fixes; verify observable behavior, since a purported bug fix can still break clients
 
 ### What Constitutes a Breaking Change
 
@@ -379,7 +382,7 @@ def old_method(self):
 
 ### Migration Guide Structure
 
-```markdown
+````markdown
 # Migrating from v2 to v3
 
 ## Overview
@@ -414,7 +417,7 @@ client = MyClient(api_key="...")
 ## Need Help?
 - [Migration support channel]
 - [Office hours for migration questions]
-```
+````
 
 ### Codemods and Automation
 

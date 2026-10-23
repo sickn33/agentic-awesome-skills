@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Soroban Liquid
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Verification procedure
+
+Bind this register to network, pool/asset contract IDs, deployed code hash and ledger snapshot. Read the actual invariant and fee/rounding implementation: constant product, stable curves and concentrated liquidity require different equations and state; do not apply xy=k universally. Record token decimals and exact integer-scaled reserves/LP shares without floating JSON conversion. Test initial/add/remove liquidity, zero reserves, tiny/large swaps, rounding direction, fees, minimum-output/deadline enforcement and unauthorized calls. Compare pre/post balances and share conservation on a disposable fixture; Balanced is a reporting label, not proof of solvency, price correctness or safety. Register generation does not authorize swaps or liquidity transactions.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Pool Pair ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `POOL-001` |
+| 1 | Pool Pair ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `POOL-001` |
 | 2 | Token A Contract | `text` | `VARCHAR(56)` | `string` | Text | `CASWAP1...` |
 | 3 | Token B Contract | `text` | `VARCHAR(56)` | `string` | Text | `CASWAP2...` |
 | 4 | Invariant Model | `select` | `VARCHAR(32)` | `string` | Select | `Constant Product (xy=k)` |

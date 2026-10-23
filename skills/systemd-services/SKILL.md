@@ -37,6 +37,10 @@ Create, manage, and monitor systemd services and timers. Covers unit file author
 - Application binary or script to run as a service
 - Understanding of the application's start/stop lifecycle
 
+## Unit compatibility and operational proof
+
+The examples require project binaries/accounts/directories; they are not drop-in units. `Type=notify` and `WatchdogSec` require application notification/watchdog support; otherwise select a compatible service type and omit the watchdog. Socket activation also requires the application to consume systemd-provided sockets. Validate reviewed units with `systemd-analyze verify`, check the host systemd version, and review restart/mask/journal-vacuum scope before authorized changes. Logs/environment properties may contain secrets. See [systemd service semantics](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html).
+
 ## Service Unit File -- Complete Example
 
 ```ini
@@ -47,6 +51,8 @@ Documentation=https://docs.example.com/myapp
 After=network-online.target postgresql.service
 Wants=network-online.target
 Requires=postgresql.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
 
 [Service]
 Type=notify
@@ -69,8 +75,6 @@ ExecStop=/opt/myapp/bin/graceful-stop.sh
 # Restart behavior
 Restart=on-failure
 RestartSec=5
-StartLimitIntervalSec=300
-StartLimitBurst=5
 
 # Timeouts
 TimeoutStartSec=30
@@ -298,7 +302,7 @@ LimitNOFILE=65535
 LimitNPROC=4096
 TasksMax=512
 
-# Disable OOM killer (let the app handle it)
+# Continue other processes after a process is OOM-killed; this does not disable OOM killing.
 OOMPolicy=continue
 ```
 

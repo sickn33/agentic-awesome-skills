@@ -169,6 +169,7 @@ When providing feedback, be specific and constructive. Quote the weak passage, e
 > Draft or edit a Sentry blog post.
 
 ## Limitations
+- This imported guide is not proof of current official Sentry policy or authorization to speak/publish for Sentry. Preserve actual authorship and obtain the intended author’s approval; sample benchmarks and story openings are examples, never facts to copy into a post.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

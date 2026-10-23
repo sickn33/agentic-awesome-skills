@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Payroll Record,Basic Salary,Bonus,Currency,DA (Dearness Allowance),Deductions,Department,Employee Name,HRA,Month,Net Pay,Notes,Pay Period,Payment Date,Payment Method,Payroll ID,Status,TA (Travel Allowance),Year
-PAY-2026-03,650000.00,97500.00,INR,14500.00,82500.00,Delivery,Aarav Sharma,260000.00,2026-03,958700.00,February run reconciled with the accountant; one deduction code was mapped to the wrong head.,2026-03,2026-04-07,Bank Transfer,,Paid,19200.00,2026
+PAY-2026-03,650000.00,97500.00,INR,14500.00,82500.00,Delivery,Aarav Sharma,260000.00,2026-03,958700.00,Synthetic March register; displayed components reconcile to net pay.,2026-03,2026-04-07,Bank Transfer,,Paid,19200.00,2026
 ```
 
 ```sql
@@ -131,7 +131,7 @@ CREATE TABLE payroll_finance (
   basic_salary NUMERIC(14,2) NOT NULL,
   bonus NUMERIC(14,2) NOT NULL,
   currency VARCHAR(255),
-  da_dearness_allowance VARCHAR(255),
+  da_dearness_allowance NUMERIC(14,2) NOT NULL,
   deductions NUMERIC(14,2) NOT NULL,
   department VARCHAR(255),
   employee_name VARCHAR(255),
@@ -140,7 +140,7 @@ CREATE TABLE payroll_finance (
   net_pay NUMERIC(14,2) NOT NULL,
   notes TEXT,
   pay_period VARCHAR(255),
-  payment_date DATE NOT NULL,
+  payment_date DATE,
   payment_method VARCHAR(100) NOT NULL,
   payroll_id SERIAL PRIMARY KEY,
   status VARCHAR(100) NOT NULL,
@@ -164,7 +164,7 @@ CREATE INDEX idx_payroll_finance_status ON payroll_finance (status);
       "Basic Salary": { "type": "number" },
       "Bonus": { "type": "number" },
       "Currency": { "type": "string" },
-      "DA (Dearness Allowance)": { "type": "string" },
+      "DA (Dearness Allowance)": { "type": "number" },
       "Deductions": { "type": "number" },
       "Department": { "type": "string" },
       "Employee Name": { "type": "string" },
@@ -186,7 +186,7 @@ CREATE INDEX idx_payroll_finance_status ON payroll_finance (status);
       "Deductions",
       "HRA",
       "Net Pay",
-      "Payment Date",
+      "DA (Dearness Allowance)",
       "Payment Method",
       "Status",
       "TA (Travel Allowance)"
@@ -201,7 +201,7 @@ CREATE INDEX idx_payroll_finance_status ON payroll_finance (status);
 | Basic Salary | Number (format: currency) | Convert to Number, set format to Currency |
 | Bonus | Number (format: currency) | Convert to Number, set format to Currency |
 | Currency | Text | Leave as Text |
-| DA (Dearness Allowance) | Text | Leave as Text |
+| DA (Dearness Allowance) | Number (format: currency) | Convert to Number, set format to Currency |
 | Deductions | Number (format: currency) | Convert to Number, set format to Currency |
 | Department | Text | Leave as Text |
 | Employee Name | Text | Leave as Text |
@@ -229,14 +229,14 @@ and anything pointing at another table stays `relation`.
 | 2 | Basic Salary | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `650000.00` |
 | 3 | Bonus | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `97500.00` |
 | 4 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
-| 5 | DA (Dearness Allowance) | `text` | `VARCHAR(255)` | `string` | Text | `14500.00` |
+| 5 | DA (Dearness Allowance) | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `14500.00` |
 | 6 | Deductions | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `82500.00` |
 | 7 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 8 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
 | 9 | HRA | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `260000.00` |
 | 10 | Month | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
 | 11 | Net Pay | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `958700.00` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `February run reconciled with the accountant; one deduction code was mapped to the wrong head.` |
+| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic March register; displayed components reconcile to net pay.` |
 | 13 | Pay Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
 | 14 | Payment Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-07` |
 | 15 | Payment Method | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Bank Transfer` |
@@ -304,7 +304,7 @@ Payroll runs in a spreadsheet and finance re-keys everything.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not calculate pay, deduct tax or transfer money.
+- Does not calculate pay, deduct tax or transfer money. DA is a currency amount across every format. Payment Date remains absent until confirmed paid; never invent it for Draft/Submitted records. The synthetic arithmetic is 650000+97500+14500+260000+19200−82500=958700 INR, not a tax/legal payroll rule. Confirm components, period, currency and authoritative payroll output; restrict salary access and exports, and retain approval/reconciliation evidence separately.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes
@@ -336,8 +336,8 @@ Payroll runs in a spreadsheet and finance re-keys everything.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [people-directory](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
 ## Reusable Prompt

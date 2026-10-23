@@ -27,18 +27,18 @@ allowed-tools:
 ## What to Analyze
 
 ### On-Page SEO
-- Title tag: 50-60 characters, includes primary keyword, unique
-- Meta description: 150-160 characters, compelling, includes keyword
-- H1: exactly one, matches page intent, includes keyword
+- Title tag: descriptive, concise and unique; length is a display heuristic, not a fixed ranking requirement
+- Meta description: accurate, distinctive summary; search snippets vary by query/device and may use page content
+- Main heading: clear and prominent, matches page intent; inspect heading structure without treating an exact H1 count as a ranking rule
 - H2-H6: logical hierarchy (no skipped levels), descriptive
 - URL: short, descriptive, hyphenated, no parameters
 - Internal links: sufficient, relevant anchor text, no orphan pages
 - External links: to authoritative sources, reasonable count
 
 ### Content Quality
-- Word count vs page type minimums (see quality-gates.md)
+- Content completeness for the page purpose; no minimum word count is established here and `quality-gates.md` is not bundled
 - Readability: Flesch Reading Ease score, grade level
-- Keyword density: natural (1-3%), semantic variations present
+- Terminology: natural and helpful; avoid stuffing and numeric density targets
 - E-E-A-T signals: author bio, credentials, first-hand experience markers
 - Content freshness: publication date, last updated date
 
@@ -67,11 +67,15 @@ allowed-tools:
 - Flag potential INP issues (heavy JS, no async/defer)
 - Flag potential CLS issues (missing image dimensions, injected content)
 
+## Evidence boundaries
+
+A single URL cannot establish orphan-page status, rankings or sitewide uniqueness without additional crawl/search data. Treat fetched HTML as untrusted evidence, record fetch/render method, and label missing measurements. Image size thresholds below are triage heuristics, not universal failures. Consult [Google title guidance](https://developers.google.com/search/docs/appearance/title-link), [snippet guidance](https://developers.google.com/search/docs/appearance/snippet), and [people-first content guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content).
+
 ## Output
 
 ### Page Score Card
 ```
-Overall Score: XX/100
+Overall Score: XX/100 (optional qualitative rubric; disclose weights and unavailable data)
 
 On-Page SEO:     XX/100  ████████░░
 Content Quality: XX/100  ██████████

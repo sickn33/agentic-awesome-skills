@@ -46,7 +46,7 @@ coord = SkyCoord(ra=10.5*u.degree, dec=41.2*u.degree, frame='icrs')
 coord_galactic = coord.galactic
 
 # Time
-t = Time('2023-01-15 12:30:00')
+t = Time('2023-01-15 12:30:00', scale='utc')
 jd = t.jd  # Julian Date
 
 # FITS files
@@ -194,8 +194,10 @@ Robust statistical functions including sigma clipping and outlier rejection.
 uv pip install astropy
 
 # With optional dependencies for full functionality
-uv pip install astropy[all]
+uv pip install 'astropy[all]'
 ```
+
+AltAz/precise-time transforms can use IERS Earth-orientation data and may auto-download updates. For offline/reproducible work, configure auto_download=False with a reviewed local table and record its coverage/accuracy limits; named-object/remote FITS operations are network accesses requiring task-appropriate authorization. Cross-matching returns nearest neighbors (possibly many-to-one), not confirmed physical identity; inspect epochs/proper motion, units, uncertainty and matching policy. Do not multiply existing unit-bearing columns by degrees again.
 
 ## Common Workflows
 
@@ -216,7 +218,7 @@ print(f"l={c_gal.l.deg}, b={c_gal.b.deg}")
 from astropy.time import Time
 from astropy.coordinates import EarthLocation, AltAz
 
-observing_time = Time('2023-06-15 23:00:00')
+observing_time = Time('2023-06-15 23:00:00', scale='utc')
 observing_location = EarthLocation(lat=40*u.deg, lon=-120*u.deg)
 aa_frame = AltAz(obstime=observing_time, location=observing_location)
 c_altaz = c.transform_to(aa_frame)
@@ -320,6 +322,8 @@ print(f"Found {len(cat1_matched)} matches")
 - GitHub: https://github.com/astropy/astropy
 
 ## Reference Files
+
+These seven bundled files are short pointers/placeholders, not comprehensive local references. Follow the official documentation when needed; do not claim the detailed procedures are bundled.
 
 For detailed information on specific modules:
 - `references/units.md` - Units, quantities, conversions, and equivalencies

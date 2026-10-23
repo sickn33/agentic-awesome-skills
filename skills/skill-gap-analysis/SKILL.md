@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Skill Gap Record,Assessment Date,Current Level,Department,Employee Name,Gap Severity,Notes,Recommended Training,Course Requests,Required Level,Skill Area,Skill ID,Status,Target Date
-Advanced SQL,2026-01-15,1 - Beginner,Delivery,Aarav Sharma,Low,Gap list agreed with the team in February; the training budget does not yet cover it.,"Advanced SQL for analysts, six hours self-paced.",CRS-2026-018,1 - Beginner,SQL,,Planned,2026-01-15
+Advanced SQL,2026-01-15,1 - Beginner,Delivery,Aarav Sharma,Low,Gap list agreed with the team in February; the training budget does not yet cover it.,"Advanced SQL for analysts, six hours self-paced.",CRS-2026-018,4 - Advanced,SQL,,Planned,2026-01-15
 ```
 
 ```sql
@@ -203,6 +203,8 @@ CREATE INDEX idx_skill_gap_analysis_status ON skill_gap_analysis (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+Define observable skill criteria and assessment evidence before assigning levels/severity. The baseline has no action-owner field: add Owner and assessment-source/date consistently when the requested plan requires accountable follow-up. Same current/required levels are not a gap; do not invent training needs from a job title or protected personal traits.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
@@ -216,7 +218,7 @@ and anything pointing at another table stays `relation`.
 | 7 | Notes | `long_text` | `TEXT` | `string` | Text | `Gap list agreed with the team in February; the training budget does not yet cover it.` |
 | 8 | Recommended Training | `text` | `VARCHAR(255)` | `string` | Text | `Advanced SQL for analysts, six hours self-paced.` |
 | 9 | Course Requests | `text` | `VARCHAR(255)` | `string` | Text | `CRS-2026-018` |
-| 10 | Required Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `1 - Beginner` |
+| 10 | Required Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `4 - Advanced` |
 | 11 | Skill Area | `text` | `VARCHAR(255)` | `string` | Text | `SQL` |
 | 12 | Skill ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 13 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Planned` |
@@ -323,7 +325,7 @@ We know delivery is weak on SQL but have not prioritised training.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

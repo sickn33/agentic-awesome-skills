@@ -2,6 +2,8 @@
 
 ## Common RBAC Patterns
 
+Read/list/watch Secrets exposes credential material; never treat wildcard read access as harmless. Prefer explicit resource lists and namespace RoleBindings, and do not bind a default service account. Workload creation/update can indirectly grant mounted secrets/service-account privileges. ClusterRole permissions become namespace-scoped only with RoleBinding; ClusterRoleBinding grants cluster-wide. The Deployment fragment below is a patch fragment, not a complete manifest (selector/template labels/container omitted).
+
 ### Pattern 1: Read-Only Access
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -9,8 +11,11 @@ kind: ClusterRole
 metadata:
   name: read-only
 rules:
-- apiGroups: ["", "apps", "batch"]
-  resources: ["*"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets", "statefulsets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps"]
   verbs: ["get", "list", "watch"]
 ```
 

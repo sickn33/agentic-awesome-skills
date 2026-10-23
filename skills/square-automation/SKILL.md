@@ -18,13 +18,17 @@ Automate Square payment processing, order management, and invoicing through Comp
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify current MCP and service authentication; adding an endpoint alone does not establish an authenticated connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `square`
 3. If connection is not ACTIVE, follow the returned auth link to complete Square OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Effect boundary
+
+Resolve exact account/environment and IDs before acting. Read-only listing does not authorize payment cancellation/order/invoice mutation. Preview the specific effect and perform only the user-authorized action; record returned identity/status, reconcile ambiguous writes before retries and verify final state rather than treating request acceptance as completion.
 
 ## Core Workflows
 

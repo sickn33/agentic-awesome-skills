@@ -68,15 +68,15 @@ For every visible value, run this decision tree:
 Did any network request return this value?
 ├── YES — found in a response:
 │   ├── Status 4xx/5xx → BROKEN
-│   ├── Endpoint matches /ai|openai|generate|llm|chat → LLM
+│   ├── Endpoint name suggests AI → UNKNOWN until implementation or provider evidence establishes provenance
 │   ├── Response shape matches mock library (faker, MSW, mockoon) → MOCK
-│   ├── Uniformity flags trigger → MOCK or LLM (review)
+│   ├── Uniformity flags trigger → UNKNOWN; inspect provenance before classifying
 │   ├── DB connection provided?
 │   │   ├── Run read-only SELECT, value matches DB row → REAL
-│   │   └── Value not in DB → MOCK
+│   │   └── Value not in this DB/query → UNKNOWN (could be computed, cached or sourced elsewhere)
 │   └── No DB → UNKNOWN (best-guess)
 └── NO — value not in any network response:
-    ├── String literal in DOM source → HARDCODED
+    ├── Verified literal in application source → HARDCODED; rendered DOM text alone does not establish this
     ├── Computed from Math.random / Date.now / faker → MOCK
     └── Cannot determine → UNKNOWN
 ```
@@ -105,7 +105,7 @@ Generate `mockhunter-report.md` with:
 User: /mockhunter audit https://my-app.lovable.app/admin
 Skill: [Phase 1] Stack detected: Lovable. Auth: skip. DB: no.
        [Phase 2] Catalog: 6 stat cards, 4 verification queues, 8 activity items.
-       [Phase 3] Search box: NO-OP (zero network requests). Activity link → 404.
+       [Phase 3] Search box: inspect DOM/results after input; zero network requests alone does not establish a NO-OP. Activity link → 404.
        [Phase 4] Bundle 2.7 MB. Zero /api/, zero supabase, zero axios.
                  "$42,850" → string literal in JSX → HARDCODED.
                  "+12% vs last month" → string literal → HARDCODED.
@@ -125,7 +125,7 @@ Skill: ...
 
 ## Best Practices
 
-- ✅ Provide DB access when available — lifts UNKNOWN verdicts to REAL or MOCK
+- ✅ Use approved read-only DB access when useful; a matching row establishes a source match, not real-world truth, and a missing row remains UNKNOWN
 - ✅ Use a dedicated test account for form-login auth
 - ✅ Run cold-start tests (zero data) — many vibe-coded apps fail there
 - ✅ Tell the skill if specific sections are intentionally AI-generated, so it doesn't false-flag them

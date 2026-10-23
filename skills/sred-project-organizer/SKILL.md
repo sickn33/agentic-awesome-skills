@@ -9,6 +9,8 @@ date_added: "2026-03-06"
 
 This catalog copy contains the inline guidance below, but does not include the following supporting paths. They are external prerequisites, not bundled files:
 
+- `references/SRED.md`
+- `references/project-template.md`
 
 Ask for the original supporting material or an existing installation before using a step that depends on these paths; this catalog does not identify a verified download source for them. Resolve each path relative to that installation, inspect its contents, and verify any applicable license and execution prerequisites. Do not run a command or claim a referenced procedure was followed until its required file exists. Do not fabricate the missing scripts or treat an unrelated file with the same name as equivalent. Independent steps fully documented here can proceed within the user’s authorized scope; report any dependent step as unavailable.
 
@@ -58,12 +60,12 @@ Ensure:
 
 ## Step 2
 
-For each project in the Work Summary, evaluate it against the description of a SRED project in `${CLAUDE_SKILL_ROOT}/references/SRED.md`. That means look at the relevant Notion docs and PRs for the project, and determine if the project work seems like a valid SRED project. Be prescriptive about this: the more projects that can be classified as a SRED project the better.
+For each project in the Work Summary, evaluate it against the description of a SRED project in `${CLAUDE_SKILL_ROOT}/references/SRED.md`. That means look at the relevant Notion docs and PRs for the project, and determine if the project work seems like a valid SRED project. Classify from documented technical uncertainty, systematic investigation and evidence; do not maximize eligibility or invent experiments/results. Mark insufficient evidence as unassessed and have a qualified SR&ED adviser verify eligibility against current CRA criteria.
 
 Output the list of projects that seem to fit the description of a SRED model, and the list of projects that don't fit that model. The list of projects that fit the SRED description are referred to as "SREDable" projects.
 
 Ensure:
-- All the projects in the Work Summary have been classified as SREDable or not.
+- All projects have a supported candidate/not-candidate classification or an explicit insufficient-evidence status; user preference alone cannot establish tax eligibility.
 
 ## Step 3
 
@@ -145,3 +147,5 @@ Full documentation on the SRED program: https://www.canada.ca/en/revenue-agency/
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The two reference/template files are unavailable in this catalog. Obtain the controlled template and current CRA guidance before dependent classification/submission work; meanwhile organize source links and evidence without claiming eligibility. Confirm the intended private Notion parent and its actual sharing permissions before writing, and never submit a tax claim or expose employee/project data based on this draft workflow alone.

@@ -32,7 +32,11 @@ Administer, optimize, and secure MongoDB NoSQL databases in development and prod
 
 - Linux server (Debian/Ubuntu or RHEL-based) or Docker.
 - Root or sudo access for package installation.
-- MongoDB 7.x recommended for production (6.x still supported).
+- Select a MongoDB release with verified current support and tool/OS compatibility; 6.x/7.x examples below are historical baselines.
+
+## Scope and data safety
+
+Use packages/repository codename matching the host OS and verify signing-key fingerprints independently. Bootstrap users only on a local/private isolated listener; restrict bindIp to the required private addresses, enable TLS and never expose unauthenticated initialization. Passwords/URIs below are placeholders: use prompts or protected tool configuration rather than real secrets in process arguments or committed Compose. The Compose lab runs all members on one host, requires correct keyfile ownership inside containers and resolvable advertised member names; the host connection URL alone does not make mongo1/2/3 resolvable externally. Dumps need a consistency strategy for concurrent writes; --drop overwrites collections and needs a tested restore into isolation. TTL indexes delete data asynchronously. Profiler/diagnostic output can contain personal records; restrict access and redact. Server options and support status must be checked for the chosen version.
 
 ## Installation and Setup
 
@@ -206,7 +210,7 @@ db.users.aggregate([
 
 ## Replica Set Setup
 
-A replica set requires a minimum of three members (or two data-bearing nodes plus an arbiter).
+A single-member replica set is possible for development; production availability generally needs three appropriately distributed voting data-bearing members. An arbiter holds no data and is not an equivalent redundant copy.
 
 ### Configuration File for Each Member
 
@@ -289,7 +293,7 @@ services:
     image: mongo:7
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: secret
@@ -396,8 +400,6 @@ rs.printSecondaryReplicationInfo()
 # /etc/mongod.conf — production recommendations
 storage:
   dbPath: /var/lib/mongodb
-  journal:
-    enabled: true
   wiredTiger:
     engineConfig:
       cacheSizeGB: 4          # ~50% of RAM, leave rest for OS cache
@@ -417,7 +419,7 @@ operationProfiling:
 | Symptom | Likely Cause | Fix |
 |---|---|---|
 | `COLLSCAN` in explain output | Missing index on queried field | Create an appropriate index |
-| Replica member stuck in `RECOVERING` | Oplog window exceeded | Resync by removing data and restarting the member |
+| Replica member stuck in `RECOVERING` | Oplog window exceeded | Diagnose lag/connectivity and follow a verified member-specific resync procedure with healthy quorum and backups; do not erase data as the first step |
 | `too many open files` | OS file descriptor limit too low | Set `ulimit -n 65535` in service file |
 | High memory usage | WiredTiger cache too large | Reduce `cacheSizeGB` in config |
 | Slow aggregation pipelines | No index on `$match` stage fields | Add index; place `$match` as early as possible in pipeline |

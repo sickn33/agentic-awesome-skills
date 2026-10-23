@@ -17,7 +17,7 @@ license_source: https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE
 
 Use this skill whenever one MCP connection can target multiple n8n instances, before instance-specific reads or writes, and whenever results suggest the session is aimed at the wrong environment.
 
-Resolve the target by stable instance ID, verify it with a read-only health check, and state the resolved environment before mutations. Require explicit confirmation for credential create/update/delete operations, never print secret values, and stop on ambiguous targeting rather than guessing.
+Resolve the target from the discovered name, ID and URL; switch using the schema-supported name, verify it with a read-only health check, and state the resolved environment before mutations. Require explicit confirmation for credential create/update/delete operations, never print secret values, and stop on ambiguous targeting rather than guessing.
 
 When the `n8n_instances` tool is available, the user has **multi-instance mode** on: one MCP
 connection can reach several n8n instances (e.g. `prod`, `staging`, or one per client/team).
@@ -28,8 +28,7 @@ argument: you change the target only by switching. Target the wrong instance and
 wrong data and a write lands in the wrong place — usually with **no error** (the one exception is an
 ambiguous credential write, which fails closed; see below). So target deliberately.
 
-If the `n8n_instances` tool is **not** present, the account is single-instance: ignore this skill
-and use the n8n tools directly.
+If the tool is absent, multi-instance support is unknown. Verify the connected server and target using available read-only evidence before operating; do not infer single-instance access from a missing tool.
 
 ## Golden rules
 
@@ -48,7 +47,7 @@ Six rules. Each prevents a class of silent misroute.
    check is `n8n_instances({mode:"list"})`. The system fail-closes only the *ambiguous* credential
    case (rule 6); an explicit switch to the **wrong** instance still writes there silently, so this
    check is on you.
-5. **An unexpected `NOT_FOUND` is almost always a wrong-instance misroute, not a deletion.** Don't
+5. **An unexpected `NOT_FOUND` may be a wrong-instance misroute, missing permission or deletion.** Don't
    recreate the object. Re-check the current instance and retry (see Recovery).
 6. **On `INSTANCE_AMBIGUOUS`, switch on *this* session, then retry.** The system is refusing to
    write a secret because this session never picked a target itself. Comply — run `switch` here to
@@ -206,3 +205,5 @@ Do each instance's steps in its own turn; never overlap `switch → B` with the 
 - Instance discovery and switching depend on the connected n8n MCP server exposing multi-instance tools.
 - A successful switch does not authorize mutations or prove that the selected environment is appropriate for the task.
 - Unexpected empty or missing data may have causes other than misrouting; verify before changing targets.
+
+The exact session lifetime, fallback, error envelope and credential guard behavior described here is server-version-specific. Verify the live schema and resolved target; never rely on a claimed server safety net without evidence. Serialize all operations sharing a mutable target session; a pre-write list check alone cannot prevent another concurrent switch. Credential reads may return redacted data, not exportable secrets; copying workflows does not copy their credentials or authorize production activation.

@@ -58,7 +58,7 @@ must be built on these CTR mechanics:
 
 ### Power Word Bank
 
-Use 1–2 of these per meta description — never more:
+Use these only where accurate and supported by the supplied page evidence; omit power words rather than inventing guarantees, free offers, rankings, expertise or statistics:
 
 **Curiosity:** Discover, Uncover, Exactly, The Truth About,
                What Nobody Tells You
@@ -75,22 +75,20 @@ Use 1–2 of these per meta description — never more:
 
 ### What to Never Use
 
-- "Click here" or "Click to learn more" — generic, 
-  penalised for passive intent
-- All caps words — treated as spam signals
+- "Click here" or "Click to learn more" — usually less informative than a specific benefit
+- Unnecessary all caps — can reduce readability
 - Keyword stuffing — using primary keyword more than once 
   in the meta description
 - Duplicate meta descriptions — every page needs unique copy
 - Vague openers — "This page is about..." or 
   "We offer..." wastes character space
-- First-person plural — "We", "Our", "Us" 
-  reduces relevance signals
+- Empty brand-centric claims — prefer information useful to the searcher
 
 ---
 
 ## Character Limits and Behaviour
 
-| Element              | Ideal Range    | Hard Limit | If Over Limit              |
+| Element              | Editorial Target | Planning Threshold | Preview Risk              |
 |----------------------|----------------|------------|----------------------------|
 | Title Tag            | 50–60 chars    | 60 chars   | Truncated with "..." in SERP|
 | Meta Description     | 140–155 chars  | 160 chars  | Truncated mid-sentence     |
@@ -99,7 +97,9 @@ Use 1–2 of these per meta description — never more:
 | Twitter Title        | 40–60 chars    | 70 chars   | Truncated in card          |
 | Twitter Description  | 100–200 chars  | 200 chars  | Truncated in card          |
 
-**Rule:** Never end a meta description mid-sentence. 
+These are drafting targets, not universal platform limits. [Google documents no fixed meta-description length limit](https://developers.google.com/search/docs/appearance/snippet); displayed snippets depend on device width/query and can be rewritten. Verify current social-card requirements before delivery. Character counts cannot guarantee truncation behavior.
+
+**Rule:** Never deliberately end a meta description mid-sentence.
 If approaching the limit, cut a clause rather than 
 let it truncate naturally.
 
@@ -146,7 +146,7 @@ This is approximately how the page will appear in search results:
 
 ## Title Tag Variants
 
-Write 3 variants — the user should A/B test these:
+Write 3 variants — compare with a controlled test where feasible; search changes and query mix can confound results:
 
 | #   | Title Tag                          | Chars | Keyword Position | CTR Angle         |
 |-----|------------------------------------|-------|------------------|-------------------|
@@ -155,14 +155,14 @@ Write 3 variants — the user should A/B test these:
 | V3  | [variant 3 — keyword + brand]      | [n]   | First phrase     | Authority/brand   |
 
 **Recommended:** V[n] — [one sentence reason why 
-this variant will perform best for this page type 
+this variant is the preferred hypothesis for this page type
 and audience]
 
 ---
 
 ## Meta Description Variants
 
-Write 3 variants — the user should A/B test these:
+Write 3 variants — compare with a controlled test where feasible; search changes and query mix can confound results:
 
 **V1 — Benefit Lead**
 [Description starting with the outcome or benefit. 
@@ -259,7 +259,7 @@ Before accepting any variant, verify:
 - [ ] Primary keyword appears in first half 
       of the description
 - [ ] Character count is 140–155
-- [ ] Contains at least one power word
+- [ ] Any power word or claim is accurate and supported; omit it otherwise
 - [ ] Ends with a CTA verb or action phrase
 - [ ] Does not duplicate the title tag phrasing
 - [ ] Does not use "click here" or passive openers
@@ -293,6 +293,8 @@ Before accepting any variant, verify:
 ````
 
 ---
+
+Escape attribute values in generated HTML (including quotes and ampersands), use verified canonical/image URLs, and leave unavailable facts as explicit placeholders. Metadata drafts do not authorize publishing changes.
 
 ## Execution Steps
 

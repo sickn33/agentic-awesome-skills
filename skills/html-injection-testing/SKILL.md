@@ -46,7 +46,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ## Constraints and Limitations
 
 ### Attack Limitations
-- Modern browsers may sanitize some injections
+- Browsers generally parse supplied markup; sanitization is the application’s responsibility
 - CSP can prevent inline styles and scripts
 - WAFs may block common payloads
 - Some applications escape output properly
@@ -58,7 +58,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Check for stored vs reflected
 
 ### Severity Assessment
-- Lower severity than XSS (no script execution)
+- Severity depends on actual context and impact; HTML-only injection is distinct from demonstrated script execution
 - Higher impact when combined with phishing
 - Consider defacement/reputation damage
 - Evaluate credential theft potential

@@ -46,13 +46,13 @@ Your goal is to aggressively break these defaults. Your outputs must be highly c
 DO NOT USE EMOJIS IN YOUR CODE, COMMENTS, OR OUTPUT. Maintain strictly professional formatting.
 
 ## 1. PYTHON-DRIVEN TRUE RANDOMIZATION (BREAKING THE LOOP)
-LLMs are inherently lazy and always pick the first layout option. To prevent this, you MUST simulate a Python script execution in your `<design_plan>` before writing any UI code.
-Use a deterministic seed (e.g., character count of the user prompt modulo math) to simulate `random.choice()` and strictly select:
+LLMs are inherently lazy and always pick the first layout option. To prevent this, you may choose a layout directly or run an actual seeded selection and report only observed execution in your `<design_plan>` before writing any UI code.
+If random selection is useful, use an explicitly recorded deterministic seed with an actual `random.choice()` run and strictly select:
 - 1 Hero Architecture (from Section 3)
 - 1 Typography Stack (Satoshi, Cabinet Grotesk, Outfit, or Geist. NEVER Inter)
 - 3 Unique Component Architectures (from Section 6)
 - 2 Advanced GSAP Paradigms (from Section 5)
-You are forbidden from defaulting to the same UI twice. You must follow the exact output of your simulated Python randomization.
+You are forbidden from defaulting to the same UI twice. Treat layout selection as a design choice, not proof of rendering or accessibility.
 
 ## 2. AIDA STRUCTURE & SPACING
 Every page MUST begin with a highly creative, premium Navigation Bar (e.g., floating glass pill, or minimal split nav).
@@ -79,7 +79,7 @@ The Hero must breathe. It must NOT be a narrow, 6-line text wall.
 - **Card Restraint:** Do not use too many cards. 3 to 5 highly intentional, beautifully styled cards are better than 8 messy ones. Fill them with a mix of large imagery, dense typography, or CSS effects.
 
 ## 5. ADVANCED GSAP MOTION & HOVER PHYSICS
-Static interfaces are strictly forbidden. You must write real GSAP (`@gsap/react`, `ScrollTrigger`).
+Use GSAP only when appropriate and supported; honor `prefers-reduced-motion` with a complete usable static presentation. Ensure content is visible without animation, keyboard navigation works, and cleanup removes triggers/listeners.
 - **Hover Physics:** Every clickable card and image must react. Use `group-hover:scale-105 transition-transform duration-700 ease-out` inside `overflow-hidden` containers.
 - **Scroll Pinning (GSAP Split):** Pin a section title on the left (`ScrollTrigger pin: true`) while a gallery of elements scrolls upwards on the right side.
 - **Image Scale & Fade Scroll:** Images must start small (`scale: 0.8`). As they scroll into view, they grow to `scale: 1.0`. As they scroll out of view, they smoothly darken and fade out (`opacity: 0.2`).
@@ -95,15 +95,15 @@ Select components from this arsenal based on your randomization:
 
 ## 7. CONTENT, ASSETS & STRICT BANS
 - **The Meta-Label Ban:** BANNED FOREVER are labels like "SECTION 01", "SECTION 04", "QUESTION 05", "ABOUT US". Remove them entirely. They look cheap and unprofessional.
-- **Image Context & Style:** Use `https://picsum.photos/seed/{keyword}/1920/1080` and match the keyword to the vibe. Apply sophisticated CSS filters (`grayscale`, `mix-blend-luminosity`, `opacity-90`, `contrast-125`) so they do not look like boring stock photos.
+- **Image Context & Style:** Use licensed/user-approved imagery matched to the content. Picsum seeds select repeatable random photos; keywords do not perform semantic image search. Apply sophisticated CSS filters (`grayscale`, `mix-blend-luminosity`, `opacity-90`, `contrast-125`) so they do not look like boring stock photos.
 - **Creative Backgrounds:** Inject subtle, professional ambient design. Use deep radial blurs, grainy mesh gradients, or shifting dark overlays. Avoid flat, boring colors.
 - **Horizontal Scroll Bug:** Wrap the entire page in `<main className="overflow-x-hidden w-full max-w-full">` to absolutely prevent horizontal scrollbars caused by off-screen animations.
 
 ## 8. MANDATORY PRE-FLIGHT <design_plan>
 Before writing ANY React/UI code, you MUST output a `<design_plan>` block containing:
-1. **Python RNG Execution:** Write a 3-line mock Python output showing the deterministic selection of your Hero Layout, Component Arsenal, GSAP animations, and Fonts based on the prompt's character count.
+1. **Layout Selection:** State the chosen design or report the actual observed seeded selection of your Hero Layout, Component Arsenal, GSAP animations, and Fonts based on the prompt's character count.
 2. **AIDA Check:** Confirm the page contains Navigation, Attention (Hero), Interest (Bento), Desire (GSAP), Action (Footer).
-3. **Hero Math Verification:** Explicitly state the `max-w` class you are applying to the H1 to GUARANTEE it will flow horizontally in 2-3 lines. Confirm NO stamp icons or spam tags exist.
+3. **Hero Math Verification:** Explicitly state the `max-w` class you are applying to the H1 as a target, then verify wrapping across viewport sizes, languages and text zoom. Confirm NO stamp icons or spam tags exist.
 4. **Bento Density Verification:** Prove mathematically that your grid columns and rows leave zero empty spaces and `grid-flow-dense` is applied.
-5. **Label Sweep & Button Check:** Confirm no cheap meta-labels ("QUESTION 05") exist, and button text contrast is perfect.
+5. **Label Sweep & Button Check:** Check labels and measure button/text contrast; do not claim perfect contrast without actual evidence.
 Only output the UI code after this rigorous verification is complete.

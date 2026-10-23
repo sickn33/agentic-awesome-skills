@@ -52,13 +52,17 @@ redis-cli ping
 # Expected output: PONG
 ```
 
+## Data durability, access and concurrency
+
+Default to private/loopback access; use authenticated TLS and least-privilege ACLs for remote clients and protect Sentinel/management UIs too. Password strings below are placeholders, never real command-line secrets; use approved secret injection and avoid MONITOR/SLOWLOG exports containing private data. `allkeys-lru` can evict queues, sessions or locks: use noeviction/appropriate isolation for durable job/coordination data. RDB/AOF and async replication do not guarantee zero data loss; test backups/failover. The lock uses a unique per-acquisition token and atomic owner-checked release, but needs fencing/expiry handling and is not Redlock. The multi-command limiter is not atomic and its sample boundary is illustrative; use a reviewed atomic script/function for concurrent enforcement.
+
 ## Core Configuration
 
 Edit `/etc/redis/redis.conf`:
 
 ```ini
 # Network
-bind 0.0.0.0
+bind 127.0.0.1
 port 6379
 protected-mode yes
 requirepass strong_redis_password
@@ -299,7 +303,7 @@ PUBLISH notifications:order-updates '{"orderId":42,"status":"shipped"}'
 PSUBSCRIBE notifications:*
 ```
 
-### Distributed Locking (Redlock Pattern)
+### Single-instance lease illustration (not Redlock)
 
 ```bash
 # Acquire lock
@@ -327,7 +331,7 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
     volumes:
       - redis_data:/data
       - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
@@ -342,7 +346,7 @@ services:
     image: redis:7-alpine
     restart: unless-stopped
     ports:
-      - "26379:26379"
+      - "127.0.0.1:26379:26379"
     volumes:
       - ./sentinel.conf:/usr/local/etc/redis/sentinel.conf
     command: redis-sentinel /usr/local/etc/redis/sentinel.conf
@@ -354,7 +358,7 @@ services:
     image: rediscommander/redis-commander:latest
     restart: unless-stopped
     ports:
-      - "8081:8081"
+      - "127.0.0.1:8081:8081"
     environment:
       REDIS_HOSTS: "local:redis:6379:0:strong_redis_password"
     depends_on:

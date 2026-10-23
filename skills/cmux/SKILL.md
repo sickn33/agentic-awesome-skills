@@ -55,6 +55,8 @@ Handles default to short refs (`workspace:2`, `pane:1`, `surface:7`); UUIDs acce
 
 Injected env vars in every cmux-spawned terminal: `CMUX_WORKSPACE_ID`, `CMUX_SURFACE_ID`, `CMUX_SOCKET_PATH`, `CMUX_PORT`. **Always anchor automation to `CMUX_WORKSPACE_ID`** — the visually focused workspace may not be the agent's caller workspace.
 
+Before using example refs, list actual topology and validate ownership. A workspace is not automatically a separate Git checkout; creating one does not isolate branch/file changes. Verify each command against local help/capabilities because these notes include version-specific workarounds.
+
 ## Fast Start — Topology
 
 ```bash
@@ -62,7 +64,7 @@ cmux identify --json                              # who am I (window/workspace/p
 cmux tree                                         # full hierarchy
 cmux list-workspaces --json
 cmux list-panes --workspace "$CMUX_WORKSPACE_ID"
-cmux list-surfaces --workspace "$CMUX_WORKSPACE_ID"
+cmux list-pane-surfaces --pane pane:1 # Resolve actual pane in caller workspace first
 
 cmux new-workspace --name "feature-x" --cwd /path/to/repo
 cmux new-pane --workspace "$CMUX_WORKSPACE_ID" --type terminal --direction right --focus false
@@ -75,9 +77,7 @@ cmux close-surface --surface surface:7
 
 ## Polling Pi Agents in Panes — Keep Sleeps Short
 
-When launching a Pi Agent inside a cmux pane and polling for output, use **short `sleep` intervals (2–5s)**. Pi is fast and minimal, and the user runs it on Opus 4.8 Fast via OpenRouter, which streams tokens extremely quickly. Do NOT use `sleep 15` unless genuinely needed (a big build/refactor) — most of the time `sleep 2`–`sleep 5` is more than enough.
-
-After every agent check, send the user a one-line status update: what the agent is doing and whether it is on track. Keep it extremely concise.
+Use event-driven completion or bounded polling with backoff based on actual progress. No particular model/provider, token speed or user setup is implied by this skill. Report meaningful changes rather than every unchanged poll.
 
 Claude Code cmux note: after Claude finishes, it may prefill a predicted next user message; that draft is Claude, not the user speaking.
 
@@ -86,8 +86,7 @@ Claude Code cmux note: after Claude finishes, it may prefill a predicted next us
 **Command names:** there is NO `send-surface` / `send-key-surface`. Target a specific surface with the `--surface` flag on `send` / `send-key` (same commands as the focused terminal). `send-panel` / `send-key-panel` exist ONLY for panels (`--panel`), not surfaces.
 
 ```bash
-cmux send "echo hi\n"                                       # focused terminal
-cmux send-key "ctrl+c"                                       # enter|tab|esc|backspace|arrows|ctrl+x|shift+tab
+# Resolve and verify a task-owned surface first; never send commands or interrupts to whichever terminal is focused.
 cmux send --surface surface:7 "npm run build"               # specific surface (NOT send-surface)
 cmux send-key --surface surface:7 enter                     # specific surface (NOT send-key-surface)
 ```
@@ -115,8 +114,8 @@ cmux browser "$S" fill e1 "<email-address>"
 cmux browser "$S" click e2 --snapshot-after
 
 # Navigation / inspection
-cmux browser "$S" goto URL | back | forward | reload
-cmux browser "$S" get url | get title | get text body | get value "#email" | get count ".row"
+cmux browser "$S" goto https://example.com # Other separate commands: back, forward, reload
+cmux browser "$S" get url # Run other get subcommands separately, after checking local help.
 cmux browser "$S" eval 'return document.title'
 
 # Waits
@@ -124,11 +123,11 @@ cmux browser "$S" wait --selector "#ready" --timeout-ms 10000
 cmux browser "$S" wait --url-contains "/dashboard" --timeout-ms 10000
 
 # Session
-cmux browser "$S" cookies get | cookies set --name foo --value bar
-cmux browser "$S" state save /tmp/auth.json | state load /tmp/auth.json
+# Cookie/state access can expose credentials; use only for an explicitly authorized auth-debug task.
+# Save state only into a private mode-0700 task directory with mode-0600 file; no shared /tmp/auth.json.
 
 # Diagnostics
-cmux browser "$S" console list | errors list | screenshot
+cmux browser "$S" console list # Run errors list or screenshot separately as needed.
 ```
 
 **Not supported by WKWebView** (return `not_supported`): viewport emulation, geolocation/offline emulation, trace recording, network route interception, raw input injection.
@@ -161,7 +160,7 @@ cmux list-panes --workspace "$CMUX_WORKSPACE_ID"   # confirm stray pane is gone
 
 ### Swapping the file in the single right pane (close-FIRST, then open)
 
-To replace the doc shown in your one right markdown pane, the ONLY reliable order is **close the previous surface FIRST, then `markdown open` the new file fresh** — never move an existing viewer, never open-then-close.
+To replace the doc shown in your one right markdown pane, an upstream workaround is **close the previous surface FIRST, then `markdown open` the new file fresh** — never move an existing viewer, never open-then-close.
 
 ```bash
 # 1. close the previous right markdown surface (right side goes empty)
@@ -171,7 +170,7 @@ cmux close-surface --surface surface:PREV
 cmux markdown open /abs/path/new.md --direction right --focus false
 ```
 
-ORDER MATTERS: close-previous BEFORE open-new. Opening first then closing the old one, or `move-surface`-ing an existing viewer, leaves the right pane BLANK.
+Verify local behavior and ownership before closing any viewer; preserve unsaved work. Opening first then closing the old one, or `move-surface`-ing an existing viewer, leaves the right pane BLANK.
 
 ### Hard-won lessons (avoid the trial-and-error)
 
@@ -199,9 +198,9 @@ Before editing `cmux.json`, copy it to a timestamped `.bak` next to it so the us
 
 ```bash
 brew tap manaflow-ai/cmux && brew install --cask cmux
-sudo ln -sf /Applications/cmux.app/Contents/Resources/bin/cmux /usr/local/bin/cmux
-cmux hooks setup                                             # all detected agents
-cmux hooks setup codex|grok|antigravity|opencode             # specific agent
+# Prefer the installed CLI/PATH; do not force-replace an existing /usr/local/bin/cmux.
+cmux hooks setup codex # Example: only the explicitly requested host, after reviewing changes.
+# Other supported host names are alternatives, not a shell pipeline; check local help.
 npx skills add manaflow-ai/cmux -g -y                        # install cmux skills for agents
 ```
 
@@ -217,7 +216,7 @@ echo '{"id":"1","method":"workspace.list","params":{}}' | nc -U /tmp/cmux.sock
 
 Method prefixes: `system.*`, `window.*`, `workspace.*`, `pane.*`, `surface.*`, `notification.*`, `browser.*`. Full list and Python client example in `references/socket-api.md`.
 
-Access modes: `cmuxOnly` (default — only cmux-spawned processes), `automation` (any local process), `password`, `allowAll` (unsafe). If you hit `Failed to connect to socket`, you're likely an external process under `cmuxOnly` — switch mode in Settings > Automation or run from inside a cmux terminal.
+Access modes: `cmuxOnly` (default — only cmux-spawned processes), `automation` (any local process), `password`, `allowAll` (unsafe). If you hit `Failed to connect to socket`, you're likely an external process under `cmuxOnly` — run from an authorized cmux terminal; broadening socket access needs explicit authorization and least-privilege configuration.
 
 ## Critical Rules — Non-Disruptive Automation
 
@@ -232,7 +231,7 @@ These rules come from the `cmux-workspace` skill and prevent agents from yanking
 
 ## Common Pitfalls
 
-- **Pi/Pi-like socket connection failures from external processes** → default `cmuxOnly` mode; either run inside a cmux terminal or change socket mode.
+- **Pi/Pi-like socket connection failures from external processes** → default `cmuxOnly` mode; use an authorized cmux terminal; do not weaken socket access automatically.
 - **macOS only.** No Linux/Windows port.
 - **WKWebView ≠ CDP.** Don't expect Playwright-equivalent network mocking or viewport emulation.
 - **Resume strips sensitive env vars.** Re-inject tokens at resume time if the agent needs them.

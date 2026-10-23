@@ -431,3 +431,5 @@ Next steps:
 - If directory creation fails: Halt and report, do not register in tracks.md
 - If any file write fails: Clean up partial track, report error
 - If tracks.md update fails: Warn user to manually register track
+
+Treat descriptions and filenames as untrusted text: generate a bounded lowercase alphanumeric/hyphen slug, reject path separators/dot segments and create track paths exclusively within the intended root. Do not overwrite an existing track on collision. Roll back only files created by this attempt; never delete a pre-existing or user-edited partial directory. Preserve prior approvals and report exact created paths.

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/claim-analysis.schema.json",
+  "title": "Product Design Harness Claim Analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "claims",
+    "riskiest_claim_id",
+    "critical_path",
+    "highest_leverage_proof_step",
+    "human_owned_decision"
+  ],
+  "properties": {
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "claim.schema.json" },
+      "minItems": 1
+    },
+    "riskiest_claim_id": { "type": "string", "minLength": 1 },
+    "critical_path": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "highest_leverage_proof_step": { "type": "string", "minLength": 1 },
+    "human_owned_decision": {
+      "type": "string",
+      "enum": ["taste", "risk", "strategy", "ethics", "meaning", "none"]
+    }
+  }
+}

@@ -77,8 +77,9 @@ private struct FilterSection: View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack {
                 ForEach(filterOptions, id: \.self) { option in
-                    FilterChip(option: option, isSelected: option == selectedFilter)
-                        .onTapGesture { selectedFilter = option }
+                    Button { selectedFilter = option } label: {
+                        FilterChip(option: option, isSelected: option == selectedFilter)
+                    }
                 }
             }
         }
@@ -193,7 +194,7 @@ init(dependency: Dependency) {
 2. Remove inline actions and side effects from `body`; move business logic into services/models and keep only thin orchestration in the view.
 3. Shorten long bodies by extracting dedicated subview types; avoid rebuilding the screen out of many computed `some View` helpers.
 4. Ensure stable view structure: avoid top-level `if`-based branch swapping; move conditions to localized sections/modifiers.
-5. If a view model exists or is explicitly required, replace optional view models with a non-optional `@State` view model initialized in `init`.
+5. If a view model exists or is explicitly required, preserve its ownership and lifetime: use @State for owned @Observable models, or @StateObject/@ObservedObject for legacy ObservableObject; do not mechanically change wrappers.
 6. Confirm Observation usage: `@State` for root `@Observable` models on iOS 17+, legacy wrappers only when the deployment target requires them.
 7. Keep behavior intact: do not change layout or business logic unless requested.
 

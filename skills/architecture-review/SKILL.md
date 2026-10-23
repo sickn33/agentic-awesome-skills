@@ -30,6 +30,8 @@ Use this skill when the user asks for architecture review using Ontoly evidence.
 
 ## Required Workflow
 
+The 1.3.3 minimum in frontmatter supersedes older 1.0.0 labels in companion notes. Verify installed capabilities and bind graph hash to the actual source revision; a graph summary is not proof that dynamic/configuration dependencies were fully captured.
+
 Follow the [shared Ontoly workflow](reference/workflow.md). Read the [graph evidence rules](reference/graph.md), [MCP usage](reference/mcp.md), [best practices](reference/best-practices.md), and [fallback rules](reference/fallbacks.md) when the task requires detail.
 
 ## Ontoly Capabilities

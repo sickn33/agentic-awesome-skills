@@ -103,7 +103,7 @@ https://github.com/Intelligent-Internet/II-Commons-Skills
 
 - Prefer server-side date filters such as `--start` and `--end` for time-bounded arXiv and PubMed searches.
 - Preserve canonical identifiers such as `arXiv:<id>`, `PMID:<id>`, `PMCID:PMC<id>`, and `policy:<jurisdiction>:<id>`.
-- Use `cutoff` as the authoritative freshness boundary for each corpus.
+- Record the reported `cutoff`, retrieval time, query/filter arguments and returned identifiers. A freshness cutoff alone does not pin an immutable result set; preserve retrieved records for reproducible analysis. Coverage and source updates can still lag.
 - Keep non-time filters conservative until initial search results show the right scope.
 
 ## Limitations

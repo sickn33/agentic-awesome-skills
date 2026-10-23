@@ -9,12 +9,12 @@ date_added: "2026-04-01"
 # Schema Generator Skill
 
 ## Description
-Activate this skill when the user wants to generate, write, 
-or validate structured data markup for any page. 
-Trigger phrases include: "generate schema", "create JSON-LD", 
-"schema markup for", "structured data for", 
-"FAQ schema", "product schema", "article schema", 
-"help Google understand my page", "rich results schema", 
+Activate this skill when the user wants to generate, write,
+or validate structured data markup for any page.
+Trigger phrases include: "generate schema", "create JSON-LD",
+"schema markup for", "structured data for",
+"FAQ schema", "product schema", "article schema",
+"help Google understand my page", "rich results schema",
 "schema generator: [type]", "add schema to [page]".
 
 ---
@@ -22,16 +22,12 @@ Trigger phrases include: "generate schema", "create JSON-LD",
 ## Input Format
 ````json
 {
-  "page_type": "landing-page | blog-post | pillar-page | 
-                product-page | homepage | faq-page | 
-                how-to-page",
-  "schema_types": ["string — list all types needed for 
-                    this page, see Schema Type Menu below"],
+  "page_type": "landing-page",
+  "schema_types": ["Article"],
   "page_data": {
     "url": "string — canonical URL of the page",
     "title": "string — page title",
-    "description": "string — page meta description 
-                    or content summary",
+    "description": "string — page description",
     "primary_keyword": "string",
     "date_published": "string — ISO format: YYYY-MM-DD",
     "date_modified": "string — ISO format: YYYY-MM-DD",
@@ -94,34 +90,31 @@ Trigger phrases include: "generate schema", "create JSON-LD",
 
 ## Schema Type Menu
 
-This skill supports the following schema types. 
+This skill supports the following schema types.
 Multiple types can be requested for a single page:
 
-| Schema Type          | Best For                                    | Rich Result Unlocked                    |
+| Schema Type          | Best For                                    | Potential Search use (not guaranteed)                    |
 |----------------------|---------------------------------------------|-----------------------------------------|
 | `Article`            | Blog posts, pillar pages, news              | Article rich result, Top Stories        |
-| `FAQPage`            | FAQ sections on any page                    | FAQ accordion in SERP — AEO critical    |
-| `HowTo`              | Step-by-step guides                         | Step-by-step rich result                |
+| `FAQPage`            | FAQ sections on any page                    | No current Google FAQ rich result    |
+| `HowTo`              | Step-by-step guides                         | Google HowTo rich result retired                |
 | `Product`            | Product or pricing pages                    | Price, availability, rating in SERP     |
 | `Review`             | Individual product or service reviews       | Star rating in SERP                     |
 | `AggregateRating`    | Pages with multiple reviews                 | Star rating with review count           |
 | `BreadcrumbList`     | Any page with a navigation hierarchy        | Breadcrumb path shown in SERP URL       |
 | `Organization`       | Homepage or About page                      | Brand knowledge panel signals           |
 | `WebPage`            | Any page needing basic structured identity  | Enhances page understanding by crawlers |
-| `WebSite`            | Homepage only                               | Sitelinks Searchbox in SERP             |
+| `WebSite`            | Homepage only                               | Site identity; searchbox retired             |
 
-**AEO Priority:** `FAQPage` and `HowTo` are the two schema 
-types most directly responsible for AI engine extraction. 
-Always include `FAQPage` on landing pages and blog posts 
-that contain a FAQ section.
+Use only types supported by visible page content. There is no established guarantee that FAQPage or HowTo causes AI extraction. Google retired HowTo rich results in 2023, the sitelinks searchbox in 2024, and FAQ rich results in May 2026. Schema.org validity and Google feature eligibility are separate.
 
 ---
 
 ## Rich Result Eligibility Rules
 
-Google requires specific fields to be present for each 
-schema type to qualify for rich results. 
-Missing required fields disqualifies the page entirely.
+Google requires specific fields to be present for each
+schema type to qualify for rich results.
+Missing required fields affects the corresponding feature, not all page indexing. Check the current Google feature guide; the tables below are content checklists, not a complete eligibility validator.
 
 ### FAQPage
 | Field          | Status      | Notes                                    |
@@ -130,18 +123,11 @@ Missing required fields disqualifies the page entirely.
 | `mainEntity`   | Required    | Array of `Question` objects              |
 | `name`         | Required    | The question text                        |
 | `acceptedAnswer` | Required  | `Answer` object containing `text`        |
-| Minimum Qs     | Required    | At least 2 question-answer pairs         |
+| Minimum Qs     | Content check | At least one real question and answer; no invented two-question rule |
 | Answer length  | Recommended | Under 300 words per answer               |
 
 ### Article
-| Field              | Status      | Notes                                |
-|--------------------|-------------|--------------------------------------|
-| `headline`         | Required    | Under 110 characters                 |
-| `image`            | Required    | At least one image URL               |
-| `datePublished`    | Required    | ISO 8601 format                      |
-| `dateModified`     | Recommended | ISO 8601 format                      |
-| `author`           | Required    | `Person` or `Organization` object    |
-| `publisher`        | Required    | `Organization` with `logo`           |
+Google currently lists recommended, rather than required, Article properties: headline, representative image, publication/modification dates and author identity. Include available truthful values; do not invent a publisher logo or date. Top Stories does not require Article markup.
 
 ### Product
 | Field              | Status      | Notes                                |
@@ -149,9 +135,9 @@ Missing required fields disqualifies the page entirely.
 | `name`             | Required    | Product name                         |
 | `image`            | Required    | Absolute URL                         |
 | `description`      | Recommended |                                      |
-| `offers`           | Required    | `Offer` object with price + currency |
-| `price`            | Required    | Numeric value                        |
-| `priceCurrency`    | Required    | ISO 4217 currency code               |
+| `offers`           | Conditional | Product snippets need name plus offers, review or aggregateRating; merchant listings have separate rules |
+| `price`            | Conditional | Required for the selected priced Offer path |
+| `priceCurrency`    | Conditional | Use ISO 4217 for priced offers; verify feature-specific rules |
 | `availability`     | Recommended | Schema.org availability URL          |
 | `aggregateRating`  | Recommended | Unlocks star rating display          |
 
@@ -183,8 +169,8 @@ The skill must always produce output in this exact format:
 **Page:** [page title]
 **URL:** [url]
 **Schema Types Generated:** [list all types]
-**Rich Results Unlocked:** [list eligible rich results]
-**AEO Signals Added:** [list AEO-relevant schema types]
+**Potential Rich Results (eligibility unverified until tested):** [list eligible rich results]
+**Structured Content Types Added:** [list AEO-relevant schema types]
 
 ---
 
@@ -240,15 +226,15 @@ Use one `<script>` block per schema type.
 ## Implementation Instructions
 
 1. Copy each `<script>` block above
-2. Paste inside the `<head>` tag of your HTML — 
+2. Paste inside the `<head>` tag of your HTML —
    after the `<title>` tag, before `</head>`
-3. One script block per schema type — 
-   do not combine multiple types in one block
-4. Test immediately using Google's Rich Results 
+3. One script block per schema type —
+   multiple types may also be combined in an @graph with stable @id links
+4. Test immediately using Google's Rich Results
    Test: https://search.google.com/test/rich-results
-5. Test using Schema.org Validator: 
+5. Test using Schema.org Validator:
    https://validator.schema.org
-6. After deploying, request re-indexing in 
+6. After deploying, request re-indexing in
    Google Search Console
 
 ---
@@ -261,9 +247,9 @@ Use one `<script>` block per schema type.
 - [ ] Date fields use ISO 8601 format (YYYY-MM-DD)
 - [ ] Price uses decimal format (e.g. 49.00 not $49)
 - [ ] Currency uses ISO 4217 code (USD not $)
-- [ ] FAQPage has minimum 2 question-answer pairs
-- [ ] No HTML tags inside JSON-LD string values
-- [ ] Each schema type in its own `<script>` block
+- [ ] FAQPage reflects real visible questions and answers
+- [ ] Serialize JSON safely and escape < as \u003c when embedding to prevent a closing script tag from ending the block
+- [ ] Every script block or @graph parses correctly
 - [ ] Tested in Google Rich Results Test ✅
 - [ ] Tested in Schema.org Validator ✅
 ````
@@ -272,9 +258,9 @@ Use one `<script>` block per schema type.
 
 ## References Folder
 
-The `references/` folder contains pre-validated 
-JSON-LD templates for all supported schema types. 
-The script uses these as base structures and 
+The `references/` folder contains illustrative, unvalidated
+JSON-LD templates for all supported schema types.
+The script uses these as base structures and
 populates them with page data.
 ````
 references/
@@ -290,47 +276,46 @@ references/
 └── website-schema.json
 ````
 
-Each template contains all required and recommended 
-fields with placeholder values in this format: 
-`"{{field_name}}"`. The `schema_builder.py` script 
-replaces all placeholders with the values from `page_data`.
+Each template contains all required and recommended
+fields with placeholder values in this format:
+`"{{field_name}}"`. No schema_builder.py is bundled. Build typed objects and serialize them; do not use textual substitution. Array/object fields must remain arrays/objects, not quoted JSON strings.
 
 ---
 
 ## Execution Steps
 
-1. Read `page_type` and `schema_types` — 
-   if `schema_types` is empty, recommend the 
-   appropriate types based on `page_type` using 
+1. Read `page_type` and `schema_types` —
+   if `schema_types` is empty, recommend the
+   appropriate types based on `page_type` using
    the Schema Type Menu before proceeding
-2. For each requested schema type, load the 
+2. For each requested schema type, load the
    corresponding template from `references/`
-3. Map all fields from `page_data` to the 
+3. Map all fields from `page_data` to the
    template placeholders
-4. Check every required field against the 
-   Rich Result Eligibility Rules — 
-   flag any missing required field as an issue 
+4. Check every required field against the
+   Rich Result Eligibility Rules —
+   flag any missing required field as an issue
    before outputting
-5. Check every recommended field — flag as 
+5. Check every recommended field — flag as
    a warning if missing but do not block output
-6. Validate all URLs are absolute, 
-   all dates are ISO 8601, 
+6. Validate all URLs are absolute,
+   all dates are ISO 8601,
    all prices are decimal format
-7. Generate one clean `<script>` block 
+7. Generate one clean `<script>` block
    per schema type
 8. Build the Validation Summary table
 9. List all issues with severity and exact fix instructions
-10. Write Implementation Instructions 
+10. Write Implementation Instructions
     and Testing Checklist
 11. Populate the selected reference template from supplied page data, validate required fields, and show unresolved placeholders as blocking issues. Use a project-provided schema helper only as a supplementary check; never emit fabricated review, rating, or product claims.
 
 ---
 
 ## Connected Skills
-- Receives output from: `seo-aeo-landing-page-writer`, 
-  `seo-aeo-blog-writer`, `seo-aeo-content-quality-auditor`, 
+- Receives output from: `seo-aeo-landing-page-writer`,
+  `seo-aeo-blog-writer`, `seo-aeo-content-quality-auditor`,
   `seo-aeo-internal-linking`
-- Feeds output to: orchestrator workflow — 
+- Feeds output to: orchestrator workflow —
   final step before publish checklist
 
 ## When to Use

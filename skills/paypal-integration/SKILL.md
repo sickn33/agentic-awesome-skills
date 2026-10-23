@@ -69,68 +69,28 @@ Master PayPal payment integration including Express Checkout, IPN handling, recu
 
 ## Quick Start
 
+Use the current JavaScript SDK with Orders v2 endpoints on your authenticated backend. Do not combine browser-side capture with a second backend capture, and do not pass Orders v2 IDs to the legacy Payments v1 SDK.
+
 ```javascript
-// Frontend - PayPal Smart Buttons
-<div id="paypal-button-container"></div>
-
-<script src="https://www.paypal.com/sdk/js?client-id=YOUR_CLIENT_ID&currency=USD"></script>
-<script>
-  paypal.Buttons({
-    createOrder: function(data, actions) {
-      return actions.order.create({
-        purchase_units: [{
-          amount: {
-            value: '25.00'
-          }
-        }]
-      });
-    },
-    onApprove: function(data, actions) {
-      return actions.order.capture().then(function(details) {
-        // Payment successful
-        console.log('Transaction completed by ' + details.payer.name.given_name);
-
-        // Send to backend for verification
-        fetch('/api/paypal/capture', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({orderID: data.orderID})
-        });
-      });
-    }
-  }).render('#paypal-button-container');
-</script>
+// Browser fragment; include the SDK with the public client ID, never the client secret.
+paypal.Buttons({
+  async createOrder() {
+    const response = await fetch('/api/paypal/orders', {method: 'POST'});
+    if (!response.ok) throw new Error('Order creation failed');
+    return (await response.json()).id;
+  },
+  async onApprove(data) {
+    const response = await fetch('/api/paypal/capture', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({orderID: data.orderID})
+    });
+    if (!response.ok) throw new Error('Capture confirmation failed');
+    // Backend owns reconciliation/fulfilment; the browser callback is not payment evidence.
+  }
+}).render('#paypal-button-container');
 ```
 
-```python
-# Backend - Verify and capture order
-from paypalrestsdk import Payment
-import paypalrestsdk
-
-paypalrestsdk.configure({
-    "mode": "sandbox",  # or "live"
-    "client_id": "YOUR_CLIENT_ID",
-    "client_secret": "YOUR_CLIENT_SECRET"
-})
-
-def capture_paypal_order(order_id):
-    """Capture a PayPal order."""
-    payment = Payment.find(order_id)
-
-    if payment.execute({"payer_id": payment.payer.payer_info.payer_id}):
-        # Payment successful
-        return {
-            'status': 'success',
-            'transaction_id': payment.id,
-            'amount': payment.transactions[0].amount.total
-        }
-    else:
-        # Payment failed
-        return {
-            'status': 'failed',
-            'error': payment.error
-        }
-```
+The route handlers are application adapters, not bundled. They must authenticate the user, enforce CSRF/origin controls, bind the order to the owned cart, derive price/currency/payee from trusted data, persist a stable PayPal-Request-Id per operation, and verify capture status/amount/currency/payee before atomic fulfilment. Treat timeout as uncertain; reconcile the existing request rather than create another charge. Store secrets through the server environment/secret manager. Use Decimal/string amounts with currency-specific precision, never binary floats for money. The following fragments are sandbox examples, not a production payment system.
 
 ## Express Checkout Implementation
 
@@ -141,6 +101,8 @@ import json
 
 class PayPalClient:
     def __init__(self, client_id, client_secret, mode='sandbox'):
+        if mode not in ('sandbox', 'live'):
+            raise ValueError('Explicit sandbox or live mode required')
         self.client_id = client_id
         self.client_secret = client_secret
         self.base_url = 'https://api-m.sandbox.paypal.com' if mode == 'sandbox' else 'https://api-m.paypal.com'
@@ -155,16 +117,18 @@ class PayPalClient:
             url,
             headers=headers,
             data={"grant_type": "client_credentials"},
-            auth=(self.client_id, self.client_secret)
+            auth=(self.client_id, self.client_secret), timeout=15, allow_redirects=False
         )
 
+        response.raise_for_status()
         return response.json()['access_token']
 
-    def create_order(self, amount, currency='USD'):
+    def create_order(self, amount, request_id, currency='USD'):
         """Create a PayPal order."""
         url = f"{self.base_url}/v2/checkout/orders"
         headers = {
             "Content-Type": "application/json",
+            "PayPal-Request-Id": request_id, # Persisted per operation, unchanged on retry.
             "Authorization": f"Bearer {self.access_token}"
         }
 
@@ -178,18 +142,21 @@ class PayPalClient:
             }]
         }
 
-        response = requests.post(url, headers=headers, json=payload)
+        response = requests.post(url, headers=headers, json=payload, timeout=15, allow_redirects=False)
+        response.raise_for_status()
         return response.json()
 
-    def capture_order(self, order_id):
+    def capture_order(self, order_id, request_id):
         """Capture payment for an order."""
         url = f"{self.base_url}/v2/checkout/orders/{order_id}/capture"
         headers = {
             "Content-Type": "application/json",
+            "PayPal-Request-Id": request_id, # Persisted per operation, unchanged on retry.
             "Authorization": f"Bearer {self.access_token}"
         }
 
-        response = requests.post(url, headers=headers)
+        response = requests.post(url, headers=headers, timeout=15, allow_redirects=False)
+        response.raise_for_status()
         return response.json()
 
     def get_order_details(self, order_id):
@@ -199,11 +166,14 @@ class PayPalClient:
             "Authorization": f"Bearer {self.access_token}"
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=15, allow_redirects=False)
+        response.raise_for_status()
         return response.json()
 ```
 
 ## IPN (Instant Payment Notification) Handling
+
+IPN is a legacy notification protocol, not the REST Webhooks API. For current REST integrations verify webhook signatures with the documented webhook ID and environment. Limit inbound request size. VERIFIED establishes origin only: validate receiver, currency, amount, owned invoice/order and transaction status, then deduplicate atomically with a unique event/transaction record. A check-then-act helper alone races. Process reversals/refunds against original records and acknowledge only after durable recording.
 
 ### IPN Verification and Processing
 ```python
@@ -217,10 +187,11 @@ app = Flask(__name__)
 def handle_ipn():
     """Handle PayPal IPN notifications."""
     # Get IPN message
+    raw_ipn = request.get_data(cache=True)
     ipn_data = request.form.to_dict()
 
     # Verify IPN with PayPal
-    if not verify_ipn(ipn_data):
+    if not verify_ipn(raw_ipn):
         return 'IPN verification failed', 400
 
     # Process IPN based on transaction type
@@ -236,18 +207,14 @@ def handle_ipn():
 
     return 'IPN processed', 200
 
-def verify_ipn(ipn_data):
-    """Verify IPN message authenticity."""
-    # Add 'cmd' parameter
-    verify_data = ipn_data.copy()
-    verify_data['cmd'] = '_notify-validate'
-
-    # Send back to PayPal for verification
-    paypal_url = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr'  # or production URL
-
-    response = requests.post(paypal_url, data=verify_data)
-
-    return response.text == 'VERIFIED'
+def verify_ipn(raw_ipn):
+    """Echo original encoded body in order; do not reconstruct it from a dict."""
+    paypal_url = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr'
+    response = requests.post(paypal_url, data=b'cmd=_notify-validate&' + raw_ipn,
+                             headers={'Content-Type': 'application/x-www-form-urlencoded'},
+                             timeout=15, allow_redirects=False)
+    response.raise_for_status()
+    return response.text.strip() == 'VERIFIED'
 
 def handle_payment_completed(ipn_data):
     """Process completed payment."""
@@ -282,18 +249,21 @@ def handle_chargeback(ipn_data):
     print(f"Chargeback: {txn_id}, Reason: {reason_code}")
 ```
 
+Mutation examples require a persisted operation-specific PayPal-Request-Id where supported, immutable server-owned amounts and opaque validated resource IDs. Token expiry/refresh, verified merchant identity and durable event processing are required integration work; no fragment implements fulfilment by itself. Refunds and recurring charges require authorization for that exact operation.
+
 ## Subscription/Recurring Billing
 
 ### Create Subscription Plan
 ```python
-def create_subscription_plan(name, amount, interval='MONTH'):
+def create_subscription_plan(name, amount, request_id, interval='MONTH'):
     """Create a subscription plan."""
     client = PayPalClient(CLIENT_ID, CLIENT_SECRET)
 
     url = f"{client.base_url}/v1/billing/plans"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {client.access_token}"
+        "Authorization": f"Bearer {client.access_token}",
+        "PayPal-Request-Id": request_id
     }
 
     payload = {
@@ -325,17 +295,19 @@ def create_subscription_plan(name, amount, interval='MONTH'):
         }
     }
 
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload, timeout=15, allow_redirects=False)
+    response.raise_for_status()
     return response.json()
 
-def create_subscription(plan_id, subscriber_email):
+def create_subscription(plan_id, subscriber_email, request_id):
     """Create a subscription for a customer."""
     client = PayPalClient(CLIENT_ID, CLIENT_SECRET)
 
     url = f"{client.base_url}/v1/billing/subscriptions"
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {client.access_token}"
+        "Authorization": f"Bearer {client.access_token}",
+        "PayPal-Request-Id": request_id
     }
 
     payload = {
@@ -349,7 +321,8 @@ def create_subscription(plan_id, subscriber_email):
         }
     }
 
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload, timeout=15, allow_redirects=False)
+    response.raise_for_status()
     subscription = response.json()
 
     # Get approval URL
@@ -364,27 +337,30 @@ def create_subscription(plan_id, subscriber_email):
 ## Refund Workflows
 
 ```python
-def create_refund(capture_id, amount=None, note=None):
+def create_refund(capture_id, request_id, amount=None, note=None):
     """Create a refund for a captured payment."""
     client = PayPalClient(CLIENT_ID, CLIENT_SECRET)
 
     url = f"{client.base_url}/v2/payments/captures/{capture_id}/refund"
     headers = {
         "Content-Type": "application/json",
+        "PayPal-Request-Id": request_id,
         "Authorization": f"Bearer {client.access_token}"
     }
 
     payload = {}
-    if amount:
+    if amount is not None:
         payload["amount"] = {
             "value": str(amount),
             "currency_code": "USD"
         }
 
+    # Validate positive Decimal refund <= remaining captured balance and capture currency first.
     if note:
         payload["note_to_payer"] = note
 
-    response = requests.post(url, headers=headers, json=payload)
+    response = requests.post(url, headers=headers, json=payload, timeout=15, allow_redirects=False)
+    response.raise_for_status()
     return response.json()
 
 def get_refund_details(refund_id):
@@ -396,7 +372,8 @@ def get_refund_details(refund_id):
         "Authorization": f"Bearer {client.access_token}"
     }
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=15, allow_redirects=False)
+    response.raise_for_status()
     return response.json()
 ```
 
@@ -421,7 +398,7 @@ def handle_paypal_api_call(api_function):
 
 # Usage
 try:
-    order = handle_paypal_api_call(lambda: client.create_order(25.00))
+    order = handle_paypal_api_call(lambda: client.create_order("25.00", persisted_request_id))
 except PayPalError as e:
     # Handle error appropriately
     log_error(e)
@@ -431,8 +408,9 @@ except PayPalError as e:
 
 ```python
 # Use sandbox credentials
-SANDBOX_CLIENT_ID = "..."
-SANDBOX_SECRET = "..."
+import os
+SANDBOX_CLIENT_ID = os.environ["PAYPAL_SANDBOX_CLIENT_ID"]
+SANDBOX_SECRET = os.environ["PAYPAL_SANDBOX_SECRET"]
 
 # Test accounts
 # Create test buyer and seller accounts at developer.paypal.com
@@ -442,7 +420,7 @@ def test_payment_flow():
     client = PayPalClient(SANDBOX_CLIENT_ID, SANDBOX_SECRET, mode='sandbox')
 
     # Create order
-    order = client.create_order(10.00)
+    order = client.create_order("10.00", "sandbox-test-order-001")
     assert 'id' in order
 
     # Get approval URL
@@ -451,7 +429,7 @@ def test_payment_flow():
 
     # After approval (manual step with test account)
     # Capture order
-    # captured = client.capture_order(order['id'])
+    # captured = client.capture_order(order['id'], 'sandbox-test-capture-001')
     # assert captured['status'] == 'COMPLETED'
 ```
 
@@ -470,7 +448,7 @@ def test_payment_flow():
 1. **Always Verify IPN**: Never trust IPN without verification
 2. **Idempotent Processing**: Handle duplicate IPN notifications
 3. **Error Handling**: Implement robust error handling
-4. **Logging**: Log all transactions and errors
+4. **Logging**: Log minimal event IDs/statuses; redact tokens, payer identifiers and raw provider errors
 5. **Test Thoroughly**: Use sandbox extensively
 6. **Webhook Backup**: Don't rely solely on client-side callbacks
 7. **Currency Handling**: Always specify currency explicitly

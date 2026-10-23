@@ -122,27 +122,27 @@ that need a number, date or currency format applied.
 
 ```csv
 Review Title,Areas for Improvement,Behaviour Score,Department,Development Plan,Due Date,Employee Name,Increment Recommended,KPI Score,Notes,OKR Score,Overall Rating,PIP Required,Promotion Eligible,Rating Label,Review Date,Review ID,Review Period,Review Type,Reviewer,Status,Strengths
-Q1 review - Aarav Sharma,Delegation,4,Delivery,Lead one workstream,2026-01-15,Aarav Sharma,FALSE,82,Cycle opened in February; two reviewers have not submitted their notes yet.,0.7,4 - Exceeds Expectations,FALSE,FALSE,Strong,2026-01-15,,Q1 2026,Probation,Sneha Iyer,Manager Review,Reliable under pressure
+Q1 review - Example Employee,Delegation,4,Delivery,Lead one workstream,2026-04-15,Example Employee,FALSE,82,Synthetic quarterly review; manager draft awaiting calibration.,0.7,4 - Exceeds Expectations,FALSE,FALSE,Strong,2026-04-15,,Q1 2026,Quarterly,Example Reviewer,Manager Review,Reliable under pressure
 ```
 
 ```sql
 CREATE TABLE performance_management (
   review_title VARCHAR(255),
   areas_for_improvement VARCHAR(255),
-  behaviour_score NUMERIC NOT NULL,
+  behaviour_score NUMERIC,
   department VARCHAR(255),
   development_plan VARCHAR(255),
   due_date DATE NOT NULL,
   employee_name VARCHAR(255),
-  increment_recommended BOOLEAN NOT NULL,
-  kpi_score NUMERIC NOT NULL,
+  increment_recommended BOOLEAN,
+  kpi_score NUMERIC,
   notes TEXT,
-  okr_score NUMERIC NOT NULL,
-  overall_rating VARCHAR(100) NOT NULL,
-  pip_required BOOLEAN NOT NULL,
-  promotion_eligible BOOLEAN NOT NULL,
+  okr_score NUMERIC,
+  overall_rating VARCHAR(100),
+  pip_required BOOLEAN,
+  promotion_eligible BOOLEAN,
   rating_label VARCHAR(255),
-  review_date DATE NOT NULL,
+  review_date DATE,
   review_id SERIAL PRIMARY KEY,
   review_period VARCHAR(255),
   review_type VARCHAR(100) NOT NULL,
@@ -187,12 +187,7 @@ CREATE INDEX idx_performance_management_status ON performance_management (status
       "Strengths": { "type": "string" }
   },
   "required": [
-      "Behaviour Score",
       "Due Date",
-      "KPI Score",
-      "OKR Score",
-      "Overall Rating",
-      "Review Date",
       "Review Type",
       "Status"
   ]
@@ -233,28 +228,30 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Review Title | `text` | `VARCHAR(255)` | `string` | Text | `Q1 review - Aarav Sharma` |
+| 1 | Review Title | `text` | `VARCHAR(255)` | `string` | Text | `Q1 review - Example Employee` |
 | 2 | Areas for Improvement | `text` | `VARCHAR(255)` | `string` | Text | `Delegation` |
 | 3 | Behaviour Score | `number` | `NUMERIC` | `number` | Number | `4` |
 | 4 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 5 | Development Plan | `text` | `VARCHAR(255)` | `string` | Text | `Lead one workstream` |
-| 6 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
-| 7 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 6 | Due Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-15` |
+| 7 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Employee` |
 | 8 | Increment Recommended | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 9 | KPI Score | `number` | `NUMERIC` | `number` | Number | `82` |
-| 10 | Notes | `long_text` | `TEXT` | `string` | Text | `Cycle opened in February; two reviewers have not submitted their notes yet.` |
+| 10 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic quarterly review; manager draft awaiting calibration.` |
 | 11 | OKR Score | `number` | `NUMERIC` | `number` | Number | `0.7` |
 | 12 | Overall Rating | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `4 - Exceeds Expectations` |
 | 13 | PIP Required | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 14 | Promotion Eligible | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 15 | Rating Label | `text` | `VARCHAR(255)` | `string` | Text | `Strong` |
-| 16 | Review Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 16 | Review Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-15` |
 | 17 | Review ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 18 | Review Period | `text` | `VARCHAR(255)` | `string` | Text | `Q1 2026` |
-| 19 | Review Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Probation` |
-| 20 | Reviewer | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 19 | Review Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Quarterly` |
+| 20 | Reviewer | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
 | 21 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Manager Review` |
 | 22 | Strengths | `text` | `VARCHAR(255)` | `string` | Text | `Reliable under pressure` |
+
+Draft reviews may omit scores, overall rating, event date and recommendation flags; blank is unknown, not zero or false. Finalisation requires named human review, evidence linked to the agreed goals, the employee’s response and an appeal/correction route. Define each score scale separately: the synthetic row uses behaviour 1–5, KPI 0–100 and OKR 0–1. Never average them without an agreed normalization and weighting rule. PIP, promotion and pay recommendations require human assessment and approval; do not derive them automatically from ratings or protected personal characteristics. Limit access and retention to the review’s stated purpose.
 
 ## Select Options
 
@@ -352,8 +349,8 @@ Reviews are done on forms nobody can find a year later.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [People Directory](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
 ## Reusable Prompt

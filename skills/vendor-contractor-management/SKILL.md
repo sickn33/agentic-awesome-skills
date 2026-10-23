@@ -135,10 +135,10 @@ CREATE TABLE vendor_contractor_management (
   phone VARCHAR(255),
   department VARCHAR(255),
   linked_contract VARCHAR(255),  -- relation -> target record
-  contract_start DATE NOT NULL,
-  contract_end DATE NOT NULL,
+  contract_start DATE,
+  contract_end DATE,
   payment_terms VARCHAR(255),
-  rating NUMERIC NOT NULL,
+  rating NUMERIC,
   status VARCHAR(100) NOT NULL,
   vendor_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -163,18 +163,15 @@ CREATE INDEX idx_vendor_contractor_management_status ON vendor_contractor_manage
       "Phone": { "type": "string" },
       "Department": { "type": "string" },
       "Linked Contract": { "type": "string" },
-      "Contract Start": { "type": "string", "format": "date" },
-      "Contract End": { "type": "string", "format": "date" },
+      "Contract Start": { "type": ["string", "null"], "format": "date" },
+      "Contract End": { "type": ["string", "null"], "format": "date" },
       "Payment Terms": { "type": "string" },
-      "Rating": { "type": "number" },
+      "Rating": { "type": ["number", "null"] },
       "Status": { "type": "string" },
       "Vendor ID": { "type": "integer" }
   },
   "required": [
       "Vendor Type",
-      "Contract Start",
-      "Contract End",
-      "Rating",
       "Status"
   ]
 }
@@ -201,6 +198,8 @@ CREATE INDEX idx_vendor_contractor_management_status ON vendor_contractor_manage
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+The baseline fields below are commercial records. For the access-review request shown later, add Owner, Access Scope, Review Date and Revocation Status consistently across the requested formats; a department is not an accountable owner. Prospects may have unknown contract dates or rating: retain null rather than inventing values.
 
 ## Field Reference
 

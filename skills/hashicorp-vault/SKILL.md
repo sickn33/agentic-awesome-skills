@@ -36,6 +36,10 @@ Use this skill when:
 - Vault CLI installed
 - Network access to Vault
 
+## Secret handling and example scope
+
+Dev mode is ephemeral/insecure and localhost-only. Never put real unseal keys, tokens or passwords in command arguments/history, reports or chat; use protected prompts/files and actual production TLS verification. The injected file example below contains a raw password: adapt the application to read that protected file directly, rather than sourcing untrusted secret text as shell code. Kubernetes/DB/PKI examples need version-specific configuration and least-privilege review; do not initialize or reconfigure an existing Vault by following the whole sequence.
+
 ## Quick Start
 
 ### Development Server
@@ -46,7 +50,8 @@ vault server -dev
 
 # Set environment
 export VAULT_ADDR='http://127.0.0.1:8200'
-export VAULT_TOKEN='root'
+# Set VAULT_TOKEN securely to the token printed by this dev server;
+# the default dev token is generated, not necessarily "root".
 
 # Verify connection
 vault status
@@ -78,12 +83,12 @@ ui = true
 vault operator init -key-shares=5 -key-threshold=3
 
 # Unseal (run 3 times with different keys)
-vault operator unseal <key-1>
-vault operator unseal <key-2>
-vault operator unseal <key-3>
+vault operator unseal
+vault operator unseal
+vault operator unseal
 
 # Login
-vault login <root-token>
+vault login  # enter token at the hidden prompt
 ```
 
 ## Secret Engines
@@ -280,7 +285,12 @@ vault write auth/oidc/role/default \
 # myapp-policy.hcl
 # Read secrets
 path "secret/data/myapp/*" {
-  capabilities = ["read", "list"]
+  capabilities = ["read"]
+}
+
+# KV v2 listing uses the metadata path
+path "secret/metadata/myapp/*" {
+  capabilities = ["list"]
 }
 
 # Database credentials
@@ -352,14 +362,14 @@ metadata:
     vault.hashicorp.com/agent-inject-secret-config: "secret/data/myapp/config"
     vault.hashicorp.com/agent-inject-template-config: |
       {{- with secret "secret/data/myapp/config" -}}
-      export DB_PASSWORD  # populated from the referenced Vault/K8s Secret at deploy time
+      {{ .Data.data.password }}
       {{- end }}
 spec:
   serviceAccountName: myapp
   containers:
     - name: myapp
       image: myapp:latest
-      command: ["/bin/sh", "-c", "source /vault/secrets/config && ./start.sh"]
+      command: ["/bin/sh", "-c", "exec ./start.sh"]
 ```
 
 ## Common Issues
