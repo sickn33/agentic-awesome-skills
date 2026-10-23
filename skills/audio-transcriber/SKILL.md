@@ -2,7 +2,7 @@
 name: audio-transcriber
 description: "Transform audio recordings into professional Markdown documentation with intelligent summaries using LLM integration"
 category: content
-risk: unknown
+risk: critical
 source: community
 tags: "[audio, transcription, whisper, meeting-minutes, speech-to-text]"
 date_added: "2026-02-27"

@@ -7,12 +7,9 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## Limitations
-
 - Pin the Makepad Git revision from Cargo.lock and use that revision’s source/examples for every macro, event and widget method. “2.0” alone is not an API compatibility guarantee; these imported snippets span a changing development branch.
 - Do not run bundled scripts without explicit user approval.
-
 ## When to Use
 - Use when building or debugging Makepad UI event routing, widget actions, timer-driven updates, or Rust/Splash communication.
 - First identify whether the target uses script_mod/Splash or older live_design APIs; use matching examples.

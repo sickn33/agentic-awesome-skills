@@ -7,35 +7,23 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## Limitations
-
 - Verify against current Makepad 2.0 docs; upstream APIs change frequently.
 - Do not run bundled scripts without explicit user approval.
-
 ## When to Use
 - Build or diagnose Makepad layouts using the project's installed Splash/script DSL.
 - Investigate sizing, flow, clipping, scrolling or overlay-placement problems.
-
 First identify the exact Makepad revision and DSL in the project. These sketches assume the imported 2.0-style syntax and are not compiled test fixtures; do not migrate a working application wholesale to match them. See the [official Makepad repository](https://github.com/makepad/makepad) for matching widget/source examples.
-
 # Makepad 2.0 Layout System
-
 Makepad uses a **layout turtle** system -- not CSS flexbox, not CSS grid. The turtle walks
 through children one by one, placing each widget according to two core concepts:
-
 - **Walk** -- how a widget sizes itself (width, height, margin)
 - **Layout** -- how a container arranges its children (flow, spacing, padding, align)
-
 Every container widget (View, SolidView, RoundedView, ScrollYView, etc.) has both Walk
 properties (its own size) and Layout properties (how it lays out children).
-
 ---
-
 ## Walk System (Widget Sizing)
-
 Walk controls how an individual widget claims space inside its parent.
-
 ### width / height
 
 | Syntax | Meaning |

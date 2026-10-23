@@ -1,7 +1,7 @@
 ---
 name: web-scraper
 description: Web scraping inteligente multi-estrategia. Extrai dados estruturados de paginas web (tabelas, listas, precos). Paginacao, monitoramento e export CSV/JSON.
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat

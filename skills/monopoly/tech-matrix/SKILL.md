@@ -248,7 +248,7 @@ Compare AWS S3, Cloudflare R2, GCS, Azure Blob, Backblaze B2 and self-hosted S3-
 
 ## Capacity evidence
 
-Use the bundled [capacity planning reference](../scale-benchmarks/SKILL.md) to define workload measurements. No fixed product throughput benchmark is established here.
+Use the bundled capacity planning reference at `skills/monopoly/scale-benchmarks/SKILL.md` to define workload measurements. No fixed product throughput benchmark is established here.
 
 ## Limitations
 - This is a reference document and may not cover all edge cases. Always verify architectures before production.

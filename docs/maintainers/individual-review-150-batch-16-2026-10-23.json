@@ -1312,7 +1312,7 @@
           "path": "skills/makepad-2-0-layout/SKILL.md",
           "gitMode": "100644",
           "beforeSha256": "e0c4b8c1cffe26a039e15345f0803ac54654f0b085423da747efc3312864b4fd",
-          "afterSha256": "523f60545416c00a75aafd8fa74766b24c942a2a65d683fb400f6f9ba06b67de",
+          "afterSha256": "907ab6ad8197f2346784841de16c0c9721adcc32467532801f9e5162d06a0d1f",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -1400,7 +1400,7 @@
           "path": "skills/day-book/SKILL.md",
           "gitMode": "100644",
           "beforeSha256": "2108127b1ecb3cf859e6f266969a5dc465d349f78929ad78f2eb7ae66ff6b8e0",
-          "afterSha256": "7c0f2e930154e7335e75de1c209270ec88cf57f0cca7bbcd169d062cb6e6e75e",
+          "afterSha256": "e906b387f0a985ca7a4f792afcc2d90a3721e2333227e91a898a79e71fa8bb63",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -1432,7 +1432,7 @@
           "path": "skills/day-book/references/how-it-works.md",
           "gitMode": "100644",
           "beforeSha256": "979e7c965b780bedcc12bcada456d439659f6684d933711431379c07de0dea52",
-          "afterSha256": "d7b5fa02400d0c914af96bdd60b2f6e232598ce5de82cfd8a147d7781f695463",
+          "afterSha256": "18e08fecd11d9f5617ac28525b438ff1fc356f06fdbb1a3c48ba192946c0297b",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -2161,7 +2161,7 @@
           "path": "skills/monopoly/tech-matrix/SKILL.md",
           "gitMode": "100644",
           "beforeSha256": "22f0c6c489e221a3fa8b1db918aae8f8c235db18566ead00c2afcd0bbf0d64cc",
-          "afterSha256": "f574e7eb86f72d2825d2839f339df77b475f3fcd5c88d2a027e6ff39dcc41362",
+          "afterSha256": "8f495c953970ace6710047d4797c705021752831308a8b4bf8466cc642977191",
           "readInFull": true,
           "afterGitMode": "100644"
         }
@@ -3590,7 +3590,7 @@
           "path": "skills/makepad-2-0-events/SKILL.md",
           "gitMode": "100644",
           "beforeSha256": "7c3fc60cce22deb54817b3a3d40e8289834cfb4ae72c997ad8a3020e509bbf45",
-          "afterSha256": "26c4b57e06e1c3ff5787568d2ac42598968d959534d91164a6c75ce14c44cbb7",
+          "afterSha256": "142865fae7174d29a205dcd12aafb56cf324a1e0fd5b64bcc7d2154133a5e140",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -8695,7 +8695,7 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "b9762467d53e5f9beeac9be2b2eb84eea7fb22ef0220320ab8991604ed0c0df7",
-          "afterSha256": "8ecd77a909d0b277a91d46955eb067562f4d36239923979e178b8b9b5519c439",
+          "afterSha256": "df68a39712c78690d38efe6452e47fa4938f63fc1c73d0af537550a652f973d8",
           "readInFull": true
         },
         {
@@ -8760,7 +8760,7 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "29f4e8747c99a24565dae7436dffd052bd3fed298508ac4df98c5223cfc6dd6c",
-          "afterSha256": "f831957af456493c9b8baf0c1d5d459fcc945e5e465ad0d5169eb54b567ce9ff",
+          "afterSha256": "58bf48ccde6ce614e5117bb17587fddf27e9abc287f86563da514222d1ca5dcd",
           "readInFull": true
         },
         {
