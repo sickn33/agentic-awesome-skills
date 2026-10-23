@@ -10,6 +10,10 @@ date_added: '2026-02-27'
 
 Client library for managing Azure ML resources: workspaces, jobs, models, data, and compute.
 
+## Scope and execution
+
+Confirm subscription, tenant, workspace, region and budget before create/update or compute/job submission. Examples are fragments: training components, source files and environment definitions are not bundled. Select currently supported reviewed SDK/environment versions; historical image and `@latest` examples do not establish reproducibility. Use least-privilege identity and do not print private job data.
+
 ## Installation
 
 ```bash
@@ -27,6 +31,7 @@ AZURE_ML_WORKSPACE_NAME=<your-workspace-name>
 ## Authentication
 
 ```python
+import os
 from azure.ai.ml import MLClient
 from azure.identity import DefaultAzureCredential
 
@@ -41,6 +46,7 @@ ml_client = MLClient(
 ### From Config File
 
 ```python
+import os
 from azure.ai.ml import MLClient
 from azure.identity import DefaultAzureCredential
 
@@ -193,7 +199,6 @@ ml_client.jobs.stream(returned_job.name)
 
 ```python
 from azure.ai.ml import dsl, Input, Output
-from azure.ai.ml.entities import Pipeline
 
 @dsl.pipeline(
     compute="cpu-cluster",

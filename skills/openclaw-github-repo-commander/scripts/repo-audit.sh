@@ -49,7 +49,12 @@ if command -v rg >/dev/null 2>&1; then
     --quiet .; then
     warn 'possible hardcoded secret pattern found'
   else
-    pass 'no common secret patterns found'
+    scan_exit=$?
+    if [[ "$scan_exit" -eq 1 ]]; then
+      pass 'no common secret patterns found'
+    else
+      warn 'secret-pattern scan failed; result unavailable'
+    fi
   fi
 else
   warn 'ripgrep not installed; skipped secret-pattern scan'

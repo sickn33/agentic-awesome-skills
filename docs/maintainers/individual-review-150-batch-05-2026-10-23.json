@@ -1,0 +1,2664 @@
+{
+  "batch": 5,
+  "base": "dee7acce0658c35cb276154892700811affcfdb2",
+  "reviewDate": "2026-10-23",
+  "scope": "150 canonical complete tracked skill trees; all entrypoints and bundled supporting files read as inert source.",
+  "reviewStatus": "manual-review-required: no Tessl review claimed; exact final-head maintainer attestation remains a merge requirement.",
+  "validation": "Two bundled helpers checked with trusted temporary/mocked fixtures; repository preflight results are recorded on the PR at its final head. No live service or catalog-wide runtime certification.",
+  "records": [
+    {
+      "id": "mercury-mcp",
+      "disposition": "retained",
+      "reviewNote": "Retained tool lookup, explicit external-write confirmation and admin-scope boundaries; server/tool/rate-limit descriptions require installed-schema verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/mercury-mcp/SKILL.md",
+          "beforeSha256": "0643f18dbf5bc1513a7784738aa1183bad7b31d3d84386607294ee8cdd203606",
+          "afterSha256": "0643f18dbf5bc1513a7784738aa1183bad7b31d3d84386607294ee8cdd203606",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "deployment-procedures",
+      "disposition": "corrected",
+      "reviewNote": "Corrected blind-restart advice and mutable-tag rollback; retained platform-neutral preparation, observation and rollback procedure.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/deployment-procedures/SKILL.md",
+          "beforeSha256": "46b862fc9e5614002257c776c711412f7d5048d2adbfd703abe7a13aaed476db",
+          "afterSha256": "1167b62c864e10bf39a4b7abaec72c79734e6cb42d47f07517c5ae1a9566bc76",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ask-copilot",
+      "disposition": "corrected",
+      "reviewNote": "Removed instruction to require permission bypass in background runs, which contradicted scoped read-only consent guidance; flags still need local CLI help.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ask-copilot/SKILL.md",
+          "beforeSha256": "5daa95975cce2f5eaa2c957d47df04aa47d6f9e9be8b4575a3154c7e18e5b249",
+          "afterSha256": "980e758aa9407e52002b89dd02852dccc114cb20d8e85797c6c50f01e09dcfd0",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "agenttrace-session-audit",
+      "disposition": "retained",
+      "reviewNote": "Retained exact-session identity checks, private-log handling, missing-metric honesty and advisory health-score limitations; no binary bundled.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/agenttrace-session-audit/SKILL.md",
+          "beforeSha256": "c00a67161d52cd4fc65bc9e2478d06e1d79143fb59dbe1d36fed218ce1e403a4",
+          "afterSha256": "c00a67161d52cd4fc65bc9e2478d06e1d79143fb59dbe1d36fed218ce1e403a4",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "performance-profiling",
+      "disposition": "corrected",
+      "reviewNote": "Corrected lab/field and LCP guidance; repaired Lighthouse helper to preserve command/JSON failures, unavailable scores, temporary-report cleanup and nonzero CLI error exit. Reviewed bundled helper completely.",
+      "limitations": "Trusted mocked fixtures covered score95, null score, malformed JSON, nonzero command, missing CLI, timeout and report cleanup; no Lighthouse/browser audit executed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/performance-profiling/SKILL.md",
+          "beforeSha256": "d342af405c6d35d9750c12cbdd9b11afc1f030a7938dcaa0aea7eba3600ef5f3",
+          "afterSha256": "a62ed262610aa02266f4951fe75b64ef94e171e21d453a9a6963d51ac49e700b",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/performance-profiling/scripts/lighthouse_audit.py",
+          "beforeSha256": "7e3928f1ac24e472fd9b0bc390f223379d8ce3e3d9ff6136e557ac4bdad7f52c",
+          "afterSha256": "2894151e78a2e3b6346655e01c85cb5b10f9d042a1edc3545fdae7e4d6422cb5",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "jobs-to-be-done-analyst",
+      "disposition": "corrected",
+      "reviewNote": "Made profiler chaining optional and required evidence/hypothesis separation; flagged incomplete research citations instead of inventing bibliography.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/jobs-to-be-done-analyst/SKILL.md",
+          "beforeSha256": "3baf99897f25e52e956c75a223335724f050b4ec176aabc1093006f549563bdd",
+          "afterSha256": "c71d609e30d7860180f5bb3ac842629b20e4cec59b1941bd7e8be3070c2804ae",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "audit-skills",
+      "disposition": "corrected",
+      "reviewNote": "Replaced leftover authoring placeholder with complete-tree inert review guidance and prevented command-keyword/score-only maliciousness verdicts.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/audit-skills/SKILL.md",
+          "beforeSha256": "03198a29c5eb59f87146b3e43030a644421a0797ba4a9339fcff7b827b234133",
+          "afterSha256": "c62e2239b51ef4394db448b18354987d540f1d711eb7ccaa37767a25c80556f7",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "local-llm-expert",
+      "disposition": "corrected",
+      "reviewNote": "Corrected supposedly exact memory calculus and misleading Mixtral size/fit example; required actual offline/exposure/license verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/local-llm-expert/SKILL.md",
+          "beforeSha256": "61adbc21e663d67ff7dadd2439c4b4c70566279ab5d8463bfd28dbbd2a18fd15",
+          "afterSha256": "e637a47db3433fa9adf7d7c0ed2cd5dc8bff656beeae2769a935caac57a05e54",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "sred-work-summary",
+      "disposition": "corrected",
+      "reviewNote": "Removed upstream-specific organization constraint and required actual private destination verification; retained complete link collection/grouping workflow.",
+      "limitations": "Work-summary compilation is not proof of SR&ED eligibility; repository/date filters must match agreed reporting basis.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/sred-work-summary/SKILL.md",
+          "beforeSha256": "08666b185b83e44da901c534ba21578844207db304a0cb67790ebf84acfa9c4d",
+          "afterSha256": "98233350f35634f9e22ce084f76d7be0f12843098be28aa15e9243e97edc2ab8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-ml-py",
+      "disposition": "corrected",
+      "reviewNote": "Added missing os import, removed unused Pipeline import and bounded paid resource/job creation; explicitly identified missing component/source dependencies and historical floating environments.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-ai-ml-py/SKILL.md",
+          "beforeSha256": "63e103c2365a8cd6d13ae14b316901b86610c6bddc2f7f19fe9f297a34cecaef",
+          "afterSha256": "0ea9da61c731c12c3e08feb475306ceb7b5a16e41bccb20af157bfc65d45335c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "darkmoon-pentest",
+      "disposition": "retained",
+      "reviewNote": "Retained scoped written authorization, per-run confirmation, Pro/CLI distinction, sparse polling and unconfirmed-finding caveat; configuration requires actual client variable expansion.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/darkmoon-pentest/SKILL.md",
+          "beforeSha256": "74a541e2e4571e8158e03f196ccc73dcd2e3e32f77ed23a76febf982f498e19d",
+          "afterSha256": "74a541e2e4571e8158e03f196ccc73dcd2e3e32f77ed23a76febf982f498e19d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-storage-blob-py",
+      "disposition": "corrected",
+      "reviewNote": "Fixed async download using an unrelated sync credential and ensured async credential closure; added overwrite/snapshot/SAS and memory-size boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://learn.microsoft.com/en-gb/azure/storage/blobs/storage-blob-python-get-started"
+      ],
+      "files": [
+        {
+          "path": "skills/azure-storage-blob-py/SKILL.md",
+          "beforeSha256": "fee9783041862e0f477784523d16e148141b25a0bdc3d864e1798a1a0805e2fc",
+          "afterSha256": "deb9734999ad5bcdcb163b3566e4495c5a01a5121e258f2117e7c41e70da33a1",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "supply-chain-risk-auditor",
+      "disposition": "corrected",
+      "reviewNote": "Removed unsafe omission-means-safe inference and unavailable-template dependency; qualified social/popularity signals as contextual rather than proof.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/supply-chain-risk-auditor/SKILL.md",
+          "beforeSha256": "9654e4e27853109b0ab032ba968b98fc0e88163975f6b2e2c2fa954e0ac163fa",
+          "afterSha256": "a0a87a92558a43fa91c04b53d959e27edbce617c4ae3ce4cb46fb259dc20d89c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "gmail-automation",
+      "disposition": "corrected",
+      "reviewNote": "Added explicit sending authorization and qualified unverified credential-storage/refresh claims for absent scripts.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/gmail-automation/SKILL.md",
+          "beforeSha256": "b8942b516b950c58d66dda03892e2e6c6127ea7635d38530329f90456a381dab",
+          "afterSha256": "771e26308e25741fc4a5bd333aa230cb4b764bd0105d3548cf78bccf40ba7c97",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-monitor-query-py",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing os/dependency, string-column DataFrame construction and marked removed metrics APIs as legacy rather than compatible with latest package.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://learn.microsoft.com/python/api/overview/azure/monitor-query-readme"
+      ],
+      "files": [
+        {
+          "path": "skills/azure-monitor-query-py/SKILL.md",
+          "beforeSha256": "f456a55d6301f823f28762e6b495c4ced5c7de9854f477d145a82a90337fd858",
+          "afterSha256": "6f34c833f2e9eb32de8710703498a85d9a1f71f63e61e19a1f40da7e1c0f63ed",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "hunt-clickjacking",
+      "disposition": "corrected",
+      "reviewNote": "Corrected header-only protected verdict and CSP/XFO precedence; retained real-browser authenticated-action proof requirements.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/Clickjacking",
+        "https://developer.chrome.com/docs/lighthouse/best-practices/clickjacking-mitigation"
+      ],
+      "files": [
+        {
+          "path": "skills/hunt-clickjacking/SKILL.md",
+          "beforeSha256": "dfeb33cfa7b365c9702e0b64e3f5832020c52c5c8b6b95e2065138bc4f4ef8e3",
+          "afterSha256": "9a27e5549b715b8614cab914388c23b5d06bcb2be4faaeeffe37ab5161d91634",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "saas-pricing-strategist",
+      "disposition": "corrected",
+      "reviewNote": "Removed invented client credentials and unsupported popularity claim; corrected acceptable-range definition.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://static.questionpro.com/userimages/site_media/Hackers-guide-to-advanced-research-methodologies-QuestionPro.pdf"
+      ],
+      "files": [
+        {
+          "path": "skills/saas-pricing-strategist/SKILL.md",
+          "beforeSha256": "7be880760b745b57c2802b079eefe51300228411e2f83b2afa93dae8d896c1e8",
+          "afterSha256": "84d8b12a29066db25b27d3a64110d533b6e213085ee435ef7c3846ec422c5f35",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "helpdesk-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication guarantee; retained schema-first read-only ticket/view/template workflows.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/helpdesk-automation/SKILL.md",
+          "beforeSha256": "a8744fd8fa269c2bd1c1dcc6b3398ff34eb74c484f432c082a921644e544036a",
+          "afterSha256": "19dbdd1d9014e1caf6c89fd7e0dd5e3890722627fff77c2d5373e3534a4e662b",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "youtube-transcript-skills",
+      "disposition": "corrected",
+      "reviewNote": "Qualified unsupported free-tier/signup guarantees while retaining strict endpoint/video-ID validation and no-redirect credential boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/youtube-transcript-skills/SKILL.md",
+          "beforeSha256": "00fab7ea8030b6dbf21d917213712b5b3be20df1774615e3eb473580b799468d",
+          "afterSha256": "d9eb78eab5946cd16211a82db3fc0fb8a8ef1678f15410529fce056c8a7afea9",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "python-pptx-generator",
+      "disposition": "retained",
+      "reviewNote": "Reviewed SKILL.md and bundled README in full; retained complete-script/save workflow, environment isolation, overwrite and sensitive-content boundaries. Built-in layout indices remain template-dependent and decks need visual QA.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/python-pptx-generator/README.md",
+          "beforeSha256": "409d9e619d06b1a550d768760993d09bbf69f51aaeaf50660d75a16eafac790f",
+          "afterSha256": "409d9e619d06b1a550d768760993d09bbf69f51aaeaf50660d75a16eafac790f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/python-pptx-generator/SKILL.md",
+          "beforeSha256": "4156422fc83cd032073828b479f56d904593152f10b89774ed3ca096963c407e",
+          "afterSha256": "4156422fc83cd032073828b479f56d904593152f10b89774ed3ca096963c407e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "styleseed-design-review",
+      "disposition": "corrected",
+      "reviewNote": "Qualified aesthetic rubric and prioritized user/accessibility harm over metric optimization; retained line-based review and no unsolicited editing.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/styleseed-design-review/SKILL.md",
+          "beforeSha256": "d5aeef3835c28b37d447c5d83283860212e6b1110940455ee2afdc72f4cb17c9",
+          "afterSha256": "f4728bb099da373b0262305f3a8c0d566d208d98153f63d9df5f8f22fe5261b6",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "repurpose-into-a-post",
+      "disposition": "retained",
+      "reviewNote": "Retained source-specific claim/quote attribution, platform adaptation, no reach guarantee and separate explicit preview confirmation for publishing; optional connector not required.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/repurpose-into-a-post/SKILL.md",
+          "beforeSha256": "6b36b0cc25834073a0afc53ec55903d2f7d54aca84481ed4354915ac6b5ead84",
+          "afterSha256": "6b36b0cc25834073a0afc53ec55903d2f7d54aca84481ed4354915ac6b5ead84",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "aegisops-ai",
+      "disposition": "retained",
+      "reviewNote": "Retained advisory model findings, unbundled upstream components, fixed-revision review and explicit private-data/model-cost authorization; generated policies need schema and workload validation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/aegisops-ai/SKILL.md",
+          "beforeSha256": "a1da82c5e0262d568f6948582d9cef61d49cca0a3c59c9476b7d83f682790dcb",
+          "afterSha256": "a1da82c5e0262d568f6948582d9cef61d49cca0a3c59c9476b7d83f682790dcb",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "gh-attach",
+      "disposition": "corrected",
+      "reviewNote": "Fixed angle-bracket shell placeholders interpreted as redirection; retained pinned extension/profile-cookie consent and destination/disclosure boundaries.",
+      "limitations": "No upload or browser-cookie access performed; private attachment ACL behavior must be verified at destination.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/gh-attach/SKILL.md",
+          "beforeSha256": "ea46f53311a9e3161228561c66824873552c7d060eb7b42d80272e2287301a3d",
+          "afterSha256": "c4edf8f590c7e921f8cd6adcee7f8a1286192edf0ef6e4ff005c44749cc21405",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "chord-onchain-trading",
+      "disposition": "retained",
+      "reviewNote": "Retained unsigned-only scope, no signing/broadcast, exact chain/token/amount identity, simulation and approval limits; quote data and API chain coverage require current provider verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/chord-onchain-trading/SKILL.md",
+          "beforeSha256": "aa23c238a857a814b60b694fc61bf88e0738a39f52259ee97cc4c48e2d321691",
+          "afterSha256": "aa23c238a857a814b60b694fc61bf88e0738a39f52259ee97cc4c48e2d321691",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "huggingface-best",
+      "disposition": "corrected",
+      "reviewNote": "Corrected memory-fit upper bounds, model-name count inference, nonexistent fallback and cross-benchmark ranking; token handling and leaderboard endpoints require current API review.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/huggingface-best/SKILL.md",
+          "beforeSha256": "7f32749350ed5c00fc22a913da302e9b425c12eff2b0d57f7c803935b62bcf5c",
+          "afterSha256": "b082c6d3a524ce4ccba8d76efbc1fcc523c24cb5ed92fe4d8c8c8d6b95b441b8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-evaluation-benchmarking",
+      "disposition": "corrected",
+      "reviewNote": "Aligned example regression verdict with the declared enum; retained matched runs, uncertainty, zero-solve cost and paid-execution boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ai-agent-evaluation-benchmarking/SKILL.md",
+          "beforeSha256": "952617fd1a233abd7f0bea8d3b6514a687df4f109d32bc13c19e94943de9aebe",
+          "afterSha256": "97b3c87b25fe818d90497d019438741f44295fc85f047abbb571e7bf07fc5beb",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "brooks-lint",
+      "disposition": "retained",
+      "reviewNote": "Retained book-based design lenses, concrete service-review examples and human-review limitations; no completeness or guaranteed bug detection inferred from principles.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/brooks-lint/SKILL.md",
+          "beforeSha256": "d9b882fc29e0170303a282bf1aaa1c79439006ff29f8b3803fd06657126c3b84",
+          "afterSha256": "d9b882fc29e0170303a282bf1aaa1c79439006ff29f8b3803fd06657126c3b84",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "shopify-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication guarantee and added explicit target/payload/bulk-write and uncertain-retry boundary; retained schema-first workflows.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/shopify-automation/SKILL.md",
+          "beforeSha256": "28ecbdfaf5cd8cb306146d0dc92e786d9451f96b508d40be327fe20e4cddeed6",
+          "afterSha256": "b303666a80b58207c2a15e85bdc98c7d11db29ec00b27d36a6d276078f588ae1",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "linear-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication guarantee and added explicit target/payload/bulk-write and uncertain-retry boundary; retained schema-first workflows.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/linear-automation/SKILL.md",
+          "beforeSha256": "1145022dbe2cbbf4da3682fee82e9eb0faf3062d89746f303a89bd0af900e687",
+          "afterSha256": "fb506f789153449546afda80a2278c7a168b2599c67756b98d8cc8fa529e2643",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "tdd-workflows-tdd-refactor",
+      "disposition": "corrected",
+      "reviewNote": "Identified unavailable orchestrator/playbook and non-equivalent payment example; bounded delegation and rollback without claiming tests green.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/tdd-workflows-tdd-refactor/SKILL.md",
+          "beforeSha256": "d0064d578cc3ea52a42ee89bb0b127f16ea404031b9851053b53e0177a9e58a3",
+          "afterSha256": "72cfab8a5de104176d8a69989926d21a74db009ae94f4d3d5e0db3f6cdcc2753",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "aws-cost-optimizer",
+      "disposition": "corrected",
+      "reviewNote": "Fixed AWS CLI statistics argument and raised risk for termination/deletion workflow; distinguished candidate savings from authorized removal and documented GNU-date/coverage limits.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/aws-cost-optimizer/SKILL.md",
+          "beforeSha256": "43cdf380dfefff01b548493c74dfc38c7369110e024551625198845babf08bfc",
+          "afterSha256": "7161ed70f621171c5af7be051a15f9ffb215efe61ed617b512f134a17279f7fc",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "nosql-expert",
+      "disposition": "corrected",
+      "reviewNote": "Corrected Cassandra aggregate prohibition, unpaginated DynamoDB all-orders claim and universal 10 GB/TTL assumptions.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://cassandra.apache.org/doc/stable/cassandra/developing/cql/dml.html",
+        "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/LSI.html"
+      ],
+      "files": [
+        {
+          "path": "skills/nosql-expert/SKILL.md",
+          "beforeSha256": "a62f4b24c966bfae76133f9ba4f123cc6c9c3fcaba1fd134a4f255c68bdb7d9b",
+          "afterSha256": "32fffd096765a60bb2da939aa641b42b51b54a89230738dc2076631156753c43",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "browser-bridge",
+      "disposition": "retained",
+      "reviewNote": "Retained pinned unbundled implementation boundary, startup consent, exact tab/snapshot identity, loopback-not-auth warning and private screenshot/credential scope; no browser connection performed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/browser-bridge/SKILL.md",
+          "beforeSha256": "63ffc365e3b66088ba8ba1298e9ef45756f89e3c9e5ace91282294d96da8d63f",
+          "afterSha256": "63ffc365e3b66088ba8ba1298e9ef45756f89e3c9e5ace91282294d96da8d63f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "faf-context",
+      "disposition": "corrected",
+      "reviewNote": "Qualified completeness score and instruction-file sync boundary instead of treating 100% as correctness proof.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/faf-context/SKILL.md",
+          "beforeSha256": "cb6bb8548b124cf0f7926df4889760f69fadcae9fc34b7ef405220fe11ee7c39",
+          "afterSha256": "e87a8e1d889e11efe5b7876f4a2395cccd944de1a32dc470ab82ecbcac5b7919",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ai-dev-jobs-mcp",
+      "disposition": "retained",
+      "reviewNote": "Retained timestamp/current employer-source verification, minimum candidate data and explicit CV/contact/application permissions; no live index or salary sample verified.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ai-dev-jobs-mcp/SKILL.md",
+          "beforeSha256": "4510db3ad251f344232a49447f2c29048f72c090ee212e13fefaf2d9cfaee661",
+          "afterSha256": "4510db3ad251f344232a49447f2c29048f72c090ee212e13fefaf2d9cfaee661",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-containerregistry-py",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing os import and unsafe age/untagged cleanup inference; artifacts/SDK operation availability require actual version verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-containerregistry-py/SKILL.md",
+          "beforeSha256": "bdf36faddd91af69c41244708872e75e01bb8559e282fc49c1749f2415726f2d",
+          "afterSha256": "232e36716e23fbf5bb0e21e39c83aacf92675fc1695e745633235822c82f8f77",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "llm-prompt-optimizer",
+      "disposition": "corrected",
+      "reviewNote": "Replaced demand for internal reasoning with checkable concise explanation and corrected JSON-format guarantee advice.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/llm-prompt-optimizer/SKILL.md",
+          "beforeSha256": "9967df7db7191eb1d99232db10717ccb26d3949e7056b31e9f02d9704dab54a4",
+          "afterSha256": "24c09f1fc7273d9ad4829219c840918fdcab326fc747abab6557a29ce5985bfa",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "asana-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected authentication guarantee and defined explicit workspace/write and non-atomic bulk retry boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/asana-automation/SKILL.md",
+          "beforeSha256": "ec770cea74546354d3f08448daf495fe310100d67e8d457d6a8ad5875d861b24",
+          "afterSha256": "ae3223c1dea1f22ab6a765a371edceae58885e4f8d822b462f9089d808b438da",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "fixing-motion-performance",
+      "disposition": "retained",
+      "reviewNote": "Retained measure-before-fix, temporary layer promotion, no library migration and offscreen-stop rules; examples are sketches requiring browser and reduced-motion verification, not measured performance results.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/fixing-motion-performance/SKILL.md",
+          "beforeSha256": "027e3332720dbc40409241ad675d6f62b6442dac80068100838eb0e1d6f12de6",
+          "afterSha256": "027e3332720dbc40409241ad675d6f62b6442dac80068100838eb0e1d6f12de6",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "dispatching-parallel-agents",
+      "disposition": "corrected",
+      "reviewNote": "Added explicit delegation authority and disjoint ownership boundary while retaining focused task prompts and integration verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/dispatching-parallel-agents/SKILL.md",
+          "beforeSha256": "03001fb9664e3a968e2648ca4bd59bffd0a6681ae22ac6e3a01b550cb34bd038",
+          "afterSha256": "f40639a8d2657a17fa7574a2be2f6ef5ff1409fb09be35aa4d82f6ea7c2018e3",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "gemini-api-dev",
+      "disposition": "corrected",
+      "reviewNote": "Removed instruction hierarchy override and unconditional current-model/MCP freshness claims; retained SDK examples as version-dependent fragments.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/gemini-api-dev/SKILL.md",
+          "beforeSha256": "09a22143a1d1203372d446b5cf918121bcf859e286bc89a943849af2b75dbacf",
+          "afterSha256": "13fc173e26996ef1b5509e5f5eb643ebc463e28ca6636fd823e5005082f1cf90",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ai-ml",
+      "disposition": "retained",
+      "reviewNote": "Retained phased LLM/RAG/ML workflow, selective phase use, data and cost constraints, explicit no implicit delegation/deployment, and evidence-based completion checklist.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ai-ml/SKILL.md",
+          "beforeSha256": "fbc3584f7e6a59e65b503b197efe461cd00559b84c3d4fe22518d43d8c27451d",
+          "afterSha256": "fbc3584f7e6a59e65b503b197efe461cd00559b84c3d4fe22518d43d8c27451d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "using-neon",
+      "disposition": "corrected",
+      "reviewNote": "Fixed shell angle-bracket redirection in documentation-fetch example; retained explicit missing-reference availability and official-doc lookup boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/using-neon/SKILL.md",
+          "beforeSha256": "f5a5cb6510a8395c3690f0a657c6c5347ac8645c73bc889062feef6ddc2d4fd7",
+          "afterSha256": "72891e4ecfd773fc7b0eb2fbd544109e9271a911cb1c9c36b19525e7be0ba673",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "reverse-engineer",
+      "disposition": "corrected",
+      "reviewNote": "Removed stray unmatched code fence and identified missing implementation playbook; retained authorized static/dynamic isolation and evidence workflow.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/reverse-engineer/SKILL.md",
+          "beforeSha256": "4008c6e3fe905c934d7d1f9b52cd3c5ccf2457c78b9f755c9ddcf51f9a19e6ea",
+          "afterSha256": "763e3ffc63ec5940eaf18fdb77a8421a723bd91d6eadaf629251b0ac36bda061",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-monitor-opentelemetry-exporter-py",
+      "disposition": "corrected",
+      "reviewNote": "Quoted semicolon-containing shell connection string, separated offline storage from retry guarantees and documented telemetry disclosure/provider lifecycle.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-monitor-opentelemetry-exporter-py/SKILL.md",
+          "beforeSha256": "1cdd8a5ad7aae3ad784de43fce47a3232b1d89c56026aca4ea832d72baa28447",
+          "afterSha256": "5beedb1a824c360726bda2023ddf58dc2ebd26c6845b8a5550d458594be0cf5e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "hunt-html-injection",
+      "disposition": "corrected",
+      "reviewNote": "Corrected reflection-only proof and automatic active escalation; required parsed DOM/context/impact with harmless separately scoped follow-up.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/hunt-html-injection/SKILL.md",
+          "beforeSha256": "da8baa1959d1b7ba535f33db2ff806089f43846a0bb3b5cd8796236758d70aa9",
+          "afterSha256": "f097bb42acc8203e933ccdb8791ed27ede5a01e012a62fb12d5f3223f3561766",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "idea-autopsy",
+      "disposition": "corrected",
+      "reviewNote": "Corrected automatic niche/AI-based rejection and ad-longevity profitability inference; allowed inconclusive evidence-backed outcome.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/idea-autopsy/SKILL.md",
+          "beforeSha256": "c614ad6da152edb7f1b3dad42015554075fc773bd6526999c3e01ff2eba60670",
+          "afterSha256": "ac95a4b1d1d2faf794a7a7ebd827e2f41b6dc61e0733c17565a885c081766e5d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "sast-configuration",
+      "disposition": "corrected",
+      "reviewNote": "Bound SonarQube exposure to loopback, identified absent scripts/templates and added missing Semgrep language key; removed nonexistent suppression metadata advice.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/sast-configuration/SKILL.md",
+          "beforeSha256": "75aa87beb1b1257a3f7e8599186b6d07a58171779ffb15459beb4a37b4ae8bee",
+          "afterSha256": "81fd2c498b0faa2d91a71f8bb88ee0eb682be942d3c5b38d10ccf4387090f022",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "orchestrate-batch-refactor",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed all four tracked files; bounded delegation authority and unavailable agent assumptions while retaining concrete prompt/packet templates.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/orchestrate-batch-refactor/SKILL.md",
+          "beforeSha256": "20ae7d71da8b4f4815a00511eecd6d4fcebd45757251e1592d72ebf14ac917fc",
+          "afterSha256": "40b2280f24c08ef22448c711f2d98ff834637096065b2bacf7b8a3baac8c7d10",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/orchestrate-batch-refactor/agents/openai.yaml",
+          "beforeSha256": "94b8d94e21c7d473d8787a28d8a98c3e37a89bfb5c5995e7ada7eb2d3ed97cf2",
+          "afterSha256": "94b8d94e21c7d473d8787a28d8a98c3e37a89bfb5c5995e7ada7eb2d3ed97cf2",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/orchestrate-batch-refactor/references/agent-prompt-templates.md",
+          "beforeSha256": "69a717f14be63a5cae7449aebeea90f10d48053fe2afad9fa5a0f207b50d456f",
+          "afterSha256": "69a717f14be63a5cae7449aebeea90f10d48053fe2afad9fa5a0f207b50d456f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/orchestrate-batch-refactor/references/work-packet-template.md",
+          "beforeSha256": "7140d0cf79589c62cbfa474b726fca9011ff8639c9e270be56b7d34aeea1e1a2",
+          "afterSha256": "7140d0cf79589c62cbfa474b726fca9011ff8639c9e270be56b7d34aeea1e1a2",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "article-illustrations",
+      "disposition": "corrected",
+      "reviewNote": "Clarified absent built-in prompt/tool dependency; retained concrete composition, character and output QA rules.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/article-illustrations/SKILL.md",
+          "beforeSha256": "5bc89e2e6794600028afbceec5454a7121636469b83b03535d5034e32632b930",
+          "afterSha256": "489de8d893795056739d9bcecc4c028c6fa0f8ec60bfbdb687fe311644f0f9af",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "people-data",
+      "disposition": "retained",
+      "reviewNote": "Reviewed SKILL and tool reference in full; retained exact profile-key distinction, identity verification, no guessed contacts, privacy/opt-out and pagination constraints. No contact lookup or outreach performed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/people-data/SKILL.md",
+          "beforeSha256": "6016582ab4eff3629554e2a6d2b6162f88af0e790ed45aa2f1459b8d0ff4e267",
+          "afterSha256": "6016582ab4eff3629554e2a6d2b6162f88af0e790ed45aa2f1459b8d0ff4e267",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/people-data/references/tool-reference.md",
+          "beforeSha256": "01e03d746c51c153efc43095dc0c5a4299f86c18448fafaf7e80c15723ee4d19",
+          "afterSha256": "01e03d746c51c153efc43095dc0c5a4299f86c18448fafaf7e80c15723ee4d19",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "marketing-psychology",
+      "disposition": "corrected",
+      "reviewNote": "Repaired inconsistent scoring range/ease-cost mapping and false preserved-library placeholder; labeled heuristic and supplied usable brief definitions.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/marketing-psychology/SKILL.md",
+          "beforeSha256": "c3637563a315668026323b24f7fd9a0dca602a86adf334f503604d42959e5058",
+          "afterSha256": "f079e4811cf0689f4ca0fea8d49ec7a6a3a2b77472c3c060d67c0c32709de12c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "requesting-code-review",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed both tracked files; clarified host-specific delegation and corrected template path plus immutable diff scope.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/requesting-code-review/SKILL.md",
+          "beforeSha256": "80db92c257490c3e7a3bef23441d6c1220f227f4dbd420671ca52036c76c4c52",
+          "afterSha256": "a95ccb7c11638d23ccce4ab32ad91b8d189b25a509bf599883fa50a4bc8748ef",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/requesting-code-review/code-reviewer.md",
+          "beforeSha256": "7f5328dca12cb200005ae9d4386f63a9b0acb735ece57f82db206b4a3189ccae",
+          "afterSha256": "7f5328dca12cb200005ae9d4386f63a9b0acb735ece57f82db206b4a3189ccae",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "learn",
+      "disposition": "retained",
+      "reviewNote": "Retained adaptive diagnostic, active practice and specific feedback workflow; format/persistence remain user-driven and examples do not pretend execution.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/learn/SKILL.md",
+          "beforeSha256": "eba1ebceaf133fd41a007588481468a1535e846032c8e8374c20f6c51a959d53",
+          "afterSha256": "eba1ebceaf133fd41a007588481468a1535e846032c8e8374c20f6c51a959d53",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-keyvault-secrets-ts",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing cross-SDK dependency/imports, removed secret/plaintext logging and corrected backup geography/subscription limit; documented fragment reuse and destructive key/secret boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/backup?tabs=azure-cli"
+      ],
+      "files": [
+        {
+          "path": "skills/azure-keyvault-secrets-ts/SKILL.md",
+          "beforeSha256": "f8b75b0c17afab633fab8a07275600639775663c5819f78a189918365365ded7",
+          "afterSha256": "e4304762a54270c23077fcdd5843d1b226a3bf13436bd4aad54f1ad7ab60688f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "sshepherd",
+      "disposition": "corrected",
+      "reviewNote": "Corrected add-yes-as-default workaround and qualified absolute zero-disclosure claims for unbundled executable.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/sshepherd/SKILL.md",
+          "beforeSha256": "7e3b140718c64c58355d7bfebb151ff082b775fa58ded8dc25846571c9a80694",
+          "afterSha256": "9390a3bd24e6234ffe3861a3835efdfd56c945dc37fcdc07d368c377fc999358",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "manage-skills",
+      "disposition": "corrected",
+      "reviewNote": "Corrected destructive whole-file replacement, Codex project instruction discovery and unverified universal disable convention.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/manage-skills/SKILL.md",
+          "beforeSha256": "43751b0c5dd5b7fa518a9800d61de7cc47e5bb59da43fd2dcbdba247df35c2d8",
+          "afterSha256": "5b68b63ba975c050d0f2d1500d2e0110fa75798c2c81e5c4e94fdb34382b3207",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-keyvault-keys-ts",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing cross-SDK dependency/imports, removed secret/plaintext logging and corrected backup geography/subscription limit; documented fragment reuse and destructive key/secret boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/azure/key-vault/general/backup?tabs=azure-cli"
+      ],
+      "files": [
+        {
+          "path": "skills/azure-keyvault-keys-ts/SKILL.md",
+          "beforeSha256": "67482ff0fea4ac4df43150058b9042c559dfdfed48ed4c1deec763a6edf4cf4e",
+          "afterSha256": "f45a97e916c57e500b36b78419817055f68e982ede8133736ba3b8c31a690ae6",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-mgmt-fabric-py",
+      "disposition": "corrected",
+      "reviewNote": "Added missing administration import and time prerequisite; qualified blanket suspend-no-billing promise and workload disruption.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-mgmt-fabric-py/SKILL.md",
+          "beforeSha256": "46aa97c7428b2c5cc2d9e708bfd8b41d26e0f7457db24c95e69c2e0a99d28b0e",
+          "afterSha256": "b7e41d7041d85358e79122824cadc7c726725f4b53ea0246fbd9090b70b61ac2",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "receiving-code-review",
+      "disposition": "retained",
+      "reviewNote": "Retained verify-before-implement and evidence-based pushback procedure; instructions are workflow advice and do not authorize posting GitHub replies or overriding actual project instructions.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/receiving-code-review/SKILL.md",
+          "beforeSha256": "95fb46f813feddcf337a43a39f168938261acdb64dad9dce95519108b44b15a8",
+          "afterSha256": "95fb46f813feddcf337a43a39f168938261acdb64dad9dce95519108b44b15a8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "deed-page",
+      "disposition": "corrected",
+      "reviewNote": "Fixed unsafe optional-header word splitting and documented private response capture to avoid leaking the once-returned update/delete token.",
+      "limitations": "Provider service/quotas not exercised; snippets still require protected response handling and live publication authorization.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/deed-page/SKILL.md",
+          "beforeSha256": "02fbaffe2aa3ef7076bcca50642eaf22296c95698fd9aeb98cb18a305de30a70",
+          "afterSha256": "f02ace69fd5194c97d33965f30fb7dc7d4f7ad27c14f527417869659ae5bfdd3",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "write-in-my-voice",
+      "disposition": "retained",
+      "reviewNote": "Retained user-provided sample sketch, explicit uncertainty, no fabricated numeric voice score and separate publication confirmation; optional connector is external.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/write-in-my-voice/SKILL.md",
+          "beforeSha256": "3da240ff2768586f78848042c343bf37300a4eb337448386d269cc4ae624507e",
+          "afterSha256": "3da240ff2768586f78848042c343bf37300a4eb337448386d269cc4ae624507e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-mgmt-apicenter-py",
+      "disposition": "retained",
+      "reviewNote": "Retained API inventory/version/definition workflow and scoped SDK fragments; exact model/operation schemas and production resource creation require installed SDK/service validation, not proven here.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-mgmt-apicenter-py/SKILL.md",
+          "beforeSha256": "cf7e249691970764759754c914a853decca4610f8b97b027e13f812f3b61e558",
+          "afterSha256": "cf7e249691970764759754c914a853decca4610f8b97b027e13f812f3b61e558",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-servicebus-ts",
+      "disposition": "corrected",
+      "reviewNote": "Handled tryAddMessage failure to prevent silent message loss and removed unconditional DLQ deletion after logging; documented settlement/idempotency and private bodies.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-servicebus-ts/SKILL.md",
+          "beforeSha256": "b03555f577c1d39f503bb074335e38405760163c810ed955c0c0c4cc6d707f13",
+          "afterSha256": "f8b49a04a263f579fb8b038b526fec21751fd1eb6b1421c3c5d1b721a9b3564e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "weather-data-lifecycle-management",
+      "disposition": "retained",
+      "reviewNote": "Retained explicit ownership/lease matrix, request-only cleanup, atomic promotion and symlink boundaries; destination replace requires an authorized output path and cross-filesystem fallback.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/weather-data-lifecycle-management/SKILL.md",
+          "beforeSha256": "a3047505ed658fda6ea0f923c3f6fb7b3655a7535c0b1b203c35159c2b550db9",
+          "afterSha256": "a3047505ed658fda6ea0f923c3f6fb7b3655a7535c0b1b203c35159c2b550db9",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "cockney",
+      "disposition": "corrected",
+      "reviewNote": "Removed hierarchy-override claim and instruction to undershoot requested scope; retained exact code/data and safety clarity.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/cockney/SKILL.md",
+          "beforeSha256": "bd0b637e48ff1333e71e2fc943712721d35b5dfaaf37d1484ca52756a62e31bf",
+          "afterSha256": "6d19bcded950f5f17ea87cd263a98c446a04c78525a8d6334f6a8d203aaabeb4",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "youtube-full",
+      "disposition": "corrected",
+      "reviewNote": "Made absent integration/automatic OAuth dependency explicit and corrected no-local-mutation claim contradicted by installation; preserved transcript/search workflow.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/youtube-full/SKILL.md",
+          "beforeSha256": "c200d24dfe1991e93b4c1a1595c6fb020c5a75102b8f083976700c264275d50d",
+          "afterSha256": "909a27b90d05094b7e48b2165055fdbb4031fc2a9b21aba8217e308a4ed4d79a",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "code-showcase-testing-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Fixed false-positive asynchronous assertion that tested the truthiness of a Promise rather than waiting for the element.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/code-showcase-testing-patterns/SKILL.md",
+          "beforeSha256": "543da08c4707e8f687b6a55b759768f8c51e54a64c2fac11419b14dd18585b1b",
+          "afterSha256": "e8abeccaaed537f6c54b27969a09225ec6097b70399d1fc1c80fa4be7fb572d8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "codex-profiles",
+      "disposition": "retained",
+      "reviewNote": "Retained community-tool identity, explicit profile scope, desktop disruption approval and no auth-token copying; CODEX_HOME isolation explicitly excludes OS/SSH/browser state.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/codex-profiles/SKILL.md",
+          "beforeSha256": "b82f5c0fa3c3292379f0710d0e82bd4341ed50a4adcbee4959d4870178051bba",
+          "afterSha256": "b82f5c0fa3c3292379f0710d0e82bd4341ed50a4adcbee4959d4870178051bba",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "us-property-data",
+      "disposition": "retained",
+      "reviewNote": "Retained resolve-before-estimate, date/currency/missing-data semantics and minimal property identifier disclosure; third-party estimates are explicitly not appraisal or tax advice. No live valuation verified.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/us-property-data/SKILL.md",
+          "beforeSha256": "4c802eb7e661fa3ab28baf33e3b4007e19a14637b11a9babb91dcc5600c644f8",
+          "afterSha256": "4c802eb7e661fa3ab28baf33e3b4007e19a14637b11a9babb91dcc5600c644f8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "seo-images",
+      "disposition": "corrected",
+      "reviewNote": "Corrected decorative-image alt handling and arbitrary universal length rule; qualified stale support percentages.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/seo-images/SKILL.md",
+          "beforeSha256": "5b0ce0ccc33b01f23cd4c4691cb5554f56646c37aefd66e03bfeccbcb6f2f50a",
+          "afterSha256": "dc1d2b7ba3a06083e23c3a8f1f63a69f4a2db068a2d4ed4405694a8fc5ed9c81",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "seo-schema",
+      "disposition": "corrected",
+      "reviewNote": "Separated Schema.org validity from Google rich-result eligibility and identified absent templates instead of universal never-recommend rule.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/seo-schema/SKILL.md",
+          "beforeSha256": "07ab2298ce79cda840a513c3a47dc45217fe88222253fbde91be42477301eb7f",
+          "afterSha256": "069498a6e337de8059c86dff5cf44682c47d3f6ac350ea14da2b94679b8843db",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "vllm-server",
+      "disposition": "corrected",
+      "reviewNote": "Fixed broken shell continuation comments and redirection placeholders; bound inference exposure to loopback and identified historical version/memory sketches.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/vllm-server/SKILL.md",
+          "beforeSha256": "5b865a9a155c37e70170eb08f97a228ab1595c90d81519fae6fb3bd3751303ee",
+          "afterSha256": "48ae9980a1beb2ce7f85e25e1553f89ad9c9a87c272bec97c2c2f0b47ded46ab",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "linkedin-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected authentication guarantee and added exact actor/content/visibility and uncertain-publication retry boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/linkedin-automation/SKILL.md",
+          "beforeSha256": "a12874b822f20672f983d343581df777b88ccceed95e70f55046cb365d028a30",
+          "afterSha256": "c47a8fa5288efe83bc9a0091c7a47145981442f03afa9c2aeb0d72aab66ec5f8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "gitlab-ci",
+      "disposition": "corrected",
+      "reviewNote": "Fixed deploy rules catch-all that deployed other branches, password process argument exposure and default privileged host-socket runner configuration.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/gitlab-ci/SKILL.md",
+          "beforeSha256": "b4be90e936131f1ba6300f25d27d7a63b61ea072040889e5d18b2c0ea67b6b82",
+          "afterSha256": "d3bb6d70097f6665f08a6f7a92721d62727bbd417b2819f26fc2f2bf0384e18c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "malware-analyst",
+      "disposition": "corrected",
+      "reviewNote": "Repaired missing opening code fence and absent playbook dependency; contained dynamic networking and public-sandbox disclosure.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/malware-analyst/SKILL.md",
+          "beforeSha256": "593eb6d070f4fd9860533de98031edaccb6a9ba805666acc1ea68aae2386ef68",
+          "afterSha256": "4936da8b11bfd3cd2e69a401e6dd1a16aded1e7b2c675570e127a6314954018c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ditto",
+      "disposition": "retained",
+      "reviewNote": "Retained explicit mining request, displayed plan hash/cost approval, local redaction limitations, complete validated reports and no competing installation; no mining or provider calls performed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ditto/SKILL.md",
+          "beforeSha256": "f2173986bcde7ab51811eff73c7d44a3ba5e64448783f3456bfe0aba57fa7d06",
+          "afterSha256": "f2173986bcde7ab51811eff73c7d44a3ba5e64448783f3456bfe0aba57fa7d06",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "file-organizer",
+      "disposition": "corrected",
+      "reviewNote": "Corrected duplicate-finder that compared entire hash-plus-path lines and never grouped same-content different paths; added collision/symlink and reversible move boundaries.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/file-organizer/SKILL.md",
+          "beforeSha256": "152aa0c0b6e02bb1ed81b0d70bae336472e85a98541ce1dee2c574faad76dddc",
+          "afterSha256": "c1c2a820801e766fee5bf521b1bc37583cc1d87e2fc1b98237676869a55da04f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "disposition": "retained",
+      "reviewNote": "Retained governed schema/metric/grain contract, read-only query scope, privacy and join/denominator validation plus association-not-causality reporting; no guessed schema or data.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/warehouse/SKILL.md",
+          "beforeSha256": "b177c7c8b5599055149e70130bf95242d4deb23d38753d3c08a5fa8e3a65c22a",
+          "afterSha256": "b177c7c8b5599055149e70130bf95242d4deb23d38753d3c08a5fa8e3a65c22a",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "geo-report-pdf",
+      "disposition": "corrected",
+      "reviewNote": "Corrected bundled-template contradiction and clarified that Chrome example does not enforce the stated offline rendering policy.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/geo-report-pdf/SKILL.md",
+          "beforeSha256": "efc55a3f602f327293af2d63657c7bce7c5ee4a57ecd468109f2c82b70eaa2d2",
+          "afterSha256": "aceb509c88608ac36d5fd4c5a8f175293b8511cf8d151b3d5d8ba4ccfa78e643",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "differential-review",
+      "disposition": "corrected",
+      "reviewNote": "Identified four absent methodology files and corrected blanket low-risk assumption for UI/logging/docs.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/differential-review/SKILL.md",
+          "beforeSha256": "173b4280363c28ebb8c939dc999758138701e64f72cf9c35b2a3b393a17ec40c",
+          "afterSha256": "ead216a5fa5aa2e272c17300e3f4c4fc292f83dcc0b0ef61a6f3ad2b95232482",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "wgm",
+      "disposition": "corrected",
+      "reviewNote": "Clarified blind-holdout validity and prevented implicit delegation/persistent shared-skill mutation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/wgm/SKILL.md",
+          "beforeSha256": "88c534bba29b7d5e2d3e076fe430bb7364ae20110a4bd01085e1504a7b2cf582",
+          "afterSha256": "aa3b1f0436c33f22d3e647f1cb2376f41db215027fe006061ee1c7126c685c79",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "graphql-schema",
+      "disposition": "corrected",
+      "reviewNote": "Corrected default fetch-policy claim and bounded project-specific codegen/hooks and raw-object normalized-cache example.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/graphql-schema/SKILL.md",
+          "beforeSha256": "a9e51b73d860aa41b14131b58b48b8eb3bc915888a4b0c7946cda222f3d49efe",
+          "afterSha256": "9a5761209d7d1a5d8ae819664f974167324eb66e2dacd83d4f9d0db090471c40",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-search-documents-ts",
+      "disposition": "corrected",
+      "reviewNote": "Stopped reporting all returned indexing results as successes and clarified server-enforced document authorization plus fragment/schema prerequisites.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-search-documents-ts/SKILL.md",
+          "beforeSha256": "1ae44666e89ee399c71c7f221a4c511f1c731dfc284e08d7c5c9334dd4b57dba",
+          "afterSha256": "357c3df2dcedd3a628aea51010b5d1fc997d83b0dcdaec1ef1e911cbdf9043af",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "web-project-brainstorming",
+      "disposition": "retained",
+      "reviewNote": "Retained staged scoping, user flows, responsive/accessibility planning, non-goals and blueprint format; architecture is provisional and contains no credentials.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/web-project-brainstorming/SKILL.md",
+          "beforeSha256": "a50514d20edc908fc34ceb4ed4c59cf205c38df82a5e31b56367b9f233460c00",
+          "afterSha256": "a50514d20edc908fc34ceb4ed4c59cf205c38df82a5e31b56367b9f233460c00",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ralph-loop-yylo",
+      "disposition": "retained",
+      "reviewNote": "Reviewed all three tracked files in full; retained exact assigned task/admission/path scope, focused checks, clean commit queue and explicit no push/merge/release boundary; yy runtime is external.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ralph-loop-yylo/SKILL.md",
+          "beforeSha256": "a25b37db7dde2c9e4af3416c04a317c1f918f74562a840f5715353319ccf78e8",
+          "afterSha256": "a25b37db7dde2c9e4af3416c04a317c1f918f74562a840f5715353319ccf78e8",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/ralph-loop-yylo/references/first_check.md",
+          "beforeSha256": "f7fd218afc7cfb7c30a3150e69894e0c7e35328b9141988e3d9407b7729c4644",
+          "afterSha256": "f7fd218afc7cfb7c30a3150e69894e0c7e35328b9141988e3d9407b7729c4644",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/ralph-loop-yylo/references/implement.md",
+          "beforeSha256": "cffa8ebb22bb677437ee78f8cc23bec5b4433a4192c58e131bcdfb071a67d289",
+          "afterSha256": "cffa8ebb22bb677437ee78f8cc23bec5b4433a4192c58e131bcdfb071a67d289",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "react-ui-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing refetch and native form submit refresh; avoided directly exposing raw error.message to users.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/react-ui-patterns/SKILL.md",
+          "beforeSha256": "5c5caf13bb926473037b5f33048e6418975f645ea3cb0918e1c652b0ebe29b22",
+          "afterSha256": "f54ca0e2019ba047bd8f1ae538a390a6e0081cdc8ceaafd355135dccb77fd15e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "square-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication and bounded payment cancellation/order/invoice mutation with exact target, write reconciliation and final-state verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/square-automation/SKILL.md",
+          "beforeSha256": "4079b41a2aa5ff167d5dac5156d5f7a313203a9e8c5bf6701560c5c857d1d6f8",
+          "afterSha256": "023f2c901d61d040d7ea784ed89eb87daa74c0b0e08da623b1383dff2182f85d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "render-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication and bounded paid deployment triggering with exact target, write reconciliation and final-state verification.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/render-automation/SKILL.md",
+          "beforeSha256": "c2139446e53873c244f74ebb5d5340a937b4a5667e751055593c566a6bf3efa0",
+          "afterSha256": "8ce1f276e9ff01ba41b4e9454c1f726ce43ccbe88fe1b57a689a913a8fde5153",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "context-kit",
+      "disposition": "retained",
+      "reviewNote": "Retained private-by-default personal context, pre-install source/path review, no secrets and explicit disclosure approval; installer is explicitly absent and license behavior unverified.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/context-kit/SKILL.md",
+          "beforeSha256": "be739002166193169972cee6273f4b1b47377d030c182a3e685f2d716a5386f9",
+          "afterSha256": "be739002166193169972cee6273f4b1b47377d030c182a3e685f2d716a5386f9",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "keenable-search-mcp",
+      "disposition": "retained",
+      "reviewNote": "Retained selected-provider scope, actual schema discovery, extraction-versus-quote distinction, private-query boundary and per-claim evidence; rate/access terms remain provider-dependent.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/keenable-search-mcp/SKILL.md",
+          "beforeSha256": "c38795977c15f8cb0508557ed670f51697b7949b76642c6548ed8b516f463593",
+          "afterSha256": "c38795977c15f8cb0508557ed670f51697b7949b76642c6548ed8b516f463593",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "makepad-shaders",
+      "disposition": "corrected",
+      "reviewNote": "Clarified absent pattern collections and prevented fallback memory from being presented as verified Makepad API evidence.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/makepad-shaders/SKILL.md",
+          "beforeSha256": "81569e2ac52cbca41ff7d09e2849b13c8d880b146640f1e61f4c58b3e0c123a2",
+          "afterSha256": "06d0ceaab6313e58cec483fd49127a5db2ead56a25c0cb309f37b489c9564612",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-textanalytics-py",
+      "disposition": "corrected",
+      "reviewNote": "Removed raw PII logging and established private/health text disclosure plus probabilistic redaction boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-ai-textanalytics-py/SKILL.md",
+          "beforeSha256": "154728fe412ed30f8889590a87e9d8064426723472e8b44427f2ade03602dfbf",
+          "afterSha256": "0ce7888aa32919c921b9d2b4c77eadfcabb5e30ffc602754659ae33f5753c93f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-vision-imageanalysis-py",
+      "disposition": "corrected",
+      "reviewNote": "Guarded optional caption result and bounded image disclosure/people detection and OCR interpretation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-ai-vision-imageanalysis-py/SKILL.md",
+          "beforeSha256": "1b625f659fb751832559b4efb496b1b50fb53d78149a3256e424857ab03a1e4a",
+          "afterSha256": "199b8598a594c7b92f8a6c5e2b5becb27062e014b90447b3d6642dc775f49a71",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "enhance-prompt",
+      "disposition": "retained",
+      "reviewNote": "Retained user-intent assessment, real DESIGN.md extraction, targeted-edit preservation and default text output; generated design prompts do not establish accessible rendered behavior.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/enhance-prompt/SKILL.md",
+          "beforeSha256": "651d381244f879cfda6d1115a63db3558c4cabf96de0c1beba00862255a4b9bf",
+          "afterSha256": "651d381244f879cfda6d1115a63db3558c4cabf96de0c1beba00862255a4b9bf",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "nsfw-ai-spicyapi",
+      "disposition": "corrected",
+      "reviewNote": "Removed explicit content-filter bypass framing and stated host-policy precedence; no media generation/download or upstream runtime execution performed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/nsfw-ai-spicyapi/SKILL.md",
+          "beforeSha256": "34db6c33c366815d7fbf38b29af76ce88082e4eb5aeb8616ffd99d01838e5fc7",
+          "afterSha256": "740b8d4571149c49962174b2fbff860e7cb39ef4cf40be1c38a9827d0d89fd7c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "vibe-code-cleanup",
+      "disposition": "corrected",
+      "reviewNote": "Removed secret-file dump and broken brace-glob search; qualified grep-only dead-code proof against dynamic/framework/external references.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/vibe-code-cleanup/SKILL.md",
+          "beforeSha256": "68e369807709581b7a9b6767f6a7c45738c5833a86c6e698cfe19b2fe49b4d58",
+          "afterSha256": "02fb0fb9b63ec8acacace3704eb527ad78ceda60530a3ce0a9a6a4d24f0b8bd3",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "development",
+      "disposition": "corrected",
+      "reviewNote": "Added selective phase and actual-skill/version/effect scope to prevent workflow checklist from authorizing deployment or invented completion.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/development/SKILL.md",
+          "beforeSha256": "e73a00868a45fb5e5ec5b27cd638ef0a4182a0698a86f14809f40b3f62715fbf",
+          "afterSha256": "8ebb6f592eadfa4f60d068ba3f6bfdb66bda6490008bd6e1c3bceadf505fcbc1",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "weather-pipeline-performance-diagnosis",
+      "disposition": "retained",
+      "reviewNote": "Retained identical workload/runtime/cache identity, stage monotonic timings, complete-path comparison, variance and privacy/budget boundaries; snippets depend on real application functions.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/weather-pipeline-performance-diagnosis/SKILL.md",
+          "beforeSha256": "9a12df114060857e370ced7ba99d75ecf4359297ceecdcdf4c37f336e5fbb541",
+          "afterSha256": "9a12df114060857e370ced7ba99d75ecf4359297ceecdcdf4c37f336e5fbb541",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "case-review",
+      "disposition": "corrected",
+      "reviewNote": "Identified missing review script/helper and prevented claiming strict/hash verification from unavailable executable support.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/case-review/SKILL.md",
+          "beforeSha256": "650ab68a4bc18c02b85acbe65ca3d1821bb48589685c882ed7ce1187fcc6480d",
+          "afterSha256": "e6efb47baf3e67e599dde7988a9e4b0225eefe609e1643e3773c76a28e9f0cf3",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-keyvault-py",
+      "disposition": "corrected",
+      "reviewNote": "Removed secret logging in sync/async examples and clarified purge/recovery alternatives and certificate private-key export risk.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-keyvault-py/SKILL.md",
+          "beforeSha256": "004c55a7f9f0c9997c92e188593b5898bbc24df5712ab04c6049e22a243cbacd",
+          "afterSha256": "5085cef5514fb2f20c574ff10f22d153066a253883377de912e4efa9c7929a93",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-identity-ts",
+      "disposition": "corrected",
+      "reviewNote": "Qualified version-dependent default chain and bounded verbose identity logs plus unintended-principal fallback.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-identity-ts/SKILL.md",
+          "beforeSha256": "63f852d8fb5275032ed52e72a8bf9c92150260536ffbc0a19ea8a5763158af15",
+          "afterSha256": "22ed615200b17e7ab25b2aab93c2e0ab49afebdd9bc78d0226084e1303b72d68",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "circleci-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication claim and bounded pipeline execution and downstream deploy hooks with exact target, result and retry reconciliation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/circleci-automation/SKILL.md",
+          "beforeSha256": "87e8886d036941b09a5616d2a4591159773a01f65218b167139ca542e583a03e",
+          "afterSha256": "37993376956f384e984abd50873e314d44f5189cbe74c017d6126a28f74326c1",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "tiktok-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication claim and bounded video/photo publication with exact target, result and retry reconciliation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/tiktok-automation/SKILL.md",
+          "beforeSha256": "0e127767e88571a93bc9bc3d717235616797ded7d39aa6a6c45584556d5d467b",
+          "afterSha256": "1ed9d4eafee85d4573996e2fc6b3c2efcee2b6661b155bbcd84a41d256211f79",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "logic-diff",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed both tracked files; identified missing shared library and limited equivalence conclusion to actual traced scenarios.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/logic-diff/SKILL.md",
+          "beforeSha256": "56b9ba79c0f45d867762b05f252823b8b0418f7eb57ba44fbf9c048206d426f8",
+          "afterSha256": "e3233e754682d7b7e866ce4632cd05c906f3edc0fa6e5f04fdb8306437599891",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/logic-diff/logic-diff-guide.md",
+          "beforeSha256": "450125455928328630172c8df920c792e19a94bbee183ab6189985d534082e99",
+          "afterSha256": "450125455928328630172c8df920c792e19a94bbee183ab6189985d534082e99",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "close-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication claim and bounded outbound SMS and CRM record mutation with exact target, result and retry reconciliation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/close-automation/SKILL.md",
+          "beforeSha256": "64ab2c5b554f881e8cd6a94730f3da50d15f55b70287b2711db0a48ff37a16c6",
+          "afterSha256": "7b73bbf8dc24040f59b41c69ad3fb06d0c6e259a7a89ad83a004c7f72dfb724d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "airtable-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication claim and bounded record/schema writes and deletion with exact target, result and retry reconciliation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/airtable-automation/SKILL.md",
+          "beforeSha256": "e8776c7a4e7a9d31895ab30aeb70cbea621e2664362b18acc5599e3f665ac4ec",
+          "afterSha256": "36e5f849d737e8fe29cef96082039340b7e481558e03d3441361538d1edc6824",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-mgmt-apimanagement-py",
+      "disposition": "corrected",
+      "reviewNote": "Removed subscription-key logging and highlighted destructive full-policy replacement/inherited-security and paid-resource effects.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-mgmt-apimanagement-py/SKILL.md",
+          "beforeSha256": "f176994c7c53d61a6ba1496fbc8f0206a743945bb58097d574078f3820859c24",
+          "afterSha256": "44fef0a6e6b9e352a0dd75436c0b6d33db6eafb105caf29bce89476c1b9cfe4a",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-translation-document-py",
+      "disposition": "corrected",
+      "reviewNote": "Removed SAS-bearing source URL logging and established private-document/cost/output/per-document-success boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-ai-translation-document-py/SKILL.md",
+          "beforeSha256": "4225b0e1a7e094d49fbb06bbe4ebd013f922b6c88d6cb62e783002755ddc79bf",
+          "afterSha256": "e7a465a621e560f281be209b114a8241bd55e94fbc88014d852acc639e9f4f6d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "infinity",
+      "disposition": "corrected",
+      "reviewNote": "Added sink-specific SQL/output/auth controls and preserved raw webhook bytes; removed implication that shape validation alone prevents all injection.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/infinity/SKILL.md",
+          "beforeSha256": "ab77eb3fb8de75e0db615b4499cbae9bf7dc5dcd51f52bcf3c9eb54262d2e69d",
+          "afterSha256": "41b1aaaa7624c9cf695db1da930804568ee081e54ba13bddc16578e29d58fe49",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "mcd-secret-menu-lab",
+      "disposition": "retained",
+      "reviewNote": "Retained exact store/current-price/portion evidence, unknown nutrition and allergy caveats, existing-MCP-only scope and no implicit coupon/order/account mutation; full MIT notice preserved.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/mcd-secret-menu-lab/SKILL.md",
+          "beforeSha256": "1ba0da53cf3c0c4487e167796a09f13ac6213634e53eaf7ae2c1e3247114bfac",
+          "afterSha256": "1ba0da53cf3c0c4487e167796a09f13ac6213634e53eaf7ae2c1e3247114bfac",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "session-handoff",
+      "disposition": "retained",
+      "reviewNote": "Retained actual git-state audit, facts-versus-unverified distinction, owners/checks and atomic next action; handoff cannot preserve live process/memory state.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/session-handoff/SKILL.md",
+          "beforeSha256": "92268ea158c931d852f6901d1d7f228cce8f79d2bf46e62ae020a2c81f9757ab",
+          "afterSha256": "92268ea158c931d852f6901d1d7f228cce8f79d2bf46e62ae020a2c81f9757ab",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "routerbase-model-gateway",
+      "disposition": "retained",
+      "reviewNote": "Retained server-side keys, current catalog/capability fixtures, paid-call approval and transient-only fallbacks; request fragments require actual helper and compatible gateway schemas.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/routerbase-model-gateway/SKILL.md",
+          "beforeSha256": "d95654aea6c666060ace3d57fcc355dbc4eca3d3db699c57777d78b7887e3f06",
+          "afterSha256": "d95654aea6c666060ace3d57fcc355dbc4eca3d3db699c57777d78b7887e3f06",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "video-router",
+      "disposition": "retained",
+      "reviewNote": "Retained route-only generate/compose/edit axes, unavailable-runtime package and no produced-media claim; downstream costs, licensing and execution remain separately authorized.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/video-router/SKILL.md",
+          "beforeSha256": "ff2470203aa04ae38f2a71cfb8c0c04355ad4cfd8976578997f73eec00f92233",
+          "afterSha256": "ff2470203aa04ae38f2a71cfb8c0c04355ad4cfd8976578997f73eec00f92233",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "hugging-face-tool-builder",
+      "disposition": "retained",
+      "reviewNote": "Retained inspect API shape, help/examples and scoped composable utilities; all seven reference scripts are explicitly absent and no dependent execution claimed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/hugging-face-tool-builder/SKILL.md",
+          "beforeSha256": "5f342e40b47fd4951e1fd980009a7d64f9451016e0a7bcdcc7b5c8586223a58d",
+          "afterSha256": "5f342e40b47fd4951e1fd980009a7d64f9451016e0a7bcdcc7b5c8586223a58d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "makepad-font",
+      "disposition": "corrected",
+      "reviewNote": "Labeled invalid Rust struct/default-value pseudo-declarations and uncertain missing-reference fallback as sketches, not runnable code.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/makepad-font/SKILL.md",
+          "beforeSha256": "2543535ab22f69ed994db48f8bd90d1f8dd7e9fc5d2005d2be95c01fb1d799e8",
+          "afterSha256": "82d5b5084aa7d2557a1e426dc6842f4f4c1c957dfb77e43899f0b34cdb7442fa",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "upstash-ratelimit",
+      "disposition": "corrected",
+      "reviewNote": "Handled pending work in middleware and clamped Retry-After; protected raw API-key identifiers and explicit fail-open/error policy.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/upstash-ratelimit/SKILL.md",
+          "beforeSha256": "5146ff9f5af2bc4edec2685436011ff6eef00e868a0836defe20bc2f1830cf95",
+          "afterSha256": "cc10090cd7479e4b13733a624857ca861d8274aef5b697e0057ce54d77ba27f5",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "simplify-code",
+      "disposition": "corrected",
+      "reviewNote": "Bound parallel review to explicit delegation/model/disclosure authority while retaining scoped behavior-preserving review modes.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/simplify-code/SKILL.md",
+          "beforeSha256": "8ff8d91a9d4380d2d356170df1c459c905d39409cfe0dca155fbbdae325919fc",
+          "afterSha256": "ee2ddd2bbb7daecca32350773708daea76895bdb673b2afb0cdd0ce3d6d16984",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "marketing-mindset",
+      "disposition": "corrected",
+      "reviewNote": "Removed universal zero-client channel prescription and statistical sufficiency implication from fixed test-volume floors.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/marketing-mindset/SKILL.md",
+          "beforeSha256": "5d0d5b7e6243e2dcca023b797b869e1bb43cee8b6040fedad4e2307d6196daf0",
+          "afterSha256": "dc06bb9b9fa96bd0045278bab1953976cef7bcec32b0de5a962ef9c1db5b750b",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "api-designer",
+      "disposition": "corrected",
+      "reviewNote": "Fixed invalid JSON-comments guidance and added missing object/tenant authorization/idempotency design contract.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/api-designer/SKILL.md",
+          "beforeSha256": "a031cfb9c658b2c953ad3e12eb8176a668422a5e1763202d49b3596ec39f3b22",
+          "afterSha256": "d85d411196640b228b0a7d3c0bf6ed48925d3c4417961169879cc9d6f5007685",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "pre-ship-gate",
+      "disposition": "corrected",
+      "reviewNote": "Strengthened short-SHA comparison to full identity and clarified revision match alone does not prove required behavior.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/pre-ship-gate/SKILL.md",
+          "beforeSha256": "9ad874fca7c06b2981f52fd6ab708888506a49e4592078eb73adb3974df10071",
+          "afterSha256": "7b262ff14ceb1f18c1f4841e541bbd2ea3fe6776ef21d83d31aac60a79ea0c24",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "brooks-harness",
+      "disposition": "corrected",
+      "reviewNote": "Removed forced model and imported direct-main exception; identified absent upstream agents/eval/release runtime and actual repository authority.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/brooks-harness/SKILL.md",
+          "beforeSha256": "7009903a91258f4d4f68113383621f0a9c0d51da7021b2fce79b6227fc1a514f",
+          "afterSha256": "3fdf52daa79b54cbea7c104852a3948163dd0b77606d7e78c6b25d85dde5bdbb",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "jira-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected endpoint-only authentication guarantee and scoped issue/role writes plus comment notification authority.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/jira-automation/SKILL.md",
+          "beforeSha256": "ef056ba9fe6c71fb5e837f99fa3066fd5127060f84e071c7bca25401bb680180",
+          "afterSha256": "5dc2489668910c9056b4c7fe0a18e7f8e541f1145bf5528e95b6866a4664e382",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "tailwind-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Clarified v4 custom dark variant versus v3 config strategies and removed universal 10x performance claim.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/tailwind-patterns/SKILL.md",
+          "beforeSha256": "fa017d7869f1ed81d98e2da3d8036c36bbf35af2e66d25168207c7e8a609355c",
+          "afterSha256": "8863975f1955e1ab3a034c06ce7440b0ec53a799f7b5c8320109a9192d830ce4",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-ai-projects-ts",
+      "disposition": "corrected",
+      "reviewNote": "Bound version-sensitive project/agent fragments, secret-bearing connection access and task-owned cleanup/provider/tool effects.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-ai-projects-ts/SKILL.md",
+          "beforeSha256": "17644c783150d194c76975cefa403246b3fc9c73eea85f333f8c8dd6fa3b74c7",
+          "afterSha256": "1ca652a361b9a0eaa3133886fcea1cbbbee697ee09de4b8263480d2fde81884c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "pangolinfo-amazon-data-research",
+      "disposition": "retained",
+      "reviewNote": "Retained actual schema discovery, bounded marketplace/time/currency comparison, point-in-time evidence and credit/private-data boundaries; no sales inference or live provider results claimed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/pangolinfo-amazon-data-research/SKILL.md",
+          "beforeSha256": "5ba3e74e093fbb8a2957fe45583c7a2674ada53f8835b3e0f0c2dc5946737009",
+          "afterSha256": "5ba3e74e093fbb8a2957fe45583c7a2674ada53f8835b3e0f0c2dc5946737009",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "social-metadata-hardening",
+      "disposition": "corrected",
+      "reviewNote": "Fixed malformed/missing metadata URL construction and query-string MIME inference, async route params and incorrect 2:1 ratio claim.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/social-metadata-hardening/SKILL.md",
+          "beforeSha256": "0202aeb971a527340560c6f344cdb286d271e6a8d33dfb8b4b474eb85e35a636",
+          "afterSha256": "f1fcde7e74823a8f6e5586dff4e5cd5df556981ac909e9ecec091aad7dbc797f",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "seo-drift",
+      "disposition": "retained",
+      "reviewNote": "Retained stable URL/property/window baseline, unknown-not-zero data gaps, source provenance, causal caution and explicit production-change boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/seo-drift/SKILL.md",
+          "beforeSha256": "e064122351672a46dd2de55b1d1c8eab4ee668a180651a6db28757a6529c3b20",
+          "afterSha256": "e064122351672a46dd2de55b1d1c8eab4ee668a180651a6db28757a6529c3b20",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "junit-5-skill",
+      "disposition": "corrected",
+      "reviewNote": "Made missing Spring/playbook references, omitted imports/application types and empty-test sketches explicit rather than production-ready tests.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/junit-5-skill/SKILL.md",
+          "beforeSha256": "d013553472a3e8847183954b6056ef573495f3a72ccbc73b8957d285aaa597e0",
+          "afterSha256": "77361bc7ef9749e33af32f99087199173c122904f972b66cabf21d570a65640c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "salesforce-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected authentication guarantee and scoped CRM/bulk ownership/notification and duplicate-create effects.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/salesforce-automation/SKILL.md",
+          "beforeSha256": "7ec7f5d50a8aa0d17858c88a83d0efccde9613a1b7ee5d38533c436a9a8121bd",
+          "afterSha256": "dd33541583d90b4b131f14722d774172331a8521ac8e3573fcc651699d2ccad6",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "popup-cro",
+      "disposition": "corrected",
+      "reviewNote": "Prevented mobile back-button hijacking and overbroad focus trapping on non-modal UI.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/popup-cro/SKILL.md",
+          "beforeSha256": "92e4c11db04ddcee436baa73e46fb1d6cc0db262c1e6c4f862229cde405d2675",
+          "afterSha256": "ee38c0ff3d67111ea9e61a20428d4717abc08a75c91dc44bb39e72b7310e3f45",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ontoly-software-graph",
+      "disposition": "retained",
+      "reviewNote": "Retained graph diagnostics/coverage, exact evidence versus inference and local artifact/external disclosure boundaries; compiler/runtime validation still required and graph freshness must match source.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ontoly-software-graph/SKILL.md",
+          "beforeSha256": "c832e2c9c533cfeee685f3ea26f982b7168cee59a8cbea83d9fbf1397068ee23",
+          "afterSha256": "c832e2c9c533cfeee685f3ea26f982b7168cee59a8cbea83d9fbf1397068ee23",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "sandbase-mcp",
+      "disposition": "retained",
+      "reviewNote": "Retained immutable artifact/checksum and full source review before activation, discovery/schema/cost checks, explicit setup approval and no repeated async run; no archive or model executed.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/sandbase-mcp/SKILL.md",
+          "beforeSha256": "bebe7de8ed56d59baa8d6738c7e3a730fa4176c5918b1148f989fa3bc0cb8f91",
+          "afterSha256": "bebe7de8ed56d59baa8d6738c7e3a730fa4176c5918b1148f989fa3bc0cb8f91",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "cucumber-skill",
+      "disposition": "corrected",
+      "reviewNote": "Identified missing fixture/steps/playbook and removed credentials from WebDriver URL; cloud recording needs explicit data/cost scope.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/cucumber-skill/SKILL.md",
+          "beforeSha256": "070b3dd6da1fcf3866747d815f84e454da45eb9a4228c984212a1f41f4bedbbc",
+          "afterSha256": "34b46d2cc2204c780a3bdc2ecf1e9948051f35e8a59af39ff96d8153926cd078",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "data-engineering-data-pipeline",
+      "disposition": "corrected",
+      "reviewNote": "Corrected automatic exactly-once/fixed-savings claims and documented missing pseudocode dependencies plus watermark/replay/retention risks.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/data-engineering-data-pipeline/SKILL.md",
+          "beforeSha256": "2570ee4d4edf2aa20e86f4a2dc0c6903a4729bd3097ba474a212b9ae0c9b13df",
+          "afterSha256": "8e9f0370b95f483e8eff09bfa9d2b3f51e0f90b7755755c2027f03d44a4ef12e",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "m365-agents-ts",
+      "disposition": "corrected",
+      "reviewNote": "Identified missing streaming dependencies and inbound activity/authentication/tool-effect boundary.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/m365-agents-ts/SKILL.md",
+          "beforeSha256": "da2c554c471f064efc1211b6cef6760cfedf8d69b51e23614bf79dfb18ab943d",
+          "afterSha256": "ccc0b16fdc6575af50222eb92442d23536d9276443672e25750b382599158411",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "openclaw-github-repo-commander",
+      "disposition": "corrected",
+      "reviewNote": "Reviewed full audit helper and entrypoint; corrected check count and scanner failure handling so ripgrep errors cannot report a clean secret scan. Removed its executable bit and documented explicit Bash invocation to preserve inert installation.",
+      "limitations": "Trusted temporary repository and fake ripgrep fixtures covered match/no-match/error; bash syntax passed. Heuristic patterns and exclusions do not establish absence of secrets or repository security.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/openclaw-github-repo-commander/SKILL.md",
+          "beforeSha256": "4fef38ff6fd2c761cf608fe45998bde3b13a52d97255fa43ed9331b73f01fc52",
+          "afterSha256": "f3aaa75385a1b834a05dacfb5ae925933c8b526fd99a123c536d3fa52daf4e3d",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        },
+        {
+          "path": "skills/openclaw-github-repo-commander/scripts/repo-audit.sh",
+          "beforeSha256": "cfd4c0e566d32345dc5c9b5550b9e1a28c826c085db4215bf2c8d4f37bd84ff1",
+          "afterSha256": "2efdad9ccd49e903689b743d0091cbdeb718fe8aba7c81c166edd27a289a0e88",
+          "gitMode": "100755",
+          "beforeMode": "100755",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "semgrep-rule-creator",
+      "disposition": "corrected",
+      "reviewNote": "Identified absent workflow/quick reference and fragment-versus-rule distinction; preserved positive/negative fixture testing before correctness claims.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/semgrep-rule-creator/SKILL.md",
+          "beforeSha256": "c8156b19238059873d49b79adccca87b71ccc439464de6b38f5af86ddeddfe7d",
+          "afterSha256": "67119a002dea6c35eaa20abb5965c06d750bb71a4f2977e85c6508ec580ccb70",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "startup-business-analyst-market-opportunity",
+      "disposition": "corrected",
+      "reviewNote": "Fixed annual ARPU/frequency double counting and arbitrary supposedly conservative SOM shares; qualified top-down agreement threshold.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/startup-business-analyst-market-opportunity/SKILL.md",
+          "beforeSha256": "215b34e35e0f026753f1b4bd3b3ac171881fe9c9a605b63014174a029119864a",
+          "afterSha256": "4c96c8887b8d2eff89f73972eb4d038ca746e760ab944d3db3df0dcd95b36d2c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "time-ledger",
+      "disposition": "corrected",
+      "reviewNote": "Removed invented duration despite honesty contract and clarified connector-specific database/date schema assumptions.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/time-ledger/SKILL.md",
+          "beforeSha256": "96aef97e35d1becb1c669baa842ac8dd3d6c4ca598304331d6a65a5faa89db13",
+          "afterSha256": "48c7832d92e8b682379b7f855e16b7fed26064fe035d2af3ef29514ce22a906c",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "google-no-code",
+      "disposition": "corrected",
+      "reviewNote": "Removed fallback to unverified user-entered email and identified missing recurring manager-notification helper/scope.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/google-no-code/SKILL.md",
+          "beforeSha256": "54fbda199090374c89ac6bb62ba6286bba1b8f819792d0973e76d0d83aef7ee0",
+          "afterSha256": "bdfda75bc7044fd706f138b2a617c68f36f486a72ef427fe39d56fdb3d9950b7",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "figma-automation",
+      "disposition": "corrected",
+      "reviewNote": "Corrected auth guarantee and raised risk for external comments/exports; bounded collaborator notifications and private asset handling.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/figma-automation/SKILL.md",
+          "beforeSha256": "9a36aa56d68a4ccd7c170ff2720b9c7865bdb74d8820f268946670acd9c3cf59",
+          "afterSha256": "5cec79ff8b2560ee3247b7ffdb557ab44088d8703e9b519ae6884f07bb8df8cd",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "debugging-toolkit-smart-debug",
+      "disposition": "retained",
+      "reviewNote": "Retained reproduced evidence, falsifiable qualitative hypotheses, authorized production instrumentation and explicitly hypothetical helper/metric example; no claimed 70% observed gain or runtime proof.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/debugging-toolkit-smart-debug/SKILL.md",
+          "beforeSha256": "d4b7eafbe46ba218e518d7bf4be23d14ea3cfc178acff4d370d4678c93ab5e33",
+          "afterSha256": "d4b7eafbe46ba218e518d7bf4be23d14ea3cfc178acff4d370d4678c93ab5e33",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "error-diagnostics-smart-debug",
+      "disposition": "retained",
+      "reviewNote": "Retained reproduced evidence, falsifiable qualitative hypotheses, authorized production instrumentation and explicitly hypothetical helper/metric example; no claimed 70% observed gain or runtime proof.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/error-diagnostics-smart-debug/SKILL.md",
+          "beforeSha256": "c0d66cbaa582638abceddd7c557efdb499e0cc0009d916c1c1f01f11f7bd0ebc",
+          "afterSha256": "c0d66cbaa582638abceddd7c557efdb499e0cc0009d916c1c1f01f11f7bd0ebc",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "dotnet-architect",
+      "disposition": "retained",
+      "reviewNote": "Retained architecture/data/performance/security review approach and cancellation-aware sketch; Result/cache/repository interfaces are application prerequisites, not bundled implementations or performance proof.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/dotnet-architect/SKILL.md",
+          "beforeSha256": "b28075b099c500c64b4d6355f64441c864fadee4d0eb785e9275568dcccceb8a",
+          "afterSha256": "b28075b099c500c64b4d6355f64441c864fadee4d0eb785e9275568dcccceb8a",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "code-showcase-react-ui-patterns",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing refetch and native form-submit refresh; prevented raw internal error text exposure, matching independently reviewed sibling pattern.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/code-showcase-react-ui-patterns/SKILL.md",
+          "beforeSha256": "28a0e4f6e0c202546201b61d40e50afeab4713a8b30ba4eec02fa82845640405",
+          "afterSha256": "b30e744f9b26b4b6a451baa30b212215644d3014404be0afe930c98d9b710af7",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "azure-mgmt-arizeaiobservabilityeval-dotnet",
+      "disposition": "corrected",
+      "reviewNote": "Bound Marketplace organization provisioning, contact disclosure and destructive deletion; historical offer/version and snippets require actual schema validation.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/azure-mgmt-arizeaiobservabilityeval-dotnet/SKILL.md",
+          "beforeSha256": "26d1cecd10d511e04f64e742775ed61f4295cc297d4693dfd2be01b248cfbb5f",
+          "afterSha256": "f29a39c9db80f120146aea97c92d06ff32dbb11a064df555de5e86a3f1f1653a",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "devops-deploy",
+      "disposition": "corrected",
+      "reviewNote": "Fixed missing curl in slim-image health check, undefined SAM parameter, missing CloudWatch statistic and missing workflow fence; scoped paid deployment and Telegram effects.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/devops-deploy/SKILL.md",
+          "beforeSha256": "a3c024624ee7aaa8f0f732abcfd35f3b0fe611d649114bafe390ac5b1e20e6bc",
+          "afterSha256": "1f9cdbd7e3f6ada8919577656f1e7ae7e9476ee4948eb6acf592fc55caf53621",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    },
+    {
+      "id": "ui-score",
+      "disposition": "corrected",
+      "reviewNote": "Reconciled seven-category weight arithmetic to 100 and prevented aesthetic score from overriding accessibility/actual design constraints; identified missing references.",
+      "limitations": "Static complete-tree review only; no live service or runtime test claimed.",
+      "sources": [],
+      "files": [
+        {
+          "path": "skills/ui-score/SKILL.md",
+          "beforeSha256": "908a8e5e71d1c2124c81b6c60a6e28f850be2446966598b1e0e289fde93e7016",
+          "afterSha256": "2ca390bf528dda90ac10c4a107ee91eda94321001b8f937aa31191d468ca06c0",
+          "gitMode": "100644",
+          "beforeMode": "100644",
+          "afterMode": "100644"
+        }
+      ]
+    }
+  ]
+}

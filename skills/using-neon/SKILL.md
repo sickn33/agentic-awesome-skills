@@ -56,7 +56,7 @@ You can use the `curl` commands to fetch the documentation page as markdown:
 curl https://neon.com/llms.txt
 
 # Fetch any doc page as markdown
-curl -H "Accept: text/markdown" https://neon.com/docs/<path>
+curl -H "Accept: text/markdown" "https://neon.com/docs/REPLACE_WITH_DISCOVERED_PATH"
 ```
 
 Don't guess docs pages. Use the `llms.txt` index to find the relevant URL or follow the links in the resources below.

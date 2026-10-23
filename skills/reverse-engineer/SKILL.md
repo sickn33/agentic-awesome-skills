@@ -30,7 +30,6 @@ date_added: '2026-02-27'
 - unicorn (CPU emulator framework)
 - angr (symbolic execution)
 - Triton (dynamic binary analysis)
-```
 
 ## Use this skill when
 
@@ -47,7 +46,7 @@ date_added: '2026-02-27'
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- The referenced implementation playbook is not bundled. Use the self-contained methodology below and inspected tool documentation; do not claim unavailable supporting content was reviewed.
 
 ## Analysis Methodology
 

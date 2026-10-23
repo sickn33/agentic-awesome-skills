@@ -48,8 +48,7 @@ The user can either specify a comma separated list, or provide a directory that 
 find . -maxdepth 2 -name ".git" -type d | sed 's/\/.git$//' | sort
 ```
 
-Ensure:
-- All the repositories listed are in the `getsentry` Github organization.
+Confirm the organization and repositories actually authorized by the user. `getsentry` is the upstream workflow’s example organization, not a requirement to access unrelated repositories.
 
 The output of this is hereafter referred to as the "user repos".
 
@@ -63,7 +62,7 @@ This should be a comma separated list of names. Remember this as the "other user
 
 ### Step 3
 
-Create a private Notion document entitled "SRED Work Summary [current year]". This document will be referred to as the Work Summary.
+Verify destination permissions before publishing any collected links; confirm the page is genuinely private rather than inherited-shared. Create a private Notion document entitled "SRED Work Summary [current year]". This document will be referred to as the Work Summary.
 
 If a document with this name already exists, notify the user to rename the existing document and stop executing.
 

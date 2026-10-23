@@ -41,6 +41,10 @@ const searchClient = new SearchClient(endpoint, indexName, credential);
 const indexClient = new SearchIndexClient(endpoint, credential);
 ```
 
+## Version, schema and authorization
+
+Snippets are independent fragments with placeholders, not a complete runnable program. Verify installed SDK types, actual index schema and embedding model/dimension before use. Set document security filters server-side from authenticated identity; never trust client-supplied filters as access control. Creating/updating indexes or uploading/deleting records needs exact target authorization and can change paid service state.
+
 ## Core Workflow
 
 ### Create Index with Vector Field
@@ -85,6 +89,8 @@ const documents = [
 ];
 
 const result = await searchClient.uploadDocuments(documents);
+const failures = result.results.filter((item) => !item.succeeded);
+if (failures.length) throw new Error(`Indexing failed for ${failures.length} documents`);
 console.log(`Indexed ${result.results.length} documents`);
 ```
 

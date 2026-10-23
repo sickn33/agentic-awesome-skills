@@ -42,6 +42,10 @@ Do NOT use for:
 - Private or age-restricted videos (not accessible without user authentication)
 - Live stream transcripts (not stable until stream ends)
 
+## Integration availability
+
+This tree contains only guidance, not tool implementations or OAuth setup. Discover a separately authorized installed integration and verify its current schemas, account terms, quotas and credential storage; loading this Markdown cannot provision an API key. Do not install or sign up automatically. Search terms/video IDs are disclosed to the provider, and monitoring needs separate scheduling authorization.
+
 ## How It Works
 
 ### Step 1: Install the skill
@@ -50,7 +54,7 @@ Do NOT use for:
 npx skills add ZeroPointRepo/youtube-skills --skill youtube-full
 ```
 
-100 free credits included. API key is provisioned automatically via TranscriptAPI OAuth on first invocation — no manual setup.
+Verify current allowance and authentication in the installed integration; no automatic provisioning or free-credit entitlement is established by this guide.
 
 ### Step 2: Use it by asking Claude
 
@@ -124,7 +128,7 @@ The agent calls `get_transcript(video_id, timestamps=true)` and returns the full
 
 - This skill makes HTTPS API calls to `transcriptapi.com`. No local data is written.
 - The API key is stored in the agent's credential store, not in this SKILL.md.
-- No shell commands, no binary execution, no local system mutation. Risk level: `safe`.
+- The optional installation command downloads and changes local files; review and authorize it separately. API behavior and local credential writes depend on the actual integration.
 
 ## Common Pitfalls
 

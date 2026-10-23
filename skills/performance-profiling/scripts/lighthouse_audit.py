@@ -14,52 +14,52 @@ import os
 import tempfile
 
 def run_lighthouse(url: str) -> dict:
-    """Run Lighthouse audit on URL."""
+    """Run Lighthouse and preserve failure evidence without leaking temp reports."""
+    output_path = None
     try:
         with tempfile.NamedTemporaryFile(suffix='.json', delete=False) as f:
             output_path = f.name
-        
         result = subprocess.run(
-            [
-                "lighthouse",
-                url,
-                "--output=json",
-                f"--output-path={output_path}",
-                "--chrome-flags=--headless",
-                "--only-categories=performance,accessibility,best-practices,seo"
-            ],
-            capture_output=True,
-            text=True,
-            timeout=120
+            ["lighthouse", url, "--output=json", f"--output-path={output_path}",
+             "--chrome-flags=--headless",
+             "--only-categories=performance,accessibility,best-practices,seo"],
+            capture_output=True, text=True, timeout=120
         )
-        
-        if os.path.exists(output_path):
-            with open(output_path, 'r') as f:
-                report = json.load(f)
-            os.unlink(output_path)
-            
-            categories = report.get("categories", {})
-            return {
-                "url": url,
-                "scores": {
-                    "performance": int(categories.get("performance", {}).get("score", 0) * 100),
-                    "accessibility": int(categories.get("accessibility", {}).get("score", 0) * 100),
-                    "best_practices": int(categories.get("best-practices", {}).get("score", 0) * 100),
-                    "seo": int(categories.get("seo", {}).get("score", 0) * 100)
-                },
-                "summary": get_summary(categories)
-            }
-        else:
-            return {"error": "Lighthouse failed to generate report", "stderr": result.stderr[:500]}
-            
+        if result.returncode != 0:
+            return {"error": "Lighthouse command failed", "returncode": result.returncode,
+                    "stderr": result.stderr[:500]}
+        with open(output_path, 'r') as f:
+            report = json.load(f)
+        categories = report.get("categories", {})
+        if not isinstance(categories, dict):
+            return {"error": "Invalid Lighthouse categories"}
+        def score(name):
+            category = categories.get(name, {})
+            value = category.get("score") if isinstance(category, dict) else None
+            return int(value * 100) if isinstance(value, (int, float)) and not isinstance(value, bool) and 0 <= value <= 1 else None
+        return {
+            "url": url,
+            "scores": {name.replace("-", "_"): score(name) for name in
+                       ("performance", "accessibility", "best-practices", "seo")},
+            "summary": get_summary(categories)
+        }
     except subprocess.TimeoutExpired:
         return {"error": "Lighthouse audit timed out"}
     except FileNotFoundError:
-        return {"error": "Lighthouse CLI not found. Install with: npm install -g lighthouse"}
+        return {"error": "Lighthouse CLI not found or report missing"}
+    except (OSError, ValueError, TypeError, AttributeError):
+        return {"error": "Lighthouse report could not be read as valid JSON"}
+    finally:
+        if output_path and os.path.exists(output_path):
+            os.unlink(output_path)
 
 def get_summary(categories: dict) -> str:
     """Generate summary based on scores."""
-    perf = categories.get("performance", {}).get("score", 0) * 100
+    category = categories.get("performance", {})
+    score = category.get("score") if isinstance(category, dict) else None
+    if not isinstance(score, (int, float)) or isinstance(score, bool) or not 0 <= score <= 1:
+        return "[?] Performance score unavailable"
+    perf = score * 100
     if perf >= 90:
         return "[OK] Excellent performance"
     elif perf >= 50:
@@ -74,3 +74,4 @@ if __name__ == "__main__":
     
     result = run_lighthouse(sys.argv[1])
     print(json.dumps(result, indent=2))
+    sys.exit(1 if "error" in result else 0)

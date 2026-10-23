@@ -211,6 +211,10 @@ class UserServiceTest {
 | Repeated | `@RepeatedTest(5)` |
 | Order | `@TestMethodOrder(MethodOrderer.OrderAnnotation.class)` |
 
+## Supporting prerequisites
+
+Only SKILL.md is bundled: `reference/playbook.md` and `reference/spring-integration.md` are unavailable. Examples need real Calculator/UserService classes and imports from JUnit params, Java util/time/stream and Mockito. Use the project’s supported JUnit/build/plugin versions; historical dependency pins below are not a current-version recommendation. Empty nested test bodies are structure-only sketches and do not validate behavior.
+
 ## Deep Patterns
 
 For production-grade patterns, see `reference/playbook.md`:

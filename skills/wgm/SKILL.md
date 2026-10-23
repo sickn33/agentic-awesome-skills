@@ -68,9 +68,10 @@ validation command (green or it isn't done), judge holdout-scenario satisfaction
 for scope creep, then record status and any durable lesson before advancing exactly one task.
 
 ### Step 6: Ship / Handoff
+
+Delegation, external judging and durable shared-skill edits require current user/repository authorization; the protocol alone does not grant it. Keep holdout scenarios in an evaluator boundary the implementation process cannot read, and do not claim a genuinely blind holdout when the same model/session has already seen them.
 Summarize what shipped and how to validate it, run a mandatory four-persona docs-audit pass
-(junior/senior/principal/PM perspectives, consolidated into one paper-trail report), and harvest any
-durable, cross-project lesson back into the shared skill's own ledger.
+(junior/senior/principal/PM perspectives, consolidated into one paper-trail report), and propose any durable cross-project lesson for an explicitly authorized ledger update.
 
 ## Examples
 
