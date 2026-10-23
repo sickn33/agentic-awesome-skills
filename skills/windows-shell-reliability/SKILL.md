@@ -74,7 +74,7 @@ In PowerShell, if an executable path starts with a quote, you MUST use the `&` o
 | Context | Command | Why |
 |---------|---------|-----|
 | Fast Iteration | `dotnet build --no-restore` | Skips redundant nuget restore. |
-| Clean Build | `dotnet build --no-incremental` | Ensures no stale artifacts. |
+| Clean Build | `dotnet build --no-incremental` | Disables incremental compilation; use a separate clean step when stale outputs are suspected. |
 | Background | `Start-Process dotnet -ArgumentList 'run' -RedirectStandardOutput output.txt -RedirectStandardError error.txt` | Launches the app without blocking the shell and keeps logs. |
 
 ---
@@ -101,7 +101,7 @@ Windows has a 260-character path limit by default.
 | Error | Likely Cause | Fix |
 |-------|-------------|-----|
 | `The term 'xxx' is not recognized` | Path not in $env:PATH | Use absolute path or fix PATH. |
-| `Access to the path is denied` | File in use or permissions | Stop process or run as Admin. |
+| `Access to the path is denied` | File in use or permissions | Inspect ownership and locks; stop only an authorized process and avoid elevation as a default fix. |
 | `Encoding mismatch` | Older shell redirection rewrote the output | Re-export the file as UTF-8 or capture with `2>&1 | Out-File -Encoding UTF8`. |
 
 ---

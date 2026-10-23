@@ -2,7 +2,7 @@
 name: seek-and-analyze-video
 description: "Seek and analyze video content using Memories.ai Large Visual Memory Model for persistent video intelligence"
 category: data-ai
-risk: safe
+risk: critical
 source: "https://github.com/kennyzheng-builds/seek-and-analyze-video"
 date_added: "2026-03-09"
 author: kennyzheng-builds
@@ -21,7 +21,7 @@ This skill enables AI agents to search, import, and analyze video content using 
 
 ## Overview
 
-The skill wraps 21 API commands into workflow-oriented reference guides that agents load on demand. A routing table in SKILL.md maps user intent to the right workflow automatically.
+This AAS import is a guide only. The upstream API wrapper, workflow router and reference files are not bundled. Discover an authorized installed integration and its current schemas before using any command names below.
 
 ## When to Use This Skill
 
@@ -40,7 +40,7 @@ The agent reads the SKILL.md workflow router and matches the user's request to o
 
 ### Step 2: Reference Loading
 
-The agent loads the appropriate reference file (e.g., video_qa.md for video questions, social_research.md for social media research).
+If the separately installed upstream integration supplies references such as video_qa.md or social_research.md, inspect those files. Otherwise use current official provider documentation; do not invent missing workflows.
 
 ### Step 3: Workflow Execution
 
@@ -87,8 +87,9 @@ Agent: uploads recording -> waits -> gets transcript -> uses chat_video for stru
 
 ## Limitations
 
-- Video processing takes 1-5 minutes depending on length
-- Free tier limited to 100 credits
+- Verify current processing limits, pricing, credit allowance and supported sources; no timing or free-tier guarantee is made.
+- Importing, captioning or indexing sends content or URLs to a third party. Confirm the user authorizes that disclosure, retention and any charge; a public URL does not establish reuse rights.
+- Persistent memories require deliberate authorization and a verified deletion path; never store meeting participants’ private data by default.
 - Social media import requires public content
 - Audio search only works on processed videos
 

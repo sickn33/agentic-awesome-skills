@@ -118,9 +118,9 @@ date_added: "2026-02-27"
 
 ### Health Check Implementation
 
-- Simple: Just return 200
-- Deep: Check all dependencies
-- Choose based on load balancer needs
+- Liveness: confirm the process can make progress; do not fail it solely because a shared dependency is down.
+- Readiness: check dependencies needed to serve traffic, using bounded timeouts.
+- A static 200 alone does not prove application health; keep diagnostic detail private.
 
 ---
 
@@ -131,7 +131,7 @@ date_added: "2026-02-27"
 | **Access** | SSH keys only, no passwords |
 | **Firewall** | Only needed ports open |
 | **Updates** | Regular security patches |
-| **Secrets** | Environment vars, not files |
+| **Secrets** | Approved secret store or protected runtime injection; keep credentials out of source and logs |
 | **Audit** | Log access and changes |
 
 ---

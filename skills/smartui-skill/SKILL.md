@@ -22,7 +22,7 @@ Use this skill when you need generates SmartUI visual regression test configurat
 
 ```javascript
 const { chromium } = require('playwright');
-const { smartuiSnapshot } = require('@lambdatest/smartui-cli');
+const { smartuiSnapshot } = require('@lambdatest/playwright-driver');
 
 (async () => {
   const browser = await chromium.launch();
@@ -51,16 +51,18 @@ const { smartuiSnapshot } = require('@lambdatest/smartui-cli');
 
 ```bash
 # Install
-npm install @lambdatest/smartui-cli --save-dev
+npm install @lambdatest/smartui-cli @lambdatest/playwright-driver --save-dev
 
 # Configure
 npx smartui config:create smartui.config.json
 
 # Execute
-npx smartui exec -- node test.js
-# or with Playwright
-npx smartui exec -- npx playwright test
+npx smartui exec node test.js --config smartui.config.json
+# For a Playwright Test runner, check the installed CLI help for argument
+# forwarding and pass the SmartUI config separately from playwright.config.js.
 ```
+
+The following web viewport entries are widths for full-page captures, not width/height pairs. Keep the SmartUI config path explicit when running the CLI.
 
 ### smartui.config.json
 
@@ -68,7 +70,7 @@ npx smartui exec -- npx playwright test
 {
   "web": {
     "browsers": ["chrome", "firefox", "safari"],
-    "viewports": [[1920, 1080], [1366, 768], [375, 812]]
+    "viewports": [[1920], [1366], [375]]
   },
   "waitForPageRender": 5000,
   "waitForTimeout": 1000
@@ -100,6 +102,8 @@ npx smartui storybook http://localhost:6006 --config smartui.config.json
 
 ### Cloud Authentication
 
+Cloud runs disclose captured page content, screenshots and possibly assets to the provider. Use authorized test data, redact secrets/personal data, confirm cloud usage and cost, and load credentials from a secret store or environment without printing them. Do not approve new baselines automatically: inspect differences first.
+
 Set environment variables:
 
 ```bash
@@ -110,7 +114,7 @@ export LT_ACCESS_KEY="your-access-key"               # For Selenium/Playwright c
 
 **CLI approach** (uses `PROJECT_TOKEN`):
 ```bash
-npx smartui exec -- npx playwright test
+npx smartui exec node test.js --config smartui.config.json
 ```
 
 **Selenium Cloud approach** (uses `LT_USERNAME`/`LT_ACCESS_KEY`):
@@ -140,7 +144,7 @@ WebDriver driver = new RemoteWebDriver(
 ## Deep Patterns
 
 For advanced patterns, debugging guides, CI/CD integration, and best practices,
-see `reference/playbook.md`.
+see the [upstream skill tree](https://github.com/LambdaTest/agent-skills/tree/main/smartui-skill); `reference/playbook.md` is not bundled here. The [official Playwright SDK guide](https://www.testmuai.com/support/docs/smartui-playwright-sdk/) documents the driver package separately from the CLI. Generate configuration with the installed CLI and validate its schema rather than assuming this illustrative config works across versions.
 
 ## Limitations
 

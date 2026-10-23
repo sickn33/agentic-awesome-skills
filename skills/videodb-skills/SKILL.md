@@ -2,7 +2,7 @@
 name: videodb-skills
 description: "Upload, stream, search, edit, transcribe, and generate AI video and audio using the VideoDB SDK."
 category: media
-risk: safe
+risk: critical
 source: community
 tags: "[video, editing, transcription, subtitles, search, streaming, ai-generation, media]"
 date_added: "2026-02-27"
@@ -12,7 +12,7 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-The only video skill your agent needs. Upload any video, connect real-time streams, search inside by what was said or shown, build complex editing workflows with overlays, generate AI media, add subtitles, and get instant streaming links — all via the VideoDB Python SDK.
+Use the VideoDB integration to upload supported video, connect real-time streams, search inside by what was said or shown, build complex editing workflows with overlays, generate AI media, add subtitles, and get instant streaming links — all via the VideoDB Python SDK.
 
 ## When to Use This Skill
 
@@ -39,12 +39,14 @@ npx skills add video-db/skills
 /videodb setup
 ```
 
-The agent guides API key setup ($20 free credits, no credit card), installs the SDK, and verifies the connection.
+The external skill may guide API key setup and SDK installation. Verify current provider pricing, credits and requirements rather than relying on a historical promotion. This catalog entry does not bundle the `/videodb setup` command.
 
 Alternatively, set the API key manually:
 
 ```bash
-export VIDEO_DB_API_KEY=sk-xxx
+read -rsp "VideoDB API key: " VIDEO_DB_API_KEY
+echo
+export VIDEO_DB_API_KEY
 ```
 
 ### Step 3: Install the SDK
@@ -52,6 +54,8 @@ export VIDEO_DB_API_KEY=sk-xxx
 ```bash
 pip install "videodb[capture]" python-dotenv
 ```
+
+Before sending media, confirm the user has rights to the source and authorization for hosted processing and any charges. Screen/audio capture requires explicit scope, participant consent where applicable, and a defined stop condition. Avoid capturing unrelated windows or credentials. Keep API keys out of source/logs and review provider retention and stream-link access before sharing. Verify installed SDK capabilities; the table is an integration overview, not a tested compatibility matrix.
 
 ## Capabilities
 

@@ -13,7 +13,7 @@ license_source: https://github.com/MohamedAbdallah-14/unslop/blob/main/LICENSE
 # Unslop Commit
 ## When to Use
 
-Use this skill when you need rewrites commit messages so they sound like a careful human engineer wrote them. Strips AI/marketing slop ("comprehensive solution", "robust implementation", "leverage", "enhance", "seamlessly", "This commit..."). Keeps Conventional Commits format. Subject ≤72 chars (aim ≤50),...
+Use when drafting or rewriting a commit message from the actual diff and supplied context. Keep Conventional Commits format and a subject no longer than 72 characters (aim for 50).
 
 
 ## Purpose
@@ -47,7 +47,7 @@ Generate or rewrite commit messages so they read like a real engineer wrote them
 - Marketing verbs: comprehensive, robust, enhance, leverage, seamless, holistic
 - Filler adverbs: just, really, basically, simply, actually
 - Restating the filename when scope already names it
-- "As requested by..." (use `Co-authored-by:` if you need attribution)
+- "As requested by..." filler; preserve required attribution. Use `Co-authored-by:` only for an actual co-author with the correct identity, not merely a requester.
 - AI attribution unless the project requires it
 - Emoji unless project convention says so
 
@@ -90,8 +90,8 @@ Closes #842
 ```
 feat(api)!: rename /v1/orders to /v1/customer-orders
 
-The old route stays in place until the next major release but logs a
-deprecation warning. Internal services have been migrated.
+The old route is removed in this release. Internal services have been
+migrated to /v1/customer-orders.
 
 BREAKING CHANGE: third-party integrations using /v1/orders directly need
 to switch to /v1/customer-orders by 2026-07-01.

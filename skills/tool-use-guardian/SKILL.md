@@ -1,8 +1,8 @@
 ---
 name: tool-use-guardian
-description: "FREE — Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate limits, and mid-chain failures."
+description: "Triage tool failures, validate responses and resume bounded workflows using replay-safe retries and explicit handling of unknown write outcomes."
 category: reliability
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-13"
 author: christopherlhammer11-ai
@@ -12,78 +12,71 @@ tools: [claude, cursor, codex, gemini, copilot, windsurf, antigravity]
 
 # Tool Use Guardian
 
-## Overview
+## Scope
 
-The reliability wrapper every AI agent needs. Monitors tool calls, auto-retries failures, fixes truncated responses, and learns which tools are unreliable — so you never lose your chain of thought.
-
-Free forever. Built by the Genesis Agent Marketplace.
-
-## Install
-
-```bash
-npx skills add christopherlhammer11-ai/tool-use-guardian
-```
+This is a manual recovery procedure, not an installed wrapper, automatic monitor
+or learned reliability service. No runtime, checkpoint store or telemetry is
+bundled. Preserve the host's tool contracts and the user's action boundaries.
 
 ## When to Use This Skill
 
-- Use when tool calls return truncated or malformed JSON
-- Use when APIs timeout or rate-limit your agent mid-task
-- Use when a multi-step chain breaks partway through
-- Use when you need automatic retry logic without writing it yourself
-- Use for any agent workflow that depends on external tool reliability
+- A tool response is incomplete, malformed, rate-limited or inconsistent.
+- A workflow needs to resume without replaying completed mutations.
+- A write timed out and its outcome must be reconciled before any further action.
 
-## How It Works
+## Procedure
 
-### Step 1: Pre-Call Validation
+1. Record the tool, target, exact non-secret parameters, request identity, observed
+   error and any confirmed effects. Separate transport status from application
+   success. Do not log credentials, private payloads or full conversation context.
+2. Validate parameters and responses against the actual tool schema. Do not
+   coerce an unknown identifier, invent missing fields, or repair truncated JSON
+   by guessing. Fetch complete bounded pages or request a smaller result.
+3. Classify the operation before retrying: a read, a documented idempotent write
+   using the same operation key, or a potentially non-idempotent mutation. A
+   timeout or 429 does not prove that a mutation had no effect.
+4. For replay-safe transient reads, follow documented Retry-After/backoff within
+   a deadline and at most three total attempts unless the tool contract is
+   stricter. Stop on authentication, permission, invalid-input and persistent
+   schema failures. Do not change credentials or scope to evade a failure.
+5. For an uncertain write, use a supported read-only status lookup bound to the
+   same request/operation ID. Resume only after establishing its outcome. If
+   lookup is unavailable or ambiguous, preserve the uncertainty and request the
+   indispensable decision; never silently repeat a payment, message or delete.
+6. Maintain a task-local checkpoint of confirmed completed steps and their
+   evidence. Before resuming a dependent step, verify its prerequisites still
+   hold. Do not replay earlier writes merely because a later step failed. Return
+   completed, failed and unknown steps separately.
 
-Before every tool call, Guardian validates:
-- Required parameters are present and correctly typed
-- The tool is not marked as "unreliable" from previous failures
-- Request size is within known limits
+## Recovery Examples
 
-### Step 2: Failure Classification
+| Observation | Bounded next action |
+| --- | --- |
+| Truncated read-only inventory | Fetch supported pages; reject incomplete inventory as completion evidence. |
+| Read timed out | Retry within the read deadline and attempt cap; keep failures visible. |
+| Mutation timed out | Inspect status by the original operation ID; do not submit a second mutation. |
+| Authentication expired | Report required reauthentication through the supported host flow. |
+| HTTP 200 with an error body | Apply the documented result schema; record application failure. |
+| Schema mismatch | Retain the original result; investigate contract/version mismatch without lossy coercion. |
 
-When a tool call fails, Guardian classifies the failure into one of 9 categories:
-
-| Failure Type | Recovery Action |
-|---|---|
-| Truncated JSON | Re-fetch with pagination or smaller chunks |
-| API Timeout | Retry once with simpler request, then decompose |
-| Rate Limit (429) | Exponential backoff, max 3 retries |
-| Auth Expired | Flag for user intervention |
-| Mid-chain Break | Resume from last successful checkpoint |
-| Error-as-200 | Detect `{"error": "..."}` disguised as success |
-| Schema Mismatch | Attempt auto-coercion, warn if lossy |
-| Network Failure | Retry with jitter, max 2 attempts |
-| Unknown Error | Log full context, escalate to user |
-
-### Step 3: Chain Protection
-
-For multi-step tool chains, Guardian maintains checkpoints. If step 4 of 7 fails, it resumes from step 4 — never restarts from scratch.
-
-### Step 4: Learning
-
-Guardian tracks failure patterns per tool. After 3+ failures of the same type, it marks the tool as unreliable and suggests alternatives.
-
-## Best Practices
-
-- ✅ Let Guardian wrap all external tool calls automatically
-- ✅ Review Guardian's reliability reports to identify flaky tools
-- ✅ Use checkpoint recovery for long chains
-- ❌ Don't disable retry logic for rate-limited APIs
-- ❌ Don't ignore repeated failure warnings
-
-## Related Skills
-
-- `@recallmax` - Long-context memory enhancement (also free from Genesis Marketplace)
-
-## Links
-
-- **Repo:** https://github.com/christopherlhammer11-ai/tool-use-guardian
-- **Marketplace:** https://genesis-node-api.vercel.app
-- **Browse skills:** https://genesis-marketplace.vercel.app
+```text
+Step: publish-message, operation ID op-17
+Observation: request timed out; no receipt returned.
+Status lookup: unavailable.
+Disposition: outcome unknown; no retry sent. Dependent announcement paused.
+```
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+- These instructions cannot enforce retry safety or recover unknown remote state.
+- Repeated failures are observations about this task, not proof a tool is globally
+  unreliable. Do not write a global denylist or persistent memory automatically.
+- Checkpoints can become stale; verify the target state and authorization on resume.
+- No automatic interception, free service, learning or guaranteed recovery is
+  established by the source links.
+
+## Declared source links
+
+- https://github.com/christopherlhammer11-ai/tool-use-guardian
+- https://genesis-node-api.vercel.app
+- https://genesis-marketplace.vercel.app
