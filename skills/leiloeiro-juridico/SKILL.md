@@ -322,3 +322,7 @@ Fontes normativas e referências:
 ## Limites de aplicação
 
 Não há parecer jurídico de caso concreto. Nenhuma referência de jurisprudência sem inteiro teor e aderência fática deve sustentar recomendação de lance ou defesa. Conferir vigência, modalidade, contrato, registro, edital e decisões antes de calcular prazo ou responsabilidade. Os exemplos de tributação, isenção, REURB e título extrajudicial são apenas tópicos para revisão profissional, sem elegibilidade ou prazo garantido. Ausência de documento essencial é pendência impeditiva, não risco baixo. Os helpers de log não são controle atômico de taxa, integridade de auditoria ou sistema de retenção; não incluir segredos ou dados processuais desnecessários. Não houve consulta de autos, operação em tribunal ou execução do script.
+
+## Exemplo de uso
+
+> Revise o edital e a matrícula fornecidos, identifique documentos ausentes e separe fatos comprovados de questões para o advogado. Não calcule prazo nem recomende lance sem os documentos e a regra aplicável.

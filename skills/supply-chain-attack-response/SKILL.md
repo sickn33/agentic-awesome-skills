@@ -160,14 +160,13 @@ git log --all -p -- package-lock.json | grep -A2 -B2 "<compromised-package>"
 ```bash
 # Search for known IOCs from the advisory
 grep -r "suspicious-domain.com" ./node_modules/<compromised-package>/
-grep -r "eval(atob" ./node_modules/<compromised-package>/
+rg --fixed-strings -- "atob" ./node_modules/<compromised-package>/
 
 # Check for unexpected post-install scripts
 cat node_modules/<compromised-package>/package.json | jq '.scripts'
 
 # For Python packages, inspect setup.py and __init__.py
-find ~/.local/lib/python*/site-packages/<compromised-package>/ -name "*.py" \
-  | xargs grep -l "subprocess\|os.system\|exec(\|eval("
+rg -l --glob "*.py" -- "subprocess|os[.]system|exec|eval" ./reviewed-package-copy/
 ```
 
 ### Step 4: Notify Stakeholders

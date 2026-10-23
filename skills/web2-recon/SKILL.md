@@ -142,7 +142,7 @@ mkdir -p $RECON_DIR
 
 ```bash
 # Parameters worth testing
-cat /tmp/urls.txt | grep -E "[?&](id|user|file|path|url|redirect|next|src|token|key|api_key)=" | tee /tmp/interesting-params.txt
+cat /tmp/urls.txt | grep -E "([?]|&)(id|user|file|path|url|redirect|next|src|token|key|api_key)=" | tee /tmp/interesting-params.txt
 
 # API endpoints
 cat /tmp/urls.txt | grep -E "/api/|/v1/|/v2/|/v3/|/graphql|/rest/|/gql" | tee /tmp/api-endpoints.txt

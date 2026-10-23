@@ -1,0 +1,5 @@
+# CSV interpretation and round-trip checks
+
+CSV quoting does not prevent spreadsheet formula execution. For spreadsheet-bound exports, flag untrusted text beginning with formula/control prefixes such as =, +, -, @, tab or carriage return; agree a target-specific text-import or escaping policy and disclose any value transformation. Do not blindly prefix every value: legitimate signed numbers and downstream machine imports have different semantics. For a lossless machine handoff, retain raw data and use a documented schema/secure importer instead of promising universal spreadsheet safety.
+
+Quote against the chosen delimiter, including headers, not only comma. Check duplicate/empty headers, consistent field count and a parse/serialize round trip. Preserve identifier leading zeros and long numbers through explicit text import; CSV alone cannot enforce them. Specify decimal precision/currency and null-versus-empty conventions. A header-only template has no generated-ID data cell to fill. Use a fresh private file destination and only authorized input; no importer, workbook or external-system acceptance was tested here.

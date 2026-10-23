@@ -341,32 +341,9 @@ fi
 
 ### 11.2 Blast Radius Assessment
 
-```bash
-#!/usr/bin/env bash
-# blast-radius.sh -- assess how widely a compromised package spread
-set -euo pipefail
+Use an explicit approved repository inventory, not an unbounded organization scan. For each authorized repo/ref, fetch the lockfile through the authenticated API into a private incident directory and record retrieval success, commit and digest. Decode API base64 content as inert bytes into a separate file; do not execute it. A missing file, denied request or decode/parse failure is **unknown**, never clean.
 
-COMPROMISED_PKG="$1"
-COMPROMISED_VERSIONS="$2"  # comma-separated, e.g., "1.2.3,1.2.4"
-
-echo "=== Blast Radius Assessment for $COMPROMISED_PKG ==="
-
-# Check all repos in the org
-for repo in $(gh repo list myorg --json name -q '.[].name'); do
-  echo "--- Checking $repo ---"
-
-  # Check package-lock.json
-  LOCK=$(gh api "repos/myorg/$repo/contents/package-lock.json" \
-    --jq '.content' 2>/dev/null | base64 -d 2>/dev/null || true)
-
-  if echo "$LOCK" | grep -q "\"$COMPROMISED_PKG\""; then
-    VERSION=$(echo "$LOCK" | jq -r ".packages[\"node_modules/$COMPROMISED_PKG\"].version // empty")
-    if echo "$COMPROMISED_VERSIONS" | grep -q "$VERSION"; then
-      echo "AFFECTED: $repo uses $COMPROMISED_PKG@$VERSION"
-    fi
-  fi
-done
-```
+Parse the actual lockfile version with a compatible parser, compare exact package identities and versions against the advisory (including nested paths/aliases/workspaces), and retain matches and exclusions with evidence. Do not use substring/regular-expression matches for semver sets or package names. Report inventory and pagination limits; this procedure does not assess build caches, images or historical deployments without their own receipts.
 
 ### 11.3 Secret Rotation After Compromise
 
