@@ -175,8 +175,8 @@ class Secur0RemediationTests(unittest.TestCase):
 
     def test_private_notebooklm_and_instagram_state_modes(self):
         with tempfile.TemporaryDirectory() as temporary:
-            notebook_state = Path(temporary) / "notebooklm"
-            instagram_state = Path(temporary) / "instagram"
+            notebook_state = Path(temporary).resolve() / "notebooklm"
+            instagram_state = Path(temporary).resolve() / "instagram"
             old_notebook = os.environ.get("AAS_NOTEBOOKLM_DATA_DIR")
             old_instagram = os.environ.get("AAS_INSTAGRAM_DATA_DIR")
             os.environ["AAS_NOTEBOOKLM_DATA_DIR"] = str(notebook_state)
