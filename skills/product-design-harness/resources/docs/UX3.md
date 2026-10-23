@@ -12,8 +12,6 @@ boundary, stop condition, and bounded output. Chapter-level sources remain in
 `knowledge/rules.json` so the projection is traceable without pretending that
 one rule represents a whole chapter.
 
-![UX3 model](../assets/ux3-model.svg)
-
 It has three connected dimensions:
 
 | Dimension | Question |
@@ -94,8 +92,6 @@ and evidence rather than starting from monetization mechanics.
 ## Intersections
 
 UX3 is strongest at the intersections.
-
-![UX3 intersections](../assets/intersections.svg)
 
 ### User Flow + Evidence Flow = Situated Understanding
 

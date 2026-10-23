@@ -1,7 +1,5 @@
 # Product Design Harness Manual
 
-![Harness sequence](../assets/harness-sequence.svg)
-
 ## 1. Definition
 
 Product Design Harness is a repeatable decision system for product work.
@@ -129,8 +127,6 @@ UX3 adds six gates: Stage, User Flow, Evidence Flow, Business Flow, Council, and
 It should be used when the decision requires external evidence, multiple reviewers, claim analysis, uncertainty review, or human-owned trade-offs.
 
 ## 5. Verdicts
-
-![Decision gate](../assets/decision-gate.svg)
 
 | Verdict | Meaning | Required behavior |
 |---|---|---|

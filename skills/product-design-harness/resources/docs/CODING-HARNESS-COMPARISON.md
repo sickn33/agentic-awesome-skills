@@ -1,7 +1,5 @@
 # Product Design Harness vs Coding Harness
 
-![Product Design Harness vs Coding Harness](../assets/product-vs-coding-harness.svg)
-
 ## Core Difference
 
 | Question | Harness |
@@ -26,8 +24,6 @@ Product Design Harness should run first.
 | Stop signal | Problem, evidence, risk, or value fails. | Tests, linters, policies, runtime checks fail. |
 
 ## Sequence
-
-![Harness sequence](../assets/harness-sequence.svg)
 
 1. Product idea
 2. Product Design Harness

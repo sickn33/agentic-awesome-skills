@@ -16,4 +16,5 @@
 | `COUNCIL.md` | UX3 council process. |
 | `CODING-HARNESS-COMPARISON.md` | Product Design Harness vs Coding Harness. |
 
-See `../assets/` for book-style diagrams used across the handbook.
+The product decision rules and schemas remain available in the adjacent
+`knowledge/`, `examples/`, and `schemas/` directories.
