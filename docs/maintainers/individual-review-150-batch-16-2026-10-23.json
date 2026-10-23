@@ -6367,14 +6367,14 @@
     {
       "id": "dbos-golang",
       "disposition": "corrected",
-      "reviewNote": "Read all 33 tracked entries; CLAUDE symlink points to fully read AGENTS. Corrected lost Go generic-call syntax, workflow completion/external exactly-once guarantees, version-hash contradiction, invalid mocked generic API recipe, unsupported queue ordering and unknown worker fallback; added authority/privacy/version caveats.",
+      "reviewNote": "Read all 33 tracked entries; CLAUDE symlink points to fully read AGENTS. Corrected lost Go generic-call syntax, workflow completion/external exactly-once guarantees, version-hash contradiction, invalid mocked generic API recipe, unsupported queue ordering and unknown worker fallback; added authority/privacy/version caveats. GitHub review fingerprint refused the internal CLAUDE alias; replaced it with a regular navigation file and corrected AGENTS description without weakening the trusted review gate.",
       "limitations": "Static review only. SDK-specific Go signatures, omitted imports/helpers and failure handling require compilation against a pinned SDK. No database, schedules, external payments or examples executed.",
       "files": [
         {
           "path": "skills/dbos-golang/AGENTS.md",
           "gitMode": "100644",
           "beforeSha256": "b3f179852d815a3cf64515bac3e5ee65042be3229353c417c1560c59f7b7fb86",
-          "afterSha256": "b3f179852d815a3cf64515bac3e5ee65042be3229353c417c1560c59f7b7fb86",
+          "afterSha256": "6307f218a4c833ed5be36d178e5f95d042553047b4ed4f5a1a06d11403c2bd8f",
           "readInFull": true,
           "afterGitMode": "100644"
         },
@@ -6382,9 +6382,9 @@
           "path": "skills/dbos-golang/CLAUDE.md",
           "gitMode": "120000",
           "beforeSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
-          "afterSha256": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+          "afterSha256": "7ab78e9d062c67ab460d44407930bb7d89de5e2fc64941ca62baddb17eef4157",
           "readInFull": true,
-          "afterGitMode": "120000"
+          "afterGitMode": "100644"
         },
         {
           "path": "skills/dbos-golang/SKILL.md",

@@ -924,3 +924,5 @@ Full nine-file review: corrected duplicate expression output names, string liter
 
 Static complete-tree review only; no documented setup, remote operation or runtime example was executed. Environment-specific behavior remains untested.
 
+
+GitHub review follow-up: replaced the reviewed internal `dbos-golang/CLAUDE.md` symlink with a regular navigation file, preserving its target and existing instructions. The trusted fingerprint gate rejects symlinks; no gate or policy was relaxed.
