@@ -44,7 +44,7 @@ Each TC stores: progress summary, next steps, blockers, key context, and files i
 
 ### Non-Blocking
 
-TC bookkeeping runs via background subagents. Never interrupts coding work.
+This entrypoint bundles no runtime, commands or background agents. Use an already reviewed installation only after inspecting its current interface; delegation and scheduling require explicit authorization.
 
 ## Features
 
@@ -63,3 +63,7 @@ https://github.com/Elkidogz/technical-change-skill — MIT License
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+The listed features describe the external project, not capabilities installed by this file. Do not invent /tc execution or accessibility certification. Track only observed status transitions; implemented, tested and deployed require different evidence. Keep private paths and logs out of shared reports, and preserve existing records.

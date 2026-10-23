@@ -30,7 +30,7 @@ reporting collision clusters where one skill shadows another.
 
 - Use when a skill you wrote never seems to trigger and you don't know why
 - Use when the user says "why isn't my skill firing", "which skill fires for X", or "audit my skills"
-- Use after writing or installing a new SKILL.md, to confirm it will actually be picked
+- Use after writing or installing a new SKILL.md, to investigate likely activation issues
 - Use in CI to fail a PR that adds a skill with empty/duplicate/colliding metadata
 
 ## How It Works
@@ -55,7 +55,7 @@ Offline heuristic by default; add `--llm` to judge with a local `claude`/`codex`
 skill-issue ~/.claude/skills
 # F  deploy-helper  ✗ no description — can never fire
 # C  shipit         ! no "use when …" trigger clause
-# A  rollback-prod  ✓ will fire on its triggers
+# A  rollback-prod  heuristic: trigger wording present; actual activation unverified
 ```
 
 ### Example 2: Diagnose a collision
@@ -71,3 +71,7 @@ skill-issue ~/.claude/skills --why "deploy the app to prod"
 - Offline scoring is heuristic and should be treated as a triage signal, not a final quality verdict.
 - Collision reports highlight likely shadowing, but agent-specific routers can weight metadata differently.
 - The `--fix` mode can improve weak trigger wording, but generated edits still need maintainer review before committing.
+
+## Execution boundaries
+
+A score or simulated trigger is not proof that a native host activates a skill. Record actual client/version observations separately. Use --fix only within authorized paths after inspecting a proposed diff; preserve original metadata. --llm may send content through the configured model provider and needs the corresponding data/cost scope.

@@ -33,7 +33,7 @@ Apply frameworks including RICE scoring, MoSCoW prioritization, Jobs-to-be-Done,
 
 ## Templates
 
-Use 12 built-in templates for PRDs, one-pagers, retrospectives, competitive analysis, launch checklists, and more.
+No template files are bundled. Draft a task-specific structure or inspect an authorized upstream template before using it; do not claim a built-in template was loaded.
 
 ## SaaS Metrics
 
@@ -57,3 +57,7 @@ GitHub: https://github.com/Digidai/product-manager-skills
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+The numerical framework/template/metric counts describe the upstream collection, not this single-file package. Define each metric's formula, denominator, period and source data explicitly. Missing revenue, churn or acquisition data remains unknown; logical prioritization does not validate demand. Keep roadmap decisions separate from external commitments or publication.

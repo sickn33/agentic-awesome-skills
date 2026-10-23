@@ -45,7 +45,7 @@ const x402 = new X402Wrapper({
 // Middleware parametrizado con la tarifa a cobrar
 // Nota: amountRaw es USDC con 6 decimales. "20000" = $0.02
 app.get('/api/premium', x402.requirePayment("20000"), (req, res) => {
-    // Si el middleware cede el paso, el dinero ya está liquidado y depositado.
+    // No inferir liquidación: verificar el recibo y el contrato real del middleware.
     res.json({ data: "Información Valiosa", receipt: req.paymentTx });
 });
 ```
@@ -54,10 +54,14 @@ app.get('/api/premium', x402.requirePayment("20000"), (req, res) => {
 1. **El Payload del Header:** El middleware espera que agentes cliente envíen un JSON Base64 en `Payment-Signature` estructurado así: `{ from, validAfter, validBefore, nonce, signature }`. 
 2. **Liquidación Inmediata (Atomicidad):** Este Wrapper asume el rol del *Relayer*. Por tanto, el propio servidor web se encarga de llamar a `M2MCentEscrow.settle()` on-chain. ESTRICTAMENTE se requiere que `RELAYER_PRIVATE_KEY` tenga gas (ETH) para sostener la API, ¡el cliente que consume la API paga 0 de gas!
 
-Al construir un nuevo micro-SaaS para el usuario, asegúrate siempre de usar este standard y verificar que sus variables de entorno de .env coincidan con el wrapper.
+Usa este enfoque solo si el usuario lo solicita y la integración está verificada. No leas ni imprimas valores secretos de .env para comprobar la configuración.
 
 ## Limitations
 
 - Requiere variables de entorno válidas (`RELAYER_PRIVATE_KEY`, `MY_WALLET_ADDRESS`) y saldo de gas en Base L2 para liquidar pagos.
 - Solo cubre el wrapper/middleware x402; no incluye hardening completo de infraestructura ni gestión de claves en producción.
 - Está orientado a Node.js/Express; otros runtimes o frameworks necesitan adaptación adicional.
+
+## Execution boundaries
+
+Esta entrada no incluye el wrapper ni demuestra la identidad del paquete publicado. Antes de instalar, comprueba repositorio, editor, versión y API reales: un nombre de npm no prueba que sea el wrapper M2MCent. El código es una ilustración histórica, no una receta verificada. No uses claves reales ni mainnet para validar; emplea una red de pruebas y credenciales desechables. Verifica chain ID, contrato, token, importe, destinatario, protección contra replay y recibo confirmado. No afirmes que hubo liquidación porque el middleware llamó next(). Requiere autorización explícita antes de firmar, financiar o transmitir transacciones; una petición de arquitectura no la concede.
