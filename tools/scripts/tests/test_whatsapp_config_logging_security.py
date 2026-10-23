@@ -1,7 +1,6 @@
 import contextlib
 import importlib.util
 import io
-import inspect
 import os
 import sys
 import types
@@ -68,11 +67,12 @@ class WhatsAppConfigLoggingSecurityTests(unittest.TestCase):
     def _run_main(self, module, responses):
         # Release snapshots may lag; ephemeral validation mirrors use current source.
         # Exercise each implementation’s explicit provider option when it exists.
+        online_options = ["--online"] if 'parser.add_argument("--online"' in Path(module.__file__).read_text() else []
         stdout = io.StringIO()
         with patch.dict(os.environ, self.REQUIRED_ENV, clear=False):
             with patch.object(module.httpx, "get", side_effect=responses):
                 with patch.object(module.os.path, "exists", return_value=False):
-                    with patch.object(sys, "argv", ["validate_config.py"] + (["--online"] if 'parser.add_argument("--online"' in inspect.getsource(module.main) else [])):
+                    with patch.object(sys, "argv", ["validate_config.py"] + online_options):
                         with contextlib.redirect_stdout(stdout):
                             with self.assertRaises(SystemExit) as exit_context:
                                 module.main()
