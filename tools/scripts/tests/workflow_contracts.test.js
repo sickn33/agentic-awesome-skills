@@ -374,6 +374,8 @@ for (const [filePath, expectedKind] of [
   ["apps/web-app/src/pages/Home.tsx", "web_app_source"],
   ["apps/web-app/src/styles/theme.css", "web_app_source"],
   ["apps/web-app/src/data/seoLandingPages.json", "web_app_source"],
+  ["apps/aas-plugin/package-lock.json", "dependency_lockfile"],
+  ["skills/loki-mode/examples/todo-app-generated/backend/package-lock.json", "dependency_lockfile"],
 ]) {
   const policy = classifyPathPolicy(filePath);
   assert.strictEqual(policy.approvalSafe, true, filePath);
@@ -386,6 +388,8 @@ for (const [filePath, reason] of [
   ["skills/example/references/run.py", "unknown_extension"],
   ["apps/web-app/package.json", "unapproved_path"],
   ["apps/web-app/package-lock.json", "unapproved_path"],
+  ["apps/other/package-lock.json", "unapproved_path"],
+  ["skills/loki-mode/examples/other/package-lock.json", "unapproved_path"],
   ["apps/web-app/vite.config.ts", "unapproved_path"],
   ["apps/web-app/public/skills.json", "unapproved_path"],
   ["apps/web-app/e2e/browse.spec.ts", "unapproved_path"],
@@ -444,6 +448,19 @@ for (const [filePath, reason] of [
   assert.deepStrictEqual(policy.canonicalSkillChanges, []);
   assert.deepStrictEqual(policy.skillContentChanges, []);
   assert.ok(policy.paths.every((entry) => entry.kind === "web_app_source"));
+}
+
+{
+  const lockfiles = [
+    modifiedRecord("apps/aas-plugin/package-lock.json"),
+    modifiedRecord("skills/loki-mode/examples/todo-app-generated/backend/package-lock.json"),
+  ];
+  const policy = classifyChangeRecords(lockfiles);
+  assert.strictEqual(policy.approvalSafe, true);
+  assert.strictEqual(policy.requiresHumanReview, true);
+  assert.deepStrictEqual(policy.skillContentChanges, []);
+  assert.deepStrictEqual(policy.dependencyLockfileChanges, lockfiles.map((record) => record.new_path).sort());
+  assert.ok(policy.paths.every((entry) => entry.kind === "dependency_lockfile"));
 }
 
 {
