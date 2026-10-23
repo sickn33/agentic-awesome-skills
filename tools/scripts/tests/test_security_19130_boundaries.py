@@ -155,7 +155,8 @@ class PublishedSecurityExamples(unittest.TestCase):
         state = {}; pipeline = scope['ESLDeltaSyncPipeline'](state)
         def item(version, price):
             return {'sku': 'A', 'tag_id': 'tag', 'price': price, 'promo_price': None,
-                    'uom': 'each', 'template': 'default', 'version': version}
+                    'uom': 'each', 'template': 'default', 'version': version,
+                    'currency': 'USD', 'barcode': 'synthetic-A'}
         pipeline.process_catalog_stream([item(10, 10), item(9, 9)], dry_run=False)
         self.assertEqual(len(sent), 1); self.assertEqual(state['A']['version'], 10)
         pipeline.process_catalog_stream([item(11, 10)], dry_run=False)
@@ -165,6 +166,22 @@ class PublishedSecurityExamples(unittest.TestCase):
         pipeline.process_catalog_stream([item(12, 12)], dry_run=True)
         self.assertEqual(state['A']['version'], 11)
         with self.assertRaises(ValueError): pipeline.process_catalog_stream([item(True, 8)])
+        with self.assertRaisesRegex(ValueError, 'Conflicting'):
+            pipeline.process_catalog_stream([item(11, 99)], dry_run=False)
+        self.assertEqual(state['A']['version'], 11)
+        original = item(12, 10)
+        for key, value in [('currency', 'EUR'), ('barcode', 'synthetic-B'), ('tag_id', 'other-tag')]:
+            changed = dict(original, **{key: value})
+            self.assertNotEqual(scope['compute_sku_hash'](original), scope['compute_sku_hash'](changed))
+        with self.assertRaises(ValueError): scope['compute_sku_hash'](item(12, float('nan')))
+
+    def test_esl_battery_rejects_nonfinite_assumptions(self):
+        scope = fixture_definitions('skills/esl-price-sync/SKILL.md', {'estimate_tag_battery_years'}, {})
+        estimate = scope['estimate_tag_battery_years']
+        for invalid in (float('nan'), float('inf'), -1, True):
+            with self.assertRaises(ValueError): estimate(invalid)
+        self.assertGreater(estimate(3), 0)
+
 
     def test_zip_bomb_is_rejected_before_member_read(self):
         import zipfile

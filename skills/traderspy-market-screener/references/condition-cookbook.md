@@ -59,9 +59,8 @@ Ready-made `conditions` arrays for the intents users actually voice. Combine at 
 
 - Oversold bounce: `rsi lt 30` on 4h, default horizons → answers "does buying the dip work here".
 - Golden cross: `emaSpread crossAbove 0 (50,200)` on 1d, horizons `[5, 10, 20, 40]`.
-- Capitulation day: `changePct lt -8 period 1` on 1d, horizons `[1, 3, 7, 14]`.
-- Squeeze release: `bbWidthPct lt 3` on 4h — note that a squeeze predicts a move, not a
-  direction; expect small average returns with large excursions both ways.
+- Two-day capitulation (periods clamp to at least 2): `changePct lt -8 period 2` on 1d, horizons `[1, 3, 7, 14]`.
+- Squeeze release: `bbWidthPct lt 3` on 4h — note that a squeeze describes contracted volatility, not a guaranteed future move or direction; report actual observed returns and excursions.
 
 ## Reading `values`
 

@@ -96,11 +96,18 @@ export function DataLoader<T>({ url, children }: DataLoaderProps<T>) {
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    fetch(url)
-      .then(res => res.json())
-      .then(setData)
-      .catch(setError)
-      .finally(() => setLoading(false))
+    let active = true
+    const controller = new AbortController()
+    setLoading(true)
+    setError(null)
+    setData(null)
+    fetch(url, { signal: controller.signal })
+      .then(res => { if (!res.ok) throw new Error(`HTTP ${res.status}`); return res.json() })
+      .then(value => { if (active) setData(value) })
+      .catch(err => { if (active) setError(err instanceof Error ? err : new Error('Load failed')) })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false; controller.abort() }
+
   }, [url])
 
   return <>{children(data, loading, error)}</>
@@ -139,57 +146,7 @@ const [isOpen, toggleOpen] = useToggle()
 ### Async Data Fetching Hook
 
 ```typescript
-interface UseQueryOptions<T> {
-  onSuccess?: (data: T) => void
-  onError?: (error: Error) => void
-  enabled?: boolean
-}
-
-export function useQuery<T>(
-  key: string,
-  fetcher: () => Promise<T>,
-  options?: UseQueryOptions<T>
-) {
-  const [data, setData] = useState<T | null>(null)
-  const [error, setError] = useState<Error | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const refetch = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-
-    try {
-      const result = await fetcher()
-      setData(result)
-      options?.onSuccess?.(result)
-    } catch (err) {
-      const error = err as Error
-      setError(error)
-      options?.onError?.(error)
-    } finally {
-      setLoading(false)
-    }
-  }, [fetcher, options])
-
-  useEffect(() => {
-    if (options?.enabled !== false) {
-      refetch()
-    }
-  }, [key, refetch, options?.enabled])
-
-  return { data, error, loading, refetch }
-}
-
-// Usage
-const { data: markets, loading, error, refetch } = useQuery(
-  'markets',
-  () => fetch('/api/markets').then(r => r.json()),
-  {
-    onSuccess: data => console.log('Fetched', data.length, 'markets'),
-    onError: err => console.error('Failed:', err)
-  }
-)
-```
+The hand-written query wrapper is omitted: an inline fetcher/options object in its usage recreated the callback on every render, retriggering requests indefinitely, and it lacked stale-result protection. Prefer a project-approved query library with stable query keys, cancellation, retry and cache policy. The DataLoader example above demonstrates scoped fetch cleanup only; it has no shared cache and must validate response data at runtime before treating it as T.
 
 ### Debounce Hook
 
@@ -283,7 +240,7 @@ export function useMarkets() {
 ```typescript
 // ✅ useMemo for expensive computations
 const sortedMarkets = useMemo(() => {
-  return markets.sort((a, b) => b.volume - a.volume)
+  return [...markets].sort((a, b) => b.volume - a.volume)
 }, [markets])
 
 // ✅ useCallback for functions passed to children
@@ -471,7 +428,8 @@ export class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error boundary caught:', error, errorInfo)
+    // Send only sanitized diagnostics through the approved telemetry adapter.
+    // Error messages/stacks may contain user data or credentials.
   }
 
   render() {
@@ -479,7 +437,7 @@ export class ErrorBoundary extends React.Component<
       return (
         <div className="error-fallback">
           <h2>Something went wrong</h2>
-          <p>{this.state.error?.message}</p>
+          <p>Please retry or contact support.</p>
           <button onClick={() => this.setState({ hasError: false })}>
             Try again
           </button>
@@ -574,6 +532,7 @@ export function Dropdown({ options, onSelect }: DropdownProps) {
         break
       case 'Enter':
         e.preventDefault()
+        if (!isOpen || options.length === 0) return
         onSelect(options[activeIndex])
         setIsOpen(false)
         break
@@ -631,3 +590,9 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 ```
 
 **Remember**: Modern frontend patterns enable maintainable, performant user interfaces. Choose patterns that fit your project complexity.
+
+## Integration and accessibility limits
+
+These independent TSX fragments require React imports, client-component boundaries in Next.js, application types and adapters; they are not a complete compiling app. Never treat a TypeScript generic as runtime response validation. Form validation must also run on the server with authorization and duplicate-submission protection; expose a visible error state rather than swallow failures.
+
+The Tab, Dropdown and animated Modal snippets demonstrate composition/animation only, not accessible production widgets. Tabs need linked tab/panel IDs and keyboard focus behavior; a combobox needs an actual focusable input and associated options; modal dialogs need an accessible name, focus trapping, inert background and restoration on unmount. Use a tested accessible primitive or native select/dialog and test keyboard/screen-reader behavior. Respect reduced motion. Error boundaries do not catch event-handler or asynchronous failures.

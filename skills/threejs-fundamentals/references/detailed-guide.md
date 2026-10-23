@@ -110,10 +110,10 @@ const cameras = [];
 for (let i = 0; i < 4; i++) {
   const subcamera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
   subcamera.viewport = new THREE.Vector4(
-    Math.floor(i % 2) * 0.5,
-    Math.floor(i / 2) * 0.5,
-    0.5,
-    0.5,
+    Math.floor(i % 2) * window.innerWidth / 2,
+    Math.floor(i / 2) * window.innerHeight / 2,
+    window.innerWidth / 2,
+    window.innerHeight / 2,
   );
   cameras.push(subcamera);
 }
@@ -233,7 +233,7 @@ Combines geometry and material.
 const mesh = new THREE.Mesh(geometry, material);
 
 // Multiple materials (one per geometry group)
-const mesh = new THREE.Mesh(geometry, [material1, material2]);
+const multiMaterialMesh = new THREE.Mesh(geometry, [material1, material2]);
 
 // Useful properties
 mesh.geometry;
@@ -360,9 +360,10 @@ euler.setFromRotationMatrix(m);
 
 ```javascript
 const color = new THREE.Color(0xff0000);
-const color = new THREE.Color("red");
-const color = new THREE.Color("rgb(255, 0, 0)");
-const color = new THREE.Color("#ff0000");
+// Alternatives (use one constructor):
+// const color = new THREE.Color("red");
+// const color = new THREE.Color("rgb(255, 0, 0)");
+// const color = new THREE.Color("#ff0000");
 
 color.setHex(0x00ff00);
 color.setRGB(r, g, b); // 0-1 range
@@ -394,6 +395,8 @@ THREE.MathUtils.smootherstep(x, min, max);
 
 ```javascript
 function dispose() {
+  // Stop animation callbacks and remove registered resize/listener handlers first.
+  renderer.setAnimationLoop(null);
   // Dispose geometries
   mesh.geometry.dispose();
 
@@ -421,6 +424,7 @@ function dispose() {
 
 ```javascript
 const timer = new THREE.Timer();
+timer.connect(document); // enable visibility handling; dispose on teardown
 
 renderer.setAnimationLoop(() => {
   timer.update();
@@ -517,7 +521,7 @@ scene.add(lod);
 Three.js includes an experimental WebGPU renderer as an alternative to WebGL:
 
 ```javascript
-import { WebGPURenderer } from "three/addons/renderers/webgpu/WebGPURenderer.js";
+import { WebGPURenderer } from "three/webgpu";
 
 const renderer = new WebGPURenderer({ antialias: true });
 await renderer.init();

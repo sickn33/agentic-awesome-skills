@@ -16,6 +16,10 @@ license_source: https://github.com/hyhmrright/brooks-lint/blob/main/LICENSE
 Use this skill when you need full-sweep mode: runs a unified analysis across all quality dimensions — code decay, architecture, tech debt, and test quality — then applies fixes directly to the codebase. Safe changes are auto-applied; risky changes are confirmed before execution. Drawing on twelve classic...
 
 
+## Supporting material availability
+
+The four ../_shared files named below are not bundled in this catalog tree. They define the risk taxonomy/config/scoring contract; do not invent their contents or claim a full Brooks sweep without them. Obtain and review matching upstream material for that mode, or perform a clearly scoped ordinary source review using the inline guide and report the unavailable dimensions. A health score is unavailable without a defined validated rubric.
+
 ## Setup
 
 1. Read `../_shared/common.md` for the Iron Law, Project Config, Report Template, and Health Score rules

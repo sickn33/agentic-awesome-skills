@@ -20,6 +20,8 @@ This skill helps you market open source projects without being cringe. Covers Gi
 
 ---
 
+Plans and draft posts do not authorize publishing, tagging people, messaging contributors or changing repository settings. Use the user’s approved account/channel and scope for external actions. Treat launch timing, growth impact/time estimates and funnel stages as hypotheses; users need not star or contribute to be successful. Preserve contributor attribution and verify licenses, badges and benchmark claims. Download/clone counts are operations, not unique active users. Named tools are examples; verify current features/costs before choosing a service.
+
 ## Before You Start
 
 **Load your audience context first.** Read `.agents/developer-audience-context.md` to understand:
@@ -52,7 +54,7 @@ If the context file doesn't exist, run the `developer-audience-context` skill fi
 Growth = (Real value) × (Discoverability) × (First-use experience)
 ```
 
-If any factor is zero, growth is zero.
+This is a planning metaphor, not a measured growth formula.
 
 ---
 
@@ -103,11 +105,11 @@ npm install project-name
 
 ## Contributing
 
-We love contributions! See [CONTRIBUTING.md](https://github.com/jonathimer/devmarketing-skills/tree/main/skills/open-source-marketing/CONTRIBUTING.md).
+We love contributions! See the project’s `CONTRIBUTING.md` (replace with a verified project link when publishing).
 
 ## License
 
-[License type] - see [LICENSE](https://github.com/jonathimer/devmarketing-skills/tree/main/skills/open-source-marketing/LICENSE)
+[License type] - see the project’s `LICENSE` (replace with a verified project link when publishing).
 ```
 
 ### README Checklist
@@ -204,7 +206,7 @@ about: Suggest an idea for this project
 | **Slack** | Enterprise communities | Medium |
 | **Forum (Discourse)** | Async, searchable discussions | High |
 
-Start with GitHub Discussions. Add Discord when you have 50+ active users.
+Start with GitHub Discussions. Add a chat space only when user needs and moderation capacity justify it.
 
 ### Community Principles
 
@@ -332,7 +334,7 @@ For each good first issue:
 | Time | Action |
 |------|--------|
 | **Day before** | Final README review, prep all posts |
-| **Launch morning** | HN post (best: 6-8am PT, Tuesday-Thursday) |
+| **Launch morning** | HN post at a time you can support; test timing with your audience |
 | **+1 hour** | Twitter thread |
 | **+2 hours** | Reddit post to relevant subreddits |
 | **Throughout day** | Respond to all comments/questions |
@@ -445,7 +447,7 @@ For each good first issue:
 | **Star History** | Track star growth over time |
 | **npm-stat** | Download statistics |
 | **GitHub Traffic** | Views, clones, referrers |
-| **Shield.io** | Dynamic badges |
+| **Shields.io** | Dynamic badges |
 | **All Contributors** | Recognize all contributors |
 | **Probot** | Automate GitHub workflows |
 

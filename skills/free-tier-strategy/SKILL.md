@@ -58,7 +58,7 @@ Review the `/devmarketing-skills/skills/developer-audience-context` skill. Free 
 | Community building | Low | Medium | Medium | High |
 | Support costs | High | Low | Medium | Variable |
 
-**Developer tools almost always need a permanent free tier, not a free trial.** Developers build side projects, evaluate tools for future use, and recommend tools to others—all of which require long-term free access.
+**Treat a permanent free tier as a hypothesis, not a universal requirement.** Developers build side projects, evaluate tools for future use, and recommend tools to others—all of which require long-term free access.
 
 ## Usage Limits That Make Sense
 
@@ -102,29 +102,13 @@ Review the `/devmarketing-skills/skills/developer-audience-context` skill. Free 
 
 Free tier limits should:
 1. **Allow meaningful usage** - Build and run a real side project
-2. **Cover hobbyist use cases** - Personal projects should never require payment
+2. **Cover hobbyist use cases** - Define a sustainable hobbyist allowance, with explicit cost and abuse caps
 3. **Trigger on growth, not time** - Upgrades happen because projects succeed
 4. **Be easy to predict** - Developers should know when they'll hit limits
 
-### Example: Good Limit Structure
+### Example: Illustrative Limit Structure
 
-**Vercel:**
-- Unlimited personal projects
-- 100GB bandwidth/month
-- Serverless function limits
-- Hobby use stays free forever
-
-**Supabase:**
-- 500MB database storage
-- 2GB bandwidth
-- 50,000 monthly active users
-- Social auth unlimited
-
-**PlanetScale:**
-- 1 database
-- 1 billion row reads/month
-- 10 million row writes/month
-- 5GB storage
+A hypothetical developer service could offer 10,000 requests/month, 1 GB storage and three seats, with visible metering and a documented reset/overage policy. These are design examples, not current vendor entitlements. Before comparing vendors, verify the official pricing, acceptable-use and inactivity policies for the exact product, region and workload; do not present historical PlanetScale, Vercel or Supabase limits as current offers.
 
 ## Feature Gating Strategies
 
@@ -148,8 +132,8 @@ Free tiers should include everything needed to:
 
 **Collaboration features:**
 - Team members beyond the solo developer
-- Access controls and permissions
-- Audit logs
+- Advanced organization controls; preserve basic isolation and least privilege on every tier
+- Extended audit-log retention; retain essential security events on every tier
 
 **Scale and performance:**
 - Higher rate limits
@@ -232,7 +216,7 @@ GitHub's free tier evolution shows how to do this well:
 3. Free Copilot for open source maintainers
 4. Generous free tier for organizations
 
-Result: Developers love GitHub, happily pay when they need more.
+This is a historical model illustration, not evidence that every cohort converts or that those entitlements remain current.
 
 ## Upgrade Triggers and Timing
 
@@ -281,7 +265,7 @@ This includes: [benefits relevant to teams]
 
 ### Timing Principles
 
-1. **Never interrupt workflow** - Don't block actions with upgrade prompts
+1. **Respect hard caps** - Warn early and offer export/read-only access where feasible; stop chargeable operations at a disclosed hard limit unless paid usage is authorized.
 2. **Warn before limits** - 70%, 85%, 95% notifications
 3. **Explain the trigger** - "You're seeing this because..."
 4. **Offer alternatives** - Not just "upgrade or suffer"
@@ -379,36 +363,14 @@ Every pricing page needs:
 - Feature comparison table
 - Open source status visible
 
-## Examples: Free Tiers That Work
+## Examples: Model Hypotheses to Test
 
-### Stripe
+- Transaction-based charging can align fees with realized usage, but is paid usage rather than a universally free tier. Verify country, payment method and product-specific fees before budgeting.
+- A free shared database may support learning, but storage, availability, backups and inactivity behavior need explicit limits; it does not imply every feature is included.
+- A CDN free plan can support eligible sites, but bandwidth statements must include product and acceptable-use restrictions.
+- A search free plan needs separate record, operation and throughput limits; never assume one number covers all usage.
 
-- No monthly fee for free tier
-- Pay only on transactions (2.9% + 30¢)
-- Test mode unlimited and forever
-- Full feature access
-- Why it works: Aligns cost with revenue
-
-### Cloudflare
-
-- Generous free tier (unlimited bandwidth)
-- Premium features clearly differentiated
-- Free tier is genuinely useful for most sites
-- Why it works: Free users become advocates
-
-### MongoDB Atlas
-
-- 512MB storage free forever
-- Shared cluster (good enough for learning)
-- All features available to test
-- Why it works: Devs learn on free, companies pay
-
-### Algolia
-
-- 10,000 records free
-- 10,000 search requests/month
-- Full API access
-- Why it works: Scales with application success
+Measure activation, paid conversion, retention, free-user support cost and abuse-adjusted gross margin by cohort before claiming a model works.
 
 ## Examples: Free Tier Problems
 

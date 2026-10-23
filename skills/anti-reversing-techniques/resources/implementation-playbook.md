@@ -6,6 +6,8 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 Understanding protection mechanisms encountered during authorized software analysis, security research, and malware analysis. This knowledge helps analysts bypass protections to complete legitimate analysis tasks.
 
+Examples are independent analysis fragments requiring platform headers, verified symbols and architecture-specific types; they are not a portable compilable application. PEB/heap offsets vary by OS/build/architecture and public PEB definitions may omit fields. Check API return statuses. Timing/parent/VM indicators are heuristics with false positives, not proof. Analyze unknown binaries only in an isolated disposable environment without host credentials, shared writable folders or unrestricted network; never move malware to a normal workstation to bypass VM detection. Preserve original hashes and patch a copy.
+
 ## Anti-Debugging Techniques
 
 ### Windows Anti-Debugging
@@ -27,26 +29,26 @@ if (debugged) exit(1);
 typedef NTSTATUS (NTAPI *pNtQueryInformationProcess)(
     HANDLE, PROCESSINFOCLASS, PVOID, ULONG, PULONG);
 
-DWORD debugPort = 0;
-NtQueryInformationProcess(
+DWORD_PTR debugPort = 0;
+NTSTATUS portStatus = NtQueryInformationProcess(
     GetCurrentProcess(),
     ProcessDebugPort,        // 7
     &debugPort,
     sizeof(debugPort),
     NULL
 );
-if (debugPort != 0) exit(1);
+if (NT_SUCCESS(portStatus) && debugPort != 0) exit(1);
 
 // Debug flags
 DWORD debugFlags = 0;
-NtQueryInformationProcess(
+NTSTATUS flagStatus = NtQueryInformationProcess(
     GetCurrentProcess(),
     ProcessDebugFlags,       // 0x1F
     &debugFlags,
     sizeof(debugFlags),
     NULL
 );
-if (debugFlags == 0) exit(1);  // 0 means being debugged
+if (NT_SUCCESS(flagStatus) && debugFlags == 0) exit(1);  // 0 means being debugged
 ```
 
 **Bypass Approaches:**
@@ -144,7 +146,8 @@ exit(1);
 // VEH-based detection
 LONG CALLBACK VectoredHandler(PEXCEPTION_POINTERS ep) {
     if (ep->ExceptionRecord->ExceptionCode == EXCEPTION_BREAKPOINT) {
-        ep->ContextRecord->Rip++;  // Skip INT3
+        // Do not blindly increment Rip: saved IP and instruction size depend on the exception.
+        // Inspect the platform exception context before changing execution.
         return EXCEPTION_CONTINUE_EXECUTION;
     }
     return EXCEPTION_CONTINUE_SEARCH;
@@ -163,12 +166,15 @@ if (ptrace(PTRACE_TRACEME, 0, NULL, NULL) == -1) {
 // /proc/self/status
 FILE *f = fopen("/proc/self/status", "r");
 char line[256];
+if (!f) { /* report unavailable status; do not infer no debugger */ return; }
 while (fgets(line, sizeof(line), f)) {
     if (strncmp(line, "TracerPid:", 10) == 0) {
         int tracer_pid = atoi(line + 10);
         if (tracer_pid != 0) exit(1);
     }
 }
+
+fclose(f);
 
 // Parent process check
 if (getppid() != 1 && strcmp(get_process_name(getppid()), "bash") != 0) {
@@ -180,7 +186,8 @@ if (getppid() != 1 && strcmp(get_process_name(getppid()), "bash") != 0) {
 ```bash
 # LD_PRELOAD to hook ptrace
 # Compile: gcc -shared -fPIC -o hook.so hook.c
-long ptrace(int request, ...) {
+// C fragment in hook.c (not shell); signature must match the target libc.
+long ptrace(enum __ptrace_request request, ...) {
     return 0;  // Always succeed
 }
 
@@ -197,7 +204,7 @@ LD_PRELOAD=./hook.so ./target
 int cpuid_info[4];
 __cpuid(cpuid_info, 1);
 // Check hypervisor bit (bit 31 of ECX)
-if (cpuid_info[2] & (1 << 31)) {
+if ((unsigned int)cpuid_info[2] & (1u << 31)) {
     // Running in hypervisor
 }
 
@@ -298,8 +305,8 @@ while (1) {
 
 ```c
 // Always true, but complex to analyze
-int x = rand();
-if ((x * x) >= 0) {  // Always true
+unsigned int x = (unsigned int)rand();
+if ((x * x) >= 0u) {  // Unsigned arithmetic; wraps modulo 2^N
     real_code();
 } else {
     junk_code();  // Dead code
@@ -322,9 +329,11 @@ if ((x * (x + 1)) % 2 == 1) {  // Product of consecutive = even
 
 ```c
 // XOR encryption
-char decrypt_string(char *enc, int len, char key) {
+char *decrypt_string(const char *enc, size_t len, unsigned char key) {
+    if (!enc || len == SIZE_MAX) return NULL;
     char *dec = malloc(len + 1);
-    for (int i = 0; i < len; i++) {
+    if (!dec) return NULL;
+    for (size_t i = 0; i < len; i++) {
         dec[i] = enc[i] ^ key;
     }
     dec[len] = 0;
@@ -509,7 +518,7 @@ add eax, 2    call vm_entry
 
 1. **Understand the protection**: Identify what technique is used
 2. **Find the check**: Locate protection code in binary
-3. **Patch or hook**: Modify check to always pass
+3. **Patch or hook**: Only in an authorized copy, after inspecting instruction boundaries and documenting behavioral effects
 4. **Use appropriate tools**: ScyllaHide, x64dbg plugins
 5. **Document findings**: Keep notes on bypassed protections
 

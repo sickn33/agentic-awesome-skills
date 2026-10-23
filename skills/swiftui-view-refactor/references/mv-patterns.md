@@ -68,9 +68,13 @@ struct FeedView: View {
     private func loadFeed() async {
         do {
             let posts = try await client.getFeed()
+            try Task.checkCancellation()
             viewState = .loaded(posts)
+        } catch is CancellationError {
+            return
         } catch {
-            viewState = .error(error.localizedDescription)
+            guard !Task.isCancelled else { return }
+            viewState = .error("Unable to load the feed. Please try again.")
         }
     }
 }

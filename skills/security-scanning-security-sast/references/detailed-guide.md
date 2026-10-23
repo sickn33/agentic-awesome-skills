@@ -27,10 +27,10 @@
 # Installation & scan
 pip install bandit
 bandit -r . -f json -o bandit-report.json
-bandit -r . -ll -ii -f json  # High/Critical only
+bandit -r . -lll -iii -f json  # HIGH severity, HIGH confidence (Bandit has no CRITICAL level)
 ```
 
-**Configuration**: `.bandit`
+**Configuration**: `bandit.yaml` (pass `-c bandit.yaml`; `.bandit` is the INI form)
 ```yaml
 exclude_dirs: ['/tests/', '/venv/', '/.tox/', '/build/']
 tests: [B201, B301, B302, B303, B304, B305, B307, B308, B312, B323, B324, B501, B502, B506, B602, B608]
@@ -40,33 +40,29 @@ skips: [B101]
 ### JavaScript/TypeScript: ESLint Security
 
 ```bash
-npm install --save-dev eslint @eslint/plugin-security eslint-plugin-no-secrets
+npm install --save-dev eslint eslint-plugin-security eslint-plugin-no-secrets
 eslint . --ext .js,.jsx,.ts,.tsx --format json > eslint-security.json
 ```
 
-**Configuration**: `.eslintrc-security.json`
-```json
-{
-  "plugins": ["@eslint/plugin-security", "eslint-plugin-no-secrets"],
-  "extends": ["plugin:security/recommended"],
-  "rules": {
-    "security/detect-object-injection": "error",
-    "security/detect-non-literal-fs-filename": "error",
-    "security/detect-eval-with-expression": "error",
-    "security/detect-pseudo-random-prng": "error",
-    "no-secrets/no-secrets": "error"
-  }
-}
+**Configuration**: `eslint.config.mjs` (JavaScript; add the project’s TypeScript parser/config separately).
+```javascript
+import security from 'eslint-plugin-security';
+import noSecrets from 'eslint-plugin-no-secrets';
+export default [
+  security.configs.recommended,
+  { files: ['**/*.{js,mjs,cjs}'], plugins: { 'no-secrets': noSecrets },
+    rules: { 'no-secrets/no-secrets': 'error' } }
+];
 ```
 
 ### Multi-Language: Semgrep
 
 ```bash
 pip install semgrep
-semgrep --config=auto --json --output=semgrep-report.json
-semgrep --config=p/security-audit --json
-semgrep --config=p/owasp-top-ten --json
-semgrep ci --config=auto  # CI mode
+semgrep scan --config=auto --json --output=semgrep-report.json
+semgrep scan --config=p/security-audit --json
+semgrep scan --config=p/owasp-top-ten --json
+semgrep ci  # authenticated platform CI; confirm upload/privacy policy first
 ```
 
 **Custom Rules**: `.semgrep.yml`
@@ -185,12 +181,16 @@ PASSWORD = os.getenv('DB_PASSWORD')
 import os
 ALLOWED_DIR = '/var/www/uploads'
 file_name = request.args.get('file')
+if not isinstance(file_name, str) or not file_name:
+    raise ValueError('Missing file name')
 file_path = os.path.join(ALLOWED_DIR, file_name)
 file_path = os.path.realpath(file_path)
-if not file_path.startswith(os.path.realpath(ALLOWED_DIR)):
+if os.path.commonpath([os.path.realpath(ALLOWED_DIR), file_path]) != os.path.realpath(ALLOWED_DIR):
     raise ValueError("Invalid file path")
 with open(file_path, 'r') as f:
     content = f.read()
+# This resolve-then-open form assumes an immutable trusted directory. For attacker-
+# writable trees, use descriptor-relative no-follow traversal to prevent symlink races.
 ```
 
 ### Insecure Deserialization
@@ -211,9 +211,11 @@ config = yaml.safe_load(user_input)  # SECURE
 
 **SECURE**:
 ```python
-subprocess.run(['ping', '-c', '4', user_input])  # Array args
-import shlex
-safe_input = shlex.quote(user_input)  # Input validation
+import ipaddress
+validated_ip = str(ipaddress.ip_address(user_input))
+subprocess.run(['ping', '-c', '4', validated_ip], check=True, timeout=10)
+# Array arguments avoid shell parsing; input validation separately prevents
+# option injection. shlex.quote is shell escaping, not input validation.
 ```
 
 ### Insecure Random
@@ -281,124 +283,9 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 ```
 
 
-## Multi-Language Scanner Implementation
+## Scanner implementation boundary
 
-```python
-import json
-import subprocess
-from pathlib import Path
-from typing import Dict, List, Any
-from dataclasses import dataclass
-from datetime import datetime
-
-@dataclass
-class SASTFinding:
-    tool: str
-    severity: str
-    category: str
-    title: str
-    description: str
-    file_path: str
-    line_number: int
-    cwe: str
-    owasp: str
-    confidence: str
-
-class MultiLanguageSASTScanner:
-    def __init__(self, project_path: str):
-        self.project_path = Path(project_path)
-        self.findings: List[SASTFinding] = []
-
-    def detect_languages(self) -> List[str]:
-        """Auto-detect languages"""
-        languages = []
-        indicators = {
-            'python': ['*.py', 'requirements.txt'],
-            'javascript': ['*.js', 'package.json'],
-            'typescript': ['*.ts', 'tsconfig.json'],
-            'java': ['*.java', 'pom.xml'],
-            'ruby': ['*.rb', 'Gemfile'],
-            'go': ['*.go', 'go.mod'],
-            'rust': ['*.rs', 'Cargo.toml'],
-        }
-        for lang, patterns in indicators.items():
-            for pattern in patterns:
-                if list(self.project_path.glob(f'**/{pattern}')):
-                    languages.append(lang)
-                    break
-        return languages
-
-    def run_comprehensive_sast(self) -> Dict[str, Any]:
-        """Execute all applicable SAST tools"""
-        languages = self.detect_languages()
-
-        scan_results = {
-            'timestamp': datetime.now().isoformat(),
-            'languages': languages,
-            'tools_executed': [],
-            'findings': []
-        }
-
-        self.run_semgrep_scan()
-        scan_results['tools_executed'].append('semgrep')
-
-        if 'python' in languages:
-            self.run_bandit_scan()
-            scan_results['tools_executed'].append('bandit')
-        if 'javascript' in languages or 'typescript' in languages:
-            self.run_eslint_security_scan()
-            scan_results['tools_executed'].append('eslint-security')
-
-        scan_results['findings'] = [vars(f) for f in self.findings]
-        scan_results['summary'] = self.generate_summary()
-        return scan_results
-
-    def run_semgrep_scan(self):
-        """Run Semgrep"""
-        for ruleset in ['auto', 'p/security-audit', 'p/owasp-top-ten']:
-            try:
-                result = subprocess.run([
-                    'semgrep', '--config', ruleset, '--json', '--quiet',
-                    str(self.project_path)
-                ], capture_output=True, text=True, timeout=300)
-
-                if result.stdout:
-                    data = json.loads(result.stdout)
-                    for f in data.get('results', []):
-                        self.findings.append(SASTFinding(
-                            tool='semgrep',
-                            severity=f.get('extra', {}).get('severity', 'MEDIUM').upper(),
-                            category='sast',
-                            title=f.get('check_id', ''),
-                            description=f.get('extra', {}).get('message', ''),
-                            file_path=f.get('path', ''),
-                            line_number=f.get('start', {}).get('line', 0),
-                            cwe=f.get('extra', {}).get('metadata', {}).get('cwe', ''),
-                            owasp=f.get('extra', {}).get('metadata', {}).get('owasp', ''),
-                            confidence=f.get('extra', {}).get('metadata', {}).get('confidence', 'MEDIUM')
-                        ))
-            except Exception as e:
-                print(f"Semgrep {ruleset} failed: {e}")
-
-    def generate_summary(self) -> Dict[str, Any]:
-        """Generate statistics"""
-        severity_counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0}
-        for f in self.findings:
-            severity_counts[f.severity] = severity_counts.get(f.severity, 0) + 1
-
-        return {
-            'total_findings': len(self.findings),
-            'severity_breakdown': severity_counts,
-            'risk_score': self.calculate_risk_score(severity_counts)
-        }
-
-    def calculate_risk_score(self, severity_counts: Dict[str, int]) -> int:
-        """Risk score 0-100"""
-        weights = {'CRITICAL': 10, 'HIGH': 7, 'MEDIUM': 4, 'LOW': 1}
-        total = sum(weights[s] * c for s, c in severity_counts.items())
-        return min(100, int((total / 50) * 100))
-```
-
+The earlier all-language wrapper was incomplete (missing Bandit/ESLint methods), swallowed process/parse failures and mapped Semgrep ERROR/WARNING/INFO to unsupported severity weights. Use each tool's documented CLI and native report instead. Record tool version, exact reviewed ruleset, target, exclusions, exit status and parse errors separately from findings. Zero findings with a failed, partial or skipped scan is **not** a pass. Do not invent a 0–100 security score from counts or claim compliance from a static scan. Custom rules above are heuristic examples requiring positive/negative fixtures; a joined path is not automatically safe and a sink match is not confirmed exploitability.
 
 ## CI/CD Integration
 
@@ -414,23 +301,24 @@ jobs:
   sast:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install tools
         run: |
           pip install bandit semgrep
-          npm install -g eslint @eslint/plugin-security
+          npm install -g eslint eslint-plugin-security
 
       - name: Run scans
         run: |
-          bandit -r . -f json -o bandit.json || true
-          semgrep --config=auto --json --output=semgrep.json || true
+          bandit -r . -f json -o bandit.json
+          semgrep scan --config=auto --error --json --output=semgrep.json
 
       - name: Upload reports
-        uses: actions/upload-artifact@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: sast-reports
           path: |
@@ -446,11 +334,11 @@ sast:
   image: python:3.11
   script:
     - pip install bandit semgrep
-    - bandit -r . -f json -o bandit.json || true
-    - semgrep --config=auto --json --output=semgrep.json || true
+    - bandit -r . -f json -o bandit.json
+    - semgrep scan --config=auto --error --json --output=semgrep.json
   artifacts:
-    reports:
-      sast: bandit.json
+    when: always
+    paths: [bandit.json, semgrep.json]
 ```
 
 
@@ -474,3 +362,7 @@ sast:
 - **security-owasp.md** - OWASP Top 10 assessment
 - **security-api.md** - API security testing
 - **security-scan.md** - Comprehensive security scanning
+
+Bandit JSON is not GitLab’s SAST report schema; the example stores raw artifacts only. Execute separate scan steps/jobs if both reports are required after one fails. Pin approved tool/ruleset/action versions before production use and scan untrusted source without running its build scripts or privileged hooks. Framework snippets are partial settings, not complete middleware stacks; CORS is not authorization. Referenced security-*.md files are not bundled.
+
+Primary references: [Bandit CLI](https://bandit.readthedocs.io/en/latest/man/bandit.html), [ESLint Security](https://github.com/eslint-community/eslint-plugin-security), [Semgrep CLI](https://docs.semgrep.dev/cli-reference).

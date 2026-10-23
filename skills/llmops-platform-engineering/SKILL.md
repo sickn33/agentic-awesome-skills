@@ -72,30 +72,41 @@ on:
         type: choice
         options: [staging, production]
 
+env:
+  MODEL_NAME: ${{ inputs.model_name }}
+  MODEL_VERSION: ${{ inputs.model_version }}
+  TARGET_ENV: ${{ inputs.target_env }}
+
 jobs:
   evaluate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - name: Validate model identifiers
+        shell: bash
+        run: |
+          [[ "$MODEL_NAME" =~ ^[a-z0-9][a-z0-9.-]*$ ]]
+          [[ "$MODEL_VERSION" =~ ^[A-Za-z0-9_][A-Za-z0-9_.-]*$ ]]
+
       - name: Run quality evaluation suite
         run: |
           python -m evals.run \
-            --model "${{ inputs.model_name }}:${{ inputs.model_version }}" \
+            --model "${MODEL_NAME}:${MODEL_VERSION}" \
             --suite quality \
             --output results/quality.json
 
       - name: Run safety evaluation suite
         run: |
           python -m evals.run \
-            --model "${{ inputs.model_name }}:${{ inputs.model_version }}" \
+            --model "${MODEL_NAME}:${MODEL_VERSION}" \
             --suite safety \
             --output results/safety.json
 
       - name: Run latency benchmark
         run: |
           python -m evals.benchmark \
-            --model "${{ inputs.model_name }}:${{ inputs.model_version }}" \
+            --model "${MODEL_NAME}:${MODEL_VERSION}" \
             --concurrent-users 50 \
             --duration 300 \
             --output results/latency.json
@@ -132,8 +143,8 @@ jobs:
       - name: Record approval
         run: |
           echo "Approved by: ${{ github.actor }}"
-          echo "Model: ${{ inputs.model_name }}:${{ inputs.model_version }}"
-          echo "Target: ${{ inputs.target_env }}"
+          echo "Model: ${MODEL_NAME}:${MODEL_VERSION}"
+          echo "Target: ${TARGET_ENV}"
           echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
   deploy:
@@ -144,27 +155,29 @@ jobs:
 
       - name: Deploy canary
         run: |
-          kubectl set image deployment/${{ inputs.model_name }}-canary \
-            model=${{ inputs.model_name }}:${{ inputs.model_version }} \
-            -n ai-${{ inputs.target_env }}
+          kubectl set image deployment/${MODEL_NAME}-canary \
+            model=${MODEL_NAME}:${MODEL_VERSION} \
+            -n ai-${TARGET_ENV}
 
       - name: Wait for canary validation (15 min)
         run: |
           python -m canary.validate \
-            --deployment ${{ inputs.model_name }}-canary \
-            --namespace ai-${{ inputs.target_env }} \
+            --deployment ${MODEL_NAME}-canary \
+            --namespace ai-${TARGET_ENV} \
             --duration 900 \
             --quality-threshold 0.85 \
             --error-rate-threshold 0.02
 
       - name: Promote to full rollout
         run: |
-          kubectl set image deployment/${{ inputs.model_name }} \
-            model=${{ inputs.model_name }}:${{ inputs.model_version }} \
-            -n ai-${{ inputs.target_env }}
-          kubectl rollout status deployment/${{ inputs.model_name }} \
-            -n ai-${{ inputs.target_env }} --timeout=300s
+          kubectl set image deployment/${MODEL_NAME} \
+            model=${MODEL_NAME}:${MODEL_VERSION} \
+            -n ai-${TARGET_ENV}
+          kubectl rollout status deployment/${MODEL_NAME} \
+            -n ai-${TARGET_ENV} --timeout=300s
 ```
+
+The `evals`, `canary`, thresholds, registry, cluster authentication and protected environment approval rules are application-owned prerequisites, not bundled implementations. Require configured production reviewers; a job named approve does not itself require human approval. Record the evaluated immutable image digest and deploy that same digest; the tag-based snippets are illustrative.
 
 ## Evaluation Gate Thresholds
 
@@ -222,10 +235,10 @@ spec:
   duration: 7d
   traffic_split:
     control:
-      model: gpt-4o-2024-08-06
+      model: example-control-model
       weight: 70
     treatment:
-      model: gpt-4o-2025-01-15
+      model: example-treatment-model
       weight: 30
   metrics:
     primary:
@@ -248,6 +261,8 @@ spec:
     hash_key: user_id
 ```
 
+`gateway.ai/v1` is an illustrative custom resource; it requires your own installed CRD/controller. Model IDs are placeholders, not available provider snapshots.
+
 ## Kubernetes Model Serving Deployment
 
 ```yaml
@@ -259,7 +274,7 @@ metadata:
   namespace: ai-production
   labels:
     app: llm-inference
-    model: gpt-4o
+    model: local-open-weights
     version: "2025-01"
 spec:
   replicas: 3
@@ -275,10 +290,10 @@ spec:
     metadata:
       labels:
         app: llm-inference
-        model: gpt-4o
+        model: local-open-weights
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
+        prometheus.io/port: "8000"
         prometheus.io/path: "/metrics"
     spec:
       topologySpreadConstraints:
@@ -299,8 +314,6 @@ spec:
           ports:
             - containerPort: 8000
               name: inference
-            - containerPort: 8080
-              name: metrics
           resources:
             requests:
               cpu: "4"
@@ -354,9 +367,6 @@ spec:
     - name: inference
       port: 8000
       targetPort: 8000
-    - name: metrics
-      port: 8080
-      targetPort: 8080
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -399,6 +409,8 @@ spec:
           value: 1
           periodSeconds: 300
 ```
+
+The deployment serves locally available open model weights, not proprietary hosted models. Provision the PVC and ConfigMap, choose a tested serving image, and install a custom-metrics adapter for the HPA metrics. Metrics use the inference port in this example.
 
 ## CI/CD Design for AI Services
 

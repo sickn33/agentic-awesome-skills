@@ -141,10 +141,10 @@ CREATE TABLE attendance (
   date DATE NOT NULL,
   check_in_time VARCHAR(255),
   check_out_time VARCHAR(255),
-  hours_worked NUMERIC NOT NULL,
+  hours_worked NUMERIC NOT NULL CHECK (hours_worked >= 0),
   work_mode VARCHAR(255),
   attendance_status VARCHAR(100) NOT NULL,
-  late_minutes NUMERIC NOT NULL,
+  late_minutes NUMERIC NOT NULL CHECK (late_minutes >= 0),
   on_approved_leave BOOLEAN NOT NULL,
   manager VARCHAR(255),
   regularisation_requested BOOLEAN NOT NULL,
@@ -168,10 +168,10 @@ CREATE TABLE attendance (
       "Date": { "type": "string", "format": "date" },
       "Check-in Time": { "type": "string" },
       "Check-out Time": { "type": "string" },
-      "Hours Worked": { "type": "number" },
+      "Hours Worked": { "type": "number", "minimum": 0 },
       "Work Mode": { "type": "string" },
       "Attendance Status": { "type": "string" },
-      "Late (Minutes)": { "type": "number" },
+      "Late (Minutes)": { "type": "number", "minimum": 0 },
       "On Approved Leave": { "type": "boolean" },
       "Manager": { "type": "string" },
       "Regularisation Requested": { "type": "boolean" },
@@ -179,6 +179,8 @@ CREATE TABLE attendance (
       "Attendance ID": { "type": "integer" }
   },
   "required": [
+      "On Approved Leave",
+      "Regularisation Requested",
       "Date",
       "Hours Worked",
       "Attendance Status",
@@ -209,6 +211,8 @@ CREATE TABLE attendance (
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Hours Worked and Late are supplied values, not calculated by this template. Define approved shift, breaks, rounding, timezone and overnight-date rules before deriving them; do not infer hours from time-only strings or impose automatic penalties. The sample row is independent of the later conversational example.
 
 ## Field Reference
 
