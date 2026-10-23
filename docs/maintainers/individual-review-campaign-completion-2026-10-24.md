@@ -40,3 +40,5 @@ unavailable/skipped means manual-review-required; this report grants no merge
 attestation. Source PRs omit generated snapshots and plugin mirrors, which are
 owned by the protected release workflow. No merge, release, campaign send,
 provider workload or publication was performed by this campaign completion step.
+
+The dangling `skills/docx` and `skills/pptx` alias symlinks were also removed; these were pointers to the removed trees, not additional reviewed root inventories.

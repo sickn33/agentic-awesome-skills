@@ -19,7 +19,7 @@ Inventory base: `8bda5fa7264cafe8259fc8212550d13bf690bfb0`. The first batch cont
 | [last30days](../../skills/last30days/SKILL.md) | 25 | 41 | Pending complete-tree review |
 | [instagram](../../skills/instagram/SKILL.md) | 20 | 30 | Pending complete-tree review |
 | [skill-sentinel](../../skills/skill-sentinel/SKILL.md) | 16 | 22 | Pending complete-tree review |
-| [pptx](../../skills/pptx/SKILL.md) | 13 | 56 | Pending complete-tree review |
+| pptx (former alias of pptx-official) | 13 | 56 | Removed for restrictive license; see [batch 17](individual-review-150-batch-17-2026-10-23.md). |
 
 ## Review sequence
 
