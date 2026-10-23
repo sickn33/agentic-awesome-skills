@@ -99,7 +99,8 @@ class YouTubeTranscriptExtractorTests(unittest.TestCase):
         with contextlib.redirect_stderr(stderr), self.assertRaises(SystemExit) as raised:
             extractor.parse_video_id("https://www.youtube.com/feed/subscriptions")
         self.assertEqual(raised.exception.code, 1)
-        self.assertIn("Could not find a video ID", stderr.getvalue())
+        self.assertIn("Invalid video ID or HTTPS YouTube URL", stderr.getvalue())
+        self.assertEqual(LegacyApi.calls, [])
 
     def test_legacy_api_uses_class_method_with_language_fallback(self):
         extractor = load_extractor(LegacyApi)
