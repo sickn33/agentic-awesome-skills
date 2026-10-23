@@ -12,11 +12,9 @@ Create Zustand stores following established patterns with proper TypeScript type
 
 ## Quick Start
 
-Copy the template from assets/template.ts and replace placeholders:
-- `{{StoreName}}` → PascalCase store name (e.g., `Project`)
-- `{{description}}` → Brief description for JSDoc
+No assets/template.ts is bundled. Adapt the inline examples to the installed Zustand version and actual project types; these are fragments, not a complete application.
 
-## Always Use subscribeWithSelector
+## Use subscribeWithSelector for selector subscriptions
 
 ```typescript
 import { create } from 'zustand';

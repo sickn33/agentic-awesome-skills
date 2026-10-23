@@ -74,3 +74,7 @@ Each plan includes:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+URL parameters travel through browser history, logs and the external service. Never include student names, private records or sensitive classroom details. Encode parameters with a URL library and verify that the service accepts them; if unavailable, provide local puzzle content instead. Check answer keys, solvability, print layout and accessible alternatives before claiming the activity is ready.

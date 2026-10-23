@@ -1,0 +1,1661 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-23",
+  "baseCommit": "772d0f26acbc26ec254b09198bdd515d51dc7319",
+  "method": "Full static reading of 150 complete canonical single-file trees, selected by ascending UTF-8 byte size then ID. Includes retained alias IDs; not 150 distinct capabilities. No bundled support files in this cohort.",
+  "limits": "No native client execution, paid API calls, provider installation, universal security certification or comprehensive upstream license verification. Source/license declarations inspected as declarations; remote availability and efficacy not independently established. Large executable bundles in the previous ten-tree queue remain pending.",
+  "reviewed": 150,
+  "corrected": 44,
+  "skills": [
+    {
+      "id": "x-article-publisher-skill",
+      "files": [
+        "skills/x-article-publisher-skill/SKILL.md"
+      ],
+      "baseTree": "a37f669207211bd01e2c070260cdfbc2813bf8b5",
+      "beforeSha256": "6a562a29cefbfb6fadda3ab9280ba1ccc0b568c87442aba6d0728a7c4ec04f5e",
+      "afterSha256": "27fdebbac21fff814c058505837df1147758ed10196b30f1d6937056a4c25ab8",
+      "disposition": "corrected",
+      "reviewNote": "Placeholder publishing guide lacked account, consent and verification procedure; replaced with scoped publication workflow."
+    },
+    {
+      "id": "vexor",
+      "files": [
+        "skills/vexor/SKILL.md"
+      ],
+      "baseTree": "aa00086ce7fcb748bfdbfd3fc35cc84d0aed7324",
+      "beforeSha256": "cfea3112935990e5a1a591805fc942cfe8cff7cea0e0fd4ba7eb6e7d23bdd0df",
+      "afterSha256": "fac205c030dccca33cdba51ccdd137d40b6c920f7170a3ddb1bd3a0d536715f8",
+      "disposition": "corrected",
+      "reviewNote": "External search pointer lacked indexing and data-transfer boundaries; supplied a concrete local-first procedure."
+    },
+    {
+      "id": "short",
+      "files": [
+        "skills/short/SKILL.md"
+      ],
+      "baseTree": "26ec529e191665a02d652346c7a4379f0c80822d",
+      "beforeSha256": "690005e46629181a269581d87879adecd5cb34ba5702a6f2be224eae6493e397",
+      "afterSha256": "690005e46629181a269581d87879adecd5cb34ba5702a6f2be224eae6493e397",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Explicit shortening request and substance preservation are coherent; no executable payload or additional capability claimed."
+    },
+    {
+      "id": "ui-skills",
+      "files": [
+        "skills/ui-skills/SKILL.md"
+      ],
+      "baseTree": "a1b694c9fe7bedeb89a0348972f2102f47279212",
+      "beforeSha256": "c7a6c60b080495f246fcf8f9198e3ed820031734eb3b3701a7754d7b092c2f2b",
+      "afterSha256": "d179881f59f5e3b5cb2a4e4ab0fc844ffdda25d031e3a358aca4b4afc8a333da",
+      "disposition": "corrected",
+      "reviewNote": "Placeholder UI pointer lacked a usable review procedure; distinguishes upstream guidance from bundled content."
+    },
+    {
+      "id": "tdd-workflows",
+      "files": [
+        "skills/tdd-workflows/SKILL.md"
+      ],
+      "baseTree": "89d186f823ad0f8670120a020c2cd44d478c2321",
+      "beforeSha256": "545bfa227b37cd310a1ec402ea6e3d3642ed40e68b7c0972aa816b798d3001af",
+      "afterSha256": "55ae55c00e01f9c77d6aa9ad47cea3115ac4482145d3d409104291f7d7335efb",
+      "disposition": "corrected",
+      "reviewNote": "Alias referenced a nonexistent skill-libraries path; uses verified sibling dependency and missing-target handling."
+    },
+    {
+      "id": "wiki-changelog",
+      "files": [
+        "skills/wiki-changelog/SKILL.md"
+      ],
+      "baseTree": "6f56c11c062e995678f955b2f1f19083030edfd4",
+      "beforeSha256": "784a838ee9fcb7a03fc22eded3a13c30aec59308e8e9e0d14bad122eaeab35da",
+      "afterSha256": "784a838ee9fcb7a03fc22eded3a13c30aec59308e8e9e0d14bad122eaeab35da",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Changelog grouping preserves commit evidence and user-facing scope; no publication step."
+    },
+    {
+      "id": "tavily-web",
+      "files": [
+        "skills/tavily-web/SKILL.md"
+      ],
+      "baseTree": "b124920c04a414e97ae68eb94eecc63b446fbf78",
+      "beforeSha256": "df7fee8c55b8098b36b145b449b82600bac2a2b8dc1a2f0f9235d86afd6fdf88",
+      "afterSha256": "81488211dbb7fda62beb6f3a9ef29040972ce283a42a4c8279b7ee11265ef6b0",
+      "disposition": "corrected",
+      "reviewNote": "Global installation was the default; prefer configured connector and bound search, privacy and costs."
+    },
+    {
+      "id": "varlock-claude-skill",
+      "files": [
+        "skills/varlock-claude-skill/SKILL.md"
+      ],
+      "baseTree": "05908123918f3dbd9b0ab61edcb8f98ef4460d10",
+      "beforeSha256": "ed2b61b8e0540b0960818cb0c2b0aa43f32a91e846393337f4db78290021295a",
+      "afterSha256": "b5f8e073b463983fd1ef39b82dd34bd91ffc60a1d34398944d751846c248e050",
+      "disposition": "corrected",
+      "reviewNote": "Absolute secret-safety claim with no procedure; replace with synthetic checks and explicit runtime limitations."
+    },
+    {
+      "id": "debugging-toolkit",
+      "files": [
+        "skills/debugging-toolkit/SKILL.md"
+      ],
+      "baseTree": "16719af159484f1bf14e5c731955a85aace11504",
+      "beforeSha256": "dd3c57f054747779ba90aa49c4b62b353472ad66cd838c4e5edbf1bad2e7126b",
+      "afterSha256": "dd3c57f054747779ba90aa49c4b62b353472ad66cd838c4e5edbf1bad2e7126b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Alias already uses sibling target and reports absent installation; no change needed."
+    },
+    {
+      "id": "web-design-guidelines",
+      "files": [
+        "skills/web-design-guidelines/SKILL.md"
+      ],
+      "baseTree": "c53ab4fb77072b7108bccab5c584f196ba8313be",
+      "beforeSha256": "8da1010867a1cd82f92c8a5831be33fa5359f2f6f3f48bbe6ae0bd337ca807aa",
+      "afterSha256": "808d5999a83df13341297851f0074e02002c69a1b84377ba997296e3d973f2fb",
+      "disposition": "corrected",
+      "reviewNote": "Fetched mutable guidelines were treated as instructions; add untrusted-reference and unavailable-fetch handling."
+    },
+    {
+      "id": "grill-me",
+      "files": [
+        "skills/grill-me/SKILL.md"
+      ],
+      "baseTree": "b36bc701a1bb9a0571abd92f0efd955276cf0f41",
+      "beforeSha256": "3546c05901dfda40dbaa8e9a7f3c44fca0d28b79cbd6796332792a9a1cd9bef1",
+      "afterSha256": "3546c05901dfda40dbaa8e9a7f3c44fca0d28b79cbd6796332792a9a1cd9bef1",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Delegation to grilling is explicit and missing host command is not fabricated; interview respects user stopping."
+    },
+    {
+      "id": "create-pr",
+      "files": [
+        "skills/create-pr/SKILL.md"
+      ],
+      "baseTree": "7a5caa53f51f79dc7d4c71ef444cdb383a6e3bd5",
+      "beforeSha256": "66146cb3843c21ec0e6d839bf88f9dedd97b7f4b05217ef1f21cf4d9a26b09ac",
+      "afterSha256": "66146cb3843c21ec0e6d839bf88f9dedd97b7f4b05217ef1f21cf4d9a26b09ac",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Canonical pr-writer dependency is checked; repository maintainer rules retained."
+    },
+    {
+      "id": "read-all-adrs",
+      "files": [
+        "skills/read-all-adrs/SKILL.md"
+      ],
+      "baseTree": "432d6cf18b9938981dc9190b63de28be83cd3597",
+      "beforeSha256": "4d88ad1a158c34276b98d03ade3246e0af442d76eae130f39999a65ad042fb61",
+      "afterSha256": "4d88ad1a158c34276b98d03ade3246e0af442d76eae130f39999a65ad042fb61",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Full ADR inventory, status and supersession handling preserve evidence and do not execute source commands."
+    },
+    {
+      "id": "pypict-skill",
+      "files": [
+        "skills/pypict-skill/SKILL.md"
+      ],
+      "baseTree": "1382931d9cefd8e05e5ac63b1e190ed286be753f",
+      "beforeSha256": "913252f87e4cb4985daad28d09914b44918a70aa1797188528e99b28028e677a",
+      "afterSha256": "913252f87e4cb4985daad28d09914b44918a70aa1797188528e99b28028e677a",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Binary-factor example covers all pairs; generator absence and higher-order limitations explicit."
+    },
+    {
+      "id": "implement",
+      "files": [
+        "skills/implement/SKILL.md"
+      ],
+      "baseTree": "477d348c359bc0355131fcd672698b797a17c358",
+      "beforeSha256": "8150f8185ff020a213538f5009eca06c8940d68cb931ac9eab9ebffcb044014b",
+      "afterSha256": "8150f8185ff020a213538f5009eca06c8940d68cb931ac9eab9ebffcb044014b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Implementation preserves supplied plan, staged scope and protected branches; no speculative publishing."
+    },
+    {
+      "id": "grill-with-docs",
+      "files": [
+        "skills/grill-with-docs/SKILL.md"
+      ],
+      "baseTree": "eb0abeecb8e4d184f9066488ea57a255468f4431",
+      "beforeSha256": "da0c0a922695b65c7abcfe29bc8965ba392fa364cdc1757f16b84235cea1388c",
+      "afterSha256": "da0c0a922695b65c7abcfe29bc8965ba392fa364cdc1757f16b84235cea1388c",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Confirmed answers and proposed ADR states remain distinct; no fabricated slash-command execution."
+    },
+    {
+      "id": "fal-upscale",
+      "files": [
+        "skills/fal-upscale/SKILL.md"
+      ],
+      "baseTree": "5c7853a015a5adefc3321b0a96daa8abbc129765",
+      "beforeSha256": "31cf403f7f37f5c3890b19a8da2b8e4a505c23c4269db3d1f93a4e2b11a1c73b",
+      "afterSha256": "31cf403f7f37f5c3890b19a8da2b8e4a505c23c4269db3d1f93a4e2b11a1c73b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Upscaling distinguishes pixel dimensions from recovered detail; upload scope and missing runtime explicit."
+    },
+    {
+      "id": "fal-platform",
+      "files": [
+        "skills/fal-platform/SKILL.md"
+      ],
+      "baseTree": "3447295ba828f3a4e371054b7a2433ba3a38fdc4",
+      "beforeSha256": "1a452c94495290e11d665055faa5ffe412e94edbdd4caa8c8d10acf9c55e871c",
+      "afterSha256": "1a452c94495290e11d665055faa5ffe412e94edbdd4caa8c8d10acf9c55e871c",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Account usage readings require actual data; billing mutations and missing API access kept separate."
+    },
+    {
+      "id": "writing-guidelines",
+      "files": [
+        "skills/writing-guidelines/SKILL.md"
+      ],
+      "baseTree": "3c19051707958e28f9659577f21e7d75101b9843",
+      "beforeSha256": "b5d2630aa950aabb56fe10ed19b84e2fb60cbd41d3d915c9c2d3262fc0018cea",
+      "afterSha256": "fece62edb6d6e230962e7321b49936c8d01fce0989fe18b10f3f9e9adfdd814c",
+      "disposition": "corrected",
+      "reviewNote": "Fetched writing rules lacked trust boundary; constrain remote text to task-relevant reference material."
+    },
+    {
+      "id": "accint-commitments",
+      "files": [
+        "skills/accint-commitments/SKILL.md"
+      ],
+      "baseTree": "990eb41ff1a66726b81b0026245e21318f1f5912",
+      "beforeSha256": "3dde4de48c6e767c7dc79ae4a47198ad0b16b25ff8e656bc672c923b20e20c7d",
+      "afterSha256": "3dde4de48c6e767c7dc79ae4a47198ad0b16b25ff8e656bc672c923b20e20c7d",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Outcome grades distinguish self-assessment from observed owner/runtime evidence; no code bundled."
+    },
+    {
+      "id": "makepad-skills",
+      "files": [
+        "skills/makepad-skills/SKILL.md"
+      ],
+      "baseTree": "f617a4c588ba54cfdbadc9b1a7c923ab8a60691f",
+      "beforeSha256": "c871833d11bc877a66cfb550290685d23028f9901ef56242b327a4ac84d5d6c9",
+      "afterSha256": "c871833d11bc877a66cfb550290685d23028f9901ef56242b327a4ac84d5d6c9",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Makepad router checks installed specialized skills and project revisions before compilation."
+    },
+    {
+      "id": "wiki-qa",
+      "files": [
+        "skills/wiki-qa/SKILL.md"
+      ],
+      "baseTree": "5172491c173ca2e84f06753c2dbd9278633efac4",
+      "beforeSha256": "8b1c83611d132a141823bdbb7d7d200c73f23c4b7da6ad5b5acee3c693ac3fb3",
+      "afterSha256": "8b1c83611d132a141823bdbb7d7d200c73f23c4b7da6ad5b5acee3c693ac3fb3",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Repository QA cites source locations and reports missing evidence; no outside facts claimed."
+    },
+    {
+      "id": "nanobanana-ppt-skills",
+      "files": [
+        "skills/nanobanana-ppt-skills/SKILL.md"
+      ],
+      "baseTree": "c15466feb0ccae3d1b9959f381134a30fdb27559",
+      "beforeSha256": "1e92268354a6c464115b88ea29960a27c50458d5783096cfaf7f20057081f826",
+      "afterSha256": "1e92268354a6c464115b88ea29960a27c50458d5783096cfaf7f20057081f826",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Deck guide distinguishes image slides from editable PPTX and requires actual export/render inspection."
+    },
+    {
+      "id": "claude-win11-speckit-update-skill",
+      "files": [
+        "skills/claude-win11-speckit-update-skill/SKILL.md"
+      ],
+      "baseTree": "1cd6ceaf060856885588e13adf3e2fa500a880f8",
+      "beforeSha256": "29e13347e71301802dcaebf0128c4d47ab5f617c3555ca93587121aca285b664",
+      "afterSha256": "0c4bff3e0be40acecbe5486ae5a7e2ba62f53469164ebfcb1666895f82f3a773",
+      "disposition": "corrected",
+      "reviewNote": "Trigger incorrectly described general Windows administration; narrowed to SpecKit update task."
+    },
+    {
+      "id": "resolving-merge-conflicts",
+      "files": [
+        "skills/resolving-merge-conflicts/SKILL.md"
+      ],
+      "baseTree": "e4233579ed320a3d8d23f3d99810e76df728849c",
+      "beforeSha256": "9e64d8fff748cfb42373c4fc503feeef66589f08620259a1367cb5e5e5b935a3",
+      "afterSha256": "d78789e5bd454dbc550f3249d7b8db738e8bcee12b4278fbd1f2339480ee565e",
+      "disposition": "corrected",
+      "reviewNote": "Unconditional abort prohibition and stage-everything could harm dirty work; scope conflict resolution and honor user choice."
+    },
+    {
+      "id": "grilling",
+      "files": [
+        "skills/grilling/SKILL.md"
+      ],
+      "baseTree": "f12f3b4663a09ca1dda8f29638ccd68687a93177",
+      "beforeSha256": "e4707c78ef4489746d9b49f23be495cc4a94530d6465e649db47daec49e7efaf",
+      "afterSha256": "e4707c78ef4489746d9b49f23be495cc4a94530d6465e649db47daec49e7efaf",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Interview has a user-defined stopping condition and checks code before asking avoidable questions."
+    },
+    {
+      "id": "claude-speed-reader",
+      "files": [
+        "skills/claude-speed-reader/SKILL.md"
+      ],
+      "baseTree": "242a2b15037e5c4dbd55c771a50d977afb1d8474",
+      "beforeSha256": "4e37ffc8543cd2ee38b82720e7ffd42ecd99d94a8b1660ae06168146eb01b3e2",
+      "afterSha256": "4e37ffc8543cd2ee38b82720e7ffd42ecd99d94a8b1660ae06168146eb01b3e2",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Reader guide distinguishes upstream command availability from printed commands and comprehension claims."
+    },
+    {
+      "id": "claude-scientific-skills",
+      "files": [
+        "skills/claude-scientific-skills/SKILL.md"
+      ],
+      "baseTree": "e018610f1d32e6ad511b62c8d6bae726ed450551",
+      "beforeSha256": "6973886c5cf954dd24a24d27e555f0d9e938db58e8a465eaf5c01b979c97b4f3",
+      "afterSha256": "6973886c5cf954dd24a24d27e555f0d9e938db58e8a465eaf5c01b979c97b4f3",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Scientific collection explicitly external; data provenance, licenses and unreviewed imports handled."
+    },
+    {
+      "id": "concise-planning",
+      "files": [
+        "skills/concise-planning/SKILL.md"
+      ],
+      "baseTree": "dfd48d19e5c46c589cf41f8c320cc47dca907a64",
+      "beforeSha256": "156ff677d4f496b5ee4faf85900505f356afd21adf0a10494da82e4fac7d41db",
+      "afterSha256": "156ff677d4f496b5ee4faf85900505f356afd21adf0a10494da82e4fac7d41db",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Planning uses bounded questions and atomic scope; no implementation or publication authority."
+    },
+    {
+      "id": "fal-generate",
+      "files": [
+        "skills/fal-generate/SKILL.md"
+      ],
+      "baseTree": "775b15d4e0626ed1dc55a63eb2f4e0daa889ea81",
+      "beforeSha256": "8a71b2a7cc7200a9b26e099949d5fd26309ce774cc1198dd25ffc3ec4101caec",
+      "afterSha256": "8a71b2a7cc7200a9b26e099949d5fd26309ce774cc1198dd25ffc3ec4101caec",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Media generation verifies model schemas, cost scope and unknown job outcomes."
+    },
+    {
+      "id": "python-development",
+      "files": [
+        "skills/python-development/SKILL.md"
+      ],
+      "baseTree": "ceddd392a89c230160ced0b40b385e4197a975d1",
+      "beforeSha256": "de56259993531fedc58b09a379e05e1395d3a16b90bb3030d4098772dee3d9a5",
+      "afterSha256": "8dc229388650fbd1f4513fc42f11f98a5dc596a1da955c8e56a162206478dac4",
+      "disposition": "corrected",
+      "reviewNote": "Alias pointed into nonexistent vault layout; sibling target checked before use."
+    },
+    {
+      "id": "sales-automator",
+      "files": [
+        "skills/sales-automator/SKILL.md"
+      ],
+      "baseTree": "746424951d53d5584e1727868039d6820e9a22de",
+      "beforeSha256": "44c05fcbd3ad6046057c833df597b5f6966baf1b0b9985546ce155c5bf957e92",
+      "afterSha256": "b1e10c832e4c656e1c472f1cbb40b826141932ae3320b94e40a92a20e5fba497",
+      "disposition": "corrected",
+      "reviewNote": "Missing implementation-playbook and outreach ambiguity; remove absent file dependency and separate drafts from sending."
+    },
+    {
+      "id": "infinite-gratitude",
+      "files": [
+        "skills/infinite-gratitude/SKILL.md"
+      ],
+      "baseTree": "617a65d50426efb46acb5f402dc7aa0b8af72c2d",
+      "beforeSha256": "5e600a48395970ca2c9c36365e5f460d65ea4b893da509ff74fa9336ffc169ff",
+      "afterSha256": "5e600a48395970ca2c9c36365e5f460d65ea4b893da509ff74fa9336ffc169ff",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Research guide makes delegation conditional and preserves primary-source uncertainty."
+    },
+    {
+      "id": "accint-frames",
+      "files": [
+        "skills/accint-frames/SKILL.md"
+      ],
+      "baseTree": "44454d0b94798f50dd738726e8ea2e3f3ec3d9c1",
+      "beforeSha256": "aaeaaa58fe4ac57f2424091eff8b26b1635b59ef3c1a4df949cca41512f8834e",
+      "afterSha256": "094ccf8baedd88f89aaa2a1fe6741f14457e86b1a258ee1794828670b1447d45",
+      "disposition": "corrected",
+      "reviewNote": "Queue draining and safe-retry claims were unconditional; constrain subset, cancellation and real idempotency evidence."
+    },
+    {
+      "id": "fal-image-edit",
+      "files": [
+        "skills/fal-image-edit/SKILL.md"
+      ],
+      "baseTree": "b3bb2693578193e29dd61a6053a02a59b2843815",
+      "beforeSha256": "dc4225cfa64b6411db6acf473f53e4ae079f8ed9ed7e8d0b536ab0a2054ac9ee",
+      "afterSha256": "dc4225cfa64b6411db6acf473f53e4ae079f8ed9ed7e8d0b536ab0a2054ac9ee",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Image edit requires actual source inspection, preservation constraints and authorized upload."
+    },
+    {
+      "id": "fal-audio",
+      "files": [
+        "skills/fal-audio/SKILL.md"
+      ],
+      "baseTree": "74b10e1c13fb14c5e0d471340a2e2b5ba15c5425",
+      "beforeSha256": "a647d34fdffb7340ba17403ebd903a4231ad79b96eca51219294e814343c6755",
+      "afterSha256": "a647d34fdffb7340ba17403ebd903a4231ad79b96eca51219294e814343c6755",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Audio workflow separates transcription from synthesis and requires voice/recording permissions."
+    },
+    {
+      "id": "context7-auto-research",
+      "files": [
+        "skills/context7-auto-research/SKILL.md"
+      ],
+      "baseTree": "859c661a3fb3a717ebbf3c7b68e308651a54b9df",
+      "beforeSha256": "0ca79bfaedea57837844f44918207d6a43d8cf2cecc03ff481513a0fa670b351",
+      "afterSha256": "0ca79bfaedea57837844f44918207d6a43d8cf2cecc03ff481513a0fa670b351",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Context7 pointer already disclaims global installation and protects private query content."
+    },
+    {
+      "id": "codex-review",
+      "files": [
+        "skills/codex-review/SKILL.md"
+      ],
+      "baseTree": "bae2b04a54a3cd379454a7a807006fd093b77aa7",
+      "beforeSha256": "51c62d46c3705531ca044127f3c8eb380d64e39f23bdb7d977b1824a974e4e42",
+      "afterSha256": "51c62d46c3705531ca044127f3c8eb380d64e39f23bdb7d977b1824a974e4e42",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Review pointer binds base/head and distinguishes advisory analysis from approval or publication."
+    },
+    {
+      "id": "zustand-store-ts",
+      "files": [
+        "skills/zustand-store-ts/SKILL.md"
+      ],
+      "baseTree": "cc077e979f8ba2d69d5e44c8fdb38b8a320cb051",
+      "beforeSha256": "5fdf224a231952b34cff0234aad030c1ac8b27778291ae5735f6c8cf93a78e4f",
+      "afterSha256": "89c94b8c48696299694620c376633f0e46e5d0888bc05d0daa2a1f43e79adfbc",
+      "disposition": "corrected",
+      "reviewNote": "Absent template and universal middleware mandate; use actual inline fragments and selector-specific middleware."
+    },
+    {
+      "id": "fal-workflow",
+      "files": [
+        "skills/fal-workflow/SKILL.md"
+      ],
+      "baseTree": "8f4bcc614fd893ab83f91f67b50c1949c55d78fd",
+      "beforeSha256": "649a44ad0183de7a60c2887efefc18e4cb0da465be4065a08630aa00965a1be0",
+      "afterSha256": "649a44ad0183de7a60c2887efefc18e4cb0da465be4065a08630aa00965a1be0",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Graph fragment explicitly incomplete and schema-bound; drafting does not authorize execution."
+    },
+    {
+      "id": "debugger",
+      "files": [
+        "skills/debugger/SKILL.md"
+      ],
+      "baseTree": "dfae60e5ccedb8b58b257aac38e2db4c4787431f",
+      "beforeSha256": "cdc55839d22a4d16b0510e3e3633ff4f663eaf71d554ee7f95701b3a0ba472bd",
+      "afterSha256": "cdc55839d22a4d16b0510e3e3633ff4f663eaf71d554ee7f95701b3a0ba472bd",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Debugger preserves reproduction evidence and scopes instrumentation, with private-log redaction."
+    },
+    {
+      "id": "claude-ally-health",
+      "files": [
+        "skills/claude-ally-health/SKILL.md"
+      ],
+      "baseTree": "aa400c787bc9b2de2bd10779282244a5df6d0343",
+      "beforeSha256": "d32d9069dcaf5f965bdb2690bb97f5bed62c86acab219b5ef723b52642780e73",
+      "afterSha256": "d32d9069dcaf5f965bdb2690bb97f5bed62c86acab219b5ef723b52642780e73",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Health summary guide distinguishes reported symptoms from records and does not diagnose or delay urgent care."
+    },
+    {
+      "id": "exa-search",
+      "files": [
+        "skills/exa-search/SKILL.md"
+      ],
+      "baseTree": "acee44a07cf04059c0fe024149c3d088cc0cdefa",
+      "beforeSha256": "5724550291515995fb8f32aac5bc03ad6587e5e0bfa42fb78fcfe667b863b51d",
+      "afterSha256": "5724550291515995fb8f32aac5bc03ad6587e5e0bfa42fb78fcfe667b863b51d",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Exa guide requires source verification and reports incomplete retrieval rather than trusting ranking."
+    },
+    {
+      "id": "accint-solve",
+      "files": [
+        "skills/accint-solve/SKILL.md"
+      ],
+      "baseTree": "9bf8e33f7ad15786b805370be9c82698cad1f19a",
+      "beforeSha256": "57dd3f45e0c93e7ee0d38e79ab2033f6618f49b5016e2318d5c1b9a36339eee2",
+      "afterSha256": "b98d4f4ac9362be49cbb5c49a05be4dd792e5330947d4d69a18da4899f245e26",
+      "disposition": "corrected",
+      "reviewNote": "Unconditional solve-loop completion could ignore cancellation; preserve blocked frames and authorized task bounds."
+    },
+    {
+      "id": "superpowers-lab",
+      "files": [
+        "skills/superpowers-lab/SKILL.md"
+      ],
+      "baseTree": "5b415dc2e827ae0d952540fee975044a9d10037c",
+      "beforeSha256": "33940624ef8a0333b0b17e31be8f67f39504186a33fe596d4842859e0c9d42c5",
+      "afterSha256": "33940624ef8a0333b0b17e31be8f67f39504186a33fe596d4842859e0c9d42c5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Lab compares controlled fixtures without production credentials and keeps adoption separate."
+    },
+    {
+      "id": "aas-discover",
+      "files": [
+        "skills/aas-discover/SKILL.md"
+      ],
+      "baseTree": "9c35997d7f8f85129de820fcb457341b87f1139c",
+      "beforeSha256": "62b4c7d89b8810498a869ee90957ef6101426c7ac04348f0330c597a54213e74",
+      "afterSha256": "62b4c7d89b8810498a869ee90957ef6101426c7ac04348f0330c597a54213e74",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "AAS discovery remains explicit, local and neutral; metadata does not disable canonical IDs."
+    },
+    {
+      "id": "firecrawl-scraper",
+      "files": [
+        "skills/firecrawl-scraper/SKILL.md"
+      ],
+      "baseTree": "8c9aa21986eada51929d1dc5625fdfdb8c57212c",
+      "beforeSha256": "e83e812342c790e6ef69975f497b81d302ed2b54a845a3dbe3d867c0b26fc258",
+      "afterSha256": "e83e812342c790e6ef69975f497b81d302ed2b54a845a3dbe3d867c0b26fc258",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Firecrawl bounds target URLs, depth and paid scope; untrusted pages cannot authorize extra crawling."
+    },
+    {
+      "id": "quant-analyst",
+      "files": [
+        "skills/quant-analyst/SKILL.md"
+      ],
+      "baseTree": "f939aea9eb513a2bf1155dd204a10b814f77a262",
+      "beforeSha256": "b492902ca076a9ac2ec70d552456a4413a774be353d77a9cee05c774d203b1f5",
+      "afterSha256": "f4bf5de415ca36794eb5f74a217ee5792cb5912d655d491222de2d05c4f16994",
+      "disposition": "corrected",
+      "reviewNote": "Backtesting covers costs but needed explicit bias, uncertainty and no-live-order boundaries."
+    },
+    {
+      "id": "pydantic-models-py",
+      "files": [
+        "skills/pydantic-models-py/SKILL.md"
+      ],
+      "baseTree": "d7c73498548cb37fd6c51cad61f955b2ed430ff0",
+      "beforeSha256": "f638bb9ebc971088d36891bd7499f5da379a8e112f8f9a5325edd05be82dc4a7",
+      "afterSha256": "f638bb9ebc971088d36891bd7499f5da379a8e112f8f9a5325edd05be82dc4a7",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Pydantic fragments declare version dependence and no standalone template; application types remain prerequisites."
+    },
+    {
+      "id": "ffuf-claude-skill",
+      "files": [
+        "skills/ffuf-claude-skill/SKILL.md"
+      ],
+      "baseTree": "63734141e87968722be4ea585f40cd72b8793a52",
+      "beforeSha256": "a29b65553b38ae61c6920ce7b7e39829899bacbe9d14a86693613fea73a125ae",
+      "afterSha256": "a29b65553b38ae61c6920ce7b7e39829899bacbe9d14a86693613fea73a125ae",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Fuzzing requires explicit authorized targets and bounded traffic; no bundled scanner is claimed."
+    },
+    {
+      "id": "ruby-pro",
+      "files": [
+        "skills/ruby-pro/SKILL.md"
+      ],
+      "baseTree": "f7c37269589f243c39704ed9916c0c60b05b3742",
+      "beforeSha256": "2a8a19b5445a34e72a29ce79ebf95b2cb5fbab22a406bf4f121ebf9bac60d855",
+      "afterSha256": "2a8a19b5445a34e72a29ce79ebf95b2cb5fbab22a406bf4f121ebf9bac60d855",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Ruby guidance prefers readability and testing; results still require project-specific execution."
+    },
+    {
+      "id": "ui-skills-root",
+      "files": [
+        "skills/ui-skills-root/SKILL.md"
+      ],
+      "baseTree": "1c5c7bb2b1e145fefb7b7f9b0457b26647d0c7ac",
+      "beforeSha256": "095a05de4ec2fcac668ec9468ad789cc43203e86110a55e7a0a2f4e299f36f23",
+      "afterSha256": "095a05de4ec2fcac668ec9468ad789cc43203e86110a55e7a0a2f4e299f36f23",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "UI Skills root is a separate upstream routing policy, not AAS Core eligibility; commands require actual tooling."
+    },
+    {
+      "id": "aws-skills",
+      "files": [
+        "skills/aws-skills/SKILL.md"
+      ],
+      "baseTree": "9f0ebd7a62aad2ccb44b3d8155b261742b89a393",
+      "beforeSha256": "a0dd69fc9af31532fcd700497c45db621adbfab146243880699a5d5f4ee44aa6",
+      "afterSha256": "a0dd69fc9af31532fcd700497c45db621adbfab146243880699a5d5f4ee44aa6",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "AWS router treats upstream workflows as external and separates planning from cloud deployment."
+    },
+    {
+      "id": "azure-ai-transcription-py",
+      "files": [
+        "skills/azure-ai-transcription-py/SKILL.md"
+      ],
+      "baseTree": "fc2681d782964af858267a276df0b6075a587df8",
+      "beforeSha256": "9d1be977398664a03dbd7fe607619e4c268bf06a93e46b6e81246ed7315b4e45",
+      "afterSha256": "9d1be977398664a03dbd7fe607619e4c268bf06a93e46b6e81246ed7315b4e45",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Transcription example is bounded to file API and installed SDK signatures; no Azure execution claimed."
+    },
+    {
+      "id": "uxui-principles",
+      "files": [
+        "skills/uxui-principles/SKILL.md"
+      ],
+      "baseTree": "ca8267e58ba1a17358b11329cc599d550982c4c1",
+      "beforeSha256": "cec7e44bdfd2df4149b24b0d1aaa2e191249bce11a5a2a904758a591f546f441",
+      "afterSha256": "cec7e44bdfd2df4149b24b0d1aaa2e191249bce11a5a2a904758a591f546f441",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Upstream UX collection is external; numeric research claims not independently validated in this review."
+    },
+    {
+      "id": "risk-manager",
+      "files": [
+        "skills/risk-manager/SKILL.md"
+      ],
+      "baseTree": "54b5f59146b8f142cef02983535cba250477e95f",
+      "beforeSha256": "9f9c6573ee7fad90720b5d9a9ed8de1330fd28f5e35b5c7dec3c24c4dcfc1e54",
+      "afterSha256": "fb675ed648f76457af4bd73862f323e3f4f30a9e5ce5c17cf9bb4c5868e94506",
+      "disposition": "corrected",
+      "reviewNote": "1R incorrectly implied guaranteed maximum loss; clarify planned risk and analysis versus broker actions."
+    },
+    {
+      "id": "legacy-modernizer",
+      "files": [
+        "skills/legacy-modernizer/SKILL.md"
+      ],
+      "baseTree": "852f316f56b12444e5ff2d46188b824f6df180e0",
+      "beforeSha256": "694f3fb95d18bbb8c6c78e7b3769b2ffca90ba685e223caa049673f2608d5e13",
+      "afterSha256": "694f3fb95d18bbb8c6c78e7b3769b2ffca90ba685e223caa049673f2608d5e13",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Legacy modernization preserves backward behavior and rejects automatic monolith-to-microservices migration."
+    },
+    {
+      "id": "technical-change-tracker",
+      "files": [
+        "skills/technical-change-tracker/SKILL.md"
+      ],
+      "baseTree": "cde3e90700672904468310c7a32444e8048989b0",
+      "beforeSha256": "300b015e44fbd648252375ad9d02b2ea244fdd1b7f7f745fe01dabcd982d0623",
+      "afterSha256": "771c187563d7dbd32f814e2f575144dd74e7cca39bc5615a77f65e026d8ca587",
+      "disposition": "corrected",
+      "reviewNote": "Claimed background agents and commands not bundled; label external prerequisites and evidence-based status transitions."
+    },
+    {
+      "id": "javascript-pro",
+      "files": [
+        "skills/javascript-pro/SKILL.md"
+      ],
+      "baseTree": "235d1d899fd68674fdd8238a84da2b4ba6018a13",
+      "beforeSha256": "ff70e5b3bff3e3ab276dc32a42e53a94b8ddc12a7602faa7dcc476a9cf3c8973",
+      "afterSha256": "ff70e5b3bff3e3ab276dc32a42e53a94b8ddc12a7602faa7dcc476a9cf3c8973",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "JavaScript guide distinguishes Node/browser targets and requires measured performance claims."
+    },
+    {
+      "id": "speed",
+      "files": [
+        "skills/speed/SKILL.md"
+      ],
+      "baseTree": "5d3c90ad04f70088ce72348e16b8214d79180528",
+      "beforeSha256": "77e6ee633dbb0ae14ff2cefddbd1cb52d0e6ed3708121d5222ecd7e66efa94fc",
+      "afterSha256": "77e6ee633dbb0ae14ff2cefddbd1cb52d0e6ed3708121d5222ecd7e66efa94fc",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "RSVP guide protects original assets and escapes script-embedded JSON; absent reader runtime explicit."
+    },
+    {
+      "id": "skill-seekers",
+      "files": [
+        "skills/skill-seekers/SKILL.md"
+      ],
+      "baseTree": "ec7e00de395aa7772891169e8bce3ad9bd3b3221",
+      "beforeSha256": "8c910e1dd24f1258c4a9390b5869062a9168f1f42fa39cb4ee861e8964bce6ca",
+      "afterSha256": "8c910e1dd24f1258c4a9390b5869062a9168f1f42fa39cb4ee861e8964bce6ca",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Conversion guide preserves licensing and treats extracted content as inert; installation remains separate."
+    },
+    {
+      "id": "fp-pipe-ref",
+      "files": [
+        "skills/fp-pipe-ref/SKILL.md"
+      ],
+      "baseTree": "307914cad49d6690f990dd2e3fc6af9db1977343",
+      "beforeSha256": "d7591a8dd783ae2a8815aa9257f0358541ae2735c3296a290f9bd18833227070",
+      "afterSha256": "d7591a8dd783ae2a8815aa9257f0358541ae2735c3296a290f9bd18833227070",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Pipe/flow examples correctly separate value transformation and reusable composition; version/application inputs stated."
+    },
+    {
+      "id": "defuddle",
+      "files": [
+        "skills/defuddle/SKILL.md"
+      ],
+      "baseTree": "1b121fc44cbc9e45da1e23287162b303c11e06fe",
+      "beforeSha256": "ebaf3f2d3da481fd17c27f2d127b91f08df3af299943b695b58969d55127714b",
+      "afterSha256": "ebaf3f2d3da481fd17c27f2d127b91f08df3af299943b695b58969d55127714b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Page extraction is read-only and scoped; original source and omitted content retained."
+    },
+    {
+      "id": "mermaid-expert",
+      "files": [
+        "skills/mermaid-expert/SKILL.md"
+      ],
+      "baseTree": "3f4b23ef24a9f7322289da98685ac87df2707d98",
+      "beforeSha256": "ff058dbce0aa748d0e2e50a65a4aba307c16cd674c51df6406a02f298c162550",
+      "afterSha256": "ff058dbce0aa748d0e2e50a65a4aba307c16cd674c51df6406a02f298c162550",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Mermaid guide requires renderer verification and strict handling of untrusted labels."
+    },
+    {
+      "id": "nerdzao-elite",
+      "files": [
+        "skills/nerdzao-elite/SKILL.md"
+      ],
+      "baseTree": "6e61d42832344753032e8e7a58ea95eb9b7d074d",
+      "beforeSha256": "7a7d6f5145bb093ecf54fddc4f1d37834f5729e9860e624244add276f83048cf",
+      "afterSha256": "7a7d6f5145bb093ecf54fddc4f1d37834f5729e9860e624244add276f83048cf",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Portuguese workflow is scoped and checks installed skills; does not select model or authorize delegation."
+    },
+    {
+      "id": "url-to-markdown",
+      "files": [
+        "skills/url-to-markdown/SKILL.md"
+      ],
+      "baseTree": "8bbd08e677679fce8e6ad1888ec6971ef67e46bd",
+      "beforeSha256": "726893f00a191b4b51dee98466eae84701f605536bff84afb678a8c2d73b0a79",
+      "afterSha256": "726893f00a191b4b51dee98466eae84701f605536bff84afb678a8c2d73b0a79",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Markdown proxy discloses external transit and limits itself to public targets; no authentication promised."
+    },
+    {
+      "id": "handoff",
+      "files": [
+        "skills/handoff/SKILL.md"
+      ],
+      "baseTree": "1db81bea4518fc182c9204a7fb0cbb58210c3661",
+      "beforeSha256": "efc962cbc42da32fb3ed0c8d940c858f7593036ca4447b08c9e9a727dac9cb32",
+      "afterSha256": "efc962cbc42da32fb3ed0c8d940c858f7593036ca4447b08c9e9a727dac9cb32",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Handoff uses private destinations and separates verified state from assumptions and messaging authority."
+    },
+    {
+      "id": "viboscope",
+      "files": [
+        "skills/viboscope/SKILL.md"
+      ],
+      "baseTree": "0e0f1d17557e4af8ce3a94abb36d55e9f8676bf8",
+      "beforeSha256": "a1bce14ea4bba55da758cd3527be0a96a3aae6a35a47dd76e04e9dea066ecb47",
+      "afterSha256": "19996d6afb40240bb3e20c872712b132db33134b49400555190dded140fc630e",
+      "disposition": "corrected",
+      "reviewNote": "Psychological profiling suggested workspace scanning and unverified validity; remove scan and require volunteered data and consent."
+    },
+    {
+      "id": "satori",
+      "files": [
+        "skills/satori/SKILL.md"
+      ],
+      "baseTree": "907f9b4ad9fda5e8c595384e1dfe559681a1de8c",
+      "beforeSha256": "3061d46d9242450534558bf52a626077b311669e60bd35278ac640a183614116",
+      "afterSha256": "f822a465a6aa929c6c68d004f14e7113be7975fee92050cfbc7c9bbbf4b87c1e",
+      "disposition": "corrected",
+      "reviewNote": "Unbundled therapeutic architecture and unconditional safety/privacy claims; clarify host boundaries and urgent-support limits."
+    },
+    {
+      "id": "typescript-pro",
+      "files": [
+        "skills/typescript-pro/SKILL.md"
+      ],
+      "baseTree": "552cdcc4ea3fbf765bcd3caffcb99a7e34a2bf6e",
+      "beforeSha256": "f033ebd4ef8cd6755c8487ac7628f2d55b5e4f5041308ec625ca3b085c7aeee1",
+      "afterSha256": "f033ebd4ef8cd6755c8487ac7628f2d55b5e4f5041308ec625ca3b085c7aeee1",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "TypeScript guide provides project verification steps; no executable or measured result bundled."
+    },
+    {
+      "id": "aas-review-stack",
+      "files": [
+        "skills/aas-review-stack/SKILL.md"
+      ],
+      "baseTree": "61b6d18a033a3434c3ebac4b796d9e42039f9803",
+      "beforeSha256": "8a3dbe5317f774a059399555acd67ee9b29dbe270547d0208a743e46698153bd",
+      "afterSha256": "8a3dbe5317f774a059399555acd67ee9b29dbe270547d0208a743e46698153bd",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Workbench entrypoint depends on the AAS plugin runtime, not a standalone skill file; review stays non-mutating."
+    },
+    {
+      "id": "threat-modeling-expert",
+      "files": [
+        "skills/threat-modeling-expert/SKILL.md"
+      ],
+      "baseTree": "0211783baebf5b1c99d3564fdb2a6d425d37c735",
+      "beforeSha256": "31664ad81d1f2db231c3654053d14758cc960889994c041fc17b4a71acca6e42",
+      "afterSha256": "31664ad81d1f2db231c3654053d14758cc960889994c041fc17b4a71acca6e42",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Threat modeling defines trust boundaries and residual risks; does not claim compliance certification."
+    },
+    {
+      "id": "unsplash-integration",
+      "files": [
+        "skills/unsplash-integration/SKILL.md"
+      ],
+      "baseTree": "4af889645e992b8100e7a7b1cbeae065b76247b6",
+      "beforeSha256": "10f0c8ff5aab53711e9762b599fa839848d305017cc773a0898362a3354838a8",
+      "afterSha256": "b87214ac46ac32f5e9fdd8f746f4bdd3fb6941a903764f891f268b52756c6b3d",
+      "disposition": "corrected",
+      "reviewNote": "Provider mandate ignored user design choices; make service optional and verify rights/data/output availability."
+    },
+    {
+      "id": "agent-manager-skill",
+      "files": [
+        "skills/agent-manager-skill/SKILL.md"
+      ],
+      "baseTree": "229e8622404b97613657c70dd0f4bc1347435d82",
+      "beforeSha256": "1e40e875ec8cbfed3b459d3c91dfc074987cca1fb0e1a3f0c646c70d075c4628",
+      "afterSha256": "1e40e875ec8cbfed3b459d3c91dfc074987cca1fb0e1a3f0c646c70d075c4628",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Agent manager explicitly requires real runtime and task authorization; historical paths not assumed runnable."
+    },
+    {
+      "id": "conductor-validator",
+      "files": [
+        "skills/conductor-validator/SKILL.md"
+      ],
+      "baseTree": "b1d865000b06cd9790491327cfbabdba64a2f6e9",
+      "beforeSha256": "185b9b118b397d9426b89c63f2f581d81acc1dc595d3507e7d44ab346052d0ee",
+      "afterSha256": "185b9b118b397d9426b89c63f2f581d81acc1dc595d3507e7d44ab346052d0ee",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Conductor validation reconciles observed artifacts and statuses without auto-creating missing files."
+    },
+    {
+      "id": "vizcom",
+      "files": [
+        "skills/vizcom/SKILL.md"
+      ],
+      "baseTree": "a7c28f55958efe24247fbcaa3555aacefd497503",
+      "beforeSha256": "bd914e98908b171b0952c14cf802594c3f226680fa51d13a66969912d38a5e70",
+      "afterSha256": "723c95dabd1de1192123cb47b185eaaad6423a8e1aec252ede2486f737745d42",
+      "disposition": "corrected",
+      "reviewNote": "Mandatory provider and rendering claims lacked available-client boundaries; preserve optional authorized tool use."
+    },
+    {
+      "id": "c-pro",
+      "files": [
+        "skills/c-pro/SKILL.md"
+      ],
+      "baseTree": "20205fa4120dfb422c2134f5c11edb49e34fd04b",
+      "beforeSha256": "65284a231f9ae8d0d068a2fb52a0333dc920afedb7b191b2a22b1d6e97bec824",
+      "afterSha256": "65284a231f9ae8d0d068a2fb52a0333dc920afedb7b191b2a22b1d6e97bec824",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "C guide distinguishes borrowed/owned pointers and actual memory-check results from proposed tests."
+    },
+    {
+      "id": "osterwalder-canvas-architect",
+      "files": [
+        "skills/osterwalder-canvas-architect/SKILL.md"
+      ],
+      "baseTree": "3d521d0f4506a9847cc560bb35ec79c09043a886",
+      "beforeSha256": "fc3b90d1706bcf49a522d87d838c6b2eff22b5638ca2f2885ae2facf23365105",
+      "afterSha256": "fc3b90d1706bcf49a522d87d838c6b2eff22b5638ca2f2885ae2facf23365105",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Canvas checks internal logical consistency and explicitly does not validate market demand or viability."
+    },
+    {
+      "id": "address-github-comments",
+      "files": [
+        "skills/address-github-comments/SKILL.md"
+      ],
+      "baseTree": "19a39d01f3e57c8cc30f9dd3843e6c1c0ef0abe9",
+      "beforeSha256": "1ee3ffe2a310b8e2cb07b0db75acf54cce1f9b7714ec92fb966e0f8877a243e8",
+      "afterSha256": "1ee3ffe2a310b8e2cb07b0db75acf54cce1f9b7714ec92fb966e0f8877a243e8",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "PR comment procedure handles paginated inline threads and requires posting/resolution authority."
+    },
+    {
+      "id": "error-detective",
+      "files": [
+        "skills/error-detective/SKILL.md"
+      ],
+      "baseTree": "03331e677b5d21386c084e6d1ba044f000a16c67",
+      "beforeSha256": "a3998123b2c43d61621fb5e9a3a48577dab87d48d0c6bc08180a18f33c6296ab",
+      "afterSha256": "a3998123b2c43d61621fb5e9a3a48577dab87d48d0c6bc08180a18f33c6296ab",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Log correlation is not causation; timestamps, missing telemetry and redaction explicitly handled."
+    },
+    {
+      "id": "search-specialist",
+      "files": [
+        "skills/search-specialist/SKILL.md"
+      ],
+      "baseTree": "ca6e354910498772d6a46f4681261f5a07871cab",
+      "beforeSha256": "66dd68677474cdd85ed7d2b411ab1c7518d0ffbb126e31deb6aa14225fcdb3d2",
+      "afterSha256": "53f0925b402af09401e5500332661128ca1b5923be2382b8124c4b8154b01f44",
+      "disposition": "corrected",
+      "reviewNote": "Truncated description and compulsory quotations; restore complete trigger and bounded source citations."
+    },
+    {
+      "id": "fix-review",
+      "files": [
+        "skills/fix-review/SKILL.md"
+      ],
+      "baseTree": "3758a74b27f03ce0596246acf4acddada47b4fa9",
+      "beforeSha256": "accf50fa48b45f8287af112519f767ce89d7b9b2b3333b0e29b54bf786f44a6b",
+      "afterSha256": "accf50fa48b45f8287af112519f767ce89d7b9b2b3333b0e29b54bf786f44a6b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Fix review binds exact SHA and original failure; cannot turn unexecuted tests into passing evidence."
+    },
+    {
+      "id": "product-manager",
+      "files": [
+        "skills/product-manager/SKILL.md"
+      ],
+      "baseTree": "79779b1ed85f6f5878299af68efc9f1f37fd4008",
+      "beforeSha256": "4acb86d443147de0c243c3107c2c5cb25fd46eb97821f732ec161e8fed4a9ce5",
+      "afterSha256": "2177e172887aef11b88177a35fa237d39250d6e1a2b09763ac96eaee276f75ac",
+      "disposition": "corrected",
+      "reviewNote": "Claimed built-in templates were absent; clarify external collection and explicit metric definitions."
+    },
+    {
+      "id": "makepad-reference",
+      "files": [
+        "skills/makepad-reference/SKILL.md"
+      ],
+      "baseTree": "cc85e7fd0eb9e5c3bf6004db61ab38981d3fd731",
+      "beforeSha256": "ec76ce020052ff81d3da5690349244f0594aa67a896fa3ff0cbbee0da527aa62",
+      "afterSha256": "ec76ce020052ff81d3da5690349244f0594aa67a896fa3ff0cbbee0da527aa62",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Makepad table names topics, not bundled files; revision-dependent APIs and rendering checks explicit."
+    },
+    {
+      "id": "akf-trust-metadata",
+      "files": [
+        "skills/akf-trust-metadata/SKILL.md"
+      ],
+      "baseTree": "12482a52c4396a0d382d161cb3d2ee0df9281f95",
+      "beforeSha256": "af8b433851271a86e4fecfde325ac8e2744c35e8bbc42b068da9fbd9e3468ff0",
+      "afterSha256": "af8b433851271a86e4fecfde325ac8e2744c35e8bbc42b068da9fbd9e3468ff0",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Trust metadata is declared evidence, not legal certification; stamping preserves originals and privacy."
+    },
+    {
+      "id": "expo-ui-swift-ui",
+      "files": [
+        "skills/expo-ui-swift-ui/SKILL.md"
+      ],
+      "baseTree": "1df1934a01ecbbfd01184e1e0a32ad9aeedafb8d",
+      "beforeSha256": "ed114176038bc52f214453c3d0e28e1773a31a883a3af09e06306498e033fa8c",
+      "afterSha256": "ed114176038bc52f214453c3d0e28e1773a31a883a3af09e06306498e033fa8c",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Expo SwiftUI is explicitly SDK55-specific; native rebuild and platform limits disclosed."
+    },
+    {
+      "id": "anti-deception",
+      "files": [
+        "skills/anti-deception/SKILL.md"
+      ],
+      "baseTree": "133cf1d9d620c12554235a939757f0339eb25bda",
+      "beforeSha256": "26904c57c507888ea7ed3c848be17ec07ab9f84df7b8506c3c9feea3bd754359",
+      "afterSha256": "26904c57c507888ea7ed3c848be17ec07ab9f84df7b8506c3c9feea3bd754359",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Anti-deception tool remains optional and external sharing is scoped; output is not truth certification."
+    },
+    {
+      "id": "context-management-context-restore",
+      "files": [
+        "skills/context-management-context-restore/SKILL.md"
+      ],
+      "baseTree": "f69ca22bb055590a988b03981a3ecadbab8f610a",
+      "beforeSha256": "3f31006a2e26f6f52a9f5aeb0e7b36ca477cfa85bc2871f33227943216314728",
+      "afterSha256": "3f31006a2e26f6f52a9f5aeb0e7b36ca477cfa85bc2871f33227943216314728",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Context restoration treats saved notes as historical evidence and preserves dirty work."
+    },
+    {
+      "id": "gh-review-requests",
+      "files": [
+        "skills/gh-review-requests/SKILL.md"
+      ],
+      "baseTree": "c9f90af7c8affa9371f747c252dce72ef507061b",
+      "beforeSha256": "1d3e9859b9ae3a04a5632653e7c26b7406f2b1b3eed144fa416b9b71e7969f7c",
+      "afterSha256": "1d3e9859b9ae3a04a5632653e7c26b7406f2b1b3eed144fa416b9b71e7969f7c",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Review queue checks pagination and exact teams without marking notifications read."
+    },
+    {
+      "id": "brain-to-docs",
+      "files": [
+        "skills/brain-to-docs/SKILL.md"
+      ],
+      "baseTree": "e1fea8038f6c666714de384d03383ef8fcd5ef4f",
+      "beforeSha256": "af52413c103bce27c1d70f0e375e4f65ab08f4f6cc37a5f8faa92e39e618e296",
+      "afterSha256": "af52413c103bce27c1d70f0e375e4f65ab08f4f6cc37a5f8faa92e39e618e296",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Interview docs preserve confirmed/proposed decisions and existing README sections; no automatic publication."
+    },
+    {
+      "id": "haskell-pro",
+      "files": [
+        "skills/haskell-pro/SKILL.md"
+      ],
+      "baseTree": "e4b326aeb253f4d658dcd8cab02344c8aeb0a00e",
+      "beforeSha256": "ddda3be60f3d98eea0169d15b0d76da9860a167c77bd5237edf8b674654e296f",
+      "afterSha256": "ddda3be60f3d98eea0169d15b0d76da9860a167c77bd5237edf8b674654e296f",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Haskell guide favors total functions and isolates IO; build and property checks are task-specific."
+    },
+    {
+      "id": "elixir-pro",
+      "files": [
+        "skills/elixir-pro/SKILL.md"
+      ],
+      "baseTree": "d5c225110ac35da3c346f4931d98253eaae35efd",
+      "beforeSha256": "61b99768b8dbff8eeab5624f439e97fcd89b1d50b886014d4bc300fa556f72ad",
+      "afterSha256": "61b99768b8dbff8eeab5624f439e97fcd89b1d50b886014d4bc300fa556f72ad",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Elixir guidance scopes supervision, persistent errors and isolated async tests correctly."
+    },
+    {
+      "id": "service-mesh-expert",
+      "files": [
+        "skills/service-mesh-expert/SKILL.md"
+      ],
+      "baseTree": "0eae3ef5ccdad45b689575985873f5a53f6ef184",
+      "beforeSha256": "cafdc61f5b85d858cbb01a224809e5e8151e1123836e267fc202408a4c25063a",
+      "afterSha256": "54d9218d729f996b60af5b077c56197fd4385efcf800a2f4ee944b2b93c30ef6",
+      "disposition": "corrected",
+      "reviewNote": "Truncated mesh trigger and blanket permissive-mTLS advice; restore description and preserve existing strict security."
+    },
+    {
+      "id": "setup-help",
+      "files": [
+        "skills/setup-help/SKILL.md"
+      ],
+      "baseTree": "42cba460f636b03bc98d63c62d747ade9c55ff6f",
+      "beforeSha256": "823bdaed6a6139032870fb12a0ef43c758f65344b792161af2c960e474dc138c",
+      "afterSha256": "6557dbda23acf8f73ebe6c97b1178eb0d378fd645b727fb88d98129e7a9dbf76",
+      "disposition": "corrected",
+      "reviewNote": "Setup helper forced English; align with requested language while retaining complete internal step tracking."
+    },
+    {
+      "id": "ui-tokens",
+      "files": [
+        "skills/ui-tokens/SKILL.md"
+      ],
+      "baseTree": "e3823d0aafe70947ca536d64f2796199aee3ec80",
+      "beforeSha256": "4c3ada26b6ec66f4443d9458f0bc71d89a25d2b10aaae3df157cc541fbe16c03",
+      "afterSha256": "9d73b99935d31c6f827d12853fa1a9953b0377abe01ec9278368de23401b10e9",
+      "disposition": "corrected",
+      "reviewNote": "StyleSeed file assumptions require explicit project prerequisites; missing local assets cannot be invented."
+    },
+    {
+      "id": "code-refactoring-context-restore",
+      "files": [
+        "skills/code-refactoring-context-restore/SKILL.md"
+      ],
+      "baseTree": "810bb27fd1c3a60c251dcb225afcd10d9ab414e2",
+      "beforeSha256": "1ed77f21d5af3ea839896d714ea4027184df0b7adaefb06813cb5f429d927a37",
+      "afterSha256": "1ed77f21d5af3ea839896d714ea4027184df0b7adaefb06813cb5f429d927a37",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Context-restoration compatibility body matches primary procedure and retains offline content."
+    },
+    {
+      "id": "fp-types-ref",
+      "files": [
+        "skills/fp-types-ref/SKILL.md"
+      ],
+      "baseTree": "15819f0f17b44b2072f3939790db3da55ad6205c",
+      "beforeSha256": "0138af00e1bd6fc611e9224a368b7894447997ed420eefc38efc9b353d1eaf42",
+      "afterSha256": "0138af00e1bd6fc611e9224a368b7894447997ed420eefc38efc9b353d1eaf42",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "fp-ts decision tree distinguishes typed error channels; rejected-promise caveat already present."
+    },
+    {
+      "id": "terraform-aws",
+      "files": [
+        "skills/terraform-aws/SKILL.md"
+      ],
+      "baseTree": "9247aaa36203fb1d596bcaa47c4efef41036e5b8",
+      "beforeSha256": "ff8caa102532056d96fd16a229813b989a15f84b452818735257dfaadb6a8792",
+      "afterSha256": "75fa873311234cb44dd766d0b141b9a8c4d20739ea571dece193ffbe1af73445",
+      "disposition": "corrected",
+      "reviewNote": "Terraform snippets are incomplete and commands could be read as a sequence; add plan/account and destructive-operation boundaries."
+    },
+    {
+      "id": "terraform-aws-modules",
+      "files": [
+        "skills/terraform-aws-modules/SKILL.md"
+      ],
+      "baseTree": "3e486c2600821a7ccbf2f30173b26ef787db1570",
+      "beforeSha256": "d1c326880ce123017849717b4226498085d3c8dd95ffc97d6264509cfea3d321",
+      "afterSha256": "2c05d62d47bd9fadfe4fd23e195a4f1769d383c73a2e0f9262cdb0bfc4f4ed97",
+      "disposition": "corrected",
+      "reviewNote": "HCL multi-attribute one-line block invalid; make multiline and clarify version-dependent locking."
+    },
+    {
+      "id": "magic-animator",
+      "files": [
+        "skills/magic-animator/SKILL.md"
+      ],
+      "baseTree": "191a79628883613146c51c131c1fa35e0528f34c",
+      "beforeSha256": "53e353830dbc5a949cd1022941f658559a37cc372018cadea16d1fbdd2afd3a1",
+      "afterSha256": "53e353830dbc5a949cd1022941f658559a37cc372018cadea16d1fbdd2afd3a1",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Animation guide already respects reduced motion, supported formats, licenses and paid/provider scope."
+    },
+    {
+      "id": "google-docs-automation",
+      "files": [
+        "skills/google-docs-automation/SKILL.md"
+      ],
+      "baseTree": "a1630f712ec3784b202d8370a9c00f1f8dff056a",
+      "beforeSha256": "52001e885a0d7f43bec7a5980ca008a9c9548682e27eeffca2029e0aa7b0e0d4",
+      "afterSha256": "52001e885a0d7f43bec7a5980ca008a9c9548682e27eeffca2029e0aa7b0e0d4",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Google Docs edits use revision controls/readback and preserve unrelated formatting; no OAuth client claimed."
+    },
+    {
+      "id": "google-slides-automation",
+      "files": [
+        "skills/google-slides-automation/SKILL.md"
+      ],
+      "baseTree": "b40aa2d3f3482a7398739879db150d2319c77317",
+      "beforeSha256": "b3bb66a735c7d898f92a7b9f92a5664207f178f8d0e4578664b8ec81c84690c5",
+      "afterSha256": "b3bb66a735c7d898f92a7b9f92a5664207f178f8d0e4578664b8ec81c84690c5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Google Slides edits resolve object IDs and inspect rendered layout; ambiguous writes reconciled."
+    },
+    {
+      "id": "push-skill-to-github",
+      "files": [
+        "skills/push-skill-to-github/SKILL.md"
+      ],
+      "baseTree": "3306288e663533520de78b503add6730ee5220ff",
+      "beforeSha256": "70da88911b29479ab37160ceb6442854aa274d8c27cfd5d0e0bf95090f8edfcc",
+      "afterSha256": "3c2fc3cc82ac665b38dbc749b4ec284181ba7df2f6bd01f4ac8af058b6f90b58",
+      "disposition": "corrected",
+      "reviewNote": "Private author repo and git add -A/main push assumptions unsafe; replace with actual repo/topic-branch workflow."
+    },
+    {
+      "id": "aas-compose-stack",
+      "files": [
+        "skills/aas-compose-stack/SKILL.md"
+      ],
+      "baseTree": "e48eb888ad60b8dcb23496faa447c96576332a14",
+      "beforeSha256": "b786acd050f1522104a16fba0ba4df8e68103428439ecf5580d12ec868567ea2",
+      "afterSha256": "b786acd050f1522104a16fba0ba4df8e68103428439ecf5580d12ec868567ea2",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "AAS composition records agent-chosen IDs; plugin runtime prerequisite distinct from neutral MCP behavior."
+    },
+    {
+      "id": "error-debugging-multi-agent-review",
+      "files": [
+        "skills/error-debugging-multi-agent-review/SKILL.md"
+      ],
+      "baseTree": "983409d78849884985b7a41a91b87f1e0a29b930",
+      "beforeSha256": "4adf0a285933332de06ff9becd05bf9820ea56519d42eaec6f1b7b3fc3892ee8",
+      "afterSha256": "4adf0a285933332de06ff9becd05bf9820ea56519d42eaec6f1b7b3fc3892ee8",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Multi-perspective review explicitly forbids unapproved agents and requires reproduced findings."
+    },
+    {
+      "id": "iconsax-library",
+      "files": [
+        "skills/iconsax-library/SKILL.md"
+      ],
+      "baseTree": "08c55114bba2f51eef9ea7ac84b2c475bae031b0",
+      "beforeSha256": "f4a610f0756f3854eed19f7fdced0fdfa0b323451ae2534bee7c3512610c7f21",
+      "afterSha256": "f4a610f0756f3854eed19f7fdced0fdfa0b323451ae2534bee7c3512610c7f21",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Icon sourcing respects chosen system, licenses, SVG safety and accessible labels."
+    },
+    {
+      "id": "csharp-pro",
+      "files": [
+        "skills/csharp-pro/SKILL.md"
+      ],
+      "baseTree": "7b07a688a0082e45f7699abf23d2698354bbffe0",
+      "beforeSha256": "bebd04cba40abc4a3f895f8a0979bac30f9f18f4df611ce7c5a9fe888e48c118",
+      "afterSha256": "bebd04cba40abc4a3f895f8a0979bac30f9f18f4df611ce7c5a9fe888e48c118",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "C# guidance checks actual language/runtime and distinguishes measured benchmarks from proposals."
+    },
+    {
+      "id": "google-sheets-automation",
+      "files": [
+        "skills/google-sheets-automation/SKILL.md"
+      ],
+      "baseTree": "7691de8b988e0e6c283b10caec11d20b230c3121",
+      "beforeSha256": "8e6011588844fab783556e4673576aa5fb30934301455fe94b783e47c1d69ab2",
+      "afterSha256": "8e6011588844fab783556e4673576aa5fb30934301455fe94b783e47c1d69ab2",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Sheets workflow preserves literal untrusted input and adjacent formulas, then reconciles readback."
+    },
+    {
+      "id": "fp-option-ref",
+      "files": [
+        "skills/fp-option-ref/SKILL.md"
+      ],
+      "baseTree": "c8794664a7bfa7419a8463285704d53d2b19f0ca",
+      "beforeSha256": "f41c3d0fde66c69140b75436bb8da1ce41cd902f3df6a6d489b40352cb6ace98",
+      "afterSha256": "f41c3d0fde66c69140b75436bb8da1ce41cd902f3df6a6d489b40352cb6ace98",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Option examples retain application placeholders and version scope; no false guarantee against thrown errors."
+    },
+    {
+      "id": "score-eval",
+      "files": [
+        "skills/score-eval/SKILL.md"
+      ],
+      "baseTree": "b0cc3d9410fef635730a0bda15b03cfae858c0bb",
+      "beforeSha256": "5353a4478d6ee57fbfe400e517013a64c49c2fd79451c51ace430ca0a817ec58",
+      "afterSha256": "5353a4478d6ee57fbfe400e517013a64c49c2fd79451c51ace430ca0a817ec58",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Evaluation scoring requires real rubric/baseline and distinguishes inspected from executed evidence."
+    },
+    {
+      "id": "ui-pattern",
+      "files": [
+        "skills/ui-pattern/SKILL.md"
+      ],
+      "baseTree": "02a9fc4feb5348369f87a876112aef0953bbe3d0",
+      "beforeSha256": "ab0e25f0b0fb12502acecab7c5002beb32cbf2b4eacd51b073ab6e93f00ae2a0",
+      "afterSha256": "ffd6261ab8979db501ae09ff1c8b70c2a42ae97cd5c213bcff6af59d658a504c",
+      "disposition": "corrected",
+      "reviewNote": "StyleSeed pattern paths are project inputs, not bundled assets; explicitly require actual project context."
+    },
+    {
+      "id": "wiki-architect",
+      "files": [
+        "skills/wiki-architect/SKILL.md"
+      ],
+      "baseTree": "4e3e67848de0c54a5239d0ac15c0e30fb35dcdae",
+      "beforeSha256": "6f10420d435303d39ffb55b09eae2b84347d9abfd3ae5cd155ed8ab5f6dcb51a",
+      "afterSha256": "83514c6c397a553a7eec2bcebf0ec992c361a5cdec13169ce133e3820453d83d",
+      "disposition": "corrected",
+      "reviewNote": "Wiki small-project rule contradicted mandatory breadth; scope glossary and sections to real evidence."
+    },
+    {
+      "id": "monorepo-architect",
+      "files": [
+        "skills/monorepo-architect/SKILL.md"
+      ],
+      "baseTree": "cc99aa929002f290c58481667fecc1a75a817409",
+      "beforeSha256": "4789c2e12a5c82d15e328069922607ac26040bd0b5ef31db9a19a92e4962d249",
+      "afterSha256": "4789c2e12a5c82d15e328069922607ac26040bd0b5ef31db9a19a92e4962d249",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Monorepo caching protects private artifacts and tests affected detection against full checks."
+    },
+    {
+      "id": "markstream-svelte",
+      "files": [
+        "skills/markstream-svelte/SKILL.md"
+      ],
+      "baseTree": "db4d3603dca66ba83cf71ea1472c769b2a062dad",
+      "beforeSha256": "61dd8c18df7b71dd6f3e163287229717b2d1914e4bfbcbfb321cdf789ab77829",
+      "afterSha256": "61dd8c18df7b71dd6f3e163287229717b2d1914e4bfbcbfb321cdf789ab77829",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Svelte renderer declares beta/Svelte5 and SSR constraints; actual package/peer verification remains required."
+    },
+    {
+      "id": "markstream-vue2-vite",
+      "files": [
+        "skills/markstream-vue2-vite/SKILL.md"
+      ],
+      "baseTree": "b993a68cdec9970f2f4d674a24b541656fe5da05",
+      "beforeSha256": "cf0e9978189d7f5c0a70058bacaef608fa4a743ed5af5b3ccc52fcf10576f399",
+      "afterSha256": "cf0e9978189d7f5c0a70058bacaef608fa4a743ed5af5b3ccc52fcf10576f399",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Vue2 Vite worker syntax and legacy limits explicit; no undocumented safety weakening."
+    },
+    {
+      "id": "php-pro",
+      "files": [
+        "skills/php-pro/SKILL.md"
+      ],
+      "baseTree": "b03cbd8e2e4e301d134e54bd0f10b4a550865e9d",
+      "beforeSha256": "b7ee0e40a73d5f71179b494aa787dcb2fcd6944774b210291fd53ffeac42a879",
+      "afterSha256": "b7ee0e40a73d5f71179b494aa787dcb2fcd6944774b210291fd53ffeac42a879",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "PHP guide requires meaningful tests and measured optimization; no bundled runtime claims."
+    },
+    {
+      "id": "performance-testing-review-multi-agent-review",
+      "files": [
+        "skills/performance-testing-review-multi-agent-review/SKILL.md"
+      ],
+      "baseTree": "cd80e4a13632a9357a6da777d0d914c8bb787b0b",
+      "beforeSha256": "eeed83b11b515da47ccead6e2cd08d239bd33050da700b2ec1eb641301c96ca7",
+      "afterSha256": "eeed83b11b515da47ccead6e2cd08d239bd33050da700b2ec1eb641301c96ca7",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Compatibility review body mirrors primary and requires authorized delegation and actual reproduction."
+    },
+    {
+      "id": "nerdzao-elite-gemini-high",
+      "files": [
+        "skills/nerdzao-elite-gemini-high/SKILL.md"
+      ],
+      "baseTree": "7abddab8ff8f5e0f2deb9a229dbf2fb57425b780",
+      "beforeSha256": "448e09df98700cd2539af00760e177311381b2e8a97722a2034a8f51518413da",
+      "afterSha256": "448e09df98700cd2539af00760e177311381b2e8a97722a2034a8f51518413da",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Historical Gemini persona cannot choose runtime or certify visual quality; constraints explicit."
+    },
+    {
+      "id": "sops-encryption",
+      "files": [
+        "skills/sops-encryption/SKILL.md"
+      ],
+      "baseTree": "c34d400d28da4c43147c3425f39438d8fd0da23f",
+      "beforeSha256": "29f859c1c55a4910a1320b409969cb7e5474c70092bd1b6717050f4ac4e32f88",
+      "afterSha256": "eeb2d40e2c01a0481a26605d434d71b4d299b34f0fddaa5126c8ded0abf97af9",
+      "disposition": "corrected",
+      "reviewNote": "SOPS raw download execution and stdout decryption risk; require verified installation and private output."
+    },
+    {
+      "id": "seo-meta-optimizer",
+      "files": [
+        "skills/seo-meta-optimizer/SKILL.md"
+      ],
+      "baseTree": "bd408d68b6d09c502fe8c0555e63dde214536571",
+      "beforeSha256": "eb6dd74809e20da60e404eaaf2862dfb1aef333751b5813211e6db79836dcde5",
+      "afterSha256": "6b375ff8c643ba466ff2939bfeccd137a240cf94ea10a40c5b8c48c8f1da20cc",
+      "disposition": "corrected",
+      "reviewNote": "SEO lengths presented too rigidly; label editorial heuristics and preserve URL migration requirements."
+    },
+    {
+      "id": "design-spells",
+      "files": [
+        "skills/design-spells/SKILL.md"
+      ],
+      "baseTree": "0f40d0629a6f014695436032dfe5bf7b9d9c4141",
+      "beforeSha256": "7ef7f3182c58b84435ed409ec6d95555589272275b7ab60201735e3a431b75c5",
+      "afterSha256": "7ef7f3182c58b84435ed409ec6d95555589272275b7ab60201735e3a431b75c5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Design micro-interactions preserve accessibility and existing scope; visual quality still requires rendering."
+    },
+    {
+      "id": "skill-issue",
+      "files": [
+        "skills/skill-issue/SKILL.md"
+      ],
+      "baseTree": "f25db4a971f12d470962e51c4e0fde5b3345e486",
+      "beforeSha256": "ce529aa76ffed985961c6d69088c7a9117f5ebeaa8ff5fcd9e16177ebc32c6cd",
+      "afterSha256": "73143804ee2456e7b1d7efef32e32685cc3df722fa645bcc779426ec4e8a4909",
+      "disposition": "corrected",
+      "reviewNote": "Heuristic activation examples implied certainty; distinguish simulation from actual native-client observation and scope --fix."
+    },
+    {
+      "id": "markstream-vue2-cli",
+      "files": [
+        "skills/markstream-vue2-cli/SKILL.md"
+      ],
+      "baseTree": "440cd0aa7c2555656b11d84d996c78cd56f42584",
+      "beforeSha256": "3f0fce332ae29fe559bc26fdd9c54151e1c8193557c373583b8733e1abca36dd",
+      "afterSha256": "3f0fce332ae29fe559bc26fdd9c54151e1c8193557c373583b8733e1abca36dd",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Vue2 CLI discloses CDN worker/CSP and legacy-version requirements."
+    },
+    {
+      "id": "seo-keyword-strategist",
+      "files": [
+        "skills/seo-keyword-strategist/SKILL.md"
+      ],
+      "baseTree": "6e76da859f27b644fbcea9fbfae3156d7fb0d3d1",
+      "beforeSha256": "96bddce43425a993fa59cfd3124c10618b1d883cc5cc80dd99f30620334c5f09",
+      "afterSha256": "6eea9320b0b3606067cef951294565c7d0f696f80df50b8fd25233d0bcc43da8",
+      "disposition": "corrected",
+      "reviewNote": "Keyword density/LSI claims lacked support; replace with descriptive frequency and related terms."
+    },
+    {
+      "id": "taisly-social-media-posting",
+      "files": [
+        "skills/taisly-social-media-posting/SKILL.md"
+      ],
+      "baseTree": "8bc4035ec9a95aa235a8f8c34470d018401e000c",
+      "beforeSha256": "3bbb9ae9b9414af46bfa5bb22b33daed55256f8f605a4dc329ccf4bac3fce4de",
+      "afterSha256": "3bbb9ae9b9414af46bfa5bb22b33daed55256f8f605a4dc329ccf4bac3fce4de",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Taisly publication requires concrete approval and existing account integration; no bundled runtime."
+    },
+    {
+      "id": "kotler-macro-analyzer",
+      "files": [
+        "skills/kotler-macro-analyzer/SKILL.md"
+      ],
+      "baseTree": "955d8865d3f11f5718c35da8aef9d85b8f9e2cec",
+      "beforeSha256": "ea1f19a0fad92377bd0c1ae98960d5e9dd63640a428562228a8f014519aa45f0",
+      "afterSha256": "ea1f19a0fad92377bd0c1ae98960d5e9dd63640a428562228a8f014519aa45f0",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "PESTEL evidence record separates observed indicators, forecasts and internal SWOT facts."
+    },
+    {
+      "id": "awt-e2e-testing",
+      "files": [
+        "skills/awt-e2e-testing/SKILL.md"
+      ],
+      "baseTree": "d5779f52c9c1bb73b57660d8633a05902913d182",
+      "beforeSha256": "9ef08f08119496172758c2e7a2d6181da28f6c6d6be1ae589bb2a36dcf00510a",
+      "afterSha256": "9ef08f08119496172758c2e7a2d6181da28f6c6d6be1ae589bb2a36dcf00510a",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "AWT explicitly calls upstream features advertised, requires isolated scenario review and real runtime evidence."
+    },
+    {
+      "id": "markstream-vue2",
+      "files": [
+        "skills/markstream-vue2/SKILL.md"
+      ],
+      "baseTree": "1251412fd01fbdad0514e02d56833f946f1c6ce7",
+      "beforeSha256": "0681c2795066276de3e7e5d71744fe13c50cd80adf2c919fb1aa38061e88f21f",
+      "afterSha256": "0681c2795066276de3e7e5d71744fe13c50cd80adf2c919fb1aa38061e88f21f",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Vue2 generic guide distinguishes 2.6/2.7 and verifies safe rendering, dependencies and legacy support."
+    },
+    {
+      "id": "expo-ui-jetpack-compose",
+      "files": [
+        "skills/expo-ui-jetpack-compose/SKILL.md"
+      ],
+      "baseTree": "5e7713f635e977b3abda3a8c79f760d511c9490e",
+      "beforeSha256": "3085145f0b66eae180750f0336c9722a837bd78d5ac4cca297a0a2fab7920801",
+      "afterSha256": "3085145f0b66eae180750f0336c9722a837bd78d5ac4cca297a0a2fab7920801",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Expo Compose targets SDK55 Android and actual props; native rebuild limits disclosed."
+    },
+    {
+      "id": "fp-either-ref",
+      "files": [
+        "skills/fp-either-ref/SKILL.md"
+      ],
+      "baseTree": "93f5456108c56e5c8cbd2f4c7172efae00bb1639",
+      "beforeSha256": "c6837a3e61e39c42fd4eb3e8b2a3efa81fd08557ff08c69922b212a667e2df76",
+      "afterSha256": "c6837a3e61e39c42fd4eb3e8b2a3efa81fd08557ff08c69922b212a667e2df76",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Either examples wrap fallible boundaries and preserve valid application placeholders."
+    },
+    {
+      "id": "x402-express-wrapper",
+      "files": [
+        "skills/x402-express-wrapper/SKILL.md"
+      ],
+      "baseTree": "4c20a030743e71cede89cec8f232f56561f9a344",
+      "beforeSha256": "3be08d2b435f06c86819efbf2da1898689cdba0978e06019c2dcb7a364cade55",
+      "afterSha256": "cb45ab9055bf86f00799094d39274ca934edff91919aedfdfd28337b9526c64f",
+      "disposition": "corrected",
+      "reviewNote": "Mainnet relayer recipe assumed package identity and settlement; mark historical/unverified and require testnet and explicit transaction authority."
+    },
+    {
+      "id": "wiki-page-writer",
+      "files": [
+        "skills/wiki-page-writer/SKILL.md"
+      ],
+      "baseTree": "c3b0c838050a380c866e98c7f1b3dc64606e7e39",
+      "beforeSha256": "c3f139cd3d5c872d758ea74a4f28e4b2ed1559f27cd17ae3e8dff942b78c701a",
+      "afterSha256": "1efd62d0867e88c594e51e108250bcebac5697612359cf8623dcdf1e63b0a218",
+      "disposition": "corrected",
+      "reviewNote": "Wiki pages imposed arbitrary five-source/two-diagram quotas; require only real relevant evidence."
+    },
+    {
+      "id": "markstream-nuxt",
+      "files": [
+        "skills/markstream-nuxt/SKILL.md"
+      ],
+      "baseTree": "2d2863389364b5b2a8065a79d70d9cd005d4bc47",
+      "beforeSha256": "6e33e2420634c5cac298e8d0f21d8ae302d84e11ccb474baf35ba1a56f61adb5",
+      "afterSha256": "6e33e2420634c5cac298e8d0f21d8ae302d84e11ccb474baf35ba1a56f61adb5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Nuxt renderer scopes SSR and client boundaries, with explicit tests and safe HTML defaults."
+    },
+    {
+      "id": "avoid-ai-writing",
+      "files": [
+        "skills/avoid-ai-writing/SKILL.md"
+      ],
+      "baseTree": "19ce2787cd44f1e8e3e526b4b4089d0a1ad8d39a",
+      "beforeSha256": "9af93460b71b786680446ea1810d0862e791722fcce48ad996cab94fcd73fb61",
+      "afterSha256": "9af93460b71b786680446ea1810d0862e791722fcce48ad996cab94fcd73fb61",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Prose heuristics preserve uncertainty and cannot prove AI authorship; no complete upstream table claimed."
+    },
+    {
+      "id": "puzzle-activity-planner",
+      "files": [
+        "skills/puzzle-activity-planner/SKILL.md"
+      ],
+      "baseTree": "0e1c04871bb0f6e7fb56e11d372ad002842bcc65",
+      "beforeSha256": "8b3061b0dc84e67ac6ae08f1522ca649b00ea507a7388b0a6831ca13d3e8422d",
+      "afterSha256": "bbe22e3be0c85da5c0fe31d367c99eb2c194500fc8093914efa119f92e461a96",
+      "disposition": "corrected",
+      "reviewNote": "Puzzle query strings could leak student data and imply unsupported parameters; add privacy and actual output checks."
+    },
+    {
+      "id": "phase-gated-debugging",
+      "files": [
+        "skills/phase-gated-debugging/SKILL.md"
+      ],
+      "baseTree": "fd752bf5907ba072c84968688f4a68a86496fd87",
+      "beforeSha256": "0493b1c9705340ff762c0e2f73b3d6aec4e1431b001a6e67dc7406d0f6e58941",
+      "afterSha256": "7c72661ebcd2c5a3c2e18ad6fad396a4d3e74d5f9caa8234cc19072815cd8238",
+      "disposition": "corrected",
+      "reviewNote": "Debug procedure forbade reading before execution and deleted all DEBUG lines; inspect commands and remove only task-added diagnostics."
+    },
+    {
+      "id": "busybox-on-windows",
+      "files": [
+        "skills/busybox-on-windows/SKILL.md"
+      ],
+      "baseTree": "47bbd97b1f1121ac9958e73952942a0b2abc019b",
+      "beforeSha256": "7883e071f6f41db36f6c9f5996a25d1a3dff596dd3789f783bebe117bf6a8965",
+      "afterSha256": "7883e071f6f41db36f6c9f5996a25d1a3dff596dd3789f783bebe117bf6a8965",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "BusyBox verifies independent publisher digest and avoids overwriting immutable bundle assets."
+    },
+    {
+      "id": "markdown-rendering",
+      "files": [
+        "skills/markdown-rendering/SKILL.md"
+      ],
+      "baseTree": "0aea3fbf67ce87a39ec78ca1adb25e088b8534e4",
+      "beforeSha256": "af6ec106f98a42934ff18211ab7ec9ab920e3938088ae6121a3d9f9ee5d3deb3",
+      "afterSha256": "af6ec106f98a42934ff18211ab7ec9ab920e3938088ae6121a3d9f9ee5d3deb3",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "cmux workaround is version-specific and closes only task-owned/authorized surfaces."
+    },
+    {
+      "id": "ux-flow",
+      "files": [
+        "skills/ux-flow/SKILL.md"
+      ],
+      "baseTree": "4998ed06b3e1583a199dd8a2d54f1d077427c378",
+      "beforeSha256": "73fa8d78a546846ba1c3c8b1fd0d981a59b3fc5d7338ea6555ab07bec09a9d58",
+      "afterSha256": "fc89f7847479308cf9e18eba7272d2c1c8c81683bebecd290109d662b783eae4",
+      "disposition": "corrected",
+      "reviewNote": "StyleSeed UX laws and paths are project-specific guidance; clarify prerequisites and measured usability limits."
+    },
+    {
+      "id": "tdd-workflow",
+      "files": [
+        "skills/tdd-workflow/SKILL.md"
+      ],
+      "baseTree": "2666a3200569f35be41674fa6bea3148ad0c6508",
+      "beforeSha256": "0a90f22a5ce3c9da93218b071f1fef3245b1cd1fd87ab2a39074a1c4d01795a5",
+      "afterSha256": "0a90f22a5ce3c9da93218b071f1fef3245b1cd1fd87ab2a39074a1c4d01795a5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "TDD is a methodology guide; test behavior and user/repository scope remain authoritative over illustrative agent roles."
+    },
+    {
+      "id": "ui-component",
+      "files": [
+        "skills/ui-component/SKILL.md"
+      ],
+      "baseTree": "1a4ad6e4d573baa02c960b69323a749af25e313c",
+      "beforeSha256": "ef1f46487d8a3e9c494674dc5b5c5c01fa53033bb17edbb405d2486d3f026ba2",
+      "afterSha256": "382ce8e89cf1926bcb8eff69121ae4158a730d23b8656266706fc3c6becf406b",
+      "disposition": "corrected",
+      "reviewNote": "StyleSeed components need actual helpers and tokens; explicit prerequisite boundary added."
+    },
+    {
+      "id": "dx-optimizer",
+      "files": [
+        "skills/dx-optimizer/SKILL.md"
+      ],
+      "baseTree": "5121ca3683c7bae4bef172e7384cb56cafa32842",
+      "beforeSha256": "80425da6d8cb18213f9ad37e4f6843fc322e89ef0c9babec03eea6a1e7f07f9b",
+      "afterSha256": "80425da6d8cb18213f9ad37e4f6843fc322e89ef0c9babec03eea6a1e7f07f9b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "DX work is measured and incremental; global configuration/hooks remain scoped optional changes."
+    },
+    {
+      "id": "deterministic-design",
+      "files": [
+        "skills/deterministic-design/SKILL.md"
+      ],
+      "baseTree": "370ef3fdc457a3aa04a6ce3106115cfd332e1a66",
+      "beforeSha256": "abe4697d6f3881fd504d3deec0e4bce2be5b447f76ee530ad7f17f06034bb885",
+      "afterSha256": "abe4697d6f3881fd504d3deec0e4bce2be5b447f76ee530ad7f17f06034bb885",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Design metrics distinguish measured layout from usability judgment and reference external prerequisites."
+    },
+    {
+      "id": "seo-snippet-hunter",
+      "files": [
+        "skills/seo-snippet-hunter/SKILL.md"
+      ],
+      "baseTree": "b6fbb5371f94576ef29809550c23d48f0335d3d6",
+      "beforeSha256": "6f31371cd5cc06ab21001327562a44fd13dbe4035a9af5180fcc73425ab19000",
+      "afterSha256": "1edb28f83876abe464cc6f103af0a4b60ce35b2c2077c7513db647ce4c421e33",
+      "disposition": "corrected",
+      "reviewNote": "Snippet formatting cannot ensure visibility; add current feature-eligibility and numeric-heuristic limitations."
+    },
+    {
+      "id": "lightning-factory-explainer",
+      "files": [
+        "skills/lightning-factory-explainer/SKILL.md"
+      ],
+      "baseTree": "63e6df224af965a6f5ad3ab604d8ef9f19e06a10",
+      "beforeSha256": "d271eea62ba88581d71b43325b7bf483e0cce5e91e07046c30b70bcd31deac4b",
+      "afterSha256": "d271eea62ba88581d71b43325b7bf483e0cce5e91e07046c30b70bcd31deac4b",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Lightning protocol explanation distinguishes proposal from unavailable implementation and real-funds authorization."
+    },
+    {
+      "id": "markstream-vue",
+      "files": [
+        "skills/markstream-vue/SKILL.md"
+      ],
+      "baseTree": "3ee6dedfe3eeb398dbdd8074a1fdf12f3fa8e14b",
+      "beforeSha256": "c85c6155147013c3bce53ae6c4969274d7740b174ec5d63df8e622f751d33375",
+      "afterSha256": "c85c6155147013c3bce53ae6c4969274d7740b174ec5d63df8e622f751d33375",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "Vue3 renderer handles streaming completion and virtualization ownership with actual package validation."
+    },
+    {
+      "id": "markstream-react",
+      "files": [
+        "skills/markstream-react/SKILL.md"
+      ],
+      "baseTree": "d08f63239259e0bd9a77d655f87ada0cc88cf135",
+      "beforeSha256": "aa789d986e57edcc698e37aa50536d5956978d0eeeadaecbba5b7ef2bd7240f5",
+      "afterSha256": "aa789d986e57edcc698e37aa50536d5956978d0eeeadaecbba5b7ef2bd7240f5",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "React renderer declares beta and client/server boundaries with safe HTML and real integration checks."
+    },
+    {
+      "id": "ui-page",
+      "files": [
+        "skills/ui-page/SKILL.md"
+      ],
+      "baseTree": "5356f6ddbfc6fe2a4e183b3c760e095b861779b4",
+      "beforeSha256": "a52e76a269dab634f413e04a9e5b8bec5a65254516b695ae834639440db1b432",
+      "afterSha256": "d0b70fd6414e49e5133f6a7497329b3f877317beeac0cbdbc8b11982b6058f81",
+      "disposition": "corrected",
+      "reviewNote": "StyleSeed page sample has placeholder props; label non-compilable template and actual project prerequisites."
+    },
+    {
+      "id": "understand-project-yylo",
+      "files": [
+        "skills/understand-project-yylo/SKILL.md"
+      ],
+      "baseTree": "6ae0ceb16d5112f02efda12d3843c7c590ce94da",
+      "beforeSha256": "7266acad2bae3f2ac234710f5b1fc4e77f7c922b5bcb177a6a444aa24fc0bc31",
+      "afterSha256": "7266acad2bae3f2ac234710f5b1fc4e77f7c922b5bcb177a6a444aa24fc0bc31",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "YYLO inspection depends on installed controller and protects private metadata; no automatic product-doc fallback."
+    },
+    {
+      "id": "anti-ui-slop",
+      "files": [
+        "skills/anti-ui-slop/SKILL.md"
+      ],
+      "baseTree": "ebc7ae93280981d5c7dbaca679d974e4dda74c6f",
+      "beforeSha256": "8ff04df7f8bcce91ecd62bc33660c31f903d319d652faa38c9d005e5e8dc3b36",
+      "afterSha256": "8ff04df7f8bcce91ecd62bc33660c31f903d319d652faa38c9d005e5e8dc3b36",
+      "disposition": "reviewed-no-change",
+      "reviewNote": "UIZZE is optional and protects existing design, real data and copyrighted reference material."
+    }
+  ]
+}

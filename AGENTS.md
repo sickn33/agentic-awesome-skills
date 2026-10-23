@@ -79,3 +79,30 @@ or PR-controlled ledger is authorized.
 Use private external review receipts and batch journals as described in the maintenance contract. They never replace current protection or exact-head evidence. Update code, rules, canonical skill, installed skill and negative regressions together when the user requests a workflow change.
 
 Use `maintenance:cycle start/intake/merge/verify` for a measured source batch (its merge delegates to `merge:batch`); finish this no-release cycle before any authorized release preparation; read `docs/maintainers/maintenance-cycle.md`. Record blockers once, continue independent PRs and reuse the existing host verifier. Do not run release steps when no release was requested.
+
+
+## Mandatory release cycle barrier
+
+A release must never proceed with an unresolved PR in the recorded batch. Every
+batch PR must be merged into protected main or closed without merge with an
+owner rationale posted **before** closure and bound to its exact head. A policy
+blocker is not completion and never authorizes bypassing merge protection or
+closing an otherwise valid contribution merely to unlock publication.
+
+Use `npm run maintenance:cycle -- close --state-dir /absolute/private/state --prs 123 --expected-head FULL_40_CHARACTER_SHA --reason 'Substantive reason, including the replacement PR when applicable'`.
+This posts the required comment before closing; uncertain writes stop without a
+retry. Plain undocumented closure does not satisfy verification. Merged PRs use
+the existing protected merge path.
+
+Run `maintenance:cycle verify` successfully on exact current main before
+`npm run release:prepare -- X.Y.Z --state-dir /absolute/private/state`.
+Preparation fails before branch creation or version changes without completed
+cycle evidence. The release PR carries `data/release-cycle.json`; publication
+and the npm workflow independently re-read live PR states, closure comments,
+protected-main ancestry and successful CI/CodeQL for the verified source commit.
+Reopened PRs, absent proof or failed checks block publication. Reverify if main
+moves before preparation. Never shrink the recorded scope to hide blockers.
+
+For a genuinely release-only task with no source PR batch, explicitly start a
+cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
+The original batch inventory must include every PR in the authorized scope.

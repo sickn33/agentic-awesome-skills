@@ -12,9 +12,9 @@ const REPO = 'sickn33/agentic-awesome-skills';
 function moduleRun(command, args) { return execFileSync(command, args, {cwd:ROOT, encoding:'utf8', timeout:120000, maxBuffer:16*1024*1024}).trim(); }
 function parse(argv) {
   const command=argv.shift(), options={command, reviewedHeads:[]};
-  if(!['start','intake','merge','align','verify','status','hosts'].includes(command)) throw Error('Use start, intake, merge, align, verify, status or hosts');
+  if(!['start','intake','merge','align','verify','status','hosts','close'].includes(command)) throw Error('Use start, intake, merge, align, verify, status, hosts or close');
   for(let i=0;i<argv.length;i+=2) {
-    if(!['--state-dir','--prs','--reviewed-head','--reviewer','--review-evidence','--version','--config','--expected-head'].includes(argv[i]) || !argv[i+1] || argv[i+1].startsWith('--')) throw Error('Unknown or incomplete option: '+argv[i]);
+    if(!['--state-dir','--prs','--reviewed-head','--reviewer','--review-evidence','--version','--config','--expected-head','--reason'].includes(argv[i]) || !argv[i+1] || argv[i+1].startsWith('--')) throw Error('Unknown or incomplete option: '+argv[i]);
     if(argv[i]==='--reviewed-head') options.reviewedHeads.push(batch.assertFullSha(argv[i+1], 'Reviewed head'));
     else options[argv[i].slice(2)]=argv[i+1];
   }
@@ -43,7 +43,7 @@ async function main(argv, dependencies = {}) {
   const options=parse([...argv]);
   const store=(dependencies.openStore || openStore)(options['state-dir'], ROOT);
   const release=options.command==='status' ? () => {} : store.acquireLock?.('cycle') || (() => {});
-  try {return await mainUnlocked(argv, {...dependencies,openStore:()=>store});}
+  try {return await mainUnlocked([...argv], {...dependencies,openStore:()=>store});}
   finally {release();}
 }
 async function mainUnlocked(argv, dependencies = {}) {
@@ -61,7 +61,8 @@ async function mainUnlocked(argv, dependencies = {}) {
   let state=store.readBatch('cycle');
   if(o.command==='start') {
     if(state) throw Error('Cycle already exists; use status/resume, never reset its timer');
-    const prs=batch.parsePrList(o.prs);
+    const prs=o.prs==='none' ? [] : batch.parsePrList(o.prs);
+    if(!prs.length && gh(['api',`repos/${REPO}/pulls?state=open&per_page=1`]).length) throw Error('Empty cycle forbidden while open PRs exist; inventory the authorized batch');
     const startedAt=new Date().toISOString();
     if(batch.readRepositorySlug(ROOT)!==REPO) throw Error('Repository mismatch');
     const baselineMain=batch.ensureTrustedMain(ROOT);
@@ -89,6 +90,23 @@ async function mainUnlocked(argv, dependencies = {}) {
       attempt.result=gh(['api','--method','PUT',`repos/${REPO}/pulls/${prs[0]}/update-branch`,'-f',`expected_head_sha=${expected}`]);
       if(!attempt.result || typeof attempt.result.message!=='string' || typeof attempt.result.url!=='string') throw failure('WRITE_UNCERTAIN','Branch-update response is incomplete; read current PR state before resuming');
       attempt.success=true;
+    } else if(o.command==='close') {
+      const prs=batch.parsePrList(o.prs);
+      if(prs.length!==1 || !o.reason || o.reason.trim().length<20) throw Error('close requires one PR and a substantive --reason');
+      const expected=batch.assertFullSha(o['expected-head'],'Expected head');
+      const pr=gh(['api',`repos/${REPO}/pulls/${prs[0]}`]);
+      if(pr.state!=='open' || pr.head.sha!==expected || pr.base.ref!=='main') throw Error('PR changed; inspect before closing');
+      const user=gh(['api','user']);
+      if(user.login!=='sickn33') throw Error('Only the repository owner may resolve a batch PR without merge');
+      const body=`${require('./release_cycle_gate.cjs').MARKER}${expected} -->\n${o.reason.trim()}`;
+      // Comment first. Never retry uncertain writes automatically.
+      const comment=gh(['api','--method','POST',`repos/${REPO}/issues/${pr.number}/comments`,'-f',`body=${body}`]);
+      if(!Number.isSafeInteger(comment?.id) || comment.body!==body || comment.user?.login!==user.login || !Number.isFinite(Date.parse(comment.created_at))) throw failure('WRITE_UNCERTAIN','Comment response incomplete; inspect the PR before closing');
+      const current=gh(['api',`repos/${REPO}/pulls/${pr.number}`]);
+      if(current.state!=='open' || current.head.sha!==expected) throw Error('PR changed after comment; closure stopped');
+      attempt.result=gh(['api','--method','PATCH',`repos/${REPO}/pulls/${pr.number}`,'-f','state=closed']);
+      attempt.success=attempt.result.state==='closed';
+      if(!attempt.success) throw Error('Closure not confirmed');
     } else if(o.command==='hosts') {
       if(!o.version || !o.config) throw Error('hosts requires --version and --config (existing Codex/Atlas config)');
       attempt.result=await require('./release_inspect.cjs').hostProof('codex',path.resolve(o.config),o.version);
@@ -98,10 +116,9 @@ async function mainUnlocked(argv, dependencies = {}) {
       const sha=batch.ensureTrustedMain(ROOT);batch.assertEffectiveMainProtection(ROOT, REPO);
       const version=readVersion();
       if(version!==state.baselineVersion) throw Error('Runtime version changed during no-release maintenance');
-      const pulls=state.prs.map(n=>gh(['api',`repos/${REPO}/pulls/${n}`]));
+      const pulls=state.prs.map(n=>{const pr=gh(['api',`repos/${REPO}/pulls/${n}`]);if(pr.number!==n) throw Error('PR identity mismatch');return pr;});
       for(const pr of pulls) {
-        if(!pr.merged || pr.base.ref!=='main') throw Error(`PR #${pr.number} not merged into main`);
-        batch.assertFullSha(pr.merge_commit_sha,'Merge SHA');run('git',['merge-base','--is-ancestor',pr.merge_commit_sha,sha]);
+        require('./release_cycle_gate.cjs').resolvedPull(pr, pr.merged ? [] : gh(['api','--paginate','--slurp',`repos/${REPO}/issues/${pr.number}/comments?per_page=100`]).flat(), merge => run('git',['merge-base','--is-ancestor',merge,sha]));
       }
       const runs=gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs?head_sha=${sha}&per_page=100`]).flatMap(p=>p.workflow_runs);
       const proofs=proofForRuns(runs,sha);
@@ -119,7 +136,7 @@ async function mainUnlocked(argv, dependencies = {}) {
       const latestProofs=proofForRuns(gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs?head_sha=${sha}&per_page=100`]).flatMap(p=>p.workflow_runs),sha);
       if(latestProofs.some((current,index)=>current.id!==proofs[index].id || current.run_attempt!==proofs[index].run_attempt)) throw failure('CI_WAIT_TIMEOUT','A newer workflow run appeared during verification; collect fresh evidence');
       if(batch.ensureTrustedMain(ROOT)!==sha) throw Error('Main changed during final verification');
-      attempt.result={main:sha,pulls:pulls.map(p=>({number:p.number,head:p.head.sha,merge:p.merge_commit_sha,mergedAt:p.merged_at})),workflows:raw};
+      attempt.result={main:sha,pulls:pulls.map(p=>({number:p.number,head:p.head.sha,merge:p.merge_commit_sha,mergedAt:p.merged_at,closedAt:p.closed_at})),workflows:raw};
       attempt.success=true;state.completedAt=new Date().toISOString();state.elapsedMs=Date.parse(state.completedAt)-Date.parse(state.startedAt);
       state.measurement='observed-source-maintenance-through-final-verification';
       state.limitations=['Includes review, agent gaps, blocked attempts and branch updates since start.','Not comparable to a release cycle or CI-only timing.','No runtime/catalog publication or native-client restart is performed.'];

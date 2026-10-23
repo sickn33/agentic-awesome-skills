@@ -22,11 +22,11 @@ disable-model-invocation: true
 - Use when the user asks to set up, install, configure, or get something working step by step.
 - Use when the setup has multiple steps and benefits from one-at-a-time guidance.
 
-Guide the user through any setup, one step at a time, in plain English.
+Guide the user through any setup, one step at a time, in the user's requested language.
 
 ## Response format (every single response)
 
-1. **Current step** — ONE atomic action. A single click, field, or command — not a checklist. 1–2 lines max. If it needs sub-steps, it's too big: split it and push the rest into "Still remaining". Plain English.
+1. **Current step** — ONE atomic action. A single click, field, or command — not a checklist. 1–2 lines max. If it needs sub-steps, it's too big: split it and push the rest into "Still remaining". Use the user's requested language.
 2. A `----` divider.
 3. **Still remaining** — a numbered list of the setup steps left after this one. Max 8 items, ever.
 

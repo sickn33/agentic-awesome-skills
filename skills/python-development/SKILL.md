@@ -12,7 +12,7 @@ date_added: "2026-06-02"
 
 This skill redirects to `python-development-python-scaffold`. Load it from the vault:
 
-`skill-libraries/development/python-development-python-scaffold/SKILL.md`
+`../python-development-python-scaffold/SKILL.md` relative to this skill directory. Confirm that the target is installed and read its complete instructions; if absent, report the missing dependency instead of claiming execution.
 
 ## When to Use
 - Use this skill when the task matches this description: You are a Python project architecture expert specializing in scaffolding production-ready Python applications. Generate complete project structures with modern tooling (uv, FastAPI, Django), type hint (Alias for python-development-python-scaffold).

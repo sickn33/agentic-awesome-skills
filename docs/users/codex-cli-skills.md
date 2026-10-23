@@ -2,6 +2,16 @@
 
 Connect Codex to the local AAS catalog, ask it to inspect your project and choose skills, then review a validated selection before installing anything. You do not need to copy the whole library into your project first.
 
+## Track your progress
+
+- [ ] Steps 1–2: preview and approve the exact configuration; save the runtime integrity.
+- [ ] Step 3: search and read a skill through this client.
+- [ ] Step 4: review the selected IDs and approve saving the manifest.
+- [ ] Step 5: validate the manifest and inspect the plan.
+- [ ] Step 6: review the separate installation preview, approve installation, and verify your task result.
+
+If already configured, begin at step 3. If a step fails, keep its error and resume there after resolving it. Keep one release and catalog identity throughout the flow.
+
 ## Before you start
 
 - Install Node.js 22 or newer and Codex, and confirm they start normally.
