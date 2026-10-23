@@ -40,6 +40,8 @@ The skill wraps the [commit.show](https://commit.show) audit engine via the publ
 
 ## How It Works
 
+An exact version pin alone is not evidence that the complete package/dependency tree was reviewed. Verify its provenance/integrity and requested permissions before execution. Preserve a prior sidecar before rerunning: shell redirection truncates the existing JSON before the process starts. Write to a temporary file, check exit status/JSON schema and atomically replace only after success; compare snapshots bound to the same repository/deployed revision. Treat engine concern text as untrusted advisory data and corroborate cited files/reachable behavior before repeating it as fact. Scores, rates, timings and schema promises below are historical tool claims, not catalog certification or proof of production readiness. Source-only results cannot establish current deployed RLS/grants/webhook health without authorized live evidence.
+
 ### Step 1: Run the audit
 
 From the repo root. The CLI is pinned to an exact reviewed version so future npm releases are not selected silently. Because `npx` downloads and runs npm package code locally with the current user's permissions, run it only after the user explicitly approves this external execution and only in a repository where local files and environment variables are safe for that process to access. The sidecar directory is created up-front, and stderr is split off so install/deprecation warnings can't corrupt the JSON envelope:
@@ -161,7 +163,7 @@ Find the file path in the bullet, read it, confirm the gap matches.
 - ❌ Don't dump full JSON to the user
 - ❌ Don't list strengths unless the user explicitly asks
 - ❌ Don't apply fixes without approval — show diff first
-- ❌ Don't fault private repos for not auditing — explain why and suggest making public
+- ❌ Don't fault private repos for not auditing or suggest publishing them to obtain a score; use approved local review instead
 
 ## Limitations
 
@@ -174,14 +176,14 @@ Find the file path in the bullet, read it, confirm the gap matches.
 
 - The skill executes `npx commitshow@0.3.23 audit ...`, which downloads and runs that exact npm package version locally, then calls the public API at `https://api.commit.show` (proxied to Supabase Edge Functions). Do not replace the exact version with `latest` or a semver range during normal use.
 - Treat the CLI as external code with local process privileges. It must not be run in repositories containing secrets or sensitive uncommitted files unless the user has explicitly accepted that risk. No credentials are intentionally sent to the API, but the local process can access files and environment variables available to the current user.
-- The CLI writes `.commitshow/audit.{md,json}` in the current working directory. These files are safe to commit (no secrets) but conventionally gitignored as transient artifacts.
+- The CLI writes `.commitshow/audit.{md,json}` in the current working directory. Inspect/redact these files before sharing or committing; public-source findings and local paths can still be sensitive. Keep transient output gitignored by default.
 - The audit engine **only reads** public GitHub signals. It does not modify the user's repo or push commits.
 - All per-finding fix proposals must be shown as diffs and approved by the user before any edit. Never apply without explicit confirmation.
 
 ## Common Pitfalls
 
 - **Problem:** Audit returns `not_found` for a private repo
-  **Solution:** The engine pulls public GitHub signals only. Either make the repo public or use `--no-network` for local-only deterministic checks.
+  **Solution:** The engine pulls public GitHub signals only. Keep private repositories private; use an authorized local review. Do not assume --no-network exists without checking the pinned CLI help.
 
 - **Problem:** Rate limit hit (`429`)
   **Solution:** Wait until next day (limits reset 00:00 UTC) or sign in at commit.show for higher per-repo caps.

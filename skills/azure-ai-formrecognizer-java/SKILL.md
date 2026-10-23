@@ -10,6 +10,10 @@ date_added: "2026-02-27"
 
 Build document analysis applications using the Azure AI Document Intelligence SDK for Java.
 
+## Version and document boundaries
+
+These examples target the legacy azure-ai-formrecognizer API and a prerelease dependency; verify the selected artifact/service API and supported model IDs before use, rather than assuming parity with newer Document Intelligence SDKs. Obtain permission before uploading documents, especially identity and financial records; use short-lived narrowly scoped SAS URLs and never log their query strings or extracted content. Build/delete model operations change billable resources. OCR fields and confidence are uncertain: check null/type for each nested Items field before calling its typed getter, validate results against source documents, and handle terminal polling failures/timeouts as well as initiation errors. Client declarations are alternative independent snippets, not one compilable file.
+
 ## Installation
 
 ```xml

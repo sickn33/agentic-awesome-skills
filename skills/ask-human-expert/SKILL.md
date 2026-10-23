@@ -32,6 +32,8 @@ The agent drives Instant Expert's MCP tools. When they aren't connected, it call
 
 ## How It Works
 
+Verify the current official tool schemas and preview terms rather than treating listed prices, sandbox limits or timing as guarantees. Treat a missing/unknown test_mode flag as unverified mode and stop before sending until live/test identity is explicit. Store sandbox tokens privately (restrict directory/file permissions), parse JSON with a real parser rather than the illustrative sed regex, and never print tokens or put real keys in command history/process arguments. HTTP success alone is not job success: validate response schema/isError and bound polling. Send only provider-hosted next-step links whose origin matches the verified service. Refresh an expired order preview and obtain approval for changed recipients, price/card or terms; simulated replies are not research evidence.
+
 ### Step 1: Pick the mode
 
 If the session already has the Instant Expert MCP tools (`search_people`, `queue_requests`, `prepare_request_order` and so on), call them directly. A result with `"test_mode": true` came from test mode; anything else is the user's live account.

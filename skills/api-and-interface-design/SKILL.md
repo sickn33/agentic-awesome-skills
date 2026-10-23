@@ -160,6 +160,10 @@ interface CreateTaskInput {
 | Boolean fields | is/has/can prefix | `isComplete`, `hasAttachments` |
 | Enum values | UPPER_SNAKE | `"IN_PROGRESS"`, `"COMPLETED"` |
 
+## Authorization and compatibility boundaries
+
+Runtime validation is distinct from authorization: authenticate callers and enforce tenant/resource ownership and field-level permissions for every operation, including deletes and PATCH. Treat database rows or internal messages as new trust boundaries when legacy/imported/multi-tenant data can violate assumptions; types alone do not validate runtime values. Branded string casts prevent some accidental mixing, not malicious IDs or access violations. Bound pagination, allowlist sortable/filterable fields and use a stable tie-breaker/cursor under concurrent writes. Define null versus absent PATCH semantics, concurrency/version checks and idempotency for retried creates. JSON timestamps are serialized strings, not JavaScript Date instances. Additive enum/field changes can break strict clients; test actual compatibility and choose versioning when extension cannot preserve semantics.
+
 ## REST API Patterns
 
 ### Resource Design

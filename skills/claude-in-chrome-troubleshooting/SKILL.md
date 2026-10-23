@@ -68,7 +68,7 @@ mv ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.anthrop
    ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.anthropic.claude_code_browser_extension.json.disabled
 ```
 
-**You cannot use both simultaneously.** Pick one and disable the other.
+These paths and coexistence failures are historical observations, not a universal current-version restriction. Confirm the active host, versions and profile first; use supported reconnect/repair before changing registrations.
 
 ### Toggle Script
 
@@ -100,6 +100,8 @@ chrome-mcp-toggle() {
 ```
 
 Usage: `chrome-mcp-toggle` then restart Chrome (and Claude Code if switching to CLI).
+
+Treat the toggle as an optional local workaround only after confirming the conflict. Back up registrations and refuse destination collisions before any move; the script below is illustrative and does not implement those checks. Closing Chrome can interrupt unrelated work: preserve tabs/forms and obtain authorization before restarting. Diagnostic process arguments/configuration may contain private paths or values; redact before sharing. Do not install the toggle in shell startup without an explicit request.
 
 ## Quick Diagnosis
 
@@ -134,18 +136,12 @@ ls ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.anthrop
 mv ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.anthropic.claude_browser_extension.json \
    ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.anthropic.claude_browser_extension.json.disabled 2>/dev/null
 
-# 2. Update the wrapper to use latest Claude Code version
-cat > ~/.claude/chrome/chrome-native-host << 'EOF'
-#!/bin/bash
-LATEST=$(ls -t ~/.local/share/claude/versions/ 2>/dev/null | head -1)
-exec "$HOME/.local/share/claude/versions/$LATEST" --chrome-native-host
-EOF
-chmod +x ~/.claude/chrome/chrome-native-host
+# 2. Preserve existing wrapper/configuration and use the installed client's supported repair.
+# Do not select an executable by directory modification time or overwrite a working wrapper.
 
-# 3. Kill existing native host and clean sockets
-pkill -f chrome-native-host
-rm -rf /tmp/claude-mcp-browser-bridge-$USER/
-rm -f "$(getconf DARWIN_USER_TEMP_DIR)/claude-mcp-browser-bridge-$USER"
+# 3. Inspect exact host PID and socket ownership/path first.
+# Stop only the confirmed process for the affected session, with approval.
+# Remove only its confirmed stale socket after exit; do not recursively delete bridge directories.
 
 # 4. Restart Chrome
 osascript -e 'quit app "Google Chrome"' && sleep 2 && open -a "Google Chrome"
@@ -184,10 +180,10 @@ The wrapper at `~/.claude/chrome/chrome-native-host` may have a hardcoded versio
 ```bash
 cat ~/.claude/chrome/chrome-native-host
 # Bad: exec "/Users/.../.local/share/claude/versions/2.0.76" --chrome-native-host
-# Good: Uses $(ls -t ...) to find latest
+# Verify the target is the intended installed version; modification time is not version ordering.
 ```
 
-**Fix:** Use the dynamic version wrapper shown in the Full Reset Procedure above.
+**Fix:** Use supported client repair to regenerate the wrapper; preserve a backup and verify the intended executable before changing it.
 
 ### TMPDIR Not Set
 

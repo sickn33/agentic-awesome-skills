@@ -18,13 +18,17 @@ Automate Outlook Calendar operations through Composio's Outlook toolkit via Rube
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The target account must still authenticate through the returned connection flow and grant the required scopes.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `outlook`
 3. If connection is not ACTIVE, follow the returned auth link to complete Microsoft OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Calendar and notification authority
+
+Discover current tool schemas and resolve the exact mailbox/calendar/event occurrence. A search/free-busy request does not authorize invitations, changes, cancellations or declines. Confirm the approved recipient set, content and series-versus-occurrence scope before those writes, which may notify attendees immediately. Preserve existing attendee/category lists unless replacement is intended; reconcile an uncertain create/update before retrying. Treat timezone examples as adapter-specific: verify supported zones, offsets and daylight-saving boundaries; use calendarView for expanded recurring occurrences and spanning events. Minimize shared calendar details.
 
 ## Core Workflows
 

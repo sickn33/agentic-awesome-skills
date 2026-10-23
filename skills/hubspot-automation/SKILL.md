@@ -18,12 +18,16 @@ Automate HubSpot CRM workflows including contact/company management, deal pipeli
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The target HubSpot account must still complete the returned authentication flow and grant the required scopes.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `hubspot`
 3. If connection is not ACTIVE, follow the returned auth link to complete HubSpot OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Account, schema and write scope
+
+Resolve the exact account and discover current schemas before using these historical slug/parameter examples. Search-before-create reduces duplicates but is not a concurrency-safe uniqueness guarantee: use supported unique IDs/upsert semantics and reconcile uncertain writes before retrying. Restrict returned contact fields, redact personal data from logs, preview batch size/targets and preserve partial-failure results. CRM creation, assignment, property-schema changes and outreach require the corresponding user authority; a read request does not grant those writes.
 
 ## Core Workflows
 
