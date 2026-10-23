@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Soroban Token 
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Verification procedure
+
+Record network, contract ID, deployed WASM hash, SDK/interface revision and admin identity before labeling compliance. Inspect the actual SEP-41 method/event behavior and authorization in source; the standard interface alone does not promise a mint function, cap, rate limit, pause or clawback. Track which controls are implemented and which are absent. Test unauthorized mint/admin replacement, zero/negative/out-of-range amounts, cap/epoch boundaries, integer overflow and balance/supply conservation using synthetic testnet fixtures. Represent runtime scaled i128 amounts exactly as integer/decimal strings across JSON/SQL boundaries; a generic NUMERIC(24,7) may not span the actual value range. Never deploy/mint/change a live admin from a register-generation request.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Token Registry ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `TOK-001` |
+| 1 | Token Registry ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `TOK-001` |
 | 2 | Token Symbol | `text` | `VARCHAR(12)` | `string` | Text | `FOX` |
 | 3 | Token Name | `text` | `VARCHAR(64)` | `string` | Text | `GrantFox Utility Token` |
 | 4 | Decimals | `number` | `INTEGER` | `number` | Number | `7` |

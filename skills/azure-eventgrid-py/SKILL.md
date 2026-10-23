@@ -45,7 +45,8 @@ client = EventGridPublisherClient(endpoint, credential)
 ## Publish CloudEvents
 
 ```python
-from azure.eventgrid import EventGridPublisherClient, CloudEvent
+from azure.eventgrid import EventGridPublisherClient
+from azure.core.messaging import CloudEvent
 from azure.identity import DefaultAzureCredential
 
 client = EventGridPublisherClient(endpoint, DefaultAzureCredential())
@@ -123,9 +124,8 @@ from azure.eventgrid.aio import EventGridPublisherClient
 from azure.identity.aio import DefaultAzureCredential
 
 async def publish_events():
-    credential = DefaultAzureCredential()
-    
-    async with EventGridPublisherClient(endpoint, credential) as client:
+    async with DefaultAzureCredential() as credential, \
+            EventGridPublisherClient(endpoint, credential) as client:
         event = CloudEvent(
             type="MyApp.Events.Test",
             source="/myapp",
@@ -150,13 +150,13 @@ topic_name = "my-topic"
 
 async with EventGridPublisherClient(
     endpoint=namespace_endpoint,
-    credential=DefaultAzureCredential()
+    credential=credential,  # an open azure.identity.aio credential
+    namespace_topic=topic_name,
 ) as client:
-    await client.send(
-        event,
-        namespace_topic=topic_name
-    )
+    await client.send(event)
 ```
+
+Namespace topics support CloudEvents; construct the namespace client with `namespace_topic`, not as a send-only keyword. Match examples to the installed SDK version. Use a test topic and synthetic payloads; publishing can trigger real subscribers. Authentication needs the scoped data-sender role, and application consumers must handle duplicate delivery/idempotency. Close both async clients and credentials. See [official Python SDK guide](https://learn.microsoft.com/en-us/python/api/overview/azure/eventgrid-readme?view=azure-python).
 
 ## Best Practices
 

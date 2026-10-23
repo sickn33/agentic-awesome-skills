@@ -77,7 +77,7 @@ Target Mermaid SVG elements with `!important`:
 ```
 
 ### Layer 3: Inline Style Replacement (`theme/index.ts`)
-Mermaid inline `style` attributes override everything. Use `onMounted` + polling to replace them:
+Normal inline styles can be overridden by appropriate author `!important` rules. Prefer renderer theme configuration and scoped CSS; avoid rewriting every SVG fill/stroke because it destroys semantic colors. If a version-specific DOM workaround is necessary, use a bounded mounted hook and dispose timers/listeners on unmount and route change:
 
 ```typescript
 import { onMounted } from 'vue'
@@ -109,7 +109,7 @@ document.querySelectorAll('.mermaid').forEach(el => {
   el.addEventListener('click', () => {
     const modal = document.createElement('div')
     modal.className = 'mermaid-zoom-modal'
-    modal.innerHTML = el.outerHTML
+    modal.appendChild(el.cloneNode(true))
     modal.addEventListener('click', () => modal.remove())
     document.body.appendChild(modal)
   })
@@ -127,10 +127,12 @@ Modal CSS:
 .mermaid-zoom-modal .mermaid { transform: scale(1.5); }
 ```
 
+The modal sketch is incomplete: production UI needs an accessible button/dialog name, Escape handling, focus trapping/restoration and listener cleanup. Treat Markdown/diagram content as untrusted; preserve strict Mermaid security and do not enable arbitrary HTML/script execution for rendering convenience.
+
 ## Post-Processing Rules
 
 Before VitePress build, scan all `.md` files and fix:
-- Replace `<br/>` with `<br>` (Vue template compiler compatibility)
+- Preserve valid self-closing `<br/>`/`<br>` markup unless an actual compiler error requires a scoped repair; do not rewrite text inside code fences
 - Wrap bare `<T>` generic parameters in backticks outside code fences
 - Ensure every page has YAML frontmatter with `title` and `description`
 

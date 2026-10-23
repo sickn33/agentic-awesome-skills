@@ -76,7 +76,8 @@ aws s3 ls
 
 ```bash
 kubectl auth can-i --list
-kubectl get pods,secrets,svc -A
+kubectl --context AUTHORIZED_CONTEXT get pods,svc -n AUTHORIZED_NAMESPACE
+# Inspect Secret metadata only if explicitly in scope; do not dump secret values.
 kubectl get clusterrolebindings
 ```
 

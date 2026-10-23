@@ -68,6 +68,8 @@ Mailtrap publishes click-path guides for common providers. Open the page that ma
 
 If the user's provider is not listed, the same rule applies: **copy every record** from Mailtrap into the DNS zone that serves the From domain.
 
+Before editing DNS, inspect existing records and zone ownership. Do not create a second SPF TXT policy at the same name or overwrite an existing DMARC policy blindly; reconcile provider-required changes with current mail senders, TTLs and policy owners. Preserve a preimage/rollback and verify authoritative DNS plus Mailtrap status. DNS verification is not permission to send mail or claim deliverability/compliance completed.
+
 ## Important DNS caveat (proxied DNS)
 
 If your DNS provider **proxies** records (orange-cloud on Cloudflare, similar CDN/proxy modes elsewhere), verification-related records must be **DNS-only** (grey cloud / non-proxied) unless Mailtrap documentation explicitly allows proxying—proxied CNAMEs and similar often break SPF/DKIM verification. The same constraint applies to any host that fronts DNS with a proxy.

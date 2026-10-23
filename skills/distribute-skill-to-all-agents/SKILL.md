@@ -21,55 +21,22 @@ license_source: "https://github.com/davidondrej/skills/blob/main/LICENSE"
 - Use when a skill should be made available across multiple local agent skill folders.
 - Use when the user asks to sync or distribute skill updates to other agents.
 
-The user has 4 agent skill locations on his MacBook. A skill must exist in each (or via symlink) to be discoverable by every agent.
+## Discover actual host locations
 
-## The 4 Canonical Locations
-
-| Agent | Skills Folder | Notes |
-|---|---|---|
-| Codex / OpenAI Agents | `~/.agents/skills/` | **Canonical** — author skills here first |
-| Claude Code | `~/.claude/skills/` | **Symlink → `~/.agents/skills/`** — writing to `.agents/skills` automatically covers Claude |
-| Pi Agent | `~/.pi/agent/skills/` | **Symlink → `~/.agents/skills/`** — auto-covered. (Path is `/agent/` nested — NOT `~/.pi/skills/`) |
-| Hermes Agent | `~/.hermes/skills/` | Independent copy — the only one needing a manual copy |
+The upstream author used `~/.agents/skills`, `~/.claude/skills`, `~/.pi/agent/skills` and `~/.hermes/skills`. These are candidate paths, not facts about this user’s machine or discovery precedence. Inspect only authorized configured hosts and their documented skill paths; do not create an absent host or replace a real directory with a symlink merely to match the upstream layout.
 
 ## Workflow
 
-1. **Author the skill in `~/.agents/skills/<skill-name>/SKILL.md`** (canonical). Follow `effective-agent-skills` SKILL.md guidance.
-2. **Verify the `.claude` symlink is intact** (one-time check):
-   ```bash
-   ls -la ~/.claude/skills
-   # Expect: ~/.claude/skills -> ~/.agents/skills
-   ```
-   If it's a real directory instead of a symlink, the user has diverged copies — ask before touching.
-3. **Copy to `.hermes` only** (`.claude` and `.pi` are symlinks — already covered):
-   ```bash
-   SKILL=<skill-name>
-   cp -r ~/.agents/skills/$SKILL ~/.hermes/skills/
-   ```
-4. **Verify all 4 locations** show identical byte counts:
-   ```bash
-   for p in ~/.agents/skills/$SKILL ~/.claude/skills/$SKILL ~/.pi/agent/skills/$SKILL ~/.hermes/skills/$SKILL; do
-     echo "$p: $(wc -c < $p/SKILL.md) bytes"
-   done
-   ```
-   All four numbers must match. If `.claude` or `.pi` shows a different byte count, that symlink is broken — investigate before proceeding.
+1. Identify the canonical reviewed source and exact target hosts from the user’s request. Read the entire skill tree and preserve bundled files, attribution and license.
+2. Inspect each destination with `ls -ld` and resolve links. Record source and destination real paths; skip aliases of the same tree and reject unexpected links outside the authorized location.
+3. Back up an existing independent target privately. Preview a file-level diff, including deletions and modes; resolve local divergence before overwriting. Validate the skill ID as one directory name and quote paths.
+4. Copy only the selected tree to the authorized independent destination. When removal of obsolete files is necessary, preview deletion with a dry run before applying; never use a broad global `rsync --delete` target.
+5. Compare relative file lists and cryptographic content hashes for every file, plus relevant modes and links. Equal SKILL.md byte counts do not prove tree equality or a correct symlink.
+6. Verify discovery through each host’s actual mechanism. Report installed bytes separately from a running session reload; reload only the authorized host when required and preserve unrelated sessions.
 
-## Updating an Existing Distributed Skill
+## Updating an existing distributed skill
 
-Same flow — re-copy from `~/.agents/skills/` to `.hermes/skills/`. The `.claude` and `.pi` symlinks update automatically. `cp -r` overwrites by default; use `rsync -a --delete` if the skill folder has nested files that may have been removed:
-
-```bash
-rsync -a --delete ~/.agents/skills/$SKILL/ ~/.hermes/skills/$SKILL/
-```
-
-## Pitfalls
-
-- **`~/.pi/skills/` is the wrong location.** Pi Agent loads from `~/.pi/agent/skills/` only. A skill placed in `~/.pi/skills/` is invisible. If you find skills already there, they're orphans — confirm with the user before deleting.
-- **`~/.claude/skills` is a symlink, not a folder.** `cp -r ~/.agents/skills/foo ~/.claude/skills/` will error with "are identical". Skip the explicit Claude copy.
-- **Project-local skills exist too** — `./.pi/agent/skills/` (or `.pi/skills/`) inside a repo overrides the global one on collision (later-discovered wins). This skill only handles GLOBAL distribution.
-- **`.pi/agent/skills` is a symlink → `.agents/skills`.** Don't `cp` into it (errors "are identical"); it auto-syncs. Only `.hermes/skills` is an independent copy — don't unilaterally consolidate Hermes into a symlink unless the user asks.
-- **Hermes snapshots skills at session start.** A newly-distributed skill won't appear inside a running Hermes session until restart (it works fine for future sessions and for the other 3 agents immediately).
-- **Filename casing matters on case-sensitive volumes.** `SKILL.md` must be uppercase.
+Repeat the same source/target, divergence, backup and whole-tree verification procedure. Do not propagate host-specific credentials, private memory or unreviewed executable files. A global installation request does not authorize publishing the skill or changing host permission stores.
 
 ## When NOT to Use This Skill
 
@@ -83,3 +50,12 @@ rsync -a --delete ~/.agents/skills/$SKILL/ ~/.hermes/skills/$SKILL/
 
 - Adapted from `davidondrej/skills`; verify local paths, tools, credentials, and agent features before acting.
 - For commands, remote access, scheduling, browser automation, or file-changing workflows, get explicit user approval and confirm the target environment first.
+
+## Example: distribute one reviewed skill
+
+The user requests the reviewed `release-notes` skill for their already-configured Claude host. The canonical source is `/workspace/team-skills/release-notes`; the verified host skill folder is `$HOME/.claude/skills`.
+
+1. Inspect `ls -ld "$HOME/.claude/skills" "$HOME/.claude/skills/release-notes"` (an absent skill target is expected for a first install). Resolve the parent and source paths; if the destination already resolves to the source, skip copying and verify discovery instead.
+2. For an independent existing destination, compare its whole tree to the source and privately back it up before resolving divergence. For a new target, preview `rsync -an --itemize-changes /workspace/team-skills/release-notes/ "$HOME/.claude/skills/release-notes/"`. Confirm the preview includes only that reviewed tree.
+3. Apply the same narrowly scoped copy with `rsync -a /workspace/team-skills/release-notes/ "$HOME/.claude/skills/release-notes/"`. These commands omit deletion: obsolete destination files require a separate explicit deletion preview.
+4. Compare all relative paths, file hashes, modes and symlink targets against the source, then use the configured Claude host’s documented discovery/reload mechanism. Report the verified installed tree and whether the active session actually discovered it. No other host folder is created by this example.
