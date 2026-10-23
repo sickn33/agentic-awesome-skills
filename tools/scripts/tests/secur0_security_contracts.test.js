@@ -14,7 +14,9 @@ assert.match(catalog, /JSON\.parse\(catalogBytes\)/);
 assert.doesNotMatch(catalog, /JSON\.parse\(fs\.readFileSync\(catalogPath/);
 
 const gguf = read("skills/hugging-face-model-trainer/scripts/convert_to_gguf.py");
-assert.match(gguf, /TemporaryDirectory\(prefix="aas-gguf-"\)/);
+assert.match(gguf, /out\.mkdir\(mode=0o700, exist_ok=False\)/);
+assert.match(gguf, /output parents may not be symlinks/);
+assert.match(gguf, /open\("x", encoding="utf-8"\)/);
 assert.doesNotMatch(gguf, /["']\/tmp\/(?:llama\.cpp|merged_model|gguf_output)/);
 
 const downloader = read("skills/2slides-ppt-generator/scripts/download_slides_pages_voices.py");
