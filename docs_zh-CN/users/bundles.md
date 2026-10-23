@@ -463,7 +463,6 @@ _用于重度文档工作流、电子表格、PDF 和演示。_
 - [`docx-official`](../../skills/docx-official/)：创建和编辑 Word 兼容文档。
 - [`pptx-official`](../../skills/pptx-official/)：创建和编辑 PowerPoint 兼容演示。
 - [`xlsx-official`](../../skills/xlsx-official/)：使用公式和格式创建和分析电子表格文件。
-- [`pdf-official`](../../skills/pdf-official/)：以编程方式提取、生成和操作 PDF。
 - [`google-slides-automation`](../../skills/google-slides-automation/)：自动化 Google Slides 中的演示更新。
 - [`google-sheets-automation`](../../skills/google-sheets-automation/)：自动化 Google Sheets 中的读写操作。
 

@@ -824,7 +824,7 @@ Static semantics; no target code or packages executed. Remaining philosophy rema
 
 ### `agents-generator` — corrected
 
-All20 files fullread. Preserve managed-block human policy/symlink targets and backup outside discovery. Stop inventing attribution/docs/approval defaults, current branch!=default. Fix malformed template placeholders/fences, exact-version/test-count inference, invalid npm run run/ad-hoc tool download, DB ID inference, unknown-body cast, Formik Zod adapter and nonexistent build fallback.
+All20 files fullread. Preserve managed-block human policy/symlink targets and backup outside discovery. Stop inventing attribution/docs/approval defaults, current branch!=default. Fix malformed template placeholders/fences, exact-version/test-count inference, invalid duplicated run subcommand/ad-hoc tool download, DB ID inference, unknown-body cast, Formik Zod adapter and nonexistent build fallback.
 
 Static review; no rules generated/adopted, no target files outside own skill modified, no scripts/config execution. Detection remains advisory and actual host loading/version checks required.
 
