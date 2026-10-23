@@ -16,6 +16,10 @@ password. Alternatively, you can authenticate using an API Key from
 [Files.com](https://www.files.com/docs/sdk-and-apis/api-keys/).
 `rclone config` walks you through it.
 
+The masked/`ENCRYPTED` values in the setup transcript do not mean the whole
+rclone configuration is encrypted. Password obscuring is reversible; protect
+the config and exported API keys, and use config encryption when required.
+
 ## Configuration
 
 Here is an example of how to make a remote called `remote`.  First run:

@@ -1,7 +1,7 @@
 """
 pytest Fixtures Template for Cosmos DB Testing
 
-Production-ready test fixtures with:
+Application-specific starter test fixtures with:
 - Mock Cosmos container
 - Async operation mocking
 - Sample document factories
@@ -40,7 +40,7 @@ def mock_cosmos_container() -> MagicMock:
     container.read_item.return_value = None
     container.upsert_item.side_effect = lambda doc: doc  # Return the doc
     container.delete_item.return_value = None
-    container.query_items.return_value = iter([])
+    container.query_items.side_effect = lambda *args, **kwargs: iter([])
 
     return container
 
@@ -249,6 +249,9 @@ def cosmos_container_integration():
     """
     import os
 
+    if os.getenv("COSMOS_TEST_DISPOSABLE") != "1":
+        pytest.skip("Set COSMOS_TEST_DISPOSABLE=1 only for an isolated test container")
+
     if not os.getenv("COSMOS_ENDPOINT"):
         pytest.skip("COSMOS_ENDPOINT not configured for integration tests")
 
@@ -287,8 +290,8 @@ def cleanup_test_docs(
             cosmos_container_integration.delete_item(
                 item=doc_id, partition_key=partition_key
             )
-        except Exception:
-            pass  # Ignore cleanup errors
+        except Exception as exc:
+            pytest.fail(f"Test document cleanup failed: {type(exc).__name__}")
 
 
 # -----------------------------------------------------------------------------

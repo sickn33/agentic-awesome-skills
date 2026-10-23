@@ -15,7 +15,7 @@ show through.
 
 Here is an overview of the major features of each cloud storage system.
 
-Generated from `testdata/rclone/docs/data/backends/*.yaml` during skill conversion.
+Snapshot generated from upstream backend metadata during conversion; the upstream checkout and generation inputs are not bundled here. Capabilities are version/configuration dependent; verify the installed backend before relying on a table entry.
 
 | Name | Tier | Hash | ModTime | Case Insensitive | Duplicate Files | MIME Type | Metadata |
 |---|---|---|---|---|---|---|---|
@@ -472,7 +472,7 @@ See [the metadata docs](/docs/#metadata) for more info.
 All rclone remotes support a base command set. Other features depend
 upon backend-specific capabilities.
 
-Generated from `testdata/rclone/docs/data/backends/*.yaml` during skill conversion.
+Snapshot generated from upstream backend metadata during conversion; the upstream checkout and generation inputs are not bundled here. Capabilities are version/configuration dependent; verify the installed backend before relying on a table entry.
 
 | Name | Purge | Copy | Move | DirMove | CleanUp | ListR | StreamUpload | MultithreadUpload | LinkSharing | About | EmptyDir |
 |---|---|---|---|---|---|---|---|---|---|---|---|

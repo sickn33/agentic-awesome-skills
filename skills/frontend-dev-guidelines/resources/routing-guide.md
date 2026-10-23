@@ -145,7 +145,7 @@ export const Route = createFileRoute('/my-route/')({
 });
 ```
 
-Breadcrumb appears in navigation/app bar automatically.
+The application must read loader crumb data and render a breadcrumb; Router does not add one automatically.
 
 ### With Data Loader
 
@@ -287,8 +287,8 @@ function RootLayout() {
 ### Nested Layouts
 
 ```typescript
-// routes/dashboard/index.tsx
-export const Route = createFileRoute('/dashboard/')({
+// routes/dashboard/route.tsx (parent layout route)
+export const Route = createFileRoute('/dashboard')({
     component: DashboardLayout,
 });
 
@@ -362,3 +362,6 @@ export default UserPage;
 - [component-patterns.md](component-patterns.md) - Lazy loading patterns
 - [loading-and-error-states.md](loading-and-error-states.md) - SuspenseLoader usage
 - [complete-examples.md](complete-examples.md) - Full route examples
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

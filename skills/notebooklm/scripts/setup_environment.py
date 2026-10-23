@@ -50,14 +50,6 @@ class SkillEnvironment:
         if self.requirements_file.exists():
             print("📦 Installing dependencies...")
             try:
-                # Upgrade pip first
-                subprocess.run(
-                    [str(self.venv_pip), "install", "--upgrade", "pip"],
-                    check=True,
-                    capture_output=True,
-                    text=True
-                )
-
                 # Install requirements
                 result = subprocess.run(
                     [str(self.venv_pip), "install", "-r", str(self.requirements_file)],
@@ -82,7 +74,8 @@ class SkillEnvironment:
                 except subprocess.CalledProcessError as e:
                     print(f"⚠️ Warning: Failed to install Chrome: {e}")
                     print("   You may need to run manually: python -m patchright install chrome")
-                    print("   Chrome is required (not Chromium) for reliability!")
+                    print("   Chrome is required by the configured browser channel.")
+                    return False
 
                 return True
             except subprocess.CalledProcessError as e:
@@ -109,6 +102,10 @@ class SkillEnvironment:
 
     def run_script(self, script_name: str, args: list = None) -> int:
         """Run a script with the virtual environment"""
+        from run import ALLOWED_SCRIPTS
+        if script_name not in ALLOWED_SCRIPTS:
+            print("Unsupported script name")
+            return 1
         script_path = self.skill_dir / "scripts" / script_name
 
         if not script_path.exists():

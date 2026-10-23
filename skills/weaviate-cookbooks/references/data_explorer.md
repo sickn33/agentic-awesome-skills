@@ -234,20 +234,20 @@ class GetDataResponse(BaseModel):
     data_types: dict[str, str]
     items: list[dict[str, Any]]
 
-@router.post("/data/{collection_name}")
+@router.get("/data/{collection_name}")
 async def get_data(
     collection_name: str,
     page_size: int = Query(default=10, ge=1, le=100),
     page_number: int = Query(default=1, ge=1),
     query: str = Query(default=""),
-    sort_on: str = Query(default=None),
+    sort_on: str | None = Query(default=None),
     ascending: bool = Query(default=True),
 ) -> GetDataResponse:
 
     # include client management to import async client here
 
-    collection = await client.collections.use(collection_name)
-    data_types = await async_get_collection_data_types(collection)
+    collection = client.collections.use(collection_name)
+    data_types = await get_collection_data_types(collection)
 
     if query != "":
         response = await collection.query.bm25(
@@ -278,10 +278,10 @@ async def get_data(
     ... # existing args
     tenant: str | None = Query(default=None)
 ):
-    base_collection = await client.collections.use(collection_name)
-    data_types = await async_get_collection_data_types(collection)
+    base_collection = client.collections.use(collection_name)
+    data_types = await get_collection_data_types(collection)
 
-    config = await collection.config.get()
+    config = await base_collection.config.get()
     if config.multi_tenancy_config.enabled and tenant and tenant.strip():
         collection = base_collection.with_tenant(tenant)
     else:
@@ -334,3 +334,5 @@ If the user chooses to combine these two applications, implement the integration
 When the user explicitly asks for a frontend, use this reference as guideline:
 
 - [Frontend Interface](frontend_interface.md): Build a Next.js frontend to interact with the Weaviate backend.
+
+Protect collection listings and env_check with backend authorization; return booleans only, never secrets. Use bool(os.getenv(...)) for nonempty configuration, not an is-not-None check. Derive tenant from authenticated identity and reject missing/mismatched tenant rather than falling back. Bound total pagination offsets, allowlist sort properties and import Sort from weaviate.classes.query. Examples omit dependency injection, authorization and tenant wiring.

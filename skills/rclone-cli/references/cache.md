@@ -107,6 +107,7 @@ chunk_total_size> 3
 Remote config
 --------------------
 [test-cache]
+type = cache
 remote = local:/test
 plex_url = http://127.0.0.1:32400
 plex_username = dummyusername

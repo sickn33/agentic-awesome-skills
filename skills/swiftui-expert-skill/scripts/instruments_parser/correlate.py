@@ -107,6 +107,7 @@ def _correlate_event(
             "samples_in_window": tp["samples_total"],
             "samples_on_main": tp["samples_main"],
             "main_running_coverage_pct": round(coverage_pct, 1),
+            "coverage_basis": "heuristic: assumed 1ms sampling; not blocking/CPU proof; processes may be aggregated",
             "hot_symbols": tp["hot_symbols"],
         }
 

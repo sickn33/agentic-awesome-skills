@@ -1,5 +1,7 @@
 # insider-trades
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
 SEC Form 4 insider trades for a US-listed company
 
@@ -41,7 +43,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge insider-trades --format json
+longbridge insider-trades AAPL.US --format json
 
 # See all options
 longbridge insider-trades --help

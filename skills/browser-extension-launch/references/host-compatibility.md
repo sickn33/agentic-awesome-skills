@@ -14,11 +14,7 @@ The public repository root contains one valid `SKILL.md`. Skill CLI 1.7.0 discov
 | GitHub Copilot | `github-copilot` | shared `.agents/skills` |
 | OpenCode | `opencode` | shared `.agents/skills` |
 
-Install for all five:
-
-Use the reviewed bundled catalog copy. This reference does not install an external skill.
-
-Use `-g` for user-level installation. Current Skill CLI 1.7.0 requires Node.js 22.20+. Other supported agents can use `--agent '*'`; do not claim a host is verified until its installation and required runtime capabilities have been exercised.
+Reuse the bundled catalog copy or an explicitly authorized host installer. Install only for the requested host and scope; do not infer authorization to install globally or for every agent. The recorded Skill CLI 1.7.0/Node.js 22.20+ compatibility is a historical observation, not a current environment guarantee. Verify the actual installer version and supported targets before use.
 
 ## Capability contract
 

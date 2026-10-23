@@ -8,7 +8,9 @@
 """
 import datetime as dt
 import zipfile
-from xml.sax.saxutils import escape
+import math
+import re
+from xml.sax.saxutils import escape, quoteattr
 
 EXCEL0 = dt.datetime(1899, 12, 30)
 STYLES = {'default': 0, 'header': 1, 'datetime': 2, 'date': 3, 'money': 4, 'wrap': 5, 'title': 6, 'note': 7,
@@ -64,6 +66,10 @@ def col_name(i):
 
 class Sheet:
     def __init__(self, name, widths=(), tab=None, freeze=True):
+        if not name or len(name) > 31 or re.search(r'[\[\]:*?/\\]', name):
+            raise ValueError('invalid Excel sheet name')
+        if tab and not re.fullmatch(r'[0-9A-Fa-f]{6}', tab):
+            raise ValueError('invalid tab color')
         self.name, self.widths, self.tab, self.freeze = name, list(widths), tab, freeze
         self.rows, self.merges = [], []
 
@@ -110,6 +116,8 @@ class Sheet:
                 elif isinstance(value, bool):
                     parts.append(f'<c r="{ref}"{sa} t="inlineStr"><is><t>{"Yes" if value else ""}</t></is></c>')
                 elif isinstance(value, (int, float)):
+                    if not math.isfinite(value):
+                        raise ValueError('non-finite spreadsheet number')
                     parts.append(f'<c r="{ref}"{sa}><v>{value}</v></c>')
                 else:
                     parts.append(f'<c r="{ref}"{sa} t="inlineStr"><is><t xml:space="preserve">{escape(str(value))}</t></is></c>')
@@ -123,6 +131,8 @@ class Sheet:
 
 def write(path, sheets):
     n = len(sheets)
+    if not n or len({s.name.casefold() for s in sheets}) != n:
+        raise ValueError('workbook needs uniquely named sheets')
     ct = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
           '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>'
           '<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>'
@@ -133,7 +143,7 @@ def write(path, sheets):
             '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')
     wb = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" '
           'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView activeTab="0"/></bookViews><sheets>'
-          + ''.join(f'<sheet name="{escape(s.name)}" sheetId="{i + 1}" r:id="rId{i + 1}"/>' for i, s in enumerate(sheets)) + '</sheets></workbook>')
+          + ''.join(f'<sheet name={quoteattr(s.name)} sheetId="{i + 1}" r:id="rId{i + 1}"/>' for i, s in enumerate(sheets)) + '</sheets></workbook>')
     wrels = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
              + ''.join(f'<Relationship Id="rId{i + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet{i + 1}.xml"/>' for i in range(n))
              + f'<Relationship Id="rId{n + 1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>')

@@ -1,6 +1,6 @@
 ---
 name: hig-components-controls
-description: "Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered."
+description: "Choose and review Apple selection and input controls: toggles, segmented controls, sliders, pickers, steppers, text fields, labels and keyboard behavior."
 risk: none
 source: community
 date_added: '2026-02-27'
@@ -18,7 +18,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 3. **Toggles for binary states.** On or off. In Settings-style screens, changes take effect immediately. In modal forms, changes commit on confirmation.
 
-4. **Segmented controls for mutually exclusive options.** 2-5 items, roughly equal importance, short labels.
+4. **Segmented controls for closely related choices.** Usually a small set; macOS also supports multiple selection and momentary actions. Keep a control’s selection/action behavior consistent.
 
 5. **Sliders for continuous values.** When precise numeric input is not critical. Provide min/max labels or icons for range endpoints.
 
@@ -38,7 +38,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 | Reference | Topic | Key content |
 |---|---|---|
-| [controls.md](references/controls.md) | General controls | States, affordance, system controls |
+| [controls.md](references/controls.md) | System controls | Control Center, Lock Screen and Action button controls |
 | [toggles.md](references/toggles.md) | Toggles | On/off, immediate effect |
 | [segmented-controls.md](references/segmented-controls.md) | Segmented controls | 2-5 options, equal weight |
 | [sliders.md](references/sliders.md) | Sliders | Continuous range, min/max labels |
@@ -86,9 +86,13 @@ This skill is applicable to execute the workflow or actions described in the ove
 
 **User request:**
 
-> Check for .claude/apple-design-context.md before asking questions.
+> Choose between a picker and segmented control for five related filters in an iPhone app, and explain state and VoiceOver behavior.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Reference scope
+
+Bundled Apple documentation is a static snapshot; check the linked primary page and target OS/API availability before platform-specific implementation. The controls.md page concerns WidgetKit system controls, not every in-app input control. The rating-indicator reference describes macOS NSLevelIndicator, which can be editable; a custom rating UI on other platforms is a separate design. Visual labels do not replace accessibility names. Keyboard type and formatters assist input but do not replace locale-aware validation, and secure fields do not encrypt stored/transmitted data. No Apple runtime or image-asset availability was tested here.

@@ -179,13 +179,13 @@ def create_style_preview(style_dict=None):
     ax4 = fig.add_subplot(gs[1, 1])
     ax4.plot(data['x'], data['y1'], label='Signal 1', linewidth=2)
     ax4.fill_between(data['x'], data['y1'] - 0.2, data['y1'] + 0.2,
-                     alpha=0.3, label='±1 std')
+                     alpha=0.3, label='Illustrative ±0.2 band')
     ax4.plot(data['x'], data['y2'], label='Signal 2', linewidth=2)
     ax4.fill_between(data['x'], data['y2'] - 0.2, data['y2'] + 0.2,
                      alpha=0.3)
     ax4.set_xlabel('X axis')
     ax4.set_ylabel('Y axis')
-    ax4.set_title('Time Series with Uncertainty')
+    ax4.set_title('Synthetic Signals with Illustrative Bands')
     ax4.legend()
     ax4.grid(True, alpha=0.3)
 
@@ -225,6 +225,8 @@ def save_style_file(style_dict, filename):
                         value_str = ', '.join(str(v) for v in value)
                     elif isinstance(value, bool):
                         value_str = str(value)
+                    elif isinstance(value, str) and "#" in value:
+                        value_str = f'"{value}"'  # protect hex colors from comment parsing
                     else:
                         value_str = str(value)
                     f.write(f"{key}: {value_str}\n")

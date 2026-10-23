@@ -85,6 +85,8 @@ def _fetch_dict_rows(cursor: Any) -> list[dict[str, Any]]:
         if not chunk:
             break
         rows.extend(dict(zip(cols, row)) for row in chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
@@ -193,6 +195,8 @@ def collect(
                     "byte_count": byte_count,
                     "last_updated": last_updated,
                 }
+                if len(assets) >= 10000:
+                    raise ValueError("Collection exceeds 10000 assets; narrow scope")
                 assets.append(asset)
                 log.info("Collected %s.%s.%s", catalog, schema, table_name)
 
@@ -213,7 +217,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Databricks metadata to a manifest file")
     parser.add_argument("--host", default=os.getenv("DATABRICKS_HOST"))           # ← SUBSTITUTE
     parser.add_argument("--http-path", default=os.getenv("DATABRICKS_HTTP_PATH")) # ← SUBSTITUTE
-    parser.add_argument("--token", default=os.getenv("DATABRICKS_TOKEN"))         # ← SUBSTITUTE
+    parser.add_argument("--token", choices=[], default=os.getenv("DATABRICKS_TOKEN"))         # ← SUBSTITUTE
     parser.add_argument("--catalog", default=os.getenv("DATABRICKS_CATALOG", "hive_metastore"))
     parser.add_argument("--manifest", default="manifest_metadata.json")
     args = parser.parse_args()

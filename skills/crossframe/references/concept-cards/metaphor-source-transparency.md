@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-concept-migration-metaphor-pack` 和 `expression-article-pack`。
+`v5-domain-translation-normative-source-pack` 和 `v5-cross-scale-context-translation-pack`。
 
 ## 证据要求
 

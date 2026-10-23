@@ -59,6 +59,7 @@ A simple retrieval tool that the RouterAgent can call. Pass this as a tool to th
 ```python
 from weaviate import connect_to_weaviate_cloud
 import os
+from weaviate.classes.init import Auth
 
 def retrieve_data(query: str):
     """
@@ -66,7 +67,7 @@ def retrieve_data(query: str):
     """
     client = connect_to_weaviate_cloud(
         cluster_url=os.getenv("WEAVIATE_URL", ""),
-        auth_credentials=os.getenv("WEAVIATE_API_KEY", ""),
+        auth_credentials=Auth.api_key(os.environ["WEAVIATE_API_KEY"]),
     )
     collection = client.collections.use("<collection_name>")
     response = collection.query.hybrid(query=query, limit=5)
@@ -117,7 +118,7 @@ class SearchCreation(dspy.Signature):
 from weaviate.classes.query import Filter
 
 def format_filters(search_filters: list[SearchFilter]):
-    filters = []
+    filters = None
     for search_filter in search_filters:
         base_filter = Filter.by_property(search_filter.field)
         if search_filter.operator == "=":
@@ -140,7 +141,7 @@ def query_agent_tool(collection_name: str, user_prompt: str):
     """
     client = connect_to_weaviate_cloud(
         cluster_url=os.getenv("WEAVIATE_URL", ""),
-        auth_credentials=os.getenv("WEAVIATE_API_KEY", ""),
+        auth_credentials=Auth.api_key(os.environ["WEAVIATE_API_KEY"]),
     )
     collection = client.collections.use(collection_name)
     config = collection.config.get()
@@ -215,8 +216,8 @@ from weaviate import connect_to_weaviate_cloud
 from weaviate.classes.config import Configure
 
 class RouterAgent:
-    def __init__(self, model: str, memory_model: str | None = None, tools: List[Callable] = []):
-        self.tools: list[Callable] = tools
+    def __init__(self, model: str, memory_model: str | None = None, tools: List[Callable] | None = None):
+        self.tools: list[Callable] = list(tools or [])
         self.model = dspy.LM(model)
         self.memory_model = dspy.LM(memory_model) if memory_model else dspy.LM(model)
         self.agent = dspy.ChainOfThought(AgentResponse)
@@ -224,7 +225,7 @@ class RouterAgent:
         self.conversation_history = dspy.History(messages=[])
         self.weaviate_client = connect_to_weaviate_cloud(
             cluster_url=os.getenv("WEAVIATE_URL", ""),
-            auth_credentials=os.getenv("WEAVIATE_API_KEY", ""),
+            auth_credentials=Auth.api_key(os.environ["WEAVIATE_API_KEY"]),
         )
 
     # ... existing methods from basic_agent.md (add_conversation_history, get_tools_and_descriptions) ...
@@ -278,7 +279,7 @@ response = qa.search("<user query here>")  # retrieval only
 response = qa.ask("<user query here>")     # retrieval + text response via response.final_answer
 ```
 
-The Query Agent is free up to 1000 requests per month. Docs: https://docs.weaviate.io/agents/query/usage
+Query Agent pricing and quotas must be checked against the current account/service contract. Docs: https://docs.weaviate.io/agents/query/usage
 
 
 ## Elysia
@@ -356,5 +357,5 @@ This guide used DSPy. Follow the guidelines in [here](./basic_agent.md), but mos
 
 ## Done Criteria
 
-- Create test scripts to check each function works independently with test data. Tear down tests after completion, or create a proper test suite with pytest (requires install)
+- Create test scripts to check each function works independently with test data. Retain meaningful regression tests with mocks or an explicitly authorized disposable test collection; never delete tests merely after a successful run
 - User has completed specification of the app.

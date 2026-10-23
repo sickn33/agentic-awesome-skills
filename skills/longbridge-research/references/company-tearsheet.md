@@ -1,5 +1,7 @@
 # longbridge-company-tearsheet
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 High-density company snapshot — business, financials, valuation, shareholders, and catalysts on one page.
 
 ## Workflow

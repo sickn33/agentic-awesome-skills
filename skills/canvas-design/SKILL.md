@@ -6,7 +6,9 @@ source: community
 date_added: "2026-02-27"
 ---
 
-These are instructions for creating design philosophies - aesthetic movements that are then EXPRESSED VISUALLY. Output only .md files, .pdf files, and .png files.
+<!-- Catalog review 2026-10-23: clarified user constraints, asset licensing, truthful authorship and export verification. -->
+
+These are instructions for creating design philosophies - aesthetic movements that are then EXPRESSED VISUALLY. Output .md, .pdf, or .png artifacts as requested.
 
 Complete this in two steps:
 1. Design Philosophy Creation (.md file)
@@ -22,7 +24,7 @@ To begin, create a VISUAL PHILOSOPHY (not layouts or templates) that will be int
 - Minimal text as visual accent
 
 ### THE CRITICAL UNDERSTANDING
-- What is received: Some subtle input or instructions by the user that should be taken into account, but used as a foundation; it should not constrain creative freedom.
+- What is received: The user’s brief, required content, brand rules, dimensions, accessibility needs and output format. Preserve these constraints; exercise creative freedom within them.
 - What is created: A design philosophy/aesthetic movement.
 - What happens next: Then, the same version receives the philosophy and EXPRESSES IT VISUALLY - creating artifacts that are 90% visual design, 10% essential text.
 
@@ -109,11 +111,11 @@ To create museum or magazine quality work, use the design philosophy as the foun
 
 **Text as a contextual element**: Text is always minimal and visual-first, but let context guide whether that means whisper-quiet labels or bold typographic gestures. A punk venue poster might have larger, more aggressive type than a minimalist ceramics studio identity. Most of the time, font should be thin. All use of fonts must be design-forward and prioritize visual communication. Regardless of text scale, nothing falls off the page and nothing overlaps. Every element must be contained within the canvas boundaries with proper margins. Check carefully that all text, graphics, and visual elements have breathing room and clear separation. This is non-negotiable for professional execution. **IMPORTANT: Use different fonts if writing text. Search the `./canvas-fonts` directory. Regardless of approach, sophistication is non-negotiable.**
 
-Download and use whatever fonts are needed to make this a reality. Get creative by making the typography actually part of the art itself -- if the art is abstract, bring the font onto the canvas, not typeset digitally.
+Prefer bundled fonts resolved relative to this skill’s installed directory. Inspect each font’s accompanying or embedded license and preserve required attribution when redistributing fonts; some families only carry embedded license metadata. Download additional fonts only from an authorized source with verified usage rights. Do not install fonts system-wide or fetch arbitrary files merely to satisfy an aesthetic choice. Get creative by making the typography actually part of the art itself -- if the art is abstract, bring the font onto the canvas, not typeset digitally.
 
 To push boundaries, follow design instinct/intuition while using the philosophy as a guiding principle. Embrace ultimate design freedom and choice. Push aesthetics and design to the frontier. 
 
-**CRITICAL**: To achieve human-crafted quality (not AI-generated), create work that looks like it took countless hours. Make it appear as though someone at the absolute top of their field labored over every detail with painstaking care. Ensure the composition, spacing, color choices, typography - everything screams expert-level craftsmanship. Double-check that nothing overlaps, formatting is flawless, every detail perfect. Create something that could be shown to people to prove expertise and rank as undeniably impressive.
+**CRITICAL**: To achieve polished visual quality, create work that looks like it took countless hours. Make it appear as though someone at the absolute top of their field labored over every detail with painstaking care. Ensure the composition, spacing, color choices, typography - everything screams expert-level craftsmanship. Double-check that nothing overlaps, formatting is flawless, every detail perfect. Create something that could be shown to people to prove expertise and rank as undeniably impressive.
 
 Output the final result as a single, downloadable .pdf or .png file, alongside the design philosophy used as a .md file.
 
@@ -121,7 +123,7 @@ Output the final result as a single, downloadable .pdf or .png file, alongside t
 
 ## FINAL STEP
 
-**IMPORTANT**: The user ALREADY said "It isn't perfect enough. It must be pristine, a masterpiece if craftsmanship, as if it were about to be displayed in a museum."
+**IMPORTANT**: Inspect and refine the first draft against the actual user brief. Do not invent prior user feedback or imply human authorship or time spent.
 
 **CRITICAL**: To refine the work, avoid adding more graphics; instead refine what has been created and make it extremely crisp, respecting the design philosophy and the principles of minimalism entirely. Rather than adding a fun filter or refactoring a font, consider how to make the existing composition more cohesive with the art. If the instinct is to call a new function or draw a new shape, STOP and instead ask: "How can I make what's already here more of a piece of art?"
 
@@ -131,10 +133,16 @@ Take a second pass. Go back to the code and refine/polish further to make this a
 
 To create additional pages when requested, create more creative pages along the same lines as the design philosophy but distinctly different as well. Bundle those pages in the same .pdf or many .pngs. Treat the first page as just a single page in a whole coffee table book waiting to be filled. Make the next pages unique twists and memories of the original. Have them almost tell a story in a very tasteful way. Exercise full creative freedom.
 
+## Export Verification
+
+Choose a renderer available in the current environment, such as a PDF drawing library or image canvas; do not assume a bundled generator exists. Set explicit page dimensions and units, render a preview, inspect text clipping, margins, overlap, contrast and glyph coverage, then link the actual saved files. For PDF, confirm page count and embedded fonts; for PNG, confirm pixel dimensions and resolution needed for the destination. Preserve exact required wording even when the aesthetic favors sparse text.
+
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use for original posters, visual compositions and design manifestos when a static PDF or PNG meets the brief.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
+- This bundle supplies guidance and fonts, not an executable design or export pipeline. Rendering and visual inspection depend on available tools.
+- Aesthetic judgments are subjective; do not claim museum quality, manual authorship, hours of labor or accessibility compliance without evidence.
+- Font name/license metadata inspection does not establish every glyph’s quality or replace full font-rendering/security validation.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

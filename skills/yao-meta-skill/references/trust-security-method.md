@@ -1,5 +1,13 @@
 # Trust Security Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Trust checks make skills safer to install and review, especially when they include scripts or are distributed to a team.
 
 ## When To Run
@@ -30,7 +38,7 @@ Run the trust report when:
 Every Python file under `scripts/` is reviewed as part of the package trust surface.
 
 - CLI scripts should use `argparse` so reviewers and installers can run `python3 scripts/name.py --help` before execution.
-- The trust report executes `python3 scripts/name.py --help` for CLI scripts with `argparse`, with a short timeout, and records pass/fail evidence.
+- Review all top-level code and dependencies before any `--help` execution; argparse does not prevent import-time effects. A timeout alone is not isolation. Only then run approved local smoke checks and record their actual result.
 - Import-only modules should declare `SCRIPT_INTERFACE = "internal-module"` near the top of the file.
 - Internal modules should also declare `SCRIPT_INTERFACE_REASON` with a short explanation of which CLI or renderer imports them.
 - The trust report keeps internal modules in the script inventory, but excludes them from CLI help-surface warnings.

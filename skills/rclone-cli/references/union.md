@@ -113,7 +113,7 @@ rclone ls remote:
 ```
 
 Copy another local directory to the union directory called source, which will be
-placed into `remote3:dir3`
+placed according to `create_policy` (the default `epmfs` selects an eligible upstream with the most free space, not necessarily `remote3:dir3`)
 
 ```console
 rclone copy C:\source remote:source

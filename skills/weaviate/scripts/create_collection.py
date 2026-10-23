@@ -14,10 +14,11 @@ Usage:
 Environment Variables:
     WEAVIATE_URL: Weaviate Cloud cluster URL
     WEAVIATE_API_KEY: API key for authentication
-    + Any provider API keys (OPENAI_API_KEY, COHERE_API_KEY, etc.) - auto-detected
+    + Explicit WEAVIATE_PROVIDER_KEYS allowlist only; unrelated credentials are never forwarded
 """
 
 import json
+import re
 import sys
 
 import typer
@@ -50,8 +51,8 @@ DATA_TYPE_MAP = {
     "date[]": DataType.DATE_ARRAY,
     "uuid": DataType.UUID,
     "uuid[]": DataType.UUID_ARRAY,
-    "geoCoordinates": DataType.GEO_COORDINATES,
-    "phoneNumber": DataType.PHONE_NUMBER,
+    "geocoordinates": DataType.GEO_COORDINATES,
+    "phonenumber": DataType.PHONE_NUMBER,
     "blob": DataType.BLOB,
     "object": DataType.OBJECT,
     "object[]": DataType.OBJECT_ARRAY,
@@ -86,7 +87,7 @@ VECTORIZER_MAP = {
 }
 
 
-def parse_property(prop_dict: dict) -> Property:
+def parse_property(prop_dict: dict, depth: int = 0) -> Property:
     """
     Parse a property definition from a dictionary.
 
@@ -99,6 +100,10 @@ def parse_property(prop_dict: dict) -> Property:
     Raises:
         ValueError: If property definition is invalid
     """
+    if depth > 20:
+        raise ValueError("nested property depth exceeds 20")
+    if not isinstance(prop_dict, dict):
+        raise ValueError("each property definition must be an object")
     if "name" not in prop_dict:
         raise ValueError("Property must have a 'name' field")
     if "data_type" not in prop_dict:
@@ -107,6 +112,10 @@ def parse_property(prop_dict: dict) -> Property:
         )
 
     name = prop_dict["name"]
+    if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name) or name in {"id", "_id", "_additional"}:
+        raise ValueError("invalid or reserved property name")
+    if not isinstance(prop_dict["data_type"], str):
+        raise ValueError("data_type must be a string")
     data_type_str = prop_dict["data_type"].lower()
 
     if data_type_str not in DATA_TYPE_MAP:
@@ -128,13 +137,19 @@ def parse_property(prop_dict: dict) -> Property:
         kwargs["description"] = prop_dict["description"]
 
     if "index_filterable" in prop_dict:
-        kwargs["index_filterable"] = bool(prop_dict["index_filterable"])
+        if not isinstance(prop_dict["index_filterable"], bool):
+            raise ValueError("index_filterable must be a JSON boolean")
+        kwargs["index_filterable"] = prop_dict["index_filterable"]
 
     if "index_searchable" in prop_dict:
-        kwargs["index_searchable"] = bool(prop_dict["index_searchable"])
+        if not isinstance(prop_dict["index_searchable"], bool):
+            raise ValueError("index_searchable must be a JSON boolean")
+        kwargs["index_searchable"] = prop_dict["index_searchable"]
 
     if "index_range_filters" in prop_dict:
-        kwargs["index_range_filters"] = bool(prop_dict["index_range_filters"])
+        if not isinstance(prop_dict["index_range_filters"], bool):
+            raise ValueError("index_range_filters must be a JSON boolean")
+        kwargs["index_range_filters"] = prop_dict["index_range_filters"]
 
     # Handle tokenization for text types
     if "tokenization" in prop_dict:
@@ -153,8 +168,10 @@ def parse_property(prop_dict: dict) -> Property:
                 f"nested_properties can only be used with 'object' or 'object[]' data types "
                 f"(property '{name}' has type '{data_type_str}')"
             )
+        if not isinstance(prop_dict["nested_properties"], list) or len(prop_dict["nested_properties"]) > 100:
+            raise ValueError("nested_properties must be a bounded list")
         kwargs["nested_properties"] = [
-            parse_property(nested_prop)
+            parse_property(nested_prop, depth + 1)
             for nested_prop in prop_dict["nested_properties"]
         ]
 
@@ -177,7 +194,7 @@ def main(
         help="Collection description. Weaviate agents read this to understand what the collection contains and decide which collection to query.",
     ),
     vectorizer: str = typer.Option(
-        "text2vec_weaviate",
+        "none",
         "--vectorizer",
         "-v",
         help=f"Vectorizer to use. Options: {', '.join(VECTORIZER_MAP.keys())}",
@@ -194,9 +211,12 @@ def main(
         "-a",
         help="Auto-create tenants on insert (requires --multi-tenancy)",
     ),
+    allow_write: bool = typer.Option(False, "--allow-write", help="Authorize creation on the approved instance"),
     json_output: bool = typer.Option(False, "--json", help="Output in JSON format"),
 ):
     """Create a new Weaviate collection with specified properties."""
+    if not allow_write:
+        raise typer.BadParameter("collection creation requires --allow-write")
     try:
         # Validate multi-tenancy options
         if auto_tenant_creation and not multi_tenancy:
@@ -206,21 +226,16 @@ def main(
             )
             raise typer.Exit(1)
 
-        # Validate collection name (should start with uppercase)
-        if not name[0].isupper():
-            print(
-                f"Warning: Collection name '{name}' should start with an uppercase letter "
-                f"(GraphQL naming convention).",
-                file=sys.stderr,
-            )
-            name = name.capitalize()
-            print(f"Using '{name}' instead.", file=sys.stderr)
+        if not re.fullmatch(r"[A-Z][A-Za-z0-9_]*", name):
+            raise ValueError("use the exact approved collection name beginning with uppercase")
 
         # Parse properties JSON
         try:
             properties_list = json.loads(properties)
             if not isinstance(properties_list, list):
                 raise ValueError("Properties must be a JSON array")
+            if len(properties_list) > 100:
+                raise ValueError("at most 100 properties per collection")
             if len(properties_list) == 0:
                 raise ValueError("Properties array cannot be empty")
         except json.JSONDecodeError as e:
@@ -231,7 +246,7 @@ def main(
         try:
             parsed_properties = [parse_property(prop) for prop in properties_list]
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
             raise typer.Exit(1)
 
         # Prepare collection config
@@ -275,7 +290,7 @@ def main(
             if client.collections.exists(name):
                 print(
                     f"Error: Collection '{name}' already exists. "
-                    f"Delete it first or use a different name.",
+                    f"Choose a different approved name; no existing collection is deleted.",
                     file=sys.stderr,
                 )
                 raise typer.Exit(1)
@@ -348,10 +363,10 @@ def main(
                     print(f"| {prop['name']} | {prop['data_type']} | {desc} |")
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

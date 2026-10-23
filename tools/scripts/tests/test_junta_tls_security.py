@@ -29,10 +29,10 @@ class JuntaTlsSecurityTests(unittest.TestCase):
         os.environ.pop("JUNTA_INSECURE_TLS", None)
         self.assertTrue(base_scraper.should_verify_tls())
 
-    def test_tls_verification_can_be_disabled_explicitly(self):
+    def test_global_insecure_environment_cannot_disable_tls(self):
         os.environ["JUNTA_INSECURE_TLS"] = "1"
         try:
-            self.assertFalse(base_scraper.should_verify_tls())
+            self.assertTrue(base_scraper.should_verify_tls())
         finally:
             os.environ.pop("JUNTA_INSECURE_TLS", None)
 

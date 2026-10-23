@@ -1,5 +1,7 @@
 # Agent Type Definitions
 
+> Review note: The listed roles and historical model choices are design suggestions, not proven parallel capacity or expertise. Coordinate ownership/locks before concurrent writes; queues alone do not prevent conflicts. Pass untrusted agent prompts through files or quoted structured arguments, never interpolate them into shell/tmux command strings.
+
 Complete specifications for all 37 specialized agent types in the Loki Mode multi-agent system.
 
 **Note:** These are agent TYPE definitions, not a fixed count. Loki Mode dynamically spawns agents based on project needs - a simple todo app might use 5-10 agents, while a complex startup could spawn 100+ agents working in parallel.

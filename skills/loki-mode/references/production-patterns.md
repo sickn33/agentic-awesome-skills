@@ -1,6 +1,8 @@
 # Production Patterns Reference
 
-Practitioner-tested patterns from Hacker News discussions and real-world deployments. These patterns represent what actually works in production, not theoretical frameworks.
+> Review note: These are informal practitioner recommendations, not a representative survey or universal production evidence. YAML/Python are conceptual and may use undefined project helpers. Model names, prices and plan limits are historical and must be rechecked with providers. Self-reported confidence is not calibrated probability or permission: authorization and deterministic checks must precede side effects.
+
+Practitioner suggestions collected from Hacker News discussions and deployment anecdotes. Their applicability depends on the task and operating environment.
 
 ---
 
@@ -18,7 +20,7 @@ This reference consolidates battle-tested insights from:
 
 ### Human-in-the-Loop (HITL) is Non-Negotiable
 
-**Key Insight:** "Zero companies don't have a human in the loop" for customer-facing applications.
+**Recommendation:** Define human review and escalation requirements for customer-facing applications.
 
 ```yaml
 hitl_patterns:
@@ -80,8 +82,8 @@ def confidence_based_routing(agent_output):
     confidence = agent_output.confidence_score
 
     if confidence >= 0.95:
-        # High confidence: auto-approve with logging
-        return AutoApprove(audit_log=True)
+        # High model confidence still requires authorization and verification
+        return HumanReview(priority="normal", context="verification_evidence")
 
     elif confidence >= 0.70:
         # Medium confidence: quick human review

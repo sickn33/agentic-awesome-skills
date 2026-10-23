@@ -1,8 +1,11 @@
 ---
 title: "Searching | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/searching
+---
 
 # Searching
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 People use various search techniques to find content on their device, within an app, and within a document or file.
 
@@ -68,3 +71,7 @@ Date| Changes
 ---|---  
 June 9, 2025| Updated best practices with general guidance from Search fields, and reorganized guidance for systemwide search.  
   
+
+## Implementation checks
+
+Index only content the signed-in person may discover. Remove or invalidate indexed content after account changes, deletion or revoked sharing; re-check access on opening a result. Bound/debounce network queries, prevent stale results replacing newer ones and make clearing private search history effective. File importer and preview extension availability differs by platform and SDK.

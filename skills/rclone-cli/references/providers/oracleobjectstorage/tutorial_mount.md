@@ -67,7 +67,7 @@ of above 3 buckets. Create a configuration file in a accessible location that
 rclone program can read.
 
 ```console
-[opc@base-inst-boot ~]$ mkdir -p /etc/rclone
+[opc@base-inst-boot ~]$ sudo mkdir -p /etc/rclone
 [opc@base-inst-boot ~]$ sudo touch /etc/rclone/rclone.conf
 
 
@@ -143,6 +143,10 @@ any {instance.compartment.id = '<compartment_ocid_a>',
     }
 ```
 
+The broad example below grants management of all object storage in three
+compartments to every matched instance. Narrow group membership and IAM policy
+to the required instances, buckets and read/write operations before deployment.
+
 Now that you have a dynamic group, you need to add a policy allowing what
 permissions this dynamic-group has. In our case, we want this dynamic-group to
 access object-storage. So create a policy now.
@@ -172,10 +176,10 @@ Create the mount folder and set its ownership to desired user, group.
 Set chmod permissions to user, group, others as desired for each mount path
 
 ```console
-[opc@base-inst-boot ~]$ sudo chmod 764 /opt/mnt
+[opc@base-inst-boot ~]$ sudo chmod 0750 /opt/mnt
 [opc@base-inst-boot ~]$ ls -al /opt/mnt/
 total 0
-drwxrw-r--. 2 opc adm 6 Apr 7 18:01 .
+drwxr-x---. 2 opc adm 6 Apr 7 18:01 .
 drwxr-xr-x. 10 root root 179 Apr 7 18:01 ..
 
 [opc@base-inst-boot ~]$ mkdir -p /opt/mnt/bucket-a
@@ -184,7 +188,7 @@ drwxr-xr-x. 10 root root 179 Apr 7 18:01 ..
 
 [opc@base-inst-boot ~]$ ls -al /opt/mnt
 total 0
-drwxrw-r--. 5 opc adm 54 Apr 7 18:17 .
+drwxr-x---. 5 opc adm 54 Apr 7 18:17 .
 drwxr-xr-x. 10 root root 179 Apr 7 18:01 ..
 drwxrwxr-x. 2 opc opc 6 Apr 7 18:17 bucket-a
 drwxrwxr-x. 2 opc opc 6 Apr 7 18:17 bucket-b
@@ -205,34 +209,24 @@ with lots of retries. However rclone mount can't use retries in the same way
 without making local copies of the uploads. Please Look at the VFS File Caching
 for solutions to make mount more reliable.
 
+Use empty mount directories. Create the persistent cache directory with ownership
+restricted to the service account before mounting; do not use a temporary cache
+for pending writes. `--allow-other` permits other local users, so use it only
+with the intended permissions (and FUSE configuration). This mount is not a POSIX
+filesystem or an independent backup.
+
 First lets understand the rclone mount flags and some global flags for troubleshooting.
 
 ```console
-rclone mount \
-    ossa:bucket-a \                     # Remote:bucket-name
-    /opt/mnt/bucket-a \                 # Local mount folder
-    --config /etc/rclone/rclone.conf \  # Path to rclone config file
-    --allow-non-empty \                 # Allow mounting over a non-empty directory
-    --dir-perms 0770 \                  # Directory permissions (default 0777)
-    --file-perms 0660 \                 # File permissions (default 0666)
-    --allow-other \                     # Allow access to other users
-    --umask 0117  \                     # sets (660) rw-rw---- as permissions for the mount using the umask
-    --transfers 8 \                     # default 4, can be set to adjust the number of parallel uploads of modified files to remote from the cache
-    --tpslimit 50  \                    # Limit HTTP transactions per second to this. A transaction is roughly defined as an API call;
-                                        # its exact meaning will depend on the backend. For HTTP based backends it is an HTTP PUT/GET/POST/etc and its response
-    --cache-dir /tmp/rclone/cache       # Directory rclone will use for caching.
-    --dir-cache-time 5m \               # Time to cache directory entries for (default 5m0s)
-    --vfs-cache-mode writes \           # Cache mode off|minimal|writes|full (default off), writes gives the maximum compatibility like a local disk
-    --vfs-cache-max-age 20m \           # Max age of objects in the cache (default 1h0m0s)
-    --vfs-cache-max-size 10G \          # Max total size of objects in the cache (default off)
-    --vfs-cache-poll-interval 1m \      # Interval to poll the cache for stale objects (default 1m0s)
-    --vfs-write-back 5s   \             # Time to writeback files after last use when using cache (default 5s).
-                                        # Note that files are written back to the remote only when they are closed and
-                                        # if they haven't been accessed for --vfs-write-back seconds. If rclone is quit or
-                                        # dies with files that haven't been uploaded, these will be uploaded next time rclone is run with the same flags.
-    --vfs-fast-fingerprint              # Use fast (less accurate) fingerprints for change detection.
-    --log-level ERROR \                            # log level, can be DEBUG, INFO, ERROR
-    --log-file /var/log/rclone/oosa-bucket-a.log   # rclone application log
+rclone mount ossa:bucket-a /opt/mnt/bucket-a \
+    --config /etc/rclone/rclone.conf \
+    --dir-perms 0770 --file-perms 0660 --umask 0007 \
+    --allow-other --transfers 4 --tpslimit 50 \
+    --cache-dir /var/cache/rclone/bucket-a \
+    --dir-cache-time 5m --vfs-cache-mode writes \
+    --vfs-cache-max-age 20m --vfs-cache-max-size 10G \
+    --vfs-cache-poll-interval 1m --vfs-write-back 5s
+
 ```
 
 ### --vfs-cache-mode writes
@@ -246,7 +240,9 @@ VFS cache mode of writes is recommended, so that application can have maximum
 compatibility of using remote storage as a local disk, when write is finished,
 file is closed, it is uploaded to backend remote after vfs-write-back duration
 has elapsed. If rclone is quit or dies with files that haven't been uploaded,
-these will be uploaded next time rclone is run with the same flags.
+pending uploads may be recovered on restart only if the persistent cache and
+its metadata remain intact and rclone uses the same remote and cache settings.
+Do not clear the cache while uploads are pending.
 
 ### --tpslimit float
 
@@ -264,10 +260,8 @@ Use this when the number of transactions per second from rclone is causing a
 problem with the cloud storage provider (e.g. getting you banned or rate
 limited or throttled).
 
-This can be very useful for rclone mount to control the behaviour of
-applications using it. Let's guess and say Object storage allows roughly 100
-tps per tenant, so to be on safe side, it will be wise to set this at 50
-(tune it to actuals per region).
+Choose this value from your actual service limits and observed throttling;
+the example value of 50 is not an OCI tenant-limit guarantee.
 
 ### --vfs-fast-fingerprint
 
@@ -292,8 +286,7 @@ changed relative to a remote file. Fingerprints are made from:
 Add this entry in /etc/fstab:
 
 ```text
-ossa:bucket-a /opt/mnt/bucket-a rclone rw,umask=0117,nofail,_netdev,args2env,config=/etc/rclone/rclone.conf,uid=1000,gid=4,
-file_perms=0760,dir_perms=0760,allow_other,vfs_cache_mode=writes,cache_dir=/tmp/rclone/cache 0 0
+ossa:bucket-a /opt/mnt/bucket-a rclone rw,umask=0117,nofail,_netdev,args2env,config=/etc/rclone/rclone.conf,uid=1000,gid=4,file_perms=0660,dir_perms=0770,allow_other,vfs_cache_mode=writes,cache_dir=/var/cache/rclone/bucket-a 0 0
 ```
 
 IMPORTANT: Please note in fstab entry arguments are specified as underscore
@@ -323,71 +316,39 @@ the each rclone mount into a systemd units file.
 various examples in git search: <https://github.com/search?l=Shell&q=rclone+unit&type=Code>
 
 ```console
-tee "/etc/systemd/system/rclonebucketa.service" > /dev/null <<EOF
+sudo tee "/etc/systemd/system/rclonebucketa.service" > /dev/null <<'EOF'
 [Unit]
 Description=RCloneMounting
-After=multi-user.target
+Wants=network-online.target
+After=network-online.target
 [Service]
 Type=simple
-User=0
-Group=0
-ExecStart=/bin/bash /etc/rclone/scripts/bucket-a.sh
+User=opc
+Group=adm
+ExecStart=/usr/bin/rclone mount ossa:bucket-a /opt/mnt/bucket-a --config /etc/rclone/rclone.conf --allow-other --dir-perms 0770 --file-perms 0660 --umask 0007 --vfs-cache-mode writes --cache-dir /var/cache/rclone/bucket-a
 ExecStop=/bin/fusermount -uz /opt/mnt/bucket-a
 TimeoutStopSec=20
-KillMode=process
-RemainAfterExit=yes
+Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 EOF
 ```
 
-## Step 7: Optional: Mount Nanny, for resiliency, recover from process crash
+## Step 7: Recovering a failed mount
 
-Sometimes, rclone process crashes and the mount points are left in dangling
-state where its mounted but the rclone mount process is gone. To clean up the
-mount point you can force unmount by running this command.
-
-```console
-sudo fusermount -uz /opt/mnt/bucket-a
-```
-
-One can also run a rclone_mount_nanny script, which detects and cleans up mount
-errors by unmounting and then auto-mounting.
-
-Content of /etc/rclone/scripts/rclone_nanny_script.sh
-
-```sh
-#!/usr/bin/env bash
-erroneous_list=$(df 2>&1 | grep -i 'Transport endpoint is not connected' | awk '{print ""$2"" }' | tr -d \:)
-rclone_list=$(findmnt -t fuse.rclone -n 2>&1 | awk '{print ""$1"" }' | tr -d \:)
-IFS=$'\n'; set -f
-intersection=$(comm -12 <(printf '%s\n' "$erroneous_list" | sort) <(printf '%s\n' "$rclone_list" | sort))
-for directory in $intersection
-do
-    echo "$directory is being fixed."
-    sudo fusermount -uz "$directory"
-done
-sudo mount -av
-```
-
-Script to idempotently add a Cron job to babysit the mount paths every 5 minutes
-
-```sh
-echo "Creating rclone nanny cron job."
-croncmd="/etc/rclone/scripts/rclone_nanny_script.sh"
-cronjob="*/5 * * * * $croncmd"
-# idempotency - adds rclone_nanny cronjob only if absent.
-( crontab -l | grep -v -F "$croncmd" || : ; echo "$cronjob" ) | crontab -
-echo "Finished creating rclone nanny cron job."
-```
-
-Ensure the crontab is added, so that above nanny script runs every 5 minutes.
+If the mount reports "Transport endpoint is not connected", stop clients and
+inspect the rclone service log and any pending VFS uploads first. Preserve the
+cache. After confirming the rclone process has stopped, unmount only the affected
+path and restart its dedicated service:
 
 ```console
-[opc@base-inst-boot ~]$ sudo crontab -l
-*/5 * * * * /etc/rclone/scripts/rclone_nanny_script.sh
-[opc@base-inst-boot ~]$
+sudo fusermount -u /opt/mnt/bucket-a
+sudo systemctl restart rclonebucketa.service
 ```
+
+A forced or lazy unmount can interrupt clients and pending work. Do not install
+a cron job that unmounts paths parsed from error messages or remounts every fstab
+entry automatically.
 
 ## Step 8: Optional: Setup NFS server to access the mount points of rclone
 
@@ -404,20 +365,20 @@ sudo yum install -y nfs-utils
 
 Export the desired directory via NFS Server in the same machine where rclone
 has mounted to, ensure NFS service has desired permissions to read the directory.
-If it runs as root, then it will have permissions for sure, but if it runs
-as separate user then ensure that user has necessary desired privileges.
+FUSE access restrictions still apply to root and other users; enable
+`--allow-other` only for intended consumers and set appropriate local permissions.
 
 ```sh
 # this gives opc user and adm (administrators group) ownership to the path, so any user belonging to adm group will be able to access the files.
 [opc@tools ~]$ sudo chown -R opc:adm /opt/mnt/bucket-a/
-[opc@tools ~]$ sudo chmod 764 /opt/mnt/bucket-a/
+[opc@tools ~]$ sudo chmod 0750 /opt/mnt/bucket-a/
 
 # Not export the mount path of rclone for exposing via nfs server
 # There are various nfs export options that you should keep per desired usage.
 # Syntax is
 # <path> <allowed-ipaddr>(<option>)
 [opc@tools ~]$ cat /etc/exports
-/opt/mnt/bucket-a *(fsid=1,rw)
+/opt/mnt/bucket-a <TRUSTED_CLIENT_IP>(fsid=1,rw,sync,root_squash)
 
 
 # Restart NFS server
@@ -427,7 +388,7 @@ as separate user then ensure that user has necessary desired privileges.
 # Show Export paths
 [opc@tools ~]$ showmount -e
 Export list for tools:
-/opt/mnt/bucket-a *
+/opt/mnt/bucket-a <TRUSTED_CLIENT_IP>
 
 # Know the port NFS server is running as, in this case it's listening on port 2049
 [opc@tools ~]$ sudo rpcinfo -p | grep nfs
@@ -477,7 +438,7 @@ In the client machine Mount the external NFS
 
 # In /etc/fstab, add the below entry
 [opc@base-inst-boot ~]$ cat /etc/fstab | grep nfs
-<ProvideYourIPAddress>:/opt/mnt/bucket-a /opt/mnt/buckert-a nfs rw 0 0
+<ProvideYourIPAddress>:/opt/mnt/bucket-a /opt/mnt/bucket-a nfs rw 0 0
 
 # remount so that newly added path gets mounted.
 [opc@base-inst-boot ~]$ sudo mount -av
@@ -497,7 +458,7 @@ In the client machine Mount the external NFS
 [opc@base-inst-boot ~]$ ls -al /opt/mnt/bucket-a
 total 1
 drw-rw----. 1 opc adm 0 Apr 18 17:28 .
-drwxrw-r--. 7 opc adm 85 Apr 18 17:36 ..
+drwxr-x---. 7 opc adm 85 Apr 18 17:36 ..
 drw-rw----. 1 opc adm 0 Apr 18 17:29 FILES
 -rw-rw----. 1 opc adm 15 Apr 18 18:13 nfs.txt
 ```

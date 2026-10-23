@@ -5,6 +5,8 @@ Plans and tracks A/B tests for metadata and visual assets.
 
 from typing import Dict, List, Any, Optional
 import math
+from statistics import NormalDist
+from uuid import uuid4
 
 
 class ABTestPlanner:
@@ -95,6 +97,10 @@ class ABTestPlanner:
         Returns:
             Sample size calculation with duration estimates
         """
+        if confidence_level not in self.CONFIDENCE_LEVELS or not all(math.isfinite(v) for v in (baseline_conversion, minimum_detectable_effect, power)):
+            raise ValueError("Invalid confidence or nonfinite input")
+        if not 0 < baseline_conversion < 1 or not 0 < minimum_detectable_effect or baseline_conversion * (1 + minimum_detectable_effect) >= 1 or not 0.5 < power < 1:
+            raise ValueError("Require baseline and expected conversion in (0, 1), positive relative MDE, and power in (0.5, 1)")
         alpha = 1 - self.CONFIDENCE_LEVELS[confidence_level]
         beta = 1 - power
 
@@ -157,6 +163,9 @@ class ABTestPlanner:
         Returns:
             Significance analysis with decision recommendation
         """
+        for conversions, visitors in ((variant_a_conversions, variant_a_visitors), (variant_b_conversions, variant_b_visitors)):
+            if type(visitors) is not int or type(conversions) is not int or visitors <= 0 or not 0 <= conversions <= visitors:
+                raise ValueError("Require positive integer visitors and conversions between zero and visitors")
         # Calculate conversion rates
         rate_a = variant_a_conversions / variant_a_visitors if variant_a_visitors > 0 else 0
         rate_b = variant_b_conversions / variant_b_visitors if variant_b_visitors > 0 else 0
@@ -169,20 +178,20 @@ class ABTestPlanner:
 
         absolute_improvement = rate_b - rate_a
 
-        # Calculate standard error
-        se_a = math.sqrt(rate_a * (1 - rate_a) / variant_a_visitors) if variant_a_visitors > 0 else 0
-        se_b = math.sqrt(rate_b * (1 - rate_b) / variant_b_visitors) if variant_b_visitors > 0 else 0
-        se_diff = math.sqrt(se_a**2 + se_b**2)
-
-        # Calculate z-score
-        z_score = absolute_improvement / se_diff if se_diff > 0 else 0
+        # Pooled standard error under the null of equal conversion rates.
+        pooled = (variant_a_conversions + variant_b_conversions) / (variant_a_visitors + variant_b_visitors)
+        se_diff = math.sqrt(pooled * (1 - pooled) * (1 / variant_a_visitors + 1 / variant_b_visitors))
+        z_score = absolute_improvement / se_diff if se_diff else 0.0
+        approximation_valid = all(value >= 5 for value in (
+            variant_a_visitors * pooled, variant_a_visitors * (1 - pooled),
+            variant_b_visitors * pooled, variant_b_visitors * (1 - pooled)))
 
         # Calculate p-value (two-tailed)
         p_value = 2 * (1 - self._standard_normal_cdf(abs(z_score)))
 
         # Determine significance
-        is_significant_95 = p_value < 0.05
-        is_significant_90 = p_value < 0.10
+        is_significant_95 = approximation_valid and p_value < 0.05
+        is_significant_90 = approximation_valid and p_value < 0.10
 
         # Generate decision
         decision = self._generate_test_decision(
@@ -209,6 +218,8 @@ class ABTestPlanner:
             },
             'statistical_analysis': {
                 'z_score': round(z_score, 3),
+                'normal_approximation_valid': approximation_valid,
+                'limitations': 'Fixed-horizon two-proportion normal approximation; use an exact method for sparse counts. No sequential or multiple-testing correction.',
                 'p_value': round(p_value, 4),
                 'is_significant_95': is_significant_95,
                 'is_significant_90': is_significant_90,
@@ -247,7 +258,9 @@ class ABTestPlanner:
 
         # Calculate test progress
         total_visitors = results_data['variant_a_visitors'] + results_data['variant_b_visitors']
-        required_sample = results_data.get('required_sample_size', 10000)
+        required_sample = results_data.get('required_sample_size')
+        if type(required_sample) is not int or required_sample <= 0:
+            raise ValueError("Provide the positive prespecified total sample size")
         progress_percentage = min((total_visitors / required_sample) * 100, 100)
 
         # Generate recommendations
@@ -329,8 +342,7 @@ class ABTestPlanner:
     def _generate_test_id(self, test_type: str) -> str:
         """Generate unique test ID."""
         import time
-        timestamp = int(time.time())
-        return f"{test_type}_{timestamp}"
+        return f"{test_type}_{uuid4().hex}"
 
     def _get_secondary_metrics(self, test_type: str) -> List[str]:
         """Get secondary metrics to track for test type."""
@@ -406,7 +418,7 @@ class ABTestPlanner:
 
         if sample_size > 50000:
             recommendations.append(
-                "Large sample size required - consider testing smaller effect size or increasing traffic"
+                "Large sample size required - consider a larger minimum detectable effect or increasing eligible traffic"
             )
 
         if duration_estimates['medium']['estimated_days'] > 30:
@@ -426,16 +438,7 @@ class ABTestPlanner:
 
     def _get_z_score(self, percentile: float) -> float:
         """Get z-score for given percentile (approximation)."""
-        # Common z-scores
-        z_scores = {
-            0.80: 0.84,
-            0.85: 1.04,
-            0.90: 1.28,
-            0.95: 1.645,
-            0.975: 1.96,
-            0.99: 2.33
-        }
-        return z_scores.get(percentile, 1.96)
+        return NormalDist().inv_cdf(percentile)
 
     def _standard_normal_cdf(self, z: float) -> float:
         """Approximate standard normal cumulative distribution function."""
@@ -520,7 +523,7 @@ class ABTestPlanner:
                 )
             else:
                 recommendations.append(
-                    "Sample size reached but no significant difference - consider extending test or concluding"
+                    "Sample size reached but no significant difference - conclude as planned without extending merely to obtain significance"
                 )
 
         return recommendations

@@ -1,5 +1,7 @@
 # Files API — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 The Files API uploads files for use in Messages API requests. Reference files via `file_id` in content blocks, avoiding re-uploads across multiple API calls.
 
 **Beta:** Pass `betas=["files-api-2025-04-14"]` in your API calls (the SDK sets the required header automatically).
@@ -36,7 +38,7 @@ print(f"Size: {uploaded.size_bytes} bytes")
 
 ```python
 response = client.beta.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -52,7 +54,7 @@ response = client.beta.messages.create(
     }],
     betas=["files-api-2025-04-14"],
 )
-print(response.content[0].text)
+print("".join(b.text for b in response.content if b.type == "text"))
 ```
 
 ### Image
@@ -63,7 +65,7 @@ image_file = client.beta.files.upload(
 )
 
 response = client.beta.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -140,7 +142,7 @@ questions = [
 
 for question in questions:
     response = client.beta.messages.create(
-        model="claude-opus-5",
+        model="claude-opus-5-5",
         max_tokens=1024,
         messages=[{
             "role": "user",
@@ -155,8 +157,11 @@ for question in questions:
         betas=["files-api-2025-04-14"],
     )
     print(f"\nQ: {question}")
-    print(f"A: {response.content[0].text[:200]}")
+    text = "".join(b.text for b in response.content if b.type == "text")
+    print(f"A: {text[:200]}")
 
 # 3. Clean up when done
 client.beta.files.delete(uploaded.id)
 ```
+
+Uploads/listing/deletion require authorized file scope. Close local handles with context managers, retain IDs privately, paginate listings when needed, and delete only files owned by this workflow under the agreed retention plan. Downloads must be bounded, type-checked, saved exclusively into a new private directory and never executed automatically. Limits/platform coverage above are historical examples requiring current verification.

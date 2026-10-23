@@ -54,7 +54,7 @@ body {
 }
 
 .mono-btn {
-  background-color: var(--mono-500);
+  background-color: var(--mono-700);
   color: #ffffff;
   border: none;
   border-radius: 4px;
@@ -67,7 +67,7 @@ body {
 }
 
 .mono-subtext {
-  color: var(--mono-500); /* Use mid-tones for secondary text */
+  color: var(--mono-700); /* Darker tone for readable secondary text */
   font-weight: 500;
 }
 ```
@@ -118,7 +118,7 @@ struct MonochromaticView: View {
     }
 }
 ```
-- Define your colors using `Color(hue: saturation: brightness:)`. This ensures math-perfect monochromatic harmony.
+- Define your colors using `Color(hue: saturation: brightness:)`. HSB/HSV and CSS HSL are distinct models; identical numerical lightness/brightness values do not produce identical platform palettes. Verify contrast after conversion.
 - *Always* tint your drop shadows with your `mono900` color. Pure black shadows look dirty in a strict monochromatic UI.
 
 ### Flutter
@@ -214,13 +214,13 @@ const MonochromaticScreen = () => {
         <Text style={{ fontSize: 24, fontWeight: '600', color: theme.mono900, marginBottom: 12 }}>
           Monochromatic
         </Text>
-        <Text style={{ fontSize: 16, color: theme.mono500 }}>
+        <Text style={{ fontSize: 16, color: theme.mono700 }}>
           Using HSL strings in React Native makes palette generation trivial.
         </Text>
       </View>
 
       <TouchableOpacity style={{
-        backgroundColor: theme.mono500,
+        backgroundColor: theme.mono700,
         padding: 16,
         borderRadius: 8,
         alignItems: 'center'
@@ -289,7 +289,7 @@ fun MonochromaticScreen() {
 
 ## Do's and Don'ts
 - **DO**: Use pure white or pure black as absolute extremes if needed for text legibility.
-- **DON'T**: Sneak in an accent color. If you add a red error button to a blue monochromatic UI, it immediately breaks the aesthetic and becomes "duotone" or standard UI. Find a way to signify errors using bold text or dark shades of the base hue.
+- **DON'T**: Sneak in an accent color. Use text and icons for errors and preserve semantic error colors when required; an accent does not automatically make a design duotone.
 
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.

@@ -1,5 +1,7 @@
 # longbridge-investment-proposal
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Generate a structured investment proposal for a single stock opportunity.
 
 ## Workflow
@@ -82,7 +84,7 @@ Target price rationale and upside / downside.
 - <Risk 3>
 
 ## Position Recommendation
-Suggested entry range, position size, stop-loss level, review trigger.
+Describe hypothetical valuation scenarios, downside sensitivity and review triggers. Do not infer a personal position size or trading instruction.
 ```
 
 ## Error handling

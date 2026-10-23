@@ -16,6 +16,10 @@ from __future__ import annotations
 
 import json
 import sqlite3
+import os
+import stat
+from contextlib import contextmanager
+from source_io import private_directory
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -180,15 +184,30 @@ def _filter_allowed_columns(data: Dict[str, Any], allowed: frozenset[str]) -> Di
 class Database:
     def __init__(self, db_path: Path = DB_PATH):
         self.db_path = Path(db_path)
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        private_directory(self.db_path.parent)
 
-    def _connect(self) -> sqlite3.Connection:
+    @contextmanager
+    def _connect(self):
+        private_directory(self.db_path.parent)
+        for candidate in [self.db_path, Path(str(self.db_path) + "-wal"), Path(str(self.db_path) + "-shm")]:
+            if candidate.is_symlink(): raise OSError("Symlinked database or sidecar refused")
+            if candidate.exists():
+                info = candidate.stat()
+                if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+                    raise OSError("Unsafe database or sidecar file")
+        fd = os.open(self.db_path, os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
+        os.close(fd)
+        os.chmod(self.db_path, 0o600)
         conn = sqlite3.connect(self.db_path)
         conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA synchronous=NORMAL")
-        conn.execute("PRAGMA foreign_keys=ON")
-        return conn
+        try:
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA synchronous=NORMAL")
+            conn.execute("PRAGMA foreign_keys=ON")
+            with conn:
+                yield conn
+        finally:
+            conn.close()
 
     def init(self) -> None:
         """Cria tabelas e indices se nao existirem."""
@@ -242,6 +261,7 @@ class Database:
 
     def insert_skill_snapshot(self, run_id: int, data: Dict[str, Any]) -> int:
         """Insere snapshot de uma skill. Retorna o id."""
+        data = dict(data)
         data["audit_run_id"] = run_id
         if "raw_metrics" in data and isinstance(data["raw_metrics"], dict):
             data["raw_metrics"] = json.dumps(data["raw_metrics"], ensure_ascii=False)
@@ -264,7 +284,7 @@ class Database:
         with self._connect() as conn:
             row = conn.execute(
                 "SELECT * FROM skill_snapshots WHERE skill_name = ? "
-                "ORDER BY created_at DESC LIMIT 1",
+                "ORDER BY created_at DESC, id DESC LIMIT 1",
                 [skill_name],
             ).fetchone()
         return dict(row) if row else None
@@ -273,6 +293,7 @@ class Database:
 
     def insert_finding(self, run_id: int, data: Dict[str, Any]) -> int:
         """Insere um finding. Retorna o id."""
+        data = dict(data)
         data["audit_run_id"] = run_id
         data = _filter_allowed_columns(data, _FINDING_COLUMNS)
         values = [data.get(column) for column in _FINDING_INSERT_COLUMNS]
@@ -322,6 +343,7 @@ class Database:
     # -- Skill Recommendations -------------------------------------------------
 
     def insert_recommendation(self, run_id: int, data: Dict[str, Any]) -> int:
+        data = dict(data)
         data["audit_run_id"] = run_id
         if "capabilities" in data and isinstance(data["capabilities"], list):
             data["capabilities"] = json.dumps(data["capabilities"], ensure_ascii=False)
@@ -354,7 +376,7 @@ class Database:
         with self._connect() as conn:
             rows = conn.execute(
                 "SELECT * FROM score_history WHERE skill_name = ? AND dimension = ? "
-                "ORDER BY recorded_at DESC LIMIT ?",
+                "ORDER BY recorded_at DESC, id DESC LIMIT ?",
                 [skill_name, dimension, limit],
             ).fetchall()
         return [dict(r) for r in rows]

@@ -1,5 +1,7 @@
 # Business Operations Reference
 
+> Planning limits: legal/privacy lists require jurisdiction-specific review and do not certify compliance; consent is not the only possible lawful basis. Verify payment webhook signatures and enforce idempotency and replay protection. Sample sizes and durations below are illustrative: choose them using power, effect size and stopping rules before testing. Distinguish percentage points from relative changes; runway is undefined for zero/negative net burn.
+
 Workflows and procedures for business swarm agents.
 
 ## Marketing Operations
@@ -434,7 +436,7 @@ Test Structure:
   
   sample_size: 1000_per_variant
   duration: 14_days
-  significance_level: 0.95
+  significance_level: 0.05 # alpha; 95% confidence level
 
 Analysis:
   - Calculate conversion rate per variant

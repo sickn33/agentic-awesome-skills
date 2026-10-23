@@ -1,4 +1,6 @@
-﻿# Garbage Collection Templates
+# Garbage Collection Templates
+
+> Review boundary: These checkers are limited discovery heuristics, not proof of complete or correct documentation. Timestamp differences do not prove drift; matching a type name does not validate its signature. Review findings against source before edits/deletions. Run inside an approved repository, contain all paths (including symlinks), propagate read/parse/subprocess errors, and never report an unexecuted or failed check as clean.
 
 > "Documentation entropy compounds. A single outdated comment erodes trust in all docs."
 
@@ -41,17 +43,18 @@ after the doc was last updated, the doc is potentially stale.
 ```python
 #!/usr/bin/env python3
 """
-scripts/gc-stale-docs.py
+scripts/gc_stale_docs.py
 
 Detects documentation that may be stale relative to the code it describes.
 
 Usage:
-    python3 scripts/gc-stale-docs.py .
-    python3 scripts/gc-stale-docs.py . --json
-    python3 scripts/gc-stale-docs.py . --threshold 30  # days
+    python3 scripts/gc_stale_docs.py .
+    python3 scripts/gc_stale_docs.py . --json
+    python3 scripts/gc_stale_docs.py . --threshold 30  # days
 """
 
 import argparse
+import os
 import json
 import os
 import re
@@ -71,8 +74,8 @@ def get_git_last_modified(filepath: str) -> Optional[datetime]:
         )
         if result.returncode == 0 and result.stdout.strip():
             return datetime.fromisoformat(result.stdout.strip())
-    except Exception:
-        pass
+    except Exception as exc:
+        raise RuntimeError(f"Inspection subprocess failed: {exc}") from exc
     return None
 
 
@@ -88,15 +91,15 @@ def extract_code_references(doc_path: str) -> List[str]:
     references = []
     try:
         content = Path(doc_path).read_text()
-    except Exception:
-        return references
+    except Exception as exc:
+        raise RuntimeError(f"Cannot inspect {doc_path}: {exc}") from exc
 
     # Match backtick-quoted file paths
     backtick_pattern = r'`([a-zA-Z0-9_./\-]+\.(go|ts|tsx|js|jsx|py|rs))(?::\d+(?:-\d+)?)?`'
     references.extend(m[0] for m in re.findall(backtick_pattern, content))
 
     # Match markdown link targets
-    link_pattern = r'\]\((?:\.\.?/)*([a-zA-Z0-9_./\-]+\.(go|ts|tsx|js|jsx|py|rs))(?::\d+(?:-\d+)?)?\)'
+    link_pattern = r'\]\(([a-zA-Z0-9_./\-]+\.(go|ts|tsx|js|jsx|py|rs))(?::\d+(?:-\d+)?)?\)'
     references.extend(m[0] for m in re.findall(link_pattern, content))
 
     # Deduplicate, strip line numbers
@@ -126,9 +129,17 @@ def find_doc_to_code_mapping(project_root: Path) -> Dict[str, List[str]]:
 
     for doc_file in doc_files:
         refs = extract_code_references(str(doc_file))
-        if refs:
+        contained = []
+        for ref in refs:
+            candidate = (project_root / ref).resolve()
+            if not candidate.exists():
+                candidate = (doc_file.parent / ref).resolve()
+            if not candidate.is_relative_to(project_root):
+                raise ValueError(f"Reference escapes project: {ref}")
+            contained.append(str(candidate.relative_to(project_root)))
+        if contained:
             rel_doc = str(doc_file.relative_to(project_root))
-            mapping[rel_doc] = refs
+            mapping[rel_doc] = contained
 
     return mapping
 
@@ -189,6 +200,7 @@ def main():
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
+    os.chdir(project_root)
     findings = check_staleness(project_root, args.threshold)
 
     if args.json:
@@ -225,16 +237,17 @@ Validates all internal markdown links (to other docs, to code files, to anchors)
 ```python
 #!/usr/bin/env python3
 """
-scripts/gc-broken-links.py
+scripts/gc_broken_links.py
 
 Checks all markdown files for broken internal links.
 
 Usage:
-    python3 scripts/gc-broken-links.py .
-    python3 scripts/gc-broken-links.py . --json
+    python3 scripts/gc_broken_links.py .
+    python3 scripts/gc_broken_links.py . --json
 """
 
 import argparse
+import os
 import json
 import re
 import sys
@@ -285,8 +298,13 @@ def resolve_link(md_path: Path, target: str, project_root: Path) -> Dict:
             return check_anchor(md_path, anchor)
         return {"valid": True}
 
-    # Resolve relative path from the markdown file's directory
-    resolved = (md_path.parent / path_part).resolve()
+    # Resolve without permitting a link to read outside the selected project.
+    from urllib.parse import unquote, urlsplit
+    if urlsplit(path_part).scheme or path_part.startswith("//"):
+        return {"valid": True, "reason": "external_not_checked"}
+    resolved = (md_path.parent / unquote(path_part)).resolve()
+    if not resolved.is_relative_to(project_root):
+        return {"valid": False, "reason": "outside_project"}
 
     if not resolved.exists():
         return {
@@ -316,7 +334,7 @@ def check_anchor(md_path: Path, anchor: str) -> Dict:
         slug = re.sub(r'[\s]+', '-', slug).strip('-')
         anchors.add(slug)
 
-    if anchor.lower() in anchors:
+    if anchor in anchors:
         return {"valid": True}
     return {
         "valid": False,
@@ -355,6 +373,7 @@ def main():
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
+    os.chdir(project_root)
     findings = check_all_links(project_root)
 
     if args.json:
@@ -390,17 +409,18 @@ of documentation rot because the doc looks legitimate but leads agents astray.
 ```python
 #!/usr/bin/env python3
 """
-scripts/gc-interface-drift.py
+scripts/gc_interface_drift.py
 
 Detects drift between documented interfaces and actual code definitions.
 
 Usage:
-    python3 scripts/gc-interface-drift.py .
-    python3 scripts/gc-interface-drift.py . --json
-    python3 scripts/gc-interface-drift.py . --doc docs/ARCHITECTURE.md
+    python3 scripts/gc_interface_drift.py .
+    python3 scripts/gc_interface_drift.py . --json
+    python3 scripts/gc_interface_drift.py . --doc docs/ARCHITECTURE.md
 """
 
 import argparse
+import os
 import json
 import re
 import subprocess
@@ -446,8 +466,8 @@ def find_type_in_code_go(project_root: Path, type_name: str) -> Optional[Dict]:
                     "line": int(parts[1]),
                     "definition": parts[2].strip() if len(parts) > 2 else ""
                 }
-    except Exception:
-        pass
+    except Exception as exc:
+        raise RuntimeError(f"Inspection subprocess failed: {exc}") from exc
     return None
 
 
@@ -474,8 +494,8 @@ def find_type_in_code_ts(project_root: Path, type_name: str) -> Optional[Dict]:
                         "line": int(parts[1]),
                         "definition": parts[2].strip() if len(parts) > 2 else ""
                     }
-    except Exception:
-        pass
+    except Exception as exc:
+        raise RuntimeError(f"Inspection subprocess failed: {exc}") from exc
     return None
 
 
@@ -496,8 +516,8 @@ def find_type_in_code_py(project_root: Path, type_name: str) -> Optional[Dict]:
                     "line": int(parts[1]),
                     "definition": parts[2].strip() if len(parts) > 2 else ""
                 }
-    except Exception:
-        pass
+    except Exception as exc:
+        raise RuntimeError(f"Inspection subprocess failed: {exc}") from exc
     return None
 
 
@@ -509,7 +529,7 @@ def detect_project_lang(project_root: Path) -> str:
         return "ts"
     if (project_root / "pyproject.toml").exists() or (project_root / "requirements.txt").exists():
         return "py"
-    return "go"  # default
+    raise ValueError("Unsupported/unknown language; interface drift was not checked")
 
 
 def check_interface_drift(project_root: Path, doc_path: Optional[str] = None) -> List[Dict]:
@@ -561,6 +581,7 @@ def main():
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
+    os.chdir(project_root)
     findings = check_interface_drift(project_root, args.doc)
 
     if args.json:
@@ -607,6 +628,7 @@ Usage:
 """
 
 import argparse
+import os
 import json
 import sys
 from pathlib import Path
@@ -670,7 +692,10 @@ def main():
     args = parser.parse_args()
 
     project_root = Path(args.project_root).resolve()
+    os.chdir(project_root)
     checks = [c.strip() for c in args.checks.split(",")]
+    if not checks or any(c not in {"stale", "links", "drift"} for c in checks):
+        parser.error("checks must contain only stale, links, drift")
     report = run_gc(project_root, checks, args.threshold)
 
     output = json.dumps(report, indent=2) if args.json else format_report(report)
@@ -756,7 +781,7 @@ jobs:
 .PHONY: gc-docs
 gc-docs:
 	@echo "Running documentation garbage collection..."
-	@python3 scripts/gc-docs.py . || true
+	@python3 scripts/gc-docs.py .
 	@echo ""
 	@echo "To fix: review stale docs and update or delete them"
 ```
@@ -778,7 +803,7 @@ After completing a task that creates or modifies code, the executor can run a qu
 
 ```bash
 # Quick post-task check — just broken links on changed docs
-python3 scripts/gc-broken-links.py . --json | python3 -c "
+python3 scripts/gc_broken_links.py . --json | python3 -c "
 import sys, json
 data = json.load(sys.stdin)
 if data['broken_links']:

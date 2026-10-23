@@ -101,7 +101,7 @@ function questionFor(kindId, matched) {
     case 'rendering_candidate':
       return `Why are the routes in ${sample} forced to dynamic rendering, and can any of them tolerate ISR or static generation?`;
     case 'use_cache_date_stamp':
-      return `Which 'use cache' boundaries in ${sample} embed new Date()/Date.now()/Math.random() that destabilizes cache keys, and can the timestamps be hoisted to a build constant or moved into a client useEffect?`;
+      return `Do date/random inputs or changing outputs in ${sample} correlate with measured cache misses or ISR writes? Prove the invalidation mechanism and preserve timestamp/freshness semantics before changing it.`;
     case 'cache_components_suspense_dedupe':
       return `In ${sample}, which repeated fetch or helper is being re-invoked across separate <Suspense> boundaries, and can the promise be hoisted to the page level or moved to 'use cache: remote' for cross-boundary dedupe?`;
     default:

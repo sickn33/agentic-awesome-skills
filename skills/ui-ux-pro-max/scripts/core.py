@@ -112,10 +112,14 @@ class BM25:
     def tokenize(self, text):
         """Lowercase, split, remove punctuation, filter short words"""
         text = re.sub(r'[^\w\s]', ' ', str(text).lower())
-        return [w for w in text.split() if len(w) > 2]
+        return [w for w in text.split() if len(w) >= 2]
 
     def fit(self, documents):
         """Build BM25 index from documents"""
+        self.doc_freqs.clear()
+        self.idf.clear()
+        self.doc_lengths = []
+        self.avgdl = 0
         self.corpus = [self.tokenize(doc) for doc in documents]
         self.N = len(self.corpus)
         if self.N == 0:
@@ -135,6 +139,8 @@ class BM25:
 
     def score(self, query):
         """Score all documents against query"""
+        if not self.avgdl:
+            return [(idx, 0) for idx in range(self.N)]
         query_tokens = self.tokenize(query)
         scores = []
 
@@ -161,12 +167,22 @@ class BM25:
 # ============ SEARCH FUNCTIONS ============
 def _load_csv(filepath):
     """Load CSV and return list of dicts"""
-    with open(filepath, 'r', encoding='utf-8') as f:
-        return list(csv.DictReader(f))
+    with open(filepath, 'r', encoding='utf-8', newline='') as f:
+        reader = csv.DictReader(f, strict=True)
+        if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames):
+            raise ValueError(f"Invalid CSV headers: {filepath.name}")
+        rows = list(reader)
+        if any(None in row or any(value is None for value in row.values()) for row in rows):
+            raise ValueError(f"Invalid CSV column count: {filepath.name}")
+        return rows
 
 
 def _search_csv(filepath, search_cols, output_cols, query, max_results):
     """Core search function using BM25"""
+    if not isinstance(query, str) or not query.strip() or len(query) > 2000:
+        raise ValueError("Query must contain 1–2000 characters")
+    if not isinstance(max_results, int) or not 1 <= max_results <= 25:
+        raise ValueError("max_results must be between 1 and 25")
     if not filepath.exists():
         return []
 
@@ -218,7 +234,9 @@ def search(query, domain=None, max_results=MAX_RESULTS):
     if domain is None:
         domain = detect_domain(query)
 
-    config = CSV_CONFIG.get(domain, CSV_CONFIG["style"])
+    if domain not in CSV_CONFIG:
+        return {"error": f"Unknown domain: {domain}"}
+    config = CSV_CONFIG[domain]
     filepath = DATA_DIR / config["file"]
 
     if not filepath.exists():

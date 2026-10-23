@@ -1,5 +1,8 @@
 # Java Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Equality Confusion
 
 ```java
@@ -20,7 +23,7 @@ x == y  // TRUE - cached in range [-128, 127]
 
 Integer p = 128;
 Integer q = 128;
-p == q  // FALSE - outside cache range!
+p == q  // Not guaranteed: implementations may cache values outside the minimum range.
 ```
 
 **Fix**: Always use `.equals()` for object comparison:
@@ -56,10 +59,10 @@ wrongType.get(0);  // ClassCastException here, not at cast
 ObjectInputStream ois = new ObjectInputStream(untrustedInput);
 Object obj = ois.readObject();
 
-// Even without reading, deserialization triggers:
+// During readObject, deserialization may invoke callbacks such as:
 // - readObject() methods
 // - readResolve() methods
-// - finalize() (deprecated but still works)
+// - implementation/class-specific callbacks; finalization availability is runtime-dependent
 
 // "Gadget chains" in libraries enable RCE:
 // - Commons Collections
@@ -231,9 +234,8 @@ field.set(obj, maliciousValue);
 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 // Default allows: <!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>
 
-// DANGEROUS: Even with DTD disabled
-factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-// Still vulnerable to billion laughs without entity limits
+// Rejecting DOCTYPE prevents classic DTD entity expansion when the parser honors the feature.
+// Also enforce external-access restrictions, secure processing and resource limits; fail if controls are unsupported.
 ```
 
 **Fix**: Disable all external entities:
@@ -241,6 +243,9 @@ factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
 factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 factory.setFeature("http://xml.org/sax/features/external-general-entities", false);
 factory.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_DTD, "");
+factory.setAttribute(javax.xml.XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+factory.setFeature(javax.xml.XMLConstants.FEATURE_SECURE_PROCESSING, true);
 factory.setXIncludeAware(false);
 factory.setExpandEntityReferences(false);
 ```

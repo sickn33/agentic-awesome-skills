@@ -1,8 +1,11 @@
 ---
 title: "Collaboration and sharing | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/collaboration-and-sharing
+---
 
 # Collaboration and sharing
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Great collaboration and sharing experiences are simple and responsive, letting people engage with the content while communicating effectively with others.
 
@@ -84,3 +87,7 @@ December 5, 2023| Added artwork illustrating button placement and various types 
 June 21, 2023| Updated to include guidance for visionOS.  
 September 14, 2022| New page.  
   
+
+## Implementation checks
+
+A share sheet, universal link or Collaboration button does not implement server authorization or conflict resolution. Default to the intended audience, enforce read/edit permissions server-side, support revocation and handle stale/invitation-expired links. Explain when Send Copy creates an independent artifact that later revocation cannot retract. Send invitations or collaboration notifications only within the person’s explicit sharing action.

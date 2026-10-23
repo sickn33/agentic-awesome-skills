@@ -1,8 +1,11 @@
 ---
 title: "File management | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/file-management
+---
 
 # File management
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Some apps can support documents and files that people expect to manage throughout the system.
 
@@ -57,7 +60,7 @@ You can customize all three parts of the document launcher. Although the system 
 
 ![A screenshot of a writing app's document launcher on iPad in landscape orientation. The document launcher displays a custom background and two accessory images. At the bottom, the file browser sheet provides 3 tabs: Recents, Shared, and Browse.](https://docs-assets.developer.apple.com/published/5c3d3fe966c8f4d89b462856bec0ed24/file-management-document-launcher%402x.png)
 
-**Assign the title card’s buttons to your app’s most important functions.** The primary button typically creates a new document, and the secondary button can provide additional options. For example, the primary button in Numbers is Start Writing and the secondary button is Choose a Template.
+**Assign the title card’s buttons to your app’s most important functions.** The primary button typically creates a new document, and the secondary button can provide additional options. For example, a writing app might label the primary button Start Writing and use Choose a Template for the secondary action.
 
 **Provide a background that’s clearly distinct from the accessories and title card.** You can use a solid color, a gradient, or a pattern. Avoid including complex images or patterns that might distract from foreground elements.
 
@@ -133,3 +136,7 @@ Date| Changes
 June 10, 2024| Added guidelines for using the document launcher in iOS and iPadOS.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Autosave must handle I/O failures, disk limits, permission changes, cloud conflicts and offline edits without claiming data is preserved before the write succeeds. Use coordinated document/file APIs and security-scoped access where required. Custom browsers stay within granted access; preview and metadata extensions are not authorization to expose private files. Preserve originals during format conversion and show explicit unsaved/error state.

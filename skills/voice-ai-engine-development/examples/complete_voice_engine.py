@@ -1,8 +1,9 @@
 """
 Example: Complete Voice AI Engine Implementation
 
-This example demonstrates a minimal but complete voice AI engine
-with all core components: Transcriber, Agent, Synthesizer, and WebSocket integration.
+This example demonstrates a local offline pipeline demonstration
+with mocked transcription, text generation and silent audio. It is not a working
+Deepgram/Gemini/ElevenLabs adapter, a microphone client, or production service.
 """
 
 import asyncio
@@ -55,6 +56,8 @@ class BaseWorker:
     
     def start(self):
         """Start the worker's processing loop"""
+        if self._task and not self._task.done():
+            return
         self.active = True
         self._task = asyncio.create_task(self._run_loop())
     
@@ -63,7 +66,10 @@ class BaseWorker:
         while self.active:
             try:
                 item = await self.input_queue.get()
-                await self.process(item)
+                try:
+                    await self.process(item)
+                finally:
+                    self.input_queue.task_done()
             except Exception as e:
                 logger.error(f"Worker error: {e}", exc_info=True)
     
@@ -86,17 +92,17 @@ class DeepgramTranscriber(BaseWorker):
     """Converts audio chunks to text transcriptions using Deepgram"""
     
     def __init__(self, config: Dict):
-        super().__init__(asyncio.Queue(), asyncio.Queue())
+        super().__init__(asyncio.Queue(maxsize=64), asyncio.Queue(maxsize=64))
         self.config = config
         self.is_muted = False
     
-    def send_audio(self, chunk: bytes):
+    async def send_audio(self, chunk: bytes):
         """Client calls this to send audio"""
         if not self.is_muted:
-            self.input_queue.put_nowait(chunk)
+            await self.input_queue.put(chunk)
         else:
             # Send silence instead (prevents echo during bot speech)
-            self.input_queue.put_nowait(self.create_silent_chunk(len(chunk)))
+            await self.input_queue.put(self.create_silent_chunk(len(chunk)))
     
     def create_silent_chunk(self, size: int) -> bytes:
         """Create a silent audio chunk"""
@@ -127,8 +133,8 @@ class DeepgramTranscriber(BaseWorker):
             is_final=True
         )
         
-        logger.info(f"🎤 [TRANSCRIBER] Received: '{transcription.message}'")
-        self.output_queue.put_nowait(transcription)
+        logger.info("[TRANSCRIBER] Mock transcription received")
+        await self.output_queue.put(transcription)
 
 
 # ============================================================================
@@ -139,7 +145,7 @@ class GeminiAgent(BaseWorker):
     """LLM-powered conversational agent using Google Gemini"""
     
     def __init__(self, config: Dict):
-        super().__init__(asyncio.Queue(), asyncio.Queue())
+        super().__init__(asyncio.Queue(maxsize=64), asyncio.Queue(maxsize=64))
         self.config = config
         self.conversation_history = []
     
@@ -151,11 +157,11 @@ class GeminiAgent(BaseWorker):
             "content": transcription.message
         })
         
-        logger.info(f"🤖 [AGENT] Generating response for: '{transcription.message}'")
+        logger.info("[TRANSCRIBER] Mock transcription received")
         
         # Generate response (streaming)
         async for response in self.generate_response(transcription.message):
-            self.output_queue.put_nowait(response)
+            await self.output_queue.put(response)
     
     async def generate_response(self, user_input: str) -> AsyncGenerator[AgentResponse, None]:
         """Generate streaming response from LLM"""
@@ -175,7 +181,7 @@ class GeminiAgent(BaseWorker):
             "content": full_response
         })
         
-        logger.info(f"🤖 [AGENT] Generated: '{full_response}'")
+        logger.info("[AGENT] Mock response generated")
         
         # Yield complete response
         yield AgentResponse(
@@ -268,6 +274,7 @@ class StreamingConversation:
         self.synthesizer = synthesizer
         self.is_human_speaking = True
         self.interrupt_event = asyncio.Event()
+        self.tasks = []
     
     async def start(self):
         """Start all workers"""
@@ -278,8 +285,8 @@ class StreamingConversation:
         self.agent.start()
         
         # Start processing pipelines
-        asyncio.create_task(self._process_transcriptions())
-        asyncio.create_task(self._process_agent_responses())
+        self.tasks = [asyncio.create_task(self._process_transcriptions()),
+                      asyncio.create_task(self._process_agent_responses())]
     
     async def _process_transcriptions(self):
         """Process transcriptions from transcriber"""
@@ -304,17 +311,14 @@ class StreamingConversation:
             
             self.is_human_speaking = False
             
-            # Mute transcriber to prevent echo
-            self.transcriber.mute()
-            
-            # Synthesize and play
-            synthesis_result = await self.synthesizer.create_speech(response.message)
-            await self._send_speech_to_output(synthesis_result, seconds_per_chunk=0.1)
-            
-            # Unmute transcriber
-            self.transcriber.unmute()
-            
-            self.is_human_speaking = True
+            # Keep input available for barge-in. A real duplex adapter needs echo
+            # cancellation/VAD; muting the only input prevents detecting speech.
+            try:
+                synthesis_result = await self.synthesizer.create_speech(response.message)
+                await self._send_speech_to_output(synthesis_result, seconds_per_chunk=0.032)
+            finally:
+                self.transcriber.unmute()
+                self.is_human_speaking = True
     
     async def _send_speech_to_output(self, synthesis_result: SynthesisResult, seconds_per_chunk: float):
         """
@@ -332,7 +336,7 @@ class StreamingConversation:
                 # Calculate what was actually spoken
                 seconds_spoken = chunk_idx * seconds_per_chunk
                 partial_message = synthesis_result.get_message_up_to(seconds_spoken)
-                logger.info(f"📝 [INTERRUPT] Partial message: '{partial_message}'")
+                logger.info("[INTERRUPT] Partial playback estimate recorded")
                 
                 # Clear interrupt event
                 self.interrupt_event.clear()
@@ -350,9 +354,11 @@ class StreamingConversation:
             
             chunk_idx += 1
     
-    def receive_audio(self, audio_chunk: bytes):
+    async def receive_audio(self, audio_chunk: bytes):
         """Receive audio from client"""
-        self.transcriber.send_audio(audio_chunk)
+        if len(audio_chunk) > 65536:
+            raise ValueError("Audio frame exceeds demo limit")
+        await self.transcriber.send_audio(audio_chunk)
     
     async def terminate(self):
         """Gracefully shut down all workers"""
@@ -361,8 +367,13 @@ class StreamingConversation:
         self.transcriber.terminate()
         self.agent.terminate()
         
-        # Wait for queues to drain
-        await asyncio.sleep(0.5)
+        # Cancellation is not queue draining; await every task we own.
+        tasks = self.tasks + [self.transcriber._task, self.agent._task]
+        for task in tasks:
+            if task is not None:
+                task.cancel()
+        await asyncio.gather(*(t for t in tasks if t is not None), return_exceptions=True)
+        self.tasks = []
 
 
 # ============================================================================
@@ -372,6 +383,8 @@ class StreamingConversation:
 @app.websocket("/conversation")
 async def conversation_endpoint(websocket: WebSocket):
     """WebSocket endpoint for voice conversations"""
+    # Loopback-only demo. Add authenticated upgrade, origin checks, session and
+    # resource limits plus recording consent before any shared deployment.
     await websocket.accept()
     logger.info("✅ [WEBSOCKET] Client connected")
     
@@ -403,7 +416,7 @@ async def conversation_endpoint(websocket: WebSocket):
     try:
         # Process incoming audio
         async for message in websocket.iter_bytes():
-            conversation.receive_audio(message)
+            await conversation.receive_audio(message)
     except WebSocketDisconnect:
         logger.info("❌ [WEBSOCKET] Client disconnected")
     except Exception as e:
@@ -420,4 +433,4 @@ if __name__ == "__main__":
     import uvicorn
     
     logger.info("🚀 Starting Voice AI Engine...")
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000, ws_max_size=65536)

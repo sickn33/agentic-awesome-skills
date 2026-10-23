@@ -17,9 +17,9 @@ export const metadata = {
   billingDimension: 'isr',
   trafficIndependent: false,
   description:
-    "`'use cache'` memoizes by argument identity AND prerender output. A timestamp baked into the cached output (`new Date().getFullYear()` in a footer, `Date.now()` in a payload field) forces a fresh ISR write on every regeneration even when the underlying data is unchanged. Random values have the same failure mode.",
+    "Cache keys include function/build identity and serialized inputs, not returned output. A changing date/random input can fragment keys; a changing returned value alone does not establish repeated cache misses or ISR amplification. Prove the actual regeneration mechanism and writes.",
   fix:
-    "Replace module-scope `new Date()` with a build-time constant (`const buildYear = new Date().getFullYear()`) or move per-request timestamps into a client component inside `useEffect`. Do not pass dates as arguments to `'use cache'` functions — they invalidate the cache every call.",
+    "Verify the timestamp purpose and invalidation path. Preserve freshness and hydration semantics; module-level new Date() is evaluated at module initialization, not guaranteed build time. Change keys or UI placement only when measured duplicate work is avoidable.",
   citations: [
     'https://nextjs.org/docs/app/api-reference/directives/use-cache',
     'https://nextjs.org/docs/app/api-reference/functions/cacheLife',

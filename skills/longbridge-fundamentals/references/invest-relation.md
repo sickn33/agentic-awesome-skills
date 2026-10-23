@@ -32,7 +32,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge invest-relation --format json
+longbridge invest-relation 700.HK --format json
 
 # See all options
 longbridge invest-relation --help

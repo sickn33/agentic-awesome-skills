@@ -26,7 +26,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 - **Borders**: Often uses thick black borders (`2px solid #000`) between blocks to emphasize the grid, reminiscent of Mondrian paintings.
 
 ## Web Implementation
-- CSS Grid is the only way to effectively build this.
+- CSS Grid is one option; flex layouts and native stacks also support color blocking. Keep content scrollable and collapse columns on narrow screens.
 - **CSS Example**:
 ```css
 body {
@@ -38,7 +38,7 @@ body {
 .color-block-grid {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  grid-template-rows: 60vh 40vh;
+  grid-template-rows: minmax(min-content, 3fr) minmax(min-content, 2fr);
   /* Thick black lines between blocks */
   gap: 4px;
   background-color: #000; 

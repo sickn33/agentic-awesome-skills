@@ -1,5 +1,8 @@
 # Advanced Biopython Features
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Sequence Motifs with Bio.motifs
 
 ### Creating Motifs
@@ -43,7 +46,7 @@ pwm = motif.counts.normalize(pseudocounts=0.5)
 print(pwm)
 
 # Calculate information content
-ic = motif.counts.information_content()
+ic = sum(motif.relative_entropy)
 print(f"Information content: {ic:.2f} bits")
 ```
 
@@ -176,11 +179,11 @@ tm_wallace = mt.Tm_Wallace(seq)
 ### GC Skew
 
 ```python
-from Bio.SeqUtils import gc_skew
+from Bio.SeqUtils import GC_skew
 
 # Calculate GC skew
 seq = Seq("ATCGATCGGGCCCAAATTT")
-skew = gc_skew(seq, window=100)
+skew = GC_skew(seq, window=100)
 print(f"GC skew: {skew}")
 ```
 
@@ -371,9 +374,8 @@ from Bio.SeqRecord import SeqRecord
 
 # Create a feature
 feature = SeqFeature(
-    location=FeatureLocation(start=10, end=50),
+    location=FeatureLocation(start=10, end=50, strand=1),
     type="CDS",
-    strand=1,
     qualifiers={"gene": ["ABC1"], "product": ["ABC protein"]}
 )
 
@@ -445,12 +447,19 @@ from Bio import SeqIO
 from Bio.SeqUtils import gc_fraction
 
 def find_orfs(seq, min_length=100):
-    """Find all ORFs in sequence."""
+    """Find stop-delimited translated segments, not validated start-codon ORFs.
+
+    Coordinates below are zero-based half-open on the original forward sequence.
+    Terminal partial segments may be returned; min_length is nucleotide length.
+    """
+    if min_length < 0:
+        raise ValueError("min_length must be nonnegative")
     orfs = []
 
     for strand, nuc in [(+1, seq), (-1, seq.reverse_complement())]:
         for frame in range(3):
-            trans = nuc[frame:].translate()
+            coding = nuc[frame:len(nuc) - (len(nuc) - frame) % 3]
+            trans = coding.translate()
             trans_len = len(trans)
 
             aa_start = 0
@@ -459,12 +468,12 @@ def find_orfs(seq, min_length=100):
                 if aa_end == -1:
                     aa_end = trans_len
 
-                if aa_end - aa_start >= min_length // 3:
+                if (aa_end - aa_start) * 3 >= min_length:
                     start = frame + aa_start * 3
                     end = frame + aa_end * 3
                     orfs.append({
-                        'start': start,
-                        'end': end,
+                        'start': start if strand == 1 else len(seq) - end,
+                        'end': end if strand == 1 else len(seq) - start,
                         'strand': strand,
                         'frame': frame,
                         'length': end - start,
@@ -486,7 +495,6 @@ for orf in orfs:
 
 ```python
 from Bio import SeqIO
-from Bio.SeqUtils import CodonUsage
 
 def analyze_codon_usage(fasta_file):
     """Analyze codon usage in coding sequences."""
@@ -516,6 +524,11 @@ def sequence_complexity(seq, k=2):
     import math
     from collections import Counter
 
+    if not isinstance(k, int) or k < 1:
+        raise ValueError("k must be a positive integer")
+    seq = str(seq).upper()
+    if any(base not in "ACGT" for base in seq):
+        raise ValueError("This DNA entropy example requires unambiguous ACGT")
     # Generate k-mers
     kmers = [str(seq[i:i+k]) for i in range(len(seq) - k + 1)]
 
@@ -545,7 +558,10 @@ print(f"Sequence complexity: {complexity:.3f}")
 
 ```python
 def extract_promoters(genbank_file, upstream=500):
-    """Extract promoter regions upstream of genes."""
+    """Extract linear upstream windows, not experimentally validated promoters.
+
+    Circular wraparound and compound/uncertain locations require separate handling.
+    """
     from Bio import SeqIO
 
     record = SeqIO.read(genbank_file, "genbank")
@@ -553,7 +569,9 @@ def extract_promoters(genbank_file, upstream=500):
 
     for feature in record.features:
         if feature.type == "gene":
-            if feature.strand == 1:
+            if feature.location is None or feature.location.strand not in (1, -1):
+                continue
+            if feature.location.strand == 1:
                 # Forward strand
                 start = max(0, feature.location.start - upstream)
                 end = feature.location.start
@@ -563,7 +581,7 @@ def extract_promoters(genbank_file, upstream=500):
                 end = min(len(record.seq), feature.location.end + upstream)
 
             promoter_seq = record.seq[start:end]
-            if feature.strand == -1:
+            if feature.location.strand == -1:
                 promoter_seq = promoter_seq.reverse_complement()
 
             promoters.append({

@@ -4,6 +4,9 @@
 from __future__ import annotations
 
 import json
+import math
+import os
+import stat
 import pathlib
 import re
 from dataclasses import dataclass
@@ -107,12 +110,15 @@ class Parser:
         if token.kind == "number":
             self.index += 1
             try:
-                return (
+                number = (
                     float(token.value)
                     if any(mark in token.value for mark in ".eE")
                     else int(token.value)
                 )
-            except ValueError as error:
+                if not math.isfinite(number):
+                    raise ManifestSyntaxError("numeric literal must be finite")
+                return number
+            except (ValueError, OverflowError) as error:
                 raise ManifestSyntaxError("numeric literal exceeds the supported range") from error
         if token.kind == "identifier" and token.value in {"true", "false", "null"}:
             self.index += 1
@@ -136,6 +142,8 @@ class Parser:
                 raise ManifestSyntaxError(
                     f"object keys must be identifiers or strings at byte offset {token.offset}"
                 )
+            if key in {"__proto__", "constructor", "prototype"}:
+                raise ManifestSyntaxError("prototype-related object keys are unsupported")
             if key in result:
                 raise ManifestSyntaxError(f"duplicate object key: {key}")
             self.take(":")
@@ -165,7 +173,10 @@ def parse_manifest(source: str) -> dict:
 
 
 def load_manifest(path: pathlib.Path) -> dict:
-    with path.open("rb") as manifest:
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0))
+    with os.fdopen(descriptor, "rb") as manifest:
+        if not stat.S_ISREG(os.fstat(manifest.fileno()).st_mode):
+            raise ManifestSyntaxError("manifest must be a regular file")
         raw = manifest.read(MAX_MANIFEST_BYTES + 1)
     if len(raw) > MAX_MANIFEST_BYTES:
         raise ManifestSyntaxError(

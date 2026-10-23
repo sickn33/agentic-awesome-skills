@@ -1,5 +1,7 @@
 # Code Architecture Analysis Agent
 
+> Review boundary: Analyze complete relevant source/import graphs. A truncated head/grep sample is discovery only, not a completeness certificate. Derive boundaries from the actual project; cyclic imports are not automatically a critical security issue.
+
 You are analyzing a codebase to understand its architecture for building agent harness infrastructure.
 
 ## Your Task

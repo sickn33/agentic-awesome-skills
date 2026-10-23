@@ -55,26 +55,8 @@ function ProjectList({ projects }: { projects: Project[] }) {
 }
 ```
 
-**Simpler pattern for single-value functions:**
-
-```typescript
-let isLoggedInCache: boolean | null = null
-
-function isLoggedIn(): boolean {
-  if (isLoggedInCache !== null) {
-    return isLoggedInCache
-  }
-  
-  isLoggedInCache = document.cookie.includes('auth=')
-  return isLoggedInCache
-}
-
-// Clear cache when auth changes
-function onAuthChange() {
-  isLoggedInCache = null
-}
-```
-
 Use a Map (not a hook) so it works everywhere: utilities, event handlers, not just React components.
 
 Reference: [How we made the Vercel Dashboard twice as fast](https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fast)
+
+Memoize pure functions only, bound cache size and lifetime, and include every relevant input. Never infer authentication or authorization from document.cookie or a cached boolean: HttpOnly cookies are invisible and stale session state is unsafe.

@@ -30,7 +30,9 @@ users.
    Create the helper symlink in "$HOME/bin":
 
    ```console
-   ln -s "$(realpath rclone)" "$HOME/bin/git-annex-remote-rclone-builtin"
+   mkdir -p "$HOME/bin"
+   ln -s "$(command -v rclone)" "$HOME/bin/git-annex-remote-rclone-builtin"
+   ```
 
    Verify the new symlink is on your PATH:
 

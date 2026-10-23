@@ -22,11 +22,11 @@ Recover text displayed on an HD44780 LCD from raw Raspberry Pi GPIO recordings:
 1. **Identify signal lines:** Map GPIO pins to HD44780 signals (RS, CLK, D4-D7 for 4-bit mode)
 2. **Clock edge detection:** Sample data lines on falling clock edges (1->0 transition)
 3. **Nibble assembly:** Combine two 4-bit samples into one 8-bit command/data byte
-4. **DRAM address mapping:** HD44780 uses non-contiguous addressing for multi-line displays:
-   - Line 0: 0x00-0x27
-   - Line 1: 0x40-0x67
-   - Line 2: 0x14-0x3B
-   - Line 3: 0x54-0x7B
+4. **DDRAM address mapping:** Typical 20×4 module row starts are 0x00, 0x40, 0x14, 0x54; only 20 positions per visible row, and module geometry must be checked. HD44780 uses non-contiguous addressing for multi-line displays:
+   - Line 0: 0x00-0x13
+   - Line 1: 0x40-0x53
+   - Line 2: 0x14-0x27
+   - Line 3: 0x54-0x67
 
 ```python
 display = [' '] * 80  # 4 lines x 20 chars
@@ -114,7 +114,7 @@ qemu-aarch64-static -L /usr/aarch64-linux-gnu/ ./arm64_binary
 
 # Debug with GDB
 qemu-aarch64-static -g 12345 -L /usr/aarch64-linux-gnu/ ./arm64_binary &
-gdb-multiarch -ex 'set arch aarch64' -ex 'target remote :1234' ./arm64_binary
+gdb-multiarch -ex 'set arch aarch64' -ex 'target remote :12345' ./arm64_binary
 
 # With library preloading (for challenges that ship libc)
 qemu-aarch64-static -g 12345 -E LD_PRELOAD=./libc.so.6 -L ./lib ./arm64_binary
@@ -302,3 +302,7 @@ open('disk_patched.img', 'wb').write(data)
 **References:** Square CTF 2017
 
 ---
+
+## Execution limits
+
+Hardware addresses and sample layouts are device/case specific, not universal peripheral definitions. Validate the exact vendor manual before access. Debuggers and QEMU execute samples; use isolated authorized copies, loopback-only debug ports, disabled networking and immutable source images. Never patch original media or attach to production devices.

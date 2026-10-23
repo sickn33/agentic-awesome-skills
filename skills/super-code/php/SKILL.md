@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # PHP: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for php.
 
@@ -98,7 +100,7 @@ function find(string $key): ?string { ... }
 
 ```php
 // ❌ Loose comparison
-if ($value == '0') { ... } // true for 0, '', false, null
+if ($value == '0') { ... } // coercion can match 0 or false; exact rules depend on PHP version
 
 // ✅
 if ($value === '0') { ... }
@@ -203,7 +205,7 @@ class User {
     }
 }
 
-// ✅ (PHP 8.0+)
+// ✅ (PHP 8.1+ for readonly)
 class User {
     public function __construct(
         private readonly string $name,
@@ -249,7 +251,7 @@ class Money {
     }
 }
 
-// ✅ (PHP 8.0+) — constructor promotion + named arguments
+// ✅ (PHP 8.1+) — readonly constructor promotion + named arguments
 class Money {
     public function __construct(
         public readonly int $cents,
@@ -279,7 +281,7 @@ function getUser(int $id) {
 }
 
 // ✅ — dependency injection
-function getUser(int $id, PDO $db): ?User {
+function getUser(int $id, UserRepository $db): ?User {
     return $db->find($id);
 }
 ```

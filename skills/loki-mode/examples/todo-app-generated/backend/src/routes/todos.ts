@@ -47,11 +47,11 @@ router.get('/todos', (_req: Request, res: Response): void => {
 
 // POST /api/todos - Create new todo
 router.post('/todos', (req: Request, res: Response): void => {
-  const { title } = req.body;
+  const { title } = req.body ?? {};
 
   // Validation
-  if (!title || typeof title !== 'string' || title.trim() === '') {
-    res.status(400).json({ error: 'Title is required and must be a non-empty string' });
+  if (!title || typeof title !== 'string' || title.trim() === '' || title.trim().length > 500) {
+    res.status(400).json({ error: 'Title must be a non-empty string of at most 500 characters' });
     return;
   }
 
@@ -77,15 +77,15 @@ router.post('/todos', (req: Request, res: Response): void => {
     };
     res.status(201).json(successResponse);
   } catch (error) {
-    const details = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ error: 'Database error', details });
+    console.error('Database operation failed', error);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
 // PATCH /api/todos/:id - Update todo completion status
 router.patch('/todos/:id', (req: Request, res: Response): void => {
   const { id } = req.params;
-  const { completed } = req.body;
+  const { completed } = req.body ?? {};
 
   // Validation
   if (typeof completed !== 'boolean') {
@@ -119,8 +119,8 @@ router.patch('/todos/:id', (req: Request, res: Response): void => {
     };
     res.json(successResponse);
   } catch (error) {
-    const details = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ error: 'Database error', details });
+    console.error('Database operation failed', error);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
@@ -144,8 +144,8 @@ router.delete('/todos/:id', (req: Request, res: Response): void => {
     db.prepare('DELETE FROM todos WHERE id = ?').run(id);
     res.json({ message: 'Todo deleted successfully' });
   } catch (error) {
-    const details = error instanceof Error ? error.message : 'Unknown error';
-    res.status(500).json({ error: 'Database error', details });
+    console.error('Database operation failed', error);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 

@@ -5,6 +5,3 @@
 # Note: After installation, run: patchright install chrome
 # (Chrome is required, not Chromium, for cross-platform reliability)
 patchright==1.55.2
-
-# Environment management
-python-dotenv==1.2.2

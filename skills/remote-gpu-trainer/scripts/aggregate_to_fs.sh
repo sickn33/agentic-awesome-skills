@@ -35,7 +35,7 @@ for d in "$LOCAL_CKPT_BASE"/*/; do
     # GATE on the copy result — never echo OK unconditionally. A full / inode-exhausted durable FS
     # makes mkdir/cp fail silently; an unconditional "OK" would lie (references/gotchas_universal.md,
     # silent-sync; principle #3). Verify best.pth landed before counting it.
-    if mkdir -p "$FS_DIR" && cp -f "$d/best.pth" "$FS_DIR/" && [ -f "$FS_DIR/best.pth" ]; then
+    if mkdir -p "$FS_DIR" && cp -f "$d/best.pth" "$FS_DIR/.best.pth.$$.tmp" && cmp -s "$d/best.pth" "$FS_DIR/.best.pth.$$.tmp" && mv -f "$FS_DIR/.best.pth.$$.tmp" "$FS_DIR/best.pth"; then
         cp -f "$d/best_metrics.json" "$FS_DIR/" 2>/dev/null || true
         cp -rf "$d/protocol" "$FS_DIR/" 2>/dev/null || true
         cp -f "$LOCAL_LOG_BASE/$name.log" "$FS_DIR/" 2>/dev/null || true

@@ -13,6 +13,8 @@ license_source: https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE
 
 # n8n Agents
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 ## When to Use
 
 Use this skill for n8n AI Agent, LangChain, classifier, extractor, memory, RAG, tool-calling, structured-output, or human-review design. Confirm the target n8n instance and inspect the live node schema before applying version-sensitive configuration.
@@ -79,7 +81,7 @@ See **references/EXAMPLES.md** for a complete stateless agent-core node-object s
 ## Two non-negotiables
 
 1. **Tool names and descriptions ARE part of the prompt.** The model picks a tool by reading its name and description — nothing else. A tool named `tool1` with an empty description is invisible to the model: it skips it, mis-selects it, or hallucinates parameters. There's usually no error — just an agent that "won't use my tool". Treat both like API design. → **references/TOOLS.md**
-2. **Structured output must parse AND autoFix.** An `outputParserStructured` with `autoFix: true` and a **coding-capable fixer model** is the production pattern. Without autoFix, one malformed JSON response halts the whole workflow. → **references/STRUCTURED_OUTPUT.md**
+2. **Structured output must validate and fail safely.** Verify whether repair requires a separate Auto-fixing Output Parser (`outputParserAutofixing`) wrapping the structured parser; do not assume an `autoFix` field on the structured parser exists. Without autoFix, one malformed JSON response halts the whole workflow. → **references/STRUCTURED_OUTPUT.md**
 
 ---
 
@@ -88,8 +90,8 @@ See **references/EXAMPLES.md** for a complete stateless agent-core node-object s
 - **Per-tool usage goes in the tool description, not the system prompt.** Anything about *how to call this specific tool* belongs with the tool, so it travels across agents and keeps the system prompt focused. → **references/SYSTEM_PROMPT.md**
 - **Sub-workflow tools (`.toolWorkflow`) for anything multi-step.** Any workflow becomes a tool with typed `$fromAI()` inputs, and composes with branching, error handling, and reuse. Default here when in doubt. → **references/SUBWORKFLOW_AS_TOOL.md** and **n8n-subworkflows**.
 - **Wrap tools with user-visible side effects in human review.** Sends, payments, refunds, account changes get gated behind an approval node so a human signs off before the tool fires. → **references/HUMAN_REVIEW.md**
-- **Raise `maxIterations`.** The default tool-call cap is **low** (single digits on most versions) — fine for a one-tool agent, far too low for a multi-tool agent that chains several calls per turn. It surfaces as "max iterations reached" or empty output. Set `options.maxIterations` to a realistic ceiling (15 for a focused sub-agent, 50-200 for a broad orchestrator).
-- **Put the current date in the system prompt** via `{{ $now }}` (or `{{ $now.format('DDDD') }}`). A hardcoded date is stale immediately.
+- **Measure and bound `maxIterations`.** The default tool-call cap is **low** (single digits on most versions) — fine for a one-tool agent, far too low for a multi-tool agent that chains several calls per turn. It surfaces as "max iterations reached" or empty output. Set `options.maxIterations` to a realistic ceiling (15 for a focused sub-agent, a measured bounded budget for a broad orchestrator, with token, elapsed-time and tool-call limits).
+- **Put the current date in the system prompt** via `{{ $now }}` (or `{{ $now.toISODate() }}`). A hardcoded date is stale immediately.
 
 ---
 
@@ -134,7 +136,7 @@ Tool parameters the agent should decide are wrapped in `$fromAI()`. It is a **re
 | Universal context (current date via `$now`, user role) | Tool-specific gotchas (rate limits, edge cases) |
 | Inter-tool flow ("after generating, always display") | Tool-specific input transformations |
 
-Why split it: a well-described tool works in **any** agent that drops it in, tool details only "load" when the model considers that tool (token efficiency), and you update one tool description instead of a paragraph buried in a 5000-token prompt. → **references/SYSTEM_PROMPT.md**
+Why split it: a well-described tool works in **any** agent that drops it in, tool schemas/descriptions may be sent on every model turn; measure actual context cost, and you update one tool description instead of a paragraph buried in a 5000-token prompt. → **references/SYSTEM_PROMPT.md**
 
 ---
 
@@ -143,7 +145,7 @@ Why split it: a well-described tool works in **any** agent that drops it in, too
 Add an `outputParserStructured` sub-node (wired `ai_outputParser`) when downstream needs strict JSON, not free-form text. Two rules:
 
 1. **Use `schemaType: 'manual'` with a real JSON Schema, not `jsonSchemaExample`.** An example can't express required-vs-optional, enums, numeric ranges, or array constraints — you outgrow it the first time the shape gets non-trivial. Reach for `fromJson` + an example only for throwaway shapes.
-2. **`autoFix: true` with a coding-capable fixer model.** Wire a *second* model into the parser's `ai_languageModel` slot. Reconciling broken JSON against a schema is a coding task — a weak fixer just produces another malformed retry and burns tokens.
+2. **Optional bounded repair, using the installed Auto-fixing Output Parser schema.** Wire a *second* model into the parser's `ai_languageModel` slot. Reconciling broken JSON against a schema is a coding task — a weak fixer just produces another malformed retry and burns tokens.
 
 → **references/STRUCTURED_OUTPUT.md** for the schema patterns, the load-bearing "DO NOT wrap in markdown" retry line, and the parse-failure cookbook.
 
@@ -153,8 +155,8 @@ Add an `outputParserStructured` sub-node (wired `ai_outputParser`) when downstre
 
 Memory is a sub-node (`ai_memory`). Without it, every call is stateless — correct for one-shot tasks (classify, summarize). With it, the agent holds a conversation, keyed by whatever expression you bind to `sessionKey`.
 
-- **`memoryBufferWindow`** — keeps the last N exchanges per key and persists across executions via n8n's store. The default for chat. **`contextWindowLength` defaults to 5, which is very low** — 50 is a saner starting point. Messages past the window are gone entirely.
-- **`memoryPostgresChat` / `memoryRedisChat`** — only when memory must be read *outside* the agent (your own UI, analytics, cross-system). Not needed just to survive restarts; BufferWindow already does that.
+- **`memoryBufferWindow`** — temporary process-local conversation context. Do not assume restart persistence, shared-worker availability or archival deletion from window size. Choose a measured window based on token/privacy needs.
+- **`memoryPostgresChat` / `memoryRedisChat`** — only when memory must be read *outside* the agent (your own UI, analytics, cross-system). Use a durable backend when history must survive process restarts or be shared across workers.
 
 **Plumb a stable key from the trigger to memory consistently.** Chat triggers fill `sessionId` automatically; for other surfaces derive one (Slack `thread_ts`, a webhook conversation ID). Never hardcode `sessionId: 'default'` and never put `sessionId` behind `$fromAI` (the model will fabricate a UUID). → **references/MEMORY.md**
 

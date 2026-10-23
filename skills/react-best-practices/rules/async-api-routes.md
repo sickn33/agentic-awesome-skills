@@ -1,7 +1,7 @@
 ---
 title: Prevent Waterfall Chains in API Routes
 impact: CRITICAL
-impactDescription: 2-10× improvement
+impactDescription: workload-dependent parallel latency reduction
 tags: api-routes, server-actions, waterfalls, parallelization
 ---
 
@@ -26,13 +26,15 @@ export async function GET(request: Request) {
 export async function GET(request: Request) {
   const sessionPromise = auth()
   const configPromise = fetchConfig()
-  const session = await sessionPromise
-  const [config, data] = await Promise.all([
-    configPromise,
-    fetchData(session.user.id)
-  ])
+  const dataPromise = sessionPromise.then(session => {
+    if (!session?.user?.id) throw new Error("Unauthorized")
+    return fetchData(session.user.id)
+  })
+  const [config, data] = await Promise.all([configPromise, dataPromise])
   return Response.json({ data, config })
 }
 ```
 
 For operations with more complex dependency chains, use `better-all` to automatically maximize parallelism (see Dependency-Based Parallelization).
+
+Only overlap independent authorized work. Promise.all observes both branches; authentication failure must prevent private fetching. No speed multiplier is guaranteed.

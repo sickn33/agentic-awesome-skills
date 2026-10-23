@@ -20,6 +20,8 @@ tools:
 
 # WhatsApp Cloud API - Integracao Profissional
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 ## Overview
 
 Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python.
@@ -47,7 +49,7 @@ Skill para implementar integracoes profissionais com WhatsApp Business usando a 
 
 A WhatsApp Cloud API e a API oficial da Meta para envio e recebimento de mensagens via WhatsApp Business. Desde outubro 2025, e a unica opcao suportada (a API On-Premises foi descontinuada).
 
-**Versao da API:** Graph API v21.0 (2026)
+**Versao ilustrativa:** Graph API v21.0 (confirme suporte antes de usar)
 **Base URL:** `https://graph.facebook.com/v21.0/{phone-number-id}/messages`
 **Autenticacao:** Bearer Token (System User Token para producao)
 
@@ -152,12 +154,13 @@ async def send_text(to: str, message: str) -> dict:
             },
             headers={"Authorization": f"Bearer {os.environ['WHATSAPP_TOKEN']}"}
         )
+        response.raise_for_status()
         return response.json()  # {"messaging_product", "contacts", "messages": [{"id"}]}
 ```
 
 ## 3. Enviar Template Message (Fora Da Janela De 24H)
 
-Templates sao a unica forma de iniciar conversa com um cliente. Devem ser aprovados pela WhatsApp antes do uso.
+Fora da janela de atendimento, use um template aprovado e consentimento aplicavel. Devem ser aprovados pela WhatsApp antes do uso.
 
 ```json
 {
@@ -271,10 +274,10 @@ function validateSignature(rawBody: Buffer, signature: string): boolean {
     .createHmac('sha256', process.env.APP_SECRET!)
     .update(rawBody)
     .digest('hex');
-  return crypto.timingSafeEqual(
-    Buffer.from(`sha256=${expectedSig}`),
-    Buffer.from(signature)
-  );
+  if (!/^sha256=[a-f0-9]{64}$/.test(signature)) return false;
+  const expected = Buffer.from(`sha256=${expectedSig}`);
+  const received = Buffer.from(signature);
+  return expected.length === received.length && crypto.timingSafeEqual(expected, received);
 }
 ```
 
@@ -367,7 +370,7 @@ Broadcasting unidirecional para subscribers ilimitados. Localizado na aba "Atual
 
 ## Click-To-Whatsapp Ads
 
-Anuncios no Facebook/Instagram com botao que abre conversa no WhatsApp. 99% de taxa de abertura.
+Anuncios no Facebook/Instagram com botao que abre conversa no WhatsApp. resultados variam; nao ha taxa garantida.
 
 ## Status Tracking
 

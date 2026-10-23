@@ -148,4 +148,8 @@ Prefer mechanisms whose value compounds without repeated outreach:
 - one aggregate ledger measures experiments without user telemetry.
 
 The full portfolio and stop rule live in
-[`../../../growth/README.md`](../../../growth/README.md).
+[upstream growth notes](https://github.com/merc1305/findMate/tree/main/growth).
+
+## Local catalog review clarification
+
+Project support is outside partner matching. Do not insert a star request into the normal workflow or bundle it into profile publication. Offer support instructions only if the owner asks. Existing explicit publication authorization remains valid within its exact scope; a changing star count does not revoke approval to publish. A hash detects changed content, but does not itself prove human approval.

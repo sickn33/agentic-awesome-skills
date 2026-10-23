@@ -1,8 +1,11 @@
 ---
 title: "Printing | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/printing
+---
 
 # Printing
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 An iOS, iPadOS, macOS, or visionOS app can integrate system-provided print functionality when it makes sense, presenting custom printer- and document-specific options if necessary.
 
@@ -12,7 +15,7 @@ An iOS, iPadOS, macOS, or visionOS app can integrate system-provided print funct
 
 **Make printing discoverable.** Help people find your print action by placing it in standard system locations. For example, include a Print item in your macOS app’s File menu; in your iOS or iPadOS app, add a toolbar button that opens an [action sheet](https://developer.apple.com/design/human-interface-guidelines/action-sheets). If your macOS app has a toolbar, you might want to put a Print button there, too, but consider making it an optional button that people can add when they customize the toolbar.
 
-**Present a printing option only when it’s possible.** If there’s nothing onscreen to print, or no printers are available, dim the Print item in a macOS app’s File menu and remove the Print action from the Action sheet in an iOS or iPadOS app. If you implement a custom print button, dim or hide it when printing isn’t possible.
+**Present a printing option only when it’s possible.** If there’s nothing onscreen to print, dim the Print item in a macOS app’s File menu and remove the Print action from the Action sheet in an iOS or iPadOS app. If you implement a custom print button, dim or hide it when printing isn’t possible.
 
 **Present relevant printing options.** If it makes sense to offer options like selecting a page range, requesting multiple copies, or printing on both sides — and the printer supports the options — use the system-provided view to present them.
 
@@ -48,3 +51,7 @@ An iOS, iPadOS, macOS, or visionOS app can integrate system-provided print funct
 
 [`NSDocument`](https://developer.apple.com/documentation/AppKit/NSDocument) — AppKit
 
+
+## Implementation checks
+
+Do not equate absent physical printer discovery with inability to print: a system print panel may still offer PDF or later printer selection. Check document and platform printing capability, present the standard print interface and honor cancellation. Never silently send sensitive content to a default or remote printer.

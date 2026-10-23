@@ -47,3 +47,5 @@ export default function RootLayout({ children }) {
   )
 }
 ```
+
+The ssr:false declaration belongs in a Client Component module. Loading after hydration is not consent: analytics still requires the applicable user consent, privacy configuration, and explicit authorization to transmit data.

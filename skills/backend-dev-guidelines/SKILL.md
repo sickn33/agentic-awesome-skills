@@ -20,7 +20,7 @@ Your goal is to build **predictable, observable, and maintainable backend system
 * Centralized configuration
 * First-class observability
 
-This skill defines **how backend code must be written**, not merely suggestions.
+Use these patterns when they fit the target repository; its architecture, authorization model and dependency versions take precedence. This documentation does not ship a runnable service.
 
 ---
 
@@ -44,13 +44,13 @@ Before implementing or modifying a backend feature, assess feasibility.
 BFRI = (Architectural Fit + Testability) − (Complexity + Data Risk + Operational Risk)
 ```
 
-**Range:** `-10 → +10`
+**Range:** `-13 → +7` (each input is 1–5). This is an informal discussion aid, not a validated risk model or merge gate.
 
 ### Interpretation
 
 | BFRI     | Meaning   | Action                 |
 | -------- | --------- | ---------------------- |
-| **6–10** | Safe      | Proceed                |
+| **6–7**  | Lower concern      | Proceed                |
 | **3–5**  | Moderate  | Add tests + monitoring |
 | **0–2**  | Risky     | Refactor or isolate    |
 | **< 0**  | Dangerous | Redesign before coding |
@@ -64,15 +64,15 @@ Automatically applies when working on:
 * Express middleware
 * Prisma database access
 * Zod validation
-* Sentry error tracking
+* Approved error tracking with redaction and destination/retention controls
 * Configuration management
 * Backend refactors or migrations
 
 ---
 
-## 2. Core Architecture Doctrine (Non-Negotiable)
+## 2. Architecture Pattern (When Adopted by the Repository)
 
-### 1. Layered Architecture Is Mandatory
+### 1. Layered Architecture Option
 
 ```
 Routes → Controllers → Services → Repositories → Database
@@ -139,7 +139,7 @@ No raw `res.json` calls outside BaseController helpers.
 
 ---
 
-### 5. All Errors Go to Sentry
+### 5. Capture Unexpected Errors at One Approved Boundary
 
 ```ts
 catch (error) {
@@ -254,7 +254,7 @@ await userRepository.findActiveUsers();
 
 ### asyncErrorWrapper Required
 
-All async route handlers must be wrapped.
+For Express 4, route promises need an error-forwarding wrapper. Express 5 forwards rejected returned promises; avoid duplicate handlers.
 
 ```ts
 router.get(
@@ -265,7 +265,7 @@ router.get(
 );
 ```
 
-No unhandled promise rejections.
+Return or await the handler promise; a wrapper does not handle detached background work.
 
 ---
 
@@ -273,8 +273,8 @@ No unhandled promise rejections.
 
 ### Required
 
-* Sentry error tracking
-* Sentry performance tracing
+* Approved error tracking with redaction and destination/retention controls
+* Sampled performance tracing appropriate to the installed SDK
 * Structured logs (where applicable)
 
 Every critical path must be observable.
@@ -301,17 +301,21 @@ No tests → no merge.
 
 ---
 
-## 10. Anti-Patterns (Immediate Rejection)
+## 10. Review Signals
 
 ❌ Business logic in routes
 ❌ Skipping service layer
 ❌ Direct Prisma in controllers
 ❌ Missing validation
-❌ process.env usage
-❌ console.log instead of Sentry
+❌ Unvalidated environment access outside configuration bootstrap
+❌ Unredacted or unapproved telemetry
 ❌ Untested business logic
 
 ---
+
+## Resource Guide
+
+Read the relevant bundled resources before applying examples. Private project paths and `@project-lifecycle-portal/database`, `SSOMiddleware`, `BaseController` and configuration utilities are illustrative application components, not installed dependencies. Authenticate with access tokens, authorize every object/tenant action, allowlist public DTO fields, project response fields and protect cookie-authenticated mutations against CSRF.
 
 ## 11. Integration With Other Skills
 
@@ -327,7 +331,7 @@ No tests → no merge.
 
 Before finalizing backend work:
 
-* [ ] BFRI ≥ 3
+* [ ] Risks discussed with evidence; no numeric score grants approval
 * [ ] Layered architecture respected
 * [ ] Input validated
 * [ ] Errors captured in Sentry
@@ -339,7 +343,7 @@ Before finalizing backend work:
 
 ## 13. Skill Status
 
-**Status:** Stable · Enforceable · Production-grade
+**Status:** Illustrative patterns; target-specific compilation, tests and security review required
 **Intended Use:** Long-lived Node.js microservices with real traffic and real risk
 ---
 

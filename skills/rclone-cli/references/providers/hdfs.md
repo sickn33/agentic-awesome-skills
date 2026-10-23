@@ -13,6 +13,10 @@ framework.
 
 Paths are specified as `remote:` or `remote:path/to/dir`.
 
+The `root` identity and disposable container below are test examples. Use an
+appropriately scoped Hadoop identity and the cluster's Kerberos/security
+configuration for production; a username alone is not authentication.
+
 ## Configuration
 
 Here is an example of how to make a remote called `remote`. First run:

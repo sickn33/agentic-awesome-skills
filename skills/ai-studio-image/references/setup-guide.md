@@ -11,7 +11,7 @@
 
 ### Opcao A: Arquivo .env (recomendado)
 
-Crie/edite `C:\Users\renat\skills\ai-studio-image\.env`:
+Crie/edite `<skill-root>/.env`:
 
 ```
 GEMINI_API_KEY=sua-api-key-principal
@@ -35,7 +35,7 @@ export GEMINI_API_KEY=sua-api-key
 ## 3. Instalar Dependencias
 
 ```bash
-pip install -r C:\Users\renat\skills\ai-studio-image\scripts\requirements.txt
+pip install -r <skill-root>/scripts\requirements.txt
 ```
 
 Ou manualmente:
@@ -47,10 +47,10 @@ pip install google-genai Pillow python-dotenv
 
 ```bash
 # Testar se tudo funciona
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py --list-models
+python <skill-root>/scripts\generate.py --list-models
 
 # Gerar primeira imagem
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
+python <skill-root>/scripts\generate.py \
   --prompt "pessoa jovem sorrindo em cafeteria" \
   --mode influencer \
   --format square
@@ -96,7 +96,13 @@ python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
 |------|-------|---------|
 | API key not found | Sem key configurada | Crie .env ou set variavel |
 | 403 Forbidden | Key sem permissao | Verifique permissoes no Google Cloud |
-| 429 Rate Limited | Muitas requisicoes | Aguarde ou use key backup |
+| 429 Rate Limited | Muitas requisicoes | Aguarde o prazo indicado; nao alterne credenciais para contornar quota |
 | Image blocked | Conteudo restrito | Ajuste prompt, evite conteudo sensivel |
 | Model not found | Modelo indisponivel | Tente outro modelo: imagen-4 |
 | Empty response | Prompt muito generico | Adicione mais detalhes ao prompt |
+
+## Limites do snapshot e autorizacao
+
+Modelos, precos e recursos citados sao historicos e nao foram verificados no servico. Consulte https://ai.google.dev/gemini-api/docs/image-generation e a tabela de precos antes de usar. Toda chamada exige --force-paid como confirmacao de custo; nenhum modelo e garantido gratuito. O contador diario e local, aproximado, sem atomicidade, e nao limita a conta nem custos de falhas/retries ou diretorios alternativos.
+
+Nao envie imagens pessoais, prompts confidenciais ou referencias sem autorizacao para processamento externo. Prompts e metadados sao gravados localmente: proteja a pasta de saida. Resultados sao sinteticos; realismo nao garante fidelidade, texto correto ou proveniencia fotografica. Multi-turn, thinking e grounding descritos nao sao implementados pela CLI. Nao publique automaticamente. Use um ambiente virtual e caminhos reais no lugar de <skill-root>; proteja e exclua .env do Git. Evite humanizar o prompt duas vezes: generate.py ja aplica o motor.

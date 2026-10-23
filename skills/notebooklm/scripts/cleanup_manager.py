@@ -8,6 +8,7 @@ import shutil
 import argparse
 from pathlib import Path
 from typing import Dict, List, Any
+from config import DATA_DIR
 
 
 class CleanupManager:
@@ -25,7 +26,7 @@ class CleanupManager:
         """Initialize the cleanup manager"""
         # Skill directory paths
         self.skill_dir = Path(__file__).parent.parent
-        self.data_dir = self.skill_dir / "data"
+        self.data_dir = DATA_DIR
 
     def get_cleanup_paths(self, preserve_library: bool = False) -> Dict[str, Any]:
         """
@@ -39,6 +40,8 @@ class CleanupManager:
 
         Note: .venv is NEVER deleted - it's part of the skill infrastructure
         """
+        if any(part.is_symlink() for part in (self.data_dir, *self.data_dir.parents)):
+            raise ValueError("Refusing cleanup through a linked data directory")
         paths = {
             'browser_state': [],
             'sessions': [],
@@ -52,6 +55,8 @@ class CleanupManager:
         if self.data_dir.exists():
             # Browser state
             browser_state_dir = self.data_dir / "browser_state"
+            if browser_state_dir.is_symlink():
+                raise ValueError("Refusing linked browser state directory")
             if browser_state_dir.exists():
                 for item in browser_state_dir.iterdir():
                     size = self._get_size(item)
@@ -115,6 +120,8 @@ class CleanupManager:
 
     def _get_size(self, path: Path) -> int:
         """Get size of file or directory in bytes"""
+        if path.is_symlink():
+            return 0
         if path.is_file():
             return path.stat().st_size
         elif path.is_dir():
@@ -168,7 +175,10 @@ class CleanupManager:
             for item_info in items:
                 path = Path(item_info['path'])
                 try:
-                    if path.exists():
+                    if path.is_symlink():
+                        path.unlink()
+                        deleted_items.append(str(path))
+                    elif path.exists():
                         if path.is_dir():
                             shutil.rmtree(path)
                         else:
@@ -186,7 +196,7 @@ class CleanupManager:
         # Recreate browser_state dir if everything was deleted
         if not preserve_library and not failed_items:
             browser_state_dir = self.data_dir / "browser_state"
-            browser_state_dir.mkdir(parents=True, exist_ok=True)
+            browser_state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
         return {
             'deleted_items': deleted_items,

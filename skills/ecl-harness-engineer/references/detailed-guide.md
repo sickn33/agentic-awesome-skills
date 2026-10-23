@@ -329,7 +329,7 @@ Create a delta list:
 - [ ] docs/ECL.md
 - [ ] docs/STATUS.md
 - [ ] docs/ARCHITECTURE.md
-- [ ] scripts/lint-deps.go
+- [ ] scripts/lint-deps/main.go
 - [ ] scripts/harness-change.{ps1|sh|mjs|py}
 - [ ] scripts/harness-evolve.{ps1|sh|mjs|py}
 - [ ] scripts/lint-ecl.{ps1|sh|mjs|py}
@@ -407,7 +407,7 @@ the user explicitly asks for it.
 Command surface rule: create ECL scripts for the selected profile, not a hardcoded shell. If Bash is
 selected on Windows, document Git Bash, WSL, MSYS2, or CI Linux shell requirements in the generated
 environment/development docs. If PowerShell is selected, detect whether `pwsh` is available; if not,
-use `powershell -NoProfile -ExecutionPolicy Bypass`. PowerShell templates must be compatible with
+use `powershell -NoProfile`. PowerShell templates must be compatible with
 Windows PowerShell 5.1: avoid ambiguous overloads such as `TrimStart(".\")`, and avoid non-ASCII
 mojibake marker string literals in `.ps1`; represent markers by Unicode codepoint or another
 PS5-safe construction.
@@ -454,13 +454,15 @@ Agents will notify when done. Collect any issues they encountered.
 # Re-run the same existing lint/typecheck/test/build commands captured in Phase 1.
 
 # 1. Harness checks pass
-make verify-harness || npm run lint:harness || {generated_harness_lint_command}
+# Select the existing harness command for this repository; run it once and preserve its exit status.
+{verified_existing_harness_command}
 
 # 2. Architecture linters pass
 make lint-arch || npm run lint:arch
 
 # 3. Business build/test gates run
-go build ./... || npm run build || python -m compileall .
+# Select the actual build command; compilation is not a substitute for tests or lint.
+{verified_existing_build_command}
 
 # 4. AGENTS.md size check
 wc -l AGENTS.md  # Should be 80-120 lines
@@ -625,7 +627,7 @@ With context: "Implement the bootstrap exec-plan at docs/exec-plans/active/boots
 
 ### 1. Repository as Single Source of Truth
 
-Agents cannot access Slack, Google Docs, or tribal knowledge. If it's not in the repository, it doesn't exist for the agent.
+Use repository evidence and any other sources the user has authorized. Do not assume access to private services, and mark unavailable context as unknown. Keep relevant project decisions in maintained documentation without copying secrets or private conversations.
 
 ### 2. AGENTS.md is a Map, Not a Manual
 

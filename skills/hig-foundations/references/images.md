@@ -31,7 +31,7 @@ iOS| @2x and @3x
 visionOS| @2x or higher (see [visionOS](https://developer.apple.com/design/human-interface-guidelines/images#visionOS))  
 macOS, tvOS| @1x and @2x  
   
-**In general, design images at the lowest resolution and scale them up to create high-resolution assets.** When you use resizable vectorized shapes, you might want to position control points at whole values so that they’re cleanly aligned at 1x. This positioning allows the points to remain cleanly aligned to the raster grid at higher resolutions, because 2x and 3x are multiples of 1x.
+**Design vector artwork on a logical grid and export at each required raster resolution. Do not upscale an already rasterized low-resolution image to invent missing detail.** When you use resizable vectorized shapes, you might want to position control points at whole values so that they’re cleanly aligned at 1x. This positioning allows the points to remain cleanly aligned to the raster grid at higher resolutions, because 2x and 3x are multiples of 1x.
 
 ## [Formats](https://developer.apple.com/design/human-interface-guidelines/images#Formats)
 

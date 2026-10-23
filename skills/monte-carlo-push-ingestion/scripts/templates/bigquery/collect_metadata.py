@@ -103,9 +103,11 @@ def _collect_assets(bq_client: bigquery.Client, project_id: str) -> list[dict]:
                     "byte_count": table.num_bytes,
                 },
                 "freshness": {
-                    "last_updated_time": table.modified.isoformat() if table.modified else None,
+                    "last_update_time": table.modified.isoformat() if table.modified else None,
                 },
             }
+            if len(assets) >= 10000:
+                raise ValueError("Collection exceeds 10000 assets; narrow scope")
             assets.append(asset)
             log.info("Queued %s.%s.%s", project_id, dataset_id, table.table_id)
 

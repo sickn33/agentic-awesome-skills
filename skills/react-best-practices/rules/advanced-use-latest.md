@@ -47,3 +47,5 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
   }, [query])
 }
 ```
+
+This ref updates in a passive Effect and can temporarily expose the previous committed callback. Do not remove reactive dependencies merely to silence the linter; use a supported Effect Event when its semantics fit.

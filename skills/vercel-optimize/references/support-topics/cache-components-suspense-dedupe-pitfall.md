@@ -11,10 +11,10 @@ maxBriefChars: 900
 ---
 
 ## Investigation Brief
-Default `'use cache'` does not dedupe identical calls across separate `<Suspense>` boundaries on the same render. Each boundary re-invokes the cached function, multiplying function-duration and ISR write churn.
+Separate `<Suspense>` boundaries can expose cache-scope differences. Repeated source calls alone do not prove duplicate origin work or ISR writes.
 
 ## Evidence To Check
-Confirm the scanner finding's repeated fetch URL or helper name. Verify the call sites are within the same route segment and inside distinct `<Suspense>` boundaries. Cross-reference `fnDurationP95ByRoute` and `isrWritesByRoute` for the owning route.
+Confirm the scanner finding's repeated fetch URL or helper name. Verify the call sites are within the same route segment and inside distinct `<Suspense>` boundaries, then confirm duplicate origin execution with traces. Cross-reference `fnDurationP95ByRoute` and `isrWritesByRoute` for the owning route.
 
 ## Do Not Recommend When
 Skip if the repeated call is intentional (different parameters, different intent). Skip if the duplicate is in a single component body where in-request memoization already applies.

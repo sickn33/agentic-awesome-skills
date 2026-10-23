@@ -105,20 +105,25 @@ class InstagramAPI:
         # Verificar rate limit
         self._gov.check_rate_limit(action_name, self.account_id)
 
-        url = f"{GRAPH_API_BASE}/{endpoint}" if not endpoint.startswith("http") else endpoint
-        params = params or {}
-        params["access_token"] = self.access_token
+        # Endpoints are relative Graph paths; never forward a token to caller URLs.
+        if not endpoint or any(x in endpoint for x in (":", "?", "#", "..")) or endpoint.startswith("/"):
+            raise ValueError("Expected a relative Graph API endpoint")
+        url = f"{GRAPH_API_BASE}/{endpoint}"
+        params = dict(params or {})
+        params.pop("access_token", None)
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+        attempts = MAX_RETRIES if method.upper() == "GET" else 1
 
         client = await self._get_client()
 
-        for attempt in range(1, MAX_RETRIES + 1):
+        for attempt in range(1, attempts + 1):
             try:
                 if method.upper() == "POST":
-                    resp = await client.post(url, params=params, data=data)
+                    resp = await client.post(url, params=params, data=data, headers=headers)
                 elif method.upper() == "DELETE":
-                    resp = await client.delete(url, params=params)
+                    resp = await client.delete(url, params=params, headers=headers)
                 else:
-                    resp = await client.get(url, params=params)
+                    resp = await client.get(url, params=params, headers=headers)
 
                 # Parse response
                 result = resp.json()
@@ -133,12 +138,12 @@ class InstagramAPI:
                     )
                     if api_error.is_rate_limit():
                         logger.warning("Rate limit da API atingido (code %s). Aguardando...", api_error.code)
-                        if attempt < MAX_RETRIES:
+                        if attempt < attempts:
                             await asyncio.sleep(60)  # espera 1 min para rate limits da API
                             continue
                     if api_error.is_permission_error():
                         raise api_error  # não faz retry para erros de permissão
-                    if attempt < MAX_RETRIES:
+                    if attempt < attempts and resp.status_code >= 500:
                         await asyncio.sleep(RETRY_BACKOFF_BASE ** attempt)
                         continue
                     raise api_error
@@ -160,20 +165,20 @@ class InstagramAPI:
                     "HTTP %s em %s (tentativa %d/%d)",
                     exc.response.status_code, url, attempt, MAX_RETRIES,
                 )
-                if attempt < MAX_RETRIES:
+                if attempt < attempts and exc.response.status_code >= 500:
                     await asyncio.sleep(RETRY_BACKOFF_BASE ** attempt)
                 else:
-                    raise
+                    raise InstagramAPIError(f"Graph HTTP {exc.response.status_code}; reconcile writes before retry") from None
 
             except (httpx.RequestError, httpx.TimeoutException) as exc:
                 logger.warning(
                     "Erro de request em %s: %s (tentativa %d/%d)",
-                    url, exc, attempt, MAX_RETRIES,
+                    url, type(exc).__name__, attempt, attempts,
                 )
-                if attempt < MAX_RETRIES:
+                if attempt < attempts:
                     await asyncio.sleep(RETRY_BACKOFF_BASE ** attempt)
                 else:
-                    raise
+                    raise InstagramAPIError("Graph request failed; write outcome may be unknown, reconcile before retry") from None
 
         raise InstagramAPIError("Falha após todas as tentativas")
 
@@ -255,11 +260,11 @@ class InstagramAPI:
                 data["cover_url"] = cover_url
             data["share_to_feed"] = str(share_to_feed).lower()
         elif media_type == "STORIES":
+            data["media_type"] = "STORIES"
             if image_url:
                 data["image_url"] = image_url
             elif video_url:
                 data["video_url"] = video_url
-                data["media_type"] = "VIDEO"
         elif media_type == "CAROUSEL":
             data["media_type"] = "CAROUSEL"
             if children:
@@ -428,6 +433,8 @@ class InstagramAPI:
         Faz upload de arquivo local para o Imgur (anônimo).
         Retorna a URL pública da imagem.
         """
+        if not IMGUR_CLIENT_ID or __import__("os").environ.get("AAS_INSTAGRAM_ALLOW_IMGUR_UPLOAD") != "1":
+            raise ValueError("Public Imgur upload requires own IMGUR_CLIENT_ID and explicit AAS_INSTAGRAM_ALLOW_IMGUR_UPLOAD=1")
         client = await self._get_client()
         with open(file_path, "rb") as f:
             resp = await client.post(
@@ -439,6 +446,6 @@ class InstagramAPI:
         data = resp.json()
         if data.get("success"):
             url = data["data"]["link"]
-            logger.info("Upload Imgur: %s → %s", file_path, url)
+            logger.info("Public Imgur upload completed")
             return url
-        raise InstagramAPIError(f"Imgur upload falhou: {data}")
+        raise InstagramAPIError("Imgur upload failed")

@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from scraper.states import SCRAPERS, get_all_scrapers, get_scraper
 from db import Database
+from private_state import state_dir, private_dir, new_export
 
 logging.basicConfig(
     level=logging.INFO,
@@ -31,7 +32,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-LOG_FILE = Path(__file__).parent.parent / "data" / "scraping_log.json"
+LOG_FILE = state_dir() / "scraping_log.json"
 
 
 async def scrape_state(estado: str, semaphore: asyncio.Semaphore) -> dict:
@@ -49,12 +50,13 @@ async def scrape_state(estado: str, semaphore: asyncio.Semaphore) -> dict:
             }
 
         try:
-            records = await scraper.scrape()
+            records = await asyncio.wait_for(scraper.scrape(), timeout=600)
             return {
                 "estado": estado,
                 "junta": scraper.junta,
                 "url": scraper.url,
-                "status": "OK" if records else "VAZIO",
+                "status": "PARTIAL" if getattr(scraper, "_had_request_failure", False) or getattr(scraper, "_request_pending", False) or getattr(scraper, "unverified_candidates", 0) else ("OK" if records else "VAZIO"),
+                "unverified_candidates": getattr(scraper, "unverified_candidates", 0),
                 "count": len(records),
                 "records": [r.to_dict() for r in records],
                 "error": None,
@@ -67,13 +69,15 @@ async def scrape_state(estado: str, semaphore: asyncio.Semaphore) -> dict:
                 "status": "ERRO",
                 "count": 0,
                 "records": [],
-                "error": str(exc),
+                "error": "scrape_failed",
                 "scraped_at": datetime.now(timezone.utc).isoformat(),
             }
 
 
 async def run(estados: Optional[List[str]], concurrency: int, dry_run: bool) -> None:
-    estados_alvo = [e.upper() for e in estados] if estados else list(SCRAPERS.keys())
+    estados_alvo = list(dict.fromkeys(e.upper() for e in estados)) if estados else list(SCRAPERS.keys())
+    if not 1 <= concurrency <= 5 or any(uf not in SCRAPERS for uf in estados_alvo):
+        raise ValueError("use recognized UFs and concurrency 1..5")
 
     if dry_run:
         print(f"\n[DRY-RUN] Estados que seriam coletados ({len(estados_alvo)}):")
@@ -122,11 +126,14 @@ async def run(estados: Optional[List[str]], concurrency: int, dry_run: bool) -> 
             "count": count,
             "error": res.get("error"),
             "scraped_at": res["scraped_at"],
+            "unverified_candidates": res.get("unverified_candidates", 0),
         })
 
     # Salvar log
-    LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(LOG_FILE, "w", encoding="utf-8") as f:
+    private_dir(LOG_FILE.parent)
+    log_path, descriptor = new_export(LOG_FILE.parent, "", "json")
+    import os
+    with os.fdopen(descriptor, "w", encoding="utf-8") as f:
         json.dump(
             {
                 "run_at": datetime.now(timezone.utc).isoformat(),
@@ -152,7 +159,7 @@ async def run(estados: Optional[List[str]], concurrency: int, dry_run: bool) -> 
     print(f"  VAZIO:  {len(vazios)} estados | {[e['estado'] for e in vazios]}")
     print(f"  ERRO:   {len(erros)} estados | {[e['estado'] for e in erros]}")
     print(f"  TOTAL SALVO NO BANCO: {total_salvos}")
-    print(f"  LOG: {LOG_FILE}")
+    print(f"  LOG: {log_path}")
     print("=" * 60)
 
     # Estatísticas do banco
@@ -163,6 +170,8 @@ async def run(estados: Optional[List[str]], concurrency: int, dry_run: bool) -> 
         print("-" * 35)
         for s in stats:
             print(f"{s['estado']:<5} {s['junta']:<12} {s['total']:>6} {s['ativos']:>7}")
+
+    return 1 if erros else 0
 
 
 def main():
@@ -181,9 +190,12 @@ def main():
         "--dry-run", action="store_true",
         help="Mostra o que seria coletado sem executar"
     )
+    parser.add_argument("--allow-collect", action="store_true", help="Authorize public collection and private local persistence")
     args = parser.parse_args()
+    if not args.dry_run and not args.allow_collect:
+        parser.error("live collection requires --allow-collect")
 
-    asyncio.run(run(args.estado, args.concurrency, args.dry_run))
+    raise SystemExit(asyncio.run(run(args.estado, args.concurrency, args.dry_run)) or 0)
 
 
 if __name__ == "__main__":

@@ -3,19 +3,9 @@
 This repository contains Postgres performance optimization rules optimized for
 AI agents and LLMs.
 
-## Quick Start
+## Bundled snapshot
 
-```bash
-# Install dependencies
-cd packages/postgres-best-practices-build
-npm install
-
-# Validate existing rules
-npm run validate
-
-# Build AGENTS.md
-npm run build
-```
+The upstream `packages/postgres-best-practices-build` toolchain is not bundled here. Do not execute its absent build steps. Maintain the rule files and compiled AGENTS.md consistently and use this repository’s current validation commands. Quantified performance examples require workload-specific measurement.
 
 ## Creating a New Rule
 

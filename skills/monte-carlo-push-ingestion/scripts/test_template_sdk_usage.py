@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Scope: synthetic models only; no live provider or template execution.
 """
 Smoke test that every pycarlo model construction used by the templates
 actually works with the real SDK. A wrong parameter name raises TypeError.

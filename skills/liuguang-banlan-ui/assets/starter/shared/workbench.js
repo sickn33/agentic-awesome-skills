@@ -16,6 +16,12 @@
   const liveStatus = document.querySelector("#live-status");
   const defaultConfig = JSON.parse(JSON.stringify(config));
 
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, (character) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[character]));
+  }
+
   function formatNumber(value, digits = 2) {
     return Number(value).toFixed(digits);
   }
@@ -43,7 +49,7 @@
         </div>
         <output for="overall-intensity">${formatNumber(config.overallColorIntensity)}</output>
       </div>
-      <input id="overall-intensity" type="range" min="0" max="1" step="0.01" value="${config.overallColorIntensity}" aria-label="总体彩色强度">
+      <input id="overall-intensity" type="range" min="0" max="1" step="0.01" value="${formatNumber(config.overallColorIntensity)}" aria-label="总体彩色强度">
       <div class="range-labels"><span>中性基材</span><span>校准上限</span></div>
     `;
     controls.append(overall);
@@ -62,15 +68,15 @@
       row.innerHTML = `
         <div class="parameter-heading">
           <div class="color-name">
-            <span class="color-chip" style="--chip:${color.srgbFallback}"></span>
+            <span class="color-chip" style="--chip:${/^#[0-9a-f]{6}$/i.test(color.srgbFallback) ? color.srgbFallback : "#808080"}"></span>
             <div>
-              <strong>${color.label}</strong>
+              <strong>${escapeHTML(color.label)}</strong>
               <span class="parameter-kicker">OKLCH ${formatNumber(color.oklch.l)} ${formatNumber(color.oklch.c, 3)} ${formatNumber(color.oklch.h, 0)}</span>
             </div>
           </div>
           <output for="color-${index}">${formatNumber(color.intensity)}</output>
         </div>
-        <input id="color-${index}" type="range" min="0" max="1" step="0.01" value="${color.intensity}" aria-label="${color.label}强度">
+        <input id="color-${index}" type="range" min="0" max="1" step="0.01" value="${formatNumber(color.intensity)}" aria-label="${escapeHTML(color.label)}强度">
         <dl class="parameter-facts">
           <div><dt>峰值 α</dt><dd>${formatNumber(color.peakOpacity, 3)}</dd></div>
           <div><dt>空间尺度</dt><dd>${formatNumber(color.fieldScale)}</dd></div>
@@ -83,7 +89,7 @@
         color.intensity = Number(input.value);
         row.querySelector("output").value = formatNumber(color.intensity);
         field.updateConfig(config);
-        announce(`${color.label}强度 ${formatNumber(color.intensity)}`);
+        announce(`${escapeHTML(color.label)}强度 ${formatNumber(color.intensity)}`);
       });
     });
   }
@@ -198,9 +204,24 @@
     });
   });
 
-  document.querySelectorAll(".record-row").forEach((row) => {
+  const recordRows = Array.from(document.querySelectorAll(".record-row"));
+  recordRows.forEach((row, index) => {
+    row.tabIndex = row.getAttribute("aria-selected") === "true" ? 0 : -1;
+    if (!row.hasAttribute("aria-selected")) row.setAttribute("aria-selected", "false");
+    row.addEventListener("keydown", (event) => {
+      let target = null;
+      if (event.key === "ArrowDown") target = (index + 1) % recordRows.length;
+      if (event.key === "ArrowUp") target = (index - 1 + recordRows.length) % recordRows.length;
+      if (event.key === "Home") target = 0;
+      if (event.key === "End") target = recordRows.length - 1;
+      if (target === null) return;
+      event.preventDefault();
+      recordRows[target].click();
+      recordRows[target].focus();
+    });
     row.addEventListener("click", () => {
-      document.querySelectorAll(".record-row").forEach((item) => item.removeAttribute("aria-selected"));
+      recordRows.forEach((item) => { item.setAttribute("aria-selected", "false"); item.tabIndex = -1; });
+      row.tabIndex = 0;
       row.setAttribute("aria-selected", "true");
       document.querySelector("#record-title").textContent = row.dataset.title;
       document.querySelector("#record-time").textContent = row.dataset.time;
@@ -247,9 +268,13 @@
     if (event.key === "Escape" && panel.dataset.open === "true") {
       setPanel(false);
       panelToggle.focus();
+    } else if (event.key === "Escape" && isMobileViewport() && sidebarOpen) {
+      setSidebar(false);
+      menuButton.focus();
     }
   });
 
+  window.addEventListener("spectral-renderer-change", applyThemeMetadata);
   applyThemeMetadata();
   renderControls();
 })();

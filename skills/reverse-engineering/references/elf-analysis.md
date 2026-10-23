@@ -6,7 +6,7 @@
 
 ## ELF 结构速查
 
-### 文件头 (ELF Header)
+### 文件头 (ELF64 Header; ELF32 offsets and widths differ)
 
 ```text
 偏移  大小  字段              说明
@@ -94,8 +94,8 @@
 
 | 寄存器 | 用途 |
 |--------|------|
-| x0-x7 | 参数/返回值 |
-| x8 | 间接结果（syscall 号） |
+| x0-x7 | 参数；返回值依 ABI/类型通常 x0 或 x0-x1 |
+| x8 | 间接结果地址；Linux syscall ABI 中另作 syscall 号 |
 | x9-x15 | 临时寄存器 |
 | x16-x17 | IP0/IP1（PLT 跳转） |
 | x18 | 平台寄存器（Android: shadow call stack） |
@@ -289,8 +289,10 @@ gdb -p <pid> -ex "dump memory out.bin 0xADDR 0xADDR+SIZE" -ex quit
 # 手动修改 e_phnum 或 patch 损坏的 PHDR
 python -c "
 import struct
-with open('binary', 'r+b') as f:
+# Work on a separate analysis copy after proving the actual PHDR table size.
+with open('binary-analysis-copy', 'r+b') as f:
     f.seek(0x38)  # e_phnum offset (64-bit)
-    f.write(struct.pack('<H', 2))  # 修改为正确的 PHDR 数量
+    # Do not hardcode 2; derive and bounds-check the true count/endian/class first.
+    raise SystemExit('No repair performed: determine verified PHDR count first')
 "
 ```

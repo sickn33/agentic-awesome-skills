@@ -52,7 +52,7 @@ XX / Proton Drive
 [snip]
 Storage> protondrive
 User name
-user> you@protonmail.com
+username> you@protonmail.com
 Password.
 y) Yes type in my own password
 g) Generate random password
@@ -70,8 +70,8 @@ Remote config
 Configuration complete.
 Options:
 - type: protondrive
-- user: you@protonmail.com
-- pass: *** ENCRYPTED ***
+- username: you@protonmail.com
+- password: *** ENCRYPTED ***
 Keep this "remote" remote?
 y) Yes this is OK
 e) Edit this remote
@@ -183,7 +183,9 @@ Properties:
 
 The OTP secret key
 
-The value can also be provided with --protondrive-otp-secret-key=ABCDEFGHIJKLMNOPQRSTUVWXYZ234567
+Configure this reusable 2FA seed through the protected interactive config.
+Do not place the seed in shell history or process arguments. Obscuring is
+reversible; protect the config file and avoid storing the seed unless needed.
 
 The OTP secret key of your proton drive account if the account is set up with
 two-factor authentication

@@ -93,12 +93,12 @@ for start_val in range(0x10000):
         bits[i + 16] = new_bit
 
     if valid:
-        # Convert bits to bytes
+        # Convert bits to bytes; format is only a filter, not proof of uniqueness
         flag_bytes = bytes(int(''.join(map(str, bits[i:i+8])), 2)
                           for i in range(0, total_bits, 8))
-        if b'BCCTF' in flag_bytes or flag_bytes[:5].isascii():
+        if b'BCCTF' in flag_bytes:
             print(flag_bytes.decode(errors='replace'))
-            break
+            # Retain all valid candidates and validate the complete original checker.
 ```
 
 **Key insight:** Sliding window popcount differences create a recurrence relation: each new bit is determined by the bit 16 positions back plus the popcount delta. Only the first 16 bits are free (constrained by initial popcount). Brute-force the ~4000-8000 valid initial windows — for each, the entire bit sequence is deterministic. Runs in under a second.
@@ -118,7 +118,7 @@ for start_val in range(0x10000):
 # Patch ptrace call at offset with NOP (0x90)
 python3 -c "
 data = open('binary','rb').read()
-data = data[:0x72b] + b'\x90'*5 + data[:0x730]  # NOP the ptrace call
+data = data[:0x72b] + b'\x90'*5 + data[0x730:]  # verified 5-byte instruction in this case only  # NOP the ptrace call
 open('patched','wb').write(data)
 "
 
@@ -237,14 +237,13 @@ uint32_t process(uint32_t val) {
 
 int solve_block(uint32_t old_key, uint32_t expected_key, unsigned char *out) {
     int found = 0;
-    #pragma omp parallel for shared(found)
+    // Sequential reference avoids unsynchronized reads of a shared OpenMP flag.
     for (int v = 0; v < 0x1000000; v++) {
         if (found) continue;
         uint32_t input_val = ((v >> 16) << 16) | (v & 0xFF) | ((v >> 8 & 0xFF) << 8);
         uint32_t saved = input_val ^ old_key;
         uint32_t final_val = process(saved);
         if ((final_val ^ saved) == expected_key) {
-            #pragma omp critical
             { if (!found) { out[0]=v>>16; out[1]=(v>>8)&0xFF; out[2]=v&0xFF; found=1; } }
         }
     }
@@ -571,14 +570,13 @@ Binary reads the system date and only executes correctly on a specific date (e.g
 
 ```bash
 # Set system clock to the required date
-sudo date -s "2012-12-21 00:00:00"
-./binary
+# Do not change the host clock. Use a disposable offline fixture process.
 
 # Or use faketime to avoid system-wide change
 LD_PRELOAD=/usr/lib/faketime/libfaketime.so.1 FAKETIME="2012-12-21 00:00:00" ./binary
 
 # Restore system time afterward
-sudo ntpdate pool.ntp.org
+# No host time mutation or external time request is needed.
 ```
 
 **In IDA/Ghidra:** Search for `time()` or `localtime()` calls. The struct `tm` fields to watch: `tm_year` (years since 1900), `tm_mon` (0-based), `tm_mday`.
@@ -649,7 +647,7 @@ from itertools import product
 def solve_psadbw_group(known_constants, expected_sum, printable_range=(0x20, 0x7e)):
     """Brute-force 2 unknown bytes given sum-of-abs-diff constraint."""
     solutions = []
-    for a, b in product(range(*printable_range), repeat=2):
+    for a, b in product(range(printable_range[0], printable_range[1] + 1), repeat=2):
         pair = [a, b]
         sad = sum(abs(pair[i] - known_constants[i]) for i in range(len(pair)))
         if sad == expected_sum:
@@ -674,7 +672,10 @@ def solve_psadbw_group(known_constants, expected_sum, printable_range=(0x20, 0x7
 import numpy as np
 
 def sigmoid_inv(x):
-    return -np.log(1.0/x - 1.0)
+    x = np.asarray(x, dtype=float)
+    if np.any(~np.isfinite(x)) or np.any((x <= 0) | (x >= 1)):
+        raise ValueError("Sigmoid inverse requires finite values strictly between zero and one")
+    return np.log(x) - np.log1p(-x)
 
 # Invert layer by layer from output to input
 v = target_output
@@ -687,7 +688,7 @@ flag = ''.join(chr(int(round(1.0 / v[j]))) for j in range(len(v)))
 
 **Key insight:** Neural networks with invertible activation functions (sigmoid, tanh) and square weight matrices can be mathematically inverted layer-by-layer. Apply inverse-sigmoid, subtract bias, multiply by weight inverse. Watch for input transformations (e.g., 1/x) that must also be inverted.
 
-**Detection:** Binary with TensorFlow or custom DNN implementation. Look for sigmoid/tanh calls, matrix multiplications, and hardcoded float arrays (weights/biases) in `.rodata`. Square weight matrices (N x N) indicate the network is invertible.
+**Detection:** Binary with TensorFlow or custom DNN implementation. Look for sigmoid/tanh calls, matrix multiplications, and hardcoded float arrays (weights/biases) in `.rodata`. Square dimensions are insufficient: each matrix must have full rank and acceptable conditioning; sigmoid outputs must lie strictly inside (0,1). Validate any reconstructed input forward.
 
 **References:** N1CTF 2018
 
@@ -699,13 +700,13 @@ flag = ''.join(chr(int(round(1.0 / v[j]))) for j in range(len(v)))
 
 ```bash
 # Enable BPF JIT compilation
-echo 1 > /proc/sys/net/core/bpf_jit_enable
+# Do not change host sysctls; use an offline BPF disassembler or dedicated test VM.
 
 # Run the binary, then read JIT-compiled BPF from kernel log
 dmesg | grep -A 100 "flen="
 
 # Analysis revealed: expects DNS TXT query on UDP port 3333
-dig @target -p 3333 'M4d!bKn3~l' TXT
+# Do not query a live target; inspect captured synthetic packets offline.
 ```
 
 **Key insight:** Linux can JIT-compile BPF filters to native x64 machine code. When standard BPF disassemblers fail or produce unreadable output, enable `bpf_jit_enable` and read the compiled assembly from dmesg. The native code is often easier to understand than BPF bytecode.
@@ -717,3 +718,7 @@ dig @target -p 3333 'M4d!bKn3~l' TXT
 ---
 
 See also: [patterns-ctf.md](patterns-ctf.md) for Part 1, [patterns-ctf-2.md](patterns-ctf-2.md) for Part 2 (multi-layer self-decrypting binary, embedded ZIP+XOR license, stack string deobfuscation, prefix hash brute-force, CVP/LLL lattice, decision tree obfuscation, GF(2^8) Gaussian elimination).
+
+## Case-specific limits
+
+Undefined helpers, omitted VM phases and fixed addresses are pseudocode, not complete solvers. Bound execution steps, memory indexes and candidate counts. Validate square matrix rank/conditioning and forward numerical residuals. Z3 Python translations need actual AST parsing, not splitting arbitrary source at semicolons or eval. C signed overflow is undefined at source level even when observed machine instructions wrap. BPF JIT logging needs kernel-specific settings and may expose sensitive code; prefer static disassembly. Historical GPU-loss percentages, runtime claims, universal Xtensa support statements and oracle uniqueness were not independently reproduced.

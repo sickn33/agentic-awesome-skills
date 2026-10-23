@@ -1,5 +1,7 @@
 # 2slides API Reference
 
+Review update 2026-10-23: API/pricing examples below are a historical snapshot; verify the current [API](https://2slides.com/api.md) and [pricing](https://2slides.com/pricing) before billable calls. Subscription credits and purchased-package credits have different expiry rules. No live generation was tested.
+
 Complete API documentation for 2slides slide generation service.
 
 ## Base URL
@@ -139,7 +141,7 @@ Content-Type: application/json
 - `data.failedCount`: Number of failed slides
 
 **Notes:**
-- This endpoint always runs synchronously
+- This endpoint supports sync or async according to the selected mode
 - Processing time: ~30 seconds per page
 - Typical response time: 30-60 seconds for 1-2 pages
 - Automatically generates PDF
@@ -169,7 +171,7 @@ Content-Type: application/json
   "resolution": "string (optional, default: '2K') - '1K', '2K', or '4K'",
   "page": "number (optional, default: 1) - 0 for auto-detection, max 100",
   "contentDetail": "string (optional, default: 'concise') - 'concise' or 'standard'",
-  "designSpec": "string (optional) - Design specifications (e.g., 'modern minimalist')"
+  "designStyle": "string (optional) - Design specifications (e.g., 'modern minimalist')"
 }
 ```
 
@@ -195,7 +197,7 @@ Content-Type: application/json
 - Uses AI to generate custom design based on content and design specs
 - Same credit costs: 100 credits/page (1K/2K), 200 credits/page (4K)
 - Processing time: ~30 seconds per page
-- Always runs synchronously
+- Check the selected mode and returned job status; do not infer completion from HTTP success
 
 ---
 
@@ -222,7 +224,7 @@ Content-Type: application/json
 ```
 
 **Available Voices (30 total):**
-Puck, Aoede, Charon, Kore, Fenrir, Phoebe, Asteria, Luna, Stella, Theia, Helios, Atlas, Clio, Melpomene, Calliope, Erato, Euterpe, Polyhymnia, Terpsichore, Thalia, Urania, Zeus, Hera, Poseidon, Athena, Apollo, Artemis, Ares, Aphrodite, Hephaestus
+Puck, Aoede, Charon, Kore, Fenrir, Zephyr, Leda, Orus, Callirrhoe, Autonoe, Enceladus, Iapetus, Umbriel, Algieba, Despina, Erinome, Algenib, Rasalgethi, Laomedeia, Achernar, Alnilam, Schedar, Gacrux, Pulcherrima, Achird, Zubenelgenubi, Vindemiatrix, Sadachbia, Sadaltager, Sulafat
 
 **Response:**
 ```json

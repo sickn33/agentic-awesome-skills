@@ -13,7 +13,6 @@ from pathlib import Path
 ALLOWED_SCRIPTS = {
     "ask_question.py",
     "notebook_manager.py",
-    "session_manager.py",
     "auth_manager.py",
     "cleanup_manager.py",
 }
@@ -40,7 +39,7 @@ def ensure_venv():
     setup_script = skill_dir / "scripts" / "setup_environment.py"
 
     # Check if venv exists
-    if not venv_dir.exists():
+    if not get_venv_python().is_file():
         print("🔧 First-time setup: Creating virtual environment...")
         print("   This may take a minute...")
 
@@ -62,7 +61,6 @@ def main():
         print("\nAvailable scripts:")
         print("  ask_question.py    - Query NotebookLM")
         print("  notebook_manager.py - Manage notebook library")
-        print("  session_manager.py  - Manage sessions")
         print("  auth_manager.py     - Handle authentication")
         print("  cleanup_manager.py  - Clean up skill data")
         sys.exit(1)

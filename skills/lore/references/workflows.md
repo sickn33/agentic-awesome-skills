@@ -1,5 +1,8 @@
 # lore workflows — operational specification
 
+> Catalog correction: all writes stay within the user-authorized project and targets. Config is not independent permission. Validate every target before touching any target; reject symlinked files/parents and non-regular or multiply-linked write targets. Prepare changes in memory, compare current content with the reviewed original, preserve all user notes and unowned drafts, and use atomic per-file replacement. No multi-file transaction or concurrent-write safety is promised. If schemas/markers are ambiguous, keep the file intact and resolve that specific ambiguity.
+
+
 The step-by-step procedures for all seven lore commands. Load this file when executing any `lore <command>`; [`SKILL.md`](../SKILL.md) routes each user request to the section below. Each section also points to the reference that backs it (entry format, marker conventions, summary/audit templates, config, platform mirrors, history).
 
 ### `init` — Initialize the memory bank
@@ -24,8 +27,8 @@ Runs once per project (or to start over).
 4. Write proposals to `.lore/draft/` mirroring the target layout (`_global/` and per-scope subdirs). Classify scanned facts per the Layer semantics table in `SKILL.md`, and apply the same layer checks as sync step 3: a picked-over-alternative with a reason is a `DEC` entry, not ARCH; a rule future agents must follow is a `CONV` entry, not ARCH or code comments. Every entry gets `#added:<today>` and a deterministic hash-based ID (see `references/entry-format.md`).
 5. For any mirror file that already has a `## Lore` section (from step 0), read its My notes section as user-supplied seed knowledge. Parse as atomic bullets into the right layer/scope.
 6. **Stop and show the user a summary**: which scopes, how many entries per layer per scope, sample of 5-10 entries, and what mirror files will be (re)generated (or skipped per step 0).
-7. On user confirmation: `mv .lore/draft/* .lore/`, run an initial `compress` to generate `SUMMARY.md`, then (re)generate platform mirrors per the two-section structure — auto-create missing files, refresh Lore sections, leave My notes sections intact. Skip any target the user chose "preserve as-is" in step 0.
-8. On user rejection: `rm -rf .lore/draft/`. Nothing persists.
+7. On user confirmation: apply the reviewed per-file draft diff, checking existing files and symlinks first, run an initial `compress` to generate `SUMMARY.md`, then (re)generate platform mirrors per the two-section structure — auto-create missing files, refresh Lore sections, leave My notes sections intact. Skip any target the user chose "preserve as-is" in step 0.
+8. On user rejection: remove only files created by this initialization attempt after verifying their identity; preserve pre-existing drafts. Nothing persists.
 
 The `draft/` directory gives a clean rollback path: nothing in `.lore/` is real until the user approves.
 
@@ -52,7 +55,7 @@ If any of these are true, the skill appends a `[COMPRESS NOTICE]` to the sync pr
 
 1. **Detect the delta** from two sources, combined and de-duplicated:
    - `git diff <last_sync_sha>..HEAD` if `.lore/.config.json#last_sync_sha` is set and reachable from any local ref. This captures every commit since the last successful `sync`.
-   - `git diff` (working tree vs. `HEAD`) — always included. Catches uncommitted changes that are not yet in any commit.
+   - `git diff HEAD` (index plus working tree vs. `HEAD`) — always included. Catches uncommitted changes that are not yet in any commit.
    - **Re-scan any new files**.
    - **Fallback** when `last_sync_sha` is absent (older config) or no longer reachable (e.g. after `git rebase` or a force-push that orphaned the SHA): use `git diff HEAD` alone and emit a one-line `[WARN]` to stderr noting that incremental sync is degraded. Working tree alone will not pick up commits made before the next sync ran — the user should re-run `sync` after `git pull --rebase` to re-establish the baseline.
    - **Empty repo** (no commits yet): `last_sync_sha` is `null`; only the working tree diff applies.
@@ -69,7 +72,7 @@ If any of these are true, the skill appends a `[COMPRESS NOTICE]` to the sync pr
    - **No replacement entry exists yet** (user is removing a fact without substituting) -> mark the old one `#stale:<today>` only; the chain can be backfilled later.
    - **Refines an existing entry** -> if the body is unchanged, update tags only (bump `#verified:<today>`) and keep the ID. If the body changes, write a new entry with a freshly hashed ID and mark the old one `#stale:<today>` + `#superseded-by:<new-id>` — the ID hashes the body, so a body rewrite always produces a new ID (see `references/entry-format.md`).
    - **Genuinely new** -> append with `#added:<today>` and a new hash ID.
-5. **De-duplicate**: before appending, run `python skill/scripts/find_duplicates.py --json` (when lore is installed as a skill the path is `<skill>/scripts/find_duplicates.py`) to identify any candidate entry that overlaps with existing entries (same hash, or Jaccard >= `--threshold`). For each match, skip the new entry and bump `#verified` on the existing one. If the new entry is genuinely different in meaning (the script flags but doesn't decide), keep both.
+5. **De-duplicate**: before appending, run `python skill/scripts/find_duplicates.py --json` (when lore is installed as a skill the path is `<skill>/scripts/find_duplicates.py`) to identify any candidate entry that overlaps with existing entries (same hash, or Jaccard >= `--threshold`). For each possible match, compare meaning and verify the claim against actual evidence. Only a verified equivalent fact may update #verified; a shared short hash or high token overlap is not verification. If the new entry is genuinely different in meaning (the script flags but doesn't decide), keep both.
 6. **Apply trust level** (controlled by `.lore/.config.json#sync_trust`, default `"medium"`):
 
    | Change type | `high` | `medium` (default) | `low` |
@@ -106,7 +109,7 @@ Read-only.
    - "backend" / "the API" -> `scopes/backend/`
    - If ambiguous, search SUMMARY.md for clues.
 2. Grep the target files for relevant entries. If multi-layer or multi-scope, check all relevant ones.
-   - **Skip entries with `#superseded-by:<id>`.** The replacement is current; the superseded entry is historical. Same filter `compress` applies (see `references/summary-template.md` selection rule 0). If the user's question is about how something evolved ("why did we switch from X to Y?"), use the `history` workflow instead — `history --follow-superseded <id>` walks the chain.
+   - **Skip entries marked #stale as well as entries with `#superseded-by:<id>`.** The replacement is current; the superseded entry is historical. Same filter `compress` applies (see `references/summary-template.md` selection rule 0). If the user's question is about how something evolved ("why did we switch from X to Y?"), use the `history` workflow instead — `history --follow-superseded <id>` walks the chain.
    - **SUMMARY is an index, not a source of truth for a claim.** A one-line summary is a locating hint; when citing a fact or making a decision, read the full referenced entry (including its tags) in `_global/` or `scopes/` first.
 3. If found: answer concisely, citing fully-qualified entry IDs (e.g. `[scopes/frontend/DECISIONS.md#DEC-2026-02-03-7c19]`). Mention `#verified` date.
 4. If not found but inferable from the code: say so explicitly ("Not in memory, but inferable from `frontend/src/store/index.ts`..."). Offer to add it.

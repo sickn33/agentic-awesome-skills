@@ -1,8 +1,9 @@
 # Growth Patterns — The Real Shape of SaaS Growth
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 The 12-month outlook in every plan (Section 10) describes a trajectory. This doc names the shape of that trajectory honestly — what real SaaS growth looks like, when to expect plateaus, and how to plan for the next leg of growth before the current one stalls.
 
-Excerpted and adapted from *Founding Marketing* by Corey Haines.
+Community planning guidance attributed upstream to *Founding Marketing* by Corey Haines. This package does not provide a verified edition/page citation; do not present these heuristics as quoted book text or empirical findings.
 
 ## The long, slow SaaS ramp of death
 
@@ -10,7 +11,7 @@ Pitch decks show hockey sticks. Real growth shows a series of S-curves — each 
 
 ### Phase 1 — $0 → $10K ARR (the grueling phase)
 
-The hardest milestone. Every customer is a hard-won victory. Typical time: **6–12 months.** Most companies pivot the product multiple times during this phase.
+The hardest milestone. Every customer is a hard-won victory. Timing varies; do not assume a6–12-month path or a typical pivot count without a dated comparable dataset.
 
 What it requires:
 - Runway long enough to keep experimenting until something clicks
@@ -19,15 +20,15 @@ What it requires:
 
 ### Phase 2 — $10K → $100K ARR (the treacherous middle)
 
-The middle ground that kills most promising startups. The average company reaches ~$40K ARR in year one. The danger: enough revenue to prove the concept, not enough to support a team.
+The middle ground that kills most promising startups. This package supplies no dataset establishing an average first-year ARR. The danger: enough revenue to prove the concept, not enough to support a team.
 
-The threshold to watch for: **$8–10K MRR.** That's when founders can typically go full-time on the business without other income sources. Until then, careful cash management or side income carries the company through.
+The threshold to watch for: **$8–10K MRR.** Whether founders can go full-time depends on margin, geography, compensation, obligations and runway, not a universal MRR threshold. Until then, careful cash management or side income carries the company through.
 
 Companies that flame out in Phase 2 usually run out of runway just as things start working.
 
 ### Phase 3 — $100K → $1M ARR (the acceleration phase)
 
-Where things get interesting. Typical time: nearly 2 years total to reach $1M. But there's an acceleration pattern: **once across $100K, companies often double from $100K → $200K in one-third the time it took to reach the first $100K.**
+Where things get interesting. A possible acceleration scenario is faster growth after early traction; no universal two-year timeline or one-third-time rule is established here.
 
 Why: critical mass kicks in. Word-of-mouth starts working. Early customers become your best salespeople. The product has proven itself, and growth becomes more about execution than experimentation.
 
@@ -71,7 +72,7 @@ The secret to sustained growth isn't one perfect channel. It's orchestrating mul
 ### Channel S-curves
 
 Every marketing channel has its own lifecycle:
-- **SEO** — 6–12 months to mature; once it does, steady leads for years. Marathon runner.
+- **SEO** — may take months to develop; results depend on competition, content quality, technical access and search changes. No guaranteed maturity or durable lead volume.
 - **Paid ads** — quick wins; diminishing returns as you scale.
 - **Content marketing** — slow to start, compounds beautifully over time.
 - **Partnerships / co-marketing** — episodic; high yield when the right partner aligns.
@@ -112,7 +113,7 @@ This is the operational thesis behind the AARRR mapping (Sections 4–8) and the
 
 ## The 3-3-2-2-2 VC growth path
 
-For companies that have crossed $1M ARR and raised institutional capital, the VC benchmark is:
+For companies that have crossed $1M ARR and raised institutional capital, an optional five-year venture-growth scenario is:
 
 | Year | Multiple | Cumulative ARR (from $1M) |
 |---|---|---|
@@ -122,8 +123,6 @@ For companies that have crossed $1M ARR and raised institutional capital, the VC
 | Year +3 | 2× | $18M |
 | Year +4 | 2× | $36M |
 | Year +5 | 2× | $72M |
-| Year +6 | 2× | $144M |
-| Year +7 | 2× | $288M |
 
 Most companies don't hit this. Useful regardless — anchoring the 12-month outlook against this benchmark forces the plan to either (a) match it and show how, or (b) explicitly defend choosing a slower trajectory.
 
@@ -146,3 +145,5 @@ For non-VC-backed (bootstrapped, founder-funded, profit-focused) companies, this
 - **Name the binding constraint.** Phase 1 binding constraint is finding any channel that works. Phase 2 is funding the team. Phase 3 is breaking the ceiling on whichever channel got you here.
 - **Plateaus aren't failures.** They're the moment between two S-curves. The plan should anticipate them and stage the next move.
 - **Don't conflate "growth" with "growth rate."** A company adding $20K MRR each month for 24 months has built a remarkable machine. The fact that the *percentage* growth rate declines as the base grows is arithmetic, not failure.
+
+T2D3 provenance: [Battery Ventures, Neeraj Agrawal,2015](https://www.battery.com/blog/helping-entrepreneurs-triple-triple-double-double-double-to-a-billion-dollar-company/). Its original starting milestone is$2M; this table rescales the same five growth multipliers to$1M. It is neither a median nor a mandatory operating target. Revenue bands alone do not identify product-market fit or prescribe the binding funnel constraint.

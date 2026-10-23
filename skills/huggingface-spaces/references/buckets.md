@@ -13,11 +13,13 @@ hf buckets create <ns>/<bucket-name>                                # --private 
 hf spaces volumes set <ns>/<space> -v hf://buckets/<ns>/<bucket-name>:/data
 ```
 
-After this, writes to `/data/` in the Space are durable. Reads come from the bucket via the Xet storage backend.
+After a successful write/close and backend synchronization, verify persistence across a restart; do not treat an unclosed local write or application response as durability proof. Reads come from the bucket via the Xet storage backend.
 
-To make the bucket files publicly addressable: leave the bucket public. Public bucket files are served at `https://huggingface.co/buckets/<ns>/<bucket>/resolve/<path>` (HTTP 302 redirect to a signed CDN URL). The Space writes once and the public URL works forever — no streaming proxy needed.
+To make the bucket files publicly addressable: leave the bucket public. Public bucket files are served at `https://huggingface.co/buckets/<ns>/<bucket>/resolve/<path>` (HTTP 302 redirect to a signed CDN URL). The resolve URL remains usable only while the object, visibility and service policy remain available — no streaming proxy needed.
 
 ## Write-durable, read-fast pattern
+
+The sketch below is single-process and incomplete: close files with context managers, bound upload sizes and feed memory, authenticate/authorize saves, publish metadata only after successful data persistence, and use shared transactional indexing for multiple workers. A module-level list does not stay coherent across workers or replicas.
 
 For a feed-style Space (e.g. a community jam where users save generations and browse a public timeline), don't re-scan disk on every request. Module-level disk scan → in-memory list → every write appends to both:
 
@@ -63,7 +65,7 @@ Reference Space using this pattern: https://huggingface.co/spaces/victor/ace-ste
 
 **Do NOT** `snapshot_download(..., local_dir="/data/weights")` and load checkpoints from there. Bucket I/O is S3-paced; reading a 22 GB `safetensors` from `/data` during `from_pretrained` stalls past any `@spaces.GPU` duration cap.
 
-For model weights, let HF Hub re-download to local container disk on each cold start. With `HF_HUB_ENABLE_HF_TRANSFER=1` (set in the runtime by default) this is fast — typically much faster than streaming the same bytes through bucket I/O at request time.
+For model weights, let HF Hub re-download to local container disk on each cold start. Use the current Hub Xet transfer backend; the legacy `HF_HUB_ENABLE_HF_TRANSFER` setting is deprecated — typically much faster than streaming the same bytes through bucket I/O at request time.
 
 Bucket I/O is fine for occasional metadata reads (the feed pattern above) or saving user information. It is *not* fine as the path your model loader streams gigabytes through every cold start.
 
@@ -73,7 +75,7 @@ Bucket I/O is fine for occasional metadata reads (the feed pattern above) or sav
 
 ```python
 import os
-os.environ.setdefault("HF_HOME", "/data/.cache/huggingface")   # or /tmp on non-bucket Spaces
+os.environ.setdefault("HF_HOME", "/tmp/huggingface")   # keep model caches on ephemeral local disk
 os.environ.setdefault("HF_MODULES_CACHE", "/tmp/hf_modules")
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 ```
@@ -86,4 +88,4 @@ The Space's `HF_TOKEN` secret needs write permission on the bucket. Set via Sett
 
 ## Security note
 
-Public bucket files are publicly accessible forever at their resolve URL. **Don't write PII** to a public bucket. If you need durable but private storage (e.g. per-user history requiring an HF login), keep the bucket private and gate reads through your Space's own auth.
+Public bucket files are accessible without authentication while public; deletion or privatization cannot recall copies already downloaded. **Don't write PII** to a public bucket. If you need durable but private storage (e.g. per-user history requiring an HF login), keep the bucket private and gate reads through your Space's own auth.

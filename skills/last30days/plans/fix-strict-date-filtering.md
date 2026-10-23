@@ -1,5 +1,7 @@
 # fix: Enforce Strict 30-Day Date Filtering
 
+> Historical upstream implementation plan. Checked boxes and reported measurements are not validation evidence for this catalog review; compare with current code. Engagement and URL dates do not verify accuracy or publication dates.
+
 ## Overview
 
 The `/last30days` skill is returning content older than 30 days, violating its core promise. Analysis shows:

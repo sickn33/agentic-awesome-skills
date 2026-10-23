@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Tuple
 
 from config import SKILL_MD_RECOMMENDED_SECTIONS, SKILL_MD_REQUIRED_SECTIONS
@@ -15,15 +16,10 @@ from config import SKILL_MD_RECOMMENDED_SECTIONS, SKILL_MD_REQUIRED_SECTIONS
 
 def _check_frontmatter(content: str) -> Dict[str, bool]:
     """Verifica presenca de campos no frontmatter YAML."""
-    has = {}
-    if content.startswith("---"):
-        end = content.find("---", 3)
-        if end > 0:
-            fm = content[3:end].lower()
-            has["name"] = "name:" in fm
-            has["description"] = "description:" in fm or "description:" in fm
-            has["version"] = "version:" in fm
-    return has
+    from scanner import _parse_yaml_frontmatter
+    try: metadata = _parse_yaml_frontmatter(content)
+    except ValueError: return {}
+    return {key: bool(metadata.get(key)) for key in ("name", "description", "version")}
 
 
 def _check_sections(content: str) -> Dict[str, bool]:
@@ -76,7 +72,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
         return 0.0, findings
 
     try:
-        content = skill_md.read_text(encoding="utf-8", errors="replace")
+        content = read_text(skill_md, root=skill_path)
     except OSError:
         return 0.0, findings
 
@@ -117,7 +113,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             "severity": "low",
             "category": "missing_version",
             "title": "Sem versao no frontmatter",
-            "recommendation": "Adicionar 'version: 1.0.0' no frontmatter YAML",
+            "recommendation": "Adicionar version somente se o contrato do catalogo exigir; nao inventar uma versao",
             "effort": "low",
             "impact": "low",
         })
@@ -134,7 +130,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             "category": "weak_triggers",
             "title": "Description com poucas palavras-chave de trigger",
             "description": f"Apenas {trigger_info['trigger_count']} palavras. "
-                           "Mais keywords = mais chance de ativacao correta pelo Claude.",
+                           "Contagem de palavras nao comprova qualidade de ativacao; revisar escopo e exemplos.",
             "recommendation": "Expandir description com mais trigger keywords em PT-BR e EN",
             "effort": "low",
             "impact": "high",

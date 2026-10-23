@@ -2,7 +2,7 @@
 
 ## Overview
 
-When GitHub Actions workflows run AI coding agents (Claude, Copilot, GPT) on pull request content, attackers can inject instructions through project configuration files. If the workflow checks out fork code, attacker-modified files like `CLAUDE.md`, `AGENTS.md`, or `.cursorrules` become "trusted" context that manipulates the AI agent.
+When GitHub Actions workflows run AI coding agents (Claude, Copilot, GPT) on pull request content, attackers can inject instructions through project configuration files. If the workflow checks out fork code, attacker-modified files like `CLAUDE.md`, `AGENTS.md`, or `.cursorrules` must remain untrusted data; a vulnerable integration may mistakenly promote them to instructions.
 
 ---
 
@@ -124,6 +124,8 @@ steps:
 ```
 
 ### 2. Protect Config Files with CODEOWNERS
+
+CODEOWNERS with required review protects merging changes; it does not stop a pre-merge workflow from reading poisoned fork files. Use trusted-base policy and restricted capabilities before any review agent runs.
 
 ```
 # .github/CODEOWNERS

@@ -20,7 +20,7 @@ Most recon generalizes; some sectors have unique attack-surface elements worth f
 
 ### 47.2 Finance
 
-- **SWIFT terminals** — typically internal-only; if external-facing, CRITICAL. Look for SWIFT Alliance Web Platform.
+- **SWIFT terminals** — prioritize unexpected external reachability for owner review; reachability alone does not establish transaction control or critical severity. Look for SWIFT Alliance Web Platform.
 - **FIX protocol** (electronic trading) — port 9876 (common); cleartext.
 - **Bloomberg terminals** — typically VDI; check for `bloomberg.com`-related auth surfaces.
 - **Trading platform vendors** — Fidessa, Charles River, Eze Software, Aladdin (BlackRock).

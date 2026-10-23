@@ -1,6 +1,6 @@
 # SKILL.md Metadata Standard
 
-Official frontmatter fields recognized by OpenCode.
+Illustrative metadata conventions. Check the installed host version and repository schema; this is not an exhaustive official field list.
 
 ## Required Fields
 
@@ -26,8 +26,8 @@ metadata:
 name: skill-name
 description: Purpose and triggers.
 metadata:
-  license: MIT
-  compatibility: opencode
+license: MIT
+compatibility: opencode
   author: "your-name"
   version: "1.0.0"
   category: "reference"
@@ -62,4 +62,4 @@ Use these conventions for consistency across skills:
 | `tags` | `"react, hooks"` | Searchable keywords |
 
 > [!IMPORTANT]
-> Any field not listed here is **ignored** by OpenCode's skill loader.
+> Custom metadata may be retained as strings without affecting loader behavior; verify supported fields against the target host.

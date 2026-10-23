@@ -6,6 +6,8 @@ Based on the MCP server implementation
 """
 
 import json
+import os
+import tempfile
 import argparse
 import sys
 from pathlib import Path
@@ -43,13 +45,27 @@ class NotebookLibrary:
             try:
                 with open(self.library_file, 'r') as f:
                     data = json.load(f)
+                    if not isinstance(data, dict) or not isinstance(data.get('notebooks', {}), dict):
+                        raise ValueError("Invalid library structure")
                     self.notebooks = data.get('notebooks', {})
+                    for notebook_id, notebook in self.notebooks.items():
+                        if not isinstance(notebook, dict):
+                            raise ValueError("Invalid notebook record")
+                        validate_metadata_text(notebook_id, "id", 64)
+                        if notebook.get("id") != notebook_id:
+                            raise ValueError("Notebook ID mismatch")
+                        validate_notebook_url(notebook.get('url', ''))
+                        validate_metadata_text(notebook.get('name', ''), 'name', 120)
+                        validate_metadata_text(notebook.get('description', ''), 'description', 1000)
+                        for field in ('topics', 'tags', 'use_cases'):
+                            notebook[field] = validate_metadata_list(notebook.get(field, []), field)
+                        if not isinstance(notebook.get('use_count', 0), int):
+                            raise ValueError("Invalid use count")
                     self.active_notebook_id = data.get('active_notebook_id')
                     print(f"📚 Loaded library with {len(self.notebooks)} notebooks")
             except Exception as e:
                 print(f"⚠️ Error loading library: {e}")
-                self.notebooks = {}
-                self.active_notebook_id = None
+                raise ValueError("Library could not be loaded; preserve it and restore a reviewed backup") from e
         else:
             self._save_library()
 
@@ -61,10 +77,17 @@ class NotebookLibrary:
                 'active_notebook_id': self.active_notebook_id,
                 'updated_at': datetime.now().isoformat()
             }
-            with open(self.library_file, 'w') as f:
-                json.dump(data, f, indent=2)
+            ensure_private_state()
+            fd, temporary = tempfile.mkstemp(prefix=".library-", dir=self.data_dir)
+            try:
+                with os.fdopen(fd, 'w', encoding='utf-8') as f:
+                    json.dump(data, f, indent=2)
+                    f.write('\n')
+                os.replace(temporary, self.library_file)
+            finally:
+                Path(temporary).unlink(missing_ok=True)
         except Exception as e:
-            print(f"❌ Error saving library: {e}")
+            raise OSError("Could not save NotebookLM library") from e
 
     def add_notebook(
         self,

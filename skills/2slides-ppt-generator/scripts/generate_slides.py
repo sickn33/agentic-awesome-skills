@@ -71,7 +71,7 @@ def generate_slides(
     timeout = 90 if mode == "sync" else 30
 
     print(f"Generating slides in {mode} mode...", file=sys.stderr)
-    response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+    response = requests.post(url, headers=headers, json=payload, timeout=timeout, allow_redirects=False)
     response.raise_for_status()
 
     result = response.json()
@@ -87,7 +87,7 @@ def generate_slides(
         raise ValueError("No data in API response")
 
     if mode == "sync":
-        print("✓ Slides generated successfully!", file=sys.stderr)
+        print(f"Request accepted; generation status: {data.get('status', 'unknown')}", file=sys.stderr)
         print(f"  Pages: {data.get('slidePageCount', 'N/A')}", file=sys.stderr)
         if data.get("downloadUrl"):
             print(f"  Download URL: {data.get('downloadUrl')}", file=sys.stderr)
@@ -152,12 +152,15 @@ def create_like_this(
 
     url = f"{API_BASE_URL}/slides/create-like-this"
 
+    if isinstance(page, bool) or not isinstance(page, int) or not 0 <= page <= 100:
+        raise ValueError("page must be an integer from 0 to 100")
+
     # Calculate dynamic timeout: ~30s per page, minimum 120s
     timeout = max(120, page * 40)
 
     print("Generating slides from reference image...", file=sys.stderr)
     print(f"(Timeout set to {timeout}s for {page} page(s))", file=sys.stderr)
-    response = requests.post(url, headers=headers, json=payload, timeout=timeout)
+    response = requests.post(url, headers=headers, json=payload, timeout=timeout, allow_redirects=False)
     response.raise_for_status()
 
     result = response.json()
@@ -174,13 +177,11 @@ def create_like_this(
             "slidePageCount": data.get("slidePageCount"),
             "jobId": data.get("jobId")
         }
-        print("✓ Slides generated successfully!", file=sys.stderr)
+        print(f"Request accepted; generation status: {data.get('status', 'unknown')}", file=sys.stderr)
         print(f"  Pages: {data.get('slidePageCount')}", file=sys.stderr)
         return normalized_result
     else:
-        # Fallback to raw result if structure is unexpected
-        print("✓ Request completed!", file=sys.stderr)
-        return result
+        raise ValueError("Generation failed or returned an unexpected response envelope")
 
 
 def main():

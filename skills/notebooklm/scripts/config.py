@@ -23,7 +23,7 @@ LIBRARY_FILE = DATA_DIR / "library.json"
 def protect_state_path(path, *, directory=False):
     """Repair only owned state paths; never follow links or mutate hard links."""
     flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
-    if path.is_symlink():
+    if any(part.is_symlink() for part in (path, *path.parents)):
         raise OSError(f"Refusing linked state path: {path}")
     if directory:
         path.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -57,6 +57,10 @@ os.umask(0o077)
 def ensure_private_state():
     """Create/repair the private state tree and migrate the legacy skill-local tree."""
     import shutil
+    if any(part.is_symlink() for part in (DATA_DIR, *DATA_DIR.parents)):
+        raise OSError("Refusing linked NotebookLM data directory")
+    if LEGACY_DATA_DIR.is_symlink():
+        raise OSError("Refusing linked legacy NotebookLM state")
     if LEGACY_DATA_DIR.exists() and LEGACY_DATA_DIR != DATA_DIR and not DATA_DIR.exists():
         DATA_DIR.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         shutil.move(str(LEGACY_DATA_DIR), str(DATA_DIR))
@@ -83,7 +87,6 @@ RESPONSE_SELECTORS = [
 BROWSER_ARGS = [
     '--disable-blink-features=AutomationControlled',  # Patches navigator.webdriver
     '--disable-dev-shm-usage',
-    '--no-sandbox',
     '--no-first-run',
     '--no-default-browser-check'
 ]

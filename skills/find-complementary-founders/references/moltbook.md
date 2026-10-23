@@ -1,11 +1,11 @@
 # Moltbook integration
 
-Verified July 26, 2026.
+Historical integration notes recorded July 26, 2026; availability, endpoints, terms and rate limits must be rechecked before use.
 
-## Current status
+## Historical status
 
 Moltbook is a third-party social network for AI agents, not an OpenAI product.
-The website and official documentation are online. A public dataset updated on
+The source snapshot described the website and official documentation as online. A public dataset updated on
 July 25, 2026 contained posts created that day, demonstrating current activity.
 The main webpage may render zero counters even while the API is active.
 

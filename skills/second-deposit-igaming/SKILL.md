@@ -1,8 +1,8 @@
 ---
 name: second-deposit-igaming
-description: "Finds why casino first-time depositors skip a second deposit from local back-office exports: 12 reasons, missed Sum Dep per reason, daily CRM list. For industry teams, 21+."
+description: "Explore local casino deposit exports with heuristic signals and descriptive comparisons. Sensitive player data; contact lists and country-rule use require separate operator verification."
 category: business
-risk: safe
+risk: critical
 source: community
 source_repo: igamingsychov/second-deposit-igaming
 source_type: community
@@ -20,9 +20,9 @@ For industry professionals (casino CRM, retention, product and analytics teams).
 
 ## Overview
 
-A Claude Code skill that reads casino back-office exports (deposits with all attempts; optionally withdrawals, bonuses, bets and players) as CSV or XLSX with any column names. It assigns every first-time depositor (FTD) one of 12 reasons for not making a second deposit, estimates missed second deposits and Sum Dep per reason against a norm of similar players, computes 24 metrics, shows segments with a gap larger than random and builds a list of recent FTDs for CRM with an action that depends on the player's state and country rules. Calculations run in local Python scripts (python3 3.9 or newer, standard library only). Claude sees column names, formats and totals, not player rows.
+A Claude Code skill that reads casino back-office exports (deposits with all attempts; optionally withdrawals, bonuses, bets and players) as CSV or XLSX with any column names. It assigns every first-time depositor (FTD) one of 12 heuristic signals for not making a second deposit, estimates missed second deposits and Sum Dep per reason against a norm of similar players, computes 24 metrics, shows exploratory segments selected by an uncorrected heuristic z score and builds a list of recent FTDs for CRM with an action that depends on the player's state and country rules. Calculations run in local Python scripts (python3 3.9 or newer, standard library only). The inspector suppresses raw cell values; file/sheet/column names and small aggregates may still identify people. Review output locally before sharing.
 
-Source repository: https://github.com/igamingsychov/second-deposit-igaming (MIT, author Yevhen Sychov). The detailed instructions after the English sections are the original skill text in Russian, kept unchanged. Support files used by the instructions: `scripts/`, `references/`, `examples/`.
+Source repository: https://github.com/igamingsychov/second-deposit-igaming (MIT, author Yevhen Sychov). The detailed instructions after the English sections are the Russian skill text with local review corrections. Support files used by the instructions: `scripts/`, `references/`, `examples/`.
 
 ## When to Use
 
@@ -43,31 +43,39 @@ build today's FTD list from the fresh export
 
 - No market benchmarks. Without history the reasons, actions and country rules work from day one, while the norm, forecast and money appear from day 8, once 50 FTDs are older than 7 days. A 60-120 day export gives the full calculation at once.
 - The number of reasons depends on the files: deposits with all attempts are the minimum, and one query with deposits and withdrawals covers 7 of 12 reasons.
-- A reason shows where players are lost, it does not prove the cause. Only the 20% control group measures the effect of actions.
+- A reason shows where players are lost, it does not prove the cause. The saved hash-based group assignment alone does not establish delivery or a causal effect; validate experiment design, adherence, contamination, power and uncertainty.
 - Google Sheets links are not opened: the user downloads the workbook as XLSX.
-- Country rules (legal payout deadlines, payment methods banned in the country, legal deposit limits) cover the countries listed in `references/geo_rules.md`, state as of 18.10.2026, official sources only. Laws change, so the source should be checked before compliance decisions.
-- Players with responsible gambling flags are excluded from the calculation and the list. If the export has no such flags, the exclusion has to happen in the CRM.
+- Country rules (legal payout deadlines, payment methods banned in the country, legal deposit limits) cover the countries listed in `references/geo_rules.md`, state as of 18.10.2026, an unverified snapshot with some secondary links. Country rules are disabled by default; verify current primary sources and applicability before --verified-country-rules.
+- Players with responsible gambling flags are excluded from the calculation and the list. Local contact lists are withheld by default; --confirmed-contact-eligibility additionally requires mapped RG flags. An operator must verify every candidate’s age, consent, restrictions and harm indicators before opting in.
 
 ## Security & Safety Notes
 
-- Privacy: export rows are never read directly. Column mapping uses only the output of `scripts/sd_inspect.py`, which hides IDs, amounts and free text. Player lists are written to files and are not opened in the chat.
+- Privacy: the model must not read export rows directly. Local Python reads the files. Column mapping uses only the output of `scripts/sd_inspect.py`, which suppresses raw cell values but does not certify anonymity. Player lists are written to files and are not opened in the chat.
 - No uploads, web services or external APIs. Scripts write results to `<folder>/second-deposit/`.
 - The optional daily schedule adds a crontab line (or a Windows scheduled task) only after explicit user consent, because it is a persistent change to the user's computer.
 
+## Review boundaries
+
+The monetary “min/max” values are two descriptive calculations, not statistical confidence bounds, recoverable revenue or a proven upper bound. Signals can use post-outcome information and overlap in priority order. A threshold of 50 or 300 FTDs does not guarantee reliability. Validate export coverage, duplicates, currencies, time zones, observation windows and profile compatibility; use a separate output folder per project.
+
+No messages are sent. Default analysis withholds contact lists and country rules. Only a responsible operator who has checked current per-player age, consent, exclusion/limits/harm status and jurisdiction may enable `--confirmed-contact-eligibility` with mapped RG fields. Enable `--verified-country-rules` only after reviewing current primary rules for the exact licence and territory. A listed method is a reference filter, never legal approval. Do not use rapid losses to recommend games, stakes or bonuses.
+
+Output files overwrite prior results in the chosen dedicated folder. Back up profiles/logs; restrict access and retention. Exported CSV cells that look like formulas receive a leading apostrophe; prefer XLSX for viewing and verify IDs before a CRM import. Never open the internal rescue log in a spreadsheet as an export.
+
 ## Original instructions
 
-The text below is the original skill (Russian), unchanged.
+The text below includes local safety and correctness amendments.
 
 # Второй депозит
 
-Скилл отвечает на вопрос "почему FTD не возвращаются и сколько это стоит". Считает код, модель только сопоставляет колонки и пересказывает итоги. Данные игроков не покидают компьютер: скрипты печатают агрегаты, списки игроков пишут в файлы.
+Скилл отвечает на вопрос "почему FTD не возвращаются и сколько это стоит". Считает код, модель только сопоставляет колонки и пересказывает итоги. Скрипты локальны, но вывод и summary.json содержат названия и малые агрегаты, которые могут идентифицировать человека. Перед передачей модели нужна локальная проверка; не обещай анонимность.
 
 Папка скилла: та, где лежит этот файл (обычно `~/.claude/skills/second-deposit`). Нужен только `python3` (3.9 и новее), сторонние библиотеки не нужны.
 
 ## Правила приватности (строго)
 
-1. Не открывай выгрузки и не читай их строки: ни Read, ни cat, ни head. Все, что нужно для сопоставления, печатает `sd_inspect.py`, он скрывает ID, суммы и свободный текст.
-2. Не открывай `rescue_list.csv`, `excluded_rg.csv` и файлы в папке `lists`, в них ID игроков. Пересказывай пользователю итоги из `summary.json`.
+1. Не открывай выгрузки и не читай их строки: ни Read, ни cat, ни head. Все, что нужно для сопоставления, печатает `sd_inspect.py`, он не печатает исходные значения, но названия файлов/листов/колонок тоже могут быть чувствительными. Статусы сверяет оператор локально.
+2. Не открывай `rescue_list.csv`, `excluded_rg.csv` и файлы в папке `lists`, в них ID игроков. summary.json, profile.json, rescue_log.csv и daily.log тоже чувствительны: не открывай их модели без локальной проверки/редактирования пользователем. Пересказывай только проверенные безопасные агрегаты.
 3. Не отправляй данные никуда: никаких загрузок, веб-сервисов и внешних API.
 4. Если пользователь сам вставил строки с данными игроков в чат, не повторяй их в ответе.
 
@@ -97,7 +105,7 @@ The text below is the original skill (Russian), unchanged.
    - Книга в формате примера (листы "Депозиты", "Выводы", "Бонусы", "Ставки", "Игроки" с теми же колонками): скопируй `examples/mapping-example.json`, поменяй `path` на имя файла и сверь статусы с обзором.
    - CSV по `export-queries.sql`: скопируй `mapping-csv-example.json` (файл на лист) или `mapping-one-file-example.json` (один файл) и сверь статусы с обзором. В них уже маски и `"latest": true` для ежедневных выгрузок.
    - Свои выгрузки: собери по образцу из `references/data.md`. Сопоставь колонки с полями (`player_id`, `time`, `amount`, `status` и т.д.), разнеси каждое значение статуса и типа операции, флаги ответственной игры (самоисключение, лимиты, тайм-аут, признаки риска) перечисли в `players.rg_flags`, укажи валюту отчета, `fx`, `dayfirst`, `decimal`, `tz`, если обзор показал такой формат.
-   - Статусы депозитов: `success` только успешный; `declined` отказ банка, провайдера или ошибка; `abandoned` игрок отменил, бросил или оплата истекла; `cancelled` для депозита тоже неудачная попытка; `pending` не учитывается. Статусы выводов: `declined` и `cancelled` не считаются, `pending` считается запросом на вывод.
+   - Статусы депозитов: `success` только успешный; `declined` отказ банка, провайдера или ошибка; `abandoned` игрок отменил, бросил или оплата истекла; `cancelled` для депозита тоже неудачная попытка; `pending` не учитывается. Статусы выводов: `declined` — отклонен, `cancelled`/`abandoned` — отменен, `pending` — запрос в обработке, `success` — выплачен.
    - Причина отказа у депозитов: если обзор показал такую колонку, сопоставь ее как `reason` и разнеси в `decline_reasons`: в `limit` только значения про лимит депозитов (лимит игрока или законный), в `block` только значения, где прямо сказано, что гемблинг заблокирован банком или самим игроком. Общие отказы банка ("Do not honor", "Insufficient funds", ошибки 3DS) не трогай: это обычный отказ, ему подсказывается другой способ оплаты.
    - Колонки с именами, email, телефонами, адресами никогда не сопоставляй. Если обзор их показал, скажи пользователю, что они не нужны и в следующий раз их лучше не выгружать.
    Спрашивай пользователя только о том, что нельзя понять из обзора: значение непонятного статуса, неоднозначный порядок дня и месяца, курсы валют, часовой пояс файлов без пояса, если в других файлах время с поясом (`Z`, `+03:00`), и реальные ли деньги в ставках, если по названию колонки это неясно. Задавай все вопросы одним сообщением.
@@ -111,8 +119,8 @@ The text below is the original skill (Russian), unchanged.
    - список: сколько игроков, по каким действиям (`rescue.actions`), на какой момент снят (последняя попытка депозита в выгрузке) и путь к папке `rescue.list_dir`: в ней `actions.csv` (сводка действий), файл на каждое действие для загрузки в CRM как сегмент, `rescue_list.xlsx` для чтения в Excel и копия отчета; в CRM при отправке исключать тех, у кого был депозит после `snapshot_utc`; действия с приоритетом 1 (много отказов подряд, отказ по лимиту, вывод отклонен или висит, документы) нужны сейчас;
    - правила стран из `geo_rules`: страны с правилами, что они изменили (`applied`: отказы по лимиту, исключенные из-за блокировки в банке, долгие выводы по законному сроку, выводы дольше законного срока), попытки депозита запрещенными в стране способами (`banned_in_data`), страны без правил;
    - оговорки из `caveats` простыми словами: чего не хватает в данных и что добавить в выгрузку.
-   В режиме списка вместо денег и показателей скажи, сколько игроков в списке, сколько писать и сколько в контрольной группе, по каким причинам, прогноз из `forecast` (сколько вернутся без действий, сколько не хватает до нормы, вилка денег) и откуда вводные. Если профиля нет, скажи, что публичного бенчмарка нет, норма и прогноз появятся с 8-го дня, а сразу полный расчет даст выгрузка за 60-120 дней. Если в `summary.json` есть `effect`, назови разницу в долях вторых депозитов и вывод: разница больше случайной (z от 2), в пределах случайной или действия вредят (z до -2).
-   Дай путь к `report.html` (копия по дате лежит в папке списка). Остальные файлы в той же папке: `scenarios.csv` и `segments.csv` (таблицы для Excel, в `segments.csv` колонка `significant` отделяет разрывы больше случайных), `excluded_rg.csv` (кто исключен по ответственной игре). Все суммы и штуки в ответе бери месячные (`lost_month`, `gap_players_month`). Не придумывай рыночных норм и не сравнивай с "рынком": все цифры только из данных пользователя.
+   В режиме списка вместо денег и показателей скажи, сколько игроков в списке, сколько писать и сколько в контрольной группе, по каким причинам, прогноз из `forecast` (сколько вернутся без действий, сколько не хватает до нормы, вилка денег) и откуда вводные. Если профиля нет, скажи, что публичного бенчмарка нет, норма и прогноз появятся с 8-го дня, а сразу полный расчет даст выгрузка за 60-120 дней. Если в `summary.json` есть `effect`, назови разницу в долях вторых депозитов и вывод: описательная разница назначенных групп; z эвристический, доставка не подтверждена, причинный эффект и статистическая значимость не установлены.
+   Дай путь к `report.html` (копия по дате лежит в папке списка). Остальные файлы в той же папке: `scenarios.csv` и `segments.csv` (таблицы для Excel, в `segments.csv` колонка `significant` означает только эвристический z ≥ 2 без поправки на множественные сравнения), `excluded_rg.csv` (кто исключен по ответственной игре). Все суммы и штуки в ответе бери месячные (`lost_month`, `gap_players_month`). Не придумывай рыночных норм и не сравнивай с "рынком": все цифры только из данных пользователя.
 7. **Предложи следующий шаг:** загрузить файлы действий в CRM как сегменты (колонки `action_code`, `priority`, `send_after_utc`), включить триггеры по сценариям (`references/scenarios.md`, раздел "Триггеры"), поставить ежедневный запуск по расписанию (раздел ниже).
 
 ## Ежедневный запуск по расписанию
@@ -122,10 +130,9 @@ The text below is the original skill (Russian), unchanged.
 1. **Папка.** Одна папка для выгрузок и результата. На Mac не на Рабочем столе и не в Документах или Загрузках: туда планировщик без отдельного разрешения не пустит. Например `~/second-deposit-data`.
 2. **mapping.json** с масками и `"latest": true` у каждого файла (как в `mapping-csv-example.json`). Проверь одним ручным запуском.
 3. **Задача.** Полный путь к python3 покажет `which python3`. Mac и Linux, добавить строку к существующим, не стирая их:
-   `(crontab -l 2>/dev/null; echo '0 9 * * * <python3> <папка скилла>/scripts/sd_analyze.py --mapping <папка>/mapping.json --out <папка>/second-deposit --lang ru >> <папка>/second-deposit/daily.log 2>&1') | crontab -`
-   Windows: `schtasks /create /tn second-deposit /sc daily /st 09:00 /tr "py <папка скилла>\scripts\sd_analyze.py --mapping <папка>\mapping.json --out <папка>\second-deposit --lang ru"`.
+   Создай проверенную задачу через редактор планировщика с отдельными полями executable/arguments; абсолютные пути заключай в корректные для ОС кавычки. Для cron сначала сохрани резервную копию текущего crontab, проверь существующую задачу, создай папку результата и отредактируй одну строку через `crontab -e`. Не вставляй пути/значения пользователя в shell-шаблон и не дублируй задачу. На Windows проверь quoting полного executable и каждого аргумента. Не добавляй флаги контактов или правил стран без отдельной проверки оператора.
    Время ставь после того, как выгрузка обычно появляется в папке.
-4. **Скажи пользователю:** куда класть выгрузки (с датой в имени, например `deposits_2026-10-17.csv`), где каждое утро лежит результат (`second-deposit/lists/<дата>/`), что лог без данных игроков пишется в `daily.log`, и как убрать задачу: `crontab -e` и удалить строку, в Windows `schtasks /delete /tn second-deposit`.
+4. **Скажи пользователю:** куда класть выгрузки (с датой в имени, например `deposits_2026-10-17.csv`), где каждое утро лежит результат (`second-deposit/lists/<дата>/`), что daily.log может содержать чувствительные названия и агрегаты, требует ограниченного доступа и ротации, и как убрать задачу: `crontab -e` и удалить строку, в Windows `schtasks /delete /tn second-deposit`.
 
 ## Как читать цифры
 
@@ -133,9 +140,9 @@ The text below is the original skill (Russian), unchanged.
 - **Действие по состоянию.** Рекомендация зависит от того, что видно в данных: вывод в обработке (провести быстро) или уже выплачен (через 2-3 дня повод вернуться), бонус еще отыгрывается (напомнить) или проигран (оффер без тяжелого вейджера). Состояние лежит в колонке `state` списка. Расчет потерь идет по FTD старше 7 дней, потому что вернулся игрок или нет, видно только через 7 дней. Если пользователь спрашивает "когда смотреть", объясни именно так и предложи запускать каждый день или поставить те же сигналы триггерами в CRM.
 
 - **Норма** это доля вторых депозитов у похожих игроков без проблемных сигналов: тот же размер FTD, источник и страна (если таких меньше 30, размер FTD и источник, потом только размер FTD). Недобор считается до нормы, поэтому это верхняя граница; вилка денег: минимум только сами вторые депозиты, максимум Sum Dep вернувшегося за 30 дней.
-- **Эффект** считается только по контрольной группе: это единственная цифра того, сколько реально вернули действия.
+- **Разница групп** описательная: журнал хранит назначение, а не факт контакта. Нельзя объявлять причинный эффект или дополнительную выручку без проверки эксперимента.
 - **Сценарий показывает, где теряются игроки, а не доказывает причину.** Причину проверяет тест с контрольной группой.
 - **Срезы со сценариями не складываются:** это другой взгляд на тех же игроков.
-- Ответственная игра: игроки с флагами из `rg_flags` исключены и из расчета, и из списка. Если флагов в выгрузке нет, скажи пользователю, что исключать их придется на стороне CRM.
+- Ответственная игра: игроки с флагами из `rg_flags` исключены и из расчета, и из списка. Без флагов контактный список не включать.
 
 Определения сценариев, пороги и формулы: `references/scenarios.md`. Форматы выгрузок и `mapping.json`: `references/data.md`.

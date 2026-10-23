@@ -1,5 +1,7 @@
 # longbridge-onchain
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 On-chain data analysis framework — MVRV, NVT, SOPR, whale behaviour, TVL, and DEX liquidity.
 
 ## Workflow
@@ -10,7 +12,7 @@ On-chain data analysis framework — MVRV, NVT, SOPR, whale behaviour, TVL, and 
    - Dune Analytics: DEX volume, TVL by protocol
    - Nansen: whale wallet labels and flows
    - DefiLlama: cross-chain TVL
-3. Interpret the metrics using standard thresholds:
+3. Interpret metrics against asset-specific, sourced historical definitions; the following are illustrative heuristics, not universal thresholds:
    - MVRV > 3.0 → historically overheated; < 1.0 → historically undervalued
    - NVT > 90th percentile → overvalued relative to transaction throughput
    - SOPR > 1 → holders selling at profit (potential distribution)

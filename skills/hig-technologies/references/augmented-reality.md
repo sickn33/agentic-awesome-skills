@@ -1,8 +1,12 @@
 ---
 title: "Augmented reality | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/augmented-reality
+---
 
 # Augmented reality
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Augmented reality (or AR) lets you deliver immersive, engaging experiences that seamlessly blend virtual objects with the real world.
 
@@ -20,7 +24,7 @@ The following guidance applies to apps that run in iOS and iPadOS. To learn abou
 
 **Let people use the entire display.** Devote as much of the screen as possible to displaying the physical world and your app’s virtual objects. Avoid cluttering the screen with controls and information that diminish the immersive experience.
 
-**Strive for convincing illusions when placing realistic objects.** Design detailed 3D assets with lifelike textures to create objects that appear to inhabit the physical environment in which you place them. Using information from ARKit, you can scale objects properly and position them on detected real-world surfaces, reflect environmental lighting conditions and simulate camera grain, cast top-down diffuse object shadows on real-world surfaces, and update visuals as the camera’s position changes. To help avoid breaking the illusion you create, make sure your app updates scenes 60 times per second so objects don’t appear to jump or flicker.
+**Strive for convincing illusions when placing realistic objects.** Design detailed 3D assets with lifelike textures to create objects that appear to inhabit the physical environment in which you place them. Using information from ARKit, you can scale objects properly and position them on detected real-world surfaces, reflect environmental lighting conditions and simulate camera grain, cast top-down diffuse object shadows on real-world surfaces, and update visuals as the camera’s position changes. To help avoid breaking the illusion you create, target a stable frame rate appropriate to supported hardware and measure tracking, thermal, and rendering performance; 60 frames per second is a common goal rather than a universal hardware guarantee so objects don’t appear to jump or flicker.
 
 **Consider how virtual objects with reflective surfaces show the environment.** Reflections in ARKit are approximations based on the environment captured by the camera. To help maintain the illusion that an AR experience is real, prefer small or coarse reflective surfaces that downplay the effect of these approximations.
 
@@ -28,7 +32,7 @@ The following guidance applies to apps that run in iOS and iPadOS. To learn abou
 
 **Minimize text in the environment.** Display only the information that people need for your app experience.
 
-**If additional information or controls are necessary, consider displaying them in screen space.** Content in _screen space_ appears fixed to a consistent location either in the virtual world or, less commonly, on the device screen. It’s typically easy for people to find and view content in screen space because it remains stationary while the underlying AR environment moves with the device.
+**If additional information or controls are necessary, consider displaying them in screen space.** Content in _screen space_ is fixed relative to the device display; world-anchored content is a separate placement that remains tied to the physical environment. It’s typically easy for people to find and view content in screen space because it remains stationary while the underlying AR environment moves with the device.
 
 **Consider using indirect controls when you need to provide persistent controls.** _Indirect controls_ are not part of the virtual environment — instead, they are 2D controls displayed in screen space. If people need access to persistent controls in your app, consider placing the controls so that people don’t have to adjust how they’re holding the device to reach them. Also, consider using translucency in an indirect control to help avoid blocking the underlying scene. For example, the Measure app uses screen space to display a mix of translucent and opaque controls that people use to measure objects in the real world.
 
@@ -98,7 +102,7 @@ Regardless of the purpose of your app, don’t use scaling as a way to adjust th
 
 ## [Offering a multiuser experience](https://developer.apple.com/design/human-interface-guidelines/augmented-reality#Offering-a-multiuser-experience)
 
-When multiple people share your app’s AR experience, each participant maps the environment independently and ARKit automatically merges the maps. For developer guidance, see [`isCollaborationEnabled`](https://developer.apple.com/documentation/ARKit/ARWorldTrackingConfiguration/isCollaborationEnabled).
+When multiple people share your app’s AR experience, each participant maps the environment independently. With collaboration enabled, the app must transport ARCollaborationData between trusted participants and feed received data into ARKit; the flag alone does not establish networking or synchronize arbitrary app state. For developer guidance, see [`isCollaborationEnabled`](https://developer.apple.com/documentation/ARKit/ARWorldTrackingConfiguration/isCollaborationEnabled).
 
 **Consider allowing people occlusion.** If your app supports placing virtual objects behind people who appear in the device’s camera feed, enhance the illusion of reality by letting the people occlude the objects. For developer guidance, see [Occluding virtual content with people](https://developer.apple.com/documentation/ARKit/occluding-virtual-content-with-people).
 

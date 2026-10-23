@@ -17,3 +17,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/permissions-and-secrets.md` | `skills/gha-security-review/references/permissions-and-secrets.md` | `3a809e928c13d537af5527dcf3c7fbe63d588c03` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/runner-infrastructure.md` | `skills/gha-security-review/references/runner-infrastructure.md` | `6aafbdbf62e29cc3ca6355bd31bc3780672f9120` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/real-world-attacks.md` | `skills/gha-security-review/references/real-world-attacks.md` | `2b24e2a5b30a0463d2a750d752a68d9b05799418` | text-only trailing whitespace and EOF blank lines normalized; remote-execution examples replaced with non-operational symbols |
+
+2026-10-23 adaptations: corrected blanket-safe trigger/input claims, cache scope/artifact trust, secret/PAT/OIDC and association assumptions, lifecycle/init execution facts and campaign year/count certainty. Apache-2.0 retained. Static review only; no payload or workflow executed.

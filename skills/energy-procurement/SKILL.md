@@ -13,7 +13,7 @@ Use this skill when managing energy procurement tasks, such as optimizing electr
 
 ## Role and Context
 
-You are a senior energy procurement manager at a large commercial and industrial (C&I) consumer with multiple facilities across regulated and deregulated electricity markets. You manage an annual energy spend of $15M–$80M across 10–50+ sites — manufacturing plants, distribution centers, corporate offices, and cold storage. You own the full procurement lifecycle: tariff analysis, supplier RFPs, contract negotiation, demand charge management, renewable energy sourcing, budget forecasting, and sustainability reporting. You sit between operations (who control load), finance (who own the budget), sustainability (who set emissions targets), and executive leadership (who approve long-term commitments like PPAs). Your systems include utility bill management platforms (Urjanet, EnergyCAP), interval data analytics (meter-level 15-minute kWh/kW), energy market data providers (ICE, CME, Platts), and procurement platforms (energy brokers, aggregators, direct ISO market access). You balance cost reduction against budget certainty, sustainability targets, and operational flexibility — because a procurement strategy that saves 8% but exposes the company to a $2M budget variance in a polar vortex year is not a good strategy.
+Use an energy-procurement analysis perspective for a large commercial and industrial (C&I) consumer with multiple facilities across regulated and deregulated electricity markets. You manage an annual energy spend of $15 M–$80 M across 10–50+ sites — manufacturing plants, distribution centers, corporate offices, and cold storage. You own the full procurement lifecycle: tariff analysis, supplier RFPs, contract negotiation, demand charge management, renewable energy sourcing, budget forecasting, and sustainability reporting. You sit between operations (who control load), finance (who own the budget), sustainability (who set emissions targets), and executive leadership (who approve long-term commitments like PPAs). Your systems include utility bill management platforms (Urjanet, EnergyCAP), interval data analytics (meter-level 15-minute kWh/kW), energy market data providers (ICE, CME, Platts), and procurement platforms (energy brokers, aggregators, direct ISO market access). You balance cost reduction against budget certainty, sustainability targets, and operational flexibility — because a procurement strategy that saves 8% but exposes the company to a $2 M budget variance in a polar vortex year is not a good strategy.
 
 ## Core Knowledge
 
@@ -32,9 +32,9 @@ Every commercial electricity bill has components that must be understood indepen
 The core decision in deregulated markets is how much price risk to retain versus transfer to suppliers:
 
 - **Fixed-price (full requirements):** Supplier provides all electricity at a locked $/kWh for the contract term (12–36 months). Provides budget certainty. You pay a risk premium — typically 5–12% above the forward curve at contract signing — because the supplier is absorbing price, volume, and basis risk. Best for organizations where budget predictability outweighs cost minimization.
-- **Index/variable pricing:** You pay the real-time or day-ahead wholesale price plus a supplier adder ($0.002–$0.006/kWh). Lowest long-run average cost, but full exposure to price spikes. In ERCOT during Winter Storm Uri (Feb 2021), wholesale prices hit $9,000/MWh — an index customer on a 5 MW peak load faced a single-week energy bill exceeding $1.5M. Index pricing requires active risk management and a corporate culture that tolerates budget variance.
+- **Index/variable pricing:** You pay the real-time or day-ahead wholesale price plus a supplier adder ($0.002–$0.006/kWh). Potentially lower quoted premium with retained market exposure, but full exposure to price spikes. In ERCOT during Winter Storm Uri (Feb 2021), wholesale prices hit $9,000/MWh — an index customer on a 5 MW peak load faced a single-week energy bill exceeding $1.5 M. Index pricing requires active risk management and a corporate culture that tolerates budget variance.
 - **Block-and-index (hybrid):** You purchase fixed-price blocks to cover your baseload (60–80% of expected consumption) and let the remaining variable load float at index. This balances cost optimization with partial budget certainty. The blocks should match your base load shape — if your facility runs 3 MW baseload 24/7 with a 2 MW variable load during production hours, buy 3 MW blocks around-the-clock and 2 MW blocks on-peak only.
-- **Layered procurement:** Instead of locking in your full load at one point in time (which concentrates market timing risk), buy in tranches over 12–24 months. For example, for a 2027 contract year: buy 25% in Q1 2025, 25% in Q3 2025, 25% in Q1 2026, and the remaining 25% in Q3 2026. Dollar-cost averaging for energy. This is the single most effective risk management technique available to most C&I buyers — it eliminates the "did we lock at the top?" problem.
+- **Layered procurement:** Instead of locking in your full load at one point in time (which concentrates market timing risk), buy in tranches over 12–24 months. For example, for a 2027 contract year: buy 25% in Q1 2025, 25% in Q3 2025, 25% in Q1 2026, and the remaining 25% in Q3 2026. Dollar-cost averaging for energy. This is the single most effective risk management technique available to most C&I buyers — it spreads execution dates but does not eliminate market, volume or basis risk or guarantee savings.
 - **RFP process in deregulated markets:** Issue RFPs to 5–8 qualified retail energy providers (REPs). Include 36 months of interval data, your load factor, site addresses, utility account numbers, current contract expiration dates, and any sustainability requirements (RECs, carbon-free targets). Evaluate on total cost, supplier credit quality (check S&P/Moody's — a supplier bankruptcy mid-contract forces you into utility default service at tariff rates), contract flexibility (change-of-use provisions, early termination), and value-added services (demand response management, sustainability reporting, market intelligence).
 
 ### Demand Charge Management
@@ -43,8 +43,8 @@ Demand charges are the most controllable cost component for facilities with oper
 
 - **Peak identification:** Download 15-minute interval data from your utility or meter data management system. Identify the top 10 peak intervals per month. In most facilities, 6–8 of the top 10 peaks share a common root cause — simultaneous startup of multiple large loads (chillers, compressors, production lines) during morning ramp-up between 6:00–9:00 AM.
 - **Load shifting:** Move discretionary loads (batch processes, charging, thermal storage, water heating) to off-peak periods. A 500 kW load shifted from on-peak to off-peak saves $5,000–$12,500/month in demand charges alone, plus energy cost differential.
-- **Peak shaving with batteries:** Behind-the-meter battery storage can cap peak demand by discharging during the highest-demand 15-minute intervals. A 500 kW / 2 MWh battery system costs $800K–$1.2M installed. At $15/kW demand charge, shaving 500 kW saves $7,500/month ($90K/year). Simple payback: 9–13 years — but stack demand charge savings with TOU energy arbitrage, capacity tag reduction, and demand response program payments, and payback drops to 5–7 years.
-- **Demand response (DR) programs:** Utility and ISO-operated programs pay customers to curtail load during grid stress events. PJM's Economic DR program pays the LMP for curtailed load during high-price hours. ERCOT's Emergency Response Service (ERS) pays a standby fee plus an energy payment during events. DR revenue for a 1 MW curtailment capability: $15K–$80K/year depending on market, program, and number of dispatch events.
+- **Peak shaving with batteries:** Behind-the-meter battery storage can cap peak demand by discharging during the highest-demand 15-minute intervals. A 500 kW / 2 MWh battery system costs $800 K–$1.2 M installed. At $15/kW demand charge, shaving 500 kW saves $7,500/month ($90 K/year). Simple payback: 9–13 years — but stack demand charge savings with TOU energy arbitrage, capacity tag reduction, and demand response program payments, and payback drops to 5–7 years.
+- **Demand response (DR) programs:** Utility and ISO-operated programs pay customers to curtail load during grid stress events. PJM's Economic DR program pays the LMP for curtailed load during high-price hours. ERCOT's Emergency Response Service (ERS) pays a standby fee plus an energy payment during events. DR revenue for a 1 MW curtailment capability: $15 K–$80 K/year depending on market, program, and number of dispatch events.
 - **Ratchet clauses:** Many tariffs include a demand ratchet — your billed demand cannot fall below 60–80% of the highest peak demand recorded in the prior 11 months. A single accidental peak of 6 MW when your normal peak is 4 MW locks you into billing demand of at least 3.6–4.8 MW for a year. Always check your tariff for ratchet provisions before any facility modification that could spike peak load.
 
 ### Renewable Energy Procurement
@@ -58,7 +58,7 @@ Demand charges are the most controllable cost component for facilities with oper
 
 Understanding your facility's load shape is the foundation of every procurement and optimization decision:
 
-- **Base vs. variable load:** Base load runs 24/7 — process refrigeration, server rooms, continuous manufacturing, lighting in occupied areas. Variable load correlates with production schedules, occupancy, and weather (HVAC). A facility with a 0.85 load factor (base load is 85% of peak) benefits from around-the-clock block purchases. A facility with a 0.45 load factor (large swings between occupied and unoccupied) benefits from shaped products that match the on-peak/off-peak pattern.
+- **Base vs. variable load:** Base load runs 24/7 — process refrigeration, server rooms, continuous manufacturing, lighting in occupied areas. Variable load correlates with production schedules, occupancy, and weather (HVAC). A facility with a 0.85 load factor (average demand is 85%of peak; baseload must be measured separately) benefits from around-the-clock block purchases. A facility with a 0.45 load factor (large swings between occupied and unoccupied) benefits from shaped products that match the on-peak/off-peak pattern.
 - **Load factor:** Average demand divided by peak demand. Load factor = (Total kWh) / (Peak kW × Hours in period). A high load factor (>0.75) means relatively flat, predictable consumption — easier to procure and lower demand charges per kWh. A low load factor (<0.50) means spiky consumption with a high peak-to-average ratio — demand charges dominate your bill and peak shaving has the highest ROI.
 - **Contribution by system:** In manufacturing, typical load breakdown: HVAC 25–35%, production motors/drives 30–45%, compressed air 10–15%, lighting 5–10%, process heating 5–15%. The system contributing most to peak demand is not always the one consuming the most energy — compressed air systems often have the worst peak-to-average ratio due to unloaded running and cycling compressors.
 
@@ -76,7 +76,7 @@ Understanding your facility's load shape is the foundation of every procurement 
 
 ### Risk Management
 
-- **Hedging approaches:** Layered procurement is the primary hedge. Supplement with financial hedges (swaps, options, heat rate call options) for specific exposures. Buy put options on wholesale electricity to cap your index pricing exposure — a $50/MWh put costs $2–$5/MWh premium but prevents the catastrophic tail risk of $200+/MWh wholesale spikes.
+- **Hedging approaches:** Layered procurement is the primary hedge. Supplement with financial hedges (swaps, options, heat rate call options) for specific exposures. For a buyer exposed to rising prices, a suitably matched purchased call/cap can limit the covered price component; a purchased put protects against falling underlying prices, not rising purchase costs. Premiums are dated quotes, not fixed ranges. Index, volume, location, timing, collateral and counterparty mismatch leave residual risk.
 - **Budget certainty vs. market exposure:** The fundamental tradeoff. Fixed-price contracts provide certainty at a premium. Index contracts provide lower average cost at higher variance. Most sophisticated C&I buyers land on 60–80% hedged, 20–40% index — the exact ratio depends on the company's financial profile, treasury risk tolerance, and whether energy is a material input cost (manufacturers) or an overhead line item (offices).
 - **Weather risk:** Heating degree days (HDD) and cooling degree days (CDD) drive consumption variance. A winter 15% colder than normal can increase natural gas costs 25–40% above budget. Weather derivatives (HDD/CDD swaps and options) can hedge volumetric risk — but most C&I buyers manage weather risk through budget reserves rather than financial instruments.
 - **Regulatory risk:** Tariff changes through rate cases, capacity market reform (PJM's capacity market has restructured pricing 3 times since 2015), carbon pricing legislation, and net metering policy changes can all shift the economics of your procurement strategy mid-contract.
@@ -99,7 +99,7 @@ Before committing to a 10–25 year PPA, evaluate:
 1. **Does the project economics pencil?** Compare the PPA strike price to the forward curve for the contract tenor. A $35/MWh solar PPA against a $45/MWh forward curve has $10/MWh positive spread. But model the full term — a 20-year PPA at $35/MWh that was in-the-money at signing can go underwater if wholesale prices drop below the strike due to overbuilding of renewables in the region.
 2. **What is the basis risk?** If the generator is in West Texas (ERCOT West) and your load is in Houston (ERCOT Houston), congestion between the two zones can create a persistent basis spread of $3–$12/MWh that erodes the PPA value. Require the developer to provide 5+ years of historical basis data between the project node and your load zone.
 3. **What is the curtailment exposure?** ERCOT curtails wind at 3–8% annually; CAISO curtails solar at 5–12% in spring months. If the PPA settles on generated (not scheduled) volumes, curtailment reduces your REC delivery and changes the economics. Negotiate a curtailment cap or a settlement structure that doesn't penalize you for grid-operator curtailment.
-4. **What are the credit requirements?** Developers typically require investment-grade credit or a letter of credit / parent guarantee for long-term PPAs. A $50M notional VPPA may require a $5–$10M LC, tying up capital. Factor the LC cost into your PPA economics.
+4. **What are the credit requirements?** Developers typically require investment-grade credit or a letter of credit / parent guarantee for long-term PPAs. A $50 M notional VPPA may require a $5–$10 M LC, tying up capital. Factor the LC cost into your PPA economics.
 
 ### Demand Charge Mitigation ROI
 
@@ -123,19 +123,19 @@ For the complete decision framework library, see [decision-frameworks.md](refere
 
 These are situations where standard procurement playbooks produce poor outcomes. Brief summaries here — see [edge-cases.md](references/edge-cases.md) for full analysis.
 
-1. **ERCOT price spike during extreme weather:** Winter Storm Uri demonstrated that index-priced customers in ERCOT face catastrophic tail risk. A 5 MW facility on index pricing incurred $1.5M+ in a single week. The lesson is not "avoid index pricing" — it's "never go unhedged into winter in ERCOT without a price cap or financial hedge."
+1. **ERCOT price spike during extreme weather:** Winter Storm Uri demonstrated that index-priced customers in ERCOT face catastrophic tail risk. A 5 MW facility on index pricing incurred $1.5 M+ in a single week. The lesson is not "avoid index pricing" — it's "never go unhedged into winter in ERCOT without a price cap or financial hedge."
 
 2. **Virtual PPA basis risk in a congested zone:** A VPPA with a wind farm in West Texas settling against Houston load zone prices can produce persistent negative settlements of $3–$12/MWh due to transmission congestion, turning an apparently favorable PPA into a net cost.
 
-3. **Demand charge ratchet trap:** A facility modification (new production line, chiller replacement startup) creates a single month's peak 50% above normal. The tariff's 80% ratchet clause locks elevated billing demand for 11 months. A $200K annual cost increase from a single 15-minute interval.
+3. **Demand charge ratchet trap:** A facility modification (new production line, chiller replacement startup) creates a single month's peak 50% above normal. The tariff's 80% ratchet clause locks elevated billing demand for 11 months. A $200 K annual cost increase from a single 15-minute interval.
 
-4. **Utility rate case filing mid-contract:** Your fixed-price supply contract covers the energy component, but T&D and rider charges flow through. A utility rate case adds $0.012/kWh to delivery charges — a $150K annual increase on a 12 MW facility that your "fixed" contract doesn't protect against.
+4. **Utility rate case filing mid-contract:** Your fixed-price supply contract covers the energy component, but T&D and rider charges flow through. A utility rate case adds $0.012/kWh to delivery charges — an increase equal to annual billed kWh×$0.012/kWh; peak MW alone cannot determine annual cost that your "fixed" contract doesn't protect against.
 
 5. **Negative LMP pricing affecting PPA economics:** During high-wind or high-solar periods, wholesale prices go negative at the generator's node. Under some PPA structures, you owe the developer the settlement difference on negative-price intervals, creating surprise payments.
 
 6. **Behind-the-meter solar cannibalizing demand response value:** On-site solar reduces your average consumption but may not reduce your peak (peaks often occur on cloudy late afternoons). If your DR baseline is calculated on recent consumption, solar reduces the baseline, which reduces your DR curtailment capacity and associated revenue.
 
-7. **Capacity market obligation surprise:** In PJM, your capacity tag (PLC) is set by your load during the prior year's 5 coincident peak hours. If you ran backup generators or increased production during a heat wave that happened to include peak hours, your PLC spikes, and capacity charges increase 20–40% the following delivery year.
+7. **Capacity market obligation surprise:** In PJM, your capacity tag (PLC) is set by your load during the prior year's 5 coincident peak hours. If net grid imports increase during relevant peak intervals, PLC can rise; correctly metered permitted behind-the-meter generation generally reduces imports rather than increasing them, and capacity charges increase 20–40% the following delivery year.
 
 8. **Deregulated market re-regulation risk:** A state legislature proposes re-regulation after a price spike event. If enacted, your competitively procured supply contract may be voided, and you revert to utility tariff rates — potentially at higher cost than your negotiated contract.
 
@@ -151,7 +151,7 @@ Energy supplier negotiations are multi-year relationships. Calibrate tone:
 
 ### Internal Stakeholders
 
-- **Finance/treasury:** Quantify decisions in terms of budget impact, variance, and risk. "This block-and-index structure provides 75% budget certainty with a modeled worst-case variance of ±$400K against a $12M annual energy budget."
+- **Finance/treasury:** Quantify decisions in terms of budget impact, variance, and risk. "This block-and-index structure provides 75% budget certainty with a modeled worst-case variance of ±$400 K against a $12 M annual energy budget."
 - **Sustainability:** Map procurement decisions to Scope 2 targets. "This PPA delivers 50,000 MWh of bundled RECs annually, representing 35% of our RE100 target."
 - **Operations:** Focus on operational requirements and constraints. "We need to reduce peak demand by 400 kW during summer afternoons — here are three options that don't affect production schedules."
 
@@ -172,7 +172,7 @@ For full communication templates, see [communication-templates.md](references/co
 
 ### Escalation Chain
 
-Energy Analyst → Energy Procurement Manager (24 hours) → Director of Procurement (48 hours) → VP Finance/CFO (>$500K exposure or long-term commitment >5 years)
+Energy Analyst → Energy Procurement Manager (24 hours) → Director of Procurement (48 hours) → VP Finance/CFO (>$500 K exposure or long-term commitment >5 years)
 
 ## Performance Indicators
 
@@ -206,3 +206,35 @@ Use this skill when you need to **design, audit, or optimise an energy procureme
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Decision boundaries and model qualifications
+
+All rates, price caps, savings, historical anecdotes, timing rules, tariff names,
+program payments and deadlines in this tree are illustrative unless linked to an
+exact dated official rule/contract. Verify the actual jurisdiction, customer
+eligibility, billing interval, demand/TOU/ratchet formula and delivery year. An
+ISO footprint does not by itself confer retail choice. A historical low/high
+forward percentile is not a forecast or automatic trading instruction.
+
+Use hourly/interval MWh consistently with $/MWh (1 MWh=1000 kWh), actual load shape
+and settlement index. Fixed energy is not fixed total bill; blocks can exceed
+actual load and create resale/imbalance exposure. Average load factor is not
+minimum baseload. Forecast adverse correlated price/volume/basis/credit scenarios
+and liquidity, not just three proportional price shocks or headline hedge ratio.
+
+A VPPA is a separate financial settlement plus attributes; it does not physically
+route renewable electrons to a site. Model settlement once at the contracted
+node/hub, load purchases separately and any mismatch without double counting.
+REC ownership/transfer/retirement, vintage, geography and quality eligibility
+control claims; unbundled RECs and on-site/PPAs do not automatically establish
+additionality or zero emissions. Never issue RECs for energy not generated.
+
+Prepare analyses and drafts only. Treasury/legal/accounting must approve hedges,
+contracts, collateral, accounting, tariff filings and notices. Qualified facility
+engineers/operations must approve BAS/interlocks, curtailment, emergency generation
+and process changes with worker/product/clinical safety and environmental permits.
+Do not trade, enroll, sign, send, file or alter physical controls from this text.
+
+Sources: [EPA RECs](https://www.epa.gov/green-power-markets/renewable-energy-certificates-recs),
+[GHG Protocol Scope 2](https://ghgprotocol.org/scope-2-guidance),
+[PJM FTRs](https://www.pjm.com/markets-and-operations/ftr).

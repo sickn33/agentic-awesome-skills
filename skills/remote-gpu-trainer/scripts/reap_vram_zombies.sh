@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# reap_vram_zombies.sh — find (and optionally kill) PIDs holding VRAM that the
+# reap_vram_zombies.sh — list PIDs with device handles for manual inspection that the
 # nvidia-smi process list cannot see (see references/gotchas_universal.md U11).
 #
 # After a crashed DDP run or a killed container, a process can keep a CUDA context
@@ -10,15 +10,15 @@
 # Strategy:
 #   1. enumerate every PID with /dev/nvidia* open       (fuser -v, lsof fallback)
 #   2. subtract the PIDs nvidia-smi already accounts for (those are live, visible jobs)
-#   3. of the remainder, flag any that is idle (~0% GPU util) and has lived past a timeout
-#   4. DRY-RUN by default: print candidates only. --force is required to kill -9.
+#   3. of the remainder, flag old holders for manual inspection (idleness is unproven)
+#   4. Always advisory: print candidates only. --force is rejected.
 #
 # Usage:
 #   bash reap_vram_zombies.sh             # dry-run: list zombie candidates, kill nothing
-#   bash reap_vram_zombies.sh --force     # actually kill -9 the flagged candidates
+#   bash reap_vram_zombies.sh --force     # rejected; killing cannot be inferred safely
 #
 # A DRY-RUN exits 0 and never touches a process. Killing is destructive:
-# it is gated behind an explicit --force so the orchestrator never auto-reaps.
+# this probe does not kill processes; the historical --force option is rejected.
 # If the holder is inside another container, kill -9 from the host may not clear it —
 # restart that container instead.
 # NEVER an unquoted pipe inside a grep regex (it reads stdin and hangs forever).
@@ -32,18 +32,19 @@ FORCE=0                 # 0 = dry-run (default), 1 = actually kill. Set by --for
 MIN_AGE_SECS=120        # only reap a holder that has lived > 2 min. A genuinely new
                         # process may briefly hold a context while warming up; 2 min
                         # is well past CUDA-context init, so survivors are stragglers.
-IDLE_UTIL_PCT=5         # treat per-process GPU util <= 5% as "idle". A real training
-                        # job pegs util far higher; ~0% + held VRAM = a zombie, not work.
 
 # ---------------------------------------------------------------------------
 # Arg parse — only --force is recognized; anything else is a usage error.
 # ---------------------------------------------------------------------------
 for arg in "$@"; do
     case "$arg" in
-        --force) FORCE=1 ;;
+        --force)
+            echo "Refusing automatic kill: device ownership plus absence from compute-apps does not prove a zombie. Inspect each PID and stop only an explicitly identified job through its launcher." >&2
+            exit 64 ;;
+
         -h|--help)
             echo "usage: bash reap_vram_zombies.sh [--force]" >&2
-            echo "  (default is a dry-run; --force enables kill -9)" >&2
+            echo "  (advisory only; historical --force is rejected)" >&2
             exit 0
             ;;
         *)
@@ -111,7 +112,7 @@ is_visible() {
 
 # ---------------------------------------------------------------------------
 # Step 3 — classify each remaining holder. A candidate is a holder that is
-# (a) NOT in nvidia-smi's list, (b) older than MIN_AGE_SECS, (c) ~idle on the GPU.
+# (a) NOT in nvidia-smi's compute list, (b) older than MIN_AGE_SECS; idleness is unknown.
 # Process age comes from `ps -o etimes` (elapsed seconds, integer, portable).
 # ---------------------------------------------------------------------------
 CANDIDATES=""
@@ -137,8 +138,8 @@ for pid in $DEV_HOLDERS; do
 
     # This PID holds /dev/nvidia*, is invisible to nvidia-smi, and is old.
     # nvidia-smi cannot give us a per-process util for an unlisted PID, so by the
-    # U11 definition (held VRAM + invisible) it is already idle on the GPU.
-    echo "   pid $pid ($CMD): age ${AGE}s, holds VRAM, INVISIBLE to nvidia-smi -> ZOMBIE candidate."
+    # absence is not proof of idleness: graphics jobs and services can be absent too.
+    echo "   pid $pid ($CMD): age ${AGE}s, holds a device, absent from compute-apps -> inspect manually."
     CANDIDATES="${CANDIDATES}${pid} "
 done
 
@@ -146,7 +147,7 @@ CANDIDATES="$(printf '%s' "$CANDIDATES" | tr -s ' ' )"
 CANDIDATES="${CANDIDATES# }"; CANDIDATES="${CANDIDATES% }"
 
 # ---------------------------------------------------------------------------
-# Step 4 — act. Dry-run prints and exits; --force kills -9.
+# Step 4 — report candidates only. Automatic process termination is unsupported.
 # ---------------------------------------------------------------------------
 echo "------------------------------------------------------------"
 if [ -z "$CANDIDATES" ]; then
@@ -156,20 +157,10 @@ fi
 
 echo "zombie VRAM holders: $CANDIDATES"
 if [ "$FORCE" -ne 1 ]; then
-    echo "RESULT: DRY-RUN — nothing killed. Re-run with --force to 'kill -9' the PIDs above."
+    echo "RESULT: DRY-RUN — nothing killed. Inspect ownership, command and job state manually; this probe never kills."
     echo "        (If a holder lives inside another container, restart that container instead.)"
     exit 0
 fi
 
-# --force path: kill each candidate, report per-PID outcome.
-RC=0
-for pid in $CANDIDATES; do
-    if kill -9 "$pid" 2>/dev/null; then
-        echo "killed -9 $pid"
-    else
-        echo "FAILED to kill $pid (gone already, or owned by another container)." >&2
-        RC=1
-    fi
-done
-echo "RESULT: reaped zombie VRAM holders (--force)."
-exit "$RC"
+# Detection is advisory only: GPU services/graphics jobs can be absent from compute-apps.
+exit 0

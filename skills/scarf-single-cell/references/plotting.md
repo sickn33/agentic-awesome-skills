@@ -146,7 +146,7 @@ ds.plots.distribution(
     show=False,
 ).close()
 ds.plots.distribution(run["cell_cycle"], grouping=run["clusters"], show=False).close()
-ds.cells.insert("baseline_doublet_score", run.cells.fetch_all("doublet_score"), overwrite=True)
+ds.cells.insert("baseline_doublet_score", run.cells.fetch_all("doublet_score"), overwrite=False)
 ds.plots.distribution("baseline_doublet_score", grouping=run["clusters"], show=False).close()
 ```
 

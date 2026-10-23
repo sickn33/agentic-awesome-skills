@@ -7,13 +7,11 @@ This module handles:
 - Client connection with caller-controlled header configuration
 
 Usage in scripts:
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "lib"))
     from weaviate_conn import get_client, get_headers, validate_env
 """
 
 import os
+from urllib.parse import urlsplit
 import sys
 from contextlib import contextmanager
 from typing import Generator
@@ -84,12 +82,41 @@ def _collect_headers_and_providers() -> tuple[dict[str, str], list[str]]:
             continue
         value = os.environ.get(env_var, "").strip()
         if not value:
-            continue
+            raise ValueError("An explicitly selected provider credential is missing")
+        if any(c in value for c in "\r\n"):
+            raise ValueError("Invalid provider credential header")
 
         detected_providers.append(env_var)
         headers[header_name] = value
 
     return headers, detected_providers
+
+
+def validate_destination(url):
+    """Validate the approved Cloud endpoint before sending any credential."""
+    parsed = urlsplit(url)
+    host = (parsed.hostname or "").lower()
+    allowed = os.environ.get("WEAVIATE_ALLOWED_HOST", "").strip().lower()
+    cloud = host.endswith(".weaviate.cloud") or host.endswith(".weaviate.network")
+    try:
+        port = parsed.port
+    except ValueError:
+        raise ValueError("invalid cluster port") from None
+    if (parsed.scheme != "https" or not host or parsed.username or parsed.password
+            or port not in {None, 443} or parsed.path not in {"", "/"}
+            or parsed.query or parsed.fragment or not (cloud or (allowed and host == allowed))):
+        raise ValueError("use an approved HTTPS Cloud endpoint; custom hosts need WEAVIATE_ALLOWED_HOST")
+    return "https://" + host
+
+
+def validate_headers(headers):
+    if headers is None:
+        return None
+    if not isinstance(headers, dict) or set(headers) - set(API_KEY_MAP.values()):
+        raise ValueError("unsupported provider headers")
+    if any(not isinstance(v, str) or not v or "\r" in v or "\n" in v for v in headers.values()):
+        raise ValueError("invalid provider header value")
+    return dict(headers)
 
 
 def validate_env(require_weaviate: bool = True) -> tuple[str, str]:
@@ -118,7 +145,7 @@ def validate_env(require_weaviate: bool = True) -> tuple[str, str]:
             )
             sys.exit(1)
 
-    return url, api_key
+    return validate_destination(url) if url else url, api_key
 
 
 def get_headers() -> dict[str, str] | None:
@@ -195,6 +222,9 @@ def get_client(
     else:
         detected_providers = None
 
+    url = validate_destination(url)
+    headers = validate_headers(headers)
+
     if verbose:
         provider_summary = _detected_provider_summary(detected_providers)
         if provider_summary:
@@ -249,6 +279,9 @@ def connect_client(
     else:
         detected_providers = None
 
+    url = validate_destination(url)
+    headers = validate_headers(headers)
+
     if verbose:
         provider_summary = _detected_provider_summary(detected_providers)
         if provider_summary:
@@ -259,6 +292,7 @@ def connect_client(
         cluster_url=url,
         auth_credentials=Auth.api_key(api_key),
         headers=headers,
+        additional_config=AdditionalConfig(timeout=Timeout(init=30, query=60, insert=120)),
     )
 
     if verbose:

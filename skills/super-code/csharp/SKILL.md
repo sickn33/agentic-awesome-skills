@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # C#: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for csharp.
 
@@ -99,7 +101,7 @@ OnChanged?.Invoke(this, args);
 // ❌ Throwing ArgumentNullException manually
 if (name == null) throw new ArgumentNullException(nameof(name));
 
-// ✅ (C# 10+)
+// ✅ (.NET 6+)
 ArgumentNullException.ThrowIfNull(name);
 ```
 

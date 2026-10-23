@@ -1,32 +1,32 @@
 ---
 name: hig-patterns
 description: Apple Human Interface Guidelines interaction and UX patterns.
-risk: none
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---
 
 # Apple HIG: Interaction Patterns
 
-Check for `.claude/apple-design-context.md` before asking questions. Use existing context and only ask for information not already covered.
+Read `.claude/apple-design-context.md` if the project provides it; treat it as project context, not a required global configuration. Ask only for missing platform, task and user constraints.
 
 ## Key Principles
 
 1. **Minimize modality.** Use modality only when it is critical to get attention, a task must be completed or abandoned, or saving changes is essential. Prefer non-modal alternatives.
 
-2. **Provide clear feedback.** Every action should produce visible, audible, or haptic response. Activity indicators for indeterminate waits, progress bars for determinate, haptics for physical confirmation.
+2. **Provide clear feedback.** Important state changes need perceivable feedback; combine accessible visual/status text with optional sound or haptics, without announcing every incidental interaction. Activity indicators for indeterminate waits, progress bars for determinate, haptics for physical confirmation.
 
-3. **Support undo over confirmation dialogs.** Destructive actions should be reversible when possible. Undo is almost always better than "Are you sure?"
+3. **Support undo over confirmation dialogs.** Destructive actions should be reversible when possible. Prefer undo when an action is genuinely reversible. Irreversible deletion, payments or external sharing may still need clear scope and confirmation.
 
-4. **Launch quickly.** Display a launch screen that transitions seamlessly into the first screen. No splash screens with logos. Restore previous state.
+4. **Launch quickly.** Display a launch screen that transitions seamlessly into the first screen. Avoid branding-only launch screens; a brief optional splash after launch can be appropriate if it does not obstruct the task. Restore previous state.
 
 5. **Defer sign-in.** Let users explore before requiring account creation. Support Sign in with Apple and passkeys.
 
-6. **Keep onboarding brief.** Three screens max. Let users skip. Teach through progressive disclosure and contextual hints.
+6. **Keep onboarding brief.** Keep the flow as short as the task permits; three screens is a heuristic, not an Apple requirement. Let users skip. Teach through progressive disclosure and contextual hints.
 
 7. **Use progressive disclosure.** Show essentials first, let users drill into details. Don't overwhelm with every option on one screen.
 
-8. **Respect user attention.** Consolidate notifications, minimize interruptions, give users control over alerts. Never use notifications for marketing.
+8. **Respect user attention.** Consolidate notifications, minimize interruptions, give users control over alerts. Marketing notifications require explicit opt-in and an easy opt-out; never mark them Time Sensitive.
 
 ## Reference Index
 
@@ -40,7 +40,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 | [file-management.md](references/file-management.md) | File Management | Document browser, file providers, iCloud integration, document lifecycle |
 | [going-full-screen.md](references/going-full-screen.md) | Going Full Screen | Full-screen transitions, immersive content, exiting full screen |
 | [launching.md](references/launching.md) | Launching | Launch screens, state restoration, cold vs warm launch |
-| [live-viewing-apps.md](references/live-viewing-apps.md) | Live Viewing Apps | Live content display, real-time updates, Live Activities, Dynamic Island |
+| [live-viewing-apps.md](references/live-viewing-apps.md) | Live Viewing Apps | Live television/video playback, channel browsing, EPG, cloud DVR |
 | [loading.md](references/loading.md) | Loading | Activity indicators, progress views, skeleton screens, lazy loading, placeholders |
 | [managing-accounts.md](references/managing-accounts.md) | Managing Accounts | Sign in with Apple, passkeys, account creation, credential autofill, account deletion |
 | [managing-notifications.md](references/managing-notifications.md) | Managing Notifications | Permission requests, grouping, actionable notifications, provisional delivery |
@@ -62,9 +62,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 | User Goal | Recommended Pattern | Avoid |
 |---|---|---|
-| First app experience | Brief onboarding (max 3 screens) + progressive disclosure | Long tutorials, mandatory sign-up |
+| First app experience | Brief optional onboarding + progressive disclosure | Long tutorials, mandatory sign-up |
 | Waiting for content | Skeleton screens or progress indicators | Blocking spinners with no context |
-| Confirming destructive action | Undo support | Excessive "Are you sure?" dialogs |
+| Destructive action | Undo if reversible; clear scoped confirmation if irreversible | Claiming undo can reverse external or permanent effects |
 | Collecting user input | Inline validation, smart defaults, autofill | Modal forms for simple inputs |
 | Requesting permissions | Contextual, just-in-time with explanation | Requesting all permissions at launch |
 | Providing feedback | Haptics + visual indicator | Silent actions with no confirmation |
@@ -96,15 +96,23 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 *Built by [Raintree Technology](https://raintree.technology) · [More developer tools](https://raintree.technology)*
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use to design or review Apple interaction flows such as onboarding, data entry, document handling, search, media playback, account management or undo. Choose the target platform and OS release before applying a reference.
 
 ## Example
 
 **User request:**
 
-> Use @hig-patterns for this task: Apple Human Interface Guidelines interaction and UX patterns.
+> Review an iPad document editor’s autosave, background interruption and undo flow.
+
+Describe recoverable edits, visible save failures, a safe conflict state and accessible actions. Cite the relevant local references and state which behaviors still need a native test.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Implementation boundaries
+
+HIG design guidance is not proof of API availability or security. Validate external drag/drop files and URLs, enforce account/tenant authorization on sharing and deep links, and keep sensitive content out of search indexes, previews and logs. A masked field does not encrypt data; client-side format validation is not server validation.
+
+Background work, notifications, audio and haptics depend on OS capabilities, user settings and system budgets. Do not promise completion, uninterrupted playback or notification delivery. Preserve work and show retry/offline/failure states. An agent must not send notifications, delete accounts, share files, record audio or alter device settings merely because the design reference describes that feature; those actions need the user task scope.

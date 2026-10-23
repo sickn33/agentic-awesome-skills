@@ -2,7 +2,7 @@
 Redshift — Query Log Collect & Push (combined)
 ================================================
 Collects completed query execution records from Redshift using sys_query_history
-and sys_querytext, then pushes them to Monte Carlo for query-pattern analysis,
+and sys_query_text, then pushes them to Monte Carlo for query-pattern analysis,
 lineage derivation, and usage attribution.
 
 This script imports and calls collect() from collect_query_logs and push() from
@@ -48,11 +48,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect and push Redshift query logs to Monte Carlo")
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
-    parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
+    parser.add_argument("--password", choices=[], default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
     parser.add_argument("--port", type=int, default=int(os.getenv("REDSHIFT_PORT", "5439")))
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--lookback-hours", type=int, default=LOOKBACK_HOURS)
     parser.add_argument("--lookback-lag-hours", type=int, default=LOOKBACK_LAG_HOURS)
     parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)

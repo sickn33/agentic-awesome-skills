@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
-from . import schema
+from . import schema, dates
 
 
 # Month name mappings for date parsing
@@ -53,21 +53,21 @@ def extract_date_from_url(url: str) -> Optional[str]:
     match = re.search(r'/(\d{4})/(\d{2})/(\d{2})/', url)
     if match:
         year, month, day = match.groups()
-        if 2020 <= int(year) <= 2030 and 1 <= int(month) <= 12 and 1 <= int(day) <= 31:
+        if dates.parse_date(f"{year}-{month}-{day}") is not None:
             return f"{year}-{month}-{day}"
 
     # Pattern 2: /YYYY-MM-DD/ or /YYYY-MM-DD-
     match = re.search(r'/(\d{4})-(\d{2})-(\d{2})[-/]', url)
     if match:
         year, month, day = match.groups()
-        if 2020 <= int(year) <= 2030 and 1 <= int(month) <= 12 and 1 <= int(day) <= 31:
+        if dates.parse_date(f"{year}-{month}-{day}") is not None:
             return f"{year}-{month}-{day}"
 
     # Pattern 3: /YYYYMMDD/ (compact)
     match = re.search(r'/(\d{4})(\d{2})(\d{2})/', url)
     if match:
         year, month, day = match.groups()
-        if 2020 <= int(year) <= 2030 and 1 <= int(month) <= 12 and 1 <= int(day) <= 31:
+        if dates.parse_date(f"{year}-{month}-{day}") is not None:
             return f"{year}-{month}-{day}"
 
     return None
@@ -103,7 +103,7 @@ def extract_date_from_snippet(text: str) -> Optional[str]:
     if match:
         month_str, day, year = match.groups()
         month = MONTH_MAP.get(month_str[:3])
-        if month and 2020 <= int(year) <= 2030 and 1 <= int(day) <= 31:
+        if month and dates.parse_date(f"{year}-{month:02d}-{int(day):02d}") is not None:
             return f"{year}-{month:02d}-{int(day):02d}"
 
     # Pattern 2: DD Month YYYY (e.g., "24 January 2026")
@@ -117,14 +117,14 @@ def extract_date_from_snippet(text: str) -> Optional[str]:
     if match:
         day, month_str, year = match.groups()
         month = MONTH_MAP.get(month_str[:3])
-        if month and 2020 <= int(year) <= 2030 and 1 <= int(day) <= 31:
+        if month and dates.parse_date(f"{year}-{month:02d}-{int(day):02d}") is not None:
             return f"{year}-{month:02d}-{int(day):02d}"
 
     # Pattern 3: YYYY-MM-DD (ISO format)
     match = re.search(r'\b(\d{4})-(\d{2})-(\d{2})\b', text)
     if match:
         year, month, day = match.groups()
-        if 2020 <= int(year) <= 2030 and 1 <= int(month) <= 12 and 1 <= int(day) <= 31:
+        if dates.parse_date(f"{year}-{month}-{day}") is not None:
             return f"{year}-{month}-{day}"
 
     # Pattern 4: Relative dates ("3 days ago", "yesterday", etc.)
@@ -170,7 +170,7 @@ def extract_date_signals(
 ) -> Tuple[Optional[str], str]:
     """Extract date from any available signal.
 
-    Tries URL first (most reliable), then snippet, then title.
+    Tries URL first (a clue, not publication verification), then snippet, then title.
 
     Args:
         url: Page URL
@@ -179,14 +179,14 @@ def extract_date_signals(
 
     Returns:
         Tuple of (date_string, confidence)
-        - date from URL: 'high' confidence
+        - date from URL: 'med' confidence
         - date from snippet/title: 'med' confidence
         - no date found: None, 'low' confidence
     """
-    # Try URL first (most reliable)
+    # Try URL first (a clue, not publication verification)
     url_date = extract_date_from_url(url)
     if url_date:
-        return url_date, "high"
+        return url_date, "med"
 
     # Try snippet
     snippet_date = extract_date_from_snippet(snippet)
@@ -301,11 +301,12 @@ def parse_websearch_results(
         date = result.get("date")  # Use provided date if available
         date_confidence = "low"
 
-        if date and re.match(r'^\d{4}-\d{2}-\d{2}$', str(date)):
+        if isinstance(date, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", date) and dates.parse_date(date) is not None:
             # Provided date is valid
             date_confidence = "med"
         else:
-            # Try to extract date from URL/snippet/title
+            # Discard malformed provided dates before falling back to textual signals.
+            date = None
             extracted_date, confidence = extract_date_signals(url, snippet, title)
             if extracted_date:
                 date = extracted_date

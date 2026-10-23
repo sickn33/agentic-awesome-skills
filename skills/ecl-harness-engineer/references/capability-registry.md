@@ -1,4 +1,6 @@
-﻿# Capability Registry
+# Capability Registry
+
+> Review boundary: This is a design specification, not an installed capability registry. detect_adapter.py, validate.py, verify.py, executor/verifier role files and harness_critic.py mentioned below are not included in this bundle. Resolve a real reviewed implementation before invoking any named command. Select delegation only when allowed by current instructions; file counts alone do not determine runtime verification needs. Invalidate caches using content/configuration fingerprints and tool versions, not only mtimes or 24-hour TTLs.
 
 This registry defines the available capabilities for the harness system.
 Instead of rigid phases, agents select capabilities based on what the task needs.

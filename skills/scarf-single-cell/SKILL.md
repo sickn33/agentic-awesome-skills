@@ -27,8 +27,28 @@ It does not use or describe `scarf.agent`.
 Read this file first. Then open only the reference modules you need (index below). Paths in this
 skill are relative to the skill directory. The maintained copy lives in the Scarf repository at
 <https://github.com/NygenAnalytics/scarf/tree/master/skills/scarf-single-cell>.
-Every recipe in the modules was run against a real store. Numbers quoted there come from the 10x
-5K PBMC documentation dataset and are illustrations, not thresholds.
+The upstream author reports running recipes on the 10x 5K PBMC documentation dataset.
+This catalog review did not run Scarf or reproduce those results; timings, counts and observations
+are upstream examples, not performance guarantees or biological thresholds. APIs target the
+prerelease documentation: pin and record the exact tested Scarf version before use.
+
+## Limitations and execution boundaries
+
+Use only authorized datasets and approved storage/network endpoints. Single-cell genomic and
+donor metadata can identify people: minimize exported fields, avoid identifiers in logs, and
+write private outputs to a new access-restricted directory. Read-only opening does not prevent
+remote reads, charges or data disclosure. Review dataset consent, license and inference scope.
+Before writable opening, conversion, merging or analysis, agree on input, output, compute, time,
+network and storage budgets; preserve the source and never overwrite it. Snippets are templates
+for that approved workspace, not commands to run automatically. Figures and diagnostics cannot
+validate cell identities or clinical conclusions. Content-addressed refs provide lineage within
+the store, not external authenticity, tamper-proof storage or scientific validity.
+
+Use a fresh output directory and exclusive file creation for exports and handoffs; check that
+metadata joins are one-to-one on unique IDs. Escape spreadsheet-formula prefixes in untrusted
+text exported to CSV. Size dense matrices before materializing them; panel size alone does not
+bound memory when cell counts are large. Do not start detached jobs without authorization and
+a reliable process identity, bounded timeout and private, unique log paths.
 
 ## When to Use This Skill
 
@@ -95,8 +115,8 @@ Every recipe in the modules was run against a real store. Numbers quoted there c
    permanently. Reopen existing stores and mounts with
    `scarf.DataStore(path, min_features_per_cell=-1)`.
 2. **Never filter by editing `I`.** Keep the `cell_selection` ref a filter returns and pass it on, or
-   insert a boolean column and use `cell_key=`. `ds.cells.reset_key("I")` undoes an accidental
-   open-time filter.
+   insert a boolean column and use `cell_key=`. Restore a saved pre-open mask if an open-time filter was accidental;
+   `reset_key("I")` activates every cell and cannot restore an earlier biological selection.
 3. **Keep every ref you will reuse in a dict** and record them. Never guess artifact IDs or read
    private Zarr paths. Use `ds.inspect_artifact(ref)`, `ds.load_artifact(ref)` and
    `ds.list_artifacts(...)`. Cell selections need `scope="datastore"` when listing.
@@ -133,7 +153,8 @@ Every recipe in the modules was run against a real store. Numbers quoted there c
     mixed, doublet-like or marker-poor clusters.
 13. **Cells are not replicates, and Scarf does not check your design.** Condition claims need
     donor-level aggregation and at least two independent donors per group. A donor sampled twice is
-    repeated measures. A donor with samples in two arms must not count in both:
+    repeated measures. A donor with samples in two arms requires a paired/repeated-measures model;
+    it must not be treated as two independent donors. For the unpaired helper below,
     `run_statistical_testing(sample_by="sample_id")` silently does that, while `sample_by="donor_id"`
     refuses such a design. `run_harmony` runs silently on a column confounded with the biology you
     want to compare, so audit donors x batch x condition first. When inserting design columns, replace
@@ -141,10 +162,10 @@ Every recipe in the modules was run against a real store. Numbers quoted there c
 14. **Hold out annotation columns when they will judge the result.** Do not use author labels
     (`cell_type`, `author_cell_type`, `cell.type.*`, `singler`, `predicted.*`, ...) to choose QC,
     parameters or labels. Use them only in a final, clearly separated comparison.
-15. **Pass an explicit HVG blacklist.** On stores with current gene symbols the default blacklist
+15. **Audit the HVG blacklist against the biological question.** On stores with current gene symbols the default blacklist
     misses replication-dependent histones (`^HIST` matches only pre-2020 names), and its `^CCN`
     family removes the CCN1-6 matricellular genes and non-cell-cycle cyclins. It also leaves Ig V/J
-    genes in, which can split plasma cells by light chain instead of biology. Use the species string
+    genes in, which can split plasma cells by light chain instead of biology. Evaluate the optional species string
     from `references/gene-blacklists.md` (`params={"hvg": {"blacklist": ...}}` in the pipeline). Add
     the clonotype add-on only on marker evidence. A `blacklist=` string replaces the default
     entirely, and changing it creates new HVG, PCA and graph artifacts.
@@ -254,7 +275,7 @@ any changes you make after seeing the comparison as such.
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `Assay 'RNA' is not prepared` on a read-only open | store just written by a converter or `SubsetZarr` | open once writable, then read-only |
-| Fewer active cells than expected after opening | writable open applied `min_features_per_cell` | `ds.cells.reset_key("I")`; reopen with `-1` |
+| Fewer active cells than expected after opening | writable open applied `min_features_per_cell` | restore the saved prior mask; reopening with `-1` prevents further filtering |
 | `ValueError` on `ds.pipeline.run(label=...)` | label already completed | new label; reuse makes it cheap |
 | `PermissionError` from a producer | store opened with `zarr_mode="r"` and no matching artifact | reopen writable |
 | `KeyError: 'values'` on a Paris ref | Paris stores `labels` | `ds.load_artifact(ref)["labels"]` |

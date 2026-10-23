@@ -1,5 +1,7 @@
 # Agent memory
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 Memory is a sub-node on the agent, wired via `ai_memory`. Without it, every invocation is stateless. With it, the agent holds a conversation across turns — and across executions, depending on type — keyed by whatever expression you bind to `sessionKey`.
 
 Memory node availability shifts between n8n versions, so confirm what's installed with `search_nodes({ query: 'memory' })`.
@@ -9,7 +11,7 @@ Memory node availability shifts between n8n versions, so confirm what's installe
 ## The two non-negotiables
 
 1. **Plumb a stable key through.** Memory buckets by whatever you bind to `sessionKey`. The Chat Trigger fills `sessionId` automatically. For other triggers, derive a stable identifier (Slack `thread_ts`, a webhook conversation ID, a generated UUID, a multi-tenant composite) and forward it to memory and any session-keyed tools. Without consistency across the same conversation, memory never matches.
-2. **Default to `memoryBufferWindow`.** It persists across executions via n8n's internal store, keyed on `sessionKey`, and is the right choice for nearly every chat agent. Reach for Postgres/Redis only when memory must be read **outside** the agent.
+2. **Choose by durability.** Simple Memory is process-local and unsuitable when restart persistence or queue-worker sharing is required. Use a configured durable Postgres/Redis backend for those needs; test its retention and concurrency semantics.
 
 ---
 
@@ -17,7 +19,7 @@ Memory node availability shifts between n8n versions, so confirm what's installe
 
 ### `memoryBufferWindow` (the default)
 
-In-context memory of the last N exchanges, persisted across executions via n8n's store.
+Temporary in-process context keyed by session; durability and worker sharing are not guaranteed.
 
 ```json
 {
@@ -54,7 +56,7 @@ Reach for these only when memory must be queried or read **outside** the agent: 
 }
 ```
 
-**Wrong for** the default chat case — `memoryBufferWindow` already survives across executions and is the cleaner pick.
+Appropriate when durable history or multiple workers are required; enforce retention, encryption/access control and tenant isolation.
 
 ---
 
@@ -73,8 +75,8 @@ When a conversation runs long and you want the gist of older turns instead of dr
 1. After each turn, `load` the buffer.
 2. If it's approaching the cap, route to a summarizer (otherwise no-op).
 3. Summarize the older turns with an LLM.
-4. `delete` the buffer.
-5. `insert` the summary as one message, plus the most recent few turns for continuity.
+4. Save and verify the replacement summary in a versioned record first.
+5. Atomically swap or lock the session before pruning old context; preserve a recoverable source and handle concurrent turns. Never delete the only history before a successful replacement.
 
 The agent now sees `[summary of turns 1-40] + [recent 5 turns]`, paying far fewer input tokens while keeping long-history context.
 

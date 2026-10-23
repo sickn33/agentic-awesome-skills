@@ -25,9 +25,9 @@ fi
 # ===== PROFILE BLOCK — override from profiles/<platform>.md §8 (defaults = AutoDL) =====
 PROJECT_REPO_DIR="${PROJECT_REPO_DIR:-/root/PROJECT_NAME}"   # where your code lives on the instance
 DATA_DIR="${DATA_DIR:-/root/autodl-tmp}"                     # fast per-instance scratch (checkpoints land here)
-DURABLE_DIR="${DURABLE_DIR:-/root/autodl-fs}"                # survives teardown (profile survival matrix); set "" to skip sync
-PROXY_HOOK="${PROXY_HOOK:-source /etc/network_turbo}"        # network-accel hook; ":" (no-op) on a clean box
-CRED_FILE="${CRED_FILE:-/root/.wandb_key}"                   # file holding the tracker key; "" if WANDB_API_KEY already in env
+DURABLE_DIR="${DURABLE_DIR-/root/autodl-fs}"                # survives teardown (profile survival matrix); set "" to skip sync
+PROXY_HOOK="${PROXY_HOOK-source /etc/network_turbo}"        # network-accel hook; ":" (no-op) on a clean box
+CRED_FILE="${CRED_FILE-/root/.wandb_key}"                   # file holding the tracker key; "" if WANDB_API_KEY already in env
 # =======================================================================================
 
 # PROXY_HOOK is an OPERATOR-supplied snippet from your platform profile (e.g. `source /etc/network_turbo`,
@@ -78,26 +78,29 @@ python -m src.train --no-strict \
     --experiment-name "abla_$NAME" \
     2>&1 | tee "$LOG_DIR/$NAME.log"
 
-EXIT=${PIPESTATUS[0]}
-
-# Post-success: keep best.pth only, prune scratch latest.pth (disk-budget, principle #5).
-if [ "$EXIT" -eq 0 ] && [ -f "$CKPT_DIR/best.pth" ]; then
-    rm -f "$CKPT_DIR/latest.pth"
-    echo "[$(date +%H:%M:%S)] kept best.pth, pruned latest.pth for $NAME"
+pipeline_status=("${PIPESTATUS[@]}")
+EXIT=${pipeline_status[0]}
+if [ "${pipeline_status[1]}" -ne 0 ]; then
+    echo "Training log write failed; retain checkpoints and inspect storage." >&2
+    EXIT=1
 fi
+
+# Preserve latest.pth: best weights alone may omit optimizer/RNG state needed for resume.
+# Pruning is a separate operator-approved action after artifact verification.
 
 # Auto-sync to durable storage. GATE the success line on the actual copy result — an unconditional
 # "synced" echo lies when the durable FS is full / inode-exhausted (references/gotchas_universal.md,
 # silent-sync). Verify best.pth landed before claiming success (principle #3). Skip if DURABLE_DIR="".
 if [ "$EXIT" -eq 0 ] && [ -f "$CKPT_DIR/best.pth" ] && [ -n "$DURABLE_DIR" ]; then
     FS_DIR="$DURABLE_DIR/final_ckpts/$NAME"
-    if mkdir -p "$FS_DIR" && cp -f "$CKPT_DIR/best.pth" "$FS_DIR/" && [ -f "$FS_DIR/best.pth" ]; then
+    if mkdir -p "$FS_DIR" && cp -f "$CKPT_DIR/best.pth" "$FS_DIR/.best.pth.$$.tmp" && cmp -s "$CKPT_DIR/best.pth" "$FS_DIR/.best.pth.$$.tmp" && mv -f "$FS_DIR/.best.pth.$$.tmp" "$FS_DIR/best.pth"; then
         cp -f "$CKPT_DIR/best_metrics.json" "$FS_DIR/" 2>/dev/null || true
         cp -rf "$CKPT_DIR/protocol" "$FS_DIR/" 2>/dev/null || true
         cp -f "$LOG_DIR/$NAME.log" "$FS_DIR/" 2>/dev/null || true
         echo "[$(date +%H:%M:%S)] synced $NAME to durable storage ($FS_DIR)"
     else
-        echo "[$(date +%H:%M:%S)] !! DURABLE SYNC FAILED for $NAME — check 'df -i $DURABLE_DIR'. The data-disk copy is source-of-truth."
+        echo "[$(date +%H:%M:%S)] !! DURABLE SYNC FAILED for $NAME — check 'df -i $DURABLE_DIR'. The data-disk copy is source-of-truth." >&2
+        EXIT=1
     fi
 fi
 

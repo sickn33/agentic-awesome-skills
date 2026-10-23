@@ -346,8 +346,9 @@ On newer versions of Ubuntu, you may encounter the following error when running
 > NOTICE: mount helper error: fusermount3: mount failed: Permission denied
 > CRITICAL: Fatal error: failed to mount FUSE fs: fusermount: exit status 1
 This may be due to newer [Apparmor](https://wiki.ubuntu.com/AppArmor) restrictions,
-which can be disabled with `sudo aa-disable /usr/bin/fusermount3` (you may need to
-`sudo apt install apparmor-utils` beforehand).
+Check AppArmor denial logs and follow your distribution's supported FUSE policy
+guidance. Do not disable the fusermount3 profile as a routine workaround; resolve
+the specific denied permission with a narrowly scoped policy change.
 
 ## Limitations
 
@@ -409,8 +410,8 @@ If you set it higher (`10s` or `1m` say) then the kernel will call
 back to rclone less often making it more efficient, however there is
 more chance of the corruption issue above.
 
-If files don't change on the remote outside of the control of rclone
-then there is no chance of corruption.
+Avoiding concurrent remote changes reduces this particular cache-staleness risk;
+it does not guarantee freedom from corruption or replace a verified backup.
 
 This is the same as setting the attr_timeout option in mount.fuse.
 
@@ -613,8 +614,9 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and its metadata remain intact.
+Do not delete that cache until pending uploads are confirmed complete.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -724,7 +726,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not

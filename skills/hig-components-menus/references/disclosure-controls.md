@@ -1,6 +1,7 @@
 ---
 title: "Disclosure controls | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/disclosure-controls
+---
 
 # Disclosure controls
 
@@ -48,7 +49,7 @@ A disclosure button points down when its content is hidden and up when its conte
 
 **Place a disclosure button near the content that it shows and hides.** Establish a clear relationship between the control and the expanded choices that appear when a person clicks or taps a button.
 
-**Use no more than one disclosure button in a single view.** Multiple disclosure buttons add complexity and can be confusing.
+**Keep expansion controls unambiguous within one panel.** The single-button convention here concerns a panel-expansion disclosure button such as a Save dialog, not every disclosure triangle or DisclosureGroup in a list. Label each independently expandable section and expose its expanded state to accessibility.
 
 For developer guidance, see [`NSButton.BezelStyle.pushDisclosure`](https://developer.apple.com/documentation/AppKit/NSButton/BezelStyle-swift.enum/pushDisclosure).
 

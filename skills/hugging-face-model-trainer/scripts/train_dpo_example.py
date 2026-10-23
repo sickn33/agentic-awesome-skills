@@ -1,106 +1,93 @@
 #!/usr/bin/env python3
-# /// script
-# requires-python = ">=3.10"
-# dependencies = [
-#     "trl>=0.12.0",
-#     "transformers>=4.36.0",
-#     "accelerate>=0.24.0",
-#     "trackio",
-# ]
-# ///
+"""Bounded DPO teaching example. Install reviewed compatible dependencies separately.
 
+No training, downloads, tracking or uploads occur on import. This example saves
+locally; publication and cloud submission are separate user-approved operations.
+GPU execution has not been certified by the source-review tests.
 """
-Production-ready DPO training example for preference learning.
-
-DPO (Direct Preference Optimization) trains models on preference pairs
-(chosen vs rejected responses) without requiring a reward model.
-
-Usage with hf_jobs MCP tool:
-    hf_jobs("uv", {
-        "script": '''<paste this entire file>''',
-        "flavor": "a10g-large",
-        "timeout": "3h",
-        "secrets": {"HF_TOKEN": "$HF_TOKEN"},
-    })
-
-Or submit the script content directly inline without saving to a file.
-"""
-
-import trackio
-from datasets import load_dataset
-from trl import DPOTrainer, DPOConfig
+import argparse
+import os
+from pathlib import Path
+import re
 
 
-# Load preference dataset
-print("📦 Loading dataset...")
-dataset = load_dataset("trl-lib/ultrafeedback_binarized", split="train")
-print(f"✅ Dataset loaded: {len(dataset)} preference pairs")
+def arguments(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--allow-training", action="store_true")
+    parser.add_argument("--model", required=True)
+    parser.add_argument("--model-revision", required=True)
+    parser.add_argument("--dataset", required=True)
+    parser.add_argument("--dataset-revision", required=True)
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--max-samples", type=int, default=100)
+    parser.add_argument("--max-steps", type=int, default=20)
+    args = parser.parse_args(argv)
+    if not args.allow_training:
+        parser.error("training/download authorization is required")
+    for revision in (args.model_revision, args.dataset_revision):
+        if not re.fullmatch(r"[0-9a-f]{40}", revision):
+            parser.error("use immutable 40-character repository revisions")
+    if not 2 <= args.max_samples <= 10000 or not 1 <= args.max_steps <= 1000:
+        parser.error("max-samples must be 2..10000 and max-steps 1..1000")
+    output = Path(os.path.abspath(args.output_dir))
+    for parent in output.parents:
+        if parent.is_symlink():
+            parser.error("output parent must not be a symbolic link")
+    if not output.parent.is_dir():
+        parser.error("output parent must already exist")
+    # Exclusive creation prevents overwriting a previous run or checkpoints.
+    output.mkdir(mode=0o700, exist_ok=False)
+    args.output_dir = str(output)
+    return args
 
-# Create train/eval split
-print("🔀 Creating train/eval split...")
-dataset_split = dataset.train_test_split(test_size=0.1, seed=42)
-train_dataset = dataset_split["train"]
-eval_dataset = dataset_split["test"]
-print(f"   Train: {len(train_dataset)} pairs")
-print(f"   Eval: {len(eval_dataset)} pairs")
 
-# Training configuration
-config = DPOConfig(
-    # CRITICAL: Hub settings
-    output_dir="qwen-dpo-aligned",
-    push_to_hub=True,
-    hub_model_id="username/qwen-dpo-aligned",
-    hub_strategy="every_save",
+def validate_rows(rows):
+    """Validate and project only the fields consumed by this teaching method."""
+    if len(rows) < 2:
+        raise ValueError("at least two examples are required")
+    result = []
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError("each example must be an object")
+        fields = ("prompt", "chosen", "rejected")
+        if not all(isinstance(row.get(key), str) and row[key].strip() for key in fields):
+            raise ValueError("this DPO example requires nonempty string prompt/chosen/rejected")
+        if row["chosen"] == row["rejected"]:
+            raise ValueError("chosen and rejected answers must differ")
+        result.append({key: row[key] for key in fields})
+    return result
 
-    # DPO-specific parameters
-    beta=0.1,  # KL penalty coefficient (higher = stay closer to reference)
 
-    # Training parameters
-    num_train_epochs=1,  # DPO typically needs fewer epochs than SFT
-    per_device_train_batch_size=4,
-    gradient_accumulation_steps=4,
-    learning_rate=5e-7,  # DPO uses much lower LR than SFT
-    # max_length=1024,  # Default - only set if you need different sequence length
+def main(argv=None):
+    args = arguments(argv)
+    # Imports are deliberately below authorization and local input validation.
+    from datasets import Dataset, load_dataset
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from trl import DPOTrainer, DPOConfig
+    stream = load_dataset(args.dataset, revision=args.dataset_revision,
+                          split="train", streaming=True)
+    rows = validate_rows(list(stream.take(args.max_samples)))
+    dataset = Dataset.from_list(rows)
+    tokenizer = AutoTokenizer.from_pretrained(args.model, revision=args.model_revision,
+                                              trust_remote_code=False)
+    if tokenizer.pad_token is None:
+        if tokenizer.eos_token is None:
+            raise ValueError("a model-specific pad token configuration is required")
+        tokenizer.pad_token = tokenizer.eos_token
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model, revision=args.model_revision, trust_remote_code=False,
+        use_safetensors=True)
+    config = DPOConfig(output_dir=args.output_dir, max_steps=args.max_steps,
+                    per_device_train_batch_size=1, gradient_accumulation_steps=1,
+                    report_to=[], push_to_hub=False, save_steps=10,
+                    save_total_limit=2, logging_steps=5)
+    trainer = DPOTrainer(model=model, args=config, train_dataset=dataset,
+                      processing_class=tokenizer)
+    trainer.train()
+    trainer.save_model(args.output_dir)
+    tokenizer.save_pretrained(args.output_dir)
+    print("Training finished; inspect local checkpoints and held-out evaluation before use.")
 
-    # Logging & checkpointing
-    logging_steps=10,
-    save_strategy="steps",
-    save_steps=100,
-    save_total_limit=2,
 
-    # Evaluation - IMPORTANT: Only enable if eval_dataset provided
-    eval_strategy="steps",
-    eval_steps=100,
-
-    # Optimization
-    warmup_ratio=0.1,
-    lr_scheduler_type="cosine",
-
-    # Monitoring
-    report_to="trackio",  # Integrate with Trackio
-    project="meaningful_project_name", # project name for the training name (trackio)
-    run_name="baseline-run", #Descriptive name for this training run
-
-)
-
-# Initialize and train
-# Note: DPO requires an instruct-tuned model as the base
-print("🎯 Initializing trainer...")
-trainer = DPOTrainer(
-    model="Qwen/Qwen2.5-0.5B-Instruct",  # Use instruct model, not base model
-    train_dataset=train_dataset,
-    eval_dataset=eval_dataset,  # CRITICAL: Must provide eval_dataset when eval_strategy is enabled
-    args=config,
-)
-
-print("🚀 Starting DPO training...")
-trainer.train()
-
-print("💾 Pushing to Hub...")
-trainer.push_to_hub()
-
-# Finish Trackio tracking
-trackio.finish()
-
-print("✅ Complete! Model at: https://huggingface.co/username/qwen-dpo-aligned")
-print("📊 View metrics at: https://huggingface.co/spaces/username/trackio")
+if __name__ == "__main__":
+    main()

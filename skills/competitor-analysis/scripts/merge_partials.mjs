@@ -18,31 +18,14 @@
 //
 // Usage: node merge_partials.mjs <research-dir>
 
-import sanitizeFilename from 'sanitize-filename';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { isAbsolute, join, relative, resolve } from 'path';
 import { parseFrontmatter, parseBody, parseSections } from './md_utils.mjs';
 
 const args = process.argv.slice(2);
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeCliPath(value, base = process.cwd()) { return checkedPath(value, base); }
 
-function safeCliPath(pathValue, baseDir = process.cwd()) {
-  const root = resolve(baseDir);
-  const target = resolve(root, ...sanitizePathSegments(pathValue));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || isAbsolute(rel)) {
-    throw new Error(`Path escapes allowed directory: ${pathValue}`);
-  }
-  return target;
-}
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
   console.error(`Usage: node merge_partials.mjs <research-dir>
@@ -142,7 +125,7 @@ function dateOf(bullet) {
 let files;
 try { files = readdirSync(partialsDir); } catch {
   console.error(`No partials directory at ${partialsDir} — nothing to merge.`);
-  process.exit(0);
+  process.exit(1);
 }
 
 // Group partials by slug
@@ -152,10 +135,11 @@ for (const f of files) {
   const m = f.match(/^(.+)\.([a-z]+)\.md$/);
   if (!m) continue;
   const slug = m[1];
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error('Invalid partial slug');
   const lane = m[2];
   if (!LANES.includes(lane)) continue;
   if (!bySlug.has(slug)) bySlug.set(slug, {});
-  const content = readFileSync(join(partialsDir, f), 'utf-8');
+  const content = readFileSync(insidePath(partialsDir, f), 'utf-8');
   bySlug.get(slug)[lane] = { fm: parseFrontmatter(content), body: parseBody(content) };
 }
 
@@ -271,7 +255,7 @@ for (const [slug, lanes] of bySlug.entries()) {
     }
   }
 
-  const fmLines = Object.entries(mergedFm).map(([k, v]) => `${k}: ${v}`).join('\n');
+  const fmLines = Object.entries(mergedFm).map(([k, v]) => `${k}: ${JSON.stringify(v)}`).join('\n');
 
   // Comparison heading may be "Comparison vs Exa" etc — find any key starting with "Comparison"
   const comparisonKey = Object.keys(allSections).find(k => k.startsWith('Comparison'));
@@ -304,9 +288,11 @@ for (const [slug, lanes] of bySlug.entries()) {
     dedupedFindings.length ? `## Research Findings\n${dedupedFindings.join('\n')}\n` : '',
   ].filter(Boolean).join('\n');
 
-  writeFileSync(join(dir, `${slug}.md`), out);
+  writeFileSync(insidePath(dir, `${slug}.md`), out);
   merged += 1;
   console.error(`[ok]   ${slug}: ${dedupedMentions.length} mentions, ${dedupedBench.length} benchmarks, ${dedupedFindings.length} findings`);
 }
 
 console.log(JSON.stringify({ merged, competitors: bySlug.size }));
+
+if (!merged || merged !== bySlug.size) process.exitCode = 1;

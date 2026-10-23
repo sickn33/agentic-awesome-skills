@@ -35,3 +35,7 @@ Use this reference when building apps that connect to Weaviate and require exter
 - Set only the provider keys your collection configuration actually uses.
 - If multiple providers are configured, include only those corresponding
   headers.
+
+Use HTTPS Cloud endpoints only. Custom approved hosts require the exact hostname
+in WEAVIATE_ALLOWED_HOST. Explicitly selected provider keys must be present; never
+forward unrelated credentials or include credentials in URLs, reports or raw errors.

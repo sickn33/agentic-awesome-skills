@@ -19,7 +19,7 @@ OUTPUTS_DIR = DATA_DIR / "outputs"
 REFERENCES_DIR = ROOT_DIR / "references"
 ASSETS_DIR = ROOT_DIR / "assets"
 
-OUTPUTS_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # =============================================================================
 # API KEY MANAGEMENT (com fallback para backup keys)
@@ -62,23 +62,9 @@ def get_api_key(try_backup: bool = True) -> str | None:
 
 
 def get_all_api_keys() -> list[str]:
-    """Retorna todas as API keys disponiveis para fallback."""
-    keys = []
-    env_file = ROOT_DIR / ".env"
-    if env_file.exists():
-        for line in env_file.read_text(encoding="utf-8").splitlines():
-            line = line.strip()
-            if line and not line.startswith("#") and "GEMINI_API_KEY" in line and "=" in line:
-                _, v = line.split("=", 1)
-                v = v.strip().strip('"').strip("'")
-                if v:
-                    keys.append(v)
-
-    env_key = os.environ.get("GEMINI_API_KEY")
-    if env_key and env_key not in keys:
-        keys.insert(0, env_key)
-
-    return keys
+    """Use only the explicitly selected primary credential; never rotate to evade quota."""
+    key = get_api_key(try_backup=False)
+    return [key] if key else []
 
 
 # =============================================================================
@@ -562,18 +548,11 @@ def safety_check_model(model_key: str, force: bool = False) -> tuple[bool, str]:
     Returns:
         (allowed, message) — se permitido e mensagem explicativa
     """
-    block_paid = os.environ.get("SAFETY_BLOCK_PAID_MODELS", "true").lower() == "true"
-
-    if model_key in PAID_MODELS:
-        cost = MODELS.get(model_key, {}).get("cost_per_image", "?")
-        if block_paid and not force:
-            return False, (
-                f"BLOQUEADO: '{model_key}' cobra ${cost}/imagem. "
-                f"Use --model gemini-2-flash-exp (gratis) ou --force-paid para confirmar."
-            )
-        return True, f"AVISO: '{model_key}' cobra ${cost}/imagem. Prosseguindo com --force-paid."
-
-    return True, f"OK: '{model_key}' e gratuito."
+    if model_key not in MODELS:
+        return False, "Unknown model; select a supported configured model explicitly."
+    if not force:
+        return False, "Model availability and billing are unverified. Confirm budget with --force-paid before any API request."
+    return True, "API request authorized; configured prices are historical estimates, not billing limits."
 
 
 def get_daily_usage_count() -> int:
@@ -601,7 +580,12 @@ def safety_check_daily_limit(num_images: int = 1) -> tuple[bool, str]:
     Returns:
         (allowed, message)
     """
-    max_per_day = int(os.environ.get("SAFETY_MAX_IMAGES_PER_DAY", "50"))
+    try:
+        max_per_day = int(os.environ.get("SAFETY_MAX_IMAGES_PER_DAY", "50"))
+    except ValueError:
+        return False, "SAFETY_MAX_IMAGES_PER_DAY must be a positive integer."
+    if num_images < 1 or max_per_day < 1:
+        return False, "Image count and local daily limit must be positive."
     current = get_daily_usage_count()
     after = current + num_images
 

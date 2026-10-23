@@ -1,28 +1,28 @@
 # Import Data
 
-Import one or more CSV, JSON, JSONL, or PDF files into a Weaviate collection with automatic type conversion and column mapping. Multiple files of the same format can be passed in a single invocation — all objects are appended to the same collection. PDF files are converted page-by-page to base64-encoded JPEG images; the collection is created automatically on first import and reused on subsequent runs.
+Import one or more CSV, JSON, JSONL, or PDF files into a Weaviate collection with automatic type conversion and column mapping. Multiple supported tabular files can be passed in a single invocation — all objects are appended to the same collection. PDF files are converted page-by-page to base64-encoded JPEG images; the collection is created automatically on first import and reused on subsequent runs.
 
 ## Usage
 
 ```bash
 # CSV/JSON/JSONL — collection must already exist
-uv run scripts/import.py "data.csv" --collection "CollectionName" [--mapping '{}'] [--tenant "name"] [--batch-size 100] [--json]
+uv run scripts/import.py --allow-write "data.csv" --collection "CollectionName" [--mapping '{}'] [--tenant "name"] [--batch-size 100] [--json]
 
-# Multiple files of the same format
-uv run scripts/import.py a.csv b.csv c.csv --collection "CollectionName"
+# Multiple supported tabular files
+uv run scripts/import.py --allow-write a.csv b.csv c.csv --collection "CollectionName"
 
 # PDF — collection is created automatically on first run; appended to on subsequent runs
-uv run scripts/import.py "document.pdf" --collection "CollectionName" [--image-field "doc_page"] [--batch-size 100] [--json]
+uv run scripts/import.py --allow-write "document.pdf" --collection "CollectionName" [--image-field "doc_page"] [--batch-size 100] [--json]
 
 # Multiple PDFs into the same collection
-uv run scripts/import.py page1.pdf page2.pdf page3.pdf --collection "PDFDocuments"
+uv run scripts/import.py --allow-write page1.pdf page2.pdf page3.pdf --collection "PDFDocuments"
 ```
 
 ## Parameters
 
 | Parameter | Flag | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `files` | — | Yes (positional, one or more) | — | One or more CSV, JSON, JSONL, or PDF files (all must be the same format) |
+| `files` | — | Yes (positional, one or more) | — | One or more CSV, JSON, JSONL, or PDF files (CSV/JSON/JSONL may be mixed; PDFs imported separately) |
 | `--collection` | `-c` | Yes | — | Target collection name (must already exist for CSV/JSON/JSONL; created automatically for PDF if absent, otherwise appended to) |
 | `--mapping` | `-m` | No | — | JSON object mapping file columns/keys to collection properties (CSV/JSON/JSONL only) |
 | `--tenant` | `-t` | No | — | Tenant name for multi-tenant collections (required if collection has multi-tenancy enabled) |
@@ -37,7 +37,7 @@ uv run scripts/import.py page1.pdf page2.pdf page3.pdf --collection "PDFDocument
 
 - First row must be a header — column names must match collection property names (case-sensitive)
 - Delimiter and quoting auto-detected via `csv.Sniffer`
-- Files without a header row are rejected with a clear error
+- Missing/duplicate/empty headers and inconsistent row widths are rejected. A heuristic warning cannot reliably distinguish all headerless text files; confirm the header manually.
 
 ### JSON
 
@@ -63,20 +63,20 @@ uv run scripts/import.py page1.pdf page2.pdf page3.pdf --collection "PDFDocument
 
 ## Type Conversion
 
-For CSV, JSON, and JSONL imports the script uses the collection schema to guide conversion. Non-string values (JSON/JSONL native types) pass through unchanged. String values are cast based on the declared property type:
+For CSV, JSON, and JSONL imports the script uses the collection schema to guide conversion. Values are validated against supported primitive schema types. Invalid conversions fail rather than silently corrupt values:
 
 | Schema type | Conversion |
 |---|---|
-| `int` / `int[]` | `int(value)` — falls back to string if it fails |
-| `number` / `number[]` | `float(value)` — falls back to string if it fails |
-| `boolean` / `boolean[]` | `"true"`/`"false"` → bool — falls back to string |
-| `date` / `date[]` | `"YYYY-MM-DD"` → `"YYYY-MM-DDT00:00:00Z"`, `"YYYY-MM-DD HH:MM:SS"` → RFC3339 with `Z` |
-| `text[]`, `int[]`, `number[]`, `boolean[]`, `date[]`, `uuid[]`, `object`, `object[]`, `geoCoordinates`, `phoneNumber` | JSON/JSONL: native lists/dicts pass through unchanged. CSV: cell is parsed with `json.loads()` — falls back to string if it fails |
+| `int` / `int[]` | `int(value)` — invalid values fail |
+| `number` / `number[]` | `float(value)` — invalid values fail |
+| `boolean` / `boolean[]` | `"true"`/`"false"` → bool — invalid values fail |
+| `date` / `date[]` | `"YYYY-MM-DD"` → `"YYYY-MM-DDT00:00:00Z"`, timestamps must carry an explicit timezone; never silently reinterpret local times as UTC |
+| `text[]`, `int[]`, `number[]`, `boolean[]`, `date[]`, `uuid[]`, `object`, `object[]`, `geoCoordinates`, `phoneNumber` | JSON/JSONL: native arrays/objects must match the declared container type. CSV: cell is parsed with `json.loads()` — invalid values fail |
 | `text`, `uuid` | kept as string |
 | `blob` | kept as string — must already be base64-encoded in the source data |
-| field not in schema | kept as string |
+| field not in schema | rejected unless explicitly skipped |
 
-`None` and empty strings are always skipped.
+`None` and empty strings are skipped. This is not an atomic migration: validate whether those omissions are intended before import.
 
 ## Reserved Fields
 
@@ -84,21 +84,19 @@ For CSV, JSON, and JSONL imports the script uses the collection schema to guide 
 
 **IMPORTANT NOTE:** Renaming must **always** be preferred over dropping when the field contains meaningful data. e.g. renaming `id` to `object_id` or `product_id` (based on the data).
 
-`--mapping` and `--skip-fields` support dot notation for nested object fields (e.g. `author.id`).
+`--mapping` and `--skip-fields` operate on top-level fields only. Dot-path
+mapping is rejected; nested transformations need a separately reviewed local step.
+Mappings that overwrite another top-level field fail. Native nested object
+semantics and UUID/blob formats still require server-compatible source validation.
 
 ```bash
-# Drop the top-level id field entirely
-uv run scripts/import.py data.json --collection "Articles" --skip-fields "id"
-
-# Rename top-level id to source_id
-uv run scripts/import.py data.json --collection "Articles" --mapping '{"id": "source_id"}'
-
-# Rename a nested id field inside an object property (e.g. author.id → author.author_id)
-uv run scripts/import.py data.json --collection "Articles" --mapping '{"author.id": "author.author_id"}'
-
-# Drop a nested id field
-uv run scripts/import.py data.json --collection "Articles" --skip-fields "author.id"
+uv run scripts/import.py --allow-write data.json --allow-write --collection Articles --mapping '{"id":"source_id"}'
 ```
+
+Imports are nontransactional. The helper validates bounded per-file data before
+enqueueing it, but a later-file failure can leave earlier writes. Preserve actual
+counts and inspect destination IDs before any retry. It does not provide exactly-once
+semantics or automatic rollback. Generated UUIDs may duplicate on a retry.
 
 ## Output
 
@@ -112,49 +110,60 @@ Returns exit code `1` if any imports fail.
 Import from CSV:
 
 ```bash
-uv run scripts/import.py data.csv --collection "Articles"
+uv run scripts/import.py --allow-write data.csv --collection "Articles"
 ```
 
 Import with column mapping:
 
 ```bash
-uv run scripts/import.py data.csv --collection "Articles" \
+uv run scripts/import.py --allow-write data.csv --collection "Articles" \
   --mapping '{"title_col": "title", "body_col": "content"}'
 ```
 
 Import to multi-tenant collection:
 
 ```bash
-uv run scripts/import.py data.jsonl --collection "Workspace" --tenant "tenant1"
+uv run scripts/import.py --allow-write data.jsonl --collection "Workspace" --tenant "tenant1"
 ```
 
 Import JSON with custom batch size:
 
 ```bash
-uv run scripts/import.py products.json --collection "Products" --batch-size 500
+uv run scripts/import.py --allow-write products.json --collection "Products" --batch-size 500
 ```
 
 Import a PDF (collection is created automatically on first run):
 
 ```bash
-uv run scripts/import.py paper.pdf --collection "PDFDocuments"
+uv run scripts/import.py --allow-write paper.pdf --collection "PDFDocuments"
 ```
 
 Import multiple PDFs into the same collection:
 
 ```bash
-uv run scripts/import.py chapter1.pdf chapter2.pdf chapter3.pdf --collection "PDFDocuments"
+uv run scripts/import.py --allow-write chapter1.pdf chapter2.pdf chapter3.pdf --collection "PDFDocuments"
 ```
 
 Import a PDF with a custom image field name:
 
 ```bash
-uv run scripts/import.py paper.pdf --collection "PDFDocuments" --image-field "page_image"
+uv run scripts/import.py --allow-write paper.pdf --collection "PDFDocuments" --image-field "page_image"
 ```
 
 Import multiple CSV files into the same collection:
 
 ```bash
-uv run scripts/import.py jan.csv feb.csv mar.csv --collection "Articles"
+uv run scripts/import.py --allow-write jan.csv feb.csv mar.csv --collection "Articles"
 ```
 
+
+## Bounds and privacy
+
+Use --allow-write only after confirming the instance, collection, tenant and data
+transfer authorization. Files must be regular non-symlinks, at most 50 MiB each;
+an invocation imports at most 10000 records. JSON is loaded within that bound.
+PDF rendering is one page at a time, at most 100 pages, max dimension 1600 pixels,
+with subprocess timeouts; resulting images may expose the entire document to the
+configured vectorizer. Poppler and model availability are separate prerequisites.
+Validate the PDF schema/provider configuration before creation. Auto-tenant creation
+can cause side effects and must be separately understood on the target collection.

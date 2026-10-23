@@ -8,14 +8,14 @@ adapter:
     files: [Cargo.toml, Cargo.lock]
     content_patterns:
       - file: "Cargo.toml"
-        pattern: '\\[package\\]'
+        pattern: '\[package\]'
     confidence: 0.95
 
   commands:
     build: "cargo build"
     test: "cargo test"
     lint: "cargo clippy -- -D warnings"
-    lint_arch: null  # Rust module system enforces architecture naturally
+    lint_arch: null  # Rust visibility enforces privacy, not the project layer policy
     format: "cargo fmt"
     start: "cargo run"
     dev: "cargo watch -x run"
@@ -193,7 +193,7 @@ For release builds: `cargo build --release && ./target/release/<name>`
 - Router-based: `Router::new().route("/path", get(handler))`
 - Extractors for request parsing: `Json<T>`, `Path<T>`, `Query<T>`
 - State sharing via `Extension` or `State`
-- Default: runs on `0.0.0.0:3000`
+- The application explicitly chooses its bind address/port; Axum does not supply a universal default.
 
 ### Actix-web
 - Attribute macros: `#[get("/path")]`, `#[post("/path")]`
@@ -218,3 +218,8 @@ If `[workspace]` in root `Cargo.toml`:
 - Each member crate may have its own layer conventions
 - Build: `cargo build --workspace`
 - Test: `cargo test --workspace`
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.

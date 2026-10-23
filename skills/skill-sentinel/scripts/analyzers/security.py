@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Tuple
 
 from config import SECRET_EXCEPTIONS, SECRET_PATTERNS, SQL_INJECTION_PATTERNS
@@ -149,7 +150,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             continue
 
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
         except OSError:
             continue
 

@@ -1,5 +1,7 @@
 # Agent SDK Patterns — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Basic Agent
 
 ```python
@@ -11,7 +13,7 @@ async def main():
         prompt="Explain what this repository does",
         options=ClaudeAgentOptions(
             cwd="/path/to/project",
-            allowed_tools=["Read", "Glob", "Grep"]
+            tools=["Read", "Glob", "Grep"], allowed_tools=["Read", "Glob", "Grep"]
         )
     ):
         if isinstance(message, ResultMessage):
@@ -81,7 +83,7 @@ async def main():
         prompt="Refactor utils.py to improve readability",
         options=ClaudeAgentOptions(
             allowed_tools=["Read", "Edit", "Write"],
-            permission_mode="acceptEdits",
+            permission_mode="default",
             hooks={
                 "PostToolUse": [HookMatcher(matcher="Edit|Write", hooks=[log_file_change])]
             }
@@ -136,7 +138,7 @@ async def main():
         prompt="Open example.com and describe what you see",
         options=ClaudeAgentOptions(
             mcp_servers={
-                "playwright": {"command": "npx", "args": ["@playwright/mcp@latest"]}
+                "playwright": {"command": "/absolute/path/to/reviewed-playwright-mcp", "args": []}
             }
         )
     ):
@@ -159,8 +161,8 @@ async def main():
         options=ClaudeAgentOptions(
             mcp_servers={
                 "postgres": {
-                    "command": "npx",
-                    "args": ["-y", "@modelcontextprotocol/server-postgres"],
+                    "command": "/absolute/path/to/reviewed-readonly-postgres-mcp",
+                    "args": [],
                     "env": {"DATABASE_URL": os.environ["DATABASE_URL"]}
                 }
             }
@@ -181,12 +183,12 @@ import anyio
 from claude_agent_sdk import query, ClaudeAgentOptions
 
 async def main():
-    # Default: prompt for dangerous operations
+    # Default: approval policy; listed allowed tools may still execute without a prompt
     async for message in query(
-        prompt="Delete all test files",
+        prompt="List the test file names without modifying them",
         options=ClaudeAgentOptions(
             allowed_tools=["Bash"],
-            permission_mode="default"  # Will prompt before deleting
+            permission_mode="default"  # An allowed Bash rule can auto-approve; do not use for destructive demos
         )
     ):
         pass
@@ -206,21 +208,12 @@ async def main():
         prompt="Refactor this module",
         options=ClaudeAgentOptions(
             allowed_tools=["Read", "Edit"],
-            permission_mode="acceptEdits"
+            permission_mode="default"
         )
     ):
         pass
 
-    # Bypass: skip all prompts (use with caution)
-    async for message in query(
-        prompt="Set up the development environment",
-        options=ClaudeAgentOptions(
-            allowed_tools=["Bash", "Write"],
-            permission_mode="bypassPermissions",
-            allow_dangerously_skip_permissions=True
-        )
-    ):
-        pass
+    # Do not demonstrate bypassPermissions on untrusted workspaces.
 
 anyio.run(main)
 ```
@@ -280,10 +273,12 @@ async def main():
         if isinstance(message, SystemMessage) and message.subtype == "init":
             session_id = message.session_id
 
-    # Resume with full context from the first query
+    if not session_id:
+        raise RuntimeError("No session ID returned; refusing to start a new session")
+    # Resume only the same authorized scope
     async for message in query(
         prompt="Now find all places that call it",  # "it" = auth module
-        options=ClaudeAgentOptions(resume=session_id)
+        options=ClaudeAgentOptions(resume=session_id, tools=["Read", "Glob"], max_turns=8)
     ):
         if isinstance(message, ResultMessage):
             print(message.result)
@@ -303,7 +298,7 @@ async def main():
     async for message in query(
         prompt="Review this code",
         options=ClaudeAgentOptions(
-            allowed_tools=["Read", "Glob", "Grep"],
+            tools=["Read", "Glob", "Grep"], allowed_tools=["Read", "Glob", "Grep"],
             system_prompt="""You are a senior code reviewer focused on:
 1. Security vulnerabilities
 2. Performance issues
@@ -317,3 +312,5 @@ Always provide specific line numbers and suggestions for improvement."""
 
 anyio.run(main)
 ```
+
+For every actual run set an approved cwd, explicit tools/deny rules, max turns, cost and time budget, and an approval handler where required. Resume only an existing authorized session with the same scope and restrictions; a missing ID must fail rather than start a new broader session. Do not log untrusted paths or full message objects without sanitization.

@@ -32,3 +32,11 @@ Use this skill when you need to:
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+### Runtime and model boundaries
+
+The references mix stable APIs with v4/main-only examples (including ModelRegistry and `env.fetch`). Pin a tested library version and check its matching documentation; the unversioned main docs may require a source build. Model repositories need compatible ONNX exports, tokenizer/config files and supported backend operators; an `onnx/` folder alone does not prove compatibility. Respect each model's license and gated-access terms. Keep tokens server-side. Offline operation also requires local runtime/WASM assets; cache presence alone is insufficient.
+
+Examples are illustrative and were not executed against downloaded models in this review. Larger models and lower precision do not guarantee better quality or faster inference. Browser unload handlers cannot guarantee asynchronous disposal; await explicit cleanup while the application is active. React examples require cancellation/unmount handling for pending loads and inference. Server deployments need authentication, input/rate limits, readiness checks and bounded shutdown before exposure.
+
+Modified for catalog review on 2026-10-23; upstream attribution and Apache-2.0 metadata retained.

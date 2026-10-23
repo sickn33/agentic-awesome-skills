@@ -35,6 +35,10 @@ default is taken (unless `--non-interactive` is used).  Each time
 that happens rclone will print or DEBUG a message saying how to
 affect the value taken.
 
+Prefer interactive `rclone config` for secrets. Command-line password values can
+be visible in shell history and process listings; obscuring is reversible and
+does not encrypt the configuration.
+
 If any of the parameters passed is a password field, then rclone will
 automatically obscure them if they aren't already obscured before
 putting them in the config file.
@@ -76,9 +80,9 @@ This will look something like (some irrelevant detail removed):
     "Required": false,
     "IsPassword": false,
     "Type": "bool",
-    "Exclusive": true,
+    "Exclusive": true
   },
-  "Error": "",
+  "Error": ""
 }
 ```
 

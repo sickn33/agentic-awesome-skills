@@ -70,14 +70,14 @@ const pipe = await pipeline('sentiment-analysis', null, {
   progress_callback: (info) => {
     // Recommended: end-to-end loading progress
     if (info.status === 'progress_total') {
-      console.log(`Total: ${info.progress.toFixed(1)}%`);
+      console.log(`Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
       return;
     }
 
     // Optional: per-file progress
     if (info.status === 'progress') {
       fileProgress[info.file] = info.progress;
-      console.log(`${info.file}: ${info.progress.toFixed(1)}%`);
+      console.log(`${info.file}: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
     }
 
     if (info.status === 'done') {
@@ -110,7 +110,7 @@ const fileProgressBars = {};
 const pipe = await pipeline('image-classification', null, {
   progress_callback: (info) => {
     if (info.status === 'progress_total') {
-      statusDiv.textContent = `Total: ${info.progress.toFixed(1)}%`;
+      statusDiv.textContent = `Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`;
       return;
     }
 
@@ -118,12 +118,15 @@ const pipe = await pipeline('image-classification', null, {
       // Create progress bar for each file if not exists
       if (!fileProgressBars[info.file]) {
         const fileDiv = document.createElement('div');
-        fileDiv.innerHTML = `
-          <div class="file-name">${info.file}</div>
-          <div class="progress-bar">
-            <div class="progress-fill" style="width: 0%"></div>
-          </div>
-        `;
+        const label = document.createElement('div');
+        label.className = 'file-name';
+        label.textContent = String(info.file ?? '');
+        const bar = document.createElement('div');
+        bar.className = 'progress-bar';
+        const fill = document.createElement('div');
+        fill.className = 'progress-fill';
+        bar.appendChild(fill);
+        fileDiv.append(label, bar);
         progressContainer.appendChild(fileDiv);
         fileProgressBars[info.file] = fileDiv.querySelector('.progress-fill');
       }
@@ -153,16 +156,12 @@ Override the model's default configuration:
 import { pipeline } from '@huggingface/transformers';
 
 const pipe = await pipeline('text-generation', 'model-id', {
-  config: {
-    max_length: 512,
-    temperature: 0.8,
-    // ... other config options
-  }
 });
+const output = await pipe('Prompt', { max_new_tokens: 128, do_sample: true, temperature: 0.8 });
 ```
 
 **Use cases:**
-- Override default generation parameters
+- Pass generation parameters to the inference call as above; `config` is model architecture configuration
 - Adjust model-specific settings
 - Test different configurations without modifying model files
 
@@ -188,7 +187,7 @@ const pipe = await pipeline('sentiment-analysis', 'model-id', {
 
 ### Local Files Only
 
-Prevent any network requests:
+Prevent remote model-file loading (WASM/runtime downloads need separate configuration):
 
 ```javascript
 const pipe = await pipeline('sentiment-analysis', 'model-id', {
@@ -315,8 +314,8 @@ For models with multiple components (encoder-decoder, vision-encoder-decoder, et
 ```javascript
 const pipe = await pipeline('automatic-speech-recognition', 'model-id', {
   device: {
-    encoder: 'webgpu',    // Run encoder on GPU
-    decoder: 'wasm'       // Run decoder on CPU
+    encoder_model: 'webgpu',    // Run encoder on GPU
+    decoder_model_merged: 'wasm'       // Run decoder on CPU
   }
 });
 ```
@@ -369,13 +368,13 @@ See the full list in the [dtypes.js source](https://github.com/huggingface/trans
 ```javascript
 const pipe = await pipeline('automatic-speech-recognition', 'model-id', {
   dtype: {
-    encoder: 'fp32',  // Encoder at full precision
-    decoder: 'q8'     // Decoder quantized
+    encoder_model: 'fp32',  // Encoder at full precision
+    decoder_model_merged: 'q8'     // Decoder quantized
   }
 });
 ```
 
-**Trade-offs:**
+**Trade-offs:** these sizes are typical; speed and quality require benchmarking on the selected model/backend. `q4` is not universally fastest and precision does not guarantee task accuracy.
 
 | Data Type | Model Size | Speed | Accuracy | Use Case |
 |-----------|-----------|-------|----------|----------|
@@ -419,8 +418,8 @@ const pipe = await pipeline('text-generation', 'large-model-id', {
 ```javascript
 const pipe = await pipeline('text-generation', 'large-model-id', {
   use_external_data_format: {
-    encoder: true,
-    decoder: 3  // Decoder has 3 external data chunks
+    encoder_model: true,
+    decoder_model_merged: 3  // Decoder has 3 external data chunks
   }
 });
 ```
@@ -477,7 +476,7 @@ import { pipeline } from '@huggingface/transformers';
 const pipe = await pipeline('sentiment-analysis', null, {
   progress_callback: (info) => {
     if (info.status === 'progress_total') {
-      console.log(`Total: ${info.progress.toFixed(1)}%`);
+      console.log(`Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
     }
   }
 });
@@ -526,12 +525,12 @@ For encoder-decoder models, configure each component separately:
 ```javascript
 const pipe = await pipeline('automatic-speech-recognition', 'model-id', {
   device: {
-    encoder: 'webgpu',
-    decoder: 'wasm'
+    encoder_model: 'webgpu',
+    decoder_model_merged: 'wasm'
   },
   dtype: {
-    encoder: 'fp16',
-    decoder: 'q8'
+    encoder_model: 'fp16',
+    decoder_model_merged: 'q8'
   }
 });
 ```

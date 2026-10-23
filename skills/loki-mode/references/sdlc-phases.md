@@ -1,5 +1,7 @@
 # SDLC Phases Reference
 
+> Review note: Workflow templates require adaptation and explicit scope. CI/YAML and service helpers are conceptual, not complete configurations; status codes should be quoted when strings are required. Review and pin local tool dependencies before running examples; package installation, network requests, load tests and deployments need the user-authorized target and budget.
+
 All phases with detailed workflows and testing procedures.
 
 ---
@@ -55,7 +57,7 @@ Development <- QA <- Deployment <- Business Ops <- Growth Loop
 
 ### Actions:
 1. Parse PRD, extract requirements
-2. Spawn `biz-analytics` agent for competitive research
+2. Spawn `data-analytics` agent for competitive research
 3. Web search competitors, extract features, reviews
 4. Identify market gaps and opportunities
 5. Generate task backlog with priorities and dependencies
@@ -126,13 +128,13 @@ swagger-cli validate .loki/specs/openapi.yaml
 npx openapi-typescript .loki/specs/openapi.yaml --output src/types/api.ts
 
 # Client SDK
-npx openapi-generator-cli generate \
+npx @openapitools/openapi-generator-cli generate \
   -i .loki/specs/openapi.yaml \
   -g typescript-axios \
   -o src/clients/api
 
 # Server stubs
-npx openapi-generator-cli generate \
+npx @openapitools/openapi-generator-cli generate \
   -i .loki/specs/openapi.yaml \
   -g nodejs-express-server \
   -o backend/generated
@@ -274,7 +276,7 @@ semgrep --config=auto .
 
 **PERFORMANCE Phase:**
 ```bash
-npx k6 run tests/load.js
+k6 run tests/load.js
 npx lighthouse http://localhost:3000
 ```
 - Load testing: 100 concurrent users for 1 minute
@@ -283,7 +285,7 @@ npx lighthouse http://localhost:3000
 
 **ACCESSIBILITY Phase:**
 ```bash
-npx axe http://localhost:3000
+npx @axe-core/cli http://localhost:3000
 ```
 - WCAG 2.1 AA compliance
 - Alt text, ARIA labels, color contrast

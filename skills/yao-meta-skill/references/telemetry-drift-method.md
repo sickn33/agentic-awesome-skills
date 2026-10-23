@@ -1,5 +1,13 @@
 # Telemetry And Drift Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Telemetry turns real use into the next iteration queue. It must stay local-first and metadata-only by default.
 
 ## When To Use
@@ -48,7 +56,7 @@ Optional destination override:
 
 ```bash
 YAO_CLI_TELEMETRY=1 \
-YAO_CLI_TELEMETRY_EVENTS=/tmp/yao-telemetry.jsonl \
+YAO_CLI_TELEMETRY_EVENTS=./private-review/yao-telemetry.jsonl \
 python3 scripts/yao.py output-exec
 ```
 
@@ -77,7 +85,7 @@ By default this writes to `.yao/telemetry_spool/external_events.jsonl`. Use `--o
 
 ```bash
 python3 scripts/yao.py telemetry-emit . \
-  --output-jsonl /tmp/external-client-events.jsonl \
+  --output-jsonl ./private-review/external-client-events.jsonl \
   --event skill_output \
   --activation-type manual \
   --outcome edited \
@@ -122,8 +130,8 @@ Generate a local launcher and Chrome native messaging manifest for an operator-i
 
 ```bash
 python3 scripts/telemetry_native_host.py . \
-  --write-launcher /tmp/yao-telemetry-host.sh \
-  --write-manifest /tmp/yao-telemetry-host.json \
+  --write-launcher ./private-review/yao-telemetry-host.sh \
+  --write-manifest ./private-review/yao-telemetry-host.json \
   --allowed-origin chrome-extension://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/
 ```
 
@@ -135,7 +143,7 @@ External clients, browser extensions, editor adapters, or wrapper scripts may ha
 
 ```bash
 python3 scripts/yao.py telemetry-import . \
-  --input-jsonl /tmp/external-client-events.jsonl \
+  --input-jsonl ./private-review/external-client-events.jsonl \
   --command browser-extension
 ```
 
@@ -144,7 +152,7 @@ The importer defaults missing `source` to `external` and missing `command` to `e
 Use `--dry-run` to validate an external batch without writing `reports/telemetry_events.jsonl` or refreshing aggregate reports:
 
 ```bash
-python3 scripts/yao.py telemetry-import . --input-jsonl /tmp/external-client-events.jsonl --dry-run
+python3 scripts/yao.py telemetry-import . --input-jsonl ./private-review/external-client-events.jsonl --dry-run
 ```
 
 ## Privacy Rule
@@ -180,3 +188,11 @@ Review Studio should show the aggregate telemetry gate as an operating loop, not
 ## Skill Atlas Role
 
 Skill Atlas uses aggregate adoption drift reports to rank portfolio work. It should surface no-data warnings for actionable production/library/governed skills, and drift warnings for missed triggers, wrong triggers, bad outputs, missing resources, script errors, and review-overdue counts. It must not inspect raw JSONL telemetry or use non-actionable example/fixture signals as release blockers.
+
+## Storage boundary
+
+If separately authorized, create a user-owned private review directory (0700)
+before using the illustrative relative paths. Write new files exclusively with
+0600 permissions, reject symlinks and bound spool size/retention. Metadata can
+still be identifying; aggregation does not guarantee anonymity. No telemetry,
+browser integration or native host is installed by this catalog package.

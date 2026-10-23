@@ -48,7 +48,7 @@ class JucisDfScraper(AbstractJuntaScraper):
                     matricula=gcol(cells, ["matr", "registro"]),
                     cpf_cnpj=gcol(cells, ["cpf", "cnpj"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio="Brasília",
+                    municipio=None,
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr"]),
@@ -58,6 +58,6 @@ class JucisDfScraper(AbstractJuntaScraper):
             for el in soup.select("ul li, .leiloeiro, article p"):
                 text = self.clean(el.get_text(" | "))
                 if text and len(text) > 5:
-                    results.append(self.make_leiloeiro(nome=text, municipio="Brasília"))
+                    results.append(self.make_leiloeiro(nome=text, municipio=None))
 
         return results

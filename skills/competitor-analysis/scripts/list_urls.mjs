@@ -5,30 +5,13 @@
 // Reads all {prefix}_discovery_batch_*.json files, deduplicates by domain,
 // outputs one URL per line to stdout, stats to stderr.
 
-import sanitizeFilename from 'sanitize-filename';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
 import { readdirSync, readFileSync } from 'fs';
 import { isAbsolute, join, relative, resolve } from 'path';
 
 const args = process.argv.slice(2);
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeCliPath(value, base = process.cwd()) { return checkedPath(value, base); }
 
-function safeCliPath(pathValue, baseDir = process.cwd()) {
-  const root = resolve(baseDir);
-  const target = resolve(root, ...sanitizePathSegments(pathValue));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || isAbsolute(rel)) {
-    throw new Error(`Path escapes allowed directory: ${pathValue}`);
-  }
-  return target;
-}
 
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
@@ -80,7 +63,7 @@ let totalResults = 0;
 
 for (const file of files) {
   try {
-    const data = JSON.parse(readFileSync(join(dir, file), 'utf-8'));
+    const data = JSON.parse(readFileSync(insidePath(dir, file), 'utf-8'));
     const results = Array.isArray(data) ? data : (data.results || []);
     totalResults += results.length;
 
@@ -89,7 +72,7 @@ for (const file of files) {
       if (!url) continue;
 
       try {
-        const u = new URL(url);
+        const u = new URL(publicURL(url));
         const hostname = u.hostname.replace(/^www\./, '');
         const depth = u.pathname.replace(/\/+$/, '').split('/').filter(Boolean).length;
         const existing = byDomain.get(hostname);
@@ -100,6 +83,7 @@ for (const file of files) {
     }
   } catch (err) {
     console.error(`Warning: Failed to parse ${file}: ${err.message}`);
+    process.exitCode = 1;
   }
 }
 

@@ -1,5 +1,7 @@
 # `container` — Concepts & Architecture
 
+> Reference scope: this imported guide mixes release-era and later branch documentation; its `1.0.0+` annotations are not verified introduction versions. Match the installed `container --version` and subcommand `--help` to the same upstream release tag before using flags or defaults. Current branch documentation can describe unreleased behavior. No container runtime was executed for this static review.
+
 Mental model for Apple's `container`: the one-VM-per-container design, the process
 topology, platform requirements, networking, images/storage, and the security/isolation
 model. Read this to explain *how* or *why* something works, or when a Docker mental model
@@ -41,7 +43,7 @@ libraries plus a `vminitd` init — rather than a full userland. Consequences of
 | **Performance** | Lower memory than a full VM, with **boot times comparable to** containers inside a shared VM (sub-second in practice). |
 | **Interop** | Consumes and produces standard **OCI images**, so images move freely to/from Docker registries and other OCI tooling. |
 
-There is **no shared daemon** like `dockerd`. Instead, per-user background services run under
+There is no Linux `dockerd` daemon inside a common VM. Shared per-user background services run under
 `launchd` and a runtime helper is launched **per container** (see §2).
 
 ---
@@ -72,9 +74,7 @@ container CLI
 
 `container system` is the control plane for this topology: `start`/`stop` bring the
 apiserver and helpers up/down, `status` health-checks them, and `logs`/`df`/`kernel`/`dns`/
-`property` manage system-wide state. **No container, image, or build command works until
-`container system start` has run** — connection errors almost always mean the services are
-stopped. See `references/configuration.md` for the full `container system` reference.
+`property` manage system-wide state. Operations using the API server require running services; help/version inspection does not. Diagnose connection failures with status, versions and logs; stopped services are one possible cause. See `references/configuration.md` for the full `container system` reference.
 
 launchd service labels (all under the `com.apple.container.` prefix) look like:
 
@@ -136,7 +136,7 @@ degrading silently.
   sudo container system dns create test    # register domain "test" on the host resolver
   # make it the default suffix by editing ~/.config/container/config.toml:  [dns] domain = "test"
   # (there is NO `property set` CLI — only `container system property list` to view values)
-  # a container named my-web-server is then reachable as my-web-server.test
+  # restart services within task scope to apply configuration; a container named my-web-server is then reachable as my-web-server.test
   ```
 
   DNS domain create/delete edits the host resolver configuration, so it **must run as
@@ -164,7 +164,7 @@ degrading silently.
   images you build to any OCI registry; they run in any other OCI-compatible tool.
 - The **local content store** (host-side image/content storage) is owned by the
   `container-core-images` helper, which exposes the image-management API. Manage it with the
-  `images` command group and disk usage with `container system df`.
+  `container image` command group and disk usage with `container system df`.
 - **Registries:** image references that omit a host default to **`docker.io`**, configurable
   via the `registry.domain` property (see `references/configuration.md`). Prefer
   fully-qualified references (`docker.io/library/alpine`, not bare `alpine`) when the source
@@ -236,7 +236,7 @@ debugger to an XPC helper by exporting `CONTAINER_DEBUG_LAUNCHD_LABEL=<launchd-l
 
 **Prefer `container` when:** you're on Apple silicon and want VM-grade isolation per
 container, minimal per-container footprint, per-container IPs, tight macOS integration
-(launchd/Keychain/unified logging), and no always-on shared daemon. **Prefer Docker/Podman
+(launchd/Keychain/unified logging), and per-container VM isolation backed by shared per-user services. **Prefer Docker/Podman
 when:** you need Intel-Mac support, features `container` hasn't implemented yet, or maximum
 Docker-flag/ecosystem compatibility.
 
@@ -247,8 +247,7 @@ Docker-flag/ecosystem compatibility.
   GiB in Activity Monitor), but pages freed *inside* the guest are **not** relinquished to the
   host. Running many memory-heavy containers may require occasionally **restarting** them.
 - **Young project.** 1.0.0 is the first stable release; some containerization features common in
-  Docker are still unimplemented (check `container <group> --help`). Expect standard semver going
-  forward — breaking changes on major bumps, not patch releases.
+  Docker are still unimplemented (check `container <group> --help`). Do not assume semantic-version compatibility: upstream describes product versions and release-specific CLI/API compatibility; check the exact release notes.
 - **macOS 15 networking limits** (see §3): no container-to-container traffic, single `default`
   network only, `container network`/`--network` unavailable, and a network-creation race that
   can cut containers off.
@@ -274,7 +273,7 @@ dotfiles are available on both sides with no copy step.
 | Lifetime | ephemeral by task | **persistent** across stop/start |
 
 ```bash
-container machine create alpine:latest --name dev
+container machine create docker.io/library/alpine:latest --home-mount none --name dev
 container machine run -n dev whoami     # your host username, not root
 container machine run -n dev            # interactive shell; your $HOME is mounted in
 container machine set-default dev        # then drop -n
@@ -292,3 +291,7 @@ container machine set -n dev cpus=4 memory=8G   # takes effect after next stop/s
   `CONTAINER_GID`, `CONTAINER_USER`, `CONTAINER_HOME`, `CONTAINER_MACHINE_ID` set).
 
 See `references/commands.md` for the full `machine` subcommand/flag matrix.
+
+## Operational boundaries
+
+See the root skill operational boundaries before executing recipes: verify trusted images and kernels, avoid secret environment output and build args, use HTTPS and explicit loopback bindings, restrict host mounts and agent forwarding, and inventory exact resources before cleanup. Machines share substantially more host access than ordinary containers.

@@ -30,7 +30,7 @@ longbridge <subcommand> 700.HK --format json
 
    | Analysis                                      | Method                                                                                                                                      |
    | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-   | **三表勾稽 / Cross-statement reconciliation** | Verify: net income (IS) ≈ change in retained earnings (BS); net income + non-cash items ≈ operating cash flow (CF); ΔCash (CF) = ΔCash (BS) |
+   | **三表勾稽 / Cross-statement reconciliation** | Verify: closing retained earnings = opening retained earnings + attributable income - dividends +/- adjustments; OCF = net income + noncash adjustments - working-capital investment; reconcile cash definitions, FX and scope between CF and BS |
    | **杜邦分解 / DuPont decomposition**           | ROE = Net Margin × Asset Turnover × Equity Multiplier                                                                                       |
    | **盈利质量 / Earnings quality**               | Accrual ratio = (Net Income − Operating CF) / Avg Total Assets; high positive ratio → earnings less cash-backed                             |
 
@@ -62,7 +62,7 @@ Period: {report_period} | Report date: {rpt_date}
 - Free cash flow (OCF − capex): X
 
 [Cross-statement reconciliation]
-- IS→BS: Net income vs ΔRetained earnings: {match / gap of X}
+- IS→BS: Net income, dividends and other adjustments vs ΔRetained earnings: {match / gap of X}
 - IS→CF: Net income vs OCF bridge: {match / key non-cash items}
 - CF→BS: ΔCash: {match / gap}
 
@@ -85,4 +85,4 @@ ROE {X%} = Net margin {Y%} × Asset turnover {Z×} × Equity multiplier {W×}
 | stderr `not logged in`              | 请运行 `longbridge auth login` 登录。                         | 請執行 `longbridge auth login`。/ Run `longbridge auth login`.                                                                              |
 | Returns empty / no data             | "{symbol} 暂无财务报表数据（可能为新上市或未覆盖标的）。"     | "{symbol} 暫無財務報表數據。" / "{symbol} has no financial statement data (newly listed or not covered)."                                   |
 | Only one or two statements returned | 仅展示已返回的报表，注明缺失部分，不做勾稽。                  | 僅展示已返回報表，注明缺失。/ Show available statements only; note missing ones; skip reconciliation.                                       |
-| Other stderr                        | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface verbatim — do not retry silently.                                                                                   |
+| Other stderr                        | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface a redacted error summary — do not retry silently.                                                                                   |

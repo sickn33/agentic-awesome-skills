@@ -69,7 +69,7 @@ body {
 .hud-warning {
   color: #ff3333;
   text-shadow: 0 0 10px rgba(255, 51, 51, 0.8);
-  animation: blink 1s step-end infinite;
+  /* Keep warning text visible; do not blink essential status. */
 }
 
 @keyframes blink { 50% { opacity: 0; } }
@@ -149,6 +149,12 @@ class _SciFiHUDScreenState extends State<SciFiHUDScreen> with SingleTickerProvid
   void initState() {
     super.initState();
     _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 2))..forward();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -242,7 +248,7 @@ const SciFiHUDScreen = () => {
   );
 };
 ```
-- You absolutely must use `react-native-svg` to draw circular HUD dials. Use `strokeDasharray` and `strokeDashoffset` on the `<Circle>` to draw arcs.
+- One option is `react-native-svg` to draw circular HUD dials. Use `strokeDasharray` and `strokeDashoffset` on the `<Circle>` to draw arcs.
 - The corner brackets are built easily by absolutely positioning small `View`s with 2 active borders over the corners of a container.
 
 ### Jetpack Compose
@@ -250,8 +256,8 @@ const SciFiHUDScreen = () => {
 @Composable
 fun SciFiHUDScreen() {
     // Animation for boot up
-    val transition = rememberInfiniteTransition()
-    val sweep by transition.animateFloat(initialValue = 0f, targetValue = 270f, animationSpec = infiniteRepeatable(tween(2000), RepeatMode.Restart))
+    // Static preview. Bind to real progress for a working HUD.
+    val sweep = 270f
 
     Column(
         modifier = Modifier.fillMaxSize().background(Color(0xFF000B18)),
@@ -286,7 +292,7 @@ fun SciFiHUDScreen() {
             }
             
             // Corner brackets via Canvas
-            Canvas(modifier = Modifier.fillMaxSize()) {
+            Canvas(modifier = Modifier.matchParentSize()) {
                 val path = Path().apply {
                     moveTo(0f, 40f); lineTo(0f, 0f); lineTo(40f, 0f) // Top Left
                     moveTo(size.width, size.height - 40f); lineTo(size.width, size.height); lineTo(size.width - 40f, size.height) // Bottom Right

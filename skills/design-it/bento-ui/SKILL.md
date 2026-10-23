@@ -70,7 +70,7 @@ struct BentoGrid: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                // 2x1 Span (Full width)
+                // This item occupies one LazyVGrid column; it does not span both columns.
                 BentoCard(title: "Hero", color: .blue)
                     .frame(height: 180)
                 
@@ -312,3 +312,5 @@ fun BentoCard(title: String, modifier: Modifier = Modifier) {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+On narrow screens, collapse the four-column web study to one column and reset item spans; use content-driven row heights when text grows. LazyVGrid does not implement cross-column spans by changing frame width. A full-width hero needs a separate row/container or a custom layout.

@@ -21,7 +21,9 @@ Run `longbridge financial-report --help` and `longbridge calc-index --help` to v
 
 ### Step 2 — Calculate historical FCF
 
-`FCF = Operating Cash Flow − Capital Expenditure`
+`FCFF = EBIT * (1 - tax rate) + D&A - capex outflow - change in operating working capital`
+
+Use unlevered FCFF with WACC. Reported OCF minus capex may be levered and must be reconciled for interest/tax classification; do not discount an equity cash flow at WACC. Normalize capex sign, units, fiscal periods and nonrecurring items. Do not compute CAGR across nonpositive endpoints.
 
 Extract the last 3–5 years of operating cash flow and capex from the CF statement. Compute FCF for each year and derive the compound annual growth rate (CAGR).
 
@@ -30,7 +32,7 @@ Extract the last 3–5 years of operating cash flow and capex from the CF statem
 Use a two-stage model:
 
 - **Stage 1 (years 1–5)**: Apply an analyst-estimated or CAGR-derived growth rate. Ask the user if they want a bull / base / bear case.
-- **Stage 2 (terminal)**: Apply a long-run growth rate `g` (default: GDP growth rate of the company's primary market, typically 2–4%).
+- **Stage 2 (terminal)**: Apply a long-run growth rate `g` (explicit scenario assumption consistent with cash-flow currency, nominal/real basis and mature long-run economics; require WACC > g).
 
 ### Step 4 — Estimate WACC
 
@@ -42,8 +44,8 @@ Re  = Rf + β × ERP
 | Input                     | Source                                                                            |
 | ------------------------- | --------------------------------------------------------------------------------- |
 | Beta (β)                  | `longbridge calc-index <SYMBOL> --format json`                                    |
-| Risk-free rate (Rf)       | 10-year government bond yield of primary market (US: ~4.2%, CN: ~2.3%, HK: ~4.0%) |
-| Equity risk premium (ERP) | Damodaran country ERP (US: ~4.6%, CN: ~7%, HK: ~6%)                               |
+| Risk-free rate (Rf)       | Dated risk-free benchmark consistent with cash-flow currency and duration |
+| Equity risk premium (ERP) | Dated, cited equity risk premium with country/exposure assumptions                               |
 | Debt ratio (Wd)           | From balance sheet (total debt / (total debt + market cap))                       |
 | Cost of debt (Rd)         | Interest expense / total debt from IS + BS                                        |
 | Tax rate (t)              | Effective tax rate from IS                                                        |
@@ -59,7 +61,7 @@ Common alternative: exit multiple method — apply an EV/EBITDA multiple consist
 1. Discount each projected FCF to present value at WACC.
 2. Discount terminal value to present value.
 3. Sum all PVs → Enterprise Value.
-4. Subtract net debt; add cash → Equity Value.
+4. Subtract gross debt and other senior/noncontrolling claims, add excess cash/nonoperating assets once → Equity Value. If using net debt, do not add the same cash again.
 5. Divide by diluted shares outstanding → Intrinsic Value per Share.
 
 ### Step 7 — Margin of safety

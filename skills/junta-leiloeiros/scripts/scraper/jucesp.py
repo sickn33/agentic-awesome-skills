@@ -116,7 +116,8 @@ class JucespScraper(AbstractJuntaScraper):
             headers=self.HEADERS,
             verify=should_verify_tls(),
             http2=False,          # servidor rejeita HTTP/2
-            follow_redirects=True,
+            follow_redirects=False,
+                event_hooks=self.request_hooks(),
             timeout=120.0,        # resposta do POST é ~2.3 MB
         ) as client:
             # 1. GET — obtém CSRF token e cookie de sessão

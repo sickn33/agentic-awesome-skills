@@ -25,7 +25,6 @@ Usage
     python collect_metadata.py \\
         --account  <SNOWFLAKE_ACCOUNT> \\
         --user     <SNOWFLAKE_USER> \\
-        --password <SNOWFLAKE_PASSWORD> \\
         --warehouse <SNOWFLAKE_WAREHOUSE>
 """
 
@@ -117,6 +116,8 @@ def _collect_assets(conn) -> list[dict]:
         if not chunk:
             break
         all_db_rows.extend(chunk)
+        if len(all_db_rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     databases = [row[1] for row in all_db_rows if row[1] not in _SKIP_DATABASES]
     print(f"  Found {len(databases)} database(s): {databases}")
 
@@ -125,8 +126,7 @@ def _collect_assets(conn) -> list[dict]:
         try:
             cursor.execute("SHOW SCHEMAS IN DATABASE IDENTIFIER(%s)", (db,))
         except Exception as exc:
-            print(f"  WARNING: could not list schemas in {db}: {exc}")
-            continue
+            raise RuntimeError("Collection incomplete; provider failure details redacted") from None
 
         # Column index 1 is the schema name
         all_schema_rows = []
@@ -135,6 +135,8 @@ def _collect_assets(conn) -> list[dict]:
             if not chunk:
                 break
             all_schema_rows.extend(chunk)
+            if len(all_schema_rows) > 100000:
+                raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
         schemas = [row[1] for row in all_schema_rows if row[1] not in _SKIP_SCHEMAS]
 
         # --- Collect tables, volume, and freshness via INFORMATION_SCHEMA ---
@@ -157,8 +159,7 @@ def _collect_assets(conn) -> list[dict]:
                 (f"{db}.INFORMATION_SCHEMA.TABLES",),
             )
         except Exception as exc:
-            print(f"  WARNING: could not query INFORMATION_SCHEMA.TABLES in {db}: {exc}")
-            continue
+            raise RuntimeError("Collection incomplete; provider failure details redacted") from None
 
         table_rows = []
         while True:
@@ -166,6 +167,8 @@ def _collect_assets(conn) -> list[dict]:
             if not chunk:
                 break
             table_rows.extend(chunk)
+            if len(table_rows) > 100000:
+                raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
         print(f"  {db}: {len(table_rows)} table(s)")
 
         # Build a set of schema names present in the table result to know which
@@ -188,8 +191,7 @@ def _collect_assets(conn) -> list[dict]:
                     (f"{db}.INFORMATION_SCHEMA.COLUMNS", schema),
                 )
             except Exception as exc:
-                print(f"  WARNING: could not fetch columns for {db}.{schema}: {exc}")
-                continue
+                raise RuntimeError("Collection incomplete; provider failure details redacted") from None
 
             all_col_rows = []
             while True:
@@ -197,6 +199,8 @@ def _collect_assets(conn) -> list[dict]:
                 if not chunk:
                     break
                 all_col_rows.extend(chunk)
+                if len(all_col_rows) > 100000:
+                    raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
             for col_row in all_col_rows:
                 table_name, col_name, data_type, col_comment = col_row
                 key = (schema, table_name)
@@ -222,12 +226,13 @@ def _collect_assets(conn) -> list[dict]:
                 }
 
             freshness = None
-            if last_altered is not None:
-                freshness = {
-                    "last_update_time": last_altered.isoformat() if hasattr(last_altered, "isoformat") else str(last_altered),
-                }
+            # LAST_ALTERED is metadata activity, so data freshness stays unknown.
 
             fields = columns_by_table.get((tbl_schema, tbl_name), [])
+
+            if len(assets) >= 10000:
+
+                raise ValueError("Collection exceeds 10000 assets; narrow scope")
 
             assets.append(
                 {
@@ -294,7 +299,7 @@ def main() -> None:
         help="Snowflake username (env: SNOWFLAKE_USER)",  # ← SUBSTITUTE
     )
     parser.add_argument(
-        "--password",
+        "--password", choices=[],
         default=os.environ.get("SNOWFLAKE_PASSWORD"),
         help="Snowflake password (env: SNOWFLAKE_PASSWORD)",  # ← SUBSTITUTE
     )

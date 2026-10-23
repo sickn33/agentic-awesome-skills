@@ -15,10 +15,11 @@ Usage:
 Environment Variables:
     WEAVIATE_URL: Weaviate Cloud cluster URL
     WEAVIATE_API_KEY: API key for authentication
-    + Any provider API keys (OPENAI_API_KEY, COHERE_API_KEY, etc.) - auto-detected
+    + Explicit WEAVIATE_PROVIDER_KEYS allowlist only; unrelated credentials are never forwarded
 """
 
 import json
+import math
 import sys
 
 import typer
@@ -54,6 +55,8 @@ def main(
     """Query Weaviate using Query Agent in Search mode (retrieves raw objects)."""
     collection_list = parse_collections(collections)
 
+    if not 1 <= limit <= 1000:
+        raise typer.BadParameter("limit must be 1..1000")
     try:
         with get_client() as client:
             agent = QueryAgent(client=client, collections=collection_list)
@@ -124,10 +127,10 @@ def main(
                     print("No objects found matching the query.\n")
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

@@ -14,6 +14,9 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+from safe_read import inert
+from list_entries import find_lore_root
+from datetime import date
 import os as _os
 import json as _json  # standard library; aliased to avoid clashing with future vars
 
@@ -45,9 +48,12 @@ def normalize_since(value):
     """
     if value is None or not isinstance(value, str):
         return value
-    if not _DATE_ONLY_RE.match(value):
-        return value
-    return value + "T00:00:00"
+    if _DATE_ONLY_RE.fullmatch(value):
+        date.fromisoformat(value)
+        return value + "T00:00:00+00:00"
+    from datetime import datetime
+    datetime.fromisoformat(value.replace("Z", "+00:00"))
+    return value
 
 
 def parse_arg(arg: str):
@@ -150,16 +156,22 @@ def run_git_log(project_root, since, code_file, n=None):
     Raises:
         RuntimeError: if git exits non-zero or is missing.
     """
+    candidate = Path(code_file)
+    if candidate.is_absolute() or ".." in candidate.parts or code_file.startswith(":") or "\\" in code_file:
+        raise RuntimeError("History paths must be literal repository-relative paths")
+    if len(code_file) > 4096 or any(ord(c) < 32 for c in code_file):
+        raise RuntimeError("Unsupported history path syntax")
     cmd = [
-        "git",
+        "git", "--literal-pathspecs",
         "-C", str(project_root),
-        "log",
+        "log", "--no-show-signature",
         f"--pretty=format:{FORMAT_STRING}",
     ]
     if since:
         cmd.append(f"--since={since}")
-    if n is not None:
-        cmd.append(f"-n{n}")
+    n = 200 if n is None else n
+    if not isinstance(n, int) or not 1 <= n <= 1000: raise RuntimeError("Invalid commit limit")
+    cmd.append(f"-n{n}")
     cmd.extend(["--", code_file])
 
     try:
@@ -170,6 +182,7 @@ def run_git_log(project_root, since, code_file, n=None):
             encoding="utf-8",
             errors="replace",
             check=False,
+            timeout=30,
         )
     except FileNotFoundError as exc:
         raise RuntimeError(f"git executable not found on PATH: {exc}")
@@ -191,11 +204,11 @@ def run_git_log(project_root, since, code_file, n=None):
 
 def parse_commit_line(line):
     """Parse one delimited git log line. Returns dict or None on malformed input."""
-    parts = line.split(COMMIT_DELIM)
+    parts = line.split(COMMIT_DELIM, 3)
     if len(parts) != 4:
         return None
     full_hash, author, date, subject = parts
-    if len(full_hash) < 7:
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", full_hash):
         return None
     return {
         "hash": full_hash,
@@ -259,14 +272,16 @@ def fetch_commit_body(project_root, commit_hash):
     Returns a string with the subject as the first line and the body
     (if any) following a blank line. Trailing blank lines are removed.
     """
+    if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", commit_hash):
+        raise ValueError("Expected a full commit object ID")
     cmd = [
         "git", "-C", str(project_root),
-        "show", "-s", "--format=%B", commit_hash,
+        "show", "--no-show-signature", "-s", "--format=%B", commit_hash,
     ]
     try:
         proc = subprocess.run(
             cmd, capture_output=True, text=True,
-            encoding="utf-8", errors="replace", check=False,
+            encoding="utf-8", errors="replace", check=False, timeout=30,
         )
     except FileNotFoundError:
         return ""
@@ -303,6 +318,7 @@ def render_markdown(meta, commits):
     Returns:
         Markdown string ready for stdout.
     """
+    meta, commits = inert(meta), inert(commits)
     lines = []
     title_suffix = ""
     if meta.get("_chain_entries"):
@@ -327,7 +343,7 @@ def render_markdown(meta, commits):
     since_suffix = " (entry #added date)" if meta.get("since_source") == "entry_added" else ""
     lines.append(f"> Since: {meta['since']}{since_suffix}")
     lines.append(f"> File: {meta['code_file']}")
-    lines.append(f"> Commits: {len(commits)} (showing all)")
+    lines.append(f"> Commits: {len(commits)} (at most 200 per query; verify truncation before drawing conclusions)")
     lines.append("")
 
     if not commits:
@@ -376,7 +392,7 @@ def _load_entries_via_subprocess():
     cmd = [sys.executable, str(here / "list_entries.py"), "--json"]
     try:
         proc = subprocess.run(cmd, capture_output=True, text=True,
-                              encoding="utf-8", errors="replace", check=False)
+                              encoding="utf-8", errors="replace", check=False, timeout=30)
     except FileNotFoundError as exc:
         die(ERR_NO_GIT, f"python executable not found: {exc}")
     if proc.returncode != 0:
@@ -389,12 +405,9 @@ def _load_entries_via_subprocess():
 
 def _find_lore_root_or_die():
     """Walk up from CWD to find .lore/. Die with ERR_NO_LORE if not found."""
-    p = Path(".").resolve()
-    while p != p.parent:
-        if (p / ".lore").is_dir():
-            return p
-        p = p.parent
-    die(ERR_NO_LORE, ".lore/ not found. Run 'lore init' first.")
+    root = find_lore_root(Path("."))
+    if root is not None: return root.parent
+    die(ERR_NO_LORE, ".lore/ not found within this project boundary. Run lore init explicitly if needed.")
 
 
 def _build_meta_entry(entry, code_file, since, since_source):
@@ -409,7 +422,11 @@ def _build_meta_entry(entry, code_file, since, since_source):
 
 def _resolve_scope_to_md_files(project_root, scope_name):
     """For scope form: list the (layer_file, md_path) tuples under the scope."""
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", scope_name):
+        die(ERR_BAD_SCOPE, "Scope must be a single validated directory name")
     scopes_dir = project_root / ".lore" / "scopes" / scope_name
+    if scopes_dir.is_symlink() or (project_root / ".lore" / "scopes").is_symlink():
+        die(ERR_BAD_SCOPE, "Symlinked scope refused")
     if not scopes_dir.is_dir():
         available = sorted(
             p.name for p in (project_root / ".lore" / "scopes").iterdir()
@@ -419,6 +436,7 @@ def _resolve_scope_to_md_files(project_root, scope_name):
         die(ERR_BAD_SCOPE, f"Scope '{scope_name}' not found. Available: {available_display}")
     files = []
     for md in sorted(scopes_dir.glob("*.md")):
+        if md.is_symlink(): die(ERR_BAD_SCOPE, "Symlinked memory file refused")
         files.append((md.stem, md))
     return files
 
@@ -427,7 +445,7 @@ def _is_git_repo(project_root):
     try:
         proc = subprocess.run(
             ["git", "-C", str(project_root), "rev-parse", "--git-dir"],
-            capture_output=True, text=True, check=False,
+            capture_output=True, text=True, check=False, timeout=30,
         )
     except FileNotFoundError:
         die(ERR_NO_GIT, "git executable not found on PATH.")
@@ -635,7 +653,7 @@ def main():
                 if e.get("replaced_by") else "\n   -> no successor"
             )
             out_lines.append(
-                f"{idx}. [{e['id']}] ({e['file']}) - {e['text']}{next_link}"
+                f"{idx}. [{e['id']}] ({inert(e['file'])}) - {inert(e['text'])}{next_link}"
             )
         out_lines.append("")
         for (e, e_since, e_code_file, e_since_source, e_commits) in per_entry:
@@ -714,10 +732,10 @@ def main():
                     print("")
                     continue
                 for c in commits:
-                    print(f"### {c['short']} ({c['date']}, {c['author']})")
-                    print(c["subject"])
+                    print(f"### {c['short']} ({c['date']}, {inert(c['author'])})")
+                    print(inert(c["subject"]))
                     if c.get("body"):
-                        print(f'  Body: "{c["body"]}"')
+                        print(f'  Body: "{inert(c["body"])}"')
                     if c.get("refs"):
                         print(f"  Refs: {', '.join(c['refs'])}")
                     print("")

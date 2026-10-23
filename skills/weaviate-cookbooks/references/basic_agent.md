@@ -70,8 +70,8 @@ Wraps the agent response into a class that manages conversation history and tool
 from typing import Callable, List, Tuple
 
 class RouterAgent:
-    def __init__(self, model: str, tools: List[Callable] = []):
-        self.tools: list[Callable] = tools
+    def __init__(self, model: str, tools: List[Callable] | None = None):
+        self.tools: list[Callable] = list(tools or [])
         self.model = dspy.LM(model)
         self.agent = dspy.ChainOfThought(AgentResponse)
         self.conversation_history = dspy.History(messages=[])
@@ -101,7 +101,7 @@ class RouterAgent:
             )
             if tool_function is None:
                 raise ValueError(f"Tool {result.tool} not found")
-            tool_inputs = {k: v for k, v in result.tool_inputs.items() if k != "return"}
+            tool_inputs = {k: v for k, v in (result.tool_inputs or {}).items() if k != "return"}
             tool_result = tool_function(**tool_inputs)
         else:
             tool_result = None
@@ -168,8 +168,8 @@ Modify `RouterAgent` to loop until the agent stops requesting tools:
 
 ```python
 class RouterAgent:
-    def __init__(self, model: str, tools: List[Callable] = []):
-        self.tools: list[Callable] = tools
+    def __init__(self, model: str, tools: List[Callable] | None = None):
+        self.tools: list[Callable] = list(tools or [])
         self.model = dspy.LM(model)
         self.agent = dspy.ChainOfThought(AgentResponse)
         self.followup_agent = dspy.ChainOfThought(AgentFollowup)
@@ -209,12 +209,13 @@ class RouterAgent:
             if tool_function is None:
                 raise ValueError(f"Tool {result.tool} not found")
 
-            tool_inputs = {k: v for k, v in result.tool_inputs.items() if k != "return"}
+            tool_inputs = {k: v for k, v in (result.tool_inputs or {}).items() if k != "return"}
             tool_result = tool_function(**tool_inputs)
 
             result = self.followup_agent(
                 history=self.conversation_history,
-                tool_output=tool_result,
+                user_prompt=user_prompt,
+                tool_output=str(tool_result),
                 available_tools=self.get_tools_and_descriptions(),
                 lm=self.model,
             )
@@ -266,5 +267,7 @@ Does the user need a single tool call per query, or should the agent chain multi
 
 ## Done Criteria
 
-- Create test scripts to check each function works independently with test data. Tear down tests after completion, or create a proper test suite with pytest (requires install)
+- Create test scripts to check each function works independently with test data. Retain meaningful regression tests with mocks or an explicitly authorized disposable test collection; never delete tests merely after a successful run
 - User has completed specification of the app.
+
+Tool execution in these snippets is a demonstration only: enforce an allowlist and validated argument schema plus caller permissions before calling functions. Apply timeouts, output-size bounds and a total budget; report iteration exhaustion as incomplete. Keep history per authenticated session and bounded; serialize dspy.Prediction explicitly rather than assuming mapping unpacking.

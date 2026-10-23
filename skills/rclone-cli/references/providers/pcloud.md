@@ -82,7 +82,8 @@ Note that rclone runs a webserver on your local machine to collect the
 token as returned from pCloud. This only runs from the moment it opens
 your browser to the moment you get back the verification code.  This
 is on `http://127.0.0.1:53682/` and this it may require you to unblock
-it temporarily if you are running a host firewall.
+the loopback callback temporarily in your host firewall; do not expose it
+to other machines.
 
 Once configured you can then use `rclone` like this (replace `remote` with the
 name you gave your remote):
@@ -150,8 +151,8 @@ of your pCloud drive.
 Normally you will leave this blank and rclone will determine the
 correct root to use itself.
 
-However you can set this to restrict rclone to a specific folder
-hierarchy.
+However you can set this to use a specific folder hierarchy as the starting
+point. This does not restrict the authorization of the underlying OAuth token.
 
 In order to do this you will have to find the `Folder ID` of the
 directory you wish rclone to display. This can be accomplished by executing

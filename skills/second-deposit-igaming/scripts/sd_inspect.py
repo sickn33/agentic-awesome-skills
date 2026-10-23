@@ -1,8 +1,8 @@
 """Безопасный обзор выгрузок перед сопоставлением колонок: python3 sd_inspect.py <папка или файлы>
 
-Печатает по каждому файлу колонки, их тип, долю пустых и формат. Значения показывает только для колонок
-с малым числом вариантов (статусы, способы оплаты, страны, валюты, типы операций). ID игроков, суммы
-и свободный текст не печатаются: в модель уходят названия колонок и форматы, а не данные игроков.
+Печатает названия колонок, предполагаемые типы и агрегаты без исходных значений.
+Даже агрегаты, имена файлов/листов/колонок могут быть чувствительными: проверьте вывод локально
+перед передачей модели. Малое число вариантов не доказывает анонимность.
 """
 import os
 import re
@@ -36,13 +36,8 @@ def kind_of(name, values):
             info['порядок'] = ('день первым' if first_big and not second_big else
                                'месяц первым' if second_big and not first_big else 'неоднозначно: уточните dayfirst')
         parsed = sorted(t for t in (parse_time(v) for v in vals) if t)
-        info['с'] = parsed[0].strftime('%Y-%m-%d %H:%M')
-        info['по'] = parsed[-1].strftime('%Y-%m-%d %H:%M')
-        info['пример формата'] = re.sub(r'\d', '9', sample[0])
         return 'дата', info
     idish = re.search(r'(^|[ _.\-])(id|uid|user|player|account|login|email|e-mail|phone|name|ip)([ _.\-]|$)|игрок|клиент|логин|почта|телефон', name.lower())
-    if re.search(r'bonus|game|provider|method|campaign|promo|offer|affiliate|source|бонус|игр[аы]|провайдер|метод|кампан|оффер', name.lower()):
-        idish = None  # название бонуса, игры или способа оплаты не персональные данные
     if nums / len(sample) > .95:
         if idish or (distinct > .5 * len(vals) and all(re.fullmatch(r'\d{5,}', v) for v in sample[:200])):
             return 'ID (значения скрыты)', info
@@ -51,13 +46,10 @@ def kind_of(name, values):
         amounts = [parse_amount(v) for v in sample]
         amounts = [x for x in amounts if x is not None]
         info['отрицательные'] = 'есть' if any(x < 0 for x in amounts) else 'нет'
-        if distinct <= 12:
-            info['значения'] = dict(Counter(vals).most_common(12))
         return 'число', info
     if idish:
         return 'ID или персональные данные (значения скрыты)', info
     if distinct <= MAX_CATEGORIES:
-        info['значения'] = dict(Counter(vals).most_common(MAX_CATEGORIES))
         return 'категория', info
     return 'текст (значения скрыты)', info
 
@@ -113,7 +105,7 @@ def main():
         try:
             inspect(p)
         except Exception as e:  # файл с битой структурой не должен останавливать обзор остальных
-            print(f'\n=== {p}\nне удалось прочитать: {e}')
+            print(f'\n=== {p}\nне удалось прочитать ({type(e).__name__}); проверьте файл локально')
 
 
 if __name__ == '__main__':

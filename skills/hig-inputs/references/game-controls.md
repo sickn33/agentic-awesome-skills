@@ -1,6 +1,7 @@
 ---
 title: "Game controls | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/game-controls
+---
 
 # Game controls
 
@@ -31,9 +32,9 @@ For iOS and iPadOS games, supporting touch interaction means that you can provid
 
 Placing virtual controls within reach of people’s thumbs can make your game more comfortable to play.
 
-**Make sure controls are large enough.** Make sure frequently used controls are a minimum size of 44x44 pt, and less important controls, such as menus, are a minimum size of 28x28 pt to accommodate people’s fingers.
+**Make sure controls are large enough.** Make sure frequently used controls are a minimum size of 44x44 pt, and secondary controls can be visually smaller, but preserve a comfortable expanded hit region (typically at least 44×44 pt for touch) and test spacing. A 28×28 pt drawing is not sufficient evidence of an accessible touch target.
 
-**Always include visible and tactile press states.** A virtual control feels unresponsive without a visual and physical press state. Help players understand when they successfully interact with a button by adding a visual press state effect, such as a glow, that they can see even when their finger is covering the control. Combine this press state with sound and haptics to enhance the feeling of feedback. For guidance, see [Playing haptics](https://developer.apple.com/design/human-interface-guidelines/playing-haptics).
+**Include visible press feedback and supported optional tactile feedback.** A virtual control feels unresponsive without a visual and physical press state. Help players understand when they successfully interact with a button by adding a visual press state effect, such as a glow, that they can see even when their finger is covering the control. Use sound/haptics where available and appropriate, respecting people’s settings; neither should be the sole feedback channel. For guidance, see [Playing haptics](https://developer.apple.com/design/human-interface-guidelines/playing-haptics).
 
 ![A right hand holding an iPhone in landscape orientation. The thumb is pressing down on a virtual button, and the button indicates its press state by increasing its opacity and showing a glow effect around it.](https://docs-assets.developer.apple.com/published/7e633e5b94444a3590ce03fee0d5c3df/game-controls-press-state%402x.png)
 

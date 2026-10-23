@@ -1,5 +1,8 @@
 # Database Patterns - Prisma Best Practices
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to database access patterns using Prisma in backend microservices.
 
 ## Table of Contents
@@ -75,6 +78,8 @@ export class UserRepository {
 ```
 
 ---
+
+Always scope queries to authorized tenant/owner and use explicit response projections. A preflight uniqueness check is advisory: enforce a unique constraint and translate the write-time error. Transactions need the same tx client throughout; do not perform network side effects inside a long-running database transaction. Use an outbox for reliable delivery.
 
 ## Transaction Patterns
 
@@ -169,7 +174,7 @@ for (const user of users) {
 ### Solution: Use include or Batching
 
 ```typescript
-// ✅ Single query with include
+// ✅ Fetch relations without an application-level N+1 loop; SQL query count depends on load strategy
 const users = await PrismaService.main.user.findMany({
     include: { profile: true },
 });

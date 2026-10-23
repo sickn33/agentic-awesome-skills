@@ -13,7 +13,7 @@ license_source: https://github.com/chaunsin/agent-skills/blob/master/LICENSE
 # redis-cli — Redis Command Line Interface
 ## When to Use
 
-Use this skill when you need redis command-line interface (redis-cli) reference and usage guide. Use this skill whenever the user mentions redis-cli, Redis CLI, or any task involving querying, inspecting, debugging, or managing Redis from the command line. Triggers on key/value reads and writes, SCAN or keyspace...
+Use this skill when you need redis command-line interface (redis-cli) reference and usage guide. Use this skill whenever the user mentions redis-cli, Redis CLI, or any task involving querying, inspecting, debugging, or managing Redis from the command line. Use it for scoped key/value operations, keyspace inspection and Redis administration.
 
 
 redis-cli is the primary command-line tool for interacting with Redis. It supports two modes: **command-line execution** (run a command and exit) and **interactive mode** (a REPL with tab completion, history, and hints). It also provides special modes for monitoring, latency analysis, key space scanning, and data import/export.
@@ -57,7 +57,7 @@ docker run -it --rm redis redis-cli -h <host> -p <port> PING
 - **`KEYS *` blocks the server** on large databases — always use `SCAN` in production code.
 - **`MONITOR` logs all commands** including sensitive data — use cautiously, and never for extended periods on production servers.
 - **`FLUSHALL` / `FLUSHDB` are irreversible** — verify target database with `CLIENT LIST` or `INFO keyspace` first.
-- **`--rdb` transfer during write operations** may produce inconsistent snapshots on busy servers.
+- **`--rdb` produces a point-in-time snapshot**, not a continuous backup. Concurrent writes after the snapshot are absent; check exit status and test restore compatibility.
 
 ## Quick Reference
 
@@ -69,10 +69,10 @@ redis-cli
 redis-cli -h redis15.localnet.org -p 6390 PING
 
 # With password (prefer REDISCLI_AUTH env var for security)
-redis-cli -a myUnguessablePazzzzzword123 PING
+redis-cli --askpass PING
 
 # URI connection
-redis-cli -u redis://user:password@host:port/dbnum PING
+redis-cli --user username --askpass -h redis.example.com PING
 
 # TLS
 redis-cli --tls --cacert /path/to/ca.crt -h redis.example.com PING
@@ -106,7 +106,7 @@ The prompt shows `host:port[db]`. Use `CONNECT <host> <port>` to switch instance
 
 ### Data Query Cheat Sheet
 
-**String operations** (O(1)):
+**String operations** (complexity depends on the command and bytes processed):
 ```
 GET key                        # Get value
 SET key value [NX|XX] [EX sec|PX ms|KEEPTTL]  # Set with conditions/TTL
@@ -171,9 +171,9 @@ DBSIZE                         # Total keys in current database                 
 RANDOMKEY                      # Return a random key                            O(1)
 ```
 
-### Key Scanning (Production-Safe)
+### Incremental Key Scanning
 
-SCAN-based iteration never blocks the server, unlike `KEYS *` which should be avoided in production.
+SCAN divides work into smaller calls but each call still uses server CPU; tune COUNT and throttle, unlike `KEYS *` which should be avoided in production.
 
 ```bash
 # redis-cli built-in scan mode
@@ -260,8 +260,8 @@ redis-cli -r -1 -i 1 INFO | grep rss_human    # infinite, every 1s
 ```bash
 # ACL management
 redis-cli ACL LIST                                    # List all users
-redis-cli ACL SETUSER admin on >pwd ~* +@all          # Create admin user
-redis-cli ACL SETUSER readonly on >pwd ~* +@read      # Create read-only user
+redis-cli ACL SETUSER admin on '>example-only-password' '~*' '+@all'          # Create admin user
+redis-cli ACL SETUSER readonly on '>example-only-password' '~*' '+@read'      # Create read-only user
 redis-cli ACL DELUSER username                        # Delete user
 redis-cli ACL DRYRUN username GET key                 # Test user permission
 redis-cli ACL GENPASS                                 # Generate random password
@@ -365,13 +365,13 @@ redis-cli --latency-history -i 5
 redis-cli --scan --pattern 'session:*' | wc -l
 
 # Find and inspect hash keys
-redis-cli --scan --pattern 'user:*' | while read key; do
+redis-cli --scan --pattern 'user:*' | while IFS= read -r key; do
   echo "=== $key ==="
   redis-cli HGETALL "$key"
 done
 
 # Check TTL of matching keys
-redis-cli --scan --pattern 'cache:*' | while read key; do
+redis-cli --scan --pattern 'cache:*' | while IFS= read -r key; do
   redis-cli TTL "$key"
 done
 ```
@@ -390,3 +390,11 @@ done
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Operational boundaries
+
+Confirm the authorized instance, database and key scope before writes, ACL/config changes, replication, failover or lifecycle commands. INFO keyspace and CLIENT LIST describe state but do not authenticate that the intended target was selected. Use a disposable database for examples; copying this guide does not authorize destructive operations.
+
+Shell ACL rules need quoting (`>`, `<`, `~`, `&`, parentheses and wildcards have shell meanings). Example passwords are syntax placeholders; do not use them or pass actual ACL secrets on a shared command line. Use a protected provisioning channel and least-privilege ACLs. Authentication environment variables may still be readable by other local processes; do not log them.
+
+Newline-delimited `--scan` output and shell read loops are only suitable for known text-only key names without newlines. SCAN can return duplicates and is not a snapshot, so line counts are approximate and bulk changes require a binary-safe client with deduplication and bounded batches. Cluster scans must explicitly enumerate primary nodes; `-c` only follows redirects and does not scan every node.

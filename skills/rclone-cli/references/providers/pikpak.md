@@ -38,7 +38,7 @@ Type of storage to configure.
 Choose a number from below, or type in your own value.
 XX / PikPak
    \ (pikpak)
-Storage> XX
+Storage> pikpak
 
 Option user.
 Pikpak username.
@@ -340,13 +340,15 @@ This command requests decompress of file/files in a folder.
 Usage examples:
 
 ```console
-rclone backend decompress pikpak:dirpath {filename} -o password=password
+rclone backend decompress pikpak:dirpath {filename}
 rclone backend decompress pikpak:dirpath {filename} -o delete-src-file
 ```
 
 An optional argument 'filename' can be specified for a file located in
 'pikpak:dirpath'. You may want to pass '-o password=password' for a
-password-protected files. Also, pass '-o delete-src-file' to delete
+password-protected files, but command-line passwords can appear in process
+arguments and shell history. Use only a protected input workflow for secrets.
+Also, pass '-o delete-src-file' to delete
 source files after decompression finished.
 
 Result:

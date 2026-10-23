@@ -1,5 +1,7 @@
 # longbridge-coverage-initiation
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Generates a structured initiating-coverage report framework for a single listed company, following a five-step institutional workflow.
 
 ## Workflow
@@ -73,4 +75,4 @@ Structure the output as a formatted research report with clearly labelled sectio
 | `command not found: longbridge`   | 回退到 MCP；否则提示安装 longbridge-terminal | 回退到 MCP；否則提示安裝 / Fall back to MCP; prompt to install longbridge-terminal |
 | `not logged in` / `unauthorized`  | 请运行 `longbridge auth login`               | 請運行 `longbridge auth login` / Run `longbridge auth login`                       |
 | `company` subcommand missing data | 从其他子命令补充可用信息，标注缺失字段       | 從其他命令補充，標注缺失 / Supplement from other commands, flag missing fields     |
-| Other stderr                      | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface verbatim, no silent retry                               |
+| Other stderr                      | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface a redacted error summary, no silent retry                               |

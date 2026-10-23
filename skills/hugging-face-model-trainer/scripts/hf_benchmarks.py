@@ -123,7 +123,14 @@ def auth_headers() -> dict[str, str]:
     return {"Authorization": f"Bearer {token}"} if token else {}
 
 
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 def http_get_json(path: str, params: dict[str, Any] | None = None) -> Any:
+    if not path.startswith("/api/") or "?" in path or "#" in path:
+        raise HfApiError("unexpected API path")
     url = f"{BASE_URL}{path}"
     if params:
         pairs: list[tuple[str, str]] = []
@@ -140,17 +147,19 @@ def http_get_json(path: str, params: dict[str, Any] | None = None) -> Any:
 
     req = urllib.request.Request(url, headers=auth_headers())
     try:
-        with urllib.request.urlopen(req, timeout=DEFAULT_TIMEOUT) as resp:
-            return json.loads(resp.read().decode("utf-8"))
+        with urllib.request.build_opener(NoRedirect()).open(req, timeout=DEFAULT_TIMEOUT) as resp:
+            raw = resp.read(2 * 1024 * 1024 + 1)
+            if len(raw) > 2 * 1024 * 1024:
+                raise HfApiError("API response exceeds 2 MiB")
+            return json.loads(raw.decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        body = exc.read().decode("utf-8", errors="replace")
-        raise HfApiError(f"{exc.code} {exc.reason} for {url}: {body[:500]}") from exc
-    except urllib.error.URLError as exc:
-        raise HfApiError(f"Request failed for {url}: {exc}") from exc
+        raise HfApiError("API HTTP failure: " + str(exc.code)) from None
+    except urllib.error.URLError:
+        raise HfApiError("API connection failed") from None
 
 
 def shorten(text: str, width: int) -> str:
-    text = " ".join((text or "").split())
+    text = " ".join("".join(c for c in (text or "") if c.isprintable() or c.isspace()).split())
     if len(text) <= width:
         return text
     return text[: max(0, width - 1)] + "…"
@@ -169,6 +178,8 @@ def first_text(value: Any) -> str:
 
 
 def benchmark_catalog(limit: int = 500) -> list[dict[str, Any]]:
+    if not 1 <= limit <= 500:
+        raise ValueError("catalog limit must be 1..500; this is a bounded sample, not a complete catalog")
     data = http_get_json(
         "/api/datasets",
         params={"filter": "benchmark:official", "limit": limit, "full": "true"},
@@ -365,10 +376,12 @@ def search_benchmarks(
 
 
 def parse_repo_id(repo_id: str) -> tuple[str, str]:
-    if "/" not in repo_id:
-        raise ValueError(f"Expected <namespace>/<repo>, got: {repo_id}")
-    namespace, repo = repo_id.split("/", 1)
-    return namespace, repo
+    if not isinstance(repo_id, str) or not re.fullmatch(
+            r"[A-Za-z0-9][A-Za-z0-9_.-]{0,95}/[A-Za-z0-9][A-Za-z0-9_.-]{0,95}", repo_id):
+        raise ValueError("expected namespace/repository")
+    if ".." in repo_id or "--" in repo_id:
+        raise ValueError("invalid repository component")
+    return tuple(repo_id.split("/"))
 
 
 def get_leaderboard(repo_id: str, task_id: str | None = None) -> list[dict[str, Any]]:
@@ -404,24 +417,22 @@ def get_leaderboard(repo_id: str, task_id: str | None = None) -> list[dict[str, 
 def read_repo_ids_from_stdin() -> list[str]:
     if sys.stdin.isatty():
         return []
-
-    repo_ids: list[str] = []
-    for raw_line in sys.stdin:
-        line = raw_line.strip()
+    text = sys.stdin.read(65537)
+    if len(text) > 65536:
+        raise ValueError("stdin exceeds 64 KiB")
+    ids = []
+    for line in text.splitlines():
+        line = line.strip()
         if not line:
             continue
         if line.startswith("{"):
-            try:
-                obj = json.loads(line)
-            except json.JSONDecodeError:
-                continue
-            candidate = obj.get("dataset_id") or obj.get("id")
-            if isinstance(candidate, str) and "/" in candidate:
-                repo_ids.append(candidate)
-            continue
-        if "/" in line:
-            repo_ids.append(line)
-    return repo_ids
+            obj = json.loads(line)
+            line = obj.get("dataset_id") or obj.get("id")
+        parse_repo_id(line)
+        ids.append(line)
+        if len(ids) > 20:
+            raise ValueError("at most 20 repository IDs per request")
+    return ids
 
 
 def print_json(data: Any) -> None:
@@ -467,9 +478,9 @@ def print_leaderboard_table(rows: list[dict[str, Any]]) -> None:
     for row in rows:
         values = [
             shorten(str(row.get("dataset_id") or ""), widths[0]),
-            str(row.get("rank") or ""),
+            str(row.get("rank") if row.get("rank") is not None else ""),
             shorten(str(row.get("model_id") or ""), widths[2]),
-            shorten(str(row.get("value") or ""), widths[3]),
+            shorten(str(row.get("value") if row.get("value") is not None else ""), widths[3]),
             str(row.get("verified")),
             shorten(str(row.get("source_name") or ""), widths[5]),
         ]
@@ -615,6 +626,10 @@ def run_leaderboard(args: argparse.Namespace) -> int:
             deduped.append(repo_id)
             seen.add(repo_id)
     repo_ids = deduped
+    if len(repo_ids) > 20:
+        raise ValueError("at most 20 repository IDs per request")
+    for repo_id in repo_ids:
+        parse_repo_id(repo_id)
 
     if not repo_ids:
         print("Error: provide dataset ids or use --stdin.", file=sys.stderr)

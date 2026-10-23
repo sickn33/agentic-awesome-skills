@@ -52,8 +52,8 @@ than a missing entry. Instead:
 
 ## 4. First-run personalization → memory
 
-The first time this skill runs for a user, capture their **actual setup** into memory so later runs are
-pre-parameterized instead of re-asked:
+When the user explicitly requests saving preferences and the host permits it, capture the approved
+parts of their **actual setup** into memory for later runs:
 
 - which platform(s) they rent, and the per-platform §8 SCRIPT OVERRIDES that worked (paths, proxy hook, cred location);
 - the project repo path / training entrypoint / config layout;

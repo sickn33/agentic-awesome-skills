@@ -2,7 +2,16 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing returns-related communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and stage. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and stage. Select the template matching your scenario, substitute variables and prepare a draft for the authorised sender.
+
+Templates are drafts. Before use verify rights, approved policy, deadlines,
+actual transaction status, refund amount and permitted fees. Resolve all variables
+and conditional blocks manually unless a compatible renderer is configured.
+Use synthetic examples and minimum necessary customer data. Do not claim a refund
+has been processed until the payment system confirms initiation; distinguish that
+from settlement. Sending any message requires task-specific authorisation.
+Generic shipping instructions below exclude hazardous/regulated goods; use the
+trained carrier/recall plan for those cases.
 
 ---
 
@@ -88,7 +97,7 @@ Your return for **{{product_name}}** (Order {{order_number}}) has been approved.
 
 **How to Return Your Item:**
 
-1. Pack the product in its original packaging with all accessories included.
+1. Follow the approved product-specific packing instructions: {{packing_instructions}}. Original packaging is required only where applicable; contact us if unavailable.
 2. Print the prepaid return label attached to this email.
 3. Attach the label to the outside of the package.
 4. Drop off the package at any {{carrier_name}} location.
@@ -157,11 +166,11 @@ Sincerely,
 ## 3. Fraud Investigation Hold Notice
 
 ### When to Use
-- A return has been flagged by the fraud scoring system (score ≥ 65) and requires review before the refund is processed.
-- The customer must be informed of the delay without revealing the fraud investigation.
+- An evidence-based review is authorised under applicable policy and law; record a review deadline that preserves any statutory refund deadline.
+- Inform the customer truthfully of the review and next update, without alleging unproven wrongdoing.
 
 ### Tone Guidance
-Neutral and professional. This is a "processing delay" notification. NEVER use the words "fraud," "suspicious," "investigation," or "flagged." The customer may be entirely legitimate — the hold is precautionary.
+Neutral and professional. Do not allege fraud without evidence or invent a quality-review explanation. Use the approved factual explanation and offer escalation; a review is not proof of misconduct.
 
 ### What NOT to Say
 - Never say "your return has been flagged."
@@ -179,7 +188,7 @@ Hi {{customer_name}},
 
 Thank you for your return of **{{product_name}}** (RMA# {{rma_number}}).
 
-We've received your returned item and it is currently undergoing our quality review process. This review ensures we accurately assess the product's condition and process your refund correctly.
+{{verified_receipt_status}}. {{approved_factual_review_explanation}}. You may request a review of this decision using {{appeal_contact}}.
 
 **We expect to complete this review within {{review_days}} business days.**
 
@@ -208,7 +217,7 @@ Thank you for your patience,
 | Review Deadline | {{review_deadline}} |
 | Assigned To | {{reviewer_name}} |
 
-**Review Instructions:** Complete inspection with photo documentation. Verify serial number against order record. Check product weight against expected weight. Compare physical product against product listing. Document findings in the fraud case management system. Recommend: process refund / partial refund / deny with escalation.
+**Review Instructions:** Preserve legal deadlines and an appeal route; a score alone does not authorise a hold or denial. Complete inspection with photo documentation. Verify serial number against order record. Check product weight against expected weight. Compare physical product against product listing. Document findings in the fraud case management system. Recommend: process refund / partial refund / deny with escalation.
 
 ---
 
@@ -252,7 +261,7 @@ Please find below our return-to-vendor claim for defective merchandise received 
 
 **Defect Rate Analysis:**
 - SKU {{sku_1}}: {{defect_rate_1}}% return rate ({{period}}), versus category baseline of {{baseline_rate}}%
-- Excess returns above baseline: {{excess_units}} units
+- Returns above the comparison baseline: {{excess_units}} units (descriptive difference; not proof of vendor-caused defects)
 
 Per Section {{agreement_section}} of our Vendor Agreement dated {{agreement_date}}, defective merchandise exceeding the {{defect_threshold}}% defect rate threshold is eligible for full credit including inbound freight and return processing costs.
 
@@ -335,7 +344,7 @@ Here's a breakdown:
 
 **Why a restocking fee is applied:**
 
-Our return policy includes a {{restocking_fee_pct}}% restocking fee for opened {{product_category}} products. This fee covers the cost of inspecting, testing, and repackaging the product so it can be offered to the next customer at a reduced "open box" price. Once an item has been opened and used, it can no longer be sold as new, and the restocking fee helps offset this value difference.
+Under the applicable, verified policy and legal basis {{fee_basis}}, a {{restocking_fee_pct}}% restocking fee applies to this return because {{verified_condition_reason}}. This fee covers the cost of inspecting, testing, and repackaging the product so it can be offered to the next customer at a reduced "open box" price. Once an item has been opened and used, it can no longer be sold as new, and the restocking fee helps offset this value difference.
 
 **Please note:** Restocking fees are waived for defective products and fulfilment errors. If you believe your product was defective, please let us know and we'll review — if a defect is confirmed, we'll refund the restocking fee.
 

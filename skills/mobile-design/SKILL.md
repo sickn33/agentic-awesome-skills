@@ -1,6 +1,6 @@
 ---
 name: mobile-design
-description: "(Mobile-First · Touch-First · Platform-Respectful)"
+description: "Design and review iOS, Android, React Native or Flutter interfaces for touch, accessibility, navigation, offline behavior and measured performance. Use for mobile app UI work; not a mobile compliance certification."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -17,71 +17,34 @@ This skill exists to **prevent desktop-thinking, AI-defaults, and unsafe assumpt
 
 ---
 
-## 1. Mobile Feasibility & Risk Index (MFRI)
+## 1. Scope and risk
 
-Before designing or implementing **any mobile feature or screen**, assess feasibility.
+Use the existing project/platform requirements and preserve its conventions.
+Ask only for missing information that changes the implementation. Do not require
+an interview or framework switch for a targeted fix. The former MFRI score was an
+unvalidated heuristic with inconsistent dimensions/range; it is not a safety or
+release gate. Record concrete interaction, data, accessibility and performance
+risks instead.
 
-### MFRI Dimensions (1–5)
+## 2. Choose the relevant checks
 
-| Dimension                  | Question                                                          |
-| -------------------------- | ----------------------------------------------------------------- |
-| **Platform Clarity**       | Is the target platform (iOS / Android / both) explicitly defined? |
-| **Interaction Complexity** | How complex are gestures, flows, or navigation?                   |
-| **Performance Risk**       | Does this involve lists, animations, heavy state, or media?       |
-| **Offline Dependence**     | Does the feature break or degrade without network?                |
-| **Accessibility Risk**     | Does this impact motor, visual, or cognitive accessibility?       |
-
-### Score Formula
-
-```
-MFRI = (Platform Clarity + Accessibility Readiness)
-       − (Interaction Complexity + Performance Risk + Offline Dependence)
-```
-
-**Range:** `-10 → +10`
-
-### Interpretation
-
-| MFRI     | Meaning   | Required Action                       |
-| -------- | --------- | ------------------------------------- |
-| **6–10** | Safe      | Proceed normally                      |
-| **3–5**  | Moderate  | Add performance + UX validation       |
-| **0–2**  | Risky     | Simplify interactions or architecture |
-| **< 0**  | Dangerous | Redesign before implementation        |
-
----
-
-## 2. Mandatory Thinking Before Any Work
-
-### ⛔ STOP: Ask Before Assuming (Required)
-
-If **any of the following are not explicitly stated**, you MUST ask before proceeding:
-
-| Aspect     | Question                                   | Why                                      |
-| ---------- | ------------------------------------------ | ---------------------------------------- |
-| Platform   | iOS, Android, or both?                     | Affects navigation, gestures, typography |
-| Framework  | React Native, Flutter, or native?          | Determines performance and patterns      |
-| Navigation | Tabs, stack, drawer?                       | Core UX architecture                     |
-| Offline    | Must it work offline?                      | Data & sync strategy                     |
-| Devices    | Phone only or tablet too?                  | Layout & density rules                   |
-| Audience   | Consumer, enterprise, accessibility needs? | Touch & readability                      |
-
-🚫 **Never default to your favorite stack or pattern.**
-
----
+For a new app, establish platform, framework, audience, device classes, navigation,
+offline needs and actual output. For existing work, reuse that context. Read only
+the reference material needed for the changed behavior. User scope and repository
+instructions take precedence over this skill's suggested ceremony.
 
 ## 3. Mandatory Reference Reading (Enforced)
 
-### Universal (Always Read First)
+### Reference map (read what the task needs)
 
 | File                          | Purpose                            | Status            |
 | ----------------------------- | ---------------------------------- | ----------------- |
-| **mobile-design-thinking.md** | Anti-memorization, context-forcing | 🔴 REQUIRED FIRST |
-| **touch-psychology.md**       | Fitts’ Law, thumb zones, gestures  | 🔴 REQUIRED       |
-| **mobile-performance.md**     | 60fps, memory, battery             | 🔴 REQUIRED       |
-| **mobile-backend.md**         | Offline sync, push, APIs           | 🔴 REQUIRED       |
-| **mobile-testing.md**         | Device & E2E testing               | 🔴 REQUIRED       |
-| **mobile-debugging.md**       | Native vs JS debugging             | 🔴 REQUIRED       |
+| **mobile-design-thinking.md** | Anti-memorization, context-forcing | Context reference |
+| **touch-psychology.md**       | Fitts’ Law, thumb zones, gestures  | Task-dependent       |
+| **mobile-performance.md**     | 60fps, memory, battery             | Task-dependent       |
+| **mobile-backend.md**         | Offline sync, push, APIs           | Task-dependent       |
+| **mobile-testing.md**         | Device & E2E testing               | Task-dependent       |
+| **mobile-debugging.md**       | Native vs JS debugging             | Task-dependent       |
 
 ### Platform-Specific (Conditional)
 
@@ -91,7 +54,7 @@ If **any of the following are not explicitly stated**, you MUST ask before proce
 | Android        | platform-android.md |
 | Cross-platform | BOTH above          |
 
-> ❌ If you haven’t read the platform file, you are not allowed to design UI.
+Read the relevant platform guidance before changing platform-specific behavior.
 
 ---
 
@@ -102,11 +65,11 @@ If **any of the following are not explicitly stated**, you MUST ask before proce
 | ❌ Never                   | Why                  | ✅ Always                                |
 | ------------------------- | -------------------- | --------------------------------------- |
 | ScrollView for long lists | Memory explosion     | FlatList / FlashList / ListView.builder |
-| Inline renderItem         | Re-renders all rows  | useCallback + memo                      |
+| Unmeasured row churn | May cause avoidable work | Profile identity/state updates; memoize only where useful |
 | Index as key              | Reorder bugs         | Stable ID                               |
 | JS-thread animations      | Jank                 | Native driver / GPU                     |
 | console.log in prod       | JS thread block      | Strip logs                              |
-| No memoization            | Battery + perf drain | React.memo / const widgets              |
+| Blanket memoization claims | Can add complexity without benefit | Profile and apply targeted optimization |
 
 ---
 
@@ -114,7 +77,7 @@ If **any of the following are not explicitly stated**, you MUST ask before proce
 
 | ❌ Never               | Why                  | ✅ Always          |
 | --------------------- | -------------------- | ----------------- |
-| Touch <44–48px        | Miss taps            | Min touch target  |
+| Undersized hit area | Miss taps | Use platform logical units: typically 44pt iOS / 48dp Android |
 | Gesture-only action   | Excludes users       | Button fallback   |
 | No loading state      | Feels broken         | Explicit feedback |
 | No error recovery     | Dead end             | Retry + message   |
@@ -127,8 +90,8 @@ If **any of the following are not explicitly stated**, you MUST ask before proce
 | ❌ Never                | Why                | ✅ Always               |
 | ---------------------- | ------------------ | ---------------------- |
 | Tokens in AsyncStorage | Easily stolen      | SecureStore / Keychain |
-| Hardcoded secrets      | Reverse engineered | Env + secure storage   |
-| No SSL pinning         | MITM risk          | Cert pinning           |
+| Embedded app secrets | Can be extracted | Keep server secrets on server; secure per-user credentials |
+| Disabled TLS verification | MITM risk | Valid platform TLS; pinning only for a justified managed threat model |
 | Log sensitive data     | PII leakage        | Never log secrets      |
 
 ---
@@ -175,7 +138,7 @@ Error semantics                Pickers / dialogs
 
 ## 7. Performance Doctrine
 
-### React Native (Required Pattern)
+### React Native (fixed-height illustrative pattern)
 
 ```ts
 const Row = React.memo(({ item }) => (
@@ -199,7 +162,7 @@ const renderItem = useCallback(
 />
 ```
 
-### Flutter (Required Pattern)
+### Flutter (illustrative static widget)
 
 ```dart
 class Item extends StatelessWidget {
@@ -217,56 +180,32 @@ class Item extends StatelessWidget {
 
 ---
 
-## 8. Mandatory Mobile Checkpoint
+## 8. Implementation evidence
 
-Before writing **any code**, you must complete this:
+State the target platform, changed behavior and checks actually performed. Profile
+representative devices/data; a static pattern scan cannot measure touch targets,
+contrast, frame rate, battery, platform navigation or secure storage behavior.
 
-```
-🧠 MOBILE CHECKPOINT
+## 9. Framework choice
 
-Platform:     ___________
-Framework:    ___________
-Files Read:   ___________
-
-3 Principles I Will Apply:
-1.
-2.
-3.
-
-Anti-Patterns I Will Avoid:
-1.
-2.
-```
-
-❌ Cannot complete → go back and read.
-
----
-
-## 9. Framework Decision Tree (Canonical)
-
-```
-Need OTA + web team → React Native + Expo
-High-perf UI → Flutter
-iOS only → SwiftUI
-Android only → Compose
-```
-
-No debate without justification.
-
----
+Preserve an existing stack unless a change is requested. For new work compare
+team experience, native integrations, accessibility, deployment policies and
+measured workload constraints. Expo OTA is bounded by runtime compatibility and
+store policies; it does not authorize bypassing review or delivering arbitrary
+native code. No framework is universally fastest or smallest.
 
 ## 10. Release Readiness Checklist
 
 ### Before Shipping
 
-* [ ] Touch targets ≥ 44–48px
+* [ ] Platform hit targets checked in logical units
 * [ ] Offline handled
 * [ ] Secure storage used
 * [ ] Lists optimized
 * [ ] Logs stripped
 * [ ] Tested on low-end devices
 * [ ] Accessibility labels present
-* [ ] MFRI ≥ 3
+* [ ] Concrete risks and any unavailable checks documented
 
 ---
 
@@ -292,3 +231,17 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Audit helper and limits
+
+Run `python scripts/mobile_audit.py . --json` from the intended project directory.
+The helper is read-only, bounded and advisory. It never imports project code and
+never declares compliance; `compliant` is null. Exit 2 means incomplete inspection
+or no detected mobile source. Source-pattern hints can match comments or miss
+behavior spread across files. Validate findings before editing. No simulator,
+real-device, screen-reader or GPU run was performed in this catalog review.
+
+Use [touch guidance](touch-psychology.md), [typography](mobile-typography.md),
+[color](mobile-color-system.md), [navigation](mobile-navigation.md) and
+[decisions](decision-trees.md) for focused checks. Code blocks are version-sensitive
+fragments, not certified complete apps; verify current APIs before execution.

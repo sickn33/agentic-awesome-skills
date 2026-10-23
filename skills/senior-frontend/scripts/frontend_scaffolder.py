@@ -857,10 +857,14 @@ def scaffold_project(
     features = features or []
     if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name) or len(name) > 64:
         return {"error": "Project name must be 1-64 lowercase letters, digits, or hyphen-separated words"}
-    output_dir = output_dir.resolve()
     if output_dir.is_symlink():
         return {"error": "Output directory must not be a symbolic link"}
+    output_dir = output_dir.resolve()
     project_path = output_dir / name
+    if project_path.is_symlink():
+        return {"error": "Project path must not be a symbolic link"}
+    if features:
+        return {"error": "Optional feature files are unimplemented placeholders in this snapshot; implement them explicitly before generating a project."}
 
     if project_path.exists() and not dry_run:
         return {"error": f"Directory already exists: {project_path}"}
@@ -873,7 +877,7 @@ def scaffold_project(
 
     # Create project directory
     if not dry_run:
-        project_path.mkdir(parents=True, exist_ok=True)
+        project_path.mkdir(parents=True, exist_ok=False)
 
     # Generate base structure
     created_files.extend(
@@ -1018,6 +1022,8 @@ def main():
         print(json.dumps(result, indent=2))
     else:
         print_result(result)
+    if "error" in result:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

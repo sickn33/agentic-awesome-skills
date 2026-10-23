@@ -17,10 +17,14 @@ Usage:
 Environment Variables:
     WEAVIATE_URL: Weaviate Cloud cluster URL
     WEAVIATE_API_KEY: API key for authentication
-    + Any provider API keys (OPENAI_API_KEY, COHERE_API_KEY, etc.) - auto-detected
+    + Explicit WEAVIATE_PROVIDER_KEYS allowlist only; unrelated credentials are never forwarded
 """
 
 import base64
+import math
+import os
+import stat
+from datetime import datetime
 import csv
 import itertools
 import json
@@ -46,6 +50,42 @@ from weaviate_conn import get_client
 _KEEP_AS_STRING = {DataType.TEXT, DataType.UUID, DataType.BLOB}
 
 app = typer.Typer()
+
+
+MAX_INPUT_BYTES = 50 * 1024 * 1024
+MAX_OBJECTS = 10000
+
+
+def check_input(path):
+    if path.is_symlink() or any(parent.is_symlink() for parent in path.absolute().parents):
+        raise ValueError("input symlinks are not supported")
+    st = path.stat()
+    if not stat.S_ISREG(st.st_mode) or st.st_size > MAX_INPUT_BYTES:
+        raise ValueError("input must be a regular file of at most 50 MiB")
+
+
+def strict_json(text):
+    def pairs(values):
+        result = {}
+        for key, value in values:
+            if key in result:
+                raise ValueError("duplicate JSON key")
+            result[key] = value
+        return result
+    return json.loads(text, object_pairs_hook=pairs,
+                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError("nonfinite JSON number")))
+
+
+def mapped_object(obj, mapping):
+    if not isinstance(obj, dict):
+        raise ValueError("each source record must be an object")
+    result = {}
+    for key, value in obj.items():
+        target = mapping.get(key, key) if mapping else key
+        if target in result:
+            raise ValueError("mapping would overwrite another field")
+        result[target] = value
+    return result
 
 
 def detect_file_format(file_path: Path) -> str:
@@ -93,6 +133,7 @@ def read_csv(
     Yields:
         Row dictionaries with data
     """
+    check_input(file_path)
     with open(file_path, "r", encoding="utf-8") as f:
         # Read a sample to detect the CSV dialect
         sample = f.read(8192)
@@ -126,11 +167,12 @@ def read_csv(
                     file=sys.stderr,
                 )
 
+        if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames) or any(not name for name in reader.fieldnames):
+            raise ValueError("CSV needs distinct nonempty header fields")
         for row in reader:
-            # Apply mapping if provided
-            if mapping:
-                row = {mapping.get(k, k): v for k, v in row.items()}
-            yield row
+            if None in row or any(value is None for value in row.values()):
+                raise ValueError("CSV row does not match the header width")
+            yield mapped_object(row, mapping)
 
 
 def read_json(
@@ -149,19 +191,18 @@ def read_json(
     Raises:
         ValueError: If JSON is not an array
     """
+    check_input(file_path)
     with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+        data = strict_json(f.read())
 
     if not isinstance(data, list):
         raise ValueError(
             f"JSON file must contain an array of objects, got {type(data).__name__}"
         )
 
-    # Apply mapping if provided
-    if mapping:
-        data = [{mapping.get(k, k): v for k, v in obj.items()} for obj in data]
-
-    return data
+    if len(data) > MAX_OBJECTS:
+        raise ValueError("JSON exceeds 10000 records")
+    return [mapped_object(obj, mapping) for obj in data]
 
 
 def read_jsonl(
@@ -179,17 +220,15 @@ def read_jsonl(
     Yields:
         Object dictionaries with data
     """
+    check_input(file_path)
     with open(file_path, "r", encoding="utf-8") as f:
         for line_num, line in enumerate(f, 1):
             line = line.strip()
             if not line:
                 continue
             try:
-                obj = json.loads(line)
-                # Apply mapping if provided
-                if mapping:
-                    obj = {mapping.get(k, k): v for k, v in obj.items()}
-                yield obj
+                obj = strict_json(line)
+                yield mapped_object(obj, mapping)
             except json.JSONDecodeError as e:
                 raise ValueError(f"Invalid JSON on line {line_num}: {e}")
 
@@ -214,30 +253,24 @@ def read_pdf(
     Raises:
         RuntimeError: If poppler is not installed
     """
-    try:
-        from pdf2image import convert_from_path
-
-        pages = convert_from_path(str(file_path))
-    except Exception as e:
-        if "poppler" in str(e).lower() or "pdftoppm" in str(e).lower():
-            raise RuntimeError(
-                f"Poppler is not installed or not in PATH. "
-                f"Install it with:\n"
-                f"  macOS:         brew install poppler\n"
-                f"  Ubuntu/Debian: sudo apt-get install poppler-utils\n"
-                f"Original error: {e}"
-            )
-        raise
-
-    for page_num, page_img in enumerate(pages, 1):
-        buffer = BytesIO()
-        page_img.save(buffer, format="JPEG")
-        img_base64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
-        yield {
-            image_field: img_base64,
-            "page_number": page_num,
-            "file_name": file_path.stem,
-        }
+    check_input(file_path)
+    from pdf2image import convert_from_path, pdfinfo_from_path
+    count = pdfinfo_from_path(str(file_path), timeout=30).get("Pages")
+    if not isinstance(count, int) or not 1 <= count <= 100:
+        raise ValueError("PDF must contain 1..100 pages")
+    for page_num in range(1, count + 1):
+        pages = convert_from_path(str(file_path), first_page=page_num, last_page=page_num,
+                                  size=1600, timeout=60, thread_count=1)
+        if len(pages) != 1:
+            raise ValueError("unexpected rendered PDF page count")
+        page_img = pages[0]
+        try:
+            buffer = BytesIO()
+            page_img.convert("RGB").save(buffer, format="JPEG")
+            yield {image_field: base64.b64encode(buffer.getvalue()).decode("ascii"),
+                   "page_number": page_num, "file_name": file_path.stem}
+        finally:
+            page_img.close()
 
 
 def create_pdf_collection(
@@ -276,116 +309,58 @@ def create_pdf_collection(
     )
 
 
-def convert_types(
-    obj: dict[str, Any],
-    prop_types: dict[str, DataType],
-) -> dict[str, Any]:
-    """
-    Prepare an object for insertion using the collection schema to guide conversion.
-
-    Non-string values (JSON/JSONL native types) pass through unchanged. String values
-    are cast to the type declared in prop_types. Fields not in the schema pass through
-    as-is. Reserved fields always pass through unchanged.
-
-    Args:
-        obj: Raw object from the file
-        prop_types: Map of property name → DataType from the collection schema
-
-    Returns:
-        Object ready for batch insertion
-    """
+def convert_types(obj, prop_types):
+    if not isinstance(obj, dict):
+        raise ValueError("source row must be an object")
+    def scalar(value, kind):
+        if kind == DataType.INT:
+            if isinstance(value, bool) or not (isinstance(value, int) or
+                    isinstance(value, str) and re.fullmatch(r"[+-]?\d+", value)):
+                raise ValueError("integer conversion would lose data")
+            return int(value)
+        if kind == DataType.NUMBER:
+            if isinstance(value, bool) or not isinstance(value, (str,int,float)):
+                raise ValueError("number required")
+            result = float(value)
+            if not math.isfinite(result):
+                raise ValueError("number must be finite")
+            return result
+        if kind == DataType.BOOL:
+            if isinstance(value, bool): return value
+            if isinstance(value, str) and value.lower() in {"true", "false"}:
+                return value.lower() == "true"
+            raise ValueError("boolean must be true or false")
+        if kind == DataType.DATE:
+            if not isinstance(value, str): raise ValueError("date must be text")
+            if _DATE_RE.fullmatch(value): value += "T00:00:00Z"
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if parsed.tzinfo is None:
+                raise ValueError("datetime needs an explicit timezone")
+            return parsed.isoformat()
+        if kind in _KEEP_AS_STRING and not isinstance(value, str):
+            raise ValueError("text/uuid/blob must remain strings")
+        return value
+    arrays = {DataType.INT_ARRAY: DataType.INT, DataType.NUMBER_ARRAY:DataType.NUMBER,
+              DataType.BOOL_ARRAY:DataType.BOOL, DataType.DATE_ARRAY:DataType.DATE,
+              DataType.TEXT_ARRAY:DataType.TEXT, DataType.UUID_ARRAY:DataType.UUID}
     result = {}
-    for key, value in obj.items():
-        if value is None or value == "":
-            continue
-
-        # Reserved fields pass through as-is (will be dropped or renamed by caller)
-        if key in _RESERVED_FIELDS:
+    for key,value in obj.items():
+        if value is None or value == "": continue
+        if key in _RESERVED_FIELDS or key == "_id":
+            raise ValueError("reserved field must be explicitly renamed or skipped")
+        if key not in prop_types:
+            raise ValueError("unknown property; define schema or explicitly skip it")
+        kind = prop_types[key]
+        if kind in arrays:
+            value = strict_json(value) if isinstance(value,str) else value
+            if not isinstance(value,list): raise ValueError("array property requires an array")
+            result[key] = [scalar(element,arrays[kind]) for element in value]
+        elif kind in {DataType.OBJECT,DataType.OBJECT_ARRAY,DataType.GEO_COORDINATES,DataType.PHONE_NUMBER}:
+            value = strict_json(value) if isinstance(value,str) else value
+            if not isinstance(value, list if kind == DataType.OBJECT_ARRAY else dict):
+                raise ValueError("object property shape mismatch")
             result[key] = value
-            continue
-
-        # String value: cast based on schema
-        target_type = prop_types.get(key)
-
-        # Non-string values already have the right native type, with one exception:
-        # date[] lists from JSON/JSONL may contain bare date strings needing RFC3339
-        if not isinstance(value, str):
-            if target_type == DataType.DATE_ARRAY and isinstance(value, list):
-                result[key] = [
-                    f"{d}T00:00:00Z"
-                    if isinstance(d, str) and _DATE_RE.match(d)
-                    else d.replace(" ", "T") + "Z"
-                    if isinstance(d, str) and _DATETIME_RE.match(d)
-                    else d
-                    for d in value
-                ]
-            else:
-                result[key] = value
-            continue
-
-        if target_type == DataType.INT:
-            try:
-                result[key] = int(value)
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type == DataType.INT_ARRAY:
-            try:
-                result[key] = [int(x) for x in json.loads(value)]
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type == DataType.NUMBER:
-            try:
-                result[key] = float(value)
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type == DataType.NUMBER_ARRAY:
-            try:
-                result[key] = [float(x) for x in json.loads(value)]
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type == DataType.BOOL:
-            if value.lower() in ("true", "false"):
-                result[key] = value.lower() == "true"
-            else:
-                result[key] = value
-        elif target_type == DataType.BOOL_ARRAY:
-            try:
-                parsed = json.loads(value)
-                result[key] = [
-                    b if isinstance(b, bool) else str(b).lower() == "true"
-                    for b in parsed
-                ]
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type == DataType.DATE:
-            if _DATE_RE.match(value):
-                result[key] = f"{value}T00:00:00Z"
-            elif _DATETIME_RE.match(value):
-                result[key] = value.replace(" ", "T") + "Z"
-            else:
-                result[key] = value
-        elif target_type == DataType.DATE_ARRAY:
-            try:
-                parsed = json.loads(value)
-                result[key] = [
-                    f"{d}T00:00:00Z"
-                    if isinstance(d, str) and _DATE_RE.match(d)
-                    else d.replace(" ", "T") + "Z"
-                    if isinstance(d, str) and _DATETIME_RE.match(d)
-                    else d
-                    for d in parsed
-                ]
-            except (ValueError, TypeError):
-                result[key] = value
-        elif target_type is not None and target_type not in _KEEP_AS_STRING:
-            try:
-                result[key] = json.loads(value)
-            except (ValueError, TypeError):
-                result[key] = value
-        else:
-            # text, uuid, blob, or field not in schema — keep as string
-            result[key] = value
-
+        else: result[key] = scalar(value,kind)
     return result
 
 
@@ -407,15 +382,11 @@ def import_objects(
     failed_count = 0
     errors: list[str] = []
 
-    with coll.batch.dynamic() as batch:
+    with coll.batch.fixed_size(batch_size=batch_size) as batch:
         for i, obj in enumerate(data, 1):
             total_count += 1
             try:
-                converted_obj = convert_types(obj, prop_types)
-                if skip_set:
-                    converted_obj = {
-                        k: v for k, v in converted_obj.items() if k not in skip_set
-                    }
+                converted_obj = convert_types({k:v for k,v in obj.items() if k not in skip_set}, prop_types)
                 batch.add_object(properties=converted_obj)
                 imported_count += 1
 
@@ -424,7 +395,7 @@ def import_objects(
 
             except Exception as e:
                 failed_count += 1
-                error_msg = f"Object {i}: {str(e)}"
+                error_msg = f"Object {i}: validation or enqueue failed"
                 if len(errors) < 10:
                     errors.append(error_msg)
                     if len(errors) <= 5:
@@ -435,10 +406,10 @@ def import_objects(
     for failed_obj in coll.batch.failed_objects:
         server_failed += 1
         if len(errors) < 10:
-            errors.append(f"Batch error: {failed_obj.message}")
+            errors.append("Server rejected an enqueued object; inspect sanitized diagnostics separately")
 
     failed_count += server_failed
-    return total_count, imported_count, failed_count, errors
+    return total_count, max(0, imported_count - server_failed), failed_count, errors
 
 
 @app.command()
@@ -472,14 +443,18 @@ def main(
         "--skip-fields",
         help="Comma-separated field names to exclude from import (e.g. 'id,created_at')",
     ),
+    allow_write: bool = typer.Option(False, "--allow-write", help="Authorize bounded import and optional PDF collection creation"),
     json_output: bool = typer.Option(False, "--json", help="Output in JSON format"),
 ):
     """Import data from CSV, JSON, JSONL, or PDF files to a Weaviate collection."""
+    if not allow_write:
+        raise typer.BadParameter("data mutation requires --allow-write")
     try:
         # Validate all file paths up front
         file_paths: list[Path] = []
         for f in files:
             fp = Path(f)
+            check_input(fp)
             if not fp.exists():
                 print(f"Error: File not found: {f}", file=sys.stderr)
                 raise typer.Exit(1)
@@ -490,8 +465,10 @@ def main(
         if mapping:
             try:
                 mapping_dict = json.loads(mapping)
-                if not isinstance(mapping_dict, dict):
-                    raise ValueError("Mapping must be a JSON object")
+                if not isinstance(mapping_dict, dict) or not all(
+                        isinstance(k,str) and isinstance(v,str) and k and v and "." not in k and "." not in v
+                        for k,v in mapping_dict.items()):
+                    raise ValueError("mapping supports nonempty top-level string keys only")
             except json.JSONDecodeError as e:
                 print(f"Error: Invalid JSON in mapping: {e}", file=sys.stderr)
                 raise typer.Exit(1)
@@ -502,15 +479,15 @@ def main(
         )
 
         # Validate batch size
-        if batch_size < 1:
-            print("Error: Batch size must be at least 1", file=sys.stderr)
+        if not 1 <= batch_size <= 1000:
+            print("Error: Batch size must be 1..1000", file=sys.stderr)
             raise typer.Exit(1)
 
         # Detect formats. CSV/JSON/JSONL can be mixed freely; PDF cannot be mixed with them.
         try:
             fmt_by_path = {fp: detect_file_format(fp) for fp in file_paths}
         except ValueError as e:
-            print(f"Error: {e}", file=sys.stderr)
+            print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
             raise typer.Exit(1)
 
         has_pdf = any(f == "pdf" for f in fmt_by_path.values())
@@ -574,7 +551,7 @@ def main(
                     f"--tenant parameter will be ignored",
                     file=sys.stderr,
                 )
-                tenant = None
+                raise ValueError("tenant supplied for a non-multi-tenant collection")
 
             if tenant:
                 coll = coll.with_tenant(tenant)
@@ -612,6 +589,13 @@ def main(
                     print(f"Error reading file: {e}", file=sys.stderr)
                     raise typer.Exit(1)
 
+                # Read bounded records before enqueueing this file. Imports remain nontransactional.
+                data = list(itertools.islice(data, MAX_OBJECTS + 1))
+                if len(data) > MAX_OBJECTS or grand_total + len(data) > MAX_OBJECTS:
+                    raise ValueError("invocation exceeds 10000 objects")
+                for row in data:
+                    convert_types({k:v for k,v in row.items() if k not in skip_set}, prop_types)
+                data = iter(data)
                 # Peek: validate non-empty and warn on reserved fields
                 first = next(data, None)
                 if first is None:
@@ -647,13 +631,13 @@ def main(
                         "file": str(file_path),
                         "format": file_fmt,
                         "total_objects": total,
-                        "imported": total - failed,
+                        "imported": imported,
                         "failed": failed,
                         **({"errors": errors[:10]} if errors else {}),
                     }
                 )
 
-            grand_success = grand_imported - grand_failed
+            grand_success = grand_imported
 
             result = {
                 "collection": collection,
@@ -671,7 +655,7 @@ def main(
             if json_output:
                 print(json.dumps(result, indent=2))
             else:
-                print(f"\n✓ Import completed!", file=sys.stderr)
+                print("\nImport finished; inspect counts for partial failures.", file=sys.stderr)
                 print(f"\n**Collection:** {collection}")
                 if tenant:
                     print(f"**Tenant:** {tenant}")
@@ -690,10 +674,10 @@ def main(
                 raise typer.Exit(1)
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

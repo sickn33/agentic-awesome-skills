@@ -8,7 +8,7 @@
 
 - `protocols/concept-explanation-protocol.md`
 - `references/concepts-minimal-set.md`
-- `references/v2-term-fidelity.md`
+- `references/v5-term-fidelity.md`
 - `templates/concept-explanation-output.md`
 
 ## 工作表摘要

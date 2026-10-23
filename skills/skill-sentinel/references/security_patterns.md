@@ -1,5 +1,8 @@
 # Padroes de Seguranca
 
+> Catalog review: exemplos e scores consultivos, nao prova de seguranca, cobertura total, conformidade ou autoridade de merge. Nomes e palavras-chave exigem confirmacao semantica; a ausencia de um sinal pode ser falso negativo. Estado privado fica fora da skill instalada.
+
+
 ## Padroes Bons (Referencia)
 
 ### Queries parametrizadas (como instagram/scripts/db.py)
@@ -77,5 +80,5 @@ except:
 ## Excecoes Conhecidas
 
 Alguns valores parecem secrets mas sao publicos:
-- `546c25a59c58ad7` - Imgur anonymous upload client ID (publico)
-- Chaves de teste/exemplo em documentacao
+- Nao ha supressao global por substring: um ID publico numa linha nao pode esconder outra credencial.
+- Exemplos sinteticos devem ser confirmados manualmente antes de descartar um alerta.

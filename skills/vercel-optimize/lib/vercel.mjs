@@ -258,8 +258,8 @@ export async function runVercelJson(args, opts = {}) {
           : failure;
       }
       if (exitCode === 0) return { ok: true, data };
-      // Exit non-zero, no `error` key, parseable stdout → still useful.
-      return { ok: true, data };
+      // Partial JSON from a failed command is diagnostic data, not successful evidence.
+      return { ok: false, code: `EXIT_${exitCode}`, stderr: safeStderr };
     } catch {
       /* fall through to stderr categorization */
     }
@@ -473,6 +473,7 @@ export function filterUsageByProject(usage, projectId, projectName = null) {
         groupBy: { ...usage.groupBy, data: [project] },
         services: Array.isArray(project.services) ? project.services : [],
         totals: project.totals ?? null,
+        totalCost: project.totalCost ?? project.totals?.billedCost ?? undefined,
         project: { name: project.name ?? projectName ?? null, projectId: project.projectId ?? projectId },
       },
       matched: true,
@@ -506,12 +507,17 @@ export function filterUsageByProject(usage, projectId, projectName = null) {
 
   out.services = aggregateServicesByName(out.breakdown.data);
   out.totals = { billedCost: projectTotal };
+  out.totalCost = projectTotal;
   return { filtered: out, matched: true, unattributedTotal };
 }
 
 function projectMatches(serviceRow, projectId, projectName = null) {
   if (!serviceRow) return false;
-  if (serviceRow.projectId === projectId) return true;
+  if (serviceRow.projectId) return serviceRow.projectId === projectId;
+  if (serviceRow.project && typeof serviceRow.project === 'object') {
+    const explicitId = serviceRow.project.id ?? serviceRow.project.projectId;
+    if (explicitId) return explicitId === projectId;
+  }
   if (projectName && serviceRow.name === projectName) return true;
   if (projectName && serviceRow.project === projectName) return true;
   if (serviceRow.project === projectId) return true;
@@ -547,8 +553,8 @@ export async function getAccountPlan(scope) {
     if (team.plan !== 'unknown' || !/not_found|404/i.test(String(team.error ?? ''))) {
       return team;
     }
-    // Older project links can carry a user/org id instead of a team id. If the
-    // team lookup misses, fall back to the authenticated user's billing record.
+    // A missing team lookup must not substitute another account's billing plan.
+    return team;
   }
 
   return await getBillingPlanFromPath('/v2/user', 'user.billing.plan');

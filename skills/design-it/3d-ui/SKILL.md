@@ -205,7 +205,7 @@ const Card3D = () => {
 ```
 - True 3D models require `react-three-fiber`.
 - For UI perspective transforms, use the `transform` array: `[{ perspective: 1000 }, { rotateX: '...' }, { rotateY: '...' }]`.
-- `perspective` MUST be the first item in the transform array for the effect to render correctly.
+- Transform order affects the result; the example places perspective first. Test the intended order and renderer instead of treating this as a universal API requirement.
 
 ### Jetpack Compose
 ```kotlin

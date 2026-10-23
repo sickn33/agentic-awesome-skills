@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Swift: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for swift.
 
@@ -90,7 +92,7 @@ var dict: [String: User] = [:]
 for user in users { dict[user.id] = user }
 
 // ✅
-let dict = Dictionary(uniqueKeysWithValues: users.map { ($0.id, $0) })
+let dict = Dictionary(users.map { ($0.id, $0) }, uniquingKeysWith: { _, latest in latest }) // same last-write behavior
 // or with possible duplicates:
 let dict = Dictionary(grouping: users, by: \.department)
 ```
@@ -134,7 +136,7 @@ struct Point { var x, y: Double }
 ```swift
 // ❌ Large struct copied repeatedly (performance hit)
 struct HugeData { var buffer: [UInt8] /* thousands of elements */ }
-func process(_ data: HugeData) { ... } // copies entire buffer
+func process(_ data: HugeData) { ... } // Array is copy-on-write; read-only passing need not copy the buffer
 
 // ✅ — use class or pass inout for mutation
 func process(_ data: inout HugeData) { ... }
@@ -211,7 +213,8 @@ fetchUser { user in
 // ✅ (Swift 5.5+)
 let user = try await fetchUser()
 let posts = try await fetchPosts(for: user)
-let comments = try await fetchComments(for: posts[0])
+guard let firstPost = posts.first else { return }
+let comments = try await fetchComments(for: firstPost)
 display(comments)
 ```
 

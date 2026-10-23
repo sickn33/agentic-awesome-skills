@@ -1,5 +1,6 @@
 # Hardware Guide
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 Training embedding models is memory-bound more often than compute-bound.
 
 ## If you hit OOM
@@ -77,29 +78,6 @@ For large corpora (retrieval), push toward 512+ effective negatives. For small, 
 
 bf16 is more numerically stable and almost always preferred when available.
 
-## Hugging Face Jobs flavor guide
+## Hugging Face Jobs hardware and budgeting
 
-Hugging Face Jobs requires a Pro/Team/Enterprise plan. Pricing is approximate and subject to change — see the [Jobs pricing page](https://huggingface.co/docs/huggingface_hub/guides/jobs).
-
-| Flavor | Memory | Typical use | Est. $/hr |
-|---|---|---|---|
-| `cpu-basic` | ~2 GB | Dataset prep, validation, hard-neg mining (small) | <$0.10 |
-| `cpu-upgrade` | ~4 GB | Same, slightly bigger | $0.10 |
-| `t4-small` | 16 GB | Demos, MiniLM/DistilBERT with small batches | ~$0.75 |
-| `t4-medium` | 16 GB | MiniLM / DistilBERT with larger batch | ~$1.50 |
-| `l4x1` | 24 GB | BERT-base, MPNet, ModernBERT-base | ~$2.50 |
-| `a10g-small` | 24 GB | BERT-base to BERT-large | ~$3.50 |
-| `a10g-large` | 48 GB | ModernBERT-large, Qwen3-0.6B | ~$5.00 |
-| `a10g-largex2` | 96 GB (2× 48GB) | Mid-size multi-GPU | ~$10 |
-| `a100-large` | 80 GB | Large models or big contrastive batches | ~$10–12 |
-| `h100` | 80 GB | Biggest single-GPU | ~$12 |
-| `h100x8` | 640 GB | LLM-scale distributed | ~$96 |
-
-Defaults by base model:
-- MiniLM / DistilBERT -> `t4-small`
-- BERT-base / MPNet / ModernBERT-base -> `a10g-small` or `l4x1`
-- BERT-large / ModernBERT-large -> `a10g-large`
-- Qwen3-0.6B decoder base -> `a10g-large`
-- 1B+ decoder bases with LoRA -> `a10g-large` or `a100-large`
-
-Always start one flavor **smaller** than you think you need: OOM on Jobs is cheap ($0.50–$5 for a failed run). Underprovisioned is better than overprovisioned for the first attempt. When budgeting `timeout`, add **20–30% buffer** for model loading, checkpoint saving, and Hub push.
+Query the current official hardware listing and account eligibility before proposing a job. Do not treat the former approximate price/VRAM table as authoritative. Measure an authorized tiny representative run; estimate total cost from the current rate, preparation, evaluation, checkpointing and an explicit within-budget buffer. OOM retries can incur material costs and require the approved retry budget; do not deliberately underprovision. Distributed/LoRA/quantized compatibility depends on the exact locked stack and model. Validate one process before adapting rank-safe output ownership.

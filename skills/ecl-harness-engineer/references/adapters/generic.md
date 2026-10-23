@@ -32,7 +32,7 @@ adapter:
         description: "Generic CLI argument parsing"
         frameworks: []
     frontend_indicators:
-      - pattern: 'index\\.html|<!DOCTYPE html>'
+      - pattern: 'index\.html|<!DOCTYPE html>'
         description: "HTML file presence"
         frameworks: []
     patterns: []
@@ -154,3 +154,8 @@ The generic adapter is the **last resort**. It activates only when:
 If you find yourself repeatedly using the generic adapter for a specific language,
 that's a signal to create a proper language adapter. See `adapter-schema.md` for
 the schema to follow.
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.

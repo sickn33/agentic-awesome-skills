@@ -231,7 +231,7 @@ const Modal = dynamic(() =>
 
 // With suspense
 const DashboardCharts = dynamic(() => import('@/components/DashboardCharts'), {
-  loading: () => <Suspense fallback={<ChartsSkeleton />} />,
+  loading: () => <ChartsSkeleton />,
 });
 ```
 
@@ -371,7 +371,7 @@ async function Header() {
 
 ```tsx
 // Cache indefinitely (default for static)
-fetch('https://api.example.com/data');
+fetch('https://api.example.com/data', { cache: 'force-cache' });
 
 // No cache - always fresh
 fetch('https://api.example.com/data', { cache: 'no-store' });
@@ -657,8 +657,8 @@ export function PerformanceMonitor() {
       case 'LCP':
         console.log('LCP:', metric.value);
         break;
-      case 'FID':
-        console.log('FID:', metric.value);
+      case 'INP':
+        console.log('INP:', metric.value);
         break;
       case 'CLS':
         console.log('CLS:', metric.value);
@@ -722,3 +722,9 @@ const nextConfig = {
 
 module.exports = nextConfig;
 ```
+
+## Snapshot limitations
+
+Examples are excerpts, not production certification. Scaffolder dependencies target historical Next14/React18/Tailwind3 and require a supported, patched dependency plan before installation. Optional scaffold feature templates are incomplete and now reject generation. Generated React/Vite config needs matching aliases, TS JSX and lint setup; auth requires server enforcement, not a frontend HOC. Components/tests assume application imports/styles and fixtures. Bundle scores and KB tables are advisory heuristics, not measured output or grounds to replace packages automatically.
+
+Client components can be server-prerendered: localStorage initializers may cause hydration mismatch; read after mount with a loading boundary and handle errors/key changes. useAsync/DataFetcher examples need cancellation, stale-response and error handling. Custom select/dialog examples omit full keyboard/focus restoration/inert-background behavior; prefer tested primitives. Persist no bearer tokens in localStorage, clear session data on logout, and enforce authorization in API routes. Never share personalized cached data without user/tenant-scoped keys. Match params, fetch caching, revalidateTag, Image preload and dynamic SSR APIs to the installed Next version.

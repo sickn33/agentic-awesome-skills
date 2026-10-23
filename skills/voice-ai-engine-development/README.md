@@ -1,6 +1,9 @@
 # Voice AI Engine Development Skill
 
-Build production-ready real-time conversational AI voice engines with async worker pipelines, streaming transcription, LLM agents, and TTS synthesis.
+> These examples are mock implementations and illustrative integration sketches, not production adapters. Full-response buffering is optional and raises first-audio latency; ordered sentence streaming is valid. Muting the sole microphone/transcriber prevents barge-in: use echo cancellation and an independent speech detector for duplex interruption. Pacing must derive from actual sample rate, channels and bytes per sample, account for generator wait and client buffer acknowledgements, and flush stale playback on interruption. Estimated text offsets are not proof of words heard. Keep provider input/output formats compatible rather than universally forcing 16kHz PCM.
+
+
+Build prototype real-time conversational AI voice engines with async worker pipelines, streaming transcription, LLM agents, and TTS synthesis.
 
 ## Overview
 
@@ -26,7 +29,7 @@ This skill provides comprehensive guidance for building voice AI engines that en
 - `SKILL.md` - Comprehensive guide to voice AI engine development
 
 ### Examples
-- `complete_voice_engine.py` - Full working implementation
+- `complete_voice_engine.py` - Offline mock pipeline; external adapters and real audio client are not implemented
 - `gemini_agent_example.py` - LLM agent with proper response buffering
 - `interrupt_system_example.py` - Interrupt handling demonstration
 
@@ -42,7 +45,7 @@ This skill provides comprehensive guidance for building voice AI engines that en
 
 ### The Worker Pipeline Pattern
 
-Every voice AI engine follows this pipeline:
+A common decomposed voice pipeline is:
 
 ```
 Audio In → Transcriber → Agent → Synthesizer → Audio Out
@@ -57,21 +60,21 @@ Each worker:
 
 ### Critical Implementation Details
 
-1. **Buffer LLM Responses** - Always buffer the entire LLM response before sending to synthesizer to prevent audio jumping
-2. **Mute Transcriber** - Mute the transcriber when bot speaks to prevent echo/feedback loops
+1. **Buffer LLM Responses** - Serialize ordered TTS output; full-response buffering trades latency for simplicity, while sentence streaming needs coordinated playback
+2. **Echo handling** - Use echo cancellation/VAD for duplex speech; muting the sole input prevents voice interruption
 3. **Rate-Limit Audio** - Send audio chunks at real-time speed to enable interrupts
 4. **Proper Cleanup** - Always cleanup resources in finally blocks to prevent memory leaks
 
 ## Supported Providers
 
 ### Transcription
-- Deepgram (fastest, best for real-time)
-- AssemblyAI (highest accuracy)
+- Deepgram (adapter required; benchmark on target audio)
+- AssemblyAI (adapter required; benchmark on target audio)
 - Azure Speech (enterprise-grade)
 - Google Cloud Speech (multi-language)
 
 ### LLM
-- OpenAI GPT-4 (highest quality)
+- OpenAI (choose a currently available model and evaluate task quality)
 - Google Gemini (cost-effective)
 - Anthropic Claude (safety-focused)
 
@@ -129,13 +132,13 @@ The skill includes examples for:
 ## Best Practices
 
 1. ✅ Always stream at every stage (transcription, LLM, synthesis)
-2. ✅ Buffer entire LLM responses before synthesis
-3. ✅ Mute transcriber during bot speech
+2. ✅ Serialize synthesis; choose full-response or ordered sentence buffering
+3. ✅ Use echo cancellation/VAD for duplex interruption
 4. ✅ Rate-limit audio chunks for interrupts
 5. ✅ Maintain conversation history for context
 6. ✅ Use proper error handling in worker loops
 7. ✅ Cleanup resources in finally blocks
-8. ✅ Use LINEAR16 PCM at 16kHz for audio
+8. ✅ Negotiate compatible codec, channel count and sample rate
 
 ## Common Pitfalls
 

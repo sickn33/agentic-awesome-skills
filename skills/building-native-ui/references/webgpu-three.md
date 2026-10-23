@@ -2,7 +2,7 @@
 
 **Use this skill for ANY 3D graphics, games, GPU compute, or Three.js features in React Native.**
 
-## Locked Versions (Tested & Working)
+## Historical version example (not verified in this catalog)
 
 ```json
 {
@@ -14,7 +14,7 @@
 }
 ```
 
-**Critical:** These versions are tested together. Mismatched versions cause type errors and runtime issues.
+These ranges are not a lockfile. Resolve a compatible set against the target SDK and validate on devices.
 
 ## Installation
 
@@ -35,7 +35,7 @@ const config = getDefaultConfig(__dirname);
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {
   // Force 'three' to webgpu build
-  if (moduleName.startsWith("three")) {
+  if (moduleName === "three") {
     moduleName = "three/webgpu";
   }
 
@@ -227,7 +227,7 @@ export const FiberCanvas = ({
 ```tsx
 import * as THREE from "three/webgpu";
 import { View } from "react-native";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FiberCanvas } from "@/lib/fiber-canvas";
 
@@ -344,7 +344,7 @@ export default function Page() {
 
 ```tsx
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import * as THREE from "three/webgpu";
 
 function AnimatedMesh() {
@@ -543,7 +543,7 @@ Performance critical?
 ```tsx
 import * as THREE from "three/webgpu";
 import { View, Text, Pressable } from "react-native";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { FiberCanvas } from "@/lib/fiber-canvas";
 
@@ -603,3 +603,5 @@ export default function Game() {
   );
 }
 ```
+
+This is an incomplete renderer adapter, not a ready-made game engine. orbit-controls.tsx is not bundled. DOM event methods are no-ops, so pointer interaction needs a native bridge. Handle context/device loss, layout resizing, renderer initialization/disposal and effect dependencies before use. Do not blindly suppress type errors or bypass peer checks; verify current package contracts. React.lazy does not guarantee native release bundle splitting.

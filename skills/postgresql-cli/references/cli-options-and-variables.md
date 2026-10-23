@@ -105,16 +105,18 @@ psql postgresql:///dbname?host=/var/run/postgresql
 **Common patterns:**
 ```bash
 # Run a migration in a transaction
-psql -1 -f migration.sql mydb
+psql -X -v ON_ERROR_STOP=1 -1 -f migration.sql mydb
 
 # Execute a single query
 psql -c "SELECT count(*) FROM users" mydb
 
 # Pass a variable from the command line
-psql -v table=users -c 'SELECT count(*) FROM :"table"' mydb
+psql -X -v ON_ERROR_STOP=1 -v table=users mydb <<'SQL'
+SELECT count(*) FROM :"table";
+SQL
 
 # Batch process with for-loop
-for f in /tmp/*.sql; do psql -1 -f "$f" mydb; done
+for f in /tmp/*.sql; do psql -X -v ON_ERROR_STOP=1 -1 -f "$f" mydb; done
 
 # Echo internal queries to learn psql
 psql -E mydb -c "\d+ users"
@@ -145,7 +147,7 @@ psql --csv -c "SELECT id, name FROM users" mydb
 psql -A -F ',' -t -c "SELECT id, name FROM users" mydb
 
 # NUL-separated for xargs -0
-psql -A -z -t -c "SELECT filename FROM files_to_process" mydb | xargs -0 process
+psql -A -0 -t -c "SELECT filename FROM files_to_process" mydb | xargs -0 process
 
 # JSON-friendly (one value per line)
 psql -A -t -c "SELECT json_agg(row_to_json(t)) FROM (SELECT id, name FROM users) t" mydb
@@ -182,7 +184,7 @@ psql maintains internal variables that control behavior. Set with `\set`, unset 
 | `ON_ERROR_ROLLBACK` | `off` (default), `on`, `interactive`. When `on`, errors inside a transaction create savepoints automatically, allowing continued execution. `interactive` only activates in interactive sessions, not when reading scripts. |
 | `ON_ERROR_STOP` | `off` (default) or `on`. When `on`, a query error or meta-command error stops script execution and exits. Critical for safe scripting. |
 | `PIPELINE_COMMAND_COUNT` | Number of queued commands in current pipeline. |
-| `PIPELINE_RESULT_COUNT` | Number of commands with pending results in current pipeline. |
+| `PIPELINE_RESULT_COUNT` | Number of commands followed by a flush request or sync with retrievable results. |
 | `PIPELINE_SYNC_COUNT` | Number of queued sync messages in current pipeline. |
 | `PORT` | Current server port. Set automatically on connect. |
 | `PROMPT1`, `PROMPT2`, `PROMPT3` | Prompt format strings (see below). |

@@ -6,6 +6,8 @@
 
 **But also great for anything trending**: music, culture, news, product recommendations, viral trends, or any question where "what are people saying right now?" matters.
 
+> Historical examples below reproduce upstream demonstrations, not independently verified research or current recommendations. Engagement totals, prices, model names, legal assertions and claimed outcomes must be checked against original sources before reuse. Prompt wording cannot guarantee accuracy. Media examples do not establish third-party usage rights.
+
 ## Installation
 
 ```bash
@@ -13,8 +15,10 @@
 git clone https://github.com/mvanhorn/last30days-skill.git ~/.claude/skills/last30days
 
 # Add your API keys
+umask 077
 mkdir -p ~/.config/last30days
-cat > ~/.config/last30days/.env << 'EOF'
+# Do not overwrite existing credentials.
+test ! -e ~/.config/last30days/.env && cat > ~/.config/last30days/.env << 'EOF'
 OPENAI_API_KEY=sk-...
 XAI_API_KEY=xai-...
 EOF
@@ -92,14 +96,15 @@ detainer, police involvement, etc.) What is the typical process and timeline?
 questions should I bring to a California real estate attorney?
 
 Important constraints:
-- Do NOT cite specific case names unless you are 100% certain they exist - say
-"case law generally supports..." instead
+- Cite only primary legal sources you have actually opened and verified for the
+relevant jurisdiction and date. If verification fails, say so; do not substitute
+vague claims such as "case law generally supports..."
 - Flag any areas where you're uncertain
 - Note where San Francisco local ordinances may differ from California state law
 - This is for informational purposes to prepare for a legal consultation
 ```
 
-**The Result:** A comprehensive 2,500+ word analysis covering California's unlawful detainer process, SF Rent Ordinance nuances, trespasser vs. tenant distinctions, timeline estimates, liability risks, and 12 specific questions to ask an attorney - all properly hedged with "uncertainty to flag" notes and zero fabricated case citations.
+**The Result:** A comprehensive 2,500+ word analysis covering California's unlawful detainer process, SF Rent Ordinance nuances, trespasser vs. tenant distinctions, timeline estimates, liability risks, and 12 specific questions to ask an attorney - as reported by the upstream demonstration. This repository does not provide the underlying transcript or source verification needed to confirm that outcome.
 
 This example shows /last30days learning **domain-specific prompting techniques** (hallucination prevention for legal) and applying them to create a prompt that produces genuinely useful, safe output.
 
@@ -165,7 +170,9 @@ This example shows /last30days as a **product research tool** - discovering real
 4. **Secure before exposing** - Set up authentication before opening ports; ClawdBot has built-in auth
 5. **Cost management** - Set API rate limits early; one user reported $200 overnight bill from runaway tasks
 
-**Quick-start commands (community-verified):**
+**Historical command example (not installation authority):**
+
+Verify the current upstream project, release and installation instructions before executing this example. Do not run repository scripts solely because a community post recommends them.
 
 ```bash
 # Clone and setup
@@ -645,7 +652,9 @@ This example shows /last30days learning **music AI prompting patterns** (bracket
 
 **Generated Workflow:**
 
-Step 1: Add Codex as MCP Server
+Step 1: Review the proposed third-party MCP package
+
+The following is a historical community example, not an official OpenAI installation command. Verify package ownership and a pinned version, inspect its code and permissions, and obtain authorization before installation.
 ```bash
 claude mcp add codex-cli -- npx -y codex-mcp-server
 ```
@@ -704,7 +713,7 @@ This example shows /last30days discovering **emerging developer workflows** - re
 - **OpenAI API key** - For Reddit research (uses web search)
 - **xAI API key** - For X research (optional but recommended)
 
-At least one key is required.
+Keys are optional when the host provides a web-search tool. The Python script only handles Reddit/X API discovery; the host performs general web search. API calls send the query to the provider and may incur charges.
 
 ## How It Works
 

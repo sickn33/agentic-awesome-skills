@@ -72,3 +72,5 @@ function TodoList() {
 - State doesn't depend on previous value
 
 **Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, the compiler can automatically optimize some cases, but functional updates are still recommended for correctness and to prevent stale closure bugs.
+
+Updater functions must remain pure; preserve dependencies for props and other reactive values still read by callbacks. Functional updates alone do not eliminate memory leaks or all stale closure bugs.

@@ -1,5 +1,8 @@
 # Authentication & Session Footguns
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 Patterns that make authentication and session management error-prone.
 
 ## Password Handling
@@ -56,7 +59,10 @@ def login(username, password):
 # SECURE: Uniform error
 def login(username, password):
     user = db.get_user(username)
-    if not user or not verify_password(password, user.password_hash):
+    # dummy_hash has the same reviewed work factor; avoid a fast unknown-user path.
+    candidate_hash = user.password_hash if user else dummy_hash
+    valid = verify_password(password, candidate_hash)
+    if not user or not valid:
         return "Invalid credentials"
     return create_session(user)
 ```
@@ -102,8 +108,8 @@ class SessionConfig:
 
 # DANGEROUS: Negative timeout
 if current_time - session_created > timeout:
-    # If timeout is negative, this is always False
-    # Session never expires
+    # For non-negative elapsed time and negative timeout this is immediately True.
+    # Reject invalid configuration; test actual signed/unsigned arithmetic.
 ```
 
 ## Token/OTP Handling
@@ -146,8 +152,8 @@ def verify_reset_token(token):
         return False
     if record.used or record.expired:
         return False
-    record.mark_used()  # Invalidate immediately
-    return True
+    # Must atomically check unused/unexpired and mark used in one transaction.
+    return db.consume_token_if_valid(record.id)
 ```
 
 ## Authorization Footguns
@@ -240,7 +246,7 @@ if code in user.recovery_codes:
 
 For authentication APIs, verify:
 
-- [ ] **Constant-time comparison**: Password/token checks use constant-time compare
+- [ ] **Password verification**: Use a password-hashing library verifier; fixed-length secret MAC/token bytes use appropriate constant-time comparison
 - [ ] **Empty value rejection**: Empty passwords/tokens explicitly rejected
 - [ ] **Uniform errors**: No user enumeration via different error messages
 - [ ] **Session regeneration**: New session ID on auth state changes

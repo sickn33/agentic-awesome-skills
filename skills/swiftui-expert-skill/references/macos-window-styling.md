@@ -141,7 +141,7 @@ WindowGroup {
 | Value | Behavior |
 |-------|----------|
 | `.automatic` | System decides resize behavior |
-| `.contentSize` | Fixed to content size; no user resize; zoom button disabled |
+| `.contentSize` | Constrained by content minimum/maximum sizes; fixed only when those sizes are fixed |
 | `.contentMinSize` | Resizable with minimum based on content's `minWidth`/`minHeight` |
 
 **`defaultPosition` options:** `.center`, `.topLeading`, `.top`, `.topTrailing`, `.leading`, `.trailing`, `.bottomLeading`, `.bottom`, `.bottomTrailing`
@@ -153,13 +153,12 @@ WindowGroup {
 
 ### windowIdealPlacement (macOS 15.0+)
 
-For precise programmatic positioning, use a closure with display geometry:
+For placement used when a window zooms, use a closure with display geometry. For newly created windows, use defaultWindowPlacement instead:
 
 ```swift
-.windowIdealPlacement { context in
-    let screen = context.defaultDisplay.visibleArea
-    return WindowPlacement(x: screen.midX, y: screen.midY,
-                           width: screen.width / 2, height: screen.height)
+.windowIdealPlacement { content, context in
+    let screen = context.defaultDisplay.visibleRect
+    return WindowPlacement(size: CGSize(width: screen.width / 2, height: screen.height))
 }
 ```
 
@@ -189,7 +188,7 @@ MenuBarExtra("Status", systemImage: "chart.bar") {
 
 ### NavigationSplitView
 
-On macOS, `NavigationSplitView` displays columns side-by-side (never overlaid). The sidebar gets a translucent material background. Columns support variable-width resizing by the user.
+On macOS, `NavigationSplitView` generally displays visible columns side-by-side; column visibility and window width still affect which columns appear. The sidebar gets a translucent material background. Columns support variable-width resizing by the user.
 
 ```swift
 NavigationSplitView {

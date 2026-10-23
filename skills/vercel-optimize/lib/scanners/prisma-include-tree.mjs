@@ -7,9 +7,9 @@ export const metadata = {
   billingDimension: 'function-duration',
   trafficIndependent: false,
   description:
-    'Nested .include({ x: { include: { y: { include: { z: ... } } } } }) makes Prisma issue a single huge join that scales O(N*M*K). Function duration explodes, memory spikes, often causes timeouts.',
+    'Nested .include({ x: { include: { y: { include: { z: ... } } } } }) can fetch excess related data. Prisma query strategy, cardinality and selected fields determine actual SQL and cost; inspect query logs and payloads before claiming a join explosion.',
   fix:
-    'Replace with explicit .findMany() calls or scoped .include() of only what the consumer reads. Consider Prisma.select() to project specific fields. For lists, batch with DataLoader patterns.',
+    'Replace with explicit .findMany() calls or scoped .include() of only what the consumer reads. Consider the query select option to project specific fields. For lists, batch with DataLoader patterns.',
   citations: [
     'vercel-react-best-practices:server-parallel-fetching',
   ],

@@ -6,7 +6,7 @@
 - Ensure to flip the camera with `mirror` to emulate social apps
 - Use liquid glass buttons on cameras
 - Icons: `arrow.triangle.2.circlepath` (flip), `photo` (gallery), `bolt` (flash)
-- Eagerly request camera permission
+- Request camera permission when the user opens the camera
 - Lazily request media library permission
 
 ```tsx
@@ -44,7 +44,7 @@ function Camera({ onPicture }: { onPicture: (uri: string) => Promise<void> }) {
     await Haptics.selectionAsync();
     if (!cameraRef.current) return;
     const photo = await cameraRef.current.takePictureAsync({ quality: 0.8 });
-    await onPicture(photo.uri);
+    if (photo?.uri) await onPicture(photo.uri);
   };
 
   const selectPhoto = async () => {
@@ -61,7 +61,7 @@ function Camera({ onPicture }: { onPicture: (uri: string) => Promise<void> }) {
 
   return (
     <View style={{ flex: 1, backgroundColor: "black" }}>
-      <CameraView ref={cameraRef} mirror style={{ flex: 1 }} facing={type} />
+      <CameraView ref={cameraRef} mirror={type === "front"} style={{ flex: 1 }} facing={type} />
       <View style={{ position: "absolute", left: 0, right: 0, bottom: bottom, gap: 16, alignItems: "center" }}>
         <GlassView isInteractive style={{ padding: 8, borderRadius: 99 }}>
           <TouchableOpacity onPress={takePhoto} style={{ width: 64, height: 64, borderRadius: 99, backgroundColor: "white" }} />
@@ -191,8 +191,10 @@ function base64ToLocalUri(base64: string, filename?: string) {
   for (let i = 0; i < len; i++) bytes[i] = binaryString.charCodeAt(i);
 
   const f = new File(Paths.cache, filename);
-  f.create({ overwrite: true });
+  f.create({ overwrite: false });
   f.write(bytes);
   return f.uri;
 }
 ```
+
+These snippets omit GlassButton, capture error/busy handling, app permission descriptions and platform fallback setup. Trigger microphone permission from the record action rather than a mount effect; await audio mode configuration before recording. Validate base64 MIME, byte size and filename (single safe basename) before writing.

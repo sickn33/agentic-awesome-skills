@@ -38,3 +38,5 @@ function ScrollTracker() {
   }, [])
 }
 ```
+
+Transitions lower priority of React state rendering; they do not throttle scroll events or make synchronous handler work non-blocking. Use animation-frame scheduling or CSS where appropriate; never transition controlled text-input updates.

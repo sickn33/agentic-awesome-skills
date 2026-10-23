@@ -77,5 +77,5 @@ def ensure_venv_and_run():
         print("   Or activate: source .venv/bin/activate")
 
 
-# Check environment when module is imported
-ensure_venv_and_run()
+# Environment setup is explicit through scripts/run.py; importing this package
+# must never install dependencies or launch browsers.

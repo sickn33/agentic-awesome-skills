@@ -5,6 +5,16 @@
 # Full rationale + the no_proxy trap + the resumable-download ladder: references/china-network.md
 set -u
 
+# Mirrors are third parties: require informed opt-in and never forward HF credentials.
+if [ "${ALLOW_THIRD_PARTY_MIRRORS:-0}" != 1 ]; then
+  echo "Set ALLOW_THIRD_PARTY_MIRRORS=1 only after approving public-artifact mirror use. No settings changed." >&2
+  return 1 2>/dev/null || exit 1
+fi
+if [ -n "${HF_TOKEN:-}${HUGGING_FACE_HUB_TOKEN:-}" ] || [ -f "${HF_TOKEN_PATH:-${HF_HOME:-$HOME/.cache/huggingface}/token}" ]; then
+  echo "HF credential detected: use the official endpoint in a separate credential-free environment for mirrors." >&2
+  return 1 2>/dev/null || exit 1
+fi
+
 # 1. HuggingFace -> hf-mirror (drop-in; identical repo IDs). MUST be set BEFORE importing
 #    huggingface_hub / transformers / datasets — they read HF_ENDPOINT at import time.
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
@@ -19,8 +29,7 @@ export MODELSCOPE_CACHE="${MODELSCOPE_CACHE:-$DATA_DIR/modelscope}"
 mkdir -p "$HF_HOME" "$MODELSCOPE_CACHE"
 
 # 3. pip index -> Tsinghua TUNA (Aliyun / USTC are alternates).
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple 2>/dev/null \
-  || export PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
+export PIP_INDEX_URL=https://pypi.tuna.tsinghua.edu.cn/simple
 
 # 4. no_proxy hygiene — ONLY when an overseas proxy is exported in THIS shell. A proxy that fixes
 #    huggingface.co will route every domestic mirror overseas and break it unless exempted here.

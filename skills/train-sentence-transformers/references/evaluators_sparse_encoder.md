@@ -1,5 +1,6 @@
 # Evaluators (Sparse Encoder)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All sparse-encoder evaluators live in `sentence_transformers.sparse_encoder.evaluation`. They mirror the bi-encoder versions with a `Sparse` prefix and default to **dot product** similarity (cosine on sparse vectors is less meaningful).
 
 ## Choosing the right evaluator
@@ -117,5 +118,5 @@ Pattern: `f"eval_{evaluator.primary_metric}"`. Inspect after construction: `prin
 
 - **Always run `evaluator(model)` once before training** — confirms the pipeline works (a fill-mask base scores ~0 on retrieval until trained).
 - Sparse evaluators default to dot product; cosine on sparse vectors isn't meaningful.
-- Don't compare dense and sparse metrics directly — different scales (cosine ∈ [-1, 1] vs. dot ∈ [0, ∞)).
+- Compare ranking metrics on identical benchmarks, not raw similarity scores; general dot products can be negative.
 - Always check `query_active_dims` / `document_active_dims` — thousands of active dims per doc means the FLOPS regularizer is mistuned, even if nDCG looks OK.

@@ -1,3 +1,5 @@
+> Review contract: follow the current SKILL.md authority and budget rules. Recipes below are illustrative; use a private run directory, quote paths, do not change global permissions, and use only authorized tools/parallelism. Unknown evidence stays unknown (never false); snippets and synthetic named-vendor examples are not verified facts. Do not publish, contact anyone or infer approval from silence. Dates must be observed, not invented from a year in a URL.
+
 # Competitor Analysis — Research Patterns
 
 ## Contents
@@ -28,7 +30,7 @@ Both use the Plan → Research → Synthesize pattern. Self-research is identica
 
 ### Page Discovery
 Dynamic via sitemap — do NOT hardcode `/about` or `/pricing`:
-1. `browse cloud fetch --allow-redirects "{company website}/sitemap.xml"` — primary source
+1. `browse cloud fetch "{company website}/sitemap.xml"` — primary source
 2. Scan for URLs with keywords: `pricing`, `customer`, `compare`, `vs`, `about`, `features`, `integrations`
 3. Optionally fetch `/llms.txt` for page descriptions
 4. Pick 3-5 most relevant URLs

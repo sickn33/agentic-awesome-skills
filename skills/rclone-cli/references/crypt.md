@@ -71,8 +71,7 @@ To use `crypt`, first set up the underlying remote. Follow the
 Before configuring the crypt remote, check the underlying remote is
 working. In this example the underlying remote is called `remote`.
 We will configure a path `path` within this remote to contain the
-encrypted content. Anything inside `remote:path` will be encrypted
-and anything outside will not.
+encrypted content. Only data written through the crypt remote is encrypted; writing directly into `remote:path` bypasses encryption.
 
 Configure `crypt` using `rclone config`. In this example the `crypt`
 remote is called `secret`, to differentiate it from the underlying
@@ -710,9 +709,7 @@ rclone rc backend/command command=decode fs=crypt: encryptedfile1 [encryptedfile
 
 ## Backing up an encrypted remote
 
-If you wish to backup an encrypted remote, it is recommended that you use
-`rclone sync` on the encrypted files, and make sure the passwords are
-the same in the new encrypted remote.
+To mirror an encrypted remote, you can use `rclone sync` on the encrypted files, using the same crypt settings/passwords in the new crypt remote. Sync propagates deletions and overwrites; retain an independent versioned backup and review a dry run before the live operation.
 
 This will have the following advantages
 
@@ -788,9 +785,9 @@ This uses a 32 byte (256 bit key) key derived from the user password.
 1 MiB (1048576 bytes) file will encrypt to
 
 - 32 bytes header
-- 16 chunks of 65568 bytes
+- 16 chunks of 65552 bytes (65536 data + 16 authenticator)
 
-1049120 bytes total (a 0.05% overhead). This is the overhead for big
+1048864 bytes total (about 0.0275% overhead for this file). This is the overhead for big
 files.
 
 ### Name encryption
@@ -834,9 +831,8 @@ optional user supplied salt (password2) to derive the 32+32+16 = 80
 bytes of key material required.  If the user doesn't supply a salt
 then rclone uses an internal one.
 
-`scrypt` makes it impractical to mount a dictionary attack on rclone
-encrypted data.  For full protection against this you should always use
-a salt.
+`scrypt` increases the cost of password guessing but does not make weak passwords safe.
+Use a strong unique passphrase and securely back up both passwords; a custom salt is not a substitute for password entropy.
 
 ## See Also
 

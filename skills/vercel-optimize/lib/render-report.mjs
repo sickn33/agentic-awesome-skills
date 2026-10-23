@@ -53,7 +53,7 @@ export function renderReport({ recommendations = [], gated = [], abstentions = [
   }
   lines.push('');
 
-  const platformRecs = recommendations.filter(isPlatformScope).slice(0, PLATFORM_CAP);
+  const platformRecs = sortRecs(recommendations.filter(isPlatformScope)).slice(0, PLATFORM_CAP);
   const codeRecs = recommendations.filter((r) => !isPlatformScope(r));
   const sorted = sortRecs(codeRecs);
   const high = sorted.filter((r) => r.impactTier === 'high');
@@ -230,9 +230,10 @@ export function buildFinalReportMessage({ reportPath, markdown, recommendations 
 }
 
 function renderFinalRecommendationPreview(recommendations, signals, maxRecommendations) {
-  const ready = Array.isArray(recommendations)
-    ? sortRecs(recommendations.filter((r) => r && r.abstain !== true))
-    : [];
+  let platformCount = 0;
+  const ready = (Array.isArray(recommendations)
+    ? sortRecs(recommendations.filter((r) => r && r.abstain !== true)) : [])
+    .filter((rec) => !isPlatformScope(rec) || ++platformCount <= PLATFORM_CAP);
   if (ready.length === 0) return [];
   const max = Math.max(1, Math.min(Number.isInteger(maxRecommendations) ? maxRecommendations : 5, 10));
   const shown = ready.slice(0, max);
@@ -367,9 +368,9 @@ function renderCostHeader(signals) {
   }
   if (scope === 'team' && signals.usage) {
     return [
-      '## Cost breakdown (team-wide — `vercel usage` has no per-project filter)',
+      '## Cost breakdown (team-wide — no matching project usage rows)',
       '',
-      '_The Vercel CLI\'s `vercel usage` reports team-wide billing without a project filter (verified May 2026). This breakdown is the whole team\'s bill for the window. Per-route metrics in the rest of this report are project-scoped via `vercel metrics`._',
+      '_No usage row could be safely matched to this project. This breakdown is the whole team\'s bill for the window. Per-route metrics in the rest of this report are project-scoped via `vercel metrics`._',
     ];
   }
   return ['## Cost breakdown'];
@@ -728,8 +729,8 @@ function renderStrengths(signals) {
   }
 
   const cache = signals.metrics?.fdtByCache?.rows ?? [];
-  const hit = cache.find((r) => r.cache_result === 'HIT' || r.cache_result === 'STALE');
-  const miss = cache.find((r) => r.cache_result === 'MISS' || r.cache_result === 'BYPASS');
+  const hit = { value: cache.filter((r) => ['HIT','STALE'].includes(r.cache_result)).reduce((n,r) => n + (r.value ?? 0), 0) };
+  const miss = { value: cache.filter((r) => ['MISS','BYPASS'].includes(r.cache_result)).reduce((n,r) => n + (r.value ?? 0), 0) };
   if (hit && miss && (hit.value ?? 0) > (miss.value ?? 0)) {
     lines.push(`- Cache hit-rate is healthy at the bandwidth tier — HIT/STALE bandwidth (${formatBytes(hit.value)}) exceeds MISS/BYPASS (${formatBytes(miss.value)}).`);
   }
@@ -785,7 +786,11 @@ function renderDataGaps(signals) {
     const middleware = middlewareMetric.rows ?? [];
     if (middleware.length === 0) lines.push('- No middleware invocations — either no `middleware.ts` is shipped or its matcher excludes all observed traffic.');
   }
-  if (lines.length === 0) lines.push('_(no relevant gaps — every signal had data)_');
+  for (const [id, metric] of Object.entries(signals.metrics ?? {})) {
+    if (id !== 'cwvCount' && metric?.ok === false) lines.push(`- Metric ${id} was unavailable (${metric.code ?? 'UNKNOWN'}); this is not evidence of zero activity.`);
+  }
+  if (Object.keys(signals.metrics ?? {}).length === 0) lines.push('- No metric queries were collected for this run.');
+  if (lines.length === 0) lines.push('_(no gaps detected by the available checks)_');
   return lines;
 }
 

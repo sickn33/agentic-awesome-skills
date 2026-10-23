@@ -1,4 +1,5 @@
 #!/bin/sh
+# Modified for AAS review: boundary/JSON, install opt-in and safe staging hardening.
 set -eu
 
 die() {
@@ -12,19 +13,7 @@ need() {
 }
 
 json_escape() {
-  printf '%s' "$1" |
-    awk 'BEGIN { first = 1 }
-      {
-        if (!first) printf "\\n"
-        first = 0
-        gsub(/\\/, "\\\\")
-        gsub(/"/, "\\\"")
-        gsub(/\t/, "\\t")
-        gsub(/\r/, "\\r")
-        gsub(/\f/, "\\f")
-        gsub(/\b/, "\\b")
-        printf "%s", $0
-      }'
+  printf '%s' "$1" | python3 -c 'import json, sys; sys.stdout.write(json.dumps(sys.stdin.read(), ensure_ascii=True)[1:-1])'
 }
 
 supported_lwc_version() {
@@ -103,6 +92,7 @@ is_excluded_root() {
 
 : "${HOME:?using-lwc bootstrap: HOME is not set}"
 need dirname
+need python3
 need awk
 need grep
 
@@ -122,7 +112,8 @@ home_dir="$(
   pwd -P
 )" || die "cannot resolve HOME"
 cwd="$(pwd -P)"
-project_boundary=""
+project_boundary="$cwd"
+# Never discover an ancestor outside the explicitly selected boundary.
 if [ -n "${LWC_PROJECT_ROOT:-}" ]; then
   [ -d "$LWC_PROJECT_ROOT" ] ||
     die "LWC_PROJECT_ROOT is not a directory: $LWC_PROJECT_ROOT"
@@ -170,7 +161,7 @@ fi
 if [ -z "$lwc_path" ]; then
   [ "${LWC_AUTO_INSTALL:-0}" = 1 ] ||
     die "compatible lwc not found; obtain explicit approval, then retry once with LWC_AUTO_INSTALL=1"
-  LWC_INSTALL_DIR="$home_dir/.local/bin" sh "$installer" >&2 ||
+  LWC_ALLOW_INSTALL=1 LWC_INSTALL_DIR="$home_dir/.local/bin" sh "$installer" >&2 ||
     die "lwc installation failed"
   lwc_path="$(command -v lwc 2>/dev/null || true)"
   if [ -z "$lwc_path" ] || ! usable_lwc "$lwc_path"; then
@@ -186,6 +177,9 @@ lwc_version="$("$lwc_path" --version)"
 global_wiki="$home_dir/.lwc/wiki.db"
 global_policy_state="$home_dir/.lwc/.using-lwc-bootstrap-v1"
 apply_global_policy=false
+for global_target in "$home_dir/.lwc" "$global_wiki" "$global_policy_state"; do
+  [ ! -L "$global_target" ] || die "symlink global memory path is not supported: $global_target"
+done
 if [ ! -f "$global_wiki" ]; then
   if [ "${LWC_GLOBAL_INIT:-0}" = 1 ]; then
     mkdir -p "$(dirname "$global_wiki")" ||
@@ -232,6 +226,9 @@ cursor="$cwd"
 while :; do
   if [ "$cursor" = "$home_dir" ]; then
     break
+  fi
+  if [ -L "$cursor/.lwc" ] || [ -L "$cursor/.lwc/wiki.db" ]; then
+    die "symlink project memory is not supported: $cursor/.lwc"
   fi
   if [ -f "$cursor/.lwc/wiki.db" ]; then
     project_wiki_count=$((project_wiki_count + 1))

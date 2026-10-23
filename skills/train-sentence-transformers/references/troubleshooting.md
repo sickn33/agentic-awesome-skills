@@ -1,5 +1,6 @@
 # Troubleshooting
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 Common failures in sentence-transformers training, with root causes and fixes. Organized by symptom.
 
 ## Out of memory (OOM)
@@ -39,7 +40,7 @@ Common failures in sentence-transformers training, with root causes and fixes. O
 
 1. **Re-run dataset inspector** with `--loss <your-loss>`. Most likely cause: column order wrong, label column not detected, or loss expects a different shape.
 2. For retrieval: **your negatives are too easy**. Mine hard negatives (`scripts/mine_hard_negatives.py`).
-3. Check `metric_for_best_model` — if the key doesn't match what the evaluator writes, the trainer silently uses the final checkpoint (not the best).
+3. Check `metric_for_best_model` — if the key doesn't match what the evaluator writes, the trainer may raise a missing-metric error; inspect actual keys and stop on mismatch.
 4. Confirm `BatchSamplers.NO_DUPLICATES` is set for MNRL-style losses. Without it, the in-batch negative signal is corrupted.
 5. Base model is wrong for the task (e.g. decoder-only LLM for short-text STS). Try a different base.
 6. Learning rate too low. Default `2e-5` works for encoders; LoRA wants `1e-4+`; static embeddings want about `2e-1` (much higher than transformers).
@@ -89,7 +90,7 @@ Same applies to `CachedSpladeLoss`, `CachedGISTEmbedLoss`, and any other `Cached
 
 - Trackio: confirm `pip install trackio` succeeded. No login step — trackio uses your `HF_TOKEN` (set by `hf auth login` or the `HF_TOKEN` env var). On HF Jobs, `HF_TOKEN` must be in `secrets`.
 - W&B: confirm `wandb login` succeeded, or `WANDB_API_KEY` env var is set. On HF Jobs, `WANDB_API_KEY` must be in `secrets`.
-- `report_to` not set to the right tracker: `report_to="trackio"` (or `"wandb"`, or a list like `["trackio", "tensorboard"]`).
+- `report_to` not set to the right tracker: `report_to="none"` (or `"wandb"`, or a list like `["trackio", "tensorboard"]`).
 - TensorBoard: check `logging_dir` (defaults to `output_dir/runs/<timestamp>`); point TB at the parent.
 
 ## Base model loads but `encode` produces garbage

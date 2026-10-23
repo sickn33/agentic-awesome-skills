@@ -1,5 +1,9 @@
 # Cosmos DB Client Setup
 
+
+Review corrections (2026-10-23): these snippets are incomplete application starters. Initialize the synchronous client during startup outside the event loop, serialize initialization and close client/credential on shutdown. A cached failed initialization needs an explicit bounded recovery path. `azure.cosmos.aio` is also available; the SDK is not synchronous-only. Enforce tenant authorization independently of partition routing; the bundled client assumes `/workspaceId`. Never accept caller SQL fragments. Distinguish unavailable storage (503) from not-found (404) and empty data; the older graceful-default examples below illustrate a policy to avoid for authoritative reads. Use ETag conditional writes to prevent lost updates, enforce uniqueness atomically, and implement cross-partition moves with conflict-aware compensation; read-then-upsert/delete is not atomic. No live Cosmos behavior is verified by these templates.
+
+
 ## Table of Contents
 
 1. [Dual Authentication Strategy](#dual-authentication-strategy)
@@ -21,7 +25,11 @@ from azure.identity import DefaultAzureCredential
 
 def _is_emulator_endpoint(endpoint: str) -> bool:
     """Detect Cosmos emulator by endpoint URL."""
-    return "localhost" in endpoint.lower() or "127.0.0.1" in endpoint
+    from urllib.parse import urlsplit
+    parsed = urlsplit(endpoint)
+    return (parsed.scheme == "https" and parsed.username is None
+            and parsed.password is None
+            and parsed.hostname in {"localhost", "127.0.0.1", "::1"})
 
 def _create_client(settings) -> CosmosClient:
     if _is_emulator_endpoint(settings.cosmos_endpoint):
@@ -100,7 +108,7 @@ def get_container() -> Optional[ContainerProxy]:
 
 ## Async Wrapping
 
-The Cosmos Python SDK is synchronous. Wrap calls with `run_in_threadpool` to avoid blocking FastAPI:
+This example uses the synchronous Cosmos client; an asynchronous client is available in `azure.cosmos.aio`. Wrap calls with `run_in_threadpool` to avoid blocking FastAPI:
 
 ```python
 from starlette.concurrency import run_in_threadpool
@@ -211,4 +219,4 @@ def reset_connection() -> None:
 
 ## Complete Implementation
 
-See [assets/cosmos_client_template.py](../assets/cosmos_client_template.py) for a production-ready implementation.
+See [assets/cosmos_client_template.py](../assets/cosmos_client_template.py) for a application-specific starter implementation.

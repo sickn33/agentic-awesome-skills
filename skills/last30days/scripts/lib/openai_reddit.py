@@ -5,7 +5,7 @@ import re
 import sys
 from typing import Any, Dict, List, Optional
 
-from . import http
+from . import http, dates, reddit_enrich
 
 
 def _log_error(msg: str):
@@ -38,7 +38,7 @@ Search for the core subject:
 2. "reddit [core subject]"
 3. "[core subject] reddit"
 
-Return as many relevant threads as you find. We filter by date server-side.
+Find threads published from {from_date} through {to_date}. Return fewer when recent evidence is scarce. We also filter dates locally.
 
 STEP 3: INCLUDE ALL MATCHES
 - Include ALL threads about the core subject
@@ -207,14 +207,14 @@ def parse_reddit_response(response: Dict[str, Any]) -> List[Dict[str, Any]]:
             continue
 
         url = item.get("url", "")
-        if not url or "reddit.com" not in url:
+        if not isinstance(url, str) or not reddit_enrich.extract_reddit_path(url):
             continue
 
         clean_item = {
             "id": f"R{i+1}",
             "title": str(item.get("title", "")).strip(),
             "url": url,
-            "subreddit": str(item.get("subreddit", "")).strip().lstrip("r/"),
+            "subreddit": re.sub(r"^r/", "", str(item.get("subreddit", "")).strip()),
             "date": item.get("date"),
             "why_relevant": str(item.get("why_relevant", "")).strip(),
             "relevance": min(1.0, max(0.0, float(item.get("relevance", 0.5)))),
@@ -222,7 +222,7 @@ def parse_reddit_response(response: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         # Validate date format
         if clean_item["date"]:
-            if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(clean_item["date"])):
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(clean_item["date"])) or dates.parse_date(str(clean_item["date"])) is None:
                 clean_item["date"] = None
 
         clean_items.append(clean_item)

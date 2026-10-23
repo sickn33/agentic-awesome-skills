@@ -382,3 +382,11 @@ body {
     width: 95%;
   }
 }
+
+/* Native modal provides focus containment and restores focus to the trigger. */
+dialog.dialog-content { margin: auto; border: 0; }
+dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

@@ -26,7 +26,7 @@ TEMPLATES = {
 import {{ useState }} from 'react';
 import {{ cn }} from '@/lib/utils';
 
-interface {name}Props {{
+export interface {name}Props {{
   className?: string;
   children?: React.ReactNode;
 }}
@@ -42,7 +42,7 @@ export function {name}({{ className, children }}: {name}Props) {{
 
     "server": '''import {{ cn }} from '@/lib/utils';
 
-interface {name}Props {{
+export interface {name}Props {{
   className?: string;
   children?: React.ReactNode;
 }}
@@ -58,11 +58,11 @@ export async function {name}({{ className, children }}: {name}Props) {{
 
     "hook": '''import {{ useState, useEffect, useCallback }} from 'react';
 
-interface Use{name}Options {{
+export interface Use{name}Options {{
   // Add options here
 }}
 
-interface Use{name}Return {{
+export interface Use{name}Return {{
   // Add return type here
   isLoading: boolean;
   error: Error | null;
@@ -95,7 +95,7 @@ describe('{name}', () => {{
 
   it('applies custom className', () => {{
     render(<{name} className="custom-class">Content</{name}>);
-    expect(screen.getByText('Content').parentElement).toHaveClass('custom-class');
+    expect(screen.getByText('Content')).toHaveClass('custom-class');
   }});
 
   // Add more tests here
@@ -169,6 +169,8 @@ def _safe_output_dir(raw_dir: str) -> Path:
 def _safe_component_file(component_dir: Path, filename: str) -> Path:
     if "/" in filename or "\\" in filename or "\x00" in filename or ".." in filename:
         raise ValueError(f"Unsafe generated filename: {filename}")
+    if (component_dir / filename).is_symlink():
+        raise ValueError("Refusing symlink output")
     target = (component_dir / filename).resolve()
     target.relative_to(component_dir.resolve())
     return target
@@ -179,7 +181,7 @@ def to_pascal_case(name: str) -> str:
     name = _safe_component_name(name)
     # Handle kebab-case and snake_case
     words = name.replace('-', '_').split('_')
-    return ''.join(word.capitalize() for word in words)
+    return ''.join(word[:1].upper() + word[1:] for word in words if word)
 
 
 def to_kebab_case(name: str) -> str:
@@ -222,28 +224,34 @@ def generate_component(
         template = TEMPLATES[component_type]
 
     content = template.format(name=pascal_name)
-    main_file.write_text(content)
+    with main_file.open("x", encoding="utf-8") as handle:
+        handle.write(content)
     files_created.append(str(main_file))
 
     # Generate test file
     if with_test and component_type != "hook":
         test_file = _safe_component_file(component_dir, f"{pascal_name}.test.tsx")
         test_content = TEMPLATES["test"].format(name=pascal_name)
-        test_file.write_text(test_content)
+        with test_file.open("x", encoding="utf-8") as handle:
+            handle.write(test_content)
         files_created.append(str(test_file))
 
     # Generate story file
     if with_story and component_type != "hook":
         story_file = _safe_component_file(component_dir, f"{pascal_name}.stories.tsx")
         story_content = TEMPLATES["story"].format(name=pascal_name)
-        story_file.write_text(story_content)
+        with story_file.open("x", encoding="utf-8") as handle:
+            handle.write(story_content)
         files_created.append(str(story_file))
 
     # Generate index file
     if with_index and not flat:
         index_file = _safe_component_file(component_dir, "index.ts")
-        index_content = TEMPLATES["index"].format(name=pascal_name)
-        index_file.write_text(index_content)
+        index_content = (f"export {{ use{pascal_name} }} from './use{pascal_name}';\n"
+                         f"export type {{ Use{pascal_name}Options, Use{pascal_name}Return }} from './use{pascal_name}';\n"
+                         if component_type == "hook" else TEMPLATES["index"].format(name=pascal_name))
+        with index_file.open("x", encoding="utf-8") as handle:
+            handle.write(index_content)
         files_created.append(str(index_file))
 
     return {

@@ -70,10 +70,7 @@ REDACT_KEEP_CHARS = 6  # Number of leading chars to keep in redacted snippets
 
 def _redact(text: str) -> str:
     """Return a redacted version of *text*, keeping only the first few chars."""
-    text = text.strip()
-    if len(text) <= REDACT_KEEP_CHARS:
-        return text
-    return text[:REDACT_KEEP_CHARS] + "****"
+    return "[redacted]" if text else ""
 
 
 def _snippet(line: str, match_start: int, context: int = 40) -> str:
@@ -148,7 +145,7 @@ def collect_files(target: Path, logger) -> list[Path]:
     max_files = LIMITS["max_files_per_scan"]
 
     for fpath in safe_user_path(target).rglob("*"):
-        if not fpath.is_file() or any(_should_skip_dir(part) for part in fpath.parts):
+        if fpath.is_symlink() or not fpath.is_file() or any(_should_skip_dir(part) for part in fpath.parts):
             continue
         if len(files) >= max_files:
             logger.warning(
@@ -193,6 +190,9 @@ def scan_file(filepath: Path, verbose: bool = False, logger=None) -> list[dict]:
 
     # Read file content
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose and logger:

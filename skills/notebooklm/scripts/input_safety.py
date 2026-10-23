@@ -40,7 +40,9 @@ def validate_notebook_url(value: str) -> str:
 
 def validate_metadata_text(value: object, field: str, max_length: int, *, required: bool = True) -> str:
     """Reject terminal controls and unreasonable metadata lengths."""
-    text = str(value).strip()
+    if not isinstance(value, str):
+        raise ValueError(f"{field} must be text")
+    text = value.strip()
     if required and not text:
         raise ValueError(f"{field} is required")
     if CONTROL_CHARACTERS.search(text):
@@ -96,7 +98,10 @@ def write_private_answer(directory: Path, answer: object, question: object) -> P
     )
     path = Path(raw_path)
     try:
-        os.fchmod(descriptor, 0o600)
+        if hasattr(os, "fchmod"):
+            os.fchmod(descriptor, 0o600)
+        else:
+            os.chmod(path, 0o600)
         with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
             json.dump({
                 "classification": "untrusted_notebooklm_content",

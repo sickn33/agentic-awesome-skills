@@ -1,6 +1,6 @@
 # Correct checkpointing & idempotent resume — full state, atomic write, sharded checkpoints, framework APIs
 
-Make a training job resume **exactly where it stopped** after any kill — not "reload the weights and
+Make a training job resume from its last verified checkpoint after interruption — not "reload the weights and
 silently restart the epoch." This layer owns the *mechanics*: what FULL state to save, how to write it
 without corruption, how to load it unconditionally, and the framework-specific knobs (FSDP / DeepSpeed /
 HF Trainer / Accelerate / Lightning) plus the resume **bugs** that make a job look resumed while it
@@ -25,6 +25,8 @@ To jump: `grep -in '<keyword>' references/training/checkpoint-resume.md` (e.g. `
 ---
 
 ## The contract
+
+Load only trusted checkpoints from a verified source. Prefer state dictionaries and explicitly `weights_only=True` where the stored primitive/tensor schema supports it; do not disable restricted loading merely to suppress an error on an untrusted pickle. Record run/config identity, framework versions and integrity hashes. Exact mid-step resume also needs accumulated gradients and data-worker/prefetch state, or checkpoint only at a documented safe boundary.
 
 ### C1 — A checkpoint that restores only weights is NOT a resume — save the FULL training state
 
@@ -52,7 +54,7 @@ the spot-resilience §3 list):
 | EMA / SWA shadow weights (if used) | the EMA copy is often what's evaluated — losing it = eval on the wrong weights (C16) |
 | best-metric-so-far + `best.pth` selection state | so "best" survives a restart instead of resetting |
 
-The runnable atomic skeleton that assembles this dict is in `references/spot-resilience.md` §5 — do not
+The illustrative atomic skeleton (not a complete production state implementation) that assembles part of this dict is in `references/spot-resilience.md` §5 — do not
 duplicate it; this table is the *checklist*, that is the *code*.
 
 ### C2 — Write atomically: tmp → fsync → os.replace (a kill mid-write corrupts a naive save)
@@ -66,15 +68,21 @@ corrupt file and (if it was the only checkpoint) zero good ones. `torch.save` it
 **Fix**: write to a temp file, force bytes to disk, then atomically rename (POSIX `rename`/`os.replace`
 is atomic on the **same filesystem**):
 ```python
-tmp = ckpt_path + ".tmp"
+tmp = ckpt_path + f".{os.getpid()}.tmp"  # serialize writers or use unique files per run/rank
 with open(tmp, "wb") as f:
     torch.save(state, f); f.flush(); os.fsync(f.fileno())   # bytes hit disk BEFORE the swap
-os.replace(tmp, ckpt_path)                                   # all-or-nothing; keep prev until this returns
+os.replace(tmp, ckpt_path)                                   # same filesystem
+# POSIX durability: fsync the containing directory after replace as supported by the filesystem.
+dfd = os.open(os.path.dirname(os.path.abspath(ckpt_path)), os.O_RDONLY)
+try:
+    os.fsync(dfd)
+finally:
+    os.close(dfd)
 ```
 Keep the previous `latest.pth` valid until the rename returns (a kill at any instant leaves one intact
 file). `os.replace` (not `os.rename`) also works on Windows for the local-test path. Full recipe +
 rationale: `references/spot-resilience.md` §3. Disk-full *during* the save is a separate failure with the
-same `.tmp` left behind → `references/gotchas_universal.md` U6 (pre-budget + prune `latest`, keep `best`).
+same `.tmp` left behind → `references/gotchas_universal.md` U6 (pre-budget + retain verified full-state latest and best, prune redundant periodic files).
 
 ### C3 — Load-latest UNCONDITIONALLY on startup → idempotent resume
 
@@ -84,7 +92,7 @@ launch wrapper forgot to pass; or two code paths (fresh vs resume) diverge.
 **Root cause**: making resume *opt-in* means a generic relaunch (spot recovery, SSH-drop restart, queue
 retry) re-trains from zero. A divergent "first launch" code path also drifts from the resume path.
 
-**Fix**: one code path that loads the latest checkpoint if it exists, else starts fresh — so the
+**Fix**: one code path that loads the latest verified compatible checkpoint for this exact run/config if it exists, else starts fresh — so the
 **identical launch command** converges to the same end state no matter how many times it runs. This is
 what makes principle #7's "retry the identical config" actually *resume* instead of restart, and it is the
 universal spine (principle #8) under SSH-drop / Slurm-walltime / K8s-reschedule / spot-preemption. Skeleton:
@@ -215,8 +223,8 @@ mid-epoch resume re-iterates the dataloader from batch 0.
 **Fix** ([Accelerate checkpoint guide](https://huggingface.co/docs/accelerate/en/usage_guides/checkpoint)):
 `accelerator.save_state(output_dir)` saves model, optimizer, **GradScaler**, and RNG generators in one
 call; `accelerator.load_state(output_dir)` restores all of it (objects must come from the *same* script).
-The LR scheduler (and any object with `state_dict`/`load_state_dict`) **must** be registered first —
-`accelerator.register_for_checkpointing(my_scheduler)` — or it is not saved and resets (C14). For
+Prepared Accelerate schedulers are normally tracked automatically. Custom stateful objects not handled by prepare can be registered explicitly —
+`accelerator.register_for_checkpointing(my_scheduler)` — then verify the checkpoint actually includes it (C14). For
 mid-epoch resume, skip consumed batches with `accelerator.skip_first_batches(train_dataloader, N)` on the
 first resumed epoch, then fall back to the full dataloader (C13).
 `ProjectConfiguration(automatic_checkpoint_naming=True, total_limit=k)` gives rolling
@@ -300,7 +308,7 @@ only `epoch` under-/over-shoots the schedule.
 loss-scale snapped back to the default and re-enters the scale-search.
 
 **Root cause**: the `GradScaler` holds dynamic state — `scale`, `growth_factor`, `backoff_factor`,
-`growth_interval`, `_growth_tracker` — that evolves during training; dropping it resets the scaler
+`growth_interval`, `_growth_tracker` — that evolves during training; dropping it resets the scaler. The specific no-inf-checks assertion often means no gradients reached the optimizer or an invalid scaler/step sequence; it is not proof of missing checkpoint state
 ([PyTorch AMP recipe](https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html),
 [forum: No inf checks were recorded](https://discuss.pytorch.org/t/resume-training-with-mixed-precision-lead-to-no-inf-checks-were-recorded-for-this-optimizer/115828)).
 
@@ -333,7 +341,7 @@ one deleted.
 
 **Fix**: keep an explicit `last`/`latest` alongside the top-k (`save_last=True` in Lightning, C11; in HF,
 `load_best_model_at_end=True` makes Trainer preserve the best checkpoint past `save_total_limit`). General
-keepable-checkpoint *policy* (how many, which selection criterion, `save_top_k ≤ 3`, prune `latest`) is
+keepable-checkpoint *policy* (how many, which selection criterion, top-k plus full-state latest retention) is
 owned by **verifying-dl-experiments** (**REQUIRED**); the disk-budget consequence is
 `references/gotchas_universal.md` U6.
 
@@ -349,7 +357,7 @@ every key; a checkpoint saved wrapped and loaded unwrapped (or vice-versa) won't
 **Fix**: save the **unwrapped** module — `model.module.state_dict()` (DDP) /
 `accelerator.unwrap_model(model).state_dict()` / `model._orig_mod.state_dict()` (compiled) — so the
 checkpoint is wrapper-agnostic. On load, strip the prefix if present
-(`{k.replace("module.", "").replace("_orig_mod.", ""): v for k, v in sd.items()}`). Keep `strict=True`
+(strip only verified leading wrapper prefixes (not global string replacement, which can alter legitimate submodule names)). Keep `strict=True`
 while debugging a resume so a silent partial load can't masquerade as success; only relax it deliberately.
 
 ---
@@ -358,7 +366,7 @@ while debugging a resume so a silent partial load can't masquerade as success; o
 
 - **Cadence — when/how often** (Young/Daly `W = sqrt(2·mu·C)`, grace windows, opportunistic SIGTERM
   last-flush, the runnable atomic skeleton) → `references/spot-resilience.md` (**REQUIRED**, spot tier).
-- **Disk-full on save** (pre-budget, prune `latest`, keep `best`, `.tmp` recovery) →
+- **Disk-full on save** (pre-budget, retain full-state latest and best, scoped redundant-file recovery) →
   `references/gotchas_universal.md` U6; **silent "synced" line** → U33; **inode exhaustion** → U7.
 - **Sharding a model that won't fit** (FSDP wrap policy, ZeRO stages, offload) is the *fitting* concern →
   `references/training/oom-memory.md` M9/M10; this file owns *checkpointing* the sharded state.

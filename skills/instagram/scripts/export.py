@@ -71,7 +71,7 @@ def export_json(records: list, output_dir: Path, name: str) -> Path:
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.json"
     payload = {"exported_at": datetime.now(timezone.utc).isoformat(), "total": len(records), "data": records}
-    with safe_user_path(path).open("w", encoding="utf-8") as f:
+    with path.open("x", encoding="utf-8") as f:
         f.write(json.dumps(payload, ensure_ascii=False, indent=2))
     print(f"[JSON] {len(records)} registros ->{path}")
     return path
@@ -81,7 +81,7 @@ def export_jsonl(records: list, output_dir: Path, name: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.jsonl"
-    with safe_user_path(path).open("w", encoding="utf-8") as f:
+    with path.open("x", encoding="utf-8") as f:
         for rec in records:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     print(f"[JSONL] {len(records)} registros ->{path}")
@@ -95,7 +95,7 @@ def export_csv_file(records: list, output_dir: Path, name: str) -> Path:
     output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
     path = output_dir / f"instagram_{name}_{ts}.csv"
-    with safe_user_path(path).open("w", newline="", encoding="utf-8-sig") as f:
+    with path.open("x", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=list(records[0].keys()), extrasaction="ignore")
         writer.writeheader()
         writer.writerows(spreadsheet_safe_record(record) for record in records)
@@ -152,7 +152,8 @@ def main():
                         help="Tipo de dados")
     parser.add_argument("--format", default="csv", choices=["json", "jsonl", "csv", "all"],
                         help="Formato (default: csv)")
-    default_exports_dir = Path(__file__).resolve().parents[1] / "data" / "exports"
+    from config import EXPORTS_DIR
+    default_exports_dir = EXPORTS_DIR
     parser.add_argument("--output", default=str(default_exports_dir), help=f"Diretório (default: {default_exports_dir})")
     parser.add_argument("--self-test", action="store_true", help="Run safety self-checks")
     args = parser.parse_args()

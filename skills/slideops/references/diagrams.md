@@ -52,7 +52,7 @@ in them land in a shipped artifact, so the confidentiality rule applies to them 
 printf '{ "executablePath": "%s" }\n' "$CHROME" > "$STAGE/puppeteer-config.json"
 # Pinned: an unpinned `npx --yes` runs whatever the registry serves today, unreviewed.
 # If mmdc is already installed, use it and skip the download entirely.
-MMDC=$(command -v mmdc || echo "npx --yes @mermaid-js/mermaid-cli@11.4.2")
+MMDC=$(command -v mmdc) || { echo "Reviewed mmdc installation required" >&2; exit 1; }
 $MMDC \
   -i "$STAGE/<name>.mmd" -o "$STAGE/<name>.svg" \
   -c "$STAGE/mermaid-config.json" -p "$STAGE/puppeteer-config.json" \
@@ -89,4 +89,4 @@ $MMDC \
   of staging; the inlined SVG is the artifact. If the user wants editable sources kept,
   put them next to the deck as `<deck>-diagrams/<name>.mmd`.
 - Escape rules still apply to `.mmd` content on slides only if you *show* the source in a
-  `<pre>`; the inlined SVG itself is already valid markup: never HTML-escape it.
+  `<pre>`; inline only reviewed/sanitized SVG: remove script, event handlers, external URLs and foreignObject content that is not explicitly needed. Valid SVG markup alone is not proof of safe content.

@@ -241,7 +241,8 @@ class AuthManager:
         print("🔄 Starting re-authentication...")
 
         # Clear existing auth
-        self.clear_auth()
+        if not self.clear_auth():
+            return False
 
         # Setup new auth
         return self.setup_auth(headless, timeout_minutes)
@@ -352,12 +353,15 @@ def main():
         if auth.validate_auth():
             print("Authentication is valid and working")
         else:
-            print("Authentication is invalid or expired")
+            print("Authentication is invalid, expired, or unverified")
             print("Run: auth_manager.py setup")
+            sys.exit(1)
 
     elif args.command == 'clear':
         if auth.clear_auth():
             print("Authentication cleared")
+        else:
+            sys.exit(1)
 
     elif args.command == 'reauth':
         if auth.re_auth(timeout_minutes=args.timeout):

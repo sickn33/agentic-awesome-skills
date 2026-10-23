@@ -1,5 +1,7 @@
 # HTTP Error Codes Reference
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 This file documents HTTP error codes returned by the Claude API, their common causes, and how to handle them. For language-specific error handling examples, see the `python/` or `typescript/` folders.
 
 ## Error Code Summary
@@ -25,7 +27,7 @@ This file documents HTTP error codes returned by the Claude API, their common ca
 - Missing required parameters (`model`, `max_tokens`, `messages`)
 - Invalid parameter types (e.g., string where integer expected)
 - Empty messages array
-- Messages not alternating user/assistant
+- Invalid role/content or tool-result pairing
 
 **Example error:**
 
@@ -43,7 +45,7 @@ This file documents HTTP error codes returned by the Claude API, their common ca
 
 - `model` is a valid model ID
 - `max_tokens` is a positive integer
-- `messages` array is non-empty and alternates correctly
+- `messages` array is valid and pending tool calls have complete matching results
 
 ---
 
@@ -79,7 +81,7 @@ This file documents HTTP error codes returned by the Claude API, their common ca
 - Using deprecated model ID
 - Invalid API endpoint
 
-**Fix:** Use exact model IDs from the models documentation. You can use aliases (e.g., `claude-opus-5`).
+**Fix:** Use exact model IDs from the models documentation. You can use aliases (e.g., `claude-opus-5-5`).
 
 ---
 
@@ -152,7 +154,7 @@ thinking: budget_tokens=10000, max_tokens=16000
 - High API demand
 - Service capacity reached
 
-**Fix:** Retry with exponential backoff. Consider using a different model (Haiku is often less loaded), spreading requests over time, or implementing request queuing.
+**Fix:** Retry with exponential backoff. Consider using a different model (verify the alternative model against your quality/budget constraints), spreading requests over time, or implementing request queuing.
 
 ---
 
@@ -161,10 +163,10 @@ thinking: budget_tokens=10000, max_tokens=16000
 | Mistake                         | Error            | Fix                                                     |
 | ------------------------------- | ---------------- | ------------------------------------------------------- |
 | `budget_tokens` >= `max_tokens` | 400              | Ensure `budget_tokens` < `max_tokens`                   |
-| Typo in model ID                | 404              | Use valid model ID like `claude-opus-5`               |
+| Typo in model ID                | 404              | Use valid model ID like `claude-opus-5-5`               |
 | First message is `assistant`    | 400              | First message must be `user`                            |
-| Consecutive same-role messages  | 400              | Alternate `user` and `assistant`                        |
-| API key in code                 | 401 (leaked key) | Use environment variable                                |
+| Missing tool results | 400 | Return every requested tool result with its matching ID |
+| API key in code                 | Credential exposure | Use environment variable                                |
 | Custom retry needs              | 429/5xx          | SDK retries automatically; customize with `max_retries` |
 
 ## Typed Exceptions in SDKs

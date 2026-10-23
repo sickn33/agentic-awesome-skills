@@ -2,9 +2,9 @@
 
 ## Overview
 
-LLMs respond to the same persuasion principles as humans. Understanding this psychology helps you design more effective skills - not to manipulate, but to ensure critical practices are followed even under pressure.
+The following human persuasion categories are editorial heuristics for clear instructions. Their effects on an LLM depend on model, task, and evaluation; they do not establish authority or guarantee compliance.
 
-**Research foundation:** Meincke et al. (2025) tested 7 persuasion principles with N=28,000 AI conversations. Persuasion techniques more than doubled compliance rates (33% → 72%, p < .001).
+Use only honest, task-relevant wording within the user and host instruction hierarchy. Do not use persuasion to bypass safeguards or invent urgency. Evaluate clarity and correctness on representative tasks.
 
 ## The Seven Principles
 
@@ -23,7 +23,7 @@ LLMs respond to the same persuasion principles as humans. Understanding this psy
 
 **Example:**
 ```markdown
-✅ Write code before test? Delete it. Start over. No exceptions.
+✅ If a required test was skipped, preserve the work and restore the agreed validation sequence.
 ❌ Consider writing tests first when feasible.
 ```
 
@@ -80,7 +80,7 @@ LLMs respond to the same persuasion principles as humans. Understanding this psy
 
 **Example:**
 ```markdown
-✅ Checklists without TodoWrite tracking = steps get skipped. Every time.
+✅ Track required checklist steps with an available tool or a plain text checklist.
 ❌ Some people find TodoWrite helpful for checklists.
 ```
 
@@ -140,15 +140,11 @@ LLMs respond to the same persuasion principles as humans. Understanding this psy
 - Explicit anti-rationalization counters close specific loopholes
 
 **Implementation intentions create automatic behavior:**
-- Clear triggers + required actions = automatic execution
+- Clear triggers + required actions make the intended behavior easier to test
 - "When X, do Y" more effective than "generally do Y"
 - Reduces cognitive load on compliance
 
-**LLMs are parahuman:**
-- Trained on human text containing these patterns
-- Authority language precedes compliance in training data
-- Commitment sequences (statement → action) frequently modeled
-- Social proof patterns (everyone does X) establish norms
+These analogies are not evidence that LLMs have human psychology. Measure behavior rather than inferring it from training-data narratives.
 
 ## Ethical Use
 
@@ -170,11 +166,7 @@ LLMs respond to the same persuasion principles as humans. Understanding this psy
 - Seven principles of persuasion
 - Empirical foundation for influence research
 
-**Meincke, L., Shapiro, D., Duckworth, A. L., Mollick, E., Mollick, L., & Cialdini, R. (2025).** Call Me A Jerk: Persuading AI to Comply with Objectionable Requests. University of Pennsylvania.
-- Tested 7 principles with N=28,000 LLM conversations
-- Compliance increased 33% → 72% with persuasion techniques
-- Authority, commitment, scarcity most effective
-- Validates parahuman model of LLM behavior
+The original upstream text cited a 2025 persuasion study. Its numerical claims and applicability to skill reliability have not been verified in this bundle and are not relied on here.
 
 ## Quick Reference
 

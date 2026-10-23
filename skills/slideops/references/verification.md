@@ -27,7 +27,7 @@ find_chrome() {
   done
 }
 CHROME=$(find_chrome)
-[ -x "$CHROME" ] || { npx --yes playwright install chromium; CHROME=$(find_chrome); }
+[ -x "$CHROME" ] || { echo "Reviewed Chrome/Chromium installation required" >&2; exit 1; }
 "$CHROME" --version   # sanity-check before the loop
 ```
 
@@ -36,9 +36,7 @@ name if you're there.) Quote `"$CHROME"` everywhere: the macOS binary path conta
 
 **Keep the Chrome sandbox on.** The commands below deliberately omit `--no-sandbox`. You
 are rendering a page built from repository content, so the sandbox is the layer that
-contains a malicious payload if one ever reaches a slide. Add `--no-sandbox` only if
-Chrome refuses to start as root inside a container that cannot grant user namespaces, and
-say so when you do; the better fix is to run as a non-root user.
+contains a malicious payload if one ever reaches a slide. If Chrome cannot start with its sandbox, use a supported non-root environment; do not disable the sandbox to render repository-derived content. Block outbound network during rendering and inspect embedded HTML/SVG/URLs first.
 
 **Staging directory: always fresh, always per-deck.** Never use fixed shared paths like
 `/tmp/slide-01.png`: parallel deck builds (or a second deck in the same session) collide

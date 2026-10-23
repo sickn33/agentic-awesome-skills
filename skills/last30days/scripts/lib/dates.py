@@ -27,7 +27,7 @@ def parse_date(date_str: Optional[str]) -> Optional[datetime]:
     try:
         ts = float(date_str)
         return datetime.fromtimestamp(ts, tz=timezone.utc)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OSError, OverflowError):
         pass
 
     # Try ISO formats
@@ -41,7 +41,8 @@ def parse_date(date_str: Optional[str]) -> Optional[datetime]:
 
     for fmt in formats:
         try:
-            return datetime.strptime(date_str, fmt).replace(tzinfo=timezone.utc)
+            parsed = datetime.strptime(date_str, fmt)
+            return parsed.astimezone(timezone.utc) if parsed.tzinfo else parsed.replace(tzinfo=timezone.utc)
         except ValueError:
             continue
 

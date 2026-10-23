@@ -1,8 +1,14 @@
 ---
 title: "HomeKit | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/homekit
+---
 
 # HomeKit
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** Home control can affect physical safety. Preserve the person’s explicit intent for locks, doors, alarms, and automations; report unavailable or stale state and failed commands instead of assuming success.
+
 
 HomeKit lets people securely control connected accessories in their homes using Siri or the Home app on iPhone, iPad, Apple Watch, and Mac.
 

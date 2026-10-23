@@ -24,3 +24,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/lang-python.md` | `plugins/sharp-edges/skills/sharp-edges/references/lang-python.md` | `11ec4fb4b6d3fa8149c2dc9c583a10047951a3fc` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/lang-ruby.md` | `plugins/sharp-edges/skills/sharp-edges/references/lang-ruby.md` | `211bf2065dcd31fbf3afc620c793cb9fd286108a` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/language-specific.md` | `plugins/sharp-edges/skills/sharp-edges/references/language-specific.md` | `a7feb9690486a29735bfdd03da90cfd2a43b7d88` | text-only trailing whitespace and EOF blank lines normalized |
+
+## Catalog adaptation changes
+
+Local corrections change the imported references: fixed encrypt-then-MAC guidance, authentication timing/atomic token use, language semantics (Rust, Kotlin, Ruby, C#, PHP, JavaScript, Swift, Go, Python/C), version-dependent claims and unsafe example mitigations. The root duplicate frontmatter/description was repaired. Reference adaptations retain CC-BY-SA-4.0 and the pinned Trail of Bits attribution above; original blob IDs identify input material, not current local bytes. No upstream endorsement or live vulnerability finding is claimed.

@@ -81,7 +81,10 @@ export function matchesFrameworkVersion(pattern, framework, version) {
 }
 
 function parseVersion(v) {
-  const m = String(v).replace(/^[v^~]+/, '').match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
+  const text = String(v).replace(/^[v^~]+/, '');
+  // Do not treat canary/RC or unparsed ranges as an installed stable release.
+  if (!/^\d+(?:\.\d+){0,2}(?:\+[0-9A-Za-z.-]+)?$/.test(text)) return null;
+  const m = text.match(/^(\d+)(?:\.(\d+))?(?:\.(\d+))?/);
   if (!m) return null;
   return [Number(m[1]) || 0, Number(m[2]) || 0, Number(m[3]) || 0];
 }

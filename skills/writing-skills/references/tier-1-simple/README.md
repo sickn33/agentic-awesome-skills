@@ -24,7 +24,7 @@ my-skill/
 
 ## Example
 
-```yaml
+````yaml
 ---
 name: flatten-with-flags
 description: Use when simplifying deeply nested conditionals.
@@ -65,7 +65,7 @@ function process(data) {
   return doWork(data);
 }
 ```
-```
+````
 
 ## Checklist
 

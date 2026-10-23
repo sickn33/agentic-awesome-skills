@@ -1,10 +1,12 @@
 # Streaming — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Quick Start
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Write a story" }],
 });
@@ -23,11 +25,11 @@ for await (const event of stream) {
 
 ## Handling Different Content Types
 
-> **Opus 4.6:** Use `thinking: {type: "adaptive"}`. On older models, use `thinking: {type: "enabled", budget_tokens: N}` instead.
+> **Thinking:** Check the selected model capabilities before using adaptive or fixed-budget thinking.
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 16000,
   thinking: { type: "adaptive" },
   messages: [{ role: "user", content: "Analyze this problem" }],
@@ -82,7 +84,7 @@ const getWeather = betaZodTool({
 });
 
 const runner = client.beta.messages.toolRunner({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 4096,
   tools: [getWeather],
   messages: [
@@ -117,7 +119,7 @@ for await (const messageStream of runner) {
 
 ```typescript
 const stream = client.messages.stream({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Hello" }],
 });

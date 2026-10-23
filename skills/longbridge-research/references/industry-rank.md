@@ -1,11 +1,13 @@
 # industry-rank
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
 Industry ranking list by market and indicator
 
 Returns a ranked list of industries. The "Counter ID" column contains BK `counter_ids` (e.g. BK/US/IN00258) that can be passed directly to `industry-peers` to explore the sub-sector hierarchy for that industry.
 
-Example: longbridge industry-rank --market US Example: longbridge industry-rank --market HK --indicator market-cap Example: longbridge industry-rank --market US --indicator revenue --limit 10
+Example: longbridge industry-rank --market US Example: longbridge industry-rank --market HK --indicator market-cap Example: longbridge industry-rank --market US --indicator revenue --count 10
 
 Usage: longbridge industry-rank [OPTIONS] --market <MARKET>
 
@@ -55,7 +57,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge industry-rank --format json
+longbridge industry-rank --market US --format json
 
 # See all options
 longbridge industry-rank --help

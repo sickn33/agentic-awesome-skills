@@ -1,18 +1,22 @@
 # /// script
 # dependencies = [
+#     "torch",
 #     "transformers>=5.2.0",
 #     "accelerate>=1.1.0",
 #     "timm",
 #     "datasets>=4.0",
-#     "evaluate",
 #     "scikit-learn",
 #     "torchvision",
-#     "trackio",
 #     "huggingface_hub",
 # ]
 # ///
 
 """Fine-tuning any Transformers or timm model supported by AutoModelForImageClassification using the Trainer API."""
+
+# Modified by AAS: bounded, local-only pilot; see root SKILL.md.
+from vision_safety import execution_guard, configure_local_run, load_bounded_dataset, validated_xywh
+if __name__ == "__main__":
+    execution_guard()  # fail before third-party imports, downloads, writes or telemetry
 
 import logging
 import os
@@ -21,7 +25,6 @@ from dataclasses import dataclass, field
 from functools import partial
 from typing import Any
 
-import evaluate
 import numpy as np
 import torch
 from datasets import load_dataset
@@ -35,7 +38,6 @@ from torchvision.transforms import (
     ToTensor,
 )
 
-import trackio
 
 import transformers
 from transformers import (
@@ -60,6 +62,7 @@ require_version("datasets>=2.0.0")
 
 @dataclass
 class DataTrainingArguments:
+    dataset_revision: str = field(default="", metadata={"help": "Full reviewed dataset commit SHA."})
     dataset_name: str = field(
         default="ethz/food101",
         metadata={"help": "Name of a dataset from the Hub."},
@@ -172,19 +175,12 @@ def main():
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
     # --- Hub authentication ---
-    from huggingface_hub import login
-    hf_token = os.environ.get("HF_TOKEN") or os.environ.get("hfjob")
-    if hf_token:
-        login(token=hf_token)
-        training_args.hub_token = hf_token
-        logger.info("Logged in to Hugging Face Hub")
-    elif training_args.push_to_hub:
-        logger.warning("HF_TOKEN not found in environment. Hub push will likely fail.")
+    configure_local_run(model_args, data_args, training_args)
+    from PIL import Image
+    import warnings
+    Image.MAX_IMAGE_PIXELS = 16_000_000
+    warnings.simplefilter("error", Image.DecompressionBombWarning)
 
-    # --- Trackio ---
-    trackio.init(project=training_args.output_dir, name=training_args.run_name)
-
-    # --- Logging ---
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
@@ -204,14 +200,15 @@ def main():
         f"n_gpu: {training_args.n_gpu}, distributed training: "
         f"{training_args.parallel_mode.value == 'distributed'}, 16-bits training: {training_args.fp16}"
     )
-    logger.info(f"Training/evaluation parameters {training_args}")
+    logger.info("Bounded local pilot; credentials/configuration are not logged")
 
     # --- Load dataset ---
-    dataset = load_dataset(
+    dataset = load_bounded_dataset(
         data_args.dataset_name,
         data_args.dataset_config_name,
         cache_dir=model_args.cache_dir,
-        trust_remote_code=model_args.trust_remote_code,
+        trust_remote_code=False,
+        revision=data_args.dataset_revision, train_limit=data_args.max_train_samples, eval_limit=data_args.max_eval_samples
     )
 
     # --- Resolve label column ---
@@ -238,6 +235,11 @@ def main():
         else:
             label_names = [str(l) for l in unique_labels]
 
+    if not label_names:
+        raise ValueError("Training labels are empty")
+    if not hasattr(label_feature, "names") and not all(isinstance(v,str) for v in unique_labels):
+        if any(isinstance(v,bool) or not isinstance(v,int) for v in unique_labels) or unique_labels != list(range(len(unique_labels))):
+            raise ValueError("Map plain numeric labels to contiguous integer IDs before training")
     num_labels = len(label_names)
     id2label = dict(enumerate(label_names))
     label2id = {v: k for k, v in id2label.items()}
@@ -276,7 +278,7 @@ def main():
         "cache_dir": model_args.cache_dir,
         "revision": model_args.model_revision,
         "token": model_args.token,
-        "trust_remote_code": model_args.trust_remote_code,
+        "trust_remote_code": False,
     }
 
     config = AutoConfig.from_pretrained(
@@ -291,6 +293,7 @@ def main():
         model_args.model_name_or_path,
         config=config,
         ignore_mismatched_sizes=model_args.ignore_mismatched_sizes,
+        use_safetensors=True,
         **common_pretrained_args,
     )
 
@@ -324,11 +327,11 @@ def main():
         dataset["test"].set_transform(preprocess_val)
 
     # --- Metrics ---
-    accuracy_metric = evaluate.load("accuracy")
+    # No dynamically downloaded metric module.
 
     def compute_metrics(eval_pred: EvalPrediction):
         predictions = np.argmax(eval_pred.predictions, axis=1)
-        return accuracy_metric.compute(predictions=predictions, references=eval_pred.label_ids)
+        return {"accuracy": float(np.mean(predictions == eval_pred.label_ids))}
 
     # --- Trainer ---
     eval_dataset = None
@@ -350,8 +353,9 @@ def main():
 
     # --- Train ---
     if training_args.do_train:
-        train_result = trainer.train(resume_from_checkpoint=training_args.resume_from_checkpoint)
+        train_result = trainer.train()
         trainer.save_model()
+        image_processor.save_pretrained(training_args.output_dir)
         trainer.log_metrics("train", train_result.metrics)
         trainer.save_metrics("train", train_result.metrics)
         trainer.save_state()
@@ -365,7 +369,7 @@ def main():
             trainer.log_metrics(test_prefix, metrics)
             trainer.save_metrics(test_prefix, metrics)
 
-    trackio.finish()
+    # Local metrics only.
 
     # --- Push to Hub ---
     kwargs = {

@@ -45,11 +45,27 @@ def graphql(query: str, variables: dict, key_id: str, key_token: str) -> dict:
             "Content-Type": "application/json",
         },
         timeout=30,
+        allow_redirects=False,
+        stream=True,
     )
-    resp.raise_for_status()
-    body = resp.json()
+    if resp.status_code != 200:
+        resp.close()
+        raise RuntimeError("GraphQL HTTP request failed; response details redacted")
+    chunks = []
+    size = 0
+    try:
+        for chunk in resp.iter_content(chunk_size=16384):
+            size += len(chunk)
+            if size > 2 * 1024 * 1024:
+                raise RuntimeError("GraphQL response exceeds the 2 MiB verification limit")
+            chunks.append(chunk)
+    finally:
+        resp.close()
+    body = json.loads(b"".join(chunks))
     if "errors" in body:
-        raise RuntimeError(json.dumps(body["errors"], indent=2))
+        raise RuntimeError("GraphQL returned errors; details redacted")
+    if not isinstance(body.get("data"), dict):
+        raise RuntimeError("GraphQL response is missing a data object")
     return body["data"]
 
 
@@ -101,10 +117,10 @@ def verify_schema(mcon: str, expected_fields: list[str], key_id: str, key_token:
         print("  WARN: no schema versions found")
         return False
     fields = edges[0]["node"]["fields"]
-    got_names = {f["name"].lower() for f in fields}
+    got_names = {f["name"] for f in fields}
     print(f"  Schema: {len(fields)} column(s) — {', '.join(f['name'] for f in fields[:8])}{'...' if len(fields) > 8 else ''}")
     if expected_fields:
-        missing = [e for e in expected_fields if e.lower() not in got_names]
+        missing = [e for e in expected_fields if e not in got_names]
         if missing:
             print(f"  FAIL: missing columns: {missing}")
             return False
@@ -143,7 +159,7 @@ def verify_metrics(mcon: str, key_id: str, key_token: str) -> None:
         latest = max(points, key=lambda p: p.get("measurementTimestamp") or "")
         val = latest.get("value")
         ts = latest.get("measurementTimestamp")
-        if metric_name == "total_row_count_last_changed_on" and val:
+        if metric_name == "total_row_count_last_changed_on" and val is not None:
             ts_fmt = datetime.fromtimestamp(float(val), tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
             print(f"  {metric_name}: {ts_fmt}")
         else:
@@ -175,10 +191,7 @@ def verify_detectors(mcon: str, key_id: str, key_token: str) -> None:
     size_status = size.get("status", "not available")
     print(f"  Freshness detector: {freshness_status}")
     print(f"  Volume detector:    {size_status}")
-    if freshness_status in ("no data", "training"):
-        print("  ↳ Freshness needs 7+ pushes with changed last_update_time over ~2 weeks")
-    if size_status in ("no data", "training"):
-        print("  ↳ Volume needs 10-48 samples over ~42 days (push hourly, consistently)")
+    print("  Training requirements must be checked against the current account contract.")
 
 
 # ---------------------------------------------------------------------------
@@ -268,7 +281,8 @@ def verify_query_logs(
     for query_type in ("read", "write"):
         cursor = None
         total = 0
-        while True:
+        seen_cursors = set()
+        for page_number in range(100):
             data = graphql(
                 """query GetQueries($mcon: String!, $type: String!, $start: DateTime!, $end: DateTime!, $after: String) {
                      getAggregatedQueries(mcon: $mcon, queryType: $type,
@@ -288,7 +302,12 @@ def verify_query_logs(
             page = result.get("pageInfo", {})
             if not page.get("hasNextPage"):
                 break
-            cursor = page["endCursor"]
+            cursor = page.get("endCursor")
+            if not cursor or cursor in seen_cursors:
+                raise RuntimeError("Query-log pagination did not advance")
+            seen_cursors.add(cursor)
+        else:
+            raise RuntimeError("Query-log pagination exceeded 100 pages; result incomplete")
         print(f"  {query_type} queries: {total}")
 
 
@@ -299,9 +318,9 @@ def verify_query_logs(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Verify Monte Carlo push-ingested data via GraphQL")
     parser.add_argument("--key-id",    default=os.environ.get("MCD_ID"))
-    parser.add_argument("--key-token", default=os.environ.get("MCD_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.environ.get("MCD_TOKEN"))
     parser.add_argument("--resource-uuid", default=os.environ.get("MCD_RESOURCE_UUID"), required=False)
-    parser.add_argument("--full-table-id", required=True, help="e.g. analytics:public.orders")
+    parser.add_argument("--full-table-id", help="e.g. analytics:public.orders")
     parser.add_argument("--mcon", help="Use MCON directly instead of resolving from fullTableId")
     parser.add_argument("--check-schema",  action="store_true")
     parser.add_argument("--check-metrics", action="store_true")
@@ -317,6 +336,13 @@ def main() -> None:
         print("ERROR: Provide --key-id/--key-token or set MCD_ID/MCD_TOKEN", file=sys.stderr)
         sys.exit(1)
 
+    if not 1 <= args.lookback_hours <= 744:
+        parser.error("lookback-hours must be between 1 and 744")
+    if not any((args.check_schema, args.check_metrics, args.check_detectors, args.check_lineage, args.check_query_logs)):
+        parser.error("Select at least one check")
+    if not args.mcon and not args.full_table_id:
+        parser.error("Provide --mcon or --full-table-id")
+    failures = []
     print(f"\n{'='*60}")
     print(f"Verifying: {args.full_table_id}")
     print(f"{'='*60}")
@@ -330,7 +356,8 @@ def main() -> None:
 
     if args.check_schema:
         print("\n[Schema]")
-        verify_schema(mcon, args.expected_fields, args.key_id, args.key_token)
+        if not verify_schema(mcon, args.expected_fields, args.key_id, args.key_token):
+            failures.append("schema")
 
     if args.check_metrics:
         print("\n[Metrics]")
@@ -342,7 +369,8 @@ def main() -> None:
 
     if args.check_lineage:
         print("\n[Table Lineage]")
-        verify_table_lineage(mcon, args.expected_sources, args.key_id, args.key_token)
+        if not verify_table_lineage(mcon, args.expected_sources, args.key_id, args.key_token):
+            failures.append("lineage")
 
     if args.check_query_logs:
         print("\n[Query Logs]")
@@ -350,7 +378,10 @@ def main() -> None:
         start = end - timedelta(hours=args.lookback_hours)
         verify_query_logs(mcon, start, end, args.key_id, args.key_token)
 
-    print("\nDone.")
+    if failures:
+        print("Failed checks: " + ", ".join(failures), file=sys.stderr)
+        sys.exit(1)
+    print("\nSelected checks completed; observational output does not certify complete ingestion.")
 
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ date_added: "2026-02-27"
 
 # Frontend Development Guidelines
 
-**(React · TypeScript · Suspense-First · Production-Grade)**
+**(React · TypeScript · Suspense-oriented examples)**
 
 You are a **senior frontend engineer** operating under strict architectural and performance standards.
 
@@ -20,7 +20,7 @@ Your goal is to build **scalable, predictable, and maintainable React applicatio
 * Strict TypeScript discipline
 * Performance-safe defaults
 
-This skill defines **how frontend code must be written**, not merely how it *can* be written.
+These are conventions for an illustrative MUI/TanStack application. Existing project requirements and user scope take precedence; do not impose a stack migration.
 
 ---
 
@@ -34,7 +34,7 @@ Before implementing a component, page, or feature, assess feasibility.
 | --------------------- | ---------------------------------------------------------------- |
 | **Architectural Fit** | Does this align with feature-based structure and Suspense model? |
 | **Complexity Load**   | How complex is state, data, and interaction logic?               |
-| **Performance Risk**  | Does it introduce rendering, bundle, or CLS risk?                |
+| **Performance Safety**  | Does it introduce rendering, bundle, or CLS risk?                |
 | **Reusability**       | Can this be reused without modification?                         |
 | **Maintenance Cost**  | How hard will this be to reason about in 6 months?               |
 
@@ -44,13 +44,13 @@ Before implementing a component, page, or feature, assess feasibility.
 FFCI = (Architectural Fit + Reusability + Performance) − (Complexity + Maintenance Cost)
 ```
 
-**Range:** `-5 → +15`
+**Range:** `-7 → +13`
 
 ### Interpretation
 
 | FFCI      | Meaning    | Action            |
 | --------- | ---------- | ----------------- |
-| **10–15** | Excellent  | Proceed           |
+| **10–13** | Excellent  | Proceed           |
 | **6–9**   | Acceptable | Proceed with care |
 | **3–5**   | Risky      | Simplify or split |
 | **≤ 2**   | Poor       | Redesign          |
@@ -367,3 +367,7 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Application prerequisites and limits
+
+SuspenseLoader, LoadingOverlay, useMuiSnackbar, useAuth and apiClient are project-specific examples, not bundled implementations. Provide or adapt them before use. FFCI is an advisory heuristic, not a validated feasibility/performance gate. Suspense does not itself prevent layout shift; reserve matching fallback space. Regular useQuery and early returns are valid when hooks are unconditional and loading/error/empty states are handled. Profile memoization and lazy boundaries rather than applying them mechanically. Server authorization and runtime response validation remain required; TypeScript does not validate network data.

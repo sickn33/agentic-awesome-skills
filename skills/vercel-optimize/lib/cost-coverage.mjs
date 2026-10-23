@@ -128,7 +128,7 @@ export function renderCostCoverageMarkdown(coverage) {
   lines.push('');
   const coveredPct = totalBilled > 0 ? (coveredBilled / totalBilled) * 100 : 0;
   const uncoveredPct = totalBilled > 0 ? (uncoveredBilled / totalBilled) * 100 : 0;
-  lines.push(`This audit has metric coverage for **$${coveredBilled.toFixed(0)} (${coveredPct.toFixed(0)}%)** of this bill via function-duration, edge-requests, ISR, middleware, and image-optimization dimensions. **$${uncoveredBilled.toFixed(0)} (${uncoveredPct.toFixed(0)}%)** sits in billed areas this run cannot analyze safely, including the top actionable items below:`);
+  lines.push(`Configured audit checks address billing categories representing **$${coveredBilled.toFixed(0)} (${coveredPct.toFixed(0)}%)** of this bill; this is category coverage, not proof that this run collected usable metrics for each category. **$${uncoveredBilled.toFixed(0)} (${uncoveredPct.toFixed(0)}%)** sits in billed areas this run cannot analyze safely, including the top actionable items below:`);
   lines.push('');
   lines.push('| Service | Billed | Share | Family | Coverage |');
   lines.push('|---|---|---|---|---|');

@@ -196,7 +196,7 @@ const SemiFlatCard = () => (
 );
 ```
 - On iOS use `shadowOpacity: 0.05...0.10` with `shadowRadius: 16...24` for a diffuse spread.
-- On Android, `elevation: 2...4` is equivalent. Avoid going above `elevation: 6`.
+- Android elevation and iOS shadow radius use different rendering models; these values are starting points, not visual equivalents.
 - Use `Pressable` with `({ pressed })` style callback for animated press states.
 
 ### Jetpack Compose

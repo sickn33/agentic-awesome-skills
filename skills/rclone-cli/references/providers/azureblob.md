@@ -231,10 +231,11 @@ for ensuring the configured authority is valid and trustworthy.
 
 Credentials created with the `az` tool can be picked up using `env_auth`.
 
-For example if you were to login with a service principal like this:
+For interactive Azure CLI authentication, sign in without putting a secret
+on the command line:
 
 ```console
-az login --service-principal -u XXX -p XXX --tenant XXX
+az login
 ```
 
 Then you could access rclone resources like this:
@@ -293,9 +294,9 @@ fail
 rclone ls azureblob:othercontainer
 ```
 
-Container level SAS URLs are useful for temporarily allowing third
-parties access to a single container or putting credentials into an
-untrusted environment such as a CI build server.
+Container SAS URLs grant bearer access within their permissions and lifetime.
+Limit permissions and expiry, store them as protected CI secrets, and never
+expose them to untrusted pull-request jobs or logs.
 
 #### Service principal with client secret
 
@@ -610,8 +611,9 @@ Path to file containing credentials for use with a service principal.
 
 Leave blank normally. Needed only if you want to use a service principal instead of interactive login.
 
+    $ umask 077
     $ az ad sp create-for-rbac --name "<name>" \
-      --role "Storage Blob Data Owner" \
+      --role "Storage Blob Data Contributor" \
       --scopes "/subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Storage/storageAccounts/<storage-account>/blobServices/default/containers/<container>" \
       > azure-principal.json
 
@@ -686,7 +688,7 @@ Properties:
 
 #### --azureblob-msi-client-id
 
-Object ID of the user-assigned MSI to use, if any.
+Client ID of the user-assigned MSI to use, if any.
 
 Leave blank if msi_object_id or msi_mi_res_id specified.
 

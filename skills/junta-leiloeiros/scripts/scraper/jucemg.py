@@ -87,7 +87,7 @@ class JucemgScraper(AbstractJuntaScraper):
 
             record = {
                 "nome": nome_raw,
-                "municipio": "Belo Horizonte",
+                "municipio": None,
                 "situacao": situacao,
             }
 
@@ -152,7 +152,7 @@ class JucemgScraper(AbstractJuntaScraper):
                     "nome": nome_raw,
                     "matricula": matricula,
                     "situacao": situacao,
-                    "municipio": "Belo Horizonte",
+                    "municipio": None,
                 })
             if records:
                 break
@@ -209,7 +209,7 @@ class JucemgScraper(AbstractJuntaScraper):
                     nome=nome,
                     matricula=gcol(cells, ["matr", "registro"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio="Belo Horizonte",
+                    municipio=None,
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                 ))

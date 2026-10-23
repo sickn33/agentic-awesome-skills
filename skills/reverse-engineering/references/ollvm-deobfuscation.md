@@ -1,7 +1,7 @@
 # OLLVM 反混淆 / Obfuscator-LLVM Deobfuscation
 
 > 面向 APK .so、ELF 二进制和控制流平坦化场景的 OLLVM 脱密工作流。
-> 工具与变种信息基于 2026 年社区活跃项目调研，非训练记忆。
+> 继承的工具/变种笔记；未附独立调研证据。兼容性、活跃度、星数和效果排序不能作为已验证事实。
 > 适用：Android NDK 加固、CTF 逆向、加壳 .so 分析、商业混淆器对抗。
 
 ---
@@ -12,17 +12,16 @@
 
 | 你的情况 | 首选工具 | 备选 | 说明 |
 |---------|---------|------|------|
-| 有 IDA Pro 7.5-7.7 + Hex-Rays，想一键去平坦化 | **obpo-plugin** | d810-ng | obpo 用 microcode + 数据流 + 混合执行，效果最强，但是云插件（需联网，核心闭源） |
-| 有 IDA Pro（任意较新版本），想本地一站式反混淆 | **d810-ng** | D-810 原版 | 本地、开源、集成 Z3，支持 OLLVM/Tigress/Hodur/Approov 多变种 |
+| 有 IDA Pro 7.5-7.7 + Hex-Rays，想一键去平坦化 | **obpo-plugin** | d810-ng | obpo 用 microcode + 数据流 + 混合执行，效果需目标实测，但是云插件（需联网，核心闭源） |
+| 有 IDA Pro（与该插件兼容的指定版本），想本地一站式反混淆 | **d810-ng** | D-810 原版 | 本地、开源、集成 Z3，支持 OLLVM/Tigress/Hodur/Approov 多变种 |
 | 有 Binary Ninja | **ollvm-breaker** | — | 针对 Android .so 实战（libvdog 等加固样本） |
-| 无 IDA/BN，纯脚本，目标 x86/x64 | **ollvm-unflattener** (Miasm) | angr deflat | 基于 Miasm 符号执行，BFS 多层处理 |
 | 无 IDA/BN，纯脚本，目标 x86/x64 | **ollvm-unflattener** (Miasm) | angr deflat | 基于 Miasm 符号执行，BFS 多层处理 |
 | 纯 Python 符号执行，CTF 场景 | **angr** Deobfuscator | Triton | 不依赖 GUI，脚本化 |
 | 目标是 ARM64 .so，无 IDA | **deollvm** (Unicorn) | angr | 基于 Unicorn 的 ARM64 deflat |
 | 遇到 BR 混淆（间接分支） | **DeObfBR** | 设置数据段只读 | Goron/Arkari 风格的 BR 混淆可被数据段只读简单对抗 |
 | 遇到 Tigress 混淆 | d810-ng `UnflattenerSwitchCase`/`UnflattenerTigressIndirect` | — | d810-ng 内置 Tigress 专用 unflattener |
 
-> **核心建议：** 优先用 **d810-ng**（本地、维护活跃、变种覆盖广）。云服务可用时 **obpo-plugin** 效果最好。两者都失败再上 **angr/Miasm** 符号执行做定制化处理。
+> **核心建议：** 优先用 **d810-ng**（本地、维护活跃、变种覆盖广）。云服务可用时 **obpo-plugin** 效果需目标实测。两者都失败再上 **angr/Miasm** 符号执行做定制化处理。
 
 ---
 
@@ -121,11 +120,11 @@ a - b  →  a + (~b) + 1
 
 ## 3. 主流工具详解（社区活跃项目）
 
-### 3.1 obpo-plugin — 最强效果，云插件
+### 3.1 obpo-plugin — 效果未作比较验证，云插件
 
 > [obpo-project/obpo-plugin](https://github.com/obpo-project/obpo-plugin) · 629⭐ · 2026-06 活跃
 
-基于 Hex-Rays **microcode** 的伪代码优化器，使用**数据流跟踪 + 程序切片 + 混合执行（concolic）**重建平坦化控制流。效果是社区公认最强之一。
+基于 Hex-Rays **microcode** 的伪代码优化器，使用**数据流跟踪 + 程序切片 + 混合执行（concolic）**重建平坦化控制流。效果是未附可复核比较实验。
 
 **关键特性：**
 - 在 microcode 层操作，直接优化反编译输出（不是改 ASM）
@@ -156,7 +155,7 @@ a - b  →  a + (~b) + 1
 
 > [w00tzenheimer/d810-ng](https://github.com/w00tzenheimer/d810-ng) · 223⭐ · 2026-06-26 更新
 
-D-810 的现代维护/重构版（Next Generation）。本地运行、开源、集成 **Z3 SMT** 求解器，变种覆盖最广。
+D-810 的现代维护/重构版（Next Generation）。本地运行、开源、集成 **Z3 SMT** 求解器，覆盖范围须对照当前版本。
 
 **核心能力（按 d810-ng README 整理）：**
 
@@ -255,8 +254,8 @@ cfg = proj.analyses.CFGFast()
 func = proj.kb.functions[0x12345]
 
 # 内置 Deobfuscator
-deob = proj.analyses.Deobfuscator(func=func)
-deob.normalize()
+deob = getattr(proj.analyses, "Deobfuscator")(func=func)  # optional extension, not a guaranteed stock angr API
+raise NotImplementedError("Check the installed extension API and validate output before use")
 ```
 
 **⚠️ Pluto/Polaris 的 Trap Angr pass：** 这两个变种专门写了 trap 来坑 angr 符号执行。如果 angr 路径爆炸或异常，怀疑目标用了 Trap Angr → 改用 d810-ng 或 Unicorn 动态方法。
@@ -328,7 +327,7 @@ c) sub: d810-ng MBA simplifier
 **Step 4 — Frida 动态验证：**
 ```javascript
 // Trace OLLVM 状态变量，辅助 deflat 确定状态变量地址
-const target = Module.findBaseAddress("libnative.so");
+const target = Process.getModuleByName("libnative.so").base;
 console.log("[+] libnative.so @", target);
 
 // 在分发器入口下 hook，观察 state 变化序列
@@ -357,8 +356,8 @@ funcs = sorted(cfg.functions.values(), key=lambda f: f.size, reverse=True)[:5]
 for func in funcs:
     print(f"[*] {func.name} @ {hex(func.addr)} size={hex(func.size)}")
     try:
-        deob = proj.analyses.Deobfuscator(func=func)
-        deob.normalize()
+        deob = getattr(proj.analyses, "Deobfuscator")(func=func)  # optional extension, not a guaranteed stock angr API
+        raise NotImplementedError("Check the installed extension API and validate output before use")
         print(f"    [+] deobfuscated")
     except Exception as e:
         print(f"    [-] failed: {e}")
@@ -406,11 +405,12 @@ for e in exprs:
 # OLLVM deobfuscation pipeline (2026 community tools)
 # 适用标准 OLLVM / Hikari / O-MVLL 加固的 ELF/.so
 
-BINARY=$1
+set -eu
+BINARY=${1:?Usage: script input-file}
 
 echo "[*] Stage 0: 基本分析与变种识别"
-file $BINARY
-readelf -h $BINARY 2>/dev/null | head -5
+file -- "$BINARY"
+readelf -h -- "$BINARY" 2>/dev/null | head -5
 echo "    → 在 IDA 中确认变种（参考第 1 节）"
 
 echo "[*] Stage 1: d810-ng 本地反混淆（首选）"
@@ -429,7 +429,7 @@ echo "    python unflattener -i $BINARY -o deobf.bin -t <func_addr> -a"
 echo "[*] Stage 4: ARM64 .so 无 IDA 备选"
 echo "    deollvm (Unicorn) 或 angr Deobfuscator"
 
-echo "[+] Done. 在 IDA 中重新分析验证。"
+echo "[PLAN ONLY] 此脚本仅打印建议，未执行反混淆或验证。"
 ```
 
 ---
@@ -457,7 +457,7 @@ echo "[+] Done. 在 IDA 中重新分析验证。"
 
 | 工具 | 平台 | 方式 | Stars/价 | 最近更新 | 开源 | 备注 |
 |------|------|------|---------|---------|------|------|
-| **obpo-plugin** | IDA | microcode+concolic（云） | 629 | 2026-06 | 插件开源/核心闭源 | 效果最强，需联网 |
+| **obpo-plugin** | IDA | microcode+concolic（云） | 629 | 2026-06 | 插件开源/核心闭源 | 效果需目标实测，需联网 |
 | **ollvm-breaker** | Binary Ninja | BN API | 441 | 2026-06 | ✅ | Android .so 实战 |
 | **ollvm-unflattener** | CLI | Miasm 符号执行 | 265 | 2026-06 | ✅ | x86/x64，BFS 多层 |
 | **d810-ng** | IDA | microcode+Z3 | 223 | 2026-06 | ✅ | **本地首选**，变种覆盖广 |
@@ -499,3 +499,7 @@ echo "[+] Done. 在 IDA 中重新分析验证。"
 - [MODeflattener](https://github.com/mrT4ntr4/MODeflattener) — 静态 deflat（ollvm-unflattener 的对照）
 
 > 关联文档：[[anti-analysis.md]] (反调试/反分析总表)、[[tools-advanced.md]] (高级工具集)、[[elf-analysis.md]] (ELF 文件分析)、[[ai-assisted-re.md]] (AI 辅助逆向)
+
+## Semantic preservation
+
+Data marked read-only in a decompiler database can change constant propagation assumptions; changing runtime segment permissions may instead crash or alter the program. Neither proves an indirect branch was recovered correctly. Do not infer an obfuscator from path explosion alone. Every rewrite must preserve fixed-width arithmetic, memory effects and branch semantics; smaller CFG/function size or one successful test is not full equivalence. Pin tools/releases and verify official APIs before installation; cloud processing requires data-sharing authorization and no confidential uploads by default.

@@ -29,3 +29,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/value-screen.md` | `skills/longbridge-fundamentals/references/value-screen.md` | `d5566b79d1c05952f2657b777b1840bf79d9a7a6` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/smallcap-growth.md` | `skills/longbridge-fundamentals/references/smallcap-growth.md` | `6d25624de7dc94e004d57f651e5492522ec4c91a` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/main-business-analysis.md` | `skills/longbridge-fundamentals/references/main-business-analysis.md` | `1d9573da5d865cf7e0c0200d2328323727f56bb6` | text-only trailing whitespace and EOF blank lines normalized |
+
+Local review changes (2026-10-23): examples now include required CLI arguments; valuation cash-flow, percentile/ranking, reconciliation, screening, source/access and software-update limitations were corrected. Original blob SHAs above identify import provenance, not the modified local content.

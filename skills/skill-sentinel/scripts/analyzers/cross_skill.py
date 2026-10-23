@@ -27,7 +27,7 @@ def analyze_cross_skill(all_skills: List[Dict[str, Any]]) -> Tuple[float, List[D
     for skill in all_skills:
         for rel_path in skill.get("python_files", []):
             filename = Path(rel_path).name
-            module_presence.setdefault(filename, []).append(skill["name"])
+            module_presence.setdefault(filename, set()).add(skill["name"])
 
     shared_modules = {k: v for k, v in module_presence.items() if len(v) > 1}
 
@@ -39,9 +39,9 @@ def analyze_cross_skill(all_skills: List[Dict[str, Any]]) -> Tuple[float, List[D
                 "skill_name": "cross-skill",
                 "dimension": "cross_skill",
                 "severity": "medium",
-                "category": "duplicated_module",
+                "category": "shared_module_name",
                 "title": f"Modulo '{module}' presente em {len(skills)} skills",
-                "description": f"Skills: {', '.join(skills)}. "
+                "description": f"Skills: {', '.join(sorted(skills))}. "
                                "Potencial para extrair em modulo compartilhado.",
                 "recommendation": f"Avaliar se {module} pode ser extraido para uma lib compartilhada "
                                   f"(ex: shared-core/scripts/{module})",
@@ -59,7 +59,7 @@ def analyze_cross_skill(all_skills: List[Dict[str, Any]]) -> Tuple[float, List[D
             "category": "shared_db_pattern",
             "title": f"{len(db_skills)} skills com modulo db.py independente",
             "description": f"Skills: {', '.join(s['name'] for s in db_skills)}. "
-                           "Padrao Database._connect() com WAL mode eh repetido.",
+                           "Nomes semelhantes nao demonstram codigo duplicado.",
             "recommendation": "Criar classe BaseDatabase em shared-core com _connect(), "
                               "e cada skill herdar e definir apenas suas tabelas.",
             "effort": "medium",
@@ -75,7 +75,7 @@ def analyze_cross_skill(all_skills: List[Dict[str, Any]]) -> Tuple[float, List[D
             "severity": "info",
             "category": "shared_config_pattern",
             "title": f"{len(config_skills)} skills com config.py similar",
-            "description": "Padrao de paths (ROOT_DIR, DATA_DIR, etc) repetido.",
+            "description": "Somente nomes de arquivos detectados; comparar implementacoes antes de extrair.",
             "recommendation": "Considerar base_config.py compartilhado com paths padrao",
             "effort": "low",
             "impact": "low",

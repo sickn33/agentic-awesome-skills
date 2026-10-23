@@ -14,3 +14,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/style_configurator.py` | `skills/matplotlib/scripts/style_configurator.py` | `1a0aca236605e633b50267599c917d4cbd60cf7a` | content unchanged |
 | `references/api_reference.md` | `skills/matplotlib/references/api_reference.md` | `9ca3c61971556697c625036aebba702165c18e55` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/common_issues.md` | `skills/matplotlib/references/common_issues.md` | `e1304c7b718262bee42d855a3ea73f0a26711479` | text-only trailing whitespace and EOF blank lines normalized |
+
+2026-10-23 adaptations: corrected Figure/Axes return contract, exclusive plot output, current boxplot APIs, rcParam/PNG/font-cache errors, hex-color style serialization and illustrative uncertainty labels; preserved MIT attribution. Both scripts AST-parsed, not executed or rendered during review.

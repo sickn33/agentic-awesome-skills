@@ -132,6 +132,6 @@ For another industry ask: what are the common reasons people contact the busines
 1. Summarize the proposed name, role, mode, language, voice, prompt, knowledge, tools, integrations, extraction, and escalation behavior.
 2. Create or update only after the user has approved any material choices not already specified.
 3. Read the assistant back and compare the returned configuration with the approved proposal.
-4. Use `create_assistant_test`/`run_assistant_test` for deterministic cases or `run_assistant_simulation_task` for broader evaluation when appropriate.
+4. Use `create_assistant_test`/`run_assistant_test` for specified test cases or `run_assistant_simulation_task` for broader evaluation when appropriate. Model judgments are not deterministic proof of safety; voice mode places real calls, and assigned tools or integrations can have external effects. Use synthetic fixtures and sandbox destinations, with authorization for any live traffic or cost.
 5. Verify failures and edge cases: unknown answer, tool failure, transfer unavailable, silence, opt-out, abusive input, and conversation close.
 6. Iterate through `update_assistant` and preserve versions so a prior state can be inspected or restored when needed.

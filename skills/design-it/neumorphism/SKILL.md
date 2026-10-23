@@ -18,7 +18,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 ## Core Principles
 1. **Unified Surface Color**: The background and the elements MUST share the exact same base color.
 2. **Dual Shadows**: Elements are shaped by two shadows: a light shadow (highlight) on the side facing the light source, and a dark shadow on the opposite side.
-3. **No Borders**: The shape is entirely defined by the shadows.
+3. **Accessible Boundaries**: Shadows establish the style, but add a visible border or other indicator when needed to identify controls and focus.
 
 ## Visual DNA
 - **Colors**: Works best with mid-tone neutrals. **Desert Mirage**, **Earth-Grounded Elegance**, or **Sophisticated Neutral** are perfect. Avoid pure white or pure black (shadows/highlights won't show).
@@ -132,7 +132,7 @@ struct NeuButton: View {
 }
 ```
 - The key trick: two `.shadow()` modifiers — one white (top-left), one dark (bottom-right).
-- Inner shadow (pressed state) requires a ZStack/overlay hack since SwiftUI doesn't have native `inset` shadows. Clip stroked shapes to simulate.
+- Recent SwiftUI supports ShapeStyle.shadow(.inner(...)); the overlay example is a fallback for older targets, not the only implementation.
 - The view's background color MUST match its parent's background exactly.
 
 ### Flutter
@@ -195,13 +195,13 @@ const NeuCard = () => (
     elevation: 8,
   }}>
     <Text style={{ fontSize: 20, fontWeight: '600' }}>Neumorphic Card</Text>
-    <Text style={{ fontSize: 15, color: '#888', marginTop: 16 }}>
+    <Text style={{ fontSize: 15, color: '#555', marginTop: 16 }}>
       Extruded from the surface itself.
     </Text>
   </View>
 );
 ```
-- **Major limitation**: React Native only supports ONE shadow per view. True neumorphism requires TWO opposing shadows.
+- **Legacy API limitation**: The shadowColor/shadowOffset family provides one shadow per view. New Architecture boxShadow supports multiple/inset shadows on supported OS versions; verify the target version before adding a dependency.
 - **Workaround**: Use `react-native-shadow-2` or `react-native-neomorph-shadows` which provide multi-shadow support.
 - Alternative: Wrap two nested `View`s — the outer one has the dark shadow, the inner one has the light shadow.
 - Inner shadows for pressed states require SVG-based solutions or pre-rendered images.
@@ -229,7 +229,7 @@ fun NeuCard() {
                 fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
             Spacer(Modifier.height(16.dp))
             Text("Extruded from the surface itself.",
-                fontSize = 15.sp, color = Color(0xFF888888))
+                fontSize = 15.sp, color = Color(0xFF555555))
         }
     }
 }

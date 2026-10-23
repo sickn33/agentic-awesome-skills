@@ -31,7 +31,7 @@ def main() -> None:
     parser.add_argument("--region", default=os.getenv("BIGQUERY_REGION", "us"))    # ← SUBSTITUTE
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--lookback-hours", type=int, default=LOOKBACK_HOURS)
     parser.add_argument("--output-file", default="lineage_output.json")
     parser.add_argument("--push-result-file", default="lineage_push_result.json")

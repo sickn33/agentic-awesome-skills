@@ -237,6 +237,9 @@ def analyze_requirements_txt(filepath: Path, verbose: bool = False) -> dict:
     deps_unpinned: list[str] = []
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -340,6 +343,9 @@ def analyze_pyproject_toml(filepath: Path, verbose: bool = False) -> dict:
     deps_unpinned: list[str] = []
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -447,6 +453,9 @@ def analyze_pipfile(filepath: Path, verbose: bool = False) -> dict:
     deps_unpinned: list[str] = []
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -554,6 +563,9 @@ def analyze_package_json(filepath: Path, verbose: bool = False) -> dict:
     dev_deps_total = 0
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -650,7 +662,7 @@ def analyze_package_json(filepath: Path, verbose: bool = False) -> dict:
                     line=line_num,
                     severity="CRITICAL",
                     description=f"Risky '{script_name}' lifecycle script: may execute arbitrary code",
-                    recommendation=f"Review and audit the '{script_name}' script: {script_cmd[:120]}",
+                    recommendation=f"Review the lifecycle script locally; command content omitted to protect secrets",
                     pattern="risky_lifecycle_script",
                 ))
 
@@ -711,6 +723,9 @@ def analyze_dockerfile(filepath: Path, verbose: bool = False) -> dict:
     has_user_directive = False
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -779,7 +794,7 @@ def analyze_dockerfile(filepath: Path, verbose: bool = False) -> dict:
                 line=line_num,
                 severity="CRITICAL",
                 description="COPY/ADD of potentially sensitive file (keys, .env, certificates)",
-                recommendation="Use Docker secrets or build args instead of copying sensitive files into images",
+                recommendation="Use BuildKit secret mounts or runtime secrets (never build args) instead of copying sensitive files into images",
                 pattern="sensitive_file_in_image",
             ))
 
@@ -819,6 +834,9 @@ def analyze_docker_compose(filepath: Path, verbose: bool = False) -> dict:
     services: list[str] = []
 
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -864,7 +882,7 @@ def discover_dependency_files(target: Path) -> list[Path]:
     found: list[Path] = []
 
     for fpath in safe_user_path(target).rglob("*"):
-        if not fpath.is_file() or any(part in config.SKIP_DIRECTORIES for part in fpath.parts):
+        if fpath.is_symlink() or not fpath.is_file() or any(part in config.SKIP_DIRECTORIES for part in fpath.parts):
             continue
         fname = fpath.name
         fname_lower = fname.lower()
@@ -1209,7 +1227,7 @@ def run_scan(
     elapsed = time.time() - start_time
 
     # Calculate pinning percentage
-    pinning_pct = (total_pinned / total_deps * 100.0) if total_deps > 0 else 100.0
+    pinning_pct = (total_pinned / total_deps * 100.0) if total_deps > 0 else 0.0
 
     # Aggregation
     severity_counts = aggregate_by_severity(all_findings)

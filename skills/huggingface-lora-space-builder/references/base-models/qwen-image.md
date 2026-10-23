@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # Qwen-Image and Qwen-Image-Edit reference
 
 The Qwen-Image family is fully supported in `diffusers`. Both base and edit variants accept LoRAs via the standard `load_lora_weights` interface.
@@ -27,7 +29,7 @@ Qwen-Image and Qwen-Image-Edit pipelines need extras beyond the standard diffuse
 The 2511 variant in particular often requires the latest `diffusers` from git, since `QwenImageEditPlusPipeline` and 2511-specific fixes land before pip releases:
 
 ```
-git+https://github.com/huggingface/diffusers
+git+https://github.com/huggingface/diffusers@<reviewed-full-commit-sha>
 ```
 
 If `from_pretrained("Qwen/Qwen-Image-Edit-2511", ...)` fails with a class-not-found or attribute error, switch the requirement to git.
@@ -116,7 +118,9 @@ Qwen-Image uses 16-pixel-aligned resolutions. When the user picks an aspect rati
 
 ```python
 def round_to_bucket(w, h, multiple=16):
-    return (w // multiple) * multiple, (h // multiple) * multiple
+    if multiple <= 0 or w <= 0 or h <= 0:
+        raise ValueError("Positive dimensions and alignment required")
+    return max(multiple, (int(w) // multiple) * multiple), max(multiple, (int(h) // multiple) * multiple)
 ```
 
 For image-edit pipelines, resize the input image to the nearest bucket while preserving aspect; don't crop.
@@ -142,3 +146,4 @@ Set `@spaces.GPU(duration=...)` accordingly.
 - **VAE memory.** For 1328×1328 outputs, consider `pipe.enable_vae_tiling()` and `pipe.enable_vae_slicing()` after loading. Keep them off for smaller resolutions to avoid quality loss.
 - **Don't compile the transformer on ZeroGPU.** `torch.compile` won't work; the speedup options on ZeroGPU are limited to reducing steps or using FP8-distilled variants.
 - **Negative prompts work** but defaults are often empty string. Don't expose a negative prompt in the UI unless the LoRA's behavior actually benefits from it.
+Recipe tables and timings are historical guidance. Match the pinned base/LoRA revision and documented API; validate finite bounded dimensions and preserve aspect within model constraints rather than claiming arbitrary independent rounding is exact aspect preservation.

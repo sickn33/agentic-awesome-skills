@@ -38,7 +38,7 @@ Apply the following filters (user can adjust thresholds):
 | PE historical percentile | < 50th pct (if available) | Below own history                  |
 | Gross margin             | > 20% (if available)      | Business quality filter            |
 
-**Composite value score** = equal-weight rank across (PE rank asc, PB rank asc, ROE rank desc, dividend yield rank desc). Higher score = better value candidate.
+**Illustrative composite score**: require positive meaningful denominators; rank valid PE/PB ascending and ROE/yield descending with best rank 1, average ties. Per metric score = 10 * (N - rank) / (N - 1), N > 1; average available comparable metrics with disclosed weights/coverage. A single candidate or missing required metric has no comparative score. Higher = stronger on this chosen screen, not a return prediction.
 
 **Cyclical-industry caveat**: for energy, steel, banks, shipping — low PE near a cycle peak may not signal undervaluation. Flag these and suggest using PB or dividend yield as primary metric.
 

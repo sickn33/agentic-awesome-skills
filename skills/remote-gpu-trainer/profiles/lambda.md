@@ -16,6 +16,8 @@ local_nvme: true              # ephemeral root/local NVMe, gone on terminate
 
 # Lambda Cloud — Profile
 
+Provider facts and prices below are a historical June 2026 snapshot. Confirm current official terms, API host, image and storage behavior before any authorized rental or teardown; this review did not exercise the provider.
+
 Lambda Cloud is a **cattle-not-pets** GPU cloud: on-demand + reserved instances, a prebuilt **Lambda
 Stack** image, and **no stop/suspend state** — an instance can only be **launched, restarted, or
 terminated**, and terminate destroys the local NVMe. Nothing on the box survives a teardown except what was
@@ -44,8 +46,7 @@ see `references/gotchas_universal.md`. Universal invariants → `references/prin
 Entry points:
 - **Web console** at `cloud.lambda.ai` → Instances → Launch (pick GPU type + region, attach a filesystem
   here if one is needed — see §2; attach any per-instance firewall ruleset here too — see §3/LAM4).
-- **REST API** — `https://cloud.lambdalabs.com/api/v1`, auth `curl -u $LAMBDA_API_KEY:` (basic-auth,
-  password empty). Canonical automation surface (verified docs.lambda.ai/api/cloud 2026-06):
+- **REST API** — `https://cloud.lambdalabs.com/api/v1`, auth via a dedicated mode-0600 netrc file selected with `curl --netrc-file "$LAMBDA_NETRC"` (basic-auth, password empty). Provision credentials privately for the confirmed API host; never put keys in command arguments, logs or shared files. Canonical automation surface (verified docs.lambda.ai/api/cloud 2026-06):
   - `GET  /instance-types` — lists every GPU type **and** `regions_with_capacity_available[]` per type.
     This field IS the capacity signal — poll it to know where a type can launch right now (drives LAM5
     retry-until-available).
@@ -126,26 +127,16 @@ path is to `pull` the result off-box (free egress) before terminating.
 
 ## 4. SPOT / INTERRUPTION + RESUME  *(principle #7/#8)*
 
-**No spot / preemptible tier — and no mid-run eviction.** This is the key divergence from vast.ai/RunPod:
-there is **no SIGTERM→SIGKILL grace window to survive**, because a running instance is never evicted
-mid-epoch. The interruption model is different in kind:
+**No spot tier was documented in the snapshot.** This does not guarantee uninterrupted service: hardware failure, provider incidents and maintenance can still interrupt a job without a usable signal grace period.
 
-- **Capacity-at-launch is the real failure.** The desired GPU type may be **unavailable when launch is
-  attempted** — Lambda has **no spot tier to fall back to**, and real-world on-demand fill rates are
-  spiky (one published 6-month log: ~64% same-day A100 success — i.e. ~1 in 3 attempts blocked; a 26 h
-  "temporarily unavailable" stall scaling 2→4 H100; verified medium.com/@velinxs 2026-06). H100/B200
-  capacity is the tightest. The resilience pattern is **retry-until-available**, not survive-eviction:
-  poll `GET /instance-types` for `regions_with_capacity_available` and `POST .../launch` the moment a
-  region appears (or let SkyPilot's provisioner retry across regions/types).
-- **Self-inflicted termination only.** Once running, the only destructive events are an operator
-  `terminate`, or an **improper `sudo shutdown`** that pushes the box to **Alert** while still billing
-  (LAM3 / §5), or a **cold reboot** that wipes RAM (LAM9).
+- **Capacity-at-launch can fail.** Check current availability with the documented read-only API. Any retry that can launch billable instances needs an approved budget, bounded attempts and duplicate-instance detection.
+- **Running jobs can still fail.** Operator termination, reboot, host failures and provider incidents require durable periodic checkpoints and a tested restart path.
 - **Resume hook** — checkpoint full state to the NFS filesystem on a periodic timer, load-latest
   unconditionally on startup, so a fresh post-capacity launch resumes instead of restarting. Because the
   box is cattle, the resume path is exercised on *every* relaunch, not just after a rare preemption.
 
 Cadence formula (Young/Daly) + atomic-write resume → `references/spot-resilience.md`. Here the formula's
-μ is effectively "time between voluntary relaunches," not a preemption rate.
+μ must account for the observed interruption model; do not equate it solely with voluntary relaunches.
 
 ---
 
@@ -174,8 +165,7 @@ What each action preserves:
 - **restart / cold reboot** — does **not** stop the meter and does **not** wipe disk, but a **cold reboot
   erases RAM and bypasses safe shutdown** — reserve it for a frozen box only (LAM9).
 
-**Iron Law (SKILL.md Phase 5):** NO `terminate` until checkpoints are **pulled to local OR confirmed on
-NFS by load-test** AND the user approves the cost-affecting action. Because terminate is destructive and
+**Iron Law (SKILL.md Phase 5):** NO `terminate` until checkpoints are **pulled to local AND successfully load-tested there** (NFS is an additional durable copy) AND the user approves the cost-affecting action. Because terminate is destructive and
 irreversible, an unverified `cp`/`rsync` to NFS means **permanent loss** — verify the sync (checksum /
 `ls -l` / a load) before terminating, not after. Egress is free, so a belt-and-suspenders `pull` to local
 is cheap. Cross-link: `superpowers:verification-before-completion` (REQUIRED) for the general gate.
@@ -272,9 +262,7 @@ is cheap. Cross-link: `superpowers:verification-before-completion` (REQUIRED) fo
   Symptom: after a recommended `apt-get update && upgrade` (or `full-upgrade` on 24.04 images), PyTorch/TF
   fails to find cuDNN, or full-upgrade itself fails on a DOCA package. → Root cause: a system cuDNN bump
   or DOCA repo state diverges from the Stack-bundled libs. → Fix: avoid blanket `full-upgrade` on a
-  rental; if cuDNN is missing, symlink the Stack copies —
-  `for so in /usr/lib/python3/dist-packages/tensorflow/libcudnn*; do sudo ln -s "$so" /usr/lib/x86_64-linux-gnu/; done`
-  (note: Stack cuDNN is usable *only* by the Stack-installed PyTorch/TF). (troubleshooting doc 2026-06)
+  rental. Diagnose the installed driver, framework and library ABI first; use the current image-specific official repair or rebuild the disposable instance. Do not blindly symlink framework-bundled cuDNN into system library directories. (troubleshooting doc 2026-06)
 
 - **LAM12 — 1-Click Clusters / reserved bill differently than on-demand (commitment traps).**
   Symptom: expected per-minute pricing, got a 2-week minimum / weekly invoice / a reservation that expired.
@@ -294,15 +282,13 @@ is cheap. Cross-link: `superpowers:verification-before-completion` (REQUIRED) fo
 
 ### Platform-specific debugging
 - **Confirm billing actually stopped:** after a teardown, check the instance is **gone** (not in *Alert*)
-  via the console or `curl -u $LAMBDA_API_KEY: https://cloud.lambdalabs.com/api/v1/instances` — an Alert-
+  via the console or `curl --netrc-file "$LAMBDA_NETRC" https://cloud.lambdalabs.com/api/v1/instances` — an Alert-
   state box (from an in-OS shutdown) is still charging (LAM3).
-- **Capacity probe before launch:** `curl -u $LAMBDA_API_KEY: .../instance-types | jq '.data | to_entries[]
+- **Capacity probe before launch:** `curl --netrc-file "$LAMBDA_NETRC" .../instance-types | jq '.data | to_entries[]
   | {type:.key, regions:.value.regions_with_capacity_available}'` — empty `regions` ⇒ that GPU type can't
   launch anywhere right now (LAM5); this is the loop condition for retry-until-available.
 - **GPU sanity on the box:** `nvidia-smi` (driver/CUDA + util) and `python -c "import torch;
-  print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"` — mismatch between
-  `torch.version.cuda` and `nvidia-smi` CUDA usually means a pip-shadowed torch (LAM7/8/13), not a Stack
-  problem.
+  print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"` — `nvidia-smi` reports the driver-supported CUDA level, while `torch.version.cuda` reports the framework build toolkit. Different versions can be normal; check the compatibility matrix and actual CUDA errors before diagnosing shadowed packages.
 - **Read the real Stack version, never assume:** `apt list --installed 2>/dev/null | grep -i lambda-stack`
   and `dpkg -l | grep -i cudnn` — confirm before debugging a "version mismatch."
 - **Disk pressure on the ephemeral root:** `df -h /` and `df -h /lambda/nfs/<name>`; remember `/home/ubuntu`
@@ -325,7 +311,7 @@ DATA_DIR=       /home/ubuntu (ephemeral NVMe — lost on terminate)
 DURABLE_DIR=    /lambda/nfs/<name>
 PROXY_HOOK=     (none — direct egress; no network_turbo)
 CRED_FILE=      ""  (Lambda key is the $LAMBDA_API_KEY env var, not a file on disk — run_one's [ -n "$CRED_FILE" ] guard skips the file read and the env var passes through; SkyPilot key file at ~/.lambda_cloud/lambda_keys, format `api_key = <KEY>`)
-SCRATCH=        prune periodic ckpts on local NVMe; keep only `best` on /lambda/nfs/<name>
+SCRATCH=        prune periodic ckpts on local NVMe; retain a verified full-state latest resume checkpoint plus best on /lambda/nfs/<name>
 HF_HOME=        /lambda/nfs/<name>/.cache/huggingface   (durable; survives terminate, free egress on re-pull)
 DETACH=         tmux  (apt install if absent; nohup fallback)
 SSH_USER=       ubuntu   (NOT root)

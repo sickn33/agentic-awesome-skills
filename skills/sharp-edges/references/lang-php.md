@@ -1,5 +1,8 @@
 # PHP Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Type Juggling
 
 ```php
@@ -25,7 +28,7 @@ md5("240610708") == md5("QNKCDZO")  // TRUE!
 $hash1 === $hash2    // Compares actual strings
 ```
 
-## strcmp Returns NULL on Error
+## Historical strcmp Type Confusion
 
 ```php
 // DANGEROUS: strcmp type confusion
@@ -34,13 +37,13 @@ if (strcmp($_POST['password'], $stored_password) == 0) {
 }
 
 // Attacker sends: password[]=anything (array instead of string)
-strcmp(array(), "password")  // Returns NULL, not -1 or 1
+strcmp(array(), "password")  // Old PHP could warn and return NULL; PHP 8 throws TypeError.
 
 // NULL == 0 is TRUE in PHP!
 // Authentication bypassed!
 ```
 
-**Fix**: Validate input type and use `===`:
+**Fix for general strings**: validate input types and use ===. Passwords need password_verify against a password_hash result; a constant-time comparison alone is not password hashing.
 ```php
 if (is_string($_POST['password']) &&
     strcmp($_POST['password'], $stored_password) === 0) {
@@ -100,7 +103,7 @@ preg_replace('/.*/e', $_GET['code'], '');
 
 // Even without /e, user-controlled patterns are dangerous:
 preg_replace($_GET['pattern'], $replacement, $subject);
-// Attacker can add /e modifier in pattern
+// /e is rejected in modern PHP; untrusted regex patterns still risk resource exhaustion.
 ```
 
 **Fix**: Use `preg_replace_callback()` instead of /e.
@@ -151,11 +154,11 @@ if ($user == $admin) {  // Compares properties, not identity!
 // Actually: 0.30000000000000004
 
 // DANGEROUS: Float to int conversion
-(int)"1e2"   // 1 (not 100!)
+(int)"1e2"   // 100 in current PHP; older versions had different numeric-string behavior
 (int)1e2     // 100
 
 // In array keys:
-$arr[(int)"1e2"] = "a";  // $arr[1]
+$arr[(int)"1e2"] = "a";  // $arr[100] in current PHP
 $arr[(int)1e2] = "b";    // $arr[100]
 ```
 
@@ -170,9 +173,10 @@ passthru("convert " . $_FILES['image']['name']);
 // Attacker: ?dir=; rm -rf /
 ```
 
-**Fix**: Use `escapeshellarg()` and `escapeshellcmd()`:
+**Fix**: Prefer a non-shell process API with separately validated arguments. Escaping is shell/platform-specific and does not prevent option injection:
 ```php
-system("ls " . escapeshellarg($_GET['dir']));
+// Unix illustration only: validate the allowed directory, then separate options.
+system("ls -- " . escapeshellarg($approved_directory));
 ```
 
 Better: Avoid shell commands entirely, use PHP functions.
@@ -189,7 +193,7 @@ $arr["00"] = "c";
 // Result: $arr = [0 => "b", "00" => "c"]
 // String "0" was coerced to integer 0!
 
-$arr[true] = "x";   // $arr[1] = "x"
+$arr[true] = "x";   // $arr[100] in current PHP = "x"
 $arr[false] = "y";  // $arr[0] = "y"
 $arr[null] = "z";   // $arr[""] = "z"
 ```

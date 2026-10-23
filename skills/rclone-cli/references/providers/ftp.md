@@ -17,6 +17,10 @@ Paths are specified as `remote:path`. If the path does not begin with
 a `/` it is relative to the home directory of the user.  An empty path
 `remote:` refers to the user's home directory.
 
+Plain FTP transmits credentials and data without encryption. For a remote
+connection use a supported FTPS mode with certificate verification, or use SFTP.
+Do not disable certificate validation as a routine compatibility workaround.
+
 ## Configuration
 
 To create an FTP configuration named `remote`, run

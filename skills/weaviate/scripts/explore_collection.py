@@ -17,6 +17,7 @@ Environment Variables:
 """
 
 import json
+import math
 import sys
 
 import typer
@@ -98,6 +99,8 @@ def main(
     json_output: bool = typer.Option(False, "--json", help="Output in JSON format"),
 ):
     """Explore data within a Weaviate collection."""
+    if not 0 <= limit <= 1000:
+        raise typer.BadParameter("limit must be 0..1000")
     try:
         with get_client() as client:
             if not client.collections.exists(name):
@@ -109,7 +112,7 @@ def main(
 
             # 1. Fetch Aggregation Metrics
             metrics_data = {}
-            total_count = 0
+            total_count = None
 
             if not no_metrics:
                 if not json_output:
@@ -193,8 +196,8 @@ def main(
 
                 except Exception as e:
                     if not json_output:
-                        print(f"Warning: Aggregation failed: {e}", file=sys.stderr)
-                    metrics_data["error"] = str(e)
+                        print("Warning: Aggregation failed; total_count may be unknown", file=sys.stderr)
+                    metrics_data["error"] = "aggregation unavailable"
             else:
                 # Just get total count if metrics skipped
                 try:
@@ -284,10 +287,10 @@ def main(
                     print()
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

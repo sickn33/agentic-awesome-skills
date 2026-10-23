@@ -91,3 +91,17 @@ CREATE INDEX idx_nome     ON leiloeiros (nome);
 CREATE INDEX idx_situacao ON leiloeiros (situacao);
 CREATE INDEX idx_scraped  ON leiloeiros (scraped_at);
 ```
+
+## Semântica de persistência e privacidade
+
+Este schema descreve snapshots, não histórico completo: upsert por UF/matrícula
+substitui valores anteriores. O coletor atual omite candidatos sem matrícula; o
+suporte de inserção sem matrícula existe para dados legados revisados e pode
+produzir duplicatas entre coletas. Nunca deduzir identidade só pelo nome.
+CPF/CNPJ, endereço, telefone e e-mail ficam nulos por padrão; o opt-in de contato
+não substitui finalidade/base aplicável. Cidade ausente fica desconhecida. Status
+IRREGULAR/INATIVO não são classificados como ATIVO por coincidência de substring.
+
+JSON acima é ilustrativo, não resultado desta revisão. O estado local padrão fica
+fora da pasta da skill, em ~/.local/share/junta-leiloeiros ou JUNTA_DATA_DIR. Banco
+e exportações exigem diretório privado. Não distribuir dados coletados por padrão.

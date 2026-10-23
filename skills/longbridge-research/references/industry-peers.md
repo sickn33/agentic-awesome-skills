@@ -1,5 +1,7 @@
 # industry-peers
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
 Industry peer group tree for a BK `counter_id`
 
@@ -39,7 +41,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge industry-peers --format json
+longbridge industry-peers BK/US/IN00258 --format json
 
 # See all options
 longbridge industry-peers --help

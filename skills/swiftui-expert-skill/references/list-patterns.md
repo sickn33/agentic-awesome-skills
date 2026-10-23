@@ -49,7 +49,7 @@ ForEach(items) { item in
     ItemRow(item: item)
 }
 
-// Bad - variable view count breaks identity
+// Variable row count may force slower row discovery in lazy containers
 ForEach(items) { item in
     if item.isSpecial {
         SpecialRow(item: item)
@@ -63,7 +63,7 @@ ForEach(items) { item in
 **Avoid inline filtering:**
 
 ```swift
-// Bad - unstable identity, changes on every update
+// Inline filtering preserves stable element IDs, but repeats filtering work
 ForEach(items.filter { $0.isEnabled }) { item in
     ItemRow(item: item)
 }
@@ -75,7 +75,7 @@ var body: some View {
     ForEach(enabledItems) { item in
         ItemRow(item: item)
     }
-    .onChange(of: items) { _, newItems in
+    .onChange(of: items, initial: true) { _, newItems in
         enabledItems = newItems.filter { $0.isEnabled }
     }
 }
@@ -86,7 +86,9 @@ var body: some View {
 ```swift
 // Bad - hides identity, increases cost
 ForEach(items) { item in
-    AnyView(item.isSpecial ? SpecialRow(item: item) : RegularRow(item: item))
+    AnyView(Group {
+        if item.isSpecial { SpecialRow(item: item) } else { RegularRow(item: item) }
+    })
 }
 
 // Good - Create a unified row view with a single top-level container
@@ -167,7 +169,7 @@ ForEach(items.enumerated(), id: \.element.id) { index, item in
 }
 ```
 
-**No `Array(...)` wrapper is needed on Swift 6.1+.** As of Swift 6.1, the sequence returned by `.enumerated()` conditionally conforms to `RandomAccessCollection` when the base collection does, so `ForEach` accepts it directly. On earlier toolchains, wrap it in `Array(...)`. Favor the direct form in new code — it avoids an eager copy on every body evaluation.
+**No `Array(...)` wrapper is needed on Swift 6.2+.** As of Swift 6.2, the sequence returned by `.enumerated()` conditionally conforms to `RandomAccessCollection` when the base collection does, so `ForEach` accepts it directly. Check standard-library/runtime availability as well as the compiler. For older toolchains or deployment targets, wrap it in Array(...). Favor the direct form in new code — it avoids an eager copy on every body evaluation.
 
 ## List with Custom Styling
 
@@ -380,7 +382,7 @@ struct TipTable: View {
 
 > **Availability:** iOS 17.4+, iPadOS 17.4+, Mac Catalyst 17.4+, macOS 14.4+, visionOS 1.1+
 
-If the number of columns is not known at runtime use `TableColumnForEach` to create columns based on a `RandomAccessCollection` of some data type. Either the collection’s elements must conform to `Identifiable` or you need to provide an id parameter to the `TableColumnForEach` initializer.
+If the number of columns is not known at compile time use `TableColumnForEach` to create columns based on a `RandomAccessCollection` of some data type. Either the collection’s elements must conform to `Identifiable` or you need to provide an id parameter to the `TableColumnForEach` initializer.
 
 This can be mixed with static compile time known `TableColumn` usage.
 
@@ -402,6 +404,10 @@ struct AudioSample: Identifiable {
 class AudioSampleTrack {
     let channels: [AudioChannel]
     var samples: [AudioSample]
+    init(channels: [AudioChannel], samples: [AudioSample] = []) {
+        self.channels = channels
+        self.samples = samples
+    }
 }
 
 struct ContentView: View {
@@ -456,9 +462,9 @@ Table(people) { /* columns */ }
 - [ ] Identifiable IDs are truly unique across all items
 - [ ] id is stable across edits (not derived from a mutable property), created outside `body`, and cheap to hash
 - [ ] Constant number of views per ForEach element; rows are unary (single top-level view)
-- [ ] No inline filtering in ForEach (prefilter and cache instead)
+- [ ] Measure filtering cost; caching must populate initially and stay synchronized (onChange examples require Equatable inputs and iOS 17+)
 - [ ] No `AnyView` in list rows
-- [ ] `.enumerated()` uses the element's id (not `\.offset`); no `Array(...)` wrapper needed on Swift 6.1+
+- [ ] `.enumerated()` uses the element's id (not `\.offset`); no `Array(...)` wrapper needed on Swift 6.2+
 - [ ] Use `.refreshable` for pull-to-refresh
 - [ ] Use `ContentUnavailableView` for empty states (iOS 17+)
 - [ ] Use `.scrollContentBackground(.hidden)` for custom list backgrounds

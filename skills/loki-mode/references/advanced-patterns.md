@@ -1,5 +1,7 @@
 # Advanced Agentic Patterns Reference
 
+> Review note: Design sketches, not an implemented runtime: helper classes (including the priority-queue sketch) require project implementations. Memory retrieval and summarization do not train model weights and can preserve errors. Numerical research claims below are historical source claims, not measured Loki improvements or guarantees; evaluate on your own tasks.
+
 Research-backed patterns from 2025-2026 literature for enhanced multi-agent orchestration.
 
 ---

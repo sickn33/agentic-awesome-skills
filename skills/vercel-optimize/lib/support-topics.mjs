@@ -312,11 +312,12 @@ function matchesScannerPatterns(patterns, candidate) {
   return patterns.some((p) => observed.has(p));
 }
 
-function topicCitationsApply(topic, candidateKind, framework, version) {
+async function topicCitationsApply(topic, candidateKind, framework, version) {
   if (!candidateKind) return false;
-  return topic.citations.every((citation) =>
+  const results = await Promise.all(topic.citations.map((citation) =>
     citationApplies(citation, candidateKind, framework, version)
-  );
+  ));
+  return results.every(Boolean);
 }
 
 async function citationApplies(citation, candidateKind, framework, version) {

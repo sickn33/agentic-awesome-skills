@@ -34,7 +34,7 @@ longbridge industry-valuation --help
    | **Industry premium / discount** | `(target PE − industry median PE) / industry median PE × 100%`                                                                            |
    | **Percentile rank**             | Position of target in the `dist` distribution; bucket into low (<33rd) / mid (33–67th) / high (>67th pct)                                 |
    | **Multi-metric view**           | Repeat for PB, PS, dividend yield — note when metrics diverge                                                                             |
-   | **Cross-currency caveat**       | If peers span markets (USD / HKD / CNY), flag that earnings-based ratios (PE, PB) are comparable but market-cap-based ones may reflect FX |
+   | **Cross-currency caveat**       | If peers span markets (USD / HKD / CNY), each ratio needs numerator/denominator in compatible currency, same share basis and period; normalize absolute market caps, and check ADR ratios/accounting differences |
 
 5. **Flag cyclical industries** (energy, materials, shipping, banks, property): PE can invert near cycle peaks/troughs — add caveat.
 6. Output structured report; cite **Longbridge Securities**; end with disclaimer.
@@ -83,4 +83,4 @@ Industry: {industry_name}  |  Peers in sample: N  |  Currency: {currency}
 | Industry sample < 5 peers          | 注明"同业样本较少，百分位仅供参考"。                          | 注明"同業樣本不足"。/ Caveat: "industry sample sparse; percentile is indicative only."                                                 |
 | `dist` returns empty               | 跳过百分位分析，仅展示对比矩阵。                              | 跳過百分位分析。/ Skip percentile analysis; show matrix only.                                                                          |
 | Cross-currency peers               | 添加汇率差异提示，不对市值类指标做绝对比较。                  | 添加匯率差異提示。/ Flag FX differences; do not compare market-cap metrics absolutely.                                                 |
-| Other stderr                       | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface verbatim — do not retry silently.                                                                              |
+| Other stderr                       | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface a redacted error summary — do not retry silently.                                                                              |

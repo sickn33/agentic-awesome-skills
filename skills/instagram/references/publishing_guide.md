@@ -1,5 +1,8 @@
 # Guia de Publicação — Specs de Mídia e Fluxos
 
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
 ## Specs de Mídia
 
 ### Foto (IMAGE)
@@ -129,28 +132,15 @@ draft → approved → scheduled → container_created → published
 | `draft` | Rascunho, não será publicado automaticamente | `--approve --id X` |
 | `approved` | Aprovado para publicação | `schedule.py --process` |
 | `scheduled` | Agendado para data futura | Aguardar horário |
-| `container_created` | Container criado na API, aguardando publish | Recovery automático |
+| `container_created` | Container criado na API, aguardando publish | Reconciliação manual; execução desativada |
 | `published` | Publicado com sucesso | Concluído |
 | `failed` | Erro na publicação | Verificar error_msg, retry possível |
 
-## Recovery de Crash
+## Recovery e upload local
 
-Se o processo crashar entre `container_created` e `published`:
-1. O `schedule.py --process` detecta posts com status `container_created`
-2. Verifica se o container ainda é válido via API
-3. Se válido → publica
-4. Se inválido → recria container e republica
+A execução confirmada e o processador estão desativados. Um container existente ou uma resposta perdida não provam que a mídia não foi publicada: reconciliar antes de tentar novamente. Não recriar e republicar automaticamente.
 
-## Upload Local via Imgur
-
-O `publish.py` detecta se o caminho é local (não começa com http):
-
-1. Lê o arquivo local
-2. Converte para JPEG se necessário (via Pillow)
-3. Faz upload anônimo para Imgur (POST https://api.imgur.com/3/image)
-4. Usa a URL retornada como `image_url` na Graph API
-
-**Configuração:** `IMGUR_CLIENT_ID` em config.py ou variável de ambiente.
+Rascunhos e prévias não fazem upload. Upload de imagem para Imgur exige autorização específica, `IMGUR_CLIENT_ID` próprio e `AAS_INSTAGRAM_ALLOW_IMGUR_UPLOAD=1`; expõe o arquivo publicamente. O caminho de imagem/Pillow não suporta vídeos locais. Não usar este fluxo como armazenamento privado.
 
 ## Captions e Hashtags
 
