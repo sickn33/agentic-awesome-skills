@@ -50,9 +50,9 @@ case "$method" in
     if [ "$count" -eq 1 ]; then
       printf '%s' '{"ok":true,"result":[]}'
     elif [ "$MOCK_SCENARIO" = private ]; then
-      printf '%s' '{"ok":true,"result":[{"update_id":1,"message":{"chat":{"id":111},"from":{"id":111},"text":"Private yes"}}]}'
+      printf '%s' '{"ok":true,"result":[{"update_id":1,"message":{"chat":{"id":111},"from":{"id":111},"reply_to_message":{"message_id":42},"text":"Private yes"}}]}'
     elif [ "$MOCK_SCENARIO" = group-text ]; then
-      printf '%s' '{"ok":true,"result":[{"update_id":1,"message":{"chat":{"id":-100},"from":{"id":666},"text":"Mallory"}},{"update_id":2,"message":{"chat":{"id":-100},"from":{"id":777},"text":"Approved"}}]}'
+      printf '%s' '{"ok":true,"result":[{"update_id":1,"message":{"chat":{"id":-100},"from":{"id":666},"reply_to_message":{"message_id":42},"text":"Mallory"}},{"update_id":2,"message":{"chat":{"id":-100},"from":{"id":777},"reply_to_message":{"message_id":41},"text":"Unrelated"}},{"update_id":3,"message":{"chat":{"id":-100},"from":{"id":777},"reply_to_message":{"message_id":42},"text":"Approved"}}]}'
     elif [ "$MOCK_SCENARIO" = group-callback ]; then
       printf '%s' '{"ok":true,"result":[{"update_id":1,"callback_query":{"id":"bad","from":{"id":666},"data":"No","message":{"message_id":42,"chat":{"id":-100}}}},{"update_id":2,"callback_query":{"id":"good","from":{"id":777},"data":"Yes","message":{"message_id":42,"chat":{"id":-100}}}}]}'
     else

@@ -26,6 +26,8 @@ Modified executable-mode helpers in `bumblebee` and `webapp-testing` use mode100
 
 Contrast checker: the exact documentation/fixture equality gate is retained. After full source reread, the trusted snapshot was refreshed and expanded CLI, invalid-color, pair-kind/transparency, partial-report, private exclusive-output and gamut cases passed; existing black/white numerical checks remain.
 
+The six existing Telegram security scenarios pass after updating only synthetic reply metadata, including an allowlisted sender replying to the wrong message before the valid reply. Existing assertions remain unchanged.
+
 ## Individual dispositions
 
 ### wellally-tech — corrected

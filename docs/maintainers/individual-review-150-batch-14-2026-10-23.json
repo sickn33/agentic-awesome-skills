@@ -19,7 +19,8 @@
       "15 changed executable/JSON files passed Python AST, Node/Bash syntax or JSON parsing.",
       "Seven offline Telegram regressions passed: config environment isolation, token-in-argv avoidance, invalid names/IDs/limit rejection, literal caption and symlink refusal, safe formatting retry, exact reply matching/private cursor, setup token validation.",
       "Modified executable-mode helpers in bumblebee and webapp-testing reduced to mode100644; explicit Python invocation already documented.",
-      "Contrast trusted fixture equality retained; refreshed after full source reread and passed expanded CLI/color/pair/private-output/gamut regressions, preserving original numerical black/white checks."
+      "Contrast trusted fixture equality retained; refreshed after full source reread and passed expanded CLI/color/pair/private-output/gamut regressions, preserving original numerical black/white checks.",
+      "Six existing Telegram security scenarios pass with realistic reply metadata; an allowlisted sender replying to a different message is ignored."
     ],
     "limitations": [
       "Direct npm test stopped on intentionally stale distribution snapshot; complete preflight generates ephemeral state and its exact-head result is reported separately.",
@@ -44,6 +45,14 @@
         "beforeGitMode": "100644",
         "afterGitMode": "100644",
         "reason": "Entire documented checker re-read as inert source, existing equality assertion preserved, trusted snapshot refreshed. Added negative regressions for CLI values, invalid hex, partial colors, pair kind/transparency, private exclusive JSON output and finite gamut suggestions."
+      },
+      {
+        "path": "tools/scripts/tests/security_findings_regressions.test.js",
+        "beforeSha256": "e8b291f69d2c687411cf24940e3d4831e790bc94103de2d9fe1c55bc02825441",
+        "afterSha256": "09039c05687c4a73b2e103a9274163857ce821c347b852aaa8b5ca7272c49ad5",
+        "beforeGitMode": "100644",
+        "afterGitMode": "100644",
+        "reason": "Updated only synthetic reply payloads to the exact asked message; added an authorized sender replying to a different message before the valid reply. All existing sender/token/callback assertions retained."
       }
     ]
   },
