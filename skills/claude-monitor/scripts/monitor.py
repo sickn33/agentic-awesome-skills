@@ -52,7 +52,7 @@ def take_snapshot():
     browser_count = 0
     for proc in psutil.process_iter(["name", "memory_info"]):
         try:
-            name = proc.(info["name"] or "").lower()
+            name = (proc.info["name"] or "").lower()
             for bname in BROWSER_NAMES:
                 if bname in name:
                     browser_ram += proc.info["memory_info"].rss
@@ -66,7 +66,7 @@ def take_snapshot():
     claude_count = 0
     for proc in psutil.process_iter(["name", "memory_info"]):
         try:
-            name = proc.(info["name"] or "").lower()
+            name = (proc.info["name"] or "").lower()
             for cname in CLAUDE_NAMES:
                 if cname in name:
                     claude_ram += proc.info["memory_info"].rss
