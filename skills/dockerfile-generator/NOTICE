@@ -1,0 +1,40 @@
+dockerfile-generator skill
+Copyright (c) 2026 Mohamed Rafaa TOUNEKTI
+
+LICENSE SCOPE
+
+The MIT license in LICENSE covers this entire package, including the original
+skill packaging and the vendored runtime snapshot described below.
+
+  SKILL.md
+  README.md
+  scripts/
+  adapters/
+  references/
+  tests/
+  LICENSE
+  NOTICE
+  requirements.txt
+  vendor/
+
+VENDORED RUNTIME
+
+The directory vendor/ is a pinned snapshot of:
+
+  https://github.com/rafaabou/docker-file-generator
+  commit 2c0fbaf
+
+The upstream repository is private and does not separately declare a license.
+The copyright holder of that code has authorized distribution of this snapshot
+under the MIT license as part of this package. That authorization applies to the
+snapshot as distributed here; it does not change the licensing status of the
+upstream repository.
+
+Keep LICENSE and this NOTICE with any redistribution of the vendored snapshot.
+
+Vendor provenance and refresh instructions are in vendor/UPSTREAM.txt.
+
+THIRD-PARTY DEPENDENCIES
+
+Click, PyYAML, and Jinja2 are not vendored. They are installed from
+requirements.txt and remain under their own licenses.

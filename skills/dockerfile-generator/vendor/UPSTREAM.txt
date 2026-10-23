@@ -1,0 +1,41 @@
+Docker File Generator runtime snapshot
+======================================
+
+Source:  https://github.com/rafaabou/docker-file-generator
+Commit:  2c0fbaf9bd9dc20883fb1b676e4f42f9cdda05b6
+Short:   2c0fbaf
+Author:  Mohamed Rafaa TOUNEKTI <88215682+rafaabou@users.noreply.github.com>
+Date:    2026-10-22T07:14:14+01:00
+Snapshot: 2026-10-23
+
+Included from upstream:
+
+  create-dockerfile.sh
+  docker_file_generator/           (runtime package, no tests)
+  legacy/create-dockerfile-legacy.sh
+  config/defaults.yaml
+
+Excluded from the snapshot:
+
+  tests/
+  all/
+  .github/
+  .git/
+  __pycache__/ and *.pyc
+  docs/ and USER-GUIDE.pdf
+  README.md and other repository documentation
+  pyproject.toml (the skill pins dependencies in requirements.txt)
+
+The vendored files are a pinned runtime copy. Do not edit them by hand. To
+refresh, re-copy the same paths from the upstream commit and update this file.
+Keep the skill's original scripts, adapters, references, and tests separate from
+vendor/.
+
+LICENSE STATUS
+
+The upstream repository is private and has no separate LICENSE file. The
+copyright holder has authorized distribution of this snapshot under the MIT
+license as part of this package. The MIT grant applies to the snapshot as
+distributed here and does not change the upstream repository's licensing
+status. Keep ../LICENSE and ../NOTICE with any redistribution. See ../NOTICE
+for the full scope.

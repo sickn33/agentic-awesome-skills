@@ -1,0 +1,2 @@
+HEALTHCHECK --interval=30s --timeout=5s --start-period={{ start_period }} --retries={{ retries }} \
+  CMD wget -q -O /dev/null "http://127.0.0.1:${APP_PORT}{{ path }}" || exit 1
