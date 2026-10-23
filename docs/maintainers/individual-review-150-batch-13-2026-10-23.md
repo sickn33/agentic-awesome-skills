@@ -1021,3 +1021,7 @@ Read both complete files; added OAuth state/session/tenant binding and actual ex
 Limitations: No SDK/OAuth/CRM/webhook runtime test; signature middleware/URI normalization, storage, allowlists and idempotent processors remain explicit adapters requiring target-version validation.
 
 Primary references consulted/attempted: https://developers.hubspot.com/changelog/introducing-version-3-of-webhook-signatures?hs_amp=true, https://developers.hubspot.com/blog/oauth-token-management-hubspot-integrations
+
+## CI compatibility follow-up
+
+GitHub runs the offline helper regressions on Python3.10. Replaced the Python3.11-only `contextlib.chdir` test utility with a local context manager that always restores the working directory. All nine existing behavioral assertions are retained and pass locally; skill-tree contents and their review bindings are unchanged. Exact revised-head evidence and preflight results are recorded with the PR validation artifacts.

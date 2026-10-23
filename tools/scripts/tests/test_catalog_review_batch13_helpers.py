@@ -16,6 +16,17 @@ import wave
 ROOT = Path(__file__).resolve().parents[3]
 
 
+@contextlib.contextmanager
+def temporary_cwd(directory):
+    """Python 3.10-compatible process cwd restoration for sequential tests."""
+    previous = Path.cwd()
+    os.chdir(directory)
+    try:
+        yield
+    finally:
+        os.chdir(previous)
+
+
 def load(relative):
     spec = importlib.util.spec_from_file_location('batch13_' + Path(relative).stem, ROOT / relative)
     module = importlib.util.module_from_spec(spec)
@@ -41,7 +52,7 @@ class LocalHelpers(unittest.TestCase):
 
     def test_shark_rejects_external_pointer_and_edited_state_path(self):
         shark = load('skills/shark/scripts/shark.py')
-        with tempfile.TemporaryDirectory() as tmp, contextlib.chdir(Path(tmp).resolve()):
+        with tempfile.TemporaryDirectory() as tmp, temporary_cwd(Path(tmp).resolve()):
             pitch = Path('pitch.md'); pitch.write_text('A synthetic idea')
             with contextlib.redirect_stdout(io.StringIO()):
                 shark.cmd_init(SimpleNamespace(investors=2, seed=1, pitch_file=str(pitch)))
@@ -54,7 +65,7 @@ class LocalHelpers(unittest.TestCase):
 
     def test_shark_refuses_symlink_output_and_incomplete_answers_phase(self):
         shark = load('skills/shark/scripts/shark.py')
-        with tempfile.TemporaryDirectory() as tmp, contextlib.chdir(Path(tmp).resolve()):
+        with tempfile.TemporaryDirectory() as tmp, temporary_cwd(Path(tmp).resolve()):
             Path('pitch.md').write_text('A synthetic idea')
             with contextlib.redirect_stdout(io.StringIO()):
                 shark.cmd_init(SimpleNamespace(investors=2, seed=1, pitch_file='pitch.md'))
@@ -74,7 +85,7 @@ class LocalHelpers(unittest.TestCase):
         with self.assertRaises(SystemExit): shark.panel_size(SimpleNamespace(investors=0))
 
     def test_governance_import_and_default_log_do_not_write(self):
-        with tempfile.TemporaryDirectory() as tmp, contextlib.chdir(Path(tmp).resolve()), patch.dict(os.environ, {}, clear=True):
+        with tempfile.TemporaryDirectory() as tmp, temporary_cwd(Path(tmp).resolve()), patch.dict(os.environ, {}, clear=True):
             helper = load('skills/leiloeiro-avaliacao/scripts/governance.py')
             entry = helper.log_action('secret-bearing action', {'private': 'CANARY'})
             self.assertEqual(entry['details'], {})
