@@ -211,8 +211,12 @@ def main() -> None:
     raw = load_dataset(CORPUS_DATASET, CORPUS_SUBSET, split="train")
     sentences = list(dict.fromkeys(s for row in raw for s in (row["anchor"], row["positive"]) if isinstance(s, str)))
     sentences = sentences[: train_size + eval_size]
-    train_sentences = sentences[:train_size]
-    eval_sentences = sentences[train_size : train_size + eval_size]
+    if len(sentences) < 2:
+        raise ValueError("At least two unique sentences are required")
+    eval_size = min(eval_size, max(1, len(sentences) // 5))
+    split_at = min(train_size, len(sentences) - eval_size)
+    train_sentences = sentences[:split_at]
+    eval_sentences = sentences[split_at : split_at + eval_size]
 
     logging.info(f"Encoding {len(train_sentences):,} training sentences with the teacher (may take a while)")
     teacher_train = teacher.encode(

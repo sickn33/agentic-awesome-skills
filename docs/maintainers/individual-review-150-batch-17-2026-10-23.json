@@ -33673,7 +33673,7 @@
         {
           "path": "skills/train-sentence-transformers/scripts/train_sentence_transformer_distillation_example.py",
           "beforeSha256": "50c7cba744b8b6ed6da252c920d8d63a661fa82b842bc9375877cf8d71724c1f",
-          "afterSha256": "9b89682e49d91b8110b94f595d9abf1516289af0c764a35a58a30963851e3193",
+          "afterSha256": "2cec5aa55ebb704a4d8a562491fe8f84bdefbce5b242d948de022e094bd75f49",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
