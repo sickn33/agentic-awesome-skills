@@ -46,7 +46,7 @@ class WsListenerSecurityTests(unittest.TestCase):
             state_home = Path(temp_dir)
             module = load_module("ws_listener_security_pid", state_home)
 
-            module.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+            module.OUTPUT_DIR.mkdir(parents=True, mode=0o700, exist_ok=True)
             outside = state_home / "outside.txt"
             outside.write_text("secret", encoding="utf-8")
             symlink_or_skip(self, outside, module.PID_FILE)
@@ -72,7 +72,7 @@ class WsListenerSecurityTests(unittest.TestCase):
             state_home = Path(temp_dir)
             module = load_module("ws_listener_security_symlink", state_home)
 
-            module.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+            module.OUTPUT_DIR.mkdir(parents=True, mode=0o700, exist_ok=True)
             outside = state_home / "outside.jsonl"
             outside.write_text("secret\n", encoding="utf-8")
             symlink_or_skip(self, outside, module.EVENTS_FILE)

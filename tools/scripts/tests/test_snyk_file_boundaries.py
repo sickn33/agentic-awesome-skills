@@ -17,9 +17,9 @@ from test_ws_listener_security import load_module as load_listener
 class FileBoundaryTests(unittest.TestCase):
     def test_listener_rejects_hardlink_before_truncating(self):
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             module = load_listener('snyk_listener', root)
-            module.OUTPUT_DIR.mkdir(parents=True)
+            module.OUTPUT_DIR.mkdir(parents=True, mode=0o700)
             outside = root / 'outside'
             outside.write_text('preserve me')
             os.link(outside, module.PID_FILE)
@@ -29,8 +29,8 @@ class FileBoundaryTests(unittest.TestCase):
 
     def test_listener_repairs_existing_permissions(self):
         with tempfile.TemporaryDirectory() as tmp:
-            module = load_listener('snyk_listener_modes', Path(tmp))
-            module.OUTPUT_DIR.mkdir(parents=True)
+            module = load_listener('snyk_listener_modes', Path(tmp).resolve())
+            module.OUTPUT_DIR.mkdir(parents=True, mode=0o700)
             module.EVENTS_FILE.write_text('old\n')
             module.EVENTS_FILE.chmod(0o644)
             module.secure_append_text(module.EVENTS_FILE, 'new\n')
@@ -40,10 +40,10 @@ class FileBoundaryTests(unittest.TestCase):
     def test_profile_rejects_hardlink_before_mutation(self):
         module = load_module('snyk_profile', 'skills/find-complementary-founders/scripts/assess_profile.py')
         with tempfile.TemporaryDirectory() as tmp:
-            outside = Path(tmp) / 'outside'
+            outside = Path(tmp).resolve() / 'outside'
             outside.write_text('preserve me')
             outside.chmod(0o644)
-            output = Path(tmp) / 'result.private.json'
+            output = Path(tmp).resolve() / 'result.private.json'
             os.link(outside, output)
             with self.assertRaises((OSError, module.ProfileError)):
                 module.write_json(output, {'secret': 'test'}, private=True)
@@ -54,7 +54,7 @@ class FileBoundaryTests(unittest.TestCase):
     def test_inventory_rejects_fifo_without_waiting_for_writer(self):
         module = load_module('snyk_inventory', 'skills/lint-and-validate/scripts/type_coverage.py')
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            root = Path(tmp).resolve()
             os.mkfifo(root / 'pipe.py')
             run = subprocess.run([sys.executable, module.__file__, str(root)], capture_output=True, text=True, timeout=5)
             self.assertEqual(run.returncode, 1)
@@ -65,7 +65,7 @@ class FileBoundaryTests(unittest.TestCase):
     def test_state_links_are_rejected_without_changing_target(self):
         for skill in ('instagram', 'notebooklm'):
             with self.subTest(skill=skill), tempfile.TemporaryDirectory() as tmp:
-                root = Path(tmp)
+                root = Path(tmp).resolve()
                 old_umask = os.umask(0o077)
                 try:
                     with patch.dict(os.environ, {f'AAS_{skill.upper()}_DATA_DIR': str(root / skill)}):
@@ -99,7 +99,7 @@ class FileBoundaryTests(unittest.TestCase):
     def test_state_initialization_preserves_parent_permissions(self):
         for skill in ('instagram', 'notebooklm'):
             with self.subTest(skill=skill), tempfile.TemporaryDirectory() as tmp:
-                parent = Path(tmp) / 'shared' / 'apps'
+                parent = Path(tmp).resolve() / 'shared' / 'apps'
                 parent.mkdir(parents=True)
                 parent.chmod(0o755)
                 parent.parent.chmod(0o755)
