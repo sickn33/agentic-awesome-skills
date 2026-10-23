@@ -2,7 +2,7 @@
 
 Date: 2026-10-23. Frozen inventory base: `dee7acce0658c35cb276154892700811affcfdb2`. Integrated PR base: `740db8bc2fa6fd62aac9303c8356d6a3b87151ac`.
 
-Reviewed **150 complete tracked trees / 417 files**: **148 corrected**, **2 retained**. None of the assigned source trees changed between those bases.
+Reviewed **150 complete tracked trees / 418 files**: **148 corrected**, **2 retained**. None of the assigned source trees changed between those bases.
 
 Full tracked-tree semantic review of each assigned root, including bundled references, scripts, licenses, modes and examples. Original receipts recovered from completedNotes where readChunks/reviewed lists were stale; no claim that the resumed agent reread all prior roots. Hashes bind original Git blobs and final source files, not correctness or runtime results.
 

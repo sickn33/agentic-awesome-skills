@@ -6,7 +6,7 @@
   "sourceDriftFromInventoryBase": [],
   "counts": {
     "reviewedRootTrees": 150,
-    "trackedFiles": 417,
+    "trackedFiles": 418,
     "corrected": 148,
     "retained": 2
   },
@@ -1899,7 +1899,7 @@
           "path": "skills/leiloeiro-juridico/SKILL.md",
           "beforeSha256": "be9788b7627ff20fbfc208f7758b9e8a12dfc7b49d24ba5893a31e606268a3e6",
           "beforeGitMode": "100644",
-          "afterSha256": "fe2ddba77989ee291016a5fdb821b1c08fc888fb977205506c85c0e60deee6cb",
+          "afterSha256": "54ddbfee1f07b01c0f011bac655c88bb42ed62b0c3e670b10cd5bc625a7392da",
           "afterGitMode": "100644"
         },
         {
@@ -2108,7 +2108,7 @@
           "path": "skills/csv-manual-export/SKILL.md",
           "beforeSha256": "55c527379bb83cb3d464af16ca4bcbd30dfd8c7ee132b1fc1fb65ebe2ef87851",
           "beforeGitMode": "100644",
-          "afterSha256": "5f76454bb43a4886db31973c129f8d6bba46775103a365fd92ff360fb84e032c",
+          "afterSha256": "5f5b56649637479b03adc1b84d21b1d0afdf6c374fc93147d5a31ba7bdefb302",
           "afterGitMode": "100644"
         },
         {
@@ -2116,6 +2116,13 @@
           "beforeSha256": "852b92a20cb6bbc5e541d7541f075fcdf914235bf41dc4fb8962f9c04cd549c5",
           "beforeGitMode": "100644",
           "afterSha256": "852b92a20cb6bbc5e541d7541f075fcdf914235bf41dc4fb8962f9c04cd549c5",
+          "afterGitMode": "100644"
+        },
+        {
+          "path": "skills/csv-manual-export/references/spreadsheet-round-trip.md",
+          "beforeSha256": null,
+          "beforeGitMode": null,
+          "afterSha256": "181b7c41da628cbeec2aa1c01bd7b1bbfdeb06edd78bc9c7e8e3a7a61ff29c12",
           "afterGitMode": "100644"
         }
       ]
@@ -3627,14 +3634,14 @@
           "path": "skills/supply-chain-attack-response/SKILL.md",
           "beforeSha256": "3268f5a3f21fe57173a13bba5ee60598a336b19a3e0a4ac8eeabc754be137c52",
           "beforeGitMode": "100644",
-          "afterSha256": "fa675c291090e91e3a12154d0b30c90eb63def5dddd2461efd26cab2b2065368",
+          "afterSha256": "07f1a217daccbb480657006cb63b355d059d5f5c18b535631f253e3b9db78bc9",
           "afterGitMode": "100644"
         },
         {
           "path": "skills/supply-chain-attack-response/references/details.md",
           "beforeSha256": "0863b1f1b57ebdde037a4d8d54b5b33d5597ce243e63d5e6b532bf830da801ae",
           "beforeGitMode": "100644",
-          "afterSha256": "6e0c4ddb05e1c3b005b859a5321ff69d009e9233f28123ad44c3991476ce8dc8",
+          "afterSha256": "6bc269290374462b131520961a117a96d3a9f7816e5489ca0b807538aee1be06",
           "afterGitMode": "100644"
         }
       ]
@@ -4465,7 +4472,7 @@
           "path": "skills/web2-recon/SKILL.md",
           "beforeSha256": "cd9ee31fdb592d27556b91a2da8ce305e27c35007e4008c13a1505c90d607e3a",
           "beforeGitMode": "100644",
-          "afterSha256": "d9ad2f021128034e5e564fcb7a3f4e70f36476915c0ab645469ba7936c2ae2f0",
+          "afterSha256": "d4623c03e589f4b89287fc7fc2ec6e8f244e402cbba33b399baf691837f6bf77",
           "afterGitMode": "100644"
         },
         {
