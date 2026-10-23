@@ -140,3 +140,5 @@ This removes the `statusLine` key from agy's settings, after a backup; the bar g
 - Once installed, the statusline runs a local copy in `~/.agy-powerline` on every refresh and makes no network calls.
 - `init` and `uninstall` change only the `statusLine` key in agy's settings, back the file up first, and refuse a settings file that isn't valid JSON.
 - Never pass `--allow-exec` to `agy-powerline import`: an imported config with shell-command widgets runs those commands on every refresh. Only the user can approve the exact commands `import` shows.
+
+The reviewed-install prerequisite above takes precedence over setup examples. `init` downloads and activates code, so stop that path unless the exact resulting package bytes/dependency tree have been separately staged/reviewed and activation authorized; a preinstalled bootstrap CLI does not make its new downloads reviewed. A doctor result checks configuration, not proof the running host loaded the statusline; verify the actual host refresh after authorized restart. Redact session/paths/quota metadata from shared output.

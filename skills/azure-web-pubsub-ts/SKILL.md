@@ -64,7 +64,7 @@ const client3 = new WebPubSubServiceClient(
 ```typescript
 // Basic token
 const token = await client.getClientAccessToken();
-console.log(token.url);  // wss://...?access_token=...
+// token.url contains a bearer credential: return only to the authorized client, never log it.
 
 // Token with user ID
 const userToken = await client.getClientAccessToken({
@@ -75,8 +75,7 @@ const userToken = await client.getClientAccessToken({
 const permToken = await client.getClientAccessToken({
   userId: "user123",
   roles: [
-    "webpubsub.joinLeaveGroup",
-    "webpubsub.sendToGroup",
+    "webpubsub.joinLeaveGroup.chat-room",
     "webpubsub.sendToGroup.chat-room",  // specific group
   ],
   groups: ["chat-room"],  // auto-join on connect
@@ -241,7 +240,7 @@ const handler = new WebPubSubEventHandler("chat", {
     res.success({
       userId: req.claims.sub[0],
       groups: ["general"],
-      roles: ["webpubsub.sendToGroup"],
+      roles: ["webpubsub.sendToGroup.general"],
     });
   },
   
@@ -265,8 +264,9 @@ app.use(handler.getMiddleware());
 
 // Negotiate endpoint
 app.get("/negotiate", async (req, res) => {
+  if (!req.user?.id) return res.status(401).end();
   const token = await serviceClient.getClientAccessToken({
-    userId: req.user?.id,
+    userId: req.user.id, // prerequisite: verified authenticated application session
   });
   res.json({ url: token.url });
 });
@@ -318,3 +318,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The negotiate example requires real application authentication middleware; fail closed if identity is absent. Resolve user/group membership from the trusted server session, authorize every requested group and issue only group-specific roles with short expiry. Never grant a wildcard role while claiming group-scoped permissions. Tokens/connection URLs are bearer secrets; protect them in responses/logs and do not treat a connected socket as authorization for all groups. Scope broadcasts/group changes to the user’s approved recipients and content.

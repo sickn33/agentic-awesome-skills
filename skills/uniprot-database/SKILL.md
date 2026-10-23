@@ -206,3 +206,5 @@ See `/references/query_syntax.md` for comprehensive syntax documentation.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The `uniprot_client.py` helper and the four `references/` files listed above are not bundled; they are prerequisites, not provided functionality. Independent REST examples can proceed using the official API documentation. Encode queries through HTTP client parameter support, set timeouts and pagination/result caps, and record accession, release/version, reviewed/unreviewed status and retrieval date. Sequence annotations are evidence with provenance, not clinical diagnoses or experimentally verified function in every case.

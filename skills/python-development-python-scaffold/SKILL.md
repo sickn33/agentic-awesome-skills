@@ -302,10 +302,10 @@ SECRET_KEY="your-secret-key-here"
 .PHONY: install dev test lint format clean
 
 install:
-	uv sync
+	uv sync --extra dev
 
 dev:
-	uv run uvicorn src.project_name.main:app --reload
+	uv run uvicorn project_name.main:app --app-dir src --reload
 
 test:
 	uv run pytest -v
@@ -331,9 +331,11 @@ clean:
 5. **Documentation**: README with setup and usage instructions
 6. **Development Tools**: Makefile, .env.example, .gitignore
 
-Focus on creating production-ready Python projects with modern tooling, type safety, and comprehensive testing setup.
+Focus on creating reviewable starting-point Python projects with modern tooling, type safety, and comprehensive testing setup.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Choose the project name/license with the user and preserve existing files; examples with placeholders and omitted application modules are not complete applications. Add `.env`/`.env.local` and real secret files to `.gitignore`, keep only synthetic `.env.example` values and verify the chosen backend’s package discovery for the `src/` layout. Lock reviewed compatible dependencies and report only checks actually run. `--extra dev` applies to the shown optional-dev-extra layout, not every project’s dependency groups.

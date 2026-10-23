@@ -180,3 +180,5 @@ For Entra ID auth, assign one of these roles:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Delivery and retries can repeat a message; use durable idempotency and complete only after successful processing. Renew locks within a bounded policy, handle lock loss and poison-message/dead-letter decisions explicitly, and do not infer exactly-once business effects from settlement. Verify these preproduction APIs against the pinned crate before implementation.

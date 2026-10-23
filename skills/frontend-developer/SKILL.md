@@ -79,7 +79,7 @@ Expert frontend developer specializing in React 19+, Next.js 15+, and modern web
 - Dark mode and theme switching patterns
 
 ### Performance & Optimization
-- Core Web Vitals optimization (LCP, FID, CLS)
+- Core Web Vitals optimization (LCP, INP, CLS)
 - Advanced code splitting and dynamic imports
 - Image optimization and lazy loading strategies
 - Font optimization and variable fonts

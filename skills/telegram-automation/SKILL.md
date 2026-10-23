@@ -19,7 +19,7 @@ Automate Telegram operations through Composio's Telegram toolkit via Rube MCP.
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The MCP endpoint still requires the provider connection and authorization flow returned by the installed Rube service; adding a URL alone does not grant account access.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -107,7 +107,7 @@ Automate Telegram operations through Composio's Telegram toolkit via Rube MCP.
 - Bots can only edit their own messages
 - Messages can only be deleted within 48 hours of sending
 - In groups, bots with delete permissions can delete any message
-- Editing a message removes its 'edited' timestamp history
+- Edits may show edit metadata; do not promise removal of edit history or copies
 
 ### 5. Forward Messages and Get Updates
 
@@ -144,9 +144,9 @@ Automate Telegram operations through Composio's Telegram toolkit via Rube MCP.
 - `callback_query_id`: ID of the callback query to answer
 
 **Pitfalls**:
-- Commands must start with '/' and be lowercase
-- Command descriptions have a 256 character limit
-- Callback queries must be answered within 10 seconds or they expire
+- BotCommand.command values omit the leading '/' and use 1–32 lowercase English letters, digits or underscores; the UI displays a slash
+- BotCommand descriptions have a 1–256 character limit; verify the current tool schema
+- Answer callback queries promptly and handle expiry errors; do not assume a fixed universal lifetime
 - Setting commands replaces the entire command list
 
 ## Common Patterns
@@ -182,8 +182,8 @@ Automate Telegram operations through Composio's Telegram toolkit via Rube MCP.
 - Bots cannot initiate conversations; users must start them first
 
 **Rate Limits**:
-- 30 messages per second to the same group
-- 20 messages per minute to the same user in groups
+- Avoid more than about one message per second in a single chat
+- Groups are limited to about 20 messages per minute; free bulk broadcasts are about 30 messages per second overall
 - Bulk operations should implement delays between calls
 - API returns 429 Too Many Requests when limits are hit
 
@@ -226,3 +226,7 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Confirm bot identity, exact destination chat IDs and message/media content before sending, forwarding or editing. Reading updates does not authorize invitations, deletion or bot-menu changes. Bot API access is not general chat-history access; use only tools actually returned by discovery. Protect tokens and private forwards, bound polling and reconcile unknown sends before retrying.
+
+These are default rate guidelines, not guaranteed capacity. Honor `retry_after`; paid broadcasts require separate explicit budget authorization. Exporting a primary invite link can revoke a previous link; confirm that effect first. See [Telegram Bots FAQ](https://core.telegram.org/bots/faq) and discover current Bot API/tool constraints before sending.

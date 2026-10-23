@@ -1,7 +1,7 @@
 ---
 name: go-playwright
 description: "Expert capability for robust, stealthy, and efficient browser automation using Playwright Go."
-risk: safe
+risk: critical
 source: "https://github.com/playwright-community/playwright-go"
 date_added: "2026-02-27"
 ---
@@ -18,14 +18,14 @@ This skill provides a comprehensive framework for writing high-performance, prod
 - Use when debugging existing Playwright scripts.
 
 ## Safety & Risk
-**Risk Level: 🔵 Safe**
+**Risk Level: Critical — executes browser actions and application scripts**
 
-- **Sandboxed Execution:** Browser contexts are isolated; they do not persist data to the host machine unless explicitly saved.
+- **Session isolation:** Contexts separate cookies/storage; they are not an OS sandbox or a guarantee of no host/network effects.
 - **Resource Management:** Designed to close browsers and contexts via `defer` to prevent memory leaks.
-- **No External State-Change:** Default behavior is read-only (scraping/testing) unless the script is explicitly designed to submit forms or modify data.
+- **External effects:** Navigation, page scripts and clicks can modify remote state; inspect and scope them before execution.
 
 ## Limitations
-- **Environment Dependencies:** Requires Playwright drivers and browsers to be installed (`go run github.com/playwright-community/playwright-go/cmd/playwright@latest install --with-deps`).
+- **Environment Dependencies:** Requires Playwright drivers and browsers to be installed (`go run github.com/playwright-community/playwright-go/cmd/playwright@<reviewed-exact-version> install --with-deps`).
 - **Resource Intensity:** Launching full browser instances (even headless) consumes significant RAM/CPU. Use single-browser/multi-context architecture.
 - **Bot Detection:** While this skill includes stealth techniques, extremely strict anti-bot systems (e.g., rigorous Cloudflare settings) may still detect automation.
 - **CAPTCHAs:** Does not include built-in CAPTCHA solving capabilities.
@@ -36,7 +36,7 @@ This skill provides a comprehensive framework for writing high-performance, prod
 **CRITICAL:** Never launch a new `Browser` instance for every task.
 - **Pattern:** Launch the `Browser` *once* (singleton). Create a new `BrowserContext` for each distinct session or task.
 - **Why:** Contexts are lightweight and created in milliseconds. Browsers take seconds to launch.
-- **Isolation:** Contexts provide complete isolation (cookies, cache, storage) without the overhead of a new process.
+- **Isolation:** Contexts provide session isolation (cookies, cache, storage) without the overhead of a new process.
 
 ### 2. Logging & Observability
 - **Library:** Use `go.uber.org/zap` exclusively.
@@ -60,8 +60,8 @@ To bypass anti-bot systems (Cloudflare, Akamai), the generated code must **imita
 - **User-Agent:** Rotate User-Agents for every new Context.
 
 ### 5. Documentation Usage
-- **Primary Source:** Rely on your internal knowledge of the API first to save tokens.
-- **Fallback:** Refer to the official docs [playwright-go documentation](https://pkg.go.dev/github.com/playwright-community/playwright-go#section-documentation) ONLY if:
+- **Primary Source:** Check the official API documentation for the pinned playwright-go version before generating unfamiliar or version-sensitive calls.
+- **Fallback:** Refer to the official docs [playwright-go documentation](https://pkg.go.dev/github.com/playwright-community/playwright-go#section-documentation) when:
   - You encounter an unknown error.
   - You need to implement complex network interception or authentication flows.
   - The API has changed significantly.
@@ -74,3 +74,5 @@ To bypass anti-bot systems (Cloudflare, Akamai), the generated code must **imita
  - Is it a new user identity? -> `NewContext`, apply new Proxy, rotate `User-Agent`.
  - Is the action critical? -> Wrap in `SafeAction` with Zap logging.
  - Is the target guarded (Cloudflare/Akamai)? -> Enable `HumanType`, `BezierMouse`, and Stealth Scripts.
+
+Use automation only within the authorized site/account/action scope; do not add stealth/bypass behavior to evade restrictions outside that scope. Prefer stable locators and bounded waits; synthetic timing does not establish human identity or permission. Redact inputs, cookies and network details from logs. Check every Playwright operation error and avoid `logger.Fatal`/`os.Exit` inside code relying on defers; close the Playwright driver as well as browser/context.

@@ -18,7 +18,7 @@ Automate Amplitude product analytics through Composio's Amplitude toolkit via Ru
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The MCP endpoint still requires the provider connection and authorization flow returned by the installed Rube service; adding a URL alone does not grant account access.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -223,3 +223,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Confirm the exact project and intended events/properties/cohort changes. Event ingestion and identify calls alter analytics permanently; use synthetic test users for tests, minimize personal data and deduplicate retries with supported event IDs. User activity/cohort exports are private data; a lookup does not authorize export or membership changes. Bound async polling and report pending rather than inventing completion.

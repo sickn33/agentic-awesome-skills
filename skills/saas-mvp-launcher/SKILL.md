@@ -105,8 +105,16 @@ model Subscription {
   stripeCustomerId   String   @unique
   stripePriceId      String
   stripeSubId        String   @unique
-  status             String   # active, canceled, past_due
+  status             String   // active, canceled, past_due
   currentPeriodEnd   DateTime
+}
+
+model WorkspaceMember {
+  userId      String
+  workspaceId String
+  user        User      @relation(fields: [userId], references: [id])
+  workspace   Workspace @relation(fields: [workspaceId], references: [id])
+  @@id([userId, workspaceId])
 }
 
 enum Plan {
@@ -131,9 +139,9 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhooks(.*)',
 ]);
 
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (!isPublicRoute(req)) {
-    auth().protect();
+    await auth.protect();
   }
 });
 
@@ -221,3 +229,5 @@ export async function createCheckoutSession(userId: string, priceId: string) {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These samples are starting points, not a production security implementation. Derive `userId`/workspace membership from the authenticated server session, validate price IDs against a server-owned allowlist, and use test-mode Stripe keys. Grant entitlements only from verified signed, idempotently handled webhook events, never the success URL. Tenant membership/schema alone does not enforce tenant authorization. Preserve critical failure, payment and recovery paths before launch; time/revenue/prepayment thresholds above are planning heuristics rather than universal go/no-go rules. Pin compatible SDK/API versions and verify the deployed Clerk integration.

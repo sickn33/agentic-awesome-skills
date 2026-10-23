@@ -1,6 +1,6 @@
 ---
 name: makepad-widgets
-description: "Version: makepad-widgets (dev branch) | Last Updated: 2026-01-19 > > Check for updates: https://crates.io/crates/makepad-widgets"
+description: "Select and compose Makepad widgets, configure their properties and styling, and debug widget behavior against a pinned makepad-widgets version."
 risk: safe
 source: community
 date_added: "2026-03-06"
@@ -44,8 +44,8 @@ Refer to the local files for detailed documentation:
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
-   - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
-   - Still answer based on SKILL.md patterns + built-in knowledge
+   - Report the missing reference and the resulting coverage limit; do not recommend an unavailable slash command or claim the missing procedure was followed
+   - Use independent inline patterns only after checking their compatibility with the project's pinned crate; identify unverified APIs
 3. If reference file exists, incorporate its content into the answer
 
 ## Key Patterns
