@@ -101,8 +101,8 @@ For each component type, describe shape, color, shadow depth, and interaction be
 ### 7. Define Responsive Rules
 Every design must work across all viewports:
 - **Mobile-First Collapse (< 768px):** All multi-column layouts collapse to single column. No exceptions
-- **No Horizontal Scroll:** Horizontal overflow on mobile is a critical failure
-- **Typography Scaling:** Headlines scale via `clamp()`. Body text minimum `1rem`/`14px`
+- **No accidental horizontal overflow:** preserve accessible deliberate scrolling for wide tables or content that requires it
+- **Typography Scaling:** Headlines scale via `clamp()`. Body text normally `1rem` (16px at the usual root size); preserve zoom and user font settings
 - **Touch Targets:** All interactive elements minimum `44px` tap target
 - **Image Behavior:** Inline typography images (photos between words) stack below headline on mobile
 - **Navigation:** Desktop horizontal nav collapses to clean mobile menu
@@ -110,8 +110,8 @@ Every design must work across all viewports:
 
 ### 8. Encode Motion Philosophy
 - **Spring Physics default:** `stiffness: 100, damping: 20` — premium, weighty feel. No linear easing
-- **Perpetual Micro-Interactions:** Every active component should have an infinite loop state (Pulse, Typewriter, Float, Shimmer)
-- **Staggered Orchestration:** Never mount lists instantly — use cascade delays for waterfall reveals
+- **Perpetual Micro-Interactions:** Use optional brief feedback; respect reduced-motion and pause/stop controls instead of requiring infinite loops (Pulse, Typewriter, Float, Shimmer)
+- **Staggered Orchestration:** Keep content available immediately; optional short reveals must respect reduced motion and avoid cumulative delay
 - **Performance:** Animate exclusively via `transform` and `opacity`. Never animate `top`, `left`, `width`, `height`. Grain/noise filters on fixed pseudo-elements only
 
 ### 9. List Anti-Patterns (AI Tells)
@@ -127,7 +127,7 @@ Encode these as explicit "NEVER DO" rules in the DESIGN.md:
 - No overlapping elements — clean spatial separation always
 - No 3-column equal card layouts
 - No generic names ("John Doe", "Acme", "Nexus")
-- No fake round numbers (`99.99%`, `50%`)
+- Use actual measured values; label mock numbers as examples rather than inventing precise metrics
 - No AI copywriting clichés ("Elevate", "Seamless", "Unleash", "Next-Gen")
 - No filler UI text: "Scroll to explore", "Swipe down", scroll arrows, bouncing chevrons
 - No broken Unsplash links — use `picsum.photos` or SVG avatars
@@ -168,12 +168,12 @@ well-lit architecture studio.")
 
 ## 5. Layout Principles
 (Grid-first responsive architecture. Asymmetric splits for Hero sections.
-Strict single-column collapse below 768px. Max-width containment.
+Adapt columns to readable content widths below 768px; preserve usable tables and controls. Max-width containment.
 No flexbox percentage math. Generous internal padding.)
 
 ## 6. Motion & Interaction
 (Spring physics for all interactive elements. Staggered cascade reveals.
-Perpetual micro-loops on active dashboard components. Hardware-accelerated
+Optional brief motion with reduced-motion and pause controls. Hardware-accelerated
 transforms only. Isolated Client Components for CPU-heavy animations.)
 
 ## 7. Anti-Patterns (Banned)
@@ -203,3 +203,7 @@ no generic placeholder names, no broken image links.)
 - Being too vague in atmosphere descriptions
 - Ignoring the anti-pattern list — these are what make the output premium
 - Defaulting to generic "safe" designs instead of enforcing the curated aesthetic
+
+## Accessibility and evidence overrides
+
+These visual bans are preferences, not usability or accessibility standards. Product requirements, existing branding, semantic reading order, keyboard operation, zoom and high-contrast settings take priority. The supplied muted slate, borders and accent/white combinations are not certified contrast pairs; measure each text, focus and control state and choose a darker color or contrasting foreground as needed. Inline headline images must preserve a coherent accessible name and mobile reading order. Use only licensed fonts/images and approved external image hosts; mock identities and metrics must remain clearly fictional. Viewport checks are examples, not proof of all-device compatibility.

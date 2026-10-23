@@ -11,7 +11,7 @@
  */
 
 import { parseArgs } from 'node:util';
-import { writeFileSync, statSync } from 'node:fs';
+import { writeFileSync, statSync, readFileSync } from 'node:fs';
 
 // User-Agent for tracking skill usage in Apify analytics
 const USER_AGENT = 'apify-agent-skills/apify-ecommerce-1.0.0';
@@ -47,6 +47,11 @@ function parseCliArgs() {
         process.exit(1);
     }
 
+    if (!/^[A-Za-z0-9_-]+(?:[\/~][A-Za-z0-9_-]+)?$/.test(values.actor)) throw new Error('Invalid Actor identifier');
+    if (!['csv', 'json'].includes(values.format)) throw new Error('Format must be csv or json');
+    for (const [name, raw, max] of [['timeout', values.timeout, 3600], ['poll-interval', values['poll-interval'], 60]]) {
+        if (!Number.isInteger(Number(raw)) || Number(raw) < 1 || Number(raw) > max) throw new Error(`Invalid ${name}`);
+    }
     return {
         actor: values.actor,
         input: values.input,
@@ -74,8 +79,8 @@ Options:
   --help, -h        Show this help message
 
 Output Formats:
-  JSON (all data)     --output file.json --format json
-  CSV (all data)      --output file.csv --format csv
+  JSON (up to 10,000 fetched records)     --output file.json --format json
+  CSV (up to 10,000 fetched records)      --output file.csv --format csv
   Quick answer        (no --output) - displays top 5 in chat
 
 Examples:
@@ -98,11 +103,18 @@ Examples:
 `);
 }
 
+// Never include bearer tokens in URLs. Requests are bounded and redirects refused.
+async function apiFetch(token, url, options = {}) {
+    const headers = new Headers(options.headers);
+    headers.set("Authorization", `Bearer ${token}`);
+    return fetch(url, { ...options, headers, redirect: "error", signal: AbortSignal.timeout(30_000) });
+}
+
 // Start an actor run and return { runId, datasetId }
 async function startActor(token, actorId, inputJson) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
-    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/acts/${apiActorId}/runs`;
 
     let data;
     try {
@@ -112,7 +124,7 @@ async function startActor(token, actorId, inputJson) {
         process.exit(1);
     }
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -128,7 +140,7 @@ async function startActor(token, actorId, inputJson) {
 
     if (!response.ok) {
         const text = await response.text();
-        console.error(`Error: API request failed (${response.status}): ${text}`);
+        console.error(`Error: API request failed (${response.status}); response body withheld`);
         process.exit(1);
     }
 
@@ -141,15 +153,15 @@ async function startActor(token, actorId, inputJson) {
 
 // Poll run status until complete or timeout
 async function pollUntilComplete(token, runId, timeout, interval) {
-    const url = `https://api.apify.com/v2/actor-runs/${runId}?token=${encodeURIComponent(token)}`;
+    const url = `https://api.apify.com/v2/actor-runs/${runId}`;
     const startTime = Date.now();
     let lastStatus = null;
 
     while (true) {
-        const response = await fetch(url);
+        const response = await apiFetch(token, url);
         if (!response.ok) {
             const text = await response.text();
-            console.error(`Error: Failed to get run status: ${text}`);
+            console.error(`Error: Failed to get run status (${response.status}); response body withheld`);
             process.exit(1);
         }
 
@@ -169,7 +181,7 @@ async function pollUntilComplete(token, runId, timeout, interval) {
         const elapsed = (Date.now() - startTime) / 1000;
         if (elapsed > timeout) {
             console.error(`Warning: Timeout after ${timeout}s, actor still running`);
-            return 'TIMED-OUT';
+            return 'WAIT-TIMED-OUT';
         }
 
         await sleep(interval * 1000);
@@ -185,9 +197,9 @@ function csvCell(value) {
 
 // Download dataset items
 async function downloadResults(token, datasetId, outputPath, format) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json&limit=10000`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         headers: {
             'User-Agent': `${USER_AGENT}/download_${format}`,
         },
@@ -195,18 +207,18 @@ async function downloadResults(token, datasetId, outputPath, format) {
 
     if (!response.ok) {
         const text = await response.text();
-        console.error(`Error: Failed to download results: ${text}`);
+        console.error(`Error: Failed to download results (${response.status}); response body withheld`);
         process.exit(1);
     }
 
     const data = await response.json();
 
     if (format === 'json') {
-        writeFileSync(outputPath, JSON.stringify(data, null, 2));
+        writeFileSync(outputPath, JSON.stringify(data, null, 2), { flag: 'wx', mode: 0o600 });
     } else {
         // CSV output
         if (data.length > 0) {
-            const fieldnames = Object.keys(data[0]);
+            const fieldnames = [...new Set(data.flatMap(row => Object.keys(row)))];
             const csvLines = [fieldnames.map(csvCell).join(',')];
 
             for (const row of data) {
@@ -214,9 +226,7 @@ async function downloadResults(token, datasetId, outputPath, format) {
                     let value = row[key];
 
                     // Truncate long text fields
-                    if (typeof value === 'string' && value.length > 200) {
-                        value = value.slice(0, 200) + '...';
-                    } else if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
+                    if (Array.isArray(value) || (typeof value === 'object' && value !== null)) {
                         value = JSON.stringify(value) || '';
                     }
 
@@ -225,9 +235,9 @@ async function downloadResults(token, datasetId, outputPath, format) {
                 csvLines.push(values.join(','));
             }
 
-            writeFileSync(outputPath, csvLines.join('\n'));
+            writeFileSync(outputPath, csvLines.join('\n'), { flag: 'wx', mode: 0o600 });
         } else {
-            writeFileSync(outputPath, '');
+            writeFileSync(outputPath, '', { flag: 'wx', mode: 0o600 });
         }
     }
 
@@ -236,9 +246,9 @@ async function downloadResults(token, datasetId, outputPath, format) {
 
 // Display top 5 results in chat format
 async function displayQuickAnswer(token, datasetId) {
-    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${encodeURIComponent(token)}&format=json`;
+    const url = `https://api.apify.com/v2/datasets/${datasetId}/items?format=json&limit=10000`;
 
-    const response = await fetch(url, {
+    const response = await apiFetch(token, url, {
         headers: {
             'User-Agent': `${USER_AGENT}/quick_answer`,
         },
@@ -246,7 +256,7 @@ async function displayQuickAnswer(token, datasetId) {
 
     if (!response.ok) {
         const text = await response.text();
-        console.error(`Error: Failed to download results: ${text}`);
+        console.error(`Error: Failed to download results (${response.status}); response body withheld`);
         process.exit(1);
     }
 
@@ -260,7 +270,7 @@ async function displayQuickAnswer(token, datasetId) {
 
     // Display top 5
     console.log(`\n${'='.repeat(60)}`);
-    console.log(`TOP 5 RESULTS (of ${total} total)`);
+    console.log(`TOP 5 FETCHED RESULTS (of ${total} fetched)`);
     console.log('='.repeat(60));
 
     for (let i = 0; i < Math.min(5, data.length); i++) {
@@ -297,14 +307,14 @@ function reportSummary(outputPath, format) {
 
     let count;
     try {
-        const content = require('fs').readFileSync(outputPath, 'utf-8');
+        const content = readFileSync(outputPath, 'utf-8');
         if (format === 'json') {
             const data = JSON.parse(content);
             count = Array.isArray(data) ? data.length : 1;
         } else {
             // CSV - count lines minus header
             const lines = content.split('\n').filter((line) => line.trim());
-            count = Math.max(0, lines.length - 1);
+            count = 'not inferred from CSV physical lines (quoted fields may contain newlines)';
         }
     } catch {
         count = 'unknown';

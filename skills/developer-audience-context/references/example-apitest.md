@@ -2,6 +2,8 @@
 
 Last updated: 2024-01-15
 
+All personas, quotes, metrics, benchmarks and endorsements below are invented teaching examples. Named organizations are not asserted users, sponsors or endorsers; do not publish or reuse these as evidence.
+
 ---
 
 ## Product Overview

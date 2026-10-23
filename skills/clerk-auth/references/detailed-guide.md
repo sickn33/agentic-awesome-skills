@@ -99,7 +99,7 @@ Best practices:
 - Single middleware.ts file at project root
 - Use createRouteMatcher for route groups
 - auth.protect() for explicit protection
-- Centralize all auth logic in middleware
+- Use middleware for routing/session checks and independently enforce authentication, permissions and resource ownership in every server data/action path
 
 ### Code Example
 
@@ -161,7 +161,7 @@ export default clerkMiddleware(async (auth, req) => {
 ### Anti_patterns
 
 - Pattern: Multiple middleware.ts files | Why: Causes conflicts and redirect loops | Fix: Use single middleware.ts with route matchers
-- Pattern: Manual redirects in components | Why: Double redirects, missed routes | Fix: Handle all redirects in middleware
+- Pattern: Manual redirects in components | Why: Double redirects, missed routes | Fix: avoid duplicated redirect paths, but preserve independent server authorization checks
 - Pattern: Missing matcher config | Why: Middleware won't run on all routes | Fix: Add comprehensive matcher pattern
 
 ### References
@@ -190,7 +190,7 @@ export default async function DashboardPage() {
     redirect('/sign-in');
   }
 
-  // Full user data (counts toward rate limits)
+  // Fetch only when actually needed; protect private fields (counts toward rate limits)
   const user = await currentUser();
 
   return (
@@ -238,7 +238,8 @@ export async function createPost(formData: FormData) {
     throw new Error('Unauthorized');
   }
 
-  const title = formData.get('title') as string;
+  const title = formData.get('title');
+  if (typeof title !== "string" || title.trim().length < 1 || title.length > 200) throw new Error("Invalid title");
 
   // Create post with userId
   const post = await prisma.post.create({
@@ -508,8 +509,7 @@ export async function POST(req: Request) {
   }
 
   // Get body
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  const body = await req.text(); // verify exact raw bytes before parsing
 
   // Verify webhook
   const wh = new Webhook(WEBHOOK_SECRET);
@@ -529,38 +529,23 @@ export async function POST(req: Request) {
   // Handle events
   const eventType = evt.type;
 
-  if (eventType === 'user.created') {
-    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
-
-    await prisma.user.create({
-      data: {
-        clerkId: id,
-        email: email_addresses[0]?.email_address,
-        firstName: first_name,
-        lastName: last_name,
-        imageUrl: image_url,
-      },
-    });
-  }
-
-  if (eventType === 'user.updated') {
-    const { id, email_addresses, first_name, last_name, image_url } = evt.data;
-
-    await prisma.user.update({
+  if (evt.type === 'user.created' || evt.type === 'user.updated') {
+    const { id, email_addresses, primary_email_address_id, first_name, last_name, image_url } = evt.data;
+    const fields = {
+      email: email_addresses.find(e => e.id === primary_email_address_id)?.email_address ?? null,
+      firstName: first_name, lastName: last_name, imageUrl: image_url,
+    };
+    await prisma.user.upsert({
       where: { clerkId: id },
-      data: {
-        email: email_addresses[0]?.email_address,
-        firstName: first_name,
-        lastName: last_name,
-        imageUrl: image_url,
-      },
+      create: { clerkId: id, ...fields },
+      update: fields,
     });
   }
 
   if (eventType === 'user.deleted') {
     const { id } = evt.data;
 
-    await prisma.user.delete({
+    await prisma.user.deleteMany({
       where: { clerkId: id! },
     });
   }
@@ -573,7 +558,7 @@ export async function POST(req: Request) {
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
-  email     String   @unique
+  email     String?  @unique
   firstName String?
   lastName  String?
   imageUrl  String?
@@ -649,19 +634,20 @@ export async function POST(req: Request) {
 // Protected with role check
 // app/api/admin/users/route.ts
 export async function GET() {
-  const { userId, orgRole } = await auth();
+  const { userId, orgRole, orgId } = await auth();
 
   if (!userId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  if (orgRole !== 'org:admin') {
+  if (!orgId || orgRole !== 'org:admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   // Admin-only logic
-  const users = await prisma.user.findMany();
-  return NextResponse.json(users);
+  // Organization admin is not a global application admin. Implement a
+  // server-authorized tenant-membership query and allowlisted response fields.
+  return NextResponse.json({ error: "Tenant-scoped membership query not implemented" }, { status: 501 });
 }
 
 // Using getAuth in older patterns (not recommended)

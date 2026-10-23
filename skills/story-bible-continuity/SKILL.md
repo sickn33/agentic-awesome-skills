@@ -23,7 +23,7 @@ license: Apache-2.0
 Long manuscripts fail in a specific, boring way: the writer (or the model)
 remembers the story as a vibe, not as facts. A character is 18 in chapter 1
 and 23 three years later in chapter 12. A name drifts one character and stays
-drifted. A phone appears in 1998. A planted key is never paid off, and the
+drifted. A modern smartphone appears in a scene set in 1998. A planted key is never paid off, and the
 author discovers it at chapter 60 while the reader noticed at chapter 20.
 
 Re-reading the draft does not catch these, because re-reading is the same
@@ -147,3 +147,7 @@ Then run `python3 sbc.py check` on the real manuscript and paste the summary lin
 empty folder, or a run whose only output is "0 errors" on a bible with no
 characters, proves nothing — check that the bible actually has entries and the
 chapter count matches the folder.
+
+## Checker input and coverage limits
+
+The checker source was modified to align JSON-mode exit behavior, protect existing bible files, skip symlink/non-file chapters, and use actual chapter numbers for payoff/deadline checks. It remains a narrow Chinese-language pattern checker, not a schema validator or semantic proof. Validate bible types, unique nonempty character names, positive integer chapter/deadline fields and allowed-POV configuration before use; malformed input may otherwise raise an exception. Disabled checks must be reported as not configured. Age matching uses only the first 1900–2099 year and age on each line, does not resolve aliases, and can attach another person's age to a character. POV mode and timeline fields are documentary; omniscient narration can trigger false warnings. Keyword occurrence does not prove a payoff. The advertised two-issue fixture must be constructed and observed, not assumed; it has not been executed by this static review. Keep unpublished manuscripts local and obtain author approval for factual retcons.

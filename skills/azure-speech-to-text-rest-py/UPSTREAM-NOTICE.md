@@ -11,3 +11,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/pronunciation-assessment.md` | `.github/plugins/azure-sdk-python/skills/azure-speech-to-text-rest-py/references/pronunciation-assessment.md` | `84601ca710e55c47a1e048053b9e7347e347090c` | text-only trailing whitespace and EOF blank lines normalized |
 
 Cloud examples and setup/evaluation scripts use the configured Azure identity and resources. Installing these files does not authenticate, provision, receive messages, or run an evaluation. Runtime verification against a live account is outside this restoration.
+
+AAS review on 2026-10-23 additionally bounded HTTP waits and guarded absent recognition results in the imported pronunciation guide. The upstream blob above remains provenance for the original, not a claim that modified local bytes are identical.

@@ -476,3 +476,7 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, derive every requested format from one field list, and give me the data or the link.
 ```
+
+## Format and scoring boundaries
+
+The displayed formats are illustrative mappings, not a bundled generator or proof that drift cannot occur. Validate emitted output and explicitly map human labels to SQL keys. PostgreSQL timestamp defaults initialize values only; update `updated_at` through application code or a trigger. JSON Schema date formats require a validator configured for format assertion, and required string fields need nonblank validation. Add scale constraints only from the confirmed scoring policy; never silently encode `N/A` as numeric zero. Cross-format null, blank, unknown and absent fields need a documented conversion rule. Spreadsheet-targeted CSV exports must neutralize formula-leading free text for the intended importer while preserving a separately authorized raw-data representation. Anonymous mode also needs collection/tool metadata and small-group controls: blanking the reviewer column alone cannot guarantee anonymity.

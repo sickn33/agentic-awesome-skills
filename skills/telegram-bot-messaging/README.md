@@ -183,3 +183,9 @@ fi
 ## License
 
 Apache 2.0
+
+## Operational limits
+
+Setup currently discovers the latest pending chat; verify its numeric ID through a trusted channel before allowing the confirmation send. Do not use setup with unverified pending senders. The script is not a secure approval system: one process per bot is required, ask/read share and consume updates, and webhook mode conflicts with getUpdates. Text answers must reply directly to the question; an allowed sender's unrelated message is not approval. Bind production approvals to the exact action/artifact/destination and verify the response identity, freshness and chosen option in the caller; timeout/error is never consent. No auto-retry on uncertain sends.
+
+Local cursors/config need a private owned directory and exclusive access; do not run on attacker-controlled paths. Bash character splitting can cut markup/Unicode units, Telegram photos/captions have separate limits, and sending a GIF/WebP as photo may fail or alter it: prefer document mode where fidelity matters. Message/caption/argv and logs may expose private data. Truncation/partial multi-message delivery must be reported; formatting fallback does not guarantee delivery. No setup/message/file/read/hook was performed in this review.

@@ -96,7 +96,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
@@ -105,7 +105,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
 
   fleet:
     image: fleetdm/fleet:v4.47.0
@@ -128,7 +128,7 @@ services:
     volumes:
       - ./tls:/tls:ro
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
 volumes:
   mysql-data:
@@ -138,21 +138,17 @@ volumes:
 
 ```bash
 # Generate TLS certs (use real certs in production)
+umask 077
 mkdir -p tls
 openssl req -x509 -newkey rsa:4096 -sha256 -days 365 \
   -nodes -keyout tls/fleet.key -out tls/fleet.crt \
-  -subj "/CN=fleet.yourcompany.com"
+  -subj "/CN=fleet.yourcompany.com" -addext "subjectAltName=DNS:fleet.yourcompany.com"
 
 # Start services
 docker compose up -d
 
-# Create admin account
-docker compose exec fleet fleet prepare db
-docker compose exec fleet fleet setup \
-  --email admin@yourcompany.com \
-  --name "IT Admin" \
-  --password "${FLEET_ADMIN_PASSWORD}" \
-  --org-name "YourCompany"
+# Verify the pinned Fleet version and migrate its database with the documented procedure.
+# Use its authenticated/local setup screen; do not assume fleet setup exists or pass admin passwords in argv.
 ```
 
 ### 3.3 Enroll a macOS host with fleetctl
@@ -171,7 +167,7 @@ fleetctl package --type pkg \
   --enroll-secret "$(fleetctl get enroll-secret)" \
   --fleet-certificate tls/fleet.crt
 
-# The .pkg file can be distributed via Apple Business Manager or manually
+# Agent package installation is distinct from MDM/ADE enrollment; ABM assigns devices to an MDM server, not arbitrary pkg distribution.
 ```
 
 ### 3.4 Enroll a Windows host
@@ -358,7 +354,7 @@ Enable-BitLocker -MountPoint "C:" `
 # Add a recovery password and back it up to Azure AD
 Add-BitLockerKeyProtector -MountPoint "C:" -RecoveryPasswordProtector
 BackupToAAD-BitLockerKeyProtector -MountPoint "C:" `
-  -KeyProtectorId (Get-BitLockerVolume -MountPoint "C:").KeyProtector[1].KeyProtectorId
+  -KeyProtectorId ((Get-BitLockerVolume -MountPoint "C:").KeyProtector | Where-Object KeyProtectorType -eq "RecoveryPassword" | Select-Object -First 1).KeyProtectorId
 
 # Verify encryption status
 Get-BitLockerVolume | Select-Object MountPoint, VolumeStatus, EncryptionPercentage
@@ -402,3 +398,10 @@ New-NetFirewallRule -DisplayName "Allow RDP from VPN" `
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+## Enrollment, recovery and deployment limits
+
+The historical vendor comparison, license bundles, Fleet v4.47 image, OS coverage and example fleetctl flags require current-version verification; agent inventory and full MDM controls are different capabilities. The Compose sketch is loopback-bound and incomplete for production: current Fleet may require additional keys/migrations and MDM certificates/tokens. An encrypted disk row does not prove every required volume or recovery escrow is healthy; a macOS-major floor is not a current patch policy. Verify osquery tables/columns on the installed platform instead of assuming disk_util exists.
+
+Before FileVault/BitLocker enforcement, verify secure-token/volume ownership or TPM prerequisites and escrow/retrieval of the correct recovery protector. The FileVault profile hides the recovery key without supplying an escrow payload; do not deploy it until the actual escrow workflow is confirmed. A positional BitLocker protector index is unreliable. Never log recovery keys or package enrollment secrets. MDM/BYOD scope and monitoring data need the device owner’s applicable consent/policy.
+
+Wipe/lock needs explicit authorization bound to verified device identity, ownership, data scope, backup/recovery and effects; a generic management request is insufficient. Keep management/Activation Lock controls until incident policy permits removal, not an arbitrary 30 days. Display sleep is not a guaranteed screen lock. Homebrew should run as the intended non-root user; root post-enrollment scripts do not configure the employee’s Git/preferences. Do not execute remote installers or mutable downloaded Brewfiles without review/pinning and authorization. The transcript-based Windows sample may capture recovery material and must not be used as-is. No device, container, enrollment or management command was executed.

@@ -1,8 +1,8 @@
 ---
 name: fsi-compliance-checker
-description: "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation."
+description: "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0.1 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation."
 category: security
-risk: safe
+risk: critical
 source: community
 source_repo: timwukp/agent-skills-best-practice
 source_type: community
@@ -18,7 +18,7 @@ license_source: "https://github.com/timwukp/agent-skills-best-practice/blob/main
 
 ## Overview
 
-Maps a concrete change (code diff, architecture design, IaC, pipeline config) to the specific controls it touches in financial services compliance frameworks — PCI-DSS v4.0 for payment card data and MAS TRM for Singapore-regulated institutions — and reports gaps with actionable remediation. This is engineering-level compliance triage: it helps teams catch violations before audit, but it does not replace a qualified assessor (QSA) or the institution's compliance function. Say so in every report.
+Maps a concrete change (code diff, architecture design, IaC, pipeline config) to the specific controls it touches in financial services compliance frameworks — PCI-DSS v4.0.1 for payment card data and MAS TRM for Singapore-regulated institutions — and reports gaps with actionable remediation. This is engineering-level compliance triage: it helps teams catch violations before audit, but it does not replace a qualified assessor (QSA) or the institution's compliance function. Say so in every report.
 
 ## When to Use This Skill
 
@@ -48,7 +48,7 @@ Identify what the diff/design actually touches: data elements (card data? custom
 
 ### Step 3: Assess applicable controls
 
-Select the applicable controls from the loaded reference file(s) — typically 5-15 controls, not the whole framework. List what you ruled out and why (one line each) so the scoping is auditable. Assess each as `Compliant` / `Gap` / `Needs evidence` (can't tell from the artifact — name the evidence required).
+Select the applicable controls from the loaded reference file(s) — typically 5-15 controls, not the whole framework. List what you ruled out and why (one line each) so the scoping is auditable. Assess each as `Supported by reviewed evidence` / `Gap` / `Needs evidence` (can't tell from the artifact — name the evidence required).
 
 ### Step 4: Report
 
@@ -56,7 +56,7 @@ Every Gap gets: the control ID, what's wrong in this specific change, concrete r
 
 ```markdown
 # Compliance Review: [change title]
-**Frameworks:** [PCI-DSS v4.0 / MAS TRM 2021] · **Date:** [YYYY-MM-DD]
+**Frameworks:** [PCI-DSS v4.0.1 / MAS TRM 2021] · **Date:** [YYYY-MM-DD]
 **Scope:** [what was reviewed: files, design doc, pipeline]
 > Engineering triage only — not a substitute for QSA assessment or the compliance function.
 
@@ -92,13 +92,13 @@ Offer to turn findings into backlog items with the control ID in each story for 
 
 **User**: "Our Singapore bank is moving the customer notification service to a cloud region in another country. MAS TRM implications?"
 
-**Skill**: Loads mas-trm.md → reviews against §11.5 (cloud: due diligence, data residency, exit strategy), flags the MAS Outsourcing Guidelines as a related instrument, asks what customer data the service touches before rating severity.
+**Skill**: Loads mas-trm.md → verifies the official cloud/third-party and data-security references (not §11.5, which concerns IoT) before mapping due diligence, cross-border data and exit risks, flags the MAS Outsourcing Guidelines as a related instrument, asks what customer data the service touches before rating severity.
 
 ## Common FSI Engineering Triggers
 
 Changes that almost always have compliance impact — check proactively when they appear in a diff:
 
-- Logging statements near payment or authentication flows (PAN/CVV must never be logged; MAS TRM requires security event logging — both directions matter)
+- Logging statements near payment or authentication flows (CVV must not be stored after authorization; avoid full PAN logs and evaluate any storage against the applicable controls; MAS TRM requires security event logging — both directions matter)
 - New data stores or caches receiving customer or card data (encryption at rest, retention, residency)
 - Authentication/session changes (MFA requirements, session timeout, credential storage)
 - New third-party SDKs or API integrations (outsourcing/vendor controls, data flows leaving the boundary)
@@ -107,15 +107,15 @@ Changes that almost always have compliance impact — check proactively when the
 
 ## Guardrails
 
-- Cite control IDs precisely (e.g. "PCI-DSS 8.3.6", "MAS TRM 9.1.1") so findings are traceable in audit tooling; the bundled reference files carry the ID schemes.
+- Cite control IDs precisely (e.g. "PCI-DSS 8.3.6", "MAS TRM 9.1.1") so findings are traceable in audit tooling; verify each ID in the official version; the bundled MAS topic map is not paragraph-level authority.
 - Severity discipline: don't inflate. A missing comment is not a Critical; unencrypted PAN at rest is.
-- When the change is compliant, say so affirmatively per control — "no findings" plus the checked-control list is a useful audit artifact.
+- When the reviewed artifact supports a control, state that limited evidence result per control — "no findings" plus the checked-control list is a useful audit artifact.
 - Never output real card numbers, even as examples; use the standard test PANs (e.g. 4111 1111 1111 1111) when illustrating.
 - Read-only: this skill reviews and reports; it never modifies code, infrastructure, or configuration.
 
 ## Limitations
 
-- Covers only the bundled PCI-DSS v4.0 and MAS TRM engineering summaries; other frameworks or local policy overlays need separate review.
+- Covers only the bundled PCI-DSS v4.0.1 and MAS TRM engineering summaries; other frameworks or local policy overlays need separate review.
 - Provides engineering triage, not legal advice, QSA assessment, or formal compliance sign-off.
 - Requires concrete evidence such as diffs, designs, IaC, logs, or control artifacts; incomplete evidence should be marked `Needs evidence`.
 - The bundled references are concise control maps, not substitutes for reading the official standards.
@@ -123,3 +123,7 @@ Changes that almost always have compliance impact — check proactively when the
 ## Credits
 
 Adapted from [timwukp/agent-skills-best-practice](https://github.com/timwukp/agent-skills-best-practice) (MIT), where the skill ships with evals and a documented 4-layer test methodology (see the repo's TESTING.md).
+
+## Evidence and framework boundaries
+
+A code diff cannot certify an organization, operating control or compliance program. Bind every finding to framework version, exact official paragraph, applicability, reviewed artifact and missing operational evidence. Use `Needs evidence` when a topic map is unverified; do not manufacture control IDs from the local table. Check MAS sector-specific Notices separately from nonbinding guidelines, including notification clocks and cross-border outsourcing requirements. Severity depends on demonstrated data exposure and control impact, not merely whether production data exists. Preserve any upstream credit as provenance only; upstream eval/test descriptions are not evidence that this imported skill was tested here. Keep cardholder data out of reports, including test PANs unless the demonstration specifically needs a clearly labeled approved sandbox value.

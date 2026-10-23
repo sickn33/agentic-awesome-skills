@@ -8,4 +8,4 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/render_diagram.py` | `skills/diagram-generator/scripts/render_diagram.py` | `8cc9e8942935be5a059462e17ad325818cfc8e11` | content unchanged |
+| `scripts/render_diagram.py` | `skills/diagram-generator/scripts/render_diagram.py` | `8cc9e8942935be5a059462e17ad325818cfc8e11` | catalog review: bounded subprocess duration; reject existing/input output paths and mismatched format extension |

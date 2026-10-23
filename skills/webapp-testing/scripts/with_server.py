@@ -14,7 +14,10 @@ Usage:
       -- python test.py
 """
 
+# Catalog modification: bounded readiness/commands, no pipe deadlock, scoped process cleanup.
 import subprocess
+import os
+import signal
 import socket
 import time
 import sys
@@ -58,18 +61,19 @@ def resolve_allowed_executable(executable):
 def validate_argv(parts):
     if not parts:
         raise ValueError("empty command")
-    exe = Path(parts[0]).name
-    resolved_exe = resolve_allowed_executable(exe)
+    resolved_exe = resolve_allowed_executable(parts[0])
     for part in parts:
         if any(token in part for token in SHELL_METACHARS):
             raise ValueError(f"unsupported shell metacharacter in argument: {part}")
     return [resolved_exe, *parts[1:]]
 
 
-def is_server_ready(port, timeout=30):
+def is_server_ready(port, timeout=30, process=None):
     """Wait for server to be ready by polling the port."""
-    start_time = time.time()
-    while time.time() - start_time < timeout:
+    start_time = time.monotonic()
+    while time.monotonic() - start_time < timeout:
+        if process is not None and process.poll() is not None:
+            return False
         try:
             with socket.create_connection(('localhost', port), timeout=1):
                 return True
@@ -127,6 +131,7 @@ def main():
     parser.add_argument('--server', action='append', dest='servers', help='Server command (can be repeated)')
     parser.add_argument('--port', action='append', dest='ports', type=int, help='Port for each server (must match --server count)')
     parser.add_argument('--timeout', type=int, default=30, help='Timeout in seconds per server (default: 30)')
+    parser.add_argument('--command-timeout', type=int, default=120, help='Maximum test command seconds')
     parser.add_argument('command', nargs=argparse.REMAINDER, help='Command to run after server(s) ready')
 
     args = parser.parse_args()
@@ -150,6 +155,13 @@ def main():
         print("Error: Number of --server and --port arguments must match")
         sys.exit(1)
 
+    if args.timeout <= 0 or args.command_timeout <= 0 or any(not 1 <= p <= 65535 for p in args.ports) or len(set(args.ports)) != len(args.ports):
+        parser.error("positive timeouts and distinct ports in 1..65535 required")
+    for port in args.ports:
+        with socket.socket() as probe:
+            if probe.connect_ex(("localhost", port)) == 0:
+                parser.error(f"port {port} already has a listener; refusing false readiness")
+
     servers = []
     for cmd, port in zip(args.servers, args.ports):
         servers.append({'cmd': cmd, 'port': port})
@@ -165,14 +177,15 @@ def main():
             process = subprocess.Popen(
                 server_cmd,
                 cwd=server_cwd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                start_new_session=(os.name == "posix")
             )
             server_processes.append(process)
 
             # Wait for this server to be ready
             print(f"Waiting for server on port {server['port']}...")
-            if not is_server_ready(server['port'], timeout=args.timeout):
+            if not is_server_ready(server['port'], timeout=args.timeout, process=process):
                 raise RuntimeError(f"Server failed to start on port {server['port']} within {args.timeout}s")
 
             print(f"Server ready on port {server['port']}")
@@ -182,7 +195,7 @@ def main():
         # Run the command
         test_command = validate_argv(args.command)
         print(f"Running: {' '.join(test_command)}\n")
-        result = subprocess.run(test_command)
+        result = subprocess.run(test_command, timeout=args.command_timeout)
         sys.exit(result.returncode)
 
     finally:
@@ -190,10 +203,18 @@ def main():
         print(f"\nStopping {len(server_processes)} server(s)...")
         for i, process in enumerate(server_processes):
             try:
-                process.terminate()
+                if os.name == "posix":
+                    os.killpg(process.pid, signal.SIGTERM)
+                else:
+                    process.terminate()
                 process.wait(timeout=5)
+            except ProcessLookupError:
+                pass
             except subprocess.TimeoutExpired:
-                process.kill()
+                if os.name == "posix":
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
                 process.wait()
             print(f"Server {i+1} stopped")
         print("All servers stopped")

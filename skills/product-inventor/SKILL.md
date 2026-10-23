@@ -1,7 +1,7 @@
 ---
 name: product-inventor
 description: "Product Inventor e Design Alchemist de nivel maximo — combina Product Thinking, Design Systems, UI Engineering, Psicologia Cognitiva, Storytelling e execucao impecavel nivel Jobs/Apple."
-risk: none
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -38,3 +38,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Limites de execucao e evidencia
+
+O fluxo pode gerar ou alterar codigo, mas publicar, substituir um produto existente, enviar dados ou executar operacoes irreversiveis exige autorizacao especifica. Preserve requisitos e arquivos existentes antes de `/reinvent`; defaults visuais nao autorizam apagar trabalho. Mock data deve ser identificado como simulacao, sem dados pessoais reais. Metricas, novidade, conversao e prontidao para producao dependem de pesquisa e verificacao reais; o checklist nao demonstra essas propriedades. As paletas sao referencias e exigem medir contraste por par e estado. Gestos precisam de alternativas por teclado e ponteiro; reducao de movimento e semantica nativa prevalecem sobre preferencias esteticas.

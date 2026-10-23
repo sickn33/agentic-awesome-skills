@@ -8,12 +8,11 @@ from __future__ import annotations
 
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Diretorio de dados
-DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR = Path(os.environ.get("LEILOEIRO_JURIDICO_STATE_DIR", Path.home() / ".local" / "state" / "leiloeiro-juridico"))
 
 LOG_FILE = DATA_DIR / "action_log.jsonl"
 RATE_LIMIT_WINDOW = 60  # segundos
@@ -24,11 +23,13 @@ WARNING_THRESHOLD = 0.8  # 80% do limite
 def log_action(action: str, details: dict | None = None) -> dict:
     """Registra acao no action_log para auditoria."""
     entry = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "action": action,
         "details": details or {},
     }
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
+    DATA_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    fd = os.open(LOG_FILE, os.O_WRONLY | os.O_CREAT | os.O_APPEND | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(fd, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     return entry
 
@@ -37,14 +38,16 @@ def check_rate(action: str = "query") -> bool:
     """Verifica rate_limit — retorna True se dentro do limite."""
     if not LOG_FILE.exists():
         return True
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
     count = 0
     with open(LOG_FILE, "r", encoding="utf-8") as f:
         for line in f:
             try:
                 entry = json.loads(line)
                 ts = datetime.fromisoformat(entry["timestamp"])
-                if (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
+                if ts.tzinfo is None:
+                    ts = ts.replace(tzinfo=timezone.utc)  # legacy UTC entries
+                if 0 <= (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
                     count += 1
             except (json.JSONDecodeError, KeyError, ValueError):
                 continue
@@ -88,6 +91,8 @@ def get_recent_actions(limit: int = 20) -> list:
                 actions.append(json.loads(line))
             except json.JSONDecodeError:
                 continue
+    if limit <= 0:
+        return []
     return actions[-limit:]
 
 

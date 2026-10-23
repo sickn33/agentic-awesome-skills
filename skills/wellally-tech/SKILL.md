@@ -108,8 +108,8 @@ function validateImportedData(data) {
   // Ensure correct time format
 
   return {
-    valid: true,
-    errors: [],
+    valid: false,
+    errors: ["Validation is not implemented; do not import until schema/unit/date checks pass"],
     warnings: []
   };
 }
@@ -198,19 +198,22 @@ const weightHistory = profile.weight_history || [];
 
 **4.2 Analyze Health Status**
 ```javascript
-function analyzeHealthStatus(data) {
+function analyzeHealthStatus(data, reviewThresholds) {
   const status = {
     concerns: [],
     good_patterns: []
   };
 
   // Analyze blood pressure
-  if (data.blood_pressure?.average > 140/90) {
+  if (Number.isFinite(data.blood_pressure?.systolic) &&
+      Number.isFinite(data.blood_pressure?.diastolic) &&
+      (data.blood_pressure.systolic >= reviewThresholds.systolic ||
+       data.blood_pressure.diastolic >= reviewThresholds.diastolic)) {
     status.concerns.push({
       area: "blood_pressure",
       severity: "high",
-      condition: "Hypertension",
-      value: data.blood_pressure.average
+      condition: "Blood pressure reading to review; not a diagnosis",
+      value: { systolic: data.blood_pressure.systolic, diastolic: data.blood_pressure.diastolic }
     });
   }
 
@@ -279,7 +282,7 @@ const recommendationReport = {
 
 ### Must Follow
 
-- ❌ Do not upload data to external servers (except API sync)
+- ❌ Do not transmit private health data without explicit authorization for the exact service and data scope; API sync is not an exemption
 - ❌ Do not hardcode API credentials in code
 - ❌ Do not share user access tokens
 - ✅ All imported data stored locally only
@@ -332,3 +335,5 @@ const recommendationReport = {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The importer functions, data schemas, article index and `scripts/import_*.py` named here are not bundled implementations. Treat them as design fragments, not available commands or completed imports. The Markdown index also needs an explicit parser; reading it does not produce an object with `.categories`. Verify article URLs/titles before recommending them and never invent search results. Validate units, separate systolic/diastolic values, timestamps, timezone, provenance and duplicate identity before a staged atomic merge; retain rejected records and an import receipt, never silently invent missing dates. Clinical review thresholds must come from the applicable qualified care context, not this example. User records and model labels are not diagnoses; do not change medication or infer an illness from one measurement. Authorize local persistence and any cloud transfer separately.

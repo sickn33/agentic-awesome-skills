@@ -43,8 +43,7 @@ Fixes deployed but unsure they're live? → Phase 10 (Live Verification)
 ### The core problem
 
 Every tool page sharing the same `<title>` template with only the tool name swapped in
-is the single most common reason tool sites rank poorly. Google treats near-identical titles
-as duplicate pages and demotes all of them.
+can reduce clarity in search results. Repeated titles alone do not prove duplicate pages or an automatic ranking penalty.
 
 ### Title tag formula
 
@@ -61,7 +60,7 @@ as duplicate pages and demotes all of them.
 - ≤ 60 characters total
 - Primary keyword in the first 40 characters
 - Every tool has a **unique** title — no two tools share the same one
-- Include "Free" where accurate — measurably improves CTR
+- Include "Free" only where accurate; any CTR effect must be measured
 
 ### Meta description formula
 
@@ -114,9 +113,7 @@ print(f"✅ All {len(tools)} tools passed meta validation")
 
 ## Phase 2 — Content Registry (The Highest-Leverage Fix)
 
-**Root cause of poor rankings on tool sites:** 80–95% of tool pages share identical
-template prose. Google sees them as thin, near-duplicate pages and ranks none well.
-Fix this before anything else.
+**Audit hypothesis:** repeated filler may provide little page-specific value. Measure actual content, indexing and query intent before prioritizing; the 80–95% figure is not established here.
 
 ### Diagnosis
 
@@ -137,12 +134,12 @@ slug: meta-tag-generator
 name: Meta Tag Generator
 meta_title: "Meta Tag Generator | Create Perfect SEO Titles & Descriptions Free"
 meta_description: "Generate optimized title tags and meta descriptions with live character
-  counters. Enforces Google's 60/160 char limits. Instant, free, no account needed."
+  counters. Shows editorial 60/160 character targets. Instant, free, no account needed."
 
 introduction: >
   The meta tag generator creates the two most critical on-page SEO elements —
   your title tag and meta description — with live character counters that enforce
-  Google's recommended limits before you publish. [80+ unique words minimum]
+  the chosen editorial targets before you publish. [80+ unique words minimum]
 
 best_practices:
   - "Include your primary keyword within the first 40 characters of the title"
@@ -159,10 +156,10 @@ how_to_steps:
 
 faqs:
   - q: "Does Google always use my meta description?"
-    a: "No — Google rewrites descriptions ~63% of the time. Write them anyway for
+    a: "No — Google may choose a query-dependent snippet from page content. Write them anyway for
        social shares and some SERPs."
   - q: "What happens if my title is over 60 characters?"
-    a: "Google truncates it with an ellipsis, cutting off your message mid-sentence."
+    a: "Display depends on available width; there is no fixed 60-character cutoff."
 
 related_tools:
   - og-tag-generator
@@ -211,7 +208,7 @@ Never skip levels. No h1 → h3 without an h2.
 
 ```bash
 # Audit heading hierarchy on a live page
-curl -s "https://yourdomain.com/tools/meta-tag-generator" \
+curl --connect-timeout 5 --max-time 20 -s "https://yourdomain.com/tools/meta-tag-generator" \
   | grep -oE '<h[1-6][^>]*>.*?</h[1-6]>'
 ```
 
@@ -220,9 +217,9 @@ curl -s "https://yourdomain.com/tools/meta-tag-generator" \
 
 ## Phase 4 — Accessibility
 
-Accessibility failures lower Core Web Vitals scores — a direct ranking signal.
+Accessibility is a separate usability requirement; failures do not automatically lower Core Web Vitals metrics.
 
-Every icon-only interactive element needs `aria-label`:
+Every icon-only interactive element needs an accessible name; aria-label is one option alongside aria-labelledby or suitable text:
 
 ```html
 <button aria-label="Copy to clipboard"><svg>...</svg></button>
@@ -299,7 +296,7 @@ done
 
 ```bash
 # Audit — list longest slugs (likely stuffed)
-curl -s "https://yourdomain.com/sitemap.xml" \
+curl --connect-timeout 5 --max-time 20 -s "https://yourdomain.com/sitemap.xml" \
   | grep -oE '<loc>[^<]+' | sed 's/<loc>//' \
   | grep "/tools/" \
   | awk -F'/tools/' '{print length($2), $2}' | sort -n | tail -20
@@ -365,8 +362,7 @@ if done < total:
 "
 ```
 
-Only commit when the count is **100% complete**. A partial batch (e.g. 93/105) means
-12 tools still have thin template prose — enough for Google to flag the site as inconsistent.
+Commit a coherent reviewed scope with unresolved pages documented. Missing introductions alone do not establish a sitewide Google penalty.
 
 ### Batch writing order
 
@@ -382,7 +378,7 @@ Prioritise tools in this order:
 npm run build        # Next.js / Nuxt
 python manage.py check  # Django
 rails assets:precompile  # Rails
-# Zero errors = safe to commit
+# Passing build is one check; inspect semantics, escaping, privacy and rendered output too.
 ```
 
 ---
@@ -398,7 +394,7 @@ format for them. Blog posts are.
 ### Diagnosis: find your 50–68 keywords
 
 In Google Search Console → Search Results → filter by Position > 49 AND Position < 69.
-These are queries where you have enough authority to rank but the wrong page type is ranking.
+These are candidates for investigation; position alone establishes neither authority nor the wrong page type.
 
 ### Blog post targeting formula
 
@@ -444,8 +440,7 @@ Conclusion: summarise + CTA to the tool
 ### Internal link rule for blog posts
 
 Every blog post must contain at least **2 contextual inline links** to relevant tools,
-not just a "Related Tools" sidebar. Inline links within body copy pass significantly
-more PageRank than sidebar links.
+not just a "Related Tools" sidebar. Use links where readers need them; no fixed PageRank advantage over sidebar links is established here.
 
 ```html
 <!-- Good — inline contextual link -->
@@ -468,15 +463,15 @@ the live site — not just the build.
 seo:verify() {
   local D="$1"; local F=0
   for p in "/" "/tools/meta-tag-generator" "/blog" "/category" "/privacy" "/terms"; do
-    local C=$(curl -so /dev/null -w "%{http_code}" "$D$p")
+    local C=$(curl --connect-timeout 5 --max-time 20 -so /dev/null -w "%{http_code}" "$D$p")
     echo "$C $p"; [ "$C" = "200" ] || ((F++))
   done
-  local C=$(curl -so /dev/null -w "%{http_code}" "$D/tools/this-slug-does-not-exist-xyz")
+  local C=$(curl --connect-timeout 5 --max-time 20 -so /dev/null -w "%{http_code}" "$D/tools/this-slug-does-not-exist-xyz")
   echo "Soft 404 check: $C (expect 404)"; [ "$C" = "404" ] || { echo "  ✗ Soft 404"; ((F++)); }
-  curl -s "$D/tools/meta-tag-generator" | grep -qi "canonical" && echo "  ✓ Canonical present" || { echo "  ✗ Canonical missing"; ((F++)); }
-  local C2=$(curl -so /dev/null -w "%{http_code}" "$D/favicon.ico")
+  curl --connect-timeout 5 --max-time 20 -s "$D/tools/meta-tag-generator" | grep -qi "canonical" && echo "  ✓ Canonical present" || { echo "  ✗ Canonical missing"; ((F++)); }
+  local C2=$(curl --connect-timeout 5 --max-time 20 -so /dev/null -w "%{http_code}" "$D/favicon.ico")
   echo "Favicon: $C2 (expect 200)"; [ "$C2" = "200" ] || { echo "  ✗ Favicon missing"; ((F++)); }
-  local J=$(curl -s "$D/tools/meta-tag-generator" | grep -c "application/ld+json" || true)
+  local J=$(curl --connect-timeout 5 --max-time 20 -s "$D/tools/meta-tag-generator" | grep -c "application/ld+json" || true)
   [ "$J" -ge 1 ] && echo "  ✓ Schema: $J blocks" || { echo "  ✗ No schema found"; ((F++)); }
   return $F
 }
@@ -509,12 +504,14 @@ tools = json.load(open('data/tools.json', 'r'))
 titles = [t.get('meta_title', '') for t in tools]
 dups = [t for t, c in Counter(titles).items() if c > 1 and t]
 print(dups) if dups else print('All titles unique')
+if dups: raise SystemExit(1)
 "
   python3 -c "
 import json
 tools = json.load(open('data/tools.json', 'r'))
 missing = [t['slug'] for t in tools if not t.get('introduction', '').strip()]
 print(f'Missing intro ({len(missing)}):', missing[:10])
+if missing: raise SystemExit(1)
 "
 }
 ```
@@ -567,28 +564,9 @@ seo:full()  { seo:quick; }
 ---
 
 
-## Key Principles
+## Key principles
 
-1. **Duplicate content first, always.** Identical template prose across 80+ pages is the
-   root cause on almost every underperforming tool site. No other fix matters until this is done.
-
-2. **Complete one tool fully before the next.** Never write partial entries across many tools.
-   A half-written registry entry is worse than no entry — it signals thin content at scale.
-
-3. **Internal links are PageRank distribution.** A tool with great content but zero inbound
-   internal links is invisible to Google. Every tool needs at least 2 inbound links.
-
-4. **URL slugs are permanent.** A clean slug outperforms a stuffed one from day one.
-   Get them right before indexing — renaming later costs ranking momentum even with 301s.
-
-5. **E-E-A-T is not decoration.** Authorless, dateless tool pages trigger quality rater
-   guidelines as potential spam. A real name and a real date is the minimum baseline.
-
-6. **Validate before every commit.** Catching a missing description before deploy is free.
-   Fixing it after indexing costs weeks.
-
----
-
+Prioritize evidence from the actual site rather than a universal ranking diagnosis. Write enough useful page-specific content to explain the tool, avoid fabricated claims/authorship and maintain crawlable relevant links. Character counts, word counts, two links and three-click depth are editorial heuristics, not Google thresholds. E-E-A-T is not itself a specific ranking factor; bylines/dates should be accurate where useful and never fabricated to imply freshness or expertise. Preserve working URLs unless a migration has a concrete benefit, and validate redirects/canonicals after authorized deployment.
 
 ## Related Skills
 

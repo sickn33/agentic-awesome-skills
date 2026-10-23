@@ -338,7 +338,7 @@ const validatePassword = (password: string): E.Either<Errors, string> =>
 
 const validateAge = (age: number | undefined): E.Either<Errors, number> =>
   age === undefined ? E.left(NEA.of('Age required'))
-  : age < 18 ? E.left(NEA.of('Must be 18+'))
+  : !Number.isFinite(age) || age < 18 ? E.left(NEA.of('Must be 18+'))
   : E.right(age)
 
 // Combine all validations - collects ALL errors
@@ -400,7 +400,11 @@ import { pipe } from 'fp-ts/function'
 // Wrap any async operation
 const fetchUser = (id: string): TE.TaskEither<Error, User> =>
   TE.tryCatch(
-    () => fetch(`/api/users/${id}`).then(r => r.json()),
+    async () => {
+      const r = await fetch(`/api/users/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json(); // Decode unknown against the actual User schema before trusting it.
+    },
     (e) => (e instanceof Error ? e : new Error(String(e)))
   )
 
@@ -547,10 +551,10 @@ const eitherUser = pipe(
 
 ```typescript
 // Wrap at the boundary
-const safeParse = <T>(schema: ZodSchema<T>) => (data: unknown): E.Either<ZodError, T> =>
+const safeParse = <T>(schema: ZodSchema<T>) => (data: unknown): E.Either<ZodError | Error, T> =>
   E.tryCatch(
     () => schema.parse(data),
-    (e) => e as ZodError
+    (e) => e instanceof ZodError ? e : new Error("Unexpected validation failure")
   )
 
 // Use throughout your code
@@ -566,7 +570,11 @@ import * as TE from 'fp-ts/TaskEither'
 // Wrap external async functions
 const fetchJson = <T>(url: string): TE.TaskEither<Error, T> =>
   TE.tryCatch(
-    () => fetch(url).then(r => r.json()),
+    async () => {
+      const r = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json(); // Generic T is not runtime validation.
+    },
     (e) => new Error(`Fetch failed: ${e}`)
   )
 
@@ -592,7 +600,7 @@ const myTaskEither: TE.TaskEither<Error, User> = fetchUser('123')
 const either: E.Either<Error, User> = await myTaskEither()
 
 // Option 2: Throw on error (for legacy code)
-const toThrowingPromise = <E, A>(te: TE.TaskEither<E, A>): Promise<A> =>
+const toThrowingPromise = <Err, A>(te: TE.TaskEither<Err, A>): Promise<A> =>
   te().then(E.fold(
     (error) => Promise.reject(error),
     (value) => Promise.resolve(value)
@@ -630,7 +638,7 @@ const parseInput = (raw: unknown): E.Either<string, ParsedInput> =>
         : E.left('Input must be an object')
     ),
     E.bind('id', ({ obj }) =>
-      typeof obj.id === 'number'
+      typeof obj.id === 'number' && Number.isFinite(obj.id)
         ? E.right(obj.id)
         : E.left('id must be a number')
     ),
@@ -670,7 +678,7 @@ const createApiError = (message: string, code = 'UNKNOWN', status?: number): Api
 const fetchWithErrorHandling = <T>(url: string): TE.TaskEither<ApiError, T> =>
   pipe(
     TE.tryCatch(
-      () => fetch(url),
+      () => fetch(url, { signal: AbortSignal.timeout(10000) }),
       () => createApiError('Network error', 'NETWORK')
     ),
     TE.chain(response =>
@@ -708,6 +716,7 @@ const handleUserFetch = (userId: string) =>
 
 ```typescript
 import * as A from 'fp-ts/Array'
+import * as O from 'fp-ts/Option'
 import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
 
@@ -729,7 +738,7 @@ const processAllCollectErrors = <T, R>(
   )
 
   return {
-    successes: pipe(results, A.filterMap(E.toOption)),
+    successes: pipe(results, A.filterMap(E.getRight)),
     failures: pipe(
       results,
       A.filterMap(r => E.isLeft(r) ? O.some(r.left) : O.none)
@@ -781,7 +790,7 @@ const bulkProcess = <T>(
         )
       )
     ),
-    T.sequenceArray,
+    T.sequenceSeqArray,
     T.map(results => ({
       succeeded: results
         .filter((r): r is { type: 'succeeded'; result: T } => r.type === 'succeeded')

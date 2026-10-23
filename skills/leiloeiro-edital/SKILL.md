@@ -43,3 +43,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Limites de decisão e custos
+
+Texto educativo, sem habilitação pericial presumida ou certificação de edital. Score /14 é uma heurística sem validação; documentos essenciais ausentes, suspensão e dúvida de titularidade não viram risco baixo por compensação com deságio. Custos, prazos de desocupação, financiamento, alíquotas municipais e percentuais são exemplos históricos não verificados para o lote: confirmar em fontes atuais e registrar data/base. Valor de mercado estimado não é sinônimo de base tributária. Laudêmio exige verificar regime, base e responsabilidade na SPU, não aplicar 5% automaticamente ao valor total.
+
+Na hasta pública, tributos e créditos propter rem podem sub-rogar-se no preço conforme CTN art. 130 parágrafo único e CPC art. 908 §1º. Não somar passivos ao custo do adquirente sem verificar a responsabilidade aplicável; não tratar cláusulas genéricas como garantia de liberação ou dívida integral. Certificar portal e beneficiário por fonte oficial antes de qualquer proposta/pagamento. A análise não autoriza lance, contato, pagamento ou acesso a autos privados. Não houve análise de lote real ou execução do helper.

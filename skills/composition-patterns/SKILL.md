@@ -59,7 +59,7 @@ Reference these guidelines when:
 
 > **⚠️ React 19+ only.** Skip this section if using React 18 or earlier.
 
-- `react19-no-forwardref` - Don't use `forwardRef`; use `use()` instead of `useContext()`
+- `react19-no-forwardref` - Prefer ref-as-prop for React 19-only components; `use()` and `useContext()` are both supported
 
 ## How to Use
 
@@ -79,9 +79,15 @@ Each rule file contains:
 
 ## Full Compiled Document
 
-For the complete guide with all rules expanded: `AGENTS.md`
+No compiled AGENTS.md is bundled here; use the individual rule files.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Version, completeness and behavior boundaries
+
+All examples using `<Context value>`, `use(Context)` or ref-as-prop assume React 19, including files outside the react19 category. React 18 consumers need Context.Provider, useContext and forwardRef adapters. useContext remains a valid supported API in React 19; migrate only when useful. Null-default contexts require the guarded useComposer helper shown in the compound-component rule, imported wherever used.
+
+Snippets omit application components, imports and some types; TextInput/onChangeText/onPress are React Native-style or custom abstractions, not browser input/button props. Supply meta.inputRef in every provider used by an input, type refs as nullable, forward placeholder/label props and handle submit semantics deliberately. Composer.Frame currently renders a form: wire onSubmit/preventDefault and button types to avoid reloads or duplicate sends. Explicit variants do not prove impossible states or preserve existing behavior automatically. Simple boolean state props such as disabled remain appropriate; composition is a design choice, not a universal ban.

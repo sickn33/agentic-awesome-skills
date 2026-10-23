@@ -1,6 +1,6 @@
 ---
 name: meteora-dlmm-pool-screening
-risk: safe
+risk: critical
 source: community
 source_repo: romankurnovskii/etemaro
 source_type: community
@@ -12,8 +12,7 @@ metadata:
   version: "1.0.0"
   author: etemaro
 license: MIT
-compatibility: Network access to public Meteora datapi. No API key. The bundled Python 3
-  stdlib screener is embedded in this file under "Screener script".
+compatibility: Network access to public Meteora datapi. No API key. The Python 3 stdlib screener is documented in references/meteora-screener.md.
 ---
 
 # Meteora DLMM pool screening
@@ -36,7 +35,7 @@ python3 screen.py --json --limit 8
 
 If you do not materialize the script, curl the same endpoints in
 [references/meteora-apis.md](references/meteora-apis.md).
-Always send a `User-Agent` — unauthenticated requests without one get `403`.
+Send a descriptive `User-Agent`; it does not guarantee access or bypass API policy.
 
 ## Untrusted evidence boundary
 
@@ -58,8 +57,7 @@ token-holder / narrative research dump. Stop after the ranked table and verdicts
    tradeoffs stay visible; pass `--preset volatile` only when the user wants that gate.
 2. **Hard filters** — reject before ranking. A high fee/TVL pool that fails a gate is a
    skip, not a "maybe".
-3. **Score** — `fee_active_tvl_ratio * 1000 + organic * 10 + volume / 100 + holders / 100`.
-   Fee/TVL dominates; organic and activity break ties.
+3. **Rank** — lexicographically by fee/TVL, then organic score, volume and holders. The retained weighted score is diagnostic only; unbounded volume/holders cannot be assumed mere tie-breakers in a weighted sum.
 4. **Verdict** — `pass` (clears gates, top of list), `watch` (clears gates but thin
    activity, unverified token, or awkward bin step), `skip` (failed a gate).
 5. **Stop** — print the table. Do not fetch a wallet, do not build a tx, do not call Etemaro CLI.
@@ -98,7 +96,7 @@ Protocol: tvl=$…  vol_24h=$…  pools=…
 ```
 
 Keep `why` to one clause (e.g. "fee/TVL 0.24, organic 67, bin 80"). Cite pool address.
-If the API returns zero rows, say so and loosen one gate at a time (usually `maxTvl` or
+If the API returns zero rows, say so and offer explicitly labeled exploratory gate changes one at a time (usually `maxTvl` or
 `minFeeActiveTvlRatio`) — do not invent pools.
 
 ## Read-only safety
@@ -147,7 +145,7 @@ dex-pool-screening on Meteora, volatile preset, top 8
 
 ## Tips
 
-- Always send a User-Agent to Meteora datapi or you get HTTP 403.
+- Send a descriptive User-Agent and handle authorization/rate-limit failures without bypassing them.
 - `fee_active_tvl_ratio` is **windowed** (default 30m), not 24h APR. Label the window.
 - Read-only. Deploying is Etemaro, not this skill.
 - Pair query (`--query BONK`) defaults to `loose` so you can compare bin steps. Dead pools
@@ -168,3 +166,7 @@ copy when done. It only ever GETs the public endpoints documented in
 """Rank Meteora DLMM pools from public datapi. Stdlib only. Read-only GET."""
   ... full source in references/meteora-screener.md ...
 ```
+
+## Coverage and metric limits
+
+This screen reads one returned page and ranks that subset; reported API totals are not fetched-row counts. Record endpoint, retrieval time, timeframe, pagination/has_more and missing fields. Do not equate pair-query fee/total-TVL buckets with discovery fee/active-TVL without verified schema/denominator evidence; compare within one source only until confirmed. Presets and scores are arbitrary screening hypotheses, not LP-quality or safety guarantees. Query data lacks some warning/ownership/organic fields, so strict gates cannot pass on absent evidence; loose mode remains exploratory and warnings still apply. A token symbol is ambiguous: verify exact mint and both token sides before any interpretation. The API and bundled code were statically reviewed, not executed or validated against a live response here. Reject redirects outside the documented API hosts, validate nested shapes and cap requests before running a reviewed local copy. DLMM returns depend on price range, active liquidity, volatility, fees, token controls and losses; observed fee ratios are not realizable future returns. The linked commercial executor is provenance/context, not an endorsement or authorization to deposit, sign or buy services.

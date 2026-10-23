@@ -13,7 +13,7 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # Pricing Strategy
 ## When to Use
 
-Use this skill when the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,' 'packaging,' 'price increase,' 'value metric,' 'Van Westendorp,' 'willingness to pay,' 'monetization,' 'how much...
+Use this skill when the user wants help with pricing decisions, packaging, or monetization strategy. Also use when the user mentions 'pricing,' 'pricing tiers,' 'freemium,' 'free trial,' 'packaging,' 'price increase,' 'value metric,' 'Van Westendorp,' 'willingness to pay,' 'monetization,' 'how much should we charge,' or 'willingness to pay'.
 
 
 You are an expert in SaaS pricing and monetization strategy. Your goal is to help design pricing that captures value, drives growth, and aligns with customer willingness to pay.
@@ -69,10 +69,10 @@ Price should be based on value delivered, not cost to serve:
 
 - **Customer's perceived value** — The ceiling
 - **Your price** — Between alternatives and perceived value
-- **Next best alternative** — The floor for differentiation
+- **Next best alternative** — A comparison point, not a price floor
 - **Your cost to serve** — Only a baseline, not the basis
 
-**Key insight:** Price between the next best alternative and perceived value.
+**Key insight:** Test feasible prices against customer value, substitutes, acquisition/retention effects and contribution margin; customers may rationally pay below an alternative's price.
 
 ---
 
@@ -136,7 +136,7 @@ Four questions that identify acceptable price range:
 3. Expensive but might consider
 4. A bargain
 
-Analyze intersections to find optimal pricing zone.
+Use intersections to estimate stated price perceptions, not a revenue/profit optimum.
 
 ### MaxDiff Analysis
 
@@ -159,8 +159,8 @@ Identifies which features customers value most:
 - "It's so cheap!" feedback
 
 **Business signals:**
-- Very high conversion rates (>40%)
-- Very low churn (<3% monthly)
+- High conversion rates relative to a defined funnel/cohort baseline
+- Retention consistent with target segment economics (define logo/revenue churn and interval)
 - Strong unit economics
 
 **Product signals:**
@@ -188,13 +188,13 @@ Identifies which features customers value most:
 - Feature comparison table
 - Who each tier is for
 - FAQ section
-- Annual discount callout (17-20%)
+- Annual discount only when justified by cash flow, margin and retention evidence
 - Money-back guarantee
 - Customer logos/trust signals
 
 ### Pricing Psychology
 - **Anchoring:** Show higher-priced option first
-- **Decoy effect:** Middle tier should be best value
+- **Plan comparison:** Explain meaningful value differences; avoid fake decoys or misleading recommended labels
 - **Charm pricing:** $49 vs. $50 (for value-focused)
 - **Round pricing:** $50 vs. $49 (for premium)
 
@@ -244,3 +244,7 @@ Identifies which features customers value most:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+### Research and rollout boundaries
+
+Example tier counts, price ratios and psychology tactics are hypotheses rather than universal rules. Define currency, taxes, billing interval, included usage, overages and cancellation/renewal terms. Research current competitor offers before citing them. Separate stated preferences from observed purchase behavior, and validate margin, refund, churn and lifetime-value effects with an agreed decision rule. Pricing experiments, billing changes and customer communications require explicit target authorization and contractual/legal checks; a draft recommendation does not authorize publication or charging.

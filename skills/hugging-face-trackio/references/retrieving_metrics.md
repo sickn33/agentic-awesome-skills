@@ -141,7 +141,7 @@ trackio get system-metric --project my-project --run my-run --metric gpu_utiliza
 LATEST_LOSS=$(trackio get metric --project my-project --run my-run --metric loss --json | jq -r '.values[-1].value')
 
 # Export run summary to file
-trackio get run --project my-project --run my-run --json > run_summary.json
+trackio get run --project my-project --run my-run --json > run_summary-new.json  # choose an unused path; ordinary > overwrites files
 
 # Filter runs with jq
 trackio list runs --project my-project --json | jq '.runs[] | select(startswith("train"))'
@@ -246,6 +246,8 @@ All errors exit with non-zero status code and write to stderr.
 
 ## References
 
-- **Complete CLI documentation**: See [docs/source/cli_commands.md](docs/source/cli_commands.md)
-- **API and MCP Server**: See [docs/source/api_mcp_server.md](docs/source/api_mcp_server.md)
+- **Complete CLI documentation**: See [official CLI documentation](https://huggingface.co/docs/trackio/en/cli_commands)
+- **API and MCP Server**: See [official API reference](https://huggingface.co/docs/trackio/api)
 
+
+JSON layouts, options and errors are version-specific: inspect actual --help/output and exit status, and reject empty/nonfinite metric results instead of treating jq null as a valid value. Commands read local data unless a remote --space is explicitly selected. --force overwrites existing remote data; back up and obtain scope-specific authorization. A private creation flag does not change existing Space visibility, and static dashboards require public snapshot data.

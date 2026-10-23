@@ -27,7 +27,10 @@ const base = (() => {
 
 const git = (args) => {
   try { return execFileSync('git', args, { encoding: 'utf8' }); }
-  catch { return null; }
+  catch (error) {
+    if (args[0] === 'diff' && args.includes('--no-index') && error.status === 1) return String(error.stdout ?? '');
+    console.error('floor-guard: git operation failed'); process.exit(2);
+  }
 };
 
 // Merge base; bail to exit 2 rather than pretending a shallow/rootless clone is clean.
@@ -36,8 +39,8 @@ if (!mergeBase) { console.error('floor-guard: no merge base against ' + base); p
 
 // Unified diff plus untracked files (git diff alone cannot see new files).
 const tracked = git(['diff', '--unified=0', mergeBase, '--']) ?? '';
-const untracked = (git(['ls-files', '--others', '--exclude-standard']) ?? '')
-  .split('\n').filter(Boolean)
+const untracked = (git(['ls-files', '-z', '--others', '--exclude-standard']) ?? '')
+  .split('\0').filter(Boolean)
   .map((f) => git(['diff', '--no-index', '--unified=0', '/dev/null', f]) ?? '')
   .join('\n');
 const diff = tracked + '\n' + untracked;
@@ -51,7 +54,7 @@ for (const line of diff.split('\n')) {
 }
 
 const findings = [];
-const flag = (rule, f, text) => findings.push({ rule, file: f, text: text.trim().slice(0, 120) });
+const flag = (rule, f, text) => findings.push({ rule, file: f }); // never retain/print potentially secret source text
 
 // 1. Silenced checker — extend this list for your ecosystem.
 const SUPPRESSIONS = /@ts-ignore|@ts-nocheck|eslint-disable|biome-ignore|# *noqa|# *type: *ignore|istanbul ignore|nosemgrep|gitleaks:allow|Stryker disable/;
@@ -79,7 +82,7 @@ const nums = (s) => (s.match(/\d+(\.\d+)?/g) || []).map(Number);
 const removedConstraints = removed.filter((l) => /CONSTRAINTS\.md$/.test(l.file));
 const addedConstraints = added.filter((l) => /CONSTRAINTS\.md$/.test(l.file));
 for (const r of removedConstraints) {
-  const a = addedConstraints.find((x) => x.text.split(/[|:]/)[0] === r.text.split(/[|:]/)[0]);
+  const a = addedConstraints.find((x) => x.text.split('|')[1]?.trim() === r.text.split('|')[1]?.trim());
   if (a && nums(a.text).some((n, i) => nums(r.text)[i] !== undefined && n < nums(r.text)[i])) {
     flag('threshold-lowered', r.file, r.text + '  ->  ' + a.text);
   }
@@ -87,7 +90,7 @@ for (const r of removedConstraints) {
 
 if (findings.length === 0) { console.log('floor-guard: clean'); process.exit(0); }
 console.error('floor-guard: ' + findings.length + ' floor violation(s):');
-for (const f of findings) console.error(`  [${f.rule}] ${f.file}: ${f.text}`);
+for (const f of findings) console.error(`  [${f.rule}] ${f.file}`);
 console.error('\nEach is a move that lowers the bar. Fix the code, or route it through a tracked exception.');
 process.exit(1);
 ```
@@ -97,3 +100,7 @@ process.exit(1);
 - **Patterns are the only stack-specific part.** Add your language's suppression and stub forms to the three regexes; the diff plumbing, the CONSTRAINTS.md checks, and the exit codes stay as-is.
 - **A `.constraintsignore`** (one glob per line) lets you exempt a path the guard would otherwise flag; check each added line's file against it before flagging, so a genuine exception is a tracked file rather than a loosened rule.
 - **This is a starting point, not a finished tool.** It is deliberately regex-shallow: it catches the cheap-road-to-green moves agents actually make, not a determined human hiding a change. That is the right trade for a check that runs on every diff. Once you outgrow it, move to a real runner (Escalation Path level 3).
+
+## Evidence limits and safe adaptation
+
+This is a shallow review aid, not enforcement of every promised floor: deleted entire tests/floor bullets, multi-line stubs, moved assertions and arbitrary constraint changes can escape; comments/examples and legitimate rewrites can trigger false positives. Numeric direction is rule-specific (lower maximum latency is stricter, lower minimum coverage is weaker). Require structured rule identity/operator/unit and baseline comparison, or flag the changed policy for human review instead of auto-deciding. New ignore/exception rules cannot authorize bypassing protected gates. Git quoting/newline paths, rename/deletion context and symlinks need robust parsing before production use. Missing/error inputs must fail closed with2. No scanner source line/secret should be printed. Do not claim this illustrative snippet passed negative regressions.

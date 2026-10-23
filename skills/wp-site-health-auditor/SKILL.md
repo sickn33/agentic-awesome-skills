@@ -43,7 +43,7 @@ this section, even for a one-line change, even if the user is in a hurry.**
    manager first, and don't proceed until they confirm they have it.
 2. **Confirm a full site/database backup exists** before deleting any plugin or theme, or running
    `wp search-replace`. If the user doesn't have one and has a backup plugin active (UpdraftPlus, etc.),
-   trigger a backup first: `wp updraftplus backup` or the plugin's own WP-CLI command, or tell them to
+   trigger a backup first: `wp help updraftplus  # verify installed plugin command before invoking a backup` or the plugin's own WP-CLI command, or tell them to
    click "Backup Now" and wait for confirmation before continuing.
 3. **Never run `wp search-replace` without `--dry-run` first**, and always show the dry-run output to the
    user before running it for real. This command rewrites the database in place — a wrong pattern can
@@ -106,7 +106,7 @@ Classify every non-passed item into one of three tiers before touching anything.
 to the user first for anything above Tier 1 count of 3+ items — don't silently start deactivating plugins.
 
 **Tier 1 — Safe, reversible, auto-fixable in wp-admin or via WP-CLI**
-No data loss risk, no downtime, fully reversible. Still back up per the Safety section before deleting
+Assess actual state: plugin/theme deletion, indexing and config changes can cause data loss, exposure or downtime. Still back up per the Safety section before deleting
 anything. Fix directly once the user confirms the item list.
 - Remove inactive plugins/themes (they aren't running, deactivation already happened — this is just
   deletion of dead code)
@@ -187,7 +187,7 @@ Where to set it (pick whichever the host supports, in this order of preference):
    leaving the problem unfixed.
 
 Always set `post_max_size` strictly greater than `upload_max_filesize`. Confirm the current values first
-(`wp cli info` doesn't show these — check `phpinfo()` or the host panel) rather than assuming defaults.
+(`wp cli info` doesn't show these — use the authenticated host panel or private diagnostic output) rather than assuming defaults.
 
 ### You should use a persistent object cache — Tier 2
 Requires a caching backend (Redis or Memcached) installed at the server level — this is not something a
@@ -217,12 +217,12 @@ Back up `wp-config.php` first, lint after editing:
 // wp-config.php
 define( 'WP_DEBUG', false );         // set to true only while actively debugging
 define( 'WP_DEBUG_DISPLAY', false ); // never show errors to visitors
-define( 'WP_DEBUG_LOG', true );      // logs to wp-content/debug.log instead
+define( 'WP_DEBUG_LOG', false );     // enable only with WP_DEBUG true and a private approved log destination
 ```
 
 ### REST API / loopback requests / background updates failing — Tier 2
 Usually a security plugin, firewall, or `.htaccess` rule blocking internal requests. Steps:
-1. Temporarily deactivate security/firewall plugins one at a time, re-check Site Health after each.
+1. Inspect logs and rules first; if necessary, reproduce a narrowly scoped temporary change on staging with a rollback, rather than disabling production defenses wholesale.
 2. Check hosting-level firewall (Cloudflare, Sucuri, host WAF) isn't blocking the site from calling itself.
 3. Verify `wp-config.php` doesn't have `define('DISALLOW_FILE_MODS', true)` set incorrectly for background
    updates specifically, if that's the failing item. Back up before removing/editing that line.
@@ -326,7 +326,7 @@ include items not covered above.
 - Cannot execute anything itself against a live site — every WP-CLI/PHP snippet is drafted for the user or
   their host to run; this skill has no shell access to the user's actual server.
 - Cannot verify current PHP/server values (upload limits, cache backend availability, HTTPS status) —
-  relies on what the user reports back after checking `phpinfo()` or their host panel.
+  relies on what the user reports back after checking their authenticated host panel or private diagnostic output.
 - Does not cover multisite-specific Site Health variations or WooCommerce-specific health checks; both add
   extra items this skill's recipe list doesn't include.
 - The item catalog (main file + `references/catalog.md`) reflects WordPress core's Site Health checks as of
@@ -339,3 +339,9 @@ include items not covered above.
 
 - `@security-hardening` — For deeper WordPress security audits beyond Site Health's surface checks
 - `@wp-performance` — For targeted performance optimization after Site Health flags are resolved
+
+## Diagnostic and change limits
+
+The bundled catalog mixes WordPress core checks, possible plugin checks and invented titles; identify the actual report producer/version before applying a recipe. Do not interpret session-token metadata size as password strength. Never publish a phpinfo page, debug log or backup; the relative parent backup path is not proof it is outside every served document root. Resolve a private backup location and retain verified restore access. Lint a staged config then replace atomically; a live file edit is exposed before a later lint check. apachectl configtest may not parse per-directory .htaccess.
+
+Verify actual admin/server tools and user authorization rather than claiming universal shell availability or inability. Page/object caches need authenticated-user/cart/checkout exclusions and tenant-safe keys. Indexing flags are not access controls and must not expose staging/private sites. wp-config constants must be edited once, not appended as duplicates. No site, database, backup, plugin or configuration change was executed.

@@ -16,7 +16,7 @@ version: 1.0.0
 
 You are an expert in technical SEO and content strategy for sites with large collections of tool, product, or feature pages. Your workflow is framework-agnostic — applies to Django, Rails, Laravel, Express, Next.js, Nuxt, Astro, WordPress, and static HTML.
 
-Derived from a real audit that found 93 of 105 tool pages sharing identical template prose and ranking at average position 68. This skill is the playbook that fixes it.
+The contributor describes an audit that found 93 of 105 tool pages sharing identical template prose and ranking at average position 68. That audit and its causal ranking interpretation are not independently evidenced in this tree.
 
 ---
 
@@ -36,3 +36,9 @@ Use it whenever the user mentions poor rankings, tools not getting indexed, all 
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
 - Content registry assumes a structured data source (JSON, YAML, DB) — static HTML tool pages will need a migration step first.
 - Technical SEO factors (page speed, Core Web Vitals, render blocking) are delegated to the pagespeed-enhancer skill.
+
+## Validation and publication limits
+
+Google does not specify fixed title/description character limits or a preferred word count. The checker thresholds are configurable house style, not search eligibility. Template examples must use the actual framework escaping and syntax; quoted meta attributes need HTML escaping. Publish privacy, speed, pricing and author claims only after verifying the product behavior.
+
+The live shell snippets are smoke checks, not a crawler or accessibility audit: grep misses multiline/generated HTML and cannot validate canonical targets, schema semantics, accessible names or link reachability. Structured data is optional unless a selected feature requires it. Verify an authorized HTTPS origin and relevant routes; inspect redirects, robots/noindex and rendered content separately. seo:validate needs each subcommand failure propagated rather than relying on its last command, and source-string reference counts are not incoming rendered links. Do not deploy or publish solely to run these checks without authorization. No live-site, Search Console or ranking outcome was validated.

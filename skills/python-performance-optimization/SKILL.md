@@ -42,3 +42,11 @@ Comprehensive guide to profiling, analyzing, and optimizing Python code for bett
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Measurement and operational limits
+
+The playbook contains standalone demonstrations, not a validated benchmark suite. No timings or speedups are established by this skill. Use representative inputs, equal work, repeated runs and recorded interpreter/platform versions. The Fibonacci comparison measures 1 uncached call against 1,000 mostly warm calls; normalize per call and report cold/warm states separately. `lru_cache(maxsize=None)` retains entries without a bound; choose eviction and invalidation for changing or sensitive data.
+
+`sys.getsizeof` is shallow: a regular instance also owns a `__dict__` and references shared or separately allocated values. The printed object-size multiplication is not total process memory or a fair complete comparison with slots. Measure representative allocations with tracemalloc or an appropriate process profiler.
+
+Use only approved test endpoints and disposable databases; the query example opens an existing database read-only and requires the shown schema. Production profiling requires authorization and bounded collection: profiles can expose code paths, arguments or other sensitive process data. Store artifacts privately. The examples have not been executed or performance-tested here.

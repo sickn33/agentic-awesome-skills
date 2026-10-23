@@ -51,7 +51,7 @@ header: "Models"
 multiSelect: true
 options:
   - label: "DeepSeek V3.2"
-    description: "DeepSeek's newest and most capable model"
+    description: "Example option; verify availability and suitability"
   - label: "MiniMax M2.1"
     description: "MiniMax's strong open-weight model"
   - label: "Kimi K2.5"
@@ -67,7 +67,7 @@ header: "Chairman"
 multiSelect: false
 options:
   - label: "DeepSeek V3.2 (Recommended)"
-    description: "Newest DeepSeek, strong at comprehensive analysis"
+    description: "Example synthesis option; verify current availability"
   - label: "GLM 5"
     description: "Strong reasoning for synthesis"
   - label: "Kimi K2.5"
@@ -97,14 +97,15 @@ MODEL_MAP = {
 After gathering input, run this script to get responses from all selected models in parallel:
 
 ```bash
-QUERY="USER_QUERY_HERE"
-MODELS='["accounts/fireworks/models/glm-5", "accounts/fireworks/models/deepseek-v3p1"]'
+export QUERY="USER_QUERY_HERE"
+export MODELS='["accounts/fireworks/models/glm-5", "accounts/fireworks/models/deepseek-v3p1"]'
 
 python3 << 'PYEOF'
 import os
 import json
 import requests
 import time
+import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY")
@@ -112,11 +113,13 @@ API_URL = "https://api.fireworks.ai/inference/v1/chat/completions"
 
 QUERY = os.environ.get("QUERY", "")
 MODELS = json.loads(os.environ.get("MODELS", "[]"))
+if not QUERY.strip() or not 2 <= len(MODELS) <= 7 or len(set(MODELS)) != len(MODELS):
+    raise ValueError("Require a nonempty query and 2–7 distinct verified model IDs")
 
 # Create session directory
 timestamp = time.strftime("%Y%m%d-%H%M%S")
-SESSION_DIR = f"/tmp/llm-council/{timestamp}"
-os.makedirs(SESSION_DIR, exist_ok=True)
+os.umask(0o077)
+SESSION_DIR = tempfile.mkdtemp(prefix="llm-council-")
 
 # Save config
 config = {"query": QUERY, "models": MODELS, "timestamp": timestamp}
@@ -188,7 +191,7 @@ with ThreadPoolExecutor(max_workers=len(MODELS)) as executor:
         latency = f"{result['latency_seconds']}s" if result["success"] else "N/A"
         print(f"  [{status}] {model.split('/')[-1]} ({latency})")
 
-# Save raw results
+# Save normalized results (not the complete HTTP responses)
 with open(f"{SESSION_DIR}/phase1_responses.json", "w") as f:
     json.dump(results, f, indent=2)
 
@@ -202,13 +205,14 @@ PYEOF
 Each model reviews and ranks the anonymized responses from Phase 1:
 
 ```bash
-SESSION_DIR="/tmp/llm-council/TIMESTAMP_HERE"
+export SESSION_DIR="PASTE_PRIVATE_SESSION_PATH_HERE"
 
 python3 << 'PYEOF'
 import os
 import json
 import requests
 import time
+import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY")
@@ -223,6 +227,8 @@ with open(f"{SESSION_DIR}/phase1_responses.json") as f:
 
 QUERY = config["query"]
 MODELS = config["models"]
+if not all(phase1_results.get(m, {}).get("success") for m in MODELS):
+    raise RuntimeError("Phase 1 incomplete: report failures before ranking")
 
 # Create anonymized mapping
 labels = ["A", "B", "C", "D", "E", "F", "G"][:len(MODELS)]
@@ -334,14 +340,15 @@ PYEOF
 The Chairman model receives all responses and rankings, then produces the final synthesis:
 
 ```bash
-SESSION_DIR="/tmp/llm-council/TIMESTAMP_HERE"
-CHAIRMAN_MODEL="accounts/fireworks/models/glm-5"
+export SESSION_DIR="PASTE_PRIVATE_SESSION_PATH_HERE"
+export CHAIRMAN_MODEL="accounts/fireworks/models/glm-5"
 
 python3 << 'PYEOF'
 import os
 import json
 import requests
 import time
+import tempfile
 
 FIREWORKS_API_KEY = os.environ.get("FIREWORKS_API_KEY")
 API_URL = "https://api.fireworks.ai/inference/v1/chat/completions"
@@ -410,7 +417,7 @@ try:
         json={
             "model": CHAIRMAN_MODEL,
             "messages": [
-                {"role": "system", "content": "You are the Chairman of an LLM Council. Synthesize multiple AI perspectives into a definitive, comprehensive response."},
+                {"role": "system", "content": "You are the Chairman of an LLM Council. Synthesize multiple AI perspectives into a evidence-qualified synthesis that preserves disagreements."},
                 {"role": "user", "content": synthesis_prompt}
             ],
             "max_tokens": 4000,
@@ -445,7 +452,7 @@ PYEOF
 Read all saved files and display the complete council deliberation:
 
 ```bash
-SESSION_DIR="/tmp/llm-council/TIMESTAMP_HERE"
+export SESSION_DIR="PASTE_PRIVATE_SESSION_PATH_HERE"
 
 python3 << 'PYEOF'
 import os

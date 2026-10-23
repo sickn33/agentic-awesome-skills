@@ -26,7 +26,7 @@ Check robots.txt for directives targeting these AI crawlers:
 
 | Crawler | User-Agent | Platform |
 |---|---|---|
-| GPTBot | GPTBot | ChatGPT / OpenAI |
+| GPTBot | GPTBot | OpenAI training crawler; distinct from OAI-SearchBot and ChatGPT-User |
 | Google-Extended | Google-Extended | Gemini / Google AI training |
 | Googlebot | Googlebot | Google Search + AI Overviews |
 | Bingbot | bingbot | Bing Copilot + ChatGPT (via Bing) |
@@ -44,7 +44,7 @@ Check robots.txt for directives targeting these AI crawlers:
 - GPTBot or PerplexityBot blocked: 1 point (significant GEO impact)
 - Googlebot blocked: 0 points (fatal)
 
-**Important nuance**: Blocking Google-Extended does NOT block Googlebot. Google-Extended only controls AI training data usage, not search indexing. However, blocking Google-Extended may reduce presence in AI Overviews. Recommend allowing Google-Extended unless there is a specific data licensing concern.
+Google-Extended is a robots control token, not a separate HTTP crawler user agent; it does not control Google Search or AI Overviews inclusion. Distinguish training, search indexing and user-triggered retrieval. Honor the owner's licensing/privacy policy; do not recommend allowing every training crawler for visibility.
 
 ### 1.3 XML Sitemaps
 - Fetch sitemap (check robots.txt for location, or try `/sitemap.xml`, `/sitemap_index.xml`)
@@ -56,7 +56,7 @@ Check robots.txt for directives targeting these AI crawlers:
 
 ### 1.4 Crawl Depth
 - Homepage = depth 0. Check that all important pages are reachable within **3 clicks** (depth 3)
-- Pages at depth 4+ receive significantly less crawl budget and are less likely to be cited by AI
+- Deep pages can be harder to discover; no universal depth cutoff predicts crawl budget or AI citation.
 - Check internal linking: are key content pages linked from the homepage or main navigation?
 
 ### 1.5 Noindex Management
@@ -79,7 +79,7 @@ Check robots.txt for directives targeting these AI crawlers:
 ## Category 2: Indexability (12 points)
 
 ### 2.1 Canonical Tags
-- Every indexable page must have a `<link rel="canonical" href="...">` tag
+- Check canonical signals where duplicates need consolidation; a canonical tag is a hint, not a universal indexability requirement.
 - Canonical must point to itself (self-referencing) for the authoritative version
 - Check for conflicting canonicals (canonical in HTML vs. HTTP header)
 - Check for canonical chains (A canonicals to B, B canonicals to C — should be A to C)
@@ -92,17 +92,17 @@ Check robots.txt for directives targeting these AI crawlers:
 
 ### 2.3 Pagination
 - If paginated content exists, check for `rel="next"` / `rel="prev"` (note: Google ignores these as of 2019, but Bing still uses them)
-- Preferred: use `rel="canonical"` on paginated pages pointing to a view-all page or the first page
+- Give distinct paginated pages their own canonical URLs; do not canonicalize page 2+ to page 1 merely because they are paginated.
 - Ensure paginated pages are not noindexed if they contain unique content
 
 ### 2.4 Hreflang (international sites)
 - Check for `<link rel="alternate" hreflang="xx">` tags
 - Validate: reciprocal hreflang (if page A points to page B, B must point back to A)
-- Validate: x-default fallback exists
+- Check x-default when a language-selection/fallback page warrants it; it is optional.
 - Check for language/region code validity (ISO 639-1 / ISO 3166-1)
 
 ### 2.5 Index Bloat
-- Estimate number of indexed pages (check sitemap count, use `site:domain.com` estimate)
+- Use authorized Search Console indexing reports when available. Sitemap counts describe submitted URLs, and site: result counts are unreliable indexing estimates.
 - Compare indexed pages to actual valuable content pages
 - Flag if indexed pages significantly exceed content pages (index bloat from thin/duplicate/parameter pages)
 
@@ -131,7 +131,7 @@ Check HTTP response headers for:
 
 | Header | Required Value | Purpose |
 |---|---|---|
-| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains` | Forces HTTPS |
+| `Strict-Transport-Security` | A staged max-age; includeSubDomains only after all subdomains support HTTPS | Forces HTTPS |
 | `Content-Security-Policy` | Appropriate policy | Prevents XSS |
 | `X-Content-Type-Options` | `nosniff` | Prevents MIME sniffing |
 | `X-Frame-Options` | `DENY` or `SAMEORIGIN` | Prevents clickjacking |
@@ -174,7 +174,7 @@ Check HTTP response headers for:
 ### 4.4 Parameter Handling
 - URL parameters should not create duplicate indexable pages
 - Use canonical tags or `robots.txt` Disallow for parameter variations
-- Configure parameter handling in Google Search Console and Bing Webmaster Tools
+- Google Search Console's URL Parameters tool was retired in 2022; use consistent internal links and canonical/indexing controls. robots.txt blocking prevents crawlers seeing noindex/canonical and does not ensure deindexing.
 
 **Category Scoring:**
 | Check | Points |
@@ -190,7 +190,7 @@ Check HTTP response headers for:
 ## Category 5: Mobile Optimization (10 points)
 
 ### Critical Context
-As of **July 2024**, Google crawls ALL sites exclusively with mobile Googlebot. There is no desktop crawling. If your site does not work on mobile, it does not work for Google. Period.
+Google Search primarily uses mobile content for indexing. Verify actual crawler/service behavior; other desktop crawlers and Google fetchers still exist.
 
 ### 5.1 Responsive Design
 - Check for `<meta name="viewport" content="width=device-width, initial-scale=1">`
@@ -198,8 +198,8 @@ As of **July 2024**, Google crawls ALL sites exclusively with mobile Googlebot. 
 - No fixed-width layouts wider than viewport
 
 ### 5.2 Tap Targets
-- Interactive elements (buttons, links) must be at least 48x48 CSS pixels
-- Minimum 8px spacing between tap targets
+- 48x48 CSS pixels is a usability target; WCAG 2.2 AA SC 2.5.8 uses 24x24 with stated exceptions, while AAA SC 2.5.5 uses 44x44.
+- Check spacing under the relevant accessibility criterion rather than imposing a universal 8px rule.
 - Check that navigation is usable on mobile
 
 ### 5.3 Font Sizes
@@ -209,7 +209,7 @@ As of **July 2024**, Google crawls ALL sites exclusively with mobile Googlebot. 
 
 ### 5.4 Mobile Content Parity
 - All content visible on desktop must also be visible on mobile
-- No hidden content behind "read more" toggles that Googlebot cannot expand (though Google has improved at expanding these as of 2025)
+- Make primary content available without user interaction or lazy network loads; collapsed content already in HTML can be indexed.
 - Images and media must load on mobile
 
 **Category Scoring:**
@@ -270,10 +270,10 @@ When real user data is unavailable, estimate from page characteristics:
 
 ## Category 7: Server-Side Rendering (15 points) — CRITICAL FOR GEO
 
-### Why SSR Is Mandatory for AI Visibility
-AI crawlers (GPTBot, PerplexityBot, ClaudeBot, etc.) do **NOT execute JavaScript**. They fetch the raw HTML and parse it. If your content is rendered client-side by React, Vue, Angular, or any other JavaScript framework, AI crawlers see an empty page.
+### Why raw HTML content improves compatibility
+Do not assume every retrieval client executes JavaScript. Compare raw HTML and rendered content for the actual target service. Static generation and prerendering can provide the same accessible content as SSR; a framework name alone does not establish an empty page.
 
-Even Googlebot, which does execute JavaScript, deprioritizes JS-rendered content due to the additional crawl budget required. Google processes JS rendering in a separate "rendering queue" that can delay indexing by days or weeks.
+Google can render JavaScript, subject to rendering/resource constraints. Do not infer a ranking penalty or fixed indexing delay merely from client rendering.
 
 ### Detection Method
 1. Fetch the page with curl (no JavaScript execution): `curl -s [URL]`
@@ -293,9 +293,9 @@ Even Googlebot, which does execute JavaScript, deprioritizes JS-rendered content
 |---|---|
 | React | Next.js (SSR/SSG), Remix, Gatsby (SSG) |
 | Vue | Nuxt.js (SSR/SSG) |
-| Angular | Angular Universal |
+| Angular | Angular SSR (@angular/ssr; verify framework version) |
 | Svelte | SvelteKit |
-| Generic | Prerender.io (prerendering service), Rendertron |
+| Generic | A maintained prerendering service evaluated for current support and private-content handling |
 
 ### Scoring Detail
 - All key content server-rendered: 15 points
@@ -412,10 +412,10 @@ Checks if the server responds to `Accept: text/markdown` with `Content-Type: tex
 IndexNow is an open protocol that allows websites to notify search engines instantly when content is created, updated, or deleted. Supported by Bing, Yandex, Seznam, and Naver. Google does NOT support IndexNow but monitors the protocol.
 
 ### Why It Matters for GEO
-ChatGPT uses Bing's index. Bing Copilot uses Bing's index. Faster Bing indexing means faster AI visibility on two major platforms.
+Search-provider integrations vary. IndexNow notifies participating engines; acceptance does not guarantee crawling, indexing or any AI citation.
 
 ### Implementation Check
-1. Check for IndexNow key file: `https://[domain]/.well-known/indexnow-key.txt` or similar
+1. Check for IndexNow key file: the configured keyLocation or root /<key>.txt; absence at a guessed path does not prove no integration
 2. Check if CMS has IndexNow plugin (WordPress: IndexNow plugin; many modern CMS platforms support it natively)
 3. If not implemented, recommend adding it with instructions
 
@@ -529,11 +529,11 @@ Reference: RFC 8288, RFC 9609.
 This site serves clean Markdown to AI agents on request. AI crawlers that support content negotiation receive formatted text without HTML boilerplate.
 
 <!-- If not supported: -->
-**Forward-Looking Recommendation:** Cloudflare Workers/Pages sites can enable Markdown content negotiation with a one-line configuration change. When an AI agent sends `Accept: text/markdown`, the server responds with clean Markdown instead of HTML.
+**Forward-Looking Recommendation:** Check current Cloudflare product eligibility and configuration before proposing Markdown content negotiation. When an AI agent sends `Accept: text/markdown`, the server responds with clean Markdown instead of HTML.
 
 - Currently Cloudflare-specific
 - Relevant for: sites already on Cloudflare infrastructure
-- Other CDNs and frameworks expected to adopt this pattern as AI agent traffic grows
+- Do not assume future platform adoption.
 
 
 ## Detailed Findings
@@ -541,3 +541,7 @@ This site serves clean Markdown to AI agents on request. AI crawlers that suppor
 ```
 
 
+
+## Evidence and scoring limits
+
+The point weights and performance budgets are local heuristics, not platform ranking rules. Mark unavailable field metrics and inaccessible pages as unknown; report sampled URLs and coverage, and normalize only applicable measured checks with the denominator shown. Raw HTML cannot measure INP or certify CWV: without CrUX/RUM mark field results unavailable and list hypotheses separately. Bound requests/timeouts and redirects to the authorized public target, and avoid fetching private/link-local destinations. Never infer CDN absence from missing branded headers or a different hostname alone. Security headers require application-specific rollout; CSP/X-Frame-Options are not universal ranking requirements.

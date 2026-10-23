@@ -114,3 +114,7 @@ Use these to diagnose issues the user may be having with the skill.
 - Requires the upstream tool, account, API key, or local setup when the workflow names one.
 - Does not authorize destructive, production, paid, or external-message actions without explicit user approval.
 - Validate generated artifacts or recommendations against the user's real sources before treating them as final.
+
+## Portability and evidence limits
+
+Invocation visibility, description loading and disable-model-invocation are host-specific; this vocabulary does not define a universal Agent Skills contract. Keep required metadata in catalog distributions and use documented host controls rather than deleting descriptions to infer user-only routing. Instruction files do not guarantee deterministic behavior or clear another agent's context. Evaluate representative tasks and actual read/coverage receipts; do not remove safety or acceptance criteria as no-ops without evidence. Shared references, deliberate redundancy and plain explicit language can be appropriate. No invocation benchmark was run.

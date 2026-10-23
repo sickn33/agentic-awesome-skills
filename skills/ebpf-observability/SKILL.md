@@ -77,7 +77,7 @@ sudo bpftrace -e 'BEGIN { printf("eBPF is working\n"); exit(); }'
 
 ## 3. Cilium Setup
 
-Cilium replaces kube-proxy with eBPF-based networking, providing identity-aware security and deep network observability via Hubble.
+Cilium can optionally replace kube-proxy when configured for the cluster, providing identity-aware security and deep network observability via Hubble.
 
 ### Install Cilium on Kubernetes
 
@@ -105,17 +105,9 @@ cilium status --wait
 ### Install the Cilium CLI and Hubble CLI
 
 ```bash
-# Cilium CLI
-CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
-curl -L --remote-name "https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-amd64.tar.gz"
-sudo tar xzvf cilium-linux-amd64.tar.gz -C /usr/local/bin
-rm cilium-linux-amd64.tar.gz
-
-# Hubble CLI
-HUBBLE_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/hubble/master/stable.txt)
-curl -L --remote-name "https://github.com/cilium/hubble/releases/download/${HUBBLE_VERSION}/hubble-linux-amd64.tar.gz"
-sudo tar xzvf hubble-linux-amd64.tar.gz -C /usr/local/bin
-rm hubble-linux-amd64.tar.gz
+# Install reviewed platform-specific Cilium/Hubble CLI releases through the current official process.
+# Verify checksums/signatures and archive members before extraction into a private staging directory.
+# Do not extract unverified latest archives directly into /usr/local/bin.
 ```
 
 ### Hubble Network Observability
@@ -169,10 +161,7 @@ helm install tetragon cilium/tetragon \
   --set tetragon.grpc.enabled=true \
   --set tetragon.exportFilename=/var/run/cilium/tetragon/tetragon.log
 
-# Install the tetra CLI
-curl -LO "https://github.com/cilium/tetragon/releases/latest/download/tetra-linux-amd64.tar.gz"
-sudo tar xzvf tetra-linux-amd64.tar.gz -C /usr/local/bin
-rm tetra-linux-amd64.tar.gz
+# Install a pinned reviewed tetra CLI using verified release artifacts and a private staging directory.
 ```
 
 ### Process Execution Monitoring
@@ -258,7 +247,7 @@ spec:
               values:
                 - "169.254.169.254"  # Block IMDS access
           matchActions:
-            - action: Sigkill
+            - action: Post  # observe only; enforcement requires separate reviewed scope
         - matchNamespaces:
             - namespace: Mnt
               operator: NotIn
@@ -312,7 +301,7 @@ kubectl apply -f detect-privilege-escalation.yaml
 
 ## 5. bpftrace One-Liners
 
-These are practical bpftrace commands you can run directly in production for targeted debugging.
+These are version-specific tracing sketches: validate in a test host and obtain production scope, duration, data and overhead limits before attachment.
 
 ### Syscall Latency
 
@@ -327,7 +316,7 @@ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_read { @start[tid] = nsecs; }
 # Top 10 slowest syscalls by total time
 sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @start[tid] = nsecs; }
   tracepoint:raw_syscalls:sys_exit /@start[tid]/ {
-    @ns[probe] = sum(nsecs - @start[tid]);
+    @ns[args->id] = sum(nsecs - @start[tid]);
     delete(@start[tid]);
   } END { print(@ns, 10); }'
 ```
@@ -386,7 +375,7 @@ sudo bpftrace -e 'tracepoint:block:block_rq_issue {
 ### Container-Aware Tracing
 
 ```bash
-# Trace process exec inside containers (cgroup-filtered)
+# Trace process exec with cgroup IDs; this example has no container-only filter
 sudo bpftrace -e 'tracepoint:syscalls:sys_enter_execve {
     printf("%-8d %-8d %-16s %s\n", pid, cgroup, comm, str(args->filename));
   }'
@@ -414,7 +403,7 @@ Use eBPF-based observability when you need:
 - **Deep performance debugging** -- trace kernel-level latency, syscall overhead, and scheduling delays that application-level metrics cannot reveal.
 - **Network observability without sidecars** -- capture L3/L4/L7 flows, DNS queries, and TCP state transitions directly from the kernel, eliminating the CPU and memory overhead of sidecar proxies.
 - **Security monitoring at the kernel boundary** -- detect container escapes, unexpected process execution, sensitive file access, and anomalous syscall patterns in real time.
-- **Continuous profiling in production** -- generate CPU flame graphs and memory allocation profiles with negligible overhead (typically under 1% CPU).
+- **Continuous profiling** -- measure host-specific CPU/memory/event overhead; no under1% guarantee is provided.
 - **Service mesh replacement or augmentation** -- Cilium can replace kube-proxy and provide identity-aware network policies enforced at the kernel level.
 
 Avoid eBPF when your kernel version is below 4.19, when you are running on managed platforms that restrict BPF capabilities, or when your debugging needs are fully met by application-level tracing.
@@ -434,3 +423,11 @@ kubectl diff -f manifest.yaml
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+### Tracing and deployment limits
+
+Kernel/version tables and Helm values are snapshots; support also depends on BTF, config, architecture, LSM and capabilities. The verifier is not a blanket safety guarantee: tracing can expose secrets and exhaust resources. CNI/kube-proxy replacement can disrupt the whole cluster; inventory current topology/versions, confirm management access and rollback, stage a reviewed chart release and measure connectivity. Observe-only Post policies are not network blocking; do not describe Sigkill as a safe packet deny.
+
+Syscall kprobe naming and argument decoding vary by Tetragon/version/architecture; verify syscall:true expectations and current CRDs before loading. A daemonset kubectl exec/logs target generally selects one pod, not all cluster nodes. Empty TracingPolicy objects do not enable missing event telemetry. File-open events are not proof of file modification; rate limiting can suppress evidence.
+
+Bound every follow/probe by duration/PID/cgroup and secure output permissions/retention. bpftrace examples need actual available fields/types: UDP connected-socket assumptions can miss sendto destinations, dev+sector is not a unique block-request identity, and kernel stack/probe labels do not prove user-level causality. No kernel program, package, cluster policy or live trace was executed.

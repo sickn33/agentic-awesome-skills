@@ -4,7 +4,7 @@
 
 ## CVSS 4.0 QUICK REFERENCE (newer programs)
 
-CVSS 4.0 replaced CVSS 3.1 in November 2023. Some newer programs require it.
+CVSS 4.0 was released in November 2023; programs may still require v3.1. Follow the stated version.
 
 ### Key Differences from CVSS 3.1
 
@@ -12,20 +12,15 @@ CVSS 4.0 replaced CVSS 3.1 in November 2023. Some newer programs require it.
 |---|---|---|
 | Attack Vector | Network/Adjacent/Local/Physical | Same |
 | Attack Complexity | Low/High | Low/High |
-| **NEW**: Attack Requirements | (didn't exist) | None/Present (replaces some PR/UI) |
+| **NEW**: Attack Requirements | (didn't exist) | None/Present (distinct from PR and UI) |
 | Privileges Required | None/Low/High | Same |
 | User Interaction | None/Required | None/Passive/Active |
 | Scope | Unchanged/Changed | REMOVED |
 | **NEW**: Sub-Impact metrics | (didn't exist) | Vulnerable/Subsequent system impact |
 
-### CVSS 4.0 Score Examples
+### CVSS 4.0 examples
 
-| Finding | CVSS 4.0 Score | Vector |
-|---|---|---|
-| Unauthenticated RCE | 10.0 | CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H |
-| IDOR read PII, auth required | 6.9 | CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N |
-| Stored XSS, admin views it | 8.2 | CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:P/VC:H/VI:H/VA:N/SC:H/SI:H/SA:N |
-| SSRF → cloud metadata | 8.7 | CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:H/SI:H/SA:N |
+Do not copy a score from a bug-class table. Derive the vector from the demonstrated scenario and calculate it with FIRST’s official versioned calculator. Subsequent-system impacts require their own evidence.
 
 ### Quick CVSS 4.0 Calculator
 ```
@@ -37,7 +32,7 @@ Key fields:
   UI = None | Passive (victim visits URL) | Active (victim takes explicit action)
 ```
 
-**Practical rule**: If program uses CVSS 4.0 and you don't know the vector, use the calculator and include the full string starting with `CVSS:4.0/AV:...`. Programs cannot dispute a valid vector string.
+**Practical rule**: If program uses CVSS 4.0 and you don't know the vector, use the calculator and include the full string starting with `CVSS:4.0/AV:...`. A syntactically valid vector can still have disputed metric assumptions; explain each one.
 
 ---
 
@@ -143,7 +138,7 @@ Optimize the top of the report ruthlessly. Save narrative for the middle. Triage
 
 ### CVSS 3.1 vs Bugcrowd VRT vs H1 default severity
 
-These three systems disagree about 30% of the time. The most common gap: a finding that scores CVSS 7.x (High) maps to Bugcrowd P4 (Low) or H1 Medium-default. When the platform default rates lower than CVSS:
+These systems measure different things; no measured disagreement rate is established here. The most common gap: a finding that scores CVSS 7.x (High) maps to Bugcrowd P4 (Low) or H1 Medium-default. When the platform default rates lower than CVSS:
 
 1. **File the severity-request paragraph as the first body section.** Bugcrowd respects this. (See `bugcrowd-reporting` for the canonical template.)
 2. **Anchor the request in CVSS vector string + business impact, not feelings.** "CVSS 3.1 AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N = 7.5 High because Confidentiality:High applies to cross-tenant data exposure."
@@ -153,7 +148,7 @@ An authorized bug-bounty engagement saw P4-default findings escalated to P3 via 
 
 ### Evidence rotation
 
-Everything in the submission body is logged forever by the platform. Operate accordingly:
+Submission retention depends on the platform/program; assume sensitive material can persist and minimize it. Operate accordingly:
 
 - Use throwaway test accounts created specifically for the engagement.
 - Rotate cookies / tokens after each submission (don't reuse the cookie that's pasted in the report).
@@ -182,6 +177,6 @@ Two valid paths:
 1. **Show concrete impact end-to-end.** Capture the chain on a test account. Paste the full request/response sequence. Done.
 2. **Downgrade the severity claim to match what you actually demonstrated.** "IDOR on /api/users/{uid} reading email + role" is real and reportable; "IDOR chained to potential admin takeover" is not until you demonstrate the takeover.
 
-Pick one. Never split the difference with "could potentially" or "may allow" — those phrases are the triager's signal that the report is theoretical, and theoretical reports get N/A.
+Separate demonstrated results from explicit hypotheses and limit severity to supported impact; do not perform prohibited escalation to obtain end-to-end proof.
 - **`bb-methodology`** — When Phase 5's report-writing step starts. Workflow primitive: Phase 5 calls `/report` which loads this skill for the platform-specific template (H1 / Bugcrowd / Intigriti / Immunefi).
 

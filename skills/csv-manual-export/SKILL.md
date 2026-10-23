@@ -96,7 +96,7 @@ source_module: null     # the module whose field list this renders
 target_system: null     # named only when the user names one
 delimiter: ","
 encoding: UTF-8
-bom: true               # false only when the target system rejects a byte order mark
+bom: false              # enable for a confirmed Excel workflow; do not force on other importers
 example_rows: false
 confirmed_facts: []     # only what the user actually said
 open_questions: []      # the unanswered ones, in the order worth asking
@@ -150,7 +150,7 @@ a real record.
 #### Escaping
 
 Valid CSV, always. Quote a value that contains a comma, a quote or a line break, and
-double any embedded quote. A file that parses is the whole product.
+double any embedded quote. Parsing is necessary but does not verify schema, spreadsheet interpretation or successful import.
 
 #### Types, stated separately if needed
 
@@ -197,8 +197,7 @@ A helper has no field list of its own, so its input is a module: the Field Refer
 that module already confirmed. Read that section - field names, types, order,
 requiredness, options and calculations - and render exactly that. The list below is
 every module that owns a field list, grouped by the layer its catalog gives it, and it
-is generated from those catalogs and the module files, so it cannot name a module that
-does not exist. `<support-root>/references/catalog.md` is an external collection index, not bundled here; locate and inspect it before depending on it. Do not claim an unavailable lookup succeeded; the module's own
+is generated from those catalogs and the module files, but this static inventory can drift; check the actual source module and confirmed field list rather than trusting listed field counts. `<support-root>/references/catalog.md` is an external collection index, not bundled here; locate and inspect it before depending on it. Do not claim an unavailable lookup succeeded; the module's own
 `SKILL.md` holds the field list.
 
 **Layer 1: Foundation** - 6 modules
@@ -461,7 +460,7 @@ Employee ID,Employee Name,Expense Type,Expense Date,Amount,Currency,Payment Meth
 - Row limits and file size belong to the target system, not to this skill.
 - A byte order mark helps Excel and can upset a strict importer, so it follows the target
   the user names.
-- Nothing is verified until the user has imported the file and checked it.
+- Local checks can verify encoding, header order, quoting and row widths; successful target import remains unverified until observed.
 - Legal, tax and payroll review is still required before the file drives real decisions.
 
 ## Security & Safety Notes
@@ -496,3 +495,9 @@ Give me a UTF-8 file with a header of the exact field names in the same order, n
 rows unless I ask for examples, and correct quoting. Tell me which columns need a date,
 number or currency format on the far side. Do not add SQL, JSON or a Notion mapping.
 ```
+
+## Spreadsheet interpretation and round-trip checks
+
+CSV quoting does not prevent spreadsheet formula execution. For spreadsheet-bound exports, flag untrusted text beginning with formula/control prefixes such as =, +, -, @, tab or carriage return; agree a target-specific text-import or escaping policy and disclose any value transformation. Do not blindly prefix every value: legitimate signed numbers and downstream machine imports have different semantics. For a lossless machine handoff, retain raw data and use a documented schema/secure importer instead of promising universal spreadsheet safety.
+
+Quote against the chosen delimiter, including headers, not only comma. Check duplicate/empty headers, consistent field count and a parse/serialize round trip. Preserve identifier leading zeros and long numbers through explicit text import; CSV alone cannot enforce them. Specify decimal precision/currency and null-versus-empty conventions. A header-only template has no generated-ID data cell to fill. Use a fresh private file destination and only authorized input; no importer, workbook or external-system acceptance was tested here.

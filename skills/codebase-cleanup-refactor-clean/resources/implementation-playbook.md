@@ -322,7 +322,7 @@ class Order:
 
     @property
     def total(self) -> Decimal:
-        return sum(item.price * item.quantity for item in self.items)
+        return sum((item.price * item.quantity for item in self.items), Decimal("0"))
 
 # domain/repositories.py
 from abc import ABC, abstractmethod
@@ -346,7 +346,8 @@ class MySQLOrderRepository(OrderRepository):
                 "INSERT INTO orders (customer_id, total) VALUES (%s, %s)",
                 (order.customer_id, order.total)
             )
-            return cursor.lastrowid
+            conn.commit()
+            return str(cursor.lastrowid)
 
 # application/validators.py
 class OrderValidator:
@@ -357,6 +358,9 @@ class OrderValidator:
             raise ValueError("Order must contain items")
         if order.total <= 0:
             raise ValueError("Order total must be positive")
+        for item in order.items:
+            if not isinstance(item.quantity, int) or isinstance(item.quantity, bool) or item.quantity <= 0 or not item.price.is_finite() or item.price < 0:
+                raise ValueError("Invalid order item")
 
 # application/services.py
 class OrderService:
@@ -532,35 +536,9 @@ Is it causing production bugs?
 
 ### 6. Modern Code Quality Practices (2024-2025)
 
-**AI-Assisted Code Review Integration**
+**AI-assisted review integration**
 
-```yaml
-# .github/workflows/ai-review.yml
-name: AI Code Review
-on: [pull_request]
-
-jobs:
-  ai-review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # GitHub Copilot Autofix
-      - uses: github/copilot-autofix@v1
-        with:
-          languages: 'python,typescript,go'
-
-      # CodeRabbit AI Review
-      - uses: coderabbitai/action@v1
-        with:
-          review_type: 'comprehensive'
-          focus: 'security,performance,maintainability'
-
-      # Codium AI PR-Agent
-      - uses: codiumai/pr-agent@v1
-        with:
-          commands: '/review --pr_reviewer.num_code_suggestions=5'
-```
+Use only a verified installed integration and its current documented workflow. The former example named unverified actions/inputs and is removed. Pin reviewed action revisions, grant minimum permissions, do not execute untrusted PR code with secrets and obtain authorization before sending private code to a review provider. AI review is advisory evidence, not proof of correctness.
 
 **Static Analysis Toolchain**
 
@@ -568,6 +546,8 @@ jobs:
 # pyproject.toml
 [tool.ruff]
 line-length = 100
+
+[tool.ruff.lint]
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -588,7 +568,7 @@ strict = true
 warn_unreachable = true
 warn_unused_ignores = true
 
-[tool.coverage]
+[tool.coverage.report]
 fail_under = 80
 ```
 
@@ -649,11 +629,8 @@ sonar.qualitygate.wait=true
 sonar.qualitygate.timeout=300
 
 # Thresholds
-sonar.coverage.threshold=80
-sonar.duplications.threshold=3
-sonar.maintainability.rating=A
-sonar.reliability.rating=A
-sonar.security.rating=A
+# Configure quality gate conditions in the actual SonarQube server/project settings.
+# Arbitrary threshold/rating properties here do not define the quality gate.
 ```
 
 **Security-Focused Refactoring**
@@ -663,16 +640,18 @@ sonar.security.rating=A
 # .semgrep.yml
 rules:
   - id: sql-injection-risk
+    languages: [python]
     pattern: execute($QUERY)
     message: Potential SQL injection
     severity: ERROR
-    fix: Use parameterized queries
+    # Do not auto-fix SQL by inserting prose; author a language-specific reviewed patch.
 
   - id: hardcoded-secrets
+    languages: [python]
     pattern: password = "..."
     message: Hardcoded password detected
     severity: ERROR
-    fix: Use environment variables or secret manager
+    # Do not auto-fix by inserting prose; remove/rotate actual exposed secrets under the project procedure.
 
 # CodeQL security analysis
 # .github/workflows/codeql.yml
@@ -689,7 +668,7 @@ Provide the complete refactored code with:
 **Clean Code Principles**
 - Meaningful names (searchable, pronounceable, no abbreviations)
 - Functions do one thing well
-- No side effects
+- Explicit, controlled side effects at boundaries
 - Consistent abstraction levels
 - DRY (Don't Repeat Yourself)
 - YAGNI (You Aren't Gonna Need It)
@@ -710,7 +689,7 @@ def validate_order(order):
 
     for item in order.items:
         if item.quantity <= 0:
-            raise OrderValidationError(f"Invalid quantity for {item.name}")
+            raise OrderValidationError(f"Invalid quantity for {item.product_id}")
 ```
 
 **Documentation**
@@ -739,7 +718,7 @@ Generate comprehensive tests for the refactored code:
 ```python
 class TestOrderProcessor:
     def test_validate_order_empty_items(self):
-        order = Order(items=[])
+        order = Order(customer_id="test-customer", items=[])
         with pytest.raises(OrderValidationError):
             validate_order(order)
 
@@ -817,10 +796,11 @@ for item in items:
         if item.id == other.id:
             # process
 
-# After: O(n)
+# Alternative only if each unique id should be processed once: O(n) expected construction.
+# This changes the nested loop semantics and overwrites duplicates; it is NOT a drop-in refactor.
 item_map = {item.id: item for item in items}
 for item_id, item in item_map.items():
-    # process
+    # process unique ids only
 ```
 
 **Caching Strategy**

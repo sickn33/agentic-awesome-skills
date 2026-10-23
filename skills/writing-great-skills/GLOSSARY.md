@@ -179,3 +179,7 @@ An instruction that changes nothing because the model already does it by default
 A leading word is a *technique*; No-Op is a *verdict* on a line — and they cross. A leading word too weak to beat the default is a no-op (_be thorough_ when the agent is already thorough-ish), and the fix is a stronger word that passes the verdict (_relentless_), not a different technique. So the No-Op test — does it change behaviour versus the default? — is also how you grade whether a leading word is earning its repetitions. This is model-relative, not reader-relative: two people disagreeing over whether a line is a no-op disagree about the default, and settle it by running the skill, not by debate.
 
 _Avoid_: redundant instruction, restating the obvious, belaboring
+
+## Portability and evidence limits
+
+Invocation visibility, description loading and disable-model-invocation are host-specific; this vocabulary does not define a universal Agent Skills contract. Keep required metadata in catalog distributions and use documented host controls rather than deleting descriptions to infer user-only routing. Instruction files do not guarantee deterministic behavior or clear another agent's context. Evaluate representative tasks and actual read/coverage receipts; do not remove safety or acceptance criteria as no-ops without evidence. Shared references, deliberate redundancy and plain explicit language can be appropriate. No invocation benchmark was run.

@@ -19,7 +19,7 @@ LOOP: last frame of S5 matches S1 composition ✅/❌
 ## Rules
 
 - **Fit the model.** Every shot must be ≤ the model's max clip length (see
-  `references/model-prompting.md`). If a beat needs longer, split it into two shots with a
+  `../model-prompting.md`). If a beat needs longer, split it into two shots with a
   change of angle.
 - **Generate long, use short.** Plan 0.5–1 s of handles at each end. The first and last
   frames of AI clips are often the weakest.

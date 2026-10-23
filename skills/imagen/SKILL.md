@@ -91,3 +91,7 @@ User: "Generate a placeholder avatar image for the user profile component"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## API compatibility caveat
+
+This helper implements the generateContent envelope; the current linked image guide demonstrates the Interactions API, whose endpoint, request fields and response shape differ. Do not pass a model advertised only for Interactions to this helper or assume its imageSize options are supported. Verify the selected model explicitly supports the helper's generateContent schema before any billable request; otherwise use a reviewed provider adapter or the host image tool. No API call or platform compatibility test was performed here. Prompt command-line arguments can appear in process listings/history, so use only non-sensitive prompts with this interface. Partial output may remain after a disk-write error; inspect it privately and choose a new path rather than automatically retrying the provider.

@@ -65,7 +65,7 @@ This single rule explains 19% of all Critical findings.
 ---
 
 ## 1. ACCOUNTING STATE DESYNCHRONIZATION
-> #1 Critical bug class — 28% of all Criticals on Immunefi.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### What It Is
 Two state variables supposed to stay in sync. One code path updates A but forgets B. Later code reads both and makes decisions based on stale B.
@@ -102,8 +102,8 @@ function claimRedemption(uint256 tokenId) external {
 **Variant 3: Update Happens in Wrong Order** (Alchemix)
 ```solidity
 function deposit(uint256 amount) external {
-    _shares = (amount * totalShares) / totalAssets;  // calculated BEFORE deposit
-    totalAssets += amount;   // assets added AFTER shares calculated → wrong rate
+    _shares = (amount * totalShares) / totalAssets;  // Pre-deposit exchange rate
+    totalAssets += amount;   // Pre-deposit pricing is normally intentional; prove an invariant violation before claiming a bug.
 }
 ```
 
@@ -121,7 +121,7 @@ grep -rn "\breturn\b" contracts/ -B3 | grep -B3 "if\b"
 ---
 
 ## 2. ACCESS CONTROL
-> #2 Critical — 19% of Criticals. $953M lost in 2024 alone.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### Variant 1: Missing Modifier on Sibling Function
 ```solidity
@@ -142,7 +142,7 @@ function split(uint256 tokenId, uint256 amount) external {
 
 ### Variant 3: Silent Modifier (if vs require)
 ```solidity
-// VULNERABLE — non-admin silently gets through:
+// Non-admin returns without executing the body; lack of revert is not an access bypass by itself:
 modifier onlyAdmin() {
     if (msg.sender == admin) {
         _;  // body only executes for admin, but non-admin doesn't revert
@@ -156,7 +156,8 @@ modifier onlyAdmin() {
 function initialize(address _owner) public {  // MISSING: initializer modifier
     owner = _owner;  // anyone can call → become owner
 }
-// Fix: constructor() { _disableInitializers(); }
+// Protect the proxy initializer with initializer and deploy/initialize atomically.
+// Separately lock implementation initialization: constructor() { _disableInitializers(); }
 ```
 
 ### Grep Patterns
@@ -187,7 +188,7 @@ grep -rn "_disableInitializers()" contracts/
 ---
 
 ## 3. INCOMPLETE CODE PATH
-> #3 Critical — 17% of Criticals.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### The Function Family Comparison Test
 ```
@@ -242,7 +243,7 @@ grep -rn "function deposit\|function mint\|function withdraw\|function redeem" c
 ---
 
 ## 4. OFF-BY-ONE & BOUNDARY CONDITIONS
-> #4 High — 22% of Highs. Single character change. Massive impact.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### Root Cause
 ```solidity
@@ -281,7 +282,7 @@ grep -rn "\.length\s*-\s*1\|i\s*<=\s*.*\.length\b" contracts/
 ---
 
 ## 5. ORACLE / PRICE MANIPULATION
-> 12% of all reports. Largest individual payouts. $117M Mango, $70M Curve.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### Bug A: Missing Staleness Check (most common)
 ```solidity
@@ -291,7 +292,7 @@ return uint256(price);  // If Chainlink node goes down, stale price returned ind
 
 // CORRECT:
 (, int256 price,, uint256 updatedAt,) = priceFeed.latestRoundData();
-require(block.timestamp - updatedAt <= MAX_PRICE_AGE, "Stale price");
+require(updatedAt > 0 && updatedAt <= block.timestamp && block.timestamp - updatedAt <= MAX_PRICE_AGE, "Stale price");
 require(price > 0, "Invalid price");
 ```
 
@@ -302,7 +303,9 @@ PythStructs.Price memory p = pyth.getPriceUnsafe(priceFeed);
 return p.price;  // ignores p.conf (confidence interval)
 
 // CORRECT:
-require(p.conf * 10 <= uint64(p.price), "Price too uncertain");
+require(p.price > 0, "Invalid price");
+require(uint256(p.conf) * 10 <= uint256(uint64(p.price)), "Price too uncertain");
+// illustrative10% policy; also validate publishTime, exponent, units and supported feed.
 // conf > 10% of price = untrustworthy
 ```
 
@@ -311,9 +314,9 @@ require(p.conf * 10 <= uint64(p.price), "Price too uncertain");
 // VULNERABLE: 60-second TWAP
 uint32[] memory secondsAgos = new uint32[] (2);
 secondsAgos[0] = 60; secondsAgos[1] = 0;
-// Flash loan can shift price for entire 60s window
+// A same-transaction flash loan cannot span elapsed60s; analyze multi-block capital, liquidity and observation behavior.
 
-// CORRECT: 1800s minimum TWAP (30 min)
+// Choose window/heartbeat/liquidity and bounded deviation from an economic threat model; no universal safe30-minute minimum.
 ```
 
 ### Bug D: Single-Source Oracle
@@ -350,7 +353,7 @@ grep -rn "secondsAgo\|TWAP\|cardinality" contracts/ -A5
 
 // CORRECT: virtual shares (OpenZeppelin v4.9+)
 function _decimalsOffset() internal view virtual override returns (uint8) {
-    return 9;  // add 1e9 virtual shares + assets to prevent manipulation
+    return 9;  // 1e9 virtual shares versus1 virtual asset in OZ's formula; mitigation is not a blanket guarantee.
 }
 ```
 
@@ -373,7 +376,7 @@ grep -rn "function deposit\|function mint\|function withdraw\|function redeem" c
 ---
 
 ## 7. REENTRANCY
-> 2016–present. CEI pattern prevents it. Still found in DeFi.
+> Heuristic review category; source frequency/severity claims are not established here.
 
 ### Variants
 - **Single-function**: attacker re-enters same function before state updated
@@ -443,3 +446,9 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+### Scope and evidence corrections
+
+Pre-dive TVL/payout thresholds and point scores are uncalibrated operator preferences, not safety or audit-quality rules; audits/low LOC never prove absence of bugs. No frequency percentages or named payout summaries above were independently reproduced. A missing sibling modifier is a lead, not proof: functions may require different invariants. Owner compromise or broad intended owner delegatecall is a threat-model decision, not automatically a vulnerability.
+
+Use authorized isolated local forks pinned to chain/block/address/compiler/implementation; never broadcast exploitation, move live funds, extract keys or manipulate a production oracle. Fork/RPC data can cost money and leave the host; preserve secrets and validate target scope. Economic profit assertions must account for source of funds, fees, liquidity and repayment; cheatcode funding/impersonation/warping cannot prove an attacker has those powers. Separate reportable demonstrated impact from hypotheses. No Foundry/parser/contract test was run.

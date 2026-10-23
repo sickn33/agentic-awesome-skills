@@ -69,8 +69,8 @@ falsely implies forward/back depth between peers.
 
 ## 5. Mechanics — what to animate, and how (any stack)
 
-- **Compositor-friendly only:** animate `transform` and `opacity`. **Never** animate layout
-  properties (`width`, `height`, `top`, `left`) — they trigger reflow and jank.
+- **Prefer compositor-friendly properties:** animate `transform` and `opacity`. Avoid animating layout
+  properties unless measured and justified; they (`width`, `height`, `top`, `left`) can trigger reflow and jank.
 - **Never `transition: all`** — list the exact properties; `all` silently animates
   layout-affecting props and janks.
 - **Correct `transform-origin`** — anchor motion where it "physically" starts (a menu from
@@ -99,9 +99,7 @@ falsely implies forward/back depth between peers.
 ## 7. Accessibility — reduced motion
 
 Honor `prefers-reduced-motion` for **public / multi-user** builds: drop the tweens (keep the
-end state / a 0s cross-fade), don't remove the information the motion conveyed. For
-**personal/single-user** projects this repo deliberately overrides that flag — see
-`motion-preference-rule`. Either way, avoid parallax, large viewport-spanning transforms, and
+end state / a 0s cross-fade), don't remove the information the motion conveyed. Honor the same user preference for personal/single-user projects unless the user explicitly chooses a specific override; do not infer it from project size. Either way, avoid parallax, large viewport-spanning transforms, and
 strobing regardless of the flag.
 
 ## The one-line test
