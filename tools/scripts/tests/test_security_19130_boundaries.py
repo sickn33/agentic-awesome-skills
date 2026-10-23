@@ -258,5 +258,22 @@ class PublishedSecurityExamples(unittest.TestCase):
         processor.on_end(safe)
         self.assertEqual(exported, [safe])
 
+    def test_log_redaction_preserves_numeric_interpolation_and_drops_exception(self):
+        import logging
+        scope = fixture_definitions('skills/agent-observability/references/details.md', {'PIIRedactingFilter'},
+                                    {'logging': logging,
+                                     'redact_string': lambda value: value.replace('PRIVATE_CANARY', '[redacted]')})
+        record = logging.LogRecord('agent', logging.INFO, __file__, 1,
+                                   'request PRIVATE_CANARY took %.2f seconds', (1.25,),
+                                   (ValueError, ValueError('PRIVATE_CANARY'), None))
+        record.exc_text = 'PRIVATE_CANARY'
+        record.stack_info = 'PRIVATE_CANARY'
+        self.assertTrue(scope['PIIRedactingFilter']().filter(record))
+        self.assertEqual(record.getMessage(), 'request [redacted] took 1.25 seconds')
+        self.assertIsNone(record.args)
+        self.assertIsNone(record.exc_info)
+        self.assertIsNone(record.exc_text)
+        self.assertIsNone(record.stack_info)
+
 if __name__ == '__main__':
     unittest.main()

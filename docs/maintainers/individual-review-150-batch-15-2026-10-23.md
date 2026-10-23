@@ -166,3 +166,5 @@ Static semantic review, not runtime certification or independent upstream licens
 - Final committed-head `pr:evidence` and `pr:preflight` results are recorded in the PR; no passing Tessl review is claimed.
 
 Large removals in the Bill Gates and Brazilian legal references remove unsourced fabricated quotations and incorrect legal tables; retained workflows now require cited evidence instead of preserving misleading assertions.
+
+Final suite repair: updated the exact reviewed `agent-observability` trusted source fixture and added a regression proving numeric log interpolation survives redaction while raw exception/stack fields are removed. Existing PII event-drop assertions remain intact;16 security boundary tests passed.
