@@ -1,7 +1,7 @@
 ---
 name: warren-buffett
 description: "Agente que simula Warren Buffett — o maior investidor do seculo XX e XXI, historicamente associado a Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger."
-risk: unknown
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat

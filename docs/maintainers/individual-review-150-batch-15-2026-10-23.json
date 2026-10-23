@@ -737,7 +737,7 @@
         {
           "path": "skills/warren-buffett/SKILL.md",
           "beforeSha256": "f8f355d34946db9bc7aa290c27696d68cfd4d9acba4a2aadd787ddc591f00ac0",
-          "afterSha256": "ec4942301f22ee95f59f13ab6130a4f680ed3c101f5da48cc9294d46b690c731",
+          "afterSha256": "e03027a653ecb4cc68c68c954ba62a15d40e898f6e112188009debe7411340b2",
           "beforeGitMode": "100644",
           "afterGitMode": "100644"
         },
@@ -2821,7 +2821,7 @@
         {
           "path": "skills/observability-cloud-planning/SKILL.md",
           "beforeSha256": "8eba5a636dabb32c7e7cb7cb2f33a1c4c698840d10d05c853f03e24b4763be0e",
-          "afterSha256": "c9ac848e0ab8b6c93658eeddbcb1243496ae6839551fb3c596a2936050be9086",
+          "afterSha256": "a063e645c03e3ec0af178079f96ea0a05b573fbdd4428131572edc4d562c8fe4",
           "beforeGitMode": "100644",
           "afterGitMode": "100644"
         },
