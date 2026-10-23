@@ -107,12 +107,17 @@ class RuntimeWrites(unittest.TestCase):
         adapter = types.ModuleType('playwright.sync_api')
         adapter.sync_playwright = lambda: self.fail('Browser must not launch')
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp); page = root / 'page.html'; page.write_text('<html></html>')
+            root = Path(temp).resolve(); page = root / 'page.html'; page.write_text('<html></html>')
             outside = root / 'private'; outside.write_text('CANARY')
             output = root / '.tastegate'; output.mkdir(); (output / 'report.json').symlink_to(outside)
             with patch.dict(sys.modules, {'playwright': types.ModuleType('playwright'), 'playwright.sync_api': adapter}):
                 with self.assertRaises(FileExistsError): helper.run(str(page), output)
             self.assertEqual(outside.read_text(), 'CANARY')
+            alias = root / 'alias'; alias.symlink_to(root, target_is_directory=True)
+            with patch.dict(sys.modules, {'playwright': types.ModuleType('playwright'), 'playwright.sync_api': adapter}):
+                with self.assertRaisesRegex(ValueError, 'symlink'):
+                    helper.run(str(page), alias / 'new-output')
+            self.assertFalse((root / 'new-output').exists())
 
 
 def fixture_definitions(relative, names, namespace):
