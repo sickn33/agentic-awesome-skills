@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/red-team-review.schema.json",
+  "title": "Product Design Harness Red-Team Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "review_id",
+    "claim_ids",
+    "evidence_receipt_ids",
+    "failure_modes",
+    "disconfirming_tests",
+    "hidden_affected_people",
+    "current_workaround",
+    "substitute_threats",
+    "trust_risk",
+    "stop_condition",
+    "verdict"
+  ],
+  "properties": {
+    "review_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_ids": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "evidence_receipt_ids": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 5,
+      "uniqueItems": true
+    },
+    "disconfirming_tests": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "hidden_affected_people": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "current_workaround": {
+      "type": "string",
+      "minLength": 1
+    },
+    "substitute_threats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direct",
+        "indirect",
+        "platform",
+        "workflow",
+        "doing_nothing"
+      ],
+      "properties": {
+        "direct": {
+          "type": "string",
+          "minLength": 1
+        },
+        "indirect": {
+          "type": "string",
+          "minLength": 1
+        },
+        "platform": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workflow": {
+          "type": "string",
+          "minLength": 1
+        },
+        "doing_nothing": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "trust_risk": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stop_condition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "verify",
+        "stop_reframe"
+      ]
+    }
+  },
+  "$defs": {
+    "non_empty_string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  }
+}

@@ -38,6 +38,10 @@ const NARROW_DOC_PATH = /^(?:README\.md|CONTRIBUTING\.md|docs\/(?:[^/]+\/)*[^/]+
 // before merge (see requiresHumanReview in classifyChangeRecords).
 const WEB_APP_SOURCE_PATH = /^apps\/web-app\/src\/(?:[^/]+\/)*[^/]+$/;
 const WEB_APP_SOURCE_EXTENSIONS = new Set([".css", ".ts", ".tsx"]);
+const REVIEWED_DEPENDENCY_LOCKFILES = new Set([
+  "apps/aas-plugin/package-lock.json",
+  "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+]);
 const LOW_RISK_EXTENSIONS = new Set([
   ".csv",
   ".gif",
@@ -129,6 +133,8 @@ function classifyPathPolicy(filePath) {
     kind = "canonical_skill";
   } else if (SKILL_SUPPORT_PATH.test(filePath) || LICENSE_PATH.test(filePath)) {
     kind = "skill_support";
+  } else if (REVIEWED_DEPENDENCY_LOCKFILES.has(filePath)) {
+    kind = "dependency_lockfile";
   } else if (NARROW_DOC_PATH.test(filePath)) {
     kind = "documentation";
   } else if (WEB_APP_SOURCE_PATH.test(filePath)) {
@@ -195,6 +201,7 @@ function classifyChangeRecords(records, options = {}) {
   const paths = [];
   const canonicalSkillChanges = [];
   const skillContentChanges = [];
+  const dependencyLockfileChanges = [];
   let sensitive = false;
   let totalBlobBytes = 0;
   let webAppSourceChangeCount = 0;
@@ -209,6 +216,7 @@ function classifyChangeRecords(records, options = {}) {
       requiresHumanReview: false,
       canonicalSkillChanges,
       skillContentChanges,
+      dependencyLockfileChanges,
     };
   }
   if (records.length > maxChangeRecords) {
@@ -279,9 +287,12 @@ function classifyChangeRecords(records, options = {}) {
       if (pathPolicy.kind === "canonical_skill") {
         canonicalSkillChanges.push(filePath);
       }
-      if (["canonical_skill", "skill_support"].includes(pathPolicy.kind)) {
+  if (["canonical_skill", "skill_support"].includes(pathPolicy.kind)) {
         skillContentChanges.push(filePath);
       }
+  if (pathPolicy.kind === "dependency_lockfile") {
+    dependencyLockfileChanges.push(filePath);
+  }
       if (pathPolicy.kind === "web_app_source") {
         webAppSourceChangeCount += 1;
       }
@@ -342,6 +353,7 @@ function classifyChangeRecords(records, options = {}) {
   const uniqueReasons = [...new Set(reasons)];
   const uniqueCanonicalSkillChanges = [...new Set(canonicalSkillChanges)].sort();
   const uniqueSkillContentChanges = [...new Set(skillContentChanges)].sort();
+  const uniqueDependencyLockfileChanges = [...new Set(dependencyLockfileChanges)].sort();
   const approvalSafe = uniqueReasons.length === 0 && !sensitive;
   return {
     safe: approvalSafe,
@@ -349,9 +361,12 @@ function classifyChangeRecords(records, options = {}) {
     approvalSafe,
     reasons: uniqueReasons,
     paths,
-    requiresHumanReview: uniqueSkillContentChanges.length > 0 || webAppSourceChangeCount > 0,
+    requiresHumanReview: uniqueSkillContentChanges.length > 0
+      || uniqueDependencyLockfileChanges.length > 0
+      || webAppSourceChangeCount > 0,
     canonicalSkillChanges: uniqueCanonicalSkillChanges,
     skillContentChanges: uniqueSkillContentChanges,
+    dependencyLockfileChanges: uniqueDependencyLockfileChanges,
   };
 }
 

@@ -120,7 +120,8 @@ texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 // Usually true by default
 texture.generateMipmaps = true;
 
-// Disable for non-power-of-2 textures or data textures
+// Disable when supplying no mip chain and intentionally using a non-mipmap filter.
+// Modern WebGL2 does not impose the old WebGL1 power-of-two restriction.
 texture.generateMipmaps = false;
 texture.minFilter = THREE.LinearFilter;
 ```
@@ -186,7 +187,7 @@ const video = document.createElement("video");
 video.src = "video.mp4";
 video.loop = true;
 video.muted = true;
-video.play();
+await video.play(); // handle rejection and offer a user-gesture play control
 
 const texture = new THREE.VideoTexture(video);
 texture.colorSpace = THREE.SRGBColorSpace;
@@ -243,12 +244,14 @@ const pmremGenerator = new THREE.PMREMGenerator(renderer);
 pmremGenerator.compileEquirectangularShader();
 
 new RGBELoader().load("environment.hdr", (texture) => {
-  const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+  const envTarget = pmremGenerator.fromEquirectangular(texture);
+  const envMap = envTarget.texture;
   scene.environment = envMap;
   scene.background = envMap;
 
   texture.dispose();
   pmremGenerator.dispose();
+  // Retain envTarget and dispose it only after detaching it from scene/materials.
 });
 ```
 
@@ -380,13 +383,15 @@ uvs.needsUpdate = true;
 ### Second UV Channel (for AO maps)
 
 ```javascript
-// Required for aoMap
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// Current UV channels: 0=uv, 1=uv1, 2=uv2. Select explicitly.
+geometry.setAttribute("uv1", geometry.attributes.uv.clone());
+aoTexture.channel = 1;
 
 // Or create custom second UV
-const uv2 = new Float32Array(vertexCount * 2);
-// ... fill uv2 data
-geometry.setAttribute("uv2", new THREE.BufferAttribute(uv2, 2));
+const uv1 = new Float32Array(vertexCount * 2);
+// ... fill uv1 data
+geometry.setAttribute("uv1", new THREE.BufferAttribute(uv1, 2));
+aoTexture.channel = 1;
 ```
 
 ### UV Transform in Shader
@@ -462,7 +467,7 @@ const material = new THREE.MeshStandardMaterial({
   metalnessMap: metalnessTexture,
   metalness: 1, // Multiplier
 
-  // Ambient occlusion (Linear, uses uv2)
+  // Ambient occlusion (Linear, uses the selected UV channel)
   aoMap: aoTexture,
   aoMapIntensity: 1,
 
@@ -481,8 +486,9 @@ const material = new THREE.MeshStandardMaterial({
   transparent: true,
 });
 
-// Don't forget UV2 for AO
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// Match the explicitly selected AO channel.
+geometry.setAttribute("uv1", geometry.attributes.uv.clone());
+aoTexture.channel = 1;
 ```
 
 ### Normal Map Types
@@ -576,6 +582,8 @@ function disposeMaterial(material) {
 
 ### Texture Pooling
 
+This minimal cache has no reference counting or in-flight request deduplication. Callers must serialize loads for a URL, and dispose only after every consumer detaches it. A production pool must cache pending promises and handle rejection/disposal races; do not dispose shared textures per material.
+
 ```javascript
 class TexturePool {
   constructor() {
@@ -639,7 +647,7 @@ As of r183, `KTX2Loader` correctly handles BC3 compressed textures with alpha ch
 
 ## ISO 21496-1 Gainmap Metadata (r183)
 
-Three.js r183 supports ISO 21496-1 gainmap metadata in HDR textures, enabling proper tone mapping of gainmap-based HDR images (such as those produced by recent smartphone cameras).
+Gainmap support depends on the exact loader, input encoding and installed Three.js revision. Do not assume RGBELoader/EXRLoader decodes a smartphone gainmap JPEG; verify the relevant loader documentation and sample asset before choosing a pipeline.
 
 
 ## See Also
@@ -647,3 +655,9 @@ Three.js r183 supports ISO 21496-1 gainmap metadata in HDR textures, enabling pr
 - `threejs-materials` - Applying textures to materials
 - `threejs-loaders` - Loading texture files
 - `threejs-shaders` - Custom texture sampling
+
+## Integration limits
+
+These are independent WebGL examples; provide the scene, renderer, geometry and material variables. Use trusted asset URLs and same-origin/CORS permissions; bound image sizes and texture allocations. Set color-space annotations for color/canvas maps before use, and mark material.needsUpdate when adding/removing a map changes its shader defines. renderer.info.memory.textures counts textures, not bytes. Dispose render targets, loaders/workers and owned textures when unused.
+
+References: [Texture channels and color space](https://threejs.org/docs/pages/Texture.html), [MeshStandardMaterial maps](https://threejs.org/docs/pages/MeshStandardMaterial.html).

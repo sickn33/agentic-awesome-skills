@@ -32,10 +32,10 @@ Security in Odoo is managed at two levels: **model-level access** (who can read/
 ```csv
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hospital_patient_user,hospital.patient.user,model_hospital_patient,base.group_user,1,0,0,0
-access_hospital_patient_manager,hospital.patient.manager,model_hospital_patient,base.group_erp_manager,1,1,1,1
+access_hospital_patient_manager,hospital.patient.manager,model_hospital_patient,hospital_management.group_hospital_manager,1,1,1,1
 ```
 
-> **Note:** Use `base.group_erp_manager` for ERP managers, not `base.group_system` — that group is reserved for Odoo's technical superusers. Always create a custom group for module-specific manager roles:
+> **Note:** Define the dedicated module manager group before loading the CSV (replace `hospital_management` with the module ID). Do not reuse broad settings/administration groups for patient-data roles. This group example targets Odoo 18; verify group fields for the installed version:
 >
 > ```xml
 > <record id="group_hospital_manager" model="res.groups">
@@ -59,7 +59,7 @@ access_hospital_patient_manager,hospital.patient.manager,model_hospital_patient,
 </record>
 ```
 
-> **Important:** If you omit `<field name="groups">`, the rule becomes **global** and applies to ALL users, including admins. Always assign a group unless you explicitly intend a global restriction.
+> **Important:** No groups makes a rule global (superuser mode bypasses record rules). Global rules intersect; group rules union within those bounds. `perm_unlink=False` means this rule is not checked for deletion, not that deletion is denied. ACLs grant operations additively, and record rules default to allow when none apply.
 
 ### Example 3: Multi-Company Record Rule
 
@@ -71,23 +71,27 @@ access_hospital_patient_manager,hospital.patient.manager,model_hospital_patient,
         ['|', ('company_id', '=', False),
                ('company_id', 'in', company_ids)]
     </field>
-    <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    <!-- No groups: global company boundary, intersected with group rules. -->
 </record>
 ```
 
 ## Best Practices
 
 - ✅ **Do:** Start with the most restrictive access and open up as needed.
-- ✅ **Do:** Use `company_ids` (plural) in multi-company rules — it includes all companies the user belongs to.
+- ✅ **Do:** Use `company_ids` (plural) in multi-company rules — it reflects the companies active in the current environment; test company switching.
 - ✅ **Do:** Test rules using a non-admin user in debug mode — `sudo()` bypasses all record rules entirely.
 - ✅ **Do:** Create dedicated security groups per module rather than reusing core Odoo groups.
 - ❌ **Don't:** Give `perm_unlink = 1` to regular users unless deletion is explicitly required by the business process.
 - ❌ **Don't:** Leave `group_id` blank in `ir.model.access.csv` unless you intend to grant public (unauthenticated) access.
 - ❌ **Don't:** Use `base.group_system` for module managers — that grants full technical access including server configurations.
 
+## Validation and sources
+
+Test as ordinary users with overlapping groups: own/other records, every CRUD operation, active company switching, and portal/public roles. The company rule assumes a `company_id` field; allowing `False` deliberately shares unowned records. See [Odoo security](https://www.odoo.com/documentation/18.0/developer/reference/backend/security.html) and [multi-company rules](https://www.odoo.com/documentation/18.0/developer/howtos/company.html).
+
 ## Limitations
 
-- Does not cover **field-level access control** (`ir.model.fields` read/write restrictions) — those require custom OWL or Python overrides.
+- Field access can be restricted using the ORM field `groups` attribute; hiding a field only in OWL/views is not server-side access control.
 - **Portal and public user** access rules have additional nuances not fully covered here; test carefully with `base.group_portal`.
 - Record rules are **bypassed by `sudo()`** — any code running in superuser context ignores all `ir.rule` entries.
 - Does not cover **row-level security via PostgreSQL** (RLS) — Odoo manages all security at the ORM layer.

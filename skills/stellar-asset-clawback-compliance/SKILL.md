@@ -14,7 +14,7 @@ source_repo: Ranjeet2063/agentic-awesome-skills
 
 # Stellar Asset Clawback Compliance
 
-**What it is:** Provides an immutable compliance record and operational audit register for executing regulatory clawbacks on CAP-35 compliant Stellar assets.
+**What it is:** Provides a proposed compliance record and operational audit register for executing regulatory clawbacks on CAP-35 compliant Stellar assets.
 
 ## Overview
 
@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Stellar Asset 
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Evidence procedure
+
+Record network, full asset code+issuer, target trustline or claimable balance ID and observed ledger. Verify clawback eligibility on the actual trustline/balance: issuer flags do not retroactively enable existing trustlines. CAP-35 claimable-balance clawback burns the entire eligible balance, not an arbitrary partial amount. Distinguish protocol eligibility from legal authority; record the actual qualified approval without inventing a court order or signoff. Execute only under separate exact transaction authorization, and bind confirmation to transaction hash/result/ledger, not a status label. A CSV/SQL register is not immutable without an implemented access/audit storage design; confirmed ledger actions are not simply reverted by changing this register.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Clawback Case ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `CLAW-001` |
+| 1 | Clawback Case ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `CLAW-001` |
 | 2 | Asset Code | `text` | `VARCHAR(12)` | `string` | Text | `USDC` |
 | 3 | Issuer Account ID | `text` | `VARCHAR(56)` | `string` | Text | `GISS...` |
 | 4 | Target Account ID | `text` | `VARCHAR(56)` | `string` | Text | `GTGT...` |

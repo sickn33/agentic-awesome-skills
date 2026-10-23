@@ -10,6 +10,12 @@ date_added: "2026-02-27"
 
 Build anomaly detection applications using the Azure AI Anomaly Detector SDK for Java.
 
+## Service status
+
+Microsoft’s [retirement guidance](https://learn.microsoft.com/en-us/azure/ai-services/anomaly-detector/how-to/create-resource) states that new resources were disabled in September 2023 and service retirement was scheduled for October 2026. Treat these SDK fragments as historical/migration reference, not a path for a new cloud deployment. Verify the actual resource lifecycle and evaluate the documented Fabric/open-source alternatives before implementation.
+
+The snippets omit surrounding application/imports and are not a tested complete program. For asynchronous training/inference, poll terminal status with a deadline and handle failure before accessing results. Use approved data, short-lived least-privilege storage access and private reports; never expose SAS tokens.
+
 ## Installation
 
 ```xml
@@ -80,7 +86,7 @@ import java.util.List;
 
 List<TimeSeriesPoint> series = List.of(
     new TimeSeriesPoint(OffsetDateTime.parse("2023-01-01T00:00:00Z"), 1.0),
-    new TimeSeriesPoint(OffsetDateTime.parse("2023-01-02T00:00:00Z"), 2.5),
+    new TimeSeriesPoint(OffsetDateTime.parse("2023-01-02T00:00:00Z"), 2.5)
     // ... more data points (minimum 12 points required)
 );
 

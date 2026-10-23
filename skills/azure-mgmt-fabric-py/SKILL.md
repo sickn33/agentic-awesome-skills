@@ -42,7 +42,7 @@ client = FabricMgmtClient(
 
 ```python
 from azure.mgmt.fabric import FabricMgmtClient
-from azure.mgmt.fabric.models import FabricCapacity, FabricCapacityProperties, CapacitySku
+from azure.mgmt.fabric.models import FabricCapacity, FabricCapacityProperties, FabricCapacityAdministration, CapacitySku
 from azure.identity import DefaultAzureCredential
 import os
 
@@ -131,7 +131,7 @@ print(f"Updated SKU: {updated.sku.name}")
 
 ## Suspend Capacity
 
-Pause capacity to stop billing:
+Suspend only an approved capacity after assessing active workloads; verify the actual billing and commitment terms rather than promising all charges stop:
 
 ```python
 client.fabric_capacities.begin_suspend(
@@ -243,7 +243,7 @@ capacity = client.fabric_capacities.begin_create_or_update(...).result()
 poller = client.fabric_capacities.begin_create_or_update(...)
 while not poller.done():
     print(f"Status: {poller.status()}")
-    time.sleep(5)
+    time.sleep(5)  # import time before this optional manual polling fragment
 capacity = poller.result()
 ```
 

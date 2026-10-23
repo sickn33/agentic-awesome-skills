@@ -4,6 +4,8 @@
 
 ## Terraform Configuration
 
+This fragment omits the private endpoint/DNS and deployment principal data-plane role required before creating a secret with public access disabled. Pin a compatible provider and supply all referenced resources/data sources. Secret values can be stored in Terraform state even when marked sensitive: encrypt/restrict state and backups, avoid logging plans and use an approved secret-management workflow. A rotation=enabled tag does not configure rotation; an expiry timestamp is not credential rotation.
+
 ```hcl
 resource "azurerm_key_vault" "main" {
   name                        = "myapp-vault-prod"
@@ -53,7 +55,7 @@ resource "azurerm_role_assignment" "app_secrets_user" {
 |---------|-------|----------|
 | "Access denied" when reading secrets | Missing RBAC role or access policy | Assign `Key Vault Secrets User` role; or add access policy with `get` permission |
 | "Vault not found" | Network access restricted | Check firewall rules; enable private endpoint; add IP to allow list |
-| Soft-deleted secret blocks creation | Name collision with deleted secret | Recover and update, or purge the deleted secret first |
+| Soft-deleted secret blocks creation | Name collision with deleted secret | Recover and update, or verify recovery options; purge only with explicit irreversible-deletion authorization and when protection permits |
 | Managed identity cannot access vault | Identity not in correct scope | Verify identity principal ID; check role assignment scope matches vault |
 | Certificate renewal fails | Auto-renew policy not configured | Set `lifetimeActions` with `AutoRenew` action in certificate policy |
 | CSI driver fails to mount secrets | Wrong provider configuration | Verify `tenantId`, `userAssignedIdentityID`, and object names match exactly |

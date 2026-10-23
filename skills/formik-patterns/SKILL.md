@@ -18,6 +18,8 @@ Use this skill when you need formik form handling with validation patterns. Use 
 
 ## Basic Form Setup
 
+These are React Native-style/custom UI fragments: VStack/Input/Button, generated GraphQL hooks, schemas and navigation are project dependencies, not Formik exports. Web forms require DOM event/submit adapters. Client validation is UX only; validate/authenticate/authorize again on the server, redact mutation errors and never log passwords. `enableReinitialize` resets dirty edits when initial values change; prompt or merge deliberately before refreshing an edited record.
+
 ```tsx
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -281,13 +283,15 @@ const MultiStepForm = () => {
       address: '',
       city: '',
       // Step 3
-      cardNumber: '',
+      paymentMethodToken: '', // token from a payment provider’s hosted field; never raw card data
     },
     validationSchema: stepSchemas[step],
     onSubmit: async (values) => {
       if (step < steps.length - 1) {
         setStep(step + 1);
       } else {
+        // Validate the complete order schema here; step-only validation is insufficient.
+        await finalOrderSchema.validate(values, { abortEarly: false });
         await submitOrder(values);
       }
     },
@@ -307,7 +311,7 @@ const MultiStepForm = () => {
         )}
         <Button
           onPress={formik.handleSubmit}
-          isDisabled={!formik.isValid}
+          isDisabled={!formik.isValid || formik.isSubmitting}
           isLoading={formik.isSubmitting}
         >
           {step < steps.length - 1 ? 'Next' : 'Submit'}

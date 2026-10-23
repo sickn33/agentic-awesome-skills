@@ -16,6 +16,10 @@ Guide for creating, managing, and completing Conductor tracks - the logical work
 - Working with the tracks.md registry
 - Interpreting or updating track metadata
 
+## Host and persistence boundaries
+
+The slash commands below require a separately installed Conductor integration; no command implementation is bundled. Without it, prepare the documented files directly in the authorized repository rather than claim command execution. Use existing project conventions/task trackers, honor requests to keep plan files immutable, and require checkpoints only when the agreed workflow requires them. Shared registry/metadata writes need one owner and validation so parallel agents do not overwrite status. Validate track names and confine paths; reject traversal/symlinks outside the target. Revert only explicit reviewed task commits after preserving unrelated work; a track label alone does not make Git rollback transactional.
+
 ## Track Concept
 
 A track is a logical work unit that encapsulates a complete piece of work. Each track has:
@@ -72,7 +76,7 @@ Code improvement without behavior change. Use for:
 
 ## Track ID Format
 
-Track IDs follow the pattern: `{shortname}_{YYYYMMDD}`
+Track IDs follow the pattern: `{shortname}_{YYYYMMDD}`. Check the registry and directory first; if an ID exists, reuse the intended track or choose a documented unique suffix rather than overwrite it.
 
 - **shortname**: 2-4 word kebab-case description (e.g., `user-auth`, `api-rate-limit`)
 - **YYYYMMDD**: Creation date in ISO format
@@ -135,7 +139,7 @@ Examples:
 **Verify Progress**
 
 1. Complete verification tasks
-2. Wait for checkpoint approval
+2. Apply the agreed checkpoint approval policy
 3. Record checkpoint commits
 
 ### 3. Completion
@@ -387,9 +391,9 @@ Example:
 
 ### Completing a Phase
 
-1. Ensure all phase tasks are `[x]`
+1. Ensure all required tasks are verified complete; explicitly authorized skipped tasks retain their reason
 2. Complete verification tasks
-3. Wait for checkpoint approval
+3. Apply the agreed checkpoint approval policy
 4. Record checkpoint SHA
 5. Proceed to next phase
 

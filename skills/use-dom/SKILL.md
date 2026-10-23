@@ -65,7 +65,7 @@ export default function WebChart({
 1. **Must have `'use dom';` directive** at the top of the file
 2. **Single default export** — One React component per file
 3. **Own file** — Cannot be defined inline or combined with native components
-4. **Serializable props only** — Strings, numbers, booleans, arrays, plain objects
+4. **Serializable data props** — Strings, numbers, booleans, arrays, plain objects; supported async native-action callbacks are the explicit exception below
 5. **Include CSS in the component file** — DOM components run in isolated context
 
 ## The `dom` Prop
@@ -411,6 +411,8 @@ export default function HomeScreen() {
 | Web      | Rendered as-is (no webview wrapper) |
 
 On web, the `dom` prop is ignored since no webview is needed.
+
+Validate and authorize native bridge actions in the native handler, even when TypeScript types match; compromised web content must not gain arbitrary filesystem/network/account access. Restrict navigation and remote embeds, sanitize untrusted HTML, and keep secrets outside DOM props/bundles/logs. Web libraries still depend on target WebView APIs and bundler support, so “any web library” is not a compatibility guarantee. Keep test-only saveData logging free of personal content and verify all actual target platforms.
 
 ## Tips
 

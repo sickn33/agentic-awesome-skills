@@ -14,7 +14,7 @@ source_repo: Ranjeet2063/agentic-awesome-skills
 
 # Smart Contract Formal Verification
 
-**What it is:** Applies rigorous mathematical invariant proofs, symbolic execution engines, and property-based fuzz tests to verify smart contract safety.
+**What it is:** Records specification and verification evidence; this schema does not run a prover or establish smart-contract safety.
 
 ## Overview
 
@@ -36,9 +36,9 @@ Provides a standardized, auditable framework and data model for **Smart Contract
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Formal Spec ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `SPEC-001` |
+| 1 | Formal Spec ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `SPEC-001` |
 | 2 | Target Contract Module | `text` | `VARCHAR(64)` | `string` | Text | `vault_liquidity_engine` |
-| 3 | State Transition Property | `text` | `VARCHAR(128)` | `string` | Text | `Total Assets Equals Sum of Shares` |
+| 3 | State Transition Property | `text` | `VARCHAR(128)` | `string` | Text | `Assets Cover Liabilities Under Explicit Exchange-Rate Model` |
 | 4 | Verification Method | `select` | `VARCHAR(64)` | `string` | Select | `Foundry Invariant Fuzzing` |
 | 5 | Fuzz Runs Count | `number` | `INTEGER` | `number` | Number | `100000` |
 | 6 | Symbolic Execution Engine | `select` | `VARCHAR(32)` | `string` | Select | `Certora Prover` |
@@ -98,6 +98,8 @@ How do I configure and track Smart Contract Formal Verification for our producti
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+Fuzzing with no counterexample is bounded testing, not a mathematical proof. Record method/tool/version, source/WASM hash, specification, assumptions, solver result, timeout/bounds, harness and evidence artifact. Use Not Attempted/Inconclusive states where appropriate; never set Theorem Proved or Formally Verified from fuzz-run counts. Foundry/Certora/Halmos support depends on target/runtime; Soroban verification needs a compatible harness rather than assuming EVM tools execute WASM. Define units for each invariant; a universal currency tolerance can hide accounting errors.
 
 ## Best Practices
 

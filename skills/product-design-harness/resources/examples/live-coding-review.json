@@ -1,0 +1,121 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "live-coding-review-001",
+  "product_direction": "Add a visible save-state label to the note editor header.",
+  "mode": "quick_gate",
+  "stage": "prototype",
+  "actor_boundary": {
+    "target_population": [
+      "Workspace editors drafting internal notes"
+    ],
+    "operator": "Workspace editor",
+    "beneficiary": "Workspace editor",
+    "machine_actor": "Repository-aware coding agent",
+    "affected_people": [
+      "Workspace editors",
+      "Support team"
+    ],
+    "excluded_groups": [
+      "External collaborators",
+      "Public note viewers"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Notes Co.",
+    "project_owner": "Editor experience team",
+    "issuer": "Example Notes Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Workspace editors",
+      "effect": "They get clearer save-state feedback before leaving the editor."
+    },
+    {
+      "stakeholder": "Support team",
+      "effect": "They may receive fewer avoidable questions about whether notes were saved."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [],
+    "machine_supported_inputs": [
+      "Support ticket pattern",
+      "Session replay observation"
+    ],
+    "not_mechanized": [],
+    "approval_gates": []
+  },
+  "unresolved_assumptions": [
+    "The confusion comes from unclear save-state feedback rather than a real save failure.",
+    "A header label is noticeable enough without changing the editor workflow."
+  ],
+  "combined_verdict": "continue",
+  "weakest_flow": "evidence",
+  "strongest_signal": "Support tickets and replay observations both show editors hesitating around save-state confidence.",
+  "riskiest_claim": "One visible header label will reduce save-state confusion without implying a stronger persistence guarantee.",
+  "main_uncertainty": "Whether the label is noticeable enough to change behavior without overstating save guarantees.",
+  "confidence_level": "medium",
+  "evidence_tier": "t2",
+  "main_trade_off": "Ship a small reversible clarity improvement now while staying inside existing editor patterns and avoiding deeper workflow or persistence changes.",
+  "human_owned_decision": "none",
+  "human_decision_record_id": null,
+  "evidence_receipt_ids": [
+    "lc-support-save-state-001",
+    "lc-replay-exit-hesitation-001"
+  ],
+  "reviews": {
+    "user": {
+      "verdict": "continue",
+      "strongest_signal": "Editors ask whether edits are saved and pause before leaving the editor.",
+      "weakest_assumption": "The visible label addresses the actual moment of uncertainty.",
+      "missing_evidence": "Post-change hesitation and support-contact rate.",
+      "disconfirming_evidence": "Editors still pause or ask the same question after the label ships.",
+      "stop_condition": "A five-person comprehension check shows the label is misunderstood.",
+      "evidence_tier": "t2"
+    },
+    "evidence": {
+      "verdict": "continue",
+      "strongest_signal": "Two independent internal sources point to the same save-state uncertainty.",
+      "weakest_assumption": "The sampled sessions represent normal editor behavior.",
+      "missing_evidence": "A measured event for hesitation before leaving the editor.",
+      "disconfirming_evidence": "Instrumented sessions show no change in exit hesitation after the label.",
+      "stop_condition": "No measurement hook can distinguish label impact from normal editor use.",
+      "evidence_tier": "t2"
+    },
+    "business": {
+      "verdict": "continue",
+      "strongest_signal": "The change is low cost, reversible, and aligned with support reduction.",
+      "weakest_assumption": "Reducing save-state confusion is worth editor header attention.",
+      "missing_evidence": "Longer-term effect on support volume and editor trust.",
+      "disconfirming_evidence": "The label adds visual noise without reducing support contact or hesitation.",
+      "stop_condition": "The change requires persistence, permission, notification, or external delivery work.",
+      "evidence_tier": "t2"
+    }
+  },
+  "next_smallest_action": "Implement one save-state label in the editor header, keep current save behavior unchanged, and measure exit hesitation plus support-tag volume.",
+  "execution_boundary": {
+    "may_do": [
+      "Add one visible save-state label to the existing note editor header.",
+      "Use the current save state already available to the editor UI.",
+      "Add or preserve a measurement hook that can compare exit hesitation and save-state support-tag volume."
+    ],
+    "must_not_do": [
+      "expand scope or execute external irreversible actions"
+    ],
+    "must_ask": [
+      "new stakeholder, data, risk, or scope appears"
+    ]
+  },
+  "human_approval_gates": [],
+  "high_risk_actions": [],
+  "stop_conditions": [
+    "The implementation requires persistence, permission, notification, or external delivery changes.",
+    "A new stakeholder group is affected by the label.",
+    "The label implies a stronger save guarantee than the product can support."
+  ],
+  "context_pack_required": true
+}

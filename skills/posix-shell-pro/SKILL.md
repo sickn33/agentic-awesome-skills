@@ -35,6 +35,8 @@ date_added: '2026-02-27'
 - Minimalist approach using only POSIX-specified features
 - Compatibility with legacy systems and embedded environments
 
+Portability target: widely deployed POSIX.1-2017 shells unless the user explicitly selects POSIX.1-2024. Newer-standard features may be absent on legacy systems. Shell conformance and utility availability are separate; test both on target hosts.
+
 ## POSIX Constraints
 
 - No arrays (use positional parameters or delimited strings)
@@ -42,7 +44,7 @@ date_added: '2026-02-27'
 - No process substitution `<()` or `>()`
 - No brace expansion `{1..10}`
 - No `local` keyword (use function-scoped variables carefully)
-- No `declare`, `typeset`, or `readonly` for variable attributes
+- No `declare` or `typeset`; POSIX `readonly name=value` is supported
 - No `+=` operator for string concatenation
 - No `${var//pattern/replacement}` substitution
 - No associative arrays or hash tables
@@ -51,11 +53,11 @@ date_added: '2026-02-27'
 ## Approach
 
 - Always use `#!/bin/sh` shebang for POSIX shell
-- Use `set -eu` for error handling (no `pipefail` in POSIX)
+- Consider `set -eu`, while checking expected failures explicitly; `-e` has conditional/subshell exceptions. `pipefail` is standardized in POSIX.1-2024 but unavailable on many 2017-era shells
 - Quote all variable expansions: `"$var"` never `$var`
 - Use `[ ]` for all conditional tests, never `[[`
 - Implement argument parsing with `while` and `case` (no `getopts` for long options)
-- Create temporary files safely with `mktemp` and cleanup traps
+- Use `mktemp` only after checking it exists (not a POSIX.1-2017 utility); otherwise require a reviewed platform-specific secure temporary-directory strategy
 - Use `printf` instead of `echo` for all output (echo behavior varies)
 - Use `. script.sh` instead of `source script.sh` for sourcing
 - Implement error handling with explicit `|| exit 1` checks
@@ -98,12 +100,12 @@ date_added: '2026-02-27'
 - Quote all variable expansions to prevent word splitting
 - Validate file permissions before operations: `[ -r "$file" ] || exit 1`
 - Sanitize user input before using in commands
-- Validate numeric input: `case $num in *[!0-9]*) exit 1 ;; esac`
+- Validate numeric input: `case $num in ''|*[!0-9]*) exit 1 ;; esac`
 - Never use `eval` on untrusted input
 - Use `--` to separate options from arguments: `rm -- "$file"`
 - Validate required variables: `[ -n "$VAR" ] || { echo "VAR required" >&2; exit 1; }`
 - Check exit codes explicitly: `cmd || { echo "failed" >&2; exit 1; }`
-- Use `trap` for cleanup: `trap 'rm -f "$tmpfile"' EXIT INT TERM`
+- Use `trap` for cleanup: `trap 'rm -f "$tmpfile"' 0; trap 'exit 1' HUP INT TERM`
 - Set restrictive umask for sensitive files: `umask 077`
 - Log security-relevant operations to syslog or file
 - Validate file paths don't contain unexpected characters
@@ -140,8 +142,8 @@ date_added: '2026-02-27'
 Since POSIX sh lacks arrays, use these patterns:
 
 - **Positional Parameters**: `set -- item1 item2 item3; for arg; do echo "$arg"; done`
-- **Delimited Strings**: `items="a:b:c"; IFS=:; set -- $items; IFS=' '`
-- **Newline-Separated**: `items="a\nb\nc"; while IFS= read -r item; do echo "$item"; done <<EOF`
+- **Delimited Strings**: Prefer positional parameters. If splitting is intentional, disable pathname expansion, preserve/restore the original IFS (including unset state), and define empty-field behavior; do not reset IFS blindly to one space
+- **Newline-Separated**: use `while IFS= read -r item || [ -n "$item" ]; do printf '%s\n' "$item"; done < "$input_file"`; quoted `"a\nb"` contains literal backslashes, not newlines
 - **Counters**: `i=0; while [ $i -lt 10 ]; do i=$((i+1)); done`
 - **Field Splitting**: Use `cut`, `awk`, or parameter expansion for string splitting
 
@@ -159,7 +161,7 @@ Use `[ ]` test command with POSIX operators:
 ## CI/CD Integration
 
 - **Matrix testing**: Test across dash, ash, bash --posix, yash on Linux, macOS, Alpine
-- **Container testing**: Use alpine:latest (ash), debian:stable (dash) for reproducible tests
+- **Container testing**: Pin reviewed Alpine/Debian image digests for reproducible ash/dash tests; floating tags move
 - **Pre-commit hooks**: Configure checkbashisms, shellcheck -s sh, shfmt -ln posix
 - **GitHub Actions**: Use shellcheck-problem-matchers with POSIX mode
 - **Cross-platform validation**: Test on Linux, macOS, FreeBSD, NetBSD
@@ -229,7 +231,7 @@ Use `[ ]` test command with POSIX operators:
 - **shfmt**: Shell formatter with `-ln posix` option for POSIX syntax
 - **checkbashisms**: Detects bash-specific constructs in scripts (from devscripts)
 - **Semgrep**: SAST with POSIX-specific security rules
-- **CodeQL**: Security scanning for shell scripts
+- **Shell analysis coverage**: verify the analyzer actually supports shell; do not claim CodeQL shell coverage by default
 
 ### POSIX Shell Implementations for Testing
 - **dash**: Debian Almquist Shell - lightweight, strict POSIX compliance (primary test target)
@@ -257,12 +259,12 @@ Use `[ ]` test command with POSIX operators:
 - Using `function` keyword (ksh/bash syntax)
 - Using `$RANDOM` variable (not in POSIX)
 - Using `read -a` for arrays (bash-specific)
-- Using `set -o pipefail` (bash-specific)
+- Assuming `set -o pipefail` exists on legacy POSIX.1-2017 shells
 - Using `&>` for redirection (use `>file 2>&1`)
 
 ## Advanced Techniques
 
-- **Error Trapping**: `trap 'echo "Error at line $LINENO" >&2; exit 1' EXIT; trap - EXIT` on success
+- **Exit cleanup**: use `trap 'cleanup' 0`; preserve the original exit status when cleanup can fail. `$LINENO` and an exit trap that always prints an error are not portable error detection
 - **Safe Temp Files**: `tmpfile=$(mktemp) || exit 1; trap 'rm -f "$tmpfile"' EXIT INT TERM`
 - **Simulating Arrays**: `set -- item1 item2 item3; for arg; do process "$arg"; done`
 - **Field Parsing**: `IFS=:; while read -r user pass uid gid; do ...; done < /etc/passwd`
@@ -289,7 +291,7 @@ Use `[ ]` test command with POSIX operators:
 ## References & Further Reading
 
 ### POSIX Standards & Specifications
-- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) - Official POSIX.1-2024 specification
+- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html) - Official POSIX.1-2017 specification at this URL
 - [POSIX Utilities](https://pubs.opengroup.org/onlinepubs/9699919799/idx/utilities.html) - Complete list of POSIX-mandated utilities
 - [Autoconf Portable Shell Programming](https://www.gnu.org/software/autoconf/manual/autoconf.html#Portable-Shell) - Comprehensive portability guide from GNU
 

@@ -22,6 +22,8 @@ Before designing onboarding, establish:
 
 If the user's first win is unclear, ask before proceeding.
 
+Treat the cited mechanisms as design hypotheses, not guarantees or clinical assessment. Verify the full study and population before attributing a causal effect; the abbreviated citations here do not establish that every proposed UI tactic was tested. Measure first-win completion, time-to-value and voluntary return with consent; do not infer a user's mental state or claim a habit/identity shift from a completed screen.
+
 ## PSYCHOLOGICAL FRAMEWORK: IDENTITY-TO-HABIT ONBOARDING
 
 ### Mechanism

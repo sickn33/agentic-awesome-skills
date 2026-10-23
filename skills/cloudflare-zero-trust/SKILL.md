@@ -89,20 +89,16 @@ ingress:
   # Internal wiki
   - hostname: wiki.example.com
     service: http://localhost:8080
-    originRequest:
-      noTLSVerify: true
 
   # SSH access via browser
   - hostname: ssh.example.com
     service: ssh://localhost:22
 
-  # Private network access (CIDR routing)
-  - hostname: internal.example.com
-    service: http://10.0.0.0/24
-
   # Catch-all — required as the last rule
   - service: http_status:404
 ```
+
+Private CIDRs are routes, not HTTP origin URLs. Configure a Tunnel CIDR route and authorized Cloudflare One Client/split-tunnel policy through the [private-network guide](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/private-net/cloudflared/connect-cidr/).
 
 ### Run the Tunnel
 
@@ -154,6 +150,8 @@ networks:
 ```
 
 ## Access Policies
+
+A Tunnel does not itself add user authentication. Configure and test Access before exposing the hostname: unauthorized requests must fail, authorized identities must succeed, and direct origin access must be constrained. Protect generated service-token responses and pass secret headers through protected stdin/config rather than logged process arguments. Verify current plans, DNS endpoints, browser-SSH requirements and policy schemas; static examples may drift. See [Access policy evaluation](https://developers.cloudflare.com/cloudflare-one/access-controls/policies/).
 
 Access policies control who can reach applications behind Cloudflare.
 
@@ -340,7 +338,7 @@ cloudflared access ssh --hostname ssh.example.com
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | Tunnel shows `ERR` in dashboard | `cloudflared` not running or config error | Check `systemctl status cloudflared`; validate config YAML |
-| Access returns 403 despite correct identity | Policy order or missing require rule | Policies are evaluated top-to-bottom; ensure Allow is above Block |
+| Access returns 403 despite correct identity | Policy order or missing require rule | Check action precedence: Bypass/Service Auth first, then ordered Allow/Block; review the matched policy instead of blindly moving Allow above Block |
 | WARP shows "Unable to connect" | Team name wrong or enrollment disabled | Verify team name in Settings > General; check enrollment permissions |
 | Service token auth fails | Token expired or wrong headers | Regenerate token; use both `CF-Access-Client-Id` and `CF-Access-Client-Secret` |
 | DNS filtering not blocking | Client not using Gateway DNS resolvers | Verify DNS is set to 172.64.36.1; check WARP is connected |

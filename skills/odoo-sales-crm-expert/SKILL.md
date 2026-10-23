@@ -25,6 +25,10 @@ This skill helps you configure and optimize Odoo Sales and CRM. It covers opport
 2. **Configure**: Receive step-by-step Odoo setup instructions.
 3. **Optimize**: Get recommendations for improving pipeline velocity and deal closure rate.
 
+## Version and write scope
+
+Confirm the deployed Odoo version, edition, installed modules and target company. Menus and feature availability vary. Use a test database for pricing, assignment and quotation changes; do not send quotations, take payments or confirm orders without the corresponding authority. Percentages and prices below are business examples, not measured forecasts.
+
 ## Examples
 
 ### Example 1: Configure CRM Pipeline Stages
@@ -41,10 +45,12 @@ Typical B2B Pipeline:
   Stage 6: Lost              (mark as lost via the "Mark as Lost" button)
 
 Tips:
-  - Enable "Rotting Days" in CRM Settings to flag stale deals in red
-  - In Odoo 16+, Predictive Lead Scoring (AI) auto-updates probability
-    based on historical data. Disable it in Settings if you prefer manual
-    stage-based probability.
+  - Review overdue activities/unattended leads using the reporting options
+    available in your version; do not assume a "Rotting Days" setting exists.
+  - In Odoo 19, predictive scoring is always active. Manually editing an
+    opportunity probability overrides automatic updates for that opportunity;
+    the AI icon restores automatic probability. Stage percentages above are
+    illustrative, not a built-in stage-probability configuration.
 ```
 
 ### Example 2: Create a Quotation Template
@@ -100,11 +106,13 @@ Assign to a customer:
 - ✅ **Do:** Use **Quotation Templates** to standardize offers and reduce quoting time across the team.
 - ❌ **Don't:** Skip the CRM opportunity when selling — going directly from lead to invoice breaks pipeline analytics.
 - ❌ **Don't:** Manually edit prices on quotation lines as a workaround — set up proper pricelists instead.
-- ❌ **Don't:** Ignore the **Predictive Lead Scoring** feature in v16+ — configure it with historical data for accurate forecasting.
+- Review predictive scoring variables and historical data quality; compare forecasts with actual outcomes rather than assuming accuracy.
 
 ## Limitations
 
-- **Commission rules** are not built into Odoo CRM out of the box — they require custom development or third-party modules.
+- Odoo 19 documents a **Commissions** feature in Sales; check the installed edition/modules before assuming custom development is required.
 - The **Quotation Template** optional product feature requires the **Sale Management** module; it is not available in the base `sale` module.
-- **Territory-based lead assignment** (geographic routing) requires custom rules or the Enterprise Leads module.
+- Rule-based assignment can use team/member domains; confirm available geographic fields and test overlapping rules before enabling repeated assignment.
 - Odoo CRM does not have native **email sequence / cadence** automation — use the **Email Marketing** or **Marketing Automation** modules for drip campaigns.
+
+References: [Odoo 19 predictive scoring and assignment](https://www.odoo.com/documentation/19.0/applications/sales/crm/track_leads/lead_scoring.html), [Odoo 19 Sales commissions](https://www.odoo.com/documentation/19.0/applications/sales/sales/commissions.html).

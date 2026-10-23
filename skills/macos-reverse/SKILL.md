@@ -80,6 +80,6 @@ otool -L target
 ## Limitations
 
 - Apple Silicon and hardened runtime add unpacking complexity.
-- Some analysis requires disabling SIP in a dedicated lab VM.
+- Do not disable SIP or other protections on the user’s working Mac as a routine debugging step. If dynamic analysis requires a different security posture, use a separately approved disposable lab and record its limitations; start with static signature, dependency and entitlement inspection.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).

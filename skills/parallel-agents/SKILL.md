@@ -91,6 +91,8 @@ Agents: security-auditor → penetration-tester → synthesis
 
 ---
 
+Agent names and model assignments below are illustrative upstream roles, not bundled definitions or guaranteed built-ins. Discover the actual host tools/installed agents and respect its delegation permissions. Pass the relevant context explicitly, assign disjoint files/worktrees and clear output contracts, and reserve shared edits/integration to one owner. Active testing/deployment never inherits authorization merely from delegation.
+
 ## Available Agents
 
 | Agent | Expertise | Trigger Phrases |
@@ -160,7 +162,7 @@ After all agents complete, synthesize:
 
 ## Best Practices
 
-1. **Available agents** - 17 specialized agents can be orchestrated
+1. **Available agents** - Use only roles actually installed or supported by the host
 2. **Logical order** - Discovery → Analysis → Implementation → Testing
 3. **Share context** - Pass relevant findings to subsequent agents
 4. **Single synthesis** - One unified report, not separate outputs
@@ -170,7 +172,7 @@ After all agents complete, synthesize:
 
 ## Key Benefits
 
-- ✅ **Single session** - All agents share context
+- ✅ **Coordinated session** - Share only relevant context explicitly; inheritance varies by host
 - ✅ **AI-controlled** - Claude orchestrates autonomously
 - ✅ **Native integration** - Works with built-in Explore, Plan agents
 - ✅ **Resume support** - Can continue previous agent work

@@ -32,7 +32,7 @@ Generate a fully customized, client-ready GEO service proposal that:
 1. Pulls findings directly from the prospect's GEO audit
 2. Translates technical gaps into business pain points
 3. Presents 3 service tiers with clear pricing
-4. Includes a realistic ROI projection
+4. Includes clearly labeled scenarios only when measured inputs support them
 5. Outputs a professional markdown document ready to send
 
 ---
@@ -51,6 +51,8 @@ Generate a fully customized, client-ready GEO service proposal that:
 ```
 
 ---
+
+This is a draft generator, not a validated scoring/ROI model or authority to contact a prospect. Use observed audit evidence with source/time/scope, separate unknowns and proposals, and leave agency capabilities, prices, terms and case claims unfilled unless confirmed. GEO scores are internal heuristics, not platform scores or proven revenue predictors. Do not select an expensive package solely from an unvalidated score. Preserve existing files and update prospect records only when that local workflow is requested.
 
 ## Workflow
 
@@ -109,9 +111,7 @@ Our GEO audit of [DOMAIN], conducted on [DATE], reveals a GEO Readiness Score
 of **[SCORE]/100 ([TIER LABEL])**.
 
 This means your website currently has [TIER DESCRIPTION — use score interpretation table].
-As AI-powered search (ChatGPT, Google AI Overviews, Perplexity) now influences
-**[X]% of online discovery** and is growing at 527% year-over-year, this gap
-represents a measurable risk to your pipeline.
+[Describe a measured audience/search change with its dated source and relevant scope. If evidence is unavailable, state that the business impact is unquantified.]
 
 The three most urgent issues are:
 1. **[CRITICAL FINDING 1]** — [Business impact in one sentence]
@@ -119,36 +119,15 @@ The three most urgent issues are:
 3. **[CRITICAL FINDING 3]** — [Business impact in one sentence]
 
 We recommend the **[TIER NAME] package** at **€[PRICE]/month**, which addresses
-all critical issues within 90 days and positions [COMPANY] as an AI-visible
-authority in [INDUSTRY].
+the agreed findings and deliverables on a confirmed schedule; search outcomes remain uncertain.
 
 ---
 
 ## The Opportunity: Why GEO Matters for [COMPANY NAME]
 
-### The AI Search Shift Is Already Happening
+### Evidence for the Opportunity
 
-| Metric | Value |
-|--------|-------|
-| AI-referred traffic growth (2025) | +527% YoY |
-| AI traffic conversion vs. organic | 4.4x higher |
-| ChatGPT weekly active users | 900M+ |
-| Google AI Overviews monthly reach | 1.5B users, 200+ countries |
-| Gartner: traditional search traffic drop by 2028 | -50% |
-| Marketers investing in GEO today | Only 23% |
-
-**First-mover advantage is real.** Companies that invest in GEO now will
-capture the AI search channel before competitors do.
-
-### Your Current Position
-
-| Metric | [COMPANY] | Industry Average | Top Performers |
-|--------|-----------|------------------|----------------|
-| GEO Score | [SCORE]/100 | 45/100 | 75+/100 |
-| AI Crawlers Allowed | [X]/14 | 8/14 | 14/14 |
-| Brand Mentions (AI platforms) | [STATUS] | Moderate | High |
-| Schema Coverage | [STATUS] | Partial | Complete |
-| llms.txt | [Yes/No] | 12% have it | 78% have it |
+[Use dated primary sources and client analytics with comparable windows. Do not invent market growth, conversion multipliers, industry averages, crawler counts or llms.txt adoption rates. Google does not require llms.txt for Search; its existence is not proof of AI visibility.]
 
 ---
 
@@ -184,7 +163,7 @@ We offer three engagement models based on the scope of optimization needed.
 
 ---
 
-### BASIC — €2,500/month
+### BASIC — [CONFIRMED PRICE]/month
 *Best for: Sites with score 61-75 needing targeted improvements*
 
 **What's included:**
@@ -195,12 +174,11 @@ We offer three engagement models based on the scope of optimization needed.
 - llms.txt creation and maintenance
 - Email support (48-hour response)
 
-**Estimated GEO score improvement:** +10-20 points in 6 months
 **Contract:** Minimum 6 months
 
 ---
 
-### STANDARD — €5,000/month ⭐ Recommended for [COMPANY]
+### STANDARD — [CONFIRMED PRICE]/month
 *Best for: Sites with score 40-60 needing structured monthly work*
 
 **Everything in Basic, plus:**
@@ -212,12 +190,11 @@ We offer three engagement models based on the scope of optimization needed.
 - E-E-A-T improvements (author pages, credentials, freshness signals)
 - Slack channel for fast communication (24-hour response)
 
-**Estimated GEO score improvement:** +25-40 points in 6 months
 **Contract:** Minimum 6 months
 
 ---
 
-### PREMIUM — €9,500/month
+### PREMIUM — [CONFIRMED PRICE]/month
 *Best for: Sites with score 0-40 with critical issues, or competitive industries*
 
 **Everything in Standard, plus:**
@@ -229,29 +206,13 @@ We offer three engagement models based on the scope of optimization needed.
 - Dedicated account manager
 - Priority support (4-hour response)
 
-**Estimated GEO score improvement:** +40-60 points in 6 months
 **Contract:** Minimum 12 months
 
 ---
 
-## ROI Projection for [COMPANY NAME]
+## Scenario Analysis for [COMPANY NAME]
 
-Based on your current GEO score of [SCORE]/100 and industry benchmarks:
-
-| Scenario | 6-Month Score | AI Traffic Increase | Est. Additional Value/Month |
-|----------|--------------|--------------------|-----------------------------|
-| No action | [SCORE + 2]/100 | +5% (organic growth) | €[LOW] |
-| Basic package | [SCORE + 15]/100 | +30-40% | €[MED] |
-| Standard package | [SCORE + 32]/100 | +60-90% | €[HIGH] |
-| Premium package | [SCORE + 50]/100 | +100-150% | €[VERY HIGH] |
-
-**Assumptions:**
-- Based on estimated [X] monthly organic visitors to [DOMAIN]
-- AI search is projected to drive 25-40% of organic discovery by end of 2026
-- AI-referred traffic converts at 4.4x the rate of regular organic traffic
-- Calculations use conservative estimates — actual results may vary
-
-**Payback period (Standard package):** [X] months based on current traffic
+[If measured inputs are available, define baseline traffic, qualified conversions, attributable margin/value, total costs, scenario assumptions and time window. Show low/base/high scenarios and sensitivity without claiming causation or guaranteed improvement. If inputs are absent, omit numeric ROI/payback and propose a bounded measurement pilot. Never convert heuristic score points into traffic or revenue.]
 
 ---
 
@@ -261,20 +222,17 @@ Based on your current GEO score of [SCORE]/100 and industry benchmarks:
 - Kick-off call and onboarding (Week 1)
 - Full technical audit + baseline metrics capture
 - Quick wins implementation: robots.txt, schema, llms.txt, meta descriptions
-- Expected score improvement: +5-10 points
 
 ### Month 2-3 — Optimization
 - Content citability rewrites (top 10 pages)
 - E-E-A-T improvements: author pages, credentials, dates
 - Platform-specific optimization (Google AIO, ChatGPT, Perplexity)
 - Brand presence: LinkedIn, Wikipedia/Wikidata groundwork
-- Expected score improvement: +15-25 points cumulative
 
 ### Month 4-6 — Authority Building
 - Brand mention campaigns (Reddit, industry sites, YouTube)
 - Topical authority content strategy
 - Monthly reports showing score improvements
-- Expected score improvement: +30-45 points cumulative
 
 ### Month 6 — Review
 - Full re-audit with before/after comparison
@@ -288,10 +246,12 @@ Based on your current GEO score of [SCORE]/100 and industry benchmarks:
 - **GEO specialists**: We focus exclusively on AI search optimization, not traditional SEO agencies adapting to GEO
 - **Transparent reporting**: Monthly reports show exactly what changed and why
 - **No lock-in beyond minimum**: Month-to-month after initial commitment
-- **Proven methodology**: 11-dimension GEO audit covering all major AI platforms
-- **Fast results**: Quick wins visible within 30 days
+- **Methodology**: [Describe the actual reviewed audit scope and limitations]
+- **Measurement**: [Define observed deliverables separately from uncertain search outcomes]
 
 ---
+
+All package capacities, prices and terms below are illustrative and must be replaced or removed using confirmed provider commitments before delivery.
 
 ## Investment Summary
 

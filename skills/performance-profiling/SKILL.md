@@ -12,7 +12,7 @@ date_added: "2026-02-27"
 
 ## 🔧 Runtime Scripts
 
-**Execute these for automated profiling:**
+Inspect this bundled helper as code before use and run only against an authorized URL. Lighthouse launches a browser and can load third-party resources; lab scores do not establish field Core Web Vitals. The helper reports command/JSON failures and unavailable scores separately; inspect the returned error and do not treat an unavailable category as a zero score.
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
@@ -124,7 +124,7 @@ date_added: "2026-02-27"
 | Priority | Action | Impact |
 |----------|--------|--------|
 | 1 | Enable compression | High |
-| 2 | Lazy load images | High |
+| 2 | Lazy load offscreen images; keep the LCP image eager | Workload-dependent |
 | 3 | Code split routes | High |
 | 4 | Cache static assets | Medium |
 | 5 | Optimize images | Medium |

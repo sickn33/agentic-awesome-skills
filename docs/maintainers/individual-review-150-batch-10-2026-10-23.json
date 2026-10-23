@@ -1,0 +1,3205 @@
+{
+  "batch": 10,
+  "base": "dee7acce0658c35cb276154892700811affcfdb2",
+  "worktree": "/Users/nicco/.codex/worktrees/catalog-review-150-10/antigravity-awesome-skills",
+  "branch": "codex/individual-review-150-batch-10",
+  "completed": [
+    {
+      "id": "aws-s3",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-s3/SKILL.md",
+          "before_sha256": "eaaed2490f804f341a25af41270d33d8cebbb4f646d0c42c1296670436b7a8da",
+          "after_sha256": "53e547fa081aeb91543aaebe84504e77f52d5647938a7bb11611f97a4ab21073",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected GET-only presigning and nonexistent CLI upload signing; removed false gzip metadata; added configuration-replacement/lockout and destructive operation boundaries.",
+      "limitations": "AWS CLI primary presign reference checked; lifecycle 7-day transition remains valid under July 2026 change.",
+      "sources": [
+        "https://docs.aws.amazon.com/cli/latest/reference/s3/presign.html"
+      ]
+    },
+    {
+      "id": "database-migration",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/database-migration/SKILL.md",
+          "before_sha256": "5461da7d0aaf2075dea9d8da92e9ff5a581804f496e0f171cbc6f1062f871da7",
+          "after_sha256": "18562215a0b2fcd8ee6f9c691bf972f2ddce8d9d9c766dc52b1307e9ccb84d15",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed destructive table-copy automatic restoration; qualified locking, concurrent-write and lossy transformation examples; retained useful ORM examples.",
+      "limitations": "Examples reviewed as inert source only; database-specific rollback/locking not certified.",
+      "sources": [
+        "Inline SQL semantics; no external supporting files bundled."
+      ]
+    },
+    {
+      "id": "azure-resource-manager-durabletask-dotnet",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-resource-manager-durabletask-dotnet/SKILL.md",
+          "before_sha256": "a4d2c7440d7a32bf2a21b0fc9e947252fcc203308d73d7c67a8b01fb1bab9357",
+          "after_sha256": "cd9daded8f020f09fc4862719d9e3b7b55326a44d7b671c5c378b58856f1ad7b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed stale latest-version claim, separated cleanup from complete example, stopped classifying every 409/404 as one cause.",
+      "limitations": "Historical snippets require package-pinned compilation; current reference reports 1.1.0 and newer API.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/dotnet/api/azure.resourcemanager.durabletask.durabletaskschedulerresource?view=azure-dotnet"
+      ]
+    },
+    {
+      "id": "seo-aeo-meta-description-generator",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/seo-aeo-meta-description-generator/SKILL.md",
+          "before_sha256": "47939bab1732bb8ef96da93f2a30006ab9b0a1c8ee386346fcced62d9048d999",
+          "after_sha256": "e34e15f84c698453f4c106f247613b33849568883a4e8958d1aac45babf4408c",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified false hard character limits and unsupported penalty claims; required evidence for power words and escaped HTML attributes.",
+      "limitations": "No CTR improvement or social preview certification.",
+      "sources": [
+        "https://developers.google.com/search/docs/appearance/snippet"
+      ]
+    },
+    {
+      "id": "todoist-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/todoist-automation/SKILL.md",
+          "before_sha256": "eeeea2d42b62fd73266d89105f9bbac63d1645c115c56e073fb615782523ec4d",
+          "after_sha256": "e065ff9a086cdf63c1b67ea13c15582edd3744b96e0da6b1e3025ab1f72c30d0",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected no-pagination assertions and numeric-ID fallback; required schema discovery, scoped mutations and unknown-write reconciliation.",
+      "limitations": "Rube schemas not executed; historical slugs require live discovery.",
+      "sources": [
+        "https://developer.todoist.com/api/v1/"
+      ]
+    },
+    {
+      "id": "swiftui-liquid-glass",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/swiftui-liquid-glass/SKILL.md",
+          "before_sha256": "87ea1108516bd87e124e6b8ef12b27459de4d933eea1b3f789f21545f2d67a82",
+          "after_sha256": "87ea1108516bd87e124e6b8ef12b27459de4d933eea1b3f789f21545f2d67a82",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/swiftui-liquid-glass/agents/openai.yaml",
+          "before_sha256": "c0558fe64c07f3cef63a002c4dacaf32fd9424700356d2fdc1262a2b27481e56",
+          "after_sha256": "c0558fe64c07f3cef63a002c4dacaf32fd9424700356d2fdc1262a2b27481e56",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/swiftui-liquid-glass/references/liquid-glass.md",
+          "before_sha256": "76b075006934bd4bdba7df53fa046502db3c2f6cc3d383d58e56bff308468608",
+          "after_sha256": "1a0c1ad226cdca543107b388038c7878b2f0e3438a729835edce2ab0563e2314",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced incorrect background example and unverified scrolling modifier with Apple documented backgroundExtensionEffect; added availability note.",
+      "limitations": "SDK compilation and native accessibility not executed.",
+      "sources": [
+        "https://developer.apple.com/documentation/SwiftUI/View/backgroundExtensionEffect()"
+      ]
+    },
+    {
+      "id": "interactive-portfolio",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/interactive-portfolio/SKILL.md",
+          "before_sha256": "25793becaa0bdfb8b9fd5b14d3389af01bc95f4ebb06493509db142f34229535",
+          "after_sha256": "e8c0776af1a66332746b0c37796fe8c7e2f1f8f77189d82ec5b0d25db29506b3",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/interactive-portfolio/references/detailed-guide.md",
+          "before_sha256": "2435b7e6d00fc089308da859fbb4ac66c1cf339eaa434e14e35558205a38f06e",
+          "after_sha256": "80d52173714085a4d15c8ab722b75e2919b62ad58236fce917c761cd8bb4168d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified invented traffic/reviewer timing facts; required evidence for outcome metrics, accessibility and authorized publication.",
+      "limitations": "No conversion or hiring guarantee; supporting guide fully read.",
+      "sources": [
+        "Declared Apache upstream attribution preserved, not independently verified."
+      ]
+    },
+    {
+      "id": "marketplace-rbac-audit",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/marketplace-rbac-audit/SKILL.md",
+          "before_sha256": "5111b701c4afa8d170bbf96dba080897228c5f0bbed7e8ae5b55ead850f6f456",
+          "after_sha256": "5111b701c4afa8d170bbf96dba080897228c5f0bbed7e8ae5b55ead850f6f456",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No actionable source defect identified. Read-only authorization matrix, synthetic negative tests, evidence distinctions and limitations are coherent.",
+      "limitations": "No live authorization testing or provenance verification performed.",
+      "sources": [
+        "Self attribution preserved."
+      ]
+    },
+    {
+      "id": "context-compression",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/context-compression/SKILL.md",
+          "before_sha256": "9a529146ead9a8ad17183923add52923cfdd90e7e62b2328b5b956dc187d21cf",
+          "after_sha256": "b2fcbdb2f1d8661ef1d61f5b1d027ebaf9ed971742413686b4ecac1f726b50cb",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed unsupported benchmark numbers and universal compression guarantees; retained structured procedure, examples, probes and source attribution.",
+      "limitations": "Historical research titles unverified; no comparative benchmark claimed.",
+      "sources": [
+        "Declared research references retained as pointers only."
+      ]
+    },
+    {
+      "id": "web3-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/web3-testing/SKILL.md",
+          "before_sha256": "535e97b08cf181ed317c3c388678737c0c87c0a1822050c06afae258b50510ae",
+          "after_sha256": "7c7d7ce55a7c65da5287bf671aaf1e86d1d4ef96ffae92a53f0a14edbc7becc4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed unbound fixture variables and missing metadata interface; replaced obsolete testFail naming, removed Goerli credentials and obsolete CI example; bounded legacy toolchain and local fork scope.",
+      "limitations": "Requires project contracts and version-pinned compilation; inert examples not runtime-certified.",
+      "sources": [
+        "Local lexical/semantic inspection; historical toolchain explicitly qualified."
+      ]
+    },
+    {
+      "id": "feature-flags",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/feature-flags/SKILL.md",
+          "before_sha256": "6dc76e72ef75c4e8ee872a814a3775812502360fd8d42981400f3daf71635d92",
+          "after_sha256": "37678be53fdfb77a5d8df9152a82fd294d69f8f6f4e6c945028fe1110ab488e4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/feature-flags/references/details.md",
+          "before_sha256": "4dc7e07cc2bd333dec3c754a86130e94d36778bee4b90729aad1fbb750d0aae1",
+          "after_sha256": "caab055e0b7f523cdcca766c413afd90da69ea96951e3582e15fe2083e90b1fe",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Clarified flags are not authorization, scoped local demo and credentials, fixed React null client and bytes assertion, labeled incomplete helpers.",
+      "limitations": "SDK/API snippets historical and require compilation; support tracking assumes extra model fields.",
+      "sources": [
+        "Inline semantics; declared MIT source preserved."
+      ]
+    },
+    {
+      "id": "evolution",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/evolution/SKILL.md",
+          "before_sha256": "fbe6f5fb68abe611a14f8147ddf990b55c42aceedca22513847f1f9c470f86a0",
+          "after_sha256": "1773e41b2e0c9c557395ac318e4879fa5610490feda23707ab46a1cd30c248db",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bound self-modification and hook installation to requested scope, disabled unreviewed mutable installer execution, qualified branch stability.",
+      "limitations": "Hook scripts not bundled or runtime-certified.",
+      "sources": [
+        "Declared upstream pointers preserved."
+      ]
+    },
+    {
+      "id": "inngest",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/inngest/SKILL.md",
+          "before_sha256": "9bffd148d1dd2d790a506c793809b161a73eed56d3655cea8a847d771315a161",
+          "after_sha256": "949f1e64d1d412bb7e21409cde3da2fd5ca716015275057ae1dd061162834daf",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Raised none risk to critical for charges/emails/deployments; added missing EventSchemas import, authoritative order amount and provider idempotency, webhook verification and durable privacy boundaries.",
+      "limitations": "Version-pinned adapters/SDK required; no payment or runtime test performed.",
+      "sources": [
+        "Inline semantics; external API shapes not certified."
+      ]
+    },
+    {
+      "id": "observability-and-instrumentation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/observability-and-instrumentation/SKILL.md",
+          "before_sha256": "3afed1cb35aee20e54e8da2dcc5fabbe07e5cad2cb8d432d73db5d75be8b4775",
+          "after_sha256": "a13847d0628be3a1e15d9f1658a5d19d76a566f4c7529e68c638856afae0fe04",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/observability-and-instrumentation/references/observability-checklist.md",
+          "before_sha256": "7cff2bfedeffd679e3c79f3378d5e4ac19345e5a49af96b51dddaea07e3c7269",
+          "after_sha256": "7cff2bfedeffd679e3c79f3378d5e4ac19345e5a49af96b51dddaea07e3c7269",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected tail-after-head error retention guarantee, scoped alert tests and qualified universal alert/average guidance.",
+      "limitations": "Checklist and entire skill read; no telemetry transmitted.",
+      "sources": [
+        "Supporting checklist already documents head-sampling loss."
+      ]
+    },
+    {
+      "id": "docs-as-marketing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/docs-as-marketing/README.md",
+          "before_sha256": "050885eaa198da22ea536ac3eaf1ae03e22b307df10c88ef9e483cda298f0f31",
+          "after_sha256": "050885eaa198da22ea536ac3eaf1ae03e22b307df10c88ef9e483cda298f0f31",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/docs-as-marketing/SKILL.md",
+          "before_sha256": "bb33acf60b85c5732783c780077f736f0154778c0a8f238adee47db252d83144",
+          "after_sha256": "90cf4592104289ad079a42e468796d4f0fc9302816161f83e0c5e2805dbfff97",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed broken signup URL and obsolete Node floor, moved secrets to environment, bounded real SMS and recording, qualified five-minute benchmark.",
+      "limitations": "Read README too; no billing/send/analytics actions executed.",
+      "sources": [
+        "Historical provider example; verified user scope required."
+      ]
+    },
+    {
+      "id": "gitops-workflow",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/gitops-workflow/SKILL.md",
+          "before_sha256": "0b227d0838c72a41bb4692bfa40818da55cb51194e291b051c43e190c10e7419",
+          "after_sha256": "82e90542778f8e97ff7e22f2f78d30b45bf612a8ed65c8b89fcb957dac30930b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/gitops-workflow/references/argocd-setup.md",
+          "before_sha256": "062bd19f9d4ca7e7ca9ccc1fd63cd5d9cf3898f60a5b5c30c140c45f2373e481",
+          "after_sha256": "a3906ef4d89ede30773528dc19a18bba6b87132662125f886760b7163fb5f8ef",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/gitops-workflow/references/sync-policies.md",
+          "before_sha256": "56b65cf0cef633d87272a1fa1b7ea8bc53ac06073496330dea6f04c5bfe60c68",
+          "after_sha256": "194629410522fc858d7e4b049ad3f7da944d02bd719ca9d0f417fdb5f7590f17",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced mutable remote kubectl applies, bounded secrets and auto-prune/force operations, qualified fragments and immutable prerequisites across three files.",
+      "limitations": "No cluster access or controller/version validation performed.",
+      "sources": [
+        "Inert manifests and credential-flow inspection."
+      ]
+    },
+    {
+      "id": "sql-injection-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/sql-injection-testing/SKILL.md",
+          "before_sha256": "2c0efec993cae41be9307a0661d6be6637def7ac3321a6a1f1bd5c643e8df962",
+          "after_sha256": "6a265d59e7d63af0bc68c19cdf86bb8874ab1b307d8d9b8983534fd703fcdda0",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected MySQL-specific DATABASE() mislabeled MSSQL, qualified parser-specific bypasses and single-sample timing confirmation, bounded OOB receivers and delays.",
+      "limitations": "Offensive payloads not executed; retained written-authorization gate.",
+      "sources": [
+        "SQL dialect semantics; historical payload compatibility unverified."
+      ]
+    },
+    {
+      "id": "monday-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/monday-automation/SKILL.md",
+          "before_sha256": "a86ea1c9fbf5854d0a612e22e8bd69d1256f3e8c45efd334f167aa7c90c3d7da",
+          "after_sha256": "a930939eb9c2d03beec4d321f36d276ad7b76fa2a61340fa3474ec2ed5f4ba4a",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Scoped authenticated setup, schema discovery, exact returned identifiers, comments, bulk and raw GraphQL mutations; disabled invented missing-label default reliance.",
+      "limitations": "Connector schemas and service response limits not runtime-certified.",
+      "sources": [
+        "Declared community attribution preserved."
+      ]
+    },
+    {
+      "id": "hunt-source-leak",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/hunt-source-leak/SKILL.md",
+          "before_sha256": "3e37dd4daf79ad96fb60c4f258cd94eb24359ca01e7b998954afc16fb6f33e2c",
+          "after_sha256": "cdd91d383815e4e8a38c286a53bf6a9f1274f87c49fd6bd8dd6768dc85561f55",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed PATH clobbering loops; removed path-trusting sourcemap writer; qualified impact, soft-404, mutable assets and wildcard HTTP examples; bounded private evidence and credential use.",
+      "limitations": "No target probed; historical report_count/provenance claims unverified and labeled.",
+      "sources": [
+        "Inert shell/Python inspection."
+      ]
+    },
+    {
+      "id": "file-path-traversal",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/file-path-traversal/SKILL.md",
+          "before_sha256": "c0678ffa7f316e173ebdd84d808ec941d440c8e21b7666bb16ea123efe4c2961",
+          "after_sha256": "29e48c5dc84b19a03f33b37bb8e2f48df59ca5da731d4682c529c51c0c156921",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed unsafe prefix-check/include prevention code; supplied path-component containment sketch with symlink/race and authorization limits; qualified parser and RCE prerequisites.",
+      "limitations": "No runtime or target tests; host filesystem races require specialized handling.",
+      "sources": [
+        "Inert Python/PHP semantics."
+      ]
+    },
+    {
+      "id": "hunt-springboot",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/hunt-springboot/SKILL.md",
+          "before_sha256": "49044f7bec12e3363f1bd6fc7d3e2d676671913a6444ac69fbd55ddc1190ea0a",
+          "after_sha256": "1eb0b06734a375d6ad99019bba42c149452e9f0df63ac4bcefec1f13dc491cca",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bound heap capture/stateful exploit steps, fixed duplicated actuator paths and JSON/arithmetic false-positive claims.",
+      "limitations": "No target execution; historical report counts unverified.",
+      "sources": [
+        "https://spring.io/security/cve-2022-22965/"
+      ]
+    },
+    {
+      "id": "aws-serverless-eda",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-serverless-eda/SKILL.md",
+          "before_sha256": "88aeaaec47dade7fe9c1d91ad64d69fbca497f1364e5d7caed29a34f9da0053a",
+          "after_sha256": "d6cabaee616cc3bc3884f3abe2b2e6fbf6e173fd32f899e24aad5ca73395f16f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed auto-loaded dependency fiction, disclosed absent references and racing idempotency sketch, documented partial-batch prerequisites.",
+      "limitations": "No AWS deployment; inline sketches require adapters and conditional state.",
+      "sources": [
+        "https://docs.aws.amazon.com/powertools/typescript/latest/features/idempotency/"
+      ]
+    },
+    {
+      "id": "azure-storage-blob-ts",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-storage-blob-ts/SKILL.md",
+          "before_sha256": "3fca410164091fc7ba8e24beea07670f36b21ee4a4cd4bdebb49eb317f8daa01",
+          "after_sha256": "23ac7160e62681d9b805ff39fa621bffe4a059ebd27b889042c456e69c009f27",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected browser stream claim, reduced broad SAS examples and qualified versions/lifecycle; bounded overwrites and key exposure.",
+      "limitations": "No live account or SDK compilation performed.",
+      "sources": [
+        "Inert Node/browser API review; historical SDK snippets explicitly qualified."
+      ]
+    },
+    {
+      "id": "launch-strategy",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/launch-strategy/SKILL.md",
+          "before_sha256": "3f405d1ccf2bebe2b62334dc05b4541549c59725a3916c6211204b6ea03bbd46",
+          "after_sha256": "18e10ae1d74098262218369dace8336359dfc212cb861319d6accc0b48528882",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bound publications, outreach, paid offers and tracking; qualified unverified numeric case studies and owned-channel autonomy.",
+      "limitations": "Planning review only; historical case outcomes not validated.",
+      "sources": [
+        "Community attribution retained; historical examples labeled unverified."
+      ]
+    },
+    {
+      "id": "firewall-config",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/firewall-config/SKILL.md",
+          "before_sha256": "a6b14255703af389c22c66947f7cc29f5e9f2aed1ec5aa225f41fecdff3ed7a2",
+          "after_sha256": "243f74f2f2eadd6ada1e148d999837b45cd72b5565bcdedf6f7e910a839be2c7",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed global SYN ACCEPT bypass and routine table flush advice; reordered UFW management allow, qualified IPv6/DNAT/late limiter and container recovery.",
+      "limitations": "No firewall or network changes; requires host-specific atomic validation.",
+      "sources": [
+        "Inert rule-order and network-policy inspection."
+      ]
+    },
+    {
+      "id": "wireshark-analysis",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/wireshark-analysis/SKILL.md",
+          "before_sha256": "968864f12d42045b015622a4c8434c8493ac94e668d1aa0e63d086cec9716020",
+          "after_sha256": "753bbcdec090b1ed2e46c59c97ead3a9306a1d44c46bd45bbd8c78d69c9bc374",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/wireshark-analysis/references/detailed-guide.md",
+          "before_sha256": "127f0faf48694b1b1b18d678bf669a625e200b2891e97725bf46645802e1d9c1",
+          "after_sha256": "162c60090679672579d51657f73909c20bca428b79d3f7d8d3e4b18a1722d67e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected invalid HTTPS filters, request/response download filter, privileged GUI advice and retransmission/TLS overclaims.",
+      "limitations": "Full detailed guide read; no packet capture or decryption performed.",
+      "sources": [
+        "Inert filter and protocol semantics review."
+      ]
+    },
+    {
+      "id": "skill-rails-upgrade",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/skill-rails-upgrade/SKILL.md",
+          "before_sha256": "a0a1b56726f061aad809642f98edfab846534811c9701fef932d80d31e6f9718",
+          "after_sha256": "be7a9c57dd031b1bec159212d838dc92a4b3ca5e231d4cf0eb5a491c1819e848",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Raised risk for mutations, bounded migrations, corrected diff-vs-customization and Git rollback claims, qualified app:update behavior.",
+      "limitations": "No app startup, dependency updates or migrations performed.",
+      "sources": [
+        "Inert workflow review; Rails guide remains primary required source."
+      ]
+    },
+    {
+      "id": "bitbucket-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/bitbucket-automation/SKILL.md",
+          "before_sha256": "7c243c84ff694eefd614d245c2cf4a15dfccc0b2f999316ea7dbb2a73ccc2603",
+          "after_sha256": "ec06f19e12a3789d9728c582107192e46c7fef28dc75197dba850cea7d37df52",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected endpoint-only authentication and pagelen completeness; bounded comments/mutations and truncated diff review.",
+      "limitations": "Current connector tool schemas not invoked.",
+      "sources": [
+        "Community source retained; historical slugs explicitly qualified."
+      ]
+    },
+    {
+      "id": "micro-saas-launcher",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/micro-saas-launcher/SKILL.md",
+          "before_sha256": "c2dc265de2fb41ae28206b8c3d905c4f3440647cf16a875ab4c09dd1d4b54e2e",
+          "after_sha256": "c2dc265de2fb41ae28206b8c3d905c4f3440647cf16a875ab4c09dd1d4b54e2e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/micro-saas-launcher/references/detailed-guide.md",
+          "before_sha256": "56ccc91d010f93b0ee394906cf7952dba574ca4a260cdc60a461941a79215bb9",
+          "after_sha256": "c18e95c5020a2037a344eb574206a94f6967dc29c8efbe102a673be2583952ba",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified price/churn/time/channel assumptions, removed coordinated-vote instruction, bounded marketing actions and legal-template overclaims.",
+      "limitations": "Entire supporting guide read; no market or conversion certification.",
+      "sources": [
+        "Declared Apache attribution retained."
+      ]
+    },
+    {
+      "id": "sqlmap-database-pentesting",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/sqlmap-database-pentesting/SKILL.md",
+          "before_sha256": "1d62cce12a97dc384b929fb69196736318c60fc997e28d398f0651e9571ed4ea",
+          "after_sha256": "d260dbaca9d519299bc8953d7d7e8661342d67145e0a526361bb9216b38e041b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected technique Q, nonexistent resume option, column exclusion and direct-DB connectivity claims; bounded dump-all and replaced real target example.",
+      "limitations": "Offensive examples not executed; exact-action authorization retained.",
+      "sources": [
+        "https://github.com/sqlmapproject/sqlmap/wiki/Usage"
+      ]
+    },
+    {
+      "id": "architecture",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/architecture/SKILL.md",
+          "before_sha256": "cc1ab59295d54bd8b0261676296cff767cf3334139992935352821471f12f900",
+          "after_sha256": "cc1ab59295d54bd8b0261676296cff767cf3334139992935352821471f12f900",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/architecture/context-discovery.md",
+          "before_sha256": "0698e38a37669c36c819bac70c51213bb955e99125ca96b690c840c317595a17",
+          "after_sha256": "49a8db4059b8e41738ea34deb128467099568b99c1cb452e9d642fde87decc71",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/architecture/examples.md",
+          "before_sha256": "5bdd281a7409189049af4c55fbf8c8f562c250cd3e34cd60741be113110843a5",
+          "after_sha256": "bbe70ce4b2de67c955e0f14c3b9abf114f19df4a1131366fc47263e34d979b76",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/architecture/pattern-selection.md",
+          "before_sha256": "6bdc74d7900a0574057d7c03b79afa3bf35b9efc4bc719cf6e198575373b879d",
+          "after_sha256": "56d5594dde4121a0af6e263cd7260e305cabb545340f101a0cb71cc4ffc3b5f1",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/architecture/patterns-reference.md",
+          "before_sha256": "264d0c372a6b5d2a7bba506a4dd4d74855f69298d4dabf1ae046d51f2f49bd9d",
+          "after_sha256": "264d0c372a6b5d2a7bba506a4dd4d74855f69298d4dabf1ae046d51f2f49bd9d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/architecture/trade-off-analysis.md",
+          "before_sha256": "14a0ceb22e88af2d39b24f06a9095312aa04bc72e8980f244bf2b42f8260abaa",
+          "after_sha256": "14a0ceb22e88af2d39b24f06a9095312aa04bc72e8980f244bf2b42f8260abaa",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified numeric architecture thresholds and corrected JWT-versus-OAuth authentication comparison across complete six-file tree.",
+      "limitations": "Architecture examples illustrative; no runtime certification.",
+      "sources": [
+        "Inert design semantics review."
+      ]
+    },
+    {
+      "id": "threejs-lighting",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/threejs-lighting/SKILL.md",
+          "before_sha256": "83151c3f03cb03c92b0b3bc8762cc5257dce7f52cd4fae494e9b8fdc2506b5b2",
+          "after_sha256": "78ba003bbe2ffaca6ea3eabd3edba1aa8ecb8cc3aeaed525b9c60771f92df416",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed nonexistent ContactShadows addon import and per-mesh light-layer claim, fixed hemi variable and qualified shadow filtering.",
+      "limitations": "No GPU rendering; version-specific features require installed renderer verification.",
+      "sources": [
+        "https://threejs.org/docs/pages/Layers.html ; https://drei.docs.pmnd.rs/staging/contact-shadows"
+      ]
+    },
+    {
+      "id": "template-library",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/template-library/SKILL.md",
+          "before_sha256": "e5d725364fbb2a4f87912b5562ffcd8102a323bb7ea861282f66cdb39ec77f33",
+          "after_sha256": "e5d725364fbb2a4f87912b5562ffcd8102a323bb7ea861282f66cdb39ec77f33",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No actionable defect identified in empty-template workflow, schema fields, requested-output boundaries or source attribution.",
+      "limitations": "No Notion workspace changes; shared module workflow reviewed as source.",
+      "sources": [
+        "Self source and repository attribution preserved."
+      ]
+    },
+    {
+      "id": "gpu-kubernetes-operations",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/gpu-kubernetes-operations/SKILL.md",
+          "before_sha256": "522ec8c599a1a317322f302f4cd9a87d041e2467472bb54ec93e21fc32a3b184",
+          "after_sha256": "622296616786c975cf99ed3e0a90ea4553ff849f6e17541b9b01a7f2811f4f22",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed GPU memory utilization denominator, Xid gauge treatment, CUDA visibility and smaller-MIG OOM advice; qualified profiles/metric adapters/isolation.",
+      "limitations": "No cluster mutation; version/profile matrix must be verified on target.",
+      "sources": [
+        "Inert YAML/PromQL and resource-allocation review."
+      ]
+    },
+    {
+      "id": "pipedrive-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/pipedrive-automation/SKILL.md",
+          "before_sha256": "0025d4bda771d673a3044d8ba00b147283b490694b459bd7808574026dad0117",
+          "after_sha256": "96805596d842afe7e36c8b8724c99c63ab63f6e84ef703fb89dbaa18ea7a5ae4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified authenticated connection, historical schemas and pagination; bounded ambiguous contacts, visibility and write retries.",
+      "limitations": "Connector not executed; live field defaults not certified.",
+      "sources": [
+        "Community source retained."
+      ]
+    },
+    {
+      "id": "performance-tuning",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/performance-tuning/SKILL.md",
+          "before_sha256": "daea4f7d18d704b4e9ae72e4e311df007d518c06987770f26125fbaa84c72ad7",
+          "after_sha256": "7f1b87a6123d3a5e06dd1d1ec049f6ef43a317918878f225e446853df4fe6431",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed blockdev option and daemon reload; bounded benchmark writes/network load and universal kernel presets.",
+      "limitations": "No host tuning or benchmarks performed.",
+      "sources": [
+        "Inert shell/system configuration review."
+      ]
+    },
+    {
+      "id": "stakeholder-investor-reports",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/stakeholder-investor-reports/SKILL.md",
+          "before_sha256": "f5f3c5f3fc49ce6c0cbd6c74788769f086ca01197632002ed435b2683089b4b8",
+          "after_sha256": "aa6c0160db20da8887ab4bcb58facf2cddc19c9cbea31bfb0bc6197f35f26068",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repaired broken catalog Markdown link; otherwise coherent empty-template/report-verification scope.",
+      "limitations": "No audited financial figures or live publication.",
+      "sources": [
+        "Self source attribution preserved."
+      ]
+    },
+    {
+      "id": "local-legal-seo-audit",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/local-legal-seo-audit/SKILL.md",
+          "before_sha256": "0a2cf6ecd498b0ca9af7ac072b57f1280577ef9f72be3109e4d9d5dce167573e",
+          "after_sha256": "42926c0b66c67706bacda2d7cc2de640e18432548c252c0fe013d831d4696249",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected retired FAQ rich-result recommendation, selective positive-review advice and ranking assumptions; bounded legal advertising/client confidentiality.",
+      "limitations": "Read-only strategy audit; jurisdiction-specific legal advice not certified.",
+      "sources": [
+        "https://developers.google.com/search/updates ; https://support.google.com/business/answer/7400114"
+      ]
+    },
+    {
+      "id": "box-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/box-automation/SKILL.md",
+          "before_sha256": "5505369ab285c6767d61f2b3452d306ec922cbbc12906ffeb6e84bc0ec35d33b",
+          "after_sha256": "c252696f3f8be0c20e462ff4bda4620851aa88c00ffa6689307410fc3e367ee5",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected all-IDs-numeric and permission type claims, qualified authentication, sharing/signature scope and unknown writes.",
+      "limitations": "Current connector schemas not executed.",
+      "sources": [
+        "Inert contradictory field/ID review."
+      ]
+    },
+    {
+      "id": "dei-dashboard",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/dei-dashboard/SKILL.md",
+          "before_sha256": "43324ea0bbf66680ec5d8f18e578aacd3ed8d3e0dd0415aa1d9925544dd74241",
+          "after_sha256": "dc85d16ca667680169cd0f4cb3ac960e8af1aeca1b30ed13d9b3ba6f67efb92f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Required suppression checkbox in JSON, bounded group size and reidentification claims; repaired broken catalog link.",
+      "limitations": "Template only; no protected data processed or hiring decisions made.",
+      "sources": [
+        "Self attribution preserved; privacy limits are explicit."
+      ]
+    },
+    {
+      "id": "ssh-penetration-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/ssh-penetration-testing/SKILL.md",
+          "before_sha256": "cdfd9e2cc66b1d6b3ffdfaf65f3d46453afe6434b284f0907baa3a498a7bef9c",
+          "after_sha256": "8fe083c6691b5c99726bfa952ff935730b06b00e2ac800f70b94301f22803856",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced Paramiko AutoAddPolicy and plaintext credential logging; bounded credential attacks/pivot/persistence and removed wildcard NSE advice.",
+      "limitations": "No target probing; host-key and test-budget prerequisites remain mandatory.",
+      "sources": [
+        "Inert SSH/Paramiko workflow inspection."
+      ]
+    },
+    {
+      "id": "aws-agentic-ai",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-agentic-ai/SKILL.md",
+          "before_sha256": "393cb6b58b6a06a7820ca84b9be819d7ab23865cfe3356323020dbead95cf69f",
+          "after_sha256": "889184b80c2de641d73ed30aa94cac0dd53bb46fc8e39b22259f1acc20b9d20a",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected bundled/auto-loaded MCP claims, disclosed external templates and region/status uncertainty, bounded cloud data/provisioning.",
+      "limitations": "Service links are upstream prerequisites not reviewed executable files.",
+      "sources": [
+        "Primary AWS documentation links retained."
+      ]
+    },
+    {
+      "id": "dropbox-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/dropbox-automation/SKILL.md",
+          "before_sha256": "679d5653294d8136b625ca6beeb419fae017e1afdcf9e8de7f4fea09f1f6d808",
+          "after_sha256": "c73dd5756dfa90e2230a0347be9330f9a367e8a87be9c281812c1625ae346aaf",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected case-sensitive path claim, authenticated setup and existing-link reuse/async write boundaries.",
+      "limitations": "No live connector changes or sharing.",
+      "sources": [
+        "https://www.dropbox.com/developers/paper-api-alpha ; https://www.dropbox.com/developers/documentation/http/documentation"
+      ]
+    },
+    {
+      "id": "nft-standards",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/nft-standards/SKILL.md",
+          "before_sha256": "ddb17195e8b94e0510aff1e2faece571d04f279065f933e6405c8306346ac791",
+          "after_sha256": "db66fe648d4f1b0a8a0caa918bac3fa363f9d5d6cd9cefe41ff4452ec57220f6",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Reserved full ERC721 mint batch before callbacks, fixed ERC1155 effects ordering, royalty inheritance and soulbound ID reuse; bounded legacy API and royalty enforcement.",
+      "limitations": "Not compiled/audited; fragments require version-pinned local tests and missing helpers.",
+      "sources": [
+        "Inert Solidity inheritance/callback/state analysis."
+      ]
+    },
+    {
+      "id": "codebase-design",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/codebase-design/DEEPENING.md",
+          "before_sha256": "125e6b77413ad2bc7cf7a772bc74336d580a50f9e797db2178ed133d62333d06",
+          "after_sha256": "d3d6f6bf432b8c1bd0cba71067f2387c05d344b0988530ea11e39b7246351d5a",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/codebase-design/DESIGN-IT-TWICE.md",
+          "before_sha256": "21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31",
+          "after_sha256": "21c3264953bd30ee87b181a3ccaf0e70649f461e5ffd7dc654acee4ba1788b31",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/codebase-design/SKILL.md",
+          "before_sha256": "deaf065f4366532a8f6adc69f783125035374fd895a25aee4c6396a38b6a56d3",
+          "after_sha256": "deaf065f4366532a8f6adc69f783125035374fd895a25aee4c6396a38b6a56d3",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced unconditional old-test deletion with coverage-preserving replacement; clarified mocks do not establish provider compatibility.",
+      "limitations": "Complete three-file tree read; no code refactor or agent instructions executed.",
+      "sources": [
+        "MIT author/source preserved."
+      ]
+    },
+    {
+      "id": "mailchimp-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/mailchimp-automation/SKILL.md",
+          "before_sha256": "b80aa7d39b59ae384161a7a71758db249648188e329433f9b6619a1d521abdcc",
+          "after_sha256": "57910f37cdb725cf07f0715608249cfc81b30ff872ff09a25063268cf02505e2",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bound test/live send and subscription consent, removed required-send implication and default validation-bypass guidance.",
+      "limitations": "No email sent, scheduled or contact imported.",
+      "sources": [
+        "Historical connector slugs/defaults qualified."
+      ]
+    },
+    {
+      "id": "gamification-engine",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/gamification-engine/SKILL.md",
+          "before_sha256": "d15c3abf9c4ded87d91f815fe8dddfceec4191f5e7ba017f96558e992eb6c51a",
+          "after_sha256": "89b0d3fd0f9ca28207f140e25c97f912175b2c3acc15b4abed77ec3b862a7ab3",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repaired malformed catalog link; empty-template workflow and safety limits otherwise coherent.",
+      "limitations": "No live employee data, points awards or rewards.",
+      "sources": [
+        "Self source preserved."
+      ]
+    },
+    {
+      "id": "azure-functions-devsec",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-functions-devsec/SKILL.md",
+          "before_sha256": "1d79f7552886897f9930610762eee5687350a01872c0a4d9c67548cf9d29f613",
+          "after_sha256": "2efeed2402518ebbb96fa7d6facf2d895c2bf50137ff757a6bb45697ce299fa7",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Excluded local settings/env files from ZIP with archive review, removed mass-assignment response and scale-based duplicate-timer fix; qualified runtime/plan behavior.",
+      "limitations": "No Azure resources or deployment; examples remain version-sensitive.",
+      "sources": [
+        "Inert package/security and event-processing analysis."
+      ]
+    },
+    {
+      "id": "data-export-engine",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/data-export-engine/SKILL.md",
+          "before_sha256": "8a35a1b9bfcbc57a84e1928bc3b0daf887d650e55ab4dd868d4d67384b49925e",
+          "after_sha256": "d6d54193a57a8885e5cb2eee933e41e1aced6adedb8e4ab68adfde9c3b817c3b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allowed unknown delivery date before completion, required personal-data flag and repaired link.",
+      "limitations": "Empty template only; no source-system export.",
+      "sources": [
+        "Self source preserved; schema consistency checked."
+      ]
+    },
+    {
+      "id": "mobile-security-coder",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/mobile-security-coder/SKILL.md",
+          "before_sha256": "7986675443d34b4356638323e27e41c14c5b8c13562ac3c39d3ffea5ef2a9fab",
+          "after_sha256": "4ae0cfa621224af3a72ffc43beaecf7ae63a8f786f6e6c49e379eed1c268b146",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified device trust, screenshot/memory guarantees, native CORS, mandatory pinning and biometric/legal claims.",
+      "limitations": "No platform runtime or compliance certification.",
+      "sources": [
+        "Inert threat-model review; platform verification required."
+      ]
+    },
+    {
+      "id": "marlin-bed-leveling",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/marlin-bed-leveling/SKILL.md",
+          "before_sha256": "ea68f25eab8b8648e7189831b351dba8f13fb3c781d710a307b1d9827a3d4f9d",
+          "after_sha256": "d8bdc166fe258d86838f54f26a6b502096ebd7d08c0db084e5f02f0e9d49f7a9",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified guaranteed adhesion/universal sign/state claims, corrected M420-enable-versus-load and G29 topology argument, bounded slicer presets.",
+      "limitations": "No hardware commands; actual firmware/geometry and operator approval required.",
+      "sources": [
+        "https://marlinfw.org/docs/gcode/M420.html ; https://marlinfw.org/docs/gcode/G029-ubl.html"
+      ]
+    },
+    {
+      "id": "basecamp-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/basecamp-automation/SKILL.md",
+          "before_sha256": "edd6716f21ebfa143810a20a1f544e1b4812b2903d4dddb9746ab2f70e33fa0e",
+          "after_sha256": "622d153c062fde2098f6793f04308db397357a26d8a0bd46c65689b0b8b40702",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Removed draft-to-active fallback and duplicate-create retry, bounded notifications/access changes and authenticated setup.",
+      "limitations": "No messages, invitations or tasks created.",
+      "sources": [
+        "Historical schemas qualified; existing attribution retained."
+      ]
+    },
+    {
+      "id": "nexrad-mosaic-access",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/nexrad-mosaic-access/SKILL.md",
+          "before_sha256": "b508ae51a782e2810ddf707f5417cdfbc42a73476ed62f44b60d8b2fc295c0b6",
+          "after_sha256": "3c1c6fca84971352aad5e48c006c80d820f1abb1d372b72b49a004dc7e77728e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Corrected invalid WIDTH/HEIGHT JSON placeholder to null; provenance/grid validation workflow otherwise coherent.",
+      "limitations": "No meteorological/runtime certification; current products must be verified on use.",
+      "sources": [
+        "Official NOAA/NCEP pointers retained."
+      ]
+    },
+    {
+      "id": "saas-multi-tenant",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/saas-multi-tenant/SKILL.md",
+          "before_sha256": "2ccc09ebcc6b1c74af2faab70af021297a436ffbbd1d340e6e7a044d1b33cc75",
+          "after_sha256": "ea57764ed6fa2071fd48173ed30e142cdbb8a62e9e8d16cd48afd91fabcb7f03",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced response-finish transaction commit pattern, qualified incomplete Prisma filter, corrected RLS DDL/pool claims and public cross-tenant sharing.",
+      "limitations": "No database execution; complete isolation requires exact-role integration tests.",
+      "sources": [
+        "Inert transaction/RLS/authorization review."
+      ]
+    },
+    {
+      "id": "hunt-nextjs",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/hunt-nextjs/SKILL.md",
+          "before_sha256": "d2473215127e81fae5d2ef097ba113b7d78f668a8568ef11d0064daeea8683f7",
+          "after_sha256": "0a5ec5fa3a43656c1c66314db6b482979cd0d519c95daca0723d51c2539bb31e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualified status-based bypass/dev false positives, fixed shell PID expansion in action search and bounded synthetic probes.",
+      "limitations": "No target probing; historical CVE conditions checked, not current framework certification.",
+      "sources": [
+        "https://github.com/vercel/next.js/security/advisories/GHSA-fr5h-rqp8-mj6g"
+      ]
+    },
+    {
+      "id": "remote-work-tracker",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/remote-work-tracker/SKILL.md",
+          "before_sha256": "2909a922783eb91bc1b1bc4c93b0982fedff772f514b23faa329c5d1bed9b57a",
+          "after_sha256": "839ff250acfd5793c6937413df6a238361500199397c00f7af5d47ef23d22049",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Aligned SQL-required boolean fields in JSON and clarified agreed-plan versus inferred-presence semantics.",
+      "limitations": "Empty templates; no employee monitoring.",
+      "sources": [
+        "Self source attribution preserved."
+      ]
+    },
+    {
+      "id": "progressive-web-app",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/progressive-web-app/SKILL.md",
+          "before_sha256": "e5a00995feb1c2f1adc02a29270ee7ede89ddb578b5ec1f90e731abeb20e543f",
+          "after_sha256": "3f94b30a4b4492aaeab51512c1276a09f232570b606746a79c8fe841030d41a8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Scoped cache deletion, removed default private API caching, bounded public resource allowlist, fixed null button and response/cache errors and opaque status claim.",
+      "limitations": "Teaching sketches; no browser lifecycle/runtime certification.",
+      "sources": [
+        "Inert service-worker security/lifetime review."
+      ]
+    },
+    {
+      "id": "azure-storage-file-share-ts",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-storage-file-share-ts/SKILL.md",
+          "before_sha256": "7dbc15961ffa0329b47433bd8788a28fd9162a00806d6cff3819e3d01a523bfd",
+          "after_sha256": "7dbc15961ffa0329b47433bd8788a28fd9162a00806d6cff3819e3d01a523bfd",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/azure-storage-file-share-ts/references/detailed-guide.md",
+          "before_sha256": "af112b1b97b598212042c8a1c4402186a66eeb3cfee4896f8e9a438aaaee50d1",
+          "after_sha256": "f3c08ec16593e9ee195a0776bcf3641c77c9e8f8ef0d01c358479c7c2d69e048",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed destructive delete-one-snapshot example and response-as-poller error, narrowed SAS and qualified version/auth/directory semantics.",
+      "limitations": "No Azure account mutation; entire support guide read.",
+      "sources": [
+        "https://azuresdkdocs.z19.web.core.windows.net/javascript/azure-storage-file-share/12.27.0/classes/ShareFileClient.html"
+      ]
+    },
+    {
+      "id": "remotion-captions",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/remotion-captions/SKILL.md",
+          "before_sha256": "04e8cee646f0c39cf42aee192fd11aa633ebb43653b48f6cd0c760f0c0538521",
+          "after_sha256": "e8a89b905a33af2e0843dc9ae138b93ef7f513e7eb3720cad2d3bae7026bbe74",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/remotion-captions/agents/openai.yaml",
+          "before_sha256": "3b39a48bd00251cf124e80090fe1b792b73020bee858c5d48b5629256cc5f045",
+          "after_sha256": "3b39a48bd00251cf124e80090fe1b792b73020bee858c5d48b5629256cc5f045",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/remotion-captions/assets/remotion-icon.svg",
+          "before_sha256": "5007669bd0555b0f4565b4e7176fa191310ab0039b2ed09d867a9270f5b0ce58",
+          "after_sha256": "5007669bd0555b0f4565b4e7176fa191310ab0039b2ed09d867a9270f5b0ce58",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/remotion-captions/display-captions.md",
+          "before_sha256": "32fabb20c5251c3bec5ca706312dd8668dd9e4e0dd42a1bcfd2f927b90b0c72e",
+          "after_sha256": "e45e0aa778b2dc115f1f0e9cd53ee1cfde3d8f49c942bb6d037136dad29c4fac",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/remotion-captions/import-srt-captions.md",
+          "before_sha256": "cf5988aad6cba8192a81e5a030955ebf09e97473e0b5ce209e18973bf1a60633",
+          "after_sha256": "cf5988aad6cba8192a81e5a030955ebf09e97473e0b5ce209e18973bf1a60633",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/remotion-captions/transcribe-captions.md",
+          "before_sha256": "ad1a62af35fe176b37ac4d98f796451ca66bcc9983207a9710ec3eca6e847738",
+          "after_sha256": "9d998e30f3ca013d31c5fb67cf43dce4ac93349e79549ad83e5a3eddf6743a31",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fixed broken root links and output path, scoped binary/model downloads/media disclosure, added HTTP fetch check; risk critical.",
+      "limitations": "All six files including SVG/YAML read inertly; no transcription/install.",
+      "sources": [
+        "Official upstream source preserved; version-sensitive helpers not certified."
+      ]
+    },
+    {
+      "id": "azure-postgres-ts",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-postgres-ts/SKILL.md",
+          "before_sha256": "e9544a17b4697f50af693e73af3664be4d4a42070d80e0737b1d6db7c19bccfc",
+          "after_sha256": "4a343bab1a29f6d428c6272866e41940c76e72975559dd9c1bd411e3b3fa7cbc",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replaced racing pool-recreation refresh with per-connection password callback, encoded connection credentials and redacted error details.",
+      "limitations": "No database connection; snippets require version-pinned integration and principal mapping.",
+      "sources": [
+        "node-postgres official documentation pointer retained."
+      ]
+    },
+    {
+      "id": "claimable-postgres",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/claimable-postgres/SKILL.md",
+          "before_sha256": "37effa3cbec73a2ed41b91751748b58c4d622496ae4d2e93c93bc7b9bc558b38",
+          "after_sha256": "5c6fe39839c9d962c0a35f42040b354a7c387f4a149e6f45ea45cf7079494477",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bound provisioning to authorization; protect capability URLs and qualify retention/quota promises.",
+      "limitations": "Historical CLI examples not executed or current service terms certified.",
+      "sources": [
+        "Complete tracked source tree; source-only review."
+      ]
+    },
+    {
+      "id": "azure-mgmt-apicenter-dotnet",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-mgmt-apicenter-dotnet/SKILL.md",
+          "before_sha256": "e1d96c497dbb32bc9cbda673ba9be2658fbd7c288ca1c659ef0c4b577a529893",
+          "after_sha256": "948d9b6e505fa58184f29a8d55be0036be57aef65db59d82acf68589b9351a92",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace synchronous subscription lookup and collections with async patterns; qualify historical SDK examples.",
+      "limitations": "SDK fragments not compiled; generated API types require pinned-version verification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "zero-trust",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/zero-trust/SKILL.md",
+          "before_sha256": "88e3e0801d83ebefaf1da6dfe86d9e12721660ac58f01f4babaf53966a1bf693",
+          "after_sha256": "de5810b670542e0459a496195f082e35b774600354291b14439f9606ba9cb71c",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Require step-up denial and explicit threat absence; restrict DNS policy destination selectors.",
+      "limitations": "OPA/CNI policies require environment tests and trusted inputs.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "slo-implementation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/slo-implementation/SKILL.md",
+          "before_sha256": "d45044b33e6940616774c92c28cec7774ff0ec0644e0ee54177b8aa18b6913aa",
+          "after_sha256": "76eb368837074a79c0e5e698d66878021e5cab37151bdaf46d89903f16cbf943",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/slo-implementation/references/error-budget.md",
+          "before_sha256": "f4c928892d158d9eb044c337c4500c4c93e4529ddbaa803242a93e668a4fd926",
+          "after_sha256": "f4c928892d158d9eb044c337c4500c4c93e4529ddbaa803242a93e668a4fd926",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/slo-implementation/references/slo-definitions.md",
+          "before_sha256": "24347c3845ef6187211595f9b5d1abf8a92dee019dffbf13e5b7a52204fe8dcc",
+          "after_sha256": "24347c3845ef6187211595f9b5d1abf8a92dee019dffbf13e5b7a52204fe8dcc",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/slo-implementation/resources/implementation-playbook.md",
+          "before_sha256": "8ac45d6e42b79a54220ab02b16d923ede1753b586af3ac75ee9f47214ad85031",
+          "after_sha256": "8ac45d6e42b79a54220ab02b16d923ede1753b586af3ac75ee9f47214ad85031",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Compute windowed success ratios from counter increases and qualify missing series.",
+      "limitations": "Prometheus examples not evaluated against deployment telemetry.",
+      "sources": [
+        "Complete four-file tracked tree."
+      ]
+    },
+    {
+      "id": "traderspy-trading-signals",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/traderspy-trading-signals/SKILL.md",
+          "before_sha256": "51f92daee384c06a1296639b91bebaa0036e0d8cbbb3e059ece66ad2baa6d473",
+          "after_sha256": "d654199ed7ed8ce1dc4f4b6246d54e4e84097808bc5b7371dbefb9f5ff90d05c",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/traderspy-trading-signals/references/signal-fields.md",
+          "before_sha256": "6699bdf43edbe4f0ff80446a9ea9691785ebc7cd053647c01f7e0cfe35b8638e",
+          "after_sha256": "1b4d37021e2e4e8a3a970148571f15573d5fc76c12f97f99da285878d82c3880",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Distinguish touched levels from filled profitable trades and qualify provider statistics.",
+      "limitations": "No independent archive or performance validation; service quotas unverified.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "seo-fundamentals",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/seo-fundamentals/SKILL.md",
+          "before_sha256": "85e98c0a4c5ee2f790296a8296c0fb85d5272c778d44822954033b7c0fed9377",
+          "after_sha256": "32c5f782699d55041abc229301dbb17f404b28b9c8db5b45ec885503a870c931",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/seo-fundamentals/scripts/seo_checker.py",
+          "before_sha256": "58354b1653f8151d8a4dd7c7d93112756160597d830ce4ba4cfd6ab45f42880e",
+          "after_sha256": "84f51eb190d3d03c4fad6b17ae083aa98a8714862b4d1ddd9d33b23c8f93d710",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct retired FAQ eligibility; make source checker advisory and distinguish no files from passing; allow decorative empty alt.",
+      "limitations": "Heuristic source scan cannot certify rendered SEO/accessibility; script execution pending validation.",
+      "sources": [
+        "Complete root and Python support; Google Search feature update log."
+      ]
+    },
+    {
+      "id": "geo-proposal",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/geo-proposal/SKILL.md",
+          "before_sha256": "3b2b0295a7b8a47fa14d4f6117045299d29e74f046aa2a222500557c6a2542aa",
+          "after_sha256": "39feede4926ee5cad926f46230189af91f2329bb5726491b2059331c526d665e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove unsupported growth and score-to-revenue claims; scope package terms and commercial actions.",
+      "limitations": "Proposal scenarios are illustrative and require prospect evidence.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "m365-agents-py",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/m365-agents-py/SKILL.md",
+          "before_sha256": "185ef835c4750fc37bd1a8b94da2b2a162efaa6f728f18bf7ddec84a5d2c5a27",
+          "after_sha256": "5543b93dfc1f503c9c122bffbea2a81261856793338ee521ace11d871b0fef68",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair AgentApplication constructor/imports and conversation tracking; add token and version guards.",
+      "limitations": "Fragments not executed; installed SDK and Azure configuration require verification.",
+      "sources": [
+        "Complete tracked source; official Microsoft Agents Python samples."
+      ]
+    },
+    {
+      "id": "arm-templates",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/arm-templates/SKILL.md",
+          "before_sha256": "d2c1295e25f96ce1708b0b46095d5da5758f336e0511a01dd51435ebaad06c52",
+          "after_sha256": "2e823ad57d529f4ec90bf21a11bd050050325e6f1a61d564ec2c3405231ca166",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/arm-templates/references/details.md",
+          "before_sha256": "a826bd6a73ac91fc1cf3077e6cd320729ce3dab906e165d322b27ace5f1cafa4",
+          "after_sha256": "65ee09c1c511206d89904d44748c9a35d7e964c075f342103b45b20af3a54421",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct storage access tiers and qualify deployment/module fragments and permissions.",
+      "limitations": "Templates not deployed; provider/version validation pending.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "expo-tailwind-setup",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/expo-tailwind-setup/SKILL.md",
+          "before_sha256": "67b7eba2453194072438db52a561e03944d60ca599ac2f5ba614d8c430d1b4b1",
+          "after_sha256": "c0950b4cf98cb58f718935c74a4155f09f74e525ef8e73fb5dd4c150f9796011",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/expo-tailwind-setup/agents/openai.yaml",
+          "before_sha256": "31dcb98d27e7f55c97cb019772f526323ee1445625edc156b42c6a57d1bb83c4",
+          "after_sha256": "31dcb98d27e7f55c97cb019772f526323ee1445625edc156b42c6a57d1bb83c4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualify preview dependency recipe; include CSS root import and Image barrel export; support both color schemes.",
+      "limitations": "Historical NativeWind preview recipe not installed or device tested.",
+      "sources": [
+        "Complete root and agents/openai.yaml."
+      ]
+    },
+    {
+      "id": "apify-linkedin-jobs-scraper",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/apify-linkedin-jobs-scraper/SKILL.md",
+          "before_sha256": "a9eb6d4aec506c3088b7d7d01570c70ea20fa022616c1816d3572fb0021de563",
+          "after_sha256": "2c2ad39104953e6bec21065d20c5403af52cd18879ddc6b9cc7146a61804bdb1",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/apify-linkedin-jobs-scraper/references/gotchas.md",
+          "before_sha256": "c729dae9c9254dcc0a1083051a2528ad16d2cd65ebd8f5d55a62932264829962",
+          "after_sha256": "a87893a1c567b29720956a3081de291440980ff3aff995df9e6d19c84965acbb",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove implicit paid-run authorization and price ceiling; retain diagnostics and qualify provider guarantees and recurrence.",
+      "limitations": "No paid runs; live Actor schema/pricing not certified.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "bash-defensive-patterns",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/bash-defensive-patterns/SKILL.md",
+          "before_sha256": "ed2a096eb6f08d48ed0d7e9fa00ae7e9d4ab7b07f9575710453b527eb51177c8",
+          "after_sha256": "ed2a096eb6f08d48ed0d7e9fa00ae7e9d4ab7b07f9575710453b527eb51177c8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/bash-defensive-patterns/resources/implementation-playbook.md",
+          "before_sha256": "f4ac917b6b1319fd36e8102fe14ea4fbdafd3b2615cbce89cd13e66be40a6ee0",
+          "after_sha256": "6833017e876247ed1d2f0288568d9311201145983738181aa1245e81c69216a8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix readonly temporary variable and cross-filesystem atomic-write examples; avoid inherited TMPDIR deletion and qualify strict mode/races.",
+      "limitations": "Teaching shell fragments not executed; platform-specific testing required.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "improve-codebase-architecture",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/improve-codebase-architecture/HTML-REPORT.md",
+          "before_sha256": "0b0936104158abeef7246ff6cbabefa4dc055f17589f2833f2d93001421910a1",
+          "after_sha256": "6716a661ee99e69a5e68e39f094afe8a86f1cc8532d9dd24b786e0c7b10bf8c4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/improve-codebase-architecture/SKILL.md",
+          "before_sha256": "5ec3f325535e2b4202de9bd0b6ed6511ce1c963e840749351b71dc9f1dc776bd",
+          "after_sha256": "f2150aed55500e1b440881d9fcc36f6aea71ee44b216b29753a82fe331f4c432",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Use strict Mermaid, escape untrusted repository content and disclose CDN/offline limitations.",
+      "limitations": "Report scaffold not rendered; companion tools depend on environment.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "arm-cortex-expert",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/arm-cortex-expert/SKILL.md",
+          "before_sha256": "c62a133a50c794d0095b7dd8ed551cb3dd2565591375e6e49b95679346bf9710",
+          "after_sha256": "4aeeb05c71900a92ea7260aabebb2d00d02a01b292075068c83bdeddeaedead8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Preserve PRIMASK state, remove unsafe default DTCM DMA placement, qualify barriers, W1C and static mut claims.",
+      "limitations": "No firmware compilation or hardware tests; exact MCU datasheet remains necessary.",
+      "sources": [
+        "Complete tracked source; https://arm-software.github.io/CMSIS_6/main/Core/group__Core__Register__gr.html"
+      ]
+    },
+    {
+      "id": "frontend-security-coder",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/frontend-security-coder/SKILL.md",
+          "before_sha256": "e48940b7f66d5d827a6dd1c84dda313ec8b171f134c3032668d475dd6e033447",
+          "after_sha256": "e48940b7f66d5d827a6dd1c84dda313ec8b171f134c3032668d475dd6e033447",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/frontend-security-coder/resources/implementation-playbook.md",
+          "before_sha256": "4fb0cf09132bfc481658f35482452bf89f95703052068d47f93328c0d6a9d4f6",
+          "after_sha256": "4fb0cf09132bfc481658f35482452bf89f95703052068d47f93328c0d6a9d4f6",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No actionable source defect found; existing support correctly separates server authorization from browser validation.",
+      "limitations": "No application or browser runtime examined; capability list is guidance.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "aws-lambda",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-lambda/SKILL.md",
+          "before_sha256": "6421d01abc4683fc1470532d727b9030487bd10f0c86c6ec9d38b1ce49cc44c3",
+          "after_sha256": "e4586d375ba32a60b784b92a47a535c9099ef96aa7284ee5685c47407761adab",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair function URL invoke permission and v1 event scope; reduce wildcard permissions and qualify retries/config replacement/performance claims.",
+      "limitations": "No cloud deployment or SAM build; native dependencies and runtime support require target validation.",
+      "sources": [
+        "Complete tracked source; https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html"
+      ]
+    },
+    {
+      "id": "alternatives-pages",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/alternatives-pages/README.md",
+          "before_sha256": "5bba189a1ae028764d396951ef7c6df425b98da260b4ee9dca7e4177109fbffe",
+          "after_sha256": "5bba189a1ae028764d396951ef7c6df425b98da260b4ee9dca7e4177109fbffe",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/alternatives-pages/SKILL.md",
+          "before_sha256": "a1e38c547c78439bad7eebd1976d862a29de90fb2fd21f98634c6b325533f485",
+          "after_sha256": "b206c22a898e6f9452d183c5fe929fbf28d727ebe15e5697251d605f048234af",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Resolve unconditional logo-use instruction and qualify jurisdiction, publication and performance claims.",
+      "limitations": "No legal determination or market/competitor research performed.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "react-modernization",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/react-modernization/SKILL.md",
+          "before_sha256": "2a66894483e2e2a27ef1c4b9761df64823f534e584938895714d6d032e05ed02",
+          "after_sha256": "2a66894483e2e2a27ef1c4b9761df64823f534e584938895714d6d032e05ed02",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/react-modernization/resources/implementation-playbook.md",
+          "before_sha256": "47b3a73f37015a68a21b8e9b65eeabb82babfb32c82e02d319fd77fe25a88f48",
+          "after_sha256": "ade8d25a1d9981cc3ae3bfb94549ac30f45a83cd74443840f5081fdd43470858",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair React codemod package name, object rendering and loading/error behavior; label absent resources and historical fragments.",
+      "limitations": "No dependency installation or React runtime tests; codemod CLI versions require validation.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "screenshots",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/screenshots/SKILL.md",
+          "before_sha256": "289ae3231249b2fb42efd83c47e641a9e89aeb8069549ab343ab39840f6d6932",
+          "after_sha256": "289f464e9924b93b5daeaea5df7c5298fea420f310a58a424cb158e62a92741b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove chat/source-embedded password solicitation and implicit npx install probe; fix login URL and failing exit status; qualify readiness and capture privacy.",
+      "limitations": "Customizable Playwright sketch not executed or pixel verified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "linux-shell-scripting",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/linux-shell-scripting/SKILL.md",
+          "before_sha256": "b74cc5a640f8b7f5c9a8cb7550ccdc3651fa9f52eb525dbfb5b1913c118020ff",
+          "after_sha256": "424280eee0c22318b6f45818d3d85b92a65a5325892146fcffa63ad7d9bbaacc",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/linux-shell-scripting/references/detailed-guide.md",
+          "before_sha256": "b2874992db079289ad42111b67bca36d2ab30e5fbf45678e345b80de54306c23",
+          "after_sha256": "151062fd68541491060d9197dcf7cda26cbbafdc402c713461fb8d316aaf1d7f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace unsafe ls-based rotation with preview, remove CLI password, guard failed cd and use fast-forward updates, make sync/cleanup previews and qualify tracing/crypto/monitoring.",
+      "limitations": "Linux fragments not executed; backups and system operations require target-specific checks.",
+      "sources": [
+        "Complete root and all481 lines of detailed guide."
+      ]
+    },
+    {
+      "id": "agent-memory-discipline",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/agent-memory-discipline/SKILL.md",
+          "before_sha256": "1ee50b1dfb99e1f0d6004974394baf8e7364d9522bc16fa37bd1bcf681d321d8",
+          "after_sha256": "d9bcb38daf954f3c1170636539964f4524a468eaa5593c2dd698953bf5395382",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/agent-memory-discipline/references/entry-format.md",
+          "before_sha256": "097dd075d4288e97c7a4e9cba49273e0f770ec91d3e8896dbc95bec79122f363",
+          "after_sha256": "101b6c78d6c681c4b17d59420caff4e6785f0c1c70c8c54550b17bf2346e7ca8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bind saves/hosted transfers to retention authorization; honor deletion instead of preserving closed copies; prevent historical evidence from overriding current policy.",
+      "limitations": "No backend invoked; deletion capability depends on actual backend and must be disclosed.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "performance-optimization",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/performance-optimization/SKILL.md",
+          "before_sha256": "1c2926ad4482c86d38d2f60fc54ba90e2c7b05147344384da64b557d2eda0cf2",
+          "after_sha256": "8215fc334fed7eac167053a20e14775eb303ba20fa8163b348c2d35aaa547815",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove single-query include guarantee; guard null config and public cache scope; qualify budgets, historical TTI and conversion claims.",
+      "limitations": "No profiling or field measurements; absent upstream checklist remains explicitly external.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-ai-openai-dotnet",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-ai-openai-dotnet/SKILL.md",
+          "before_sha256": "b4c57027e2b92c96996a82342874b5b9a5049f07a99b6bc5fe5cc1a2adb24913",
+          "after_sha256": "9c03e6917d56ab19579c3cf23c748aae80e07002c8ba3af83f865fcf2dca9e96",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace outdated exception handler family and current-version assertion; scope deployment/model compatibility and unsafe content assumptions.",
+      "limitations": "SDK snippets uncompiled; mixed historical API baselines require pinned-version checks.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "api-security",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/api-security/SKILL.md",
+          "before_sha256": "e7abc857e8a5158f8fa4a4340b17905ae67bcb69f9fe69f27fc0c6793867e589",
+          "after_sha256": "f9d01f535043f7475e48fe5f873e3c40e19ef4406725eb102c7d393c3f6af8d5",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/api-security/references/jwt-oauth-testing.md",
+          "before_sha256": "b9408e4026cbce626f340e4036dee66a1c8122a29473adbfffd1de65774b722f",
+          "after_sha256": "d56919d199b9a5d04c737e7c0e4e896f9d8384d31d6df725656e33cd42863c13",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/api-security/references/rest-graphql-testing.md",
+          "before_sha256": "0bb12f409e74104f89f96f53c57ca246677c447fe33e7ff887f0bae6dba8f7ea",
+          "after_sha256": "59938c1637a67cee26645089fef1902f8b57c698f0c4d1d0313eb80dbf069f85",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair broken JWT Python and fragment/Referer claim; replace unconditional all-step execution, scope DoS/metadata/CI and mark pseudocode/tool dependencies.",
+      "limitations": "No target probes or tool installs; source review does not certify tool claims.",
+      "sources": [
+        "Complete three-file tracked tree."
+      ]
+    },
+    {
+      "id": "supabase-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/supabase-automation/SKILL.md",
+          "before_sha256": "b2a1611e0e7af8a051c2fcad98c22045d25d74bf66a167a7c5ad64efafaa2033",
+          "after_sha256": "5c8090cb7fe4a325d52ccec242725108ea1298a88adb79cbfa7f31a55a28de58",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct endpoint/auth guarantee and narrow error diagnosis; scope privileged SQL/key retrieval and qualify connector snapshot and pagination.",
+      "limitations": "No connector or database operations; live schemas/permissions unverified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "one-drive-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/one-drive-automation/SKILL.md",
+          "before_sha256": "6dfd1ee39a36ad46d7e632c521ab687480608c2c1506e9ed25be68730d46de20",
+          "after_sha256": "5ec592d14bc88dc5aec7b5c21fd7660878bcbef77b1cd1aa17dea5d8e36e2578",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct endpoint/auth and upload overwrite guarantees; distinguish connector delta exposure from Graph capability and scope sharing/recursive pagination.",
+      "limitations": "No Microsoft connection or file operation; live connector snapshot unverified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "team-calendar",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/team-calendar/SKILL.md",
+          "before_sha256": "bb70e28524289e9c5c7222bb1e9ae9908851f7bcfc44db68577d0f663e4df457",
+          "after_sha256": "bb70e28524289e9c5c7222bb1e9ae9908851f7bcfc44db68577d0f663e4df457",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No actionable source defect found; template artifacts align on required event type/date and clearly exclude actual scheduling.",
+      "limitations": "Free-text times/time zones are an index only, not a timezone-aware scheduling model.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-ai-voicelive-ts",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-ai-voicelive-ts/SKILL.md",
+          "before_sha256": "88c51acf933629b4759ab48bd7d7bc6335d79726d4db7d213dfd13d0bf506e43",
+          "after_sha256": "3321437389d54d0bd9ed776a6da09d55010e2dfd5d1f647f676cf16a82393069",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct inconsistent transcription callback and async audio return; qualify preview versions, browser credentials, audio encoding and tool/microphone scope.",
+      "limitations": "No audio session, compilation or model availability check.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "wordpress-theme-development",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/wordpress-theme-development/SKILL.md",
+          "before_sha256": "2d0cb41770f6def8d441d38647c5229fe229ad63c62d52eb5248091d70056bab",
+          "after_sha256": "2d0cb41770f6def8d441d38647c5229fe229ad63c62d52eb5248091d70056bab",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/wordpress-theme-development/references/detailed-guide.md",
+          "before_sha256": "f453082095782f50b2f2b8a5cc17197807aa7a96fb001063a887f834c28c7d60",
+          "after_sha256": "5f5d178537ae516dfd6b24f076eb4b3f6ef54f6aaa3118fe869405cbb02bde6e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair invalid theme.json typography presets, remove penetration-testing route for CPT creation, mark invented/version-dependent hooks and conceptual pattern input.",
+      "limitations": "No WordPress installation or 7.0 compatibility certification; release feature claims remain explicitly unverified.",
+      "sources": [
+        "Complete root and490-line guide; https://developer.wordpress.org/themes/global-settings-and-styles/settings/typography/ ; https://developer.wordpress.org/themes/patterns/registering-patterns/"
+      ]
+    },
+    {
+      "id": "apify-tiktok-scraper",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/apify-tiktok-scraper/SKILL.md",
+          "before_sha256": "3b3825f2cf1128538028975d68674796c6dda926bb40f59490724948cb7db745",
+          "after_sha256": "ee30b53eb86265829fff63fcf3752c853b7e9115a1772784565fdabe4553fc6d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/apify-tiktok-scraper/references/gotchas.md",
+          "before_sha256": "00eb75738579e37a7aded4e505cbc63f09248ece828f013871e8e40d5642cc7f",
+          "after_sha256": "b2a948595bb2a74b44af3e5f612539a2bc0fc4ad922e5e48fcd84e83283a6fbd",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove implicit spending allowance and compatibility guarantee; retain errors, protect zero-view ratios and scope downloads and AI labeling.",
+      "limitations": "No paid run or independent provider-price/field certification.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "n8n-multi-instance",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/n8n-multi-instance/SKILL.md",
+          "before_sha256": "cef70582a6b824e21aa66c646e717efc59cb1f0d06433a88451ea2618bb05b87",
+          "after_sha256": "d88d304a33348c0f414434a9ba3b971a0e114682ebb25d6c817f532992e6a261",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Do not infer single-instance access from missing tool; resolve name/ID consistently and qualify server safety/lifetime guarantees and concurrent target races.",
+      "limitations": "No n8n server queried; session guard behavior version-dependent.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-appconfiguration-java",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-appconfiguration-java/SKILL.md",
+          "before_sha256": "90da99c7d53efd3c704d0108e35c9ac07db33409f24f13ced52dcb29592c0734",
+          "after_sha256": "ec048b7dd7ce367b69f6703972ad75be21f472088525693bc34ef606e7a095a1",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove configuration-value logging and clarify labels, flags, Key Vault references and snapshot limits.",
+      "limitations": "Java SDK fragments uncompiled; selected BOM/methods require version checks.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "cc-skill-security-review",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/cc-skill-security-review/SKILL.md",
+          "before_sha256": "9a696e3148576df7ceeea0d3ec707beca82ac3a6041c8ca5793d250f323737fd",
+          "after_sha256": "33b0581c7fae7b48a3c35b877452ca1c8db524fbc16811c4c6391e562dd47ee5",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/cc-skill-security-review/references/detailed-guide.md",
+          "before_sha256": "1cb81e6726df4f4de029ddbe7b2b1a2b22d141ce68ff26107dc4436819d1fd27",
+          "after_sha256": "1cb81e6726df4f4de029ddbe7b2b1a2b22d141ce68ff26107dc4436819d1fd27",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove insecure CSP defaults and fabricated Solana verifier/API assumptions; handle missing requester and explain session binding, uploads, replay and CSRF limitations.",
+      "limitations": "No application tests or transaction execution; intent sketch is not on-chain validation.",
+      "sources": [
+        "Complete root and detailed guide."
+      ]
+    },
+    {
+      "id": "aws-rds",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-rds/SKILL.md",
+          "before_sha256": "1bcf7234170333fd6cbe994061e80b26952508c2f2e513313fd87ac693fd3b87",
+          "after_sha256": "9068b6cceb05863b0575d902ed4a2236d230c611d8b9e21adab398526b189307",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct byte-to-8KiB parameter formulas and static Terraform apply method; remove wildcard prerequisite and forced failover default; qualify snapshots/secrets/DR.",
+      "limitations": "No database provisioned; examples need current engine/provider/region validation.",
+      "sources": [
+        "Complete tracked source; https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Tuning.concepts.memory.html"
+      ]
+    },
+    {
+      "id": "architecture-decision-records",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/architecture-decision-records/SKILL.md",
+          "before_sha256": "081585b1668ffa2691dc0616b86313c8329afda733d3dfb055f5ab6665d534e1",
+          "after_sha256": "b44ccbafbcb0cf2b0a2456e41787a7686b240f5392298019bf1187f142364235",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct MySQL/MongoDB capability claims, distinguish PostGIS extension and retention/temporal-query assumptions, label fictional decisions.",
+      "limitations": "No technology benchmark or real ADR approval performed.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "orca-replay",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/orca-replay/SKILL.md",
+          "before_sha256": "0f8c448ce463b9a30a1cfed0142245ebe9ec141f38f98a74fa024523d614cf84",
+          "after_sha256": "99f12d016a2a4ba8f57adff0d56f73a4d52b7754ca40347ae0046f4867fc4860",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualify sole-variable and exact replay claims, npx local resolution and automatic scrub completeness.",
+      "limitations": "No replay, installed-package certification or provider comparison executed.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "js-reverse",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/js-reverse/SKILL.md",
+          "before_sha256": "bd8bacbdcc76a50f2aeac1a50faa700571068e33722703a6cf1e86bfea3ed0be",
+          "after_sha256": "52fce8dda2712354cd63c395a8be6bb3f87be9020c555cac829a6222cc944858",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/ast-deobfuscation.md",
+          "before_sha256": "f17674b425049e38b11d50123793d0658602e9614cca7882fa6ca193f8090081",
+          "after_sha256": "f17674b425049e38b11d50123793d0658602e9614cca7882fa6ca193f8090081",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/automation-entry.md",
+          "before_sha256": "74f04e1b434bb4dd716328db52825eef7bf14c4709965a42ca0a4b19338ea4e4",
+          "after_sha256": "74f04e1b434bb4dd716328db52825eef7bf14c4709965a42ca0a4b19338ea4e4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/env-patching.md",
+          "before_sha256": "86d099755acaf104c9d83966cc11746b6e8378db66c75e546b5f106e6117afb5",
+          "after_sha256": "86d099755acaf104c9d83966cc11746b6e8378db66c75e546b5f106e6117afb5",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/fallbacks.md",
+          "before_sha256": "4a29d01fcc2c79b15df353b8f93ef9cd26d57a4dedff66d4170eeb23e0fa4696",
+          "after_sha256": "4a29d01fcc2c79b15df353b8f93ef9cd26d57a4dedff66d4170eeb23e0fa4696",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/instrumentation.md",
+          "before_sha256": "04306264d4403a7091f3c9910fdaf575557699496fe5bbde6c9ac96313116d61",
+          "after_sha256": "04306264d4403a7091f3c9910fdaf575557699496fe5bbde6c9ac96313116d61",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/local-rebuild.md",
+          "before_sha256": "64819623a0dad7104220cd7c71dd171cb6cc38a59d59b15974fc7df3c3bbc26f",
+          "after_sha256": "64819623a0dad7104220cd7c71dd171cb6cc38a59d59b15974fc7df3c3bbc26f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/mcp-task-template.md",
+          "before_sha256": "80ea1f87d1a9719d04d98fafcfe355e23984f49a32c88aadfea4b2ccdf6a0f00",
+          "after_sha256": "80ea1f87d1a9719d04d98fafcfe355e23984f49a32c88aadfea4b2ccdf6a0f00",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/node-env-rebuild.md",
+          "before_sha256": "68edef32e61396d6278bdde500c702b7627dd944b88985032c68fff844019027",
+          "after_sha256": "258ca3ffe660aea38a654370a315db1aa8cff9cb99d54736cc0c65a71fa295d1",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/output-contract.md",
+          "before_sha256": "318818bbde547fa2c91c621b7ec7d50b9f6b585953949ae6709d8da0693116e6",
+          "after_sha256": "318818bbde547fa2c91c621b7ec7d50b9f6b585953949ae6709d8da0693116e6",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/task-artifacts.md",
+          "before_sha256": "d798a89acb2526316a155918e4a1063d6b88993b7119329abaa3f8c7ced7ba39",
+          "after_sha256": "d798a89acb2526316a155918e4a1063d6b88993b7119329abaa3f8c7ced7ba39",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/task-input-template.md",
+          "before_sha256": "286631de3aa4a8767404a3231c633c756e08798084fa145e42d1630106a0dc03",
+          "after_sha256": "286631de3aa4a8767404a3231c633c756e08798084fa145e42d1630106a0dc03",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/js-reverse/references/tool-defaults.md",
+          "before_sha256": "bb8f97f71bad3bd6a10265ac846b2fed5fc7c28da60344ab565b9bd903474af3",
+          "after_sha256": "bb8f97f71bad3bd6a10265ac846b2fed5fc7c28da60344ab565b9bd903474af3",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace missing bootstrap executable path with explicit prerequisite limits; require isolation for untrusted Node execution and redact runtime secrets.",
+      "limitations": "No browser instrumentation or extracted code executed; historical MCP names unverified.",
+      "sources": [
+        "Complete13-file tracked tree including every reference."
+      ]
+    },
+    {
+      "id": "oral-health-analyzer",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/oral-health-analyzer/SKILL.md",
+          "before_sha256": "95f9f4547c13ad8e849e4e26afb3fc9f8a725f65cb04202eba8a5b280a2bdcb2",
+          "after_sha256": "4a3776d7bca1ce2bd393e0ca879aaeffe82b473fefeafefefcbc7f8fe7013031",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/oral-health-analyzer/references/detailed-guide.md",
+          "before_sha256": "f53bf891d0c357ed69f60c999b9acafcb3a7fa9e7ec6a197066ae64231606624",
+          "after_sha256": "f9c6ad3e784c0b835258806796ad742ce96e5ee27d189c1dfbee65ee4cb39c75",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove unsupported pocket-depth staging/cancer factor counts and health-age claim; correct delayed dental/biopsy triage and add emergency signs and health-data scope; raise declared risk.",
+      "limitations": "No diagnosis or clinical validation; remaining habit weights explicitly unvalidated educational examples.",
+      "sources": [
+        "Complete root and529-line guide; https://www.nhs.uk/symptoms/toothache/ ; https://www.nhs.uk/conditions/mouth-ulcers/"
+      ]
+    },
+    {
+      "id": "bats-testing-patterns",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/bats-testing-patterns/SKILL.md",
+          "before_sha256": "a763084d3568d2d9e31b94a0f2344d08f94d2797fda97f87b7120c26ee3a05ba",
+          "after_sha256": "a763084d3568d2d9e31b94a0f2344d08f94d2797fda97f87b7120c26ee3a05ba",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/bats-testing-patterns/resources/implementation-playbook.md",
+          "before_sha256": "e7cf09f3d2e8bca8ecf55fb14f2f9849347581fcbf94b536f79a24ea68580bfd",
+          "after_sha256": "1d17b02da67fd4896544c99fd66efcae477113a3876a616ff8244dc5ff165c86",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix nonexistent skip_if, parallel/verbose flags and lost command-status assertion; use Bats-owned temp storage and qualify stubs/background waits/platform permissions.",
+      "limitations": "No Bats installation or suite execution; examples require reviewed helpers.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "sendgrid-automation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/sendgrid-automation/SKILL.md",
+          "before_sha256": "82026bc35e0fd7baef1a9d90b2aadcaf9aef39d5d61a737240b7343f48b83f7a",
+          "after_sha256": "56e7c1a18912601f8a1a48537945d0e0a74c134950071d703ad28a565279ff08",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct endpoint/auth and compliance guarantees; distinguish draft creation from actual send, authorize audience/verification effects and verify async outcomes.",
+      "limitations": "No emails, contact changes or connector calls; limits are historical.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "linux-privilege-escalation",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/linux-privilege-escalation/SKILL.md",
+          "before_sha256": "9c8f91729a31c8d065999ccafd9624f094ae36e7a795ac62b0cedcdb581afb27",
+          "after_sha256": "6befe92e1cf2228c3cf644045df2f109c98d3542dab1a35f510596ac48d9b2ca",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/linux-privilege-escalation/references/detailed-guide.md",
+          "before_sha256": "797b0ee5ae9d16483e36cdeb30b759e6d33db922201fb0a3ca15ec58064b1517",
+          "after_sha256": "5afda1937198666005477980d5bae98818a87dcfd4e6a20a93a1733dabba3f48",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove ineffective unprivileged cp SUID example and environment dump; qualify patch ranges, container host impact and persistent cleanup scope.",
+      "limitations": "No target commands or exploits executed; vendor applicability and shell behavior require controlled lab verification.",
+      "sources": [
+        "Complete root and436-line guide."
+      ]
+    },
+    {
+      "id": "notion-template-business",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/notion-template-business/SKILL.md",
+          "before_sha256": "3c8c9fb8bc6f2f13850bf27ac1a59536cf6a93e3857587620db62ca2bb935158",
+          "after_sha256": "b30754ea46223c0464e27682f06e5e21aa2bc99933b6a1710690e733a07984e6",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/notion-template-business/references/detailed-guide.md",
+          "before_sha256": "f4374839c806ca35eec5b5da16ac7421e93bd9293502b64995c42a17e3e38e1d",
+          "after_sha256": "8bf2fb648966f5131335b11ed49432bf99f1d2c4962fb56c42e8455355c254bd",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove false zero-fee Marketplace claim and fixed processor rates; qualify access locking, revenue hypotheses and duplication/publication privacy.",
+      "limitations": "No business launch or profitability validation.",
+      "sources": [
+        "Complete root and detailed guide; https://www.notion.com/help/selling-on-marketplace"
+      ]
+    },
+    {
+      "id": "agent-evals",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/agent-evals/SKILL.md",
+          "before_sha256": "bc03648fc0d4d70f5a10150397f7ecf60644b28dff7aace22e36f3128532cb4f",
+          "after_sha256": "bc03648fc0d4d70f5a10150397f7ecf60644b28dff7aace22e36f3128532cb4f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No additional actionable source defect found; existing evaluation contract explicitly rejects keyword/judge scores as safety proof and bounds paid/provider execution.",
+      "limitations": "Application adapters, fixtures and dependencies not bundled or executed; historical examples not model certification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-monitor-query-java",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-monitor-query-java/SKILL.md",
+          "before_sha256": "f7cf39bdfb600094180e3529b652c0f3e14c79b3099acb1c2533a851be8fa639",
+          "after_sha256": "306c59188428d2848c06f2004f520f72881888245a5a611fe217126dc6b2088d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair nonexistent single-result status usage, qualify cache freshness and migrated APIs, and align critical cloud-data risk.",
+      "limitations": "No Java compilation or log/metric queries; deprecated/migrated APIs require pinned version checks.",
+      "sources": [
+        "Complete tracked source; https://learn.microsoft.com/java/api/overview/azure/monitor-query-readme"
+      ]
+    },
+    {
+      "id": "knowledge-base",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/knowledge-base/SKILL.md",
+          "before_sha256": "696ee14d951b1045fcc0a333c62ae189b3ca16535e4e25e8509ff4f0d330b1b2",
+          "after_sha256": "a51815eba8f76b038ae0c7d5e669a4c923ebd7ed7098089beb18e116b97820f8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allow unreviewed drafts without fabricated last-review dates; repair catalog link and distinguish metadata/identifier fields from enforcement.",
+      "limitations": "Empty register template only; no wiki or permission implementation tested.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "model-supply-chain-security",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/model-supply-chain-security/SKILL.md",
+          "before_sha256": "dc94de8fbedf3a7d8d4be588dadba6df54d6adf217a63d62e3f915bd94eb2aa0",
+          "after_sha256": "24074775b66f467b50fdc88d2ee1c28914a61475517d639ed8bb7fe9e61353ad",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove invalid reusable-workflow step, unsafe sign-to-fix/conversion advice and automatic promotion approval; require digest/predicate validation and qualify SLSA/scanning limits.",
+      "limitations": "No signatures, scans, training, CI or cluster policy executed; illustrative fragments need version-specific implementation.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "remotion",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/remotion/SKILL.md",
+          "before_sha256": "d657fb96b3713d305cc6ca17127483e0ebfc62fc0085f054e2f6d550e3715c09",
+          "after_sha256": "2e581cbda3d0bf28773c7ea2a0bd2e0272aaf397da2de251f5db41cfa0b7a8ed",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix composition registration location, missing spring/fps and unsupported generic quality flag; mark absent support files and public-asset/timing constraints.",
+      "limitations": "No video render, Stitch request or dependency installation; tool availability and media permissions unverified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "makepad-deployment",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/makepad-deployment/SKILL.md",
+          "before_sha256": "4552a2ac8ae4f0729a52074ee6e7990d52edbed75e1bd28ba5ecb6c801c4bb13",
+          "after_sha256": "4d85ae0a31b3abb91bf4e993a6b03d7075668de23b3eb7e252e190d291e8e24c",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Bind local preview to loopback, quote signing paths and qualify moving tool dependencies and raw IPA distribution claims.",
+      "limitations": "No platform build/install/signing or action execution; absent supports remain external.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "broken-authentication",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/broken-authentication/SKILL.md",
+          "before_sha256": "53d198f65c239cc854de17fddb3e860595aabd1af9ca597cdda3ef8339dbe653",
+          "after_sha256": "4137e2caa45b315391dccf7f229eacc0d669bbe566235531fc5ca302a1653a74",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct obsolete composition guidance, real breached-account testing and session-fixation/MFA assurance claims; bound credential attempts and cookie/entropy conclusions.",
+      "limitations": "No authentication probes; standards applicability depends on actual application policy.",
+      "sources": [
+        "Complete tracked source; https://pages.nist.gov/800-63-4/sp800-63b.html"
+      ]
+    },
+    {
+      "id": "memory-systems",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/memory-systems/SKILL.md",
+          "before_sha256": "faf64d266d50c810ba99807249258949d9b67bbe79b16ac5763e34c351d98cf0",
+          "after_sha256": "5f826110220b6b808712f8d0e2aaa3956daa3494b343a9e8b073322e8d49aa25",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove unsupported cross-system benchmark/latency claims and vector impossibility assertions; scope persistence/access/deletion and historical evidence trust; align critical risk.",
+      "limitations": "No retrieval benchmark or backend implementation tested; conceptual fragments only.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "alumni-re-hire-tracker",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/alumni-re-hire-tracker/SKILL.md",
+          "before_sha256": "ed270a1bdd14018b32e358abb1a53cf42d50d67d24b48cb9c4479138860c419f",
+          "after_sha256": "9dc094ab76ea84f2ebe44a1b07981c2e37671df0533c50418a9926c3ba8492aa",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Align required eligibility boolean across SQL/JSON and allow unknown contact/re-engagement dates without fabricated records.",
+      "limitations": "Empty template only; no hiring or outreach decisions made.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "debugging-strategies",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/debugging-strategies/SKILL.md",
+          "before_sha256": "49fb069639aed6df0e1d86629cfa291422cab2911daf9d4c6e29834e3fdac2a9",
+          "after_sha256": "519ffb5cb5951fd1dabdcc59cbe5e7b0b72eb0b2b227d7abc4a1df50cb383cf8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/debugging-strategies/resources/implementation-playbook.md",
+          "before_sha256": "b74622e440ab2ac223d1eaec23ebf02d1ce54dcb8a8d3246b44f9130fda02b86",
+          "after_sha256": "c5cc77625caa038df2e1db9b3ef1a2849c368bf8e471238aca572457d2738cce",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove user-object logging and mandatory reproducibility claim; scope production diagnostics/heap dumps and mark missing upstream resources and incomplete Go snippets.",
+      "limitations": "No debugger or profiling executed; incident evidence and app build configuration not supplied.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "idor-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/idor-testing/SKILL.md",
+          "before_sha256": "073d7b93ab39c40c6f87aa2ebfc04216bbfeaa500867a5c9a75994e2575d0337",
+          "after_sha256": "c89ec4c42148e57282b3457c55435e146b137a1cf60d631cad416c2b388c9063",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct status-only vulnerability/success claims and nonexistent model update method; scope enumeration to known controlled objects and explain throttling/UUID limits.",
+      "limitations": "No API probes or Django application tests; missing auth/validation context explicitly documented.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "sop-company-wiki",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/sop-company-wiki/SKILL.md",
+          "before_sha256": "8a72d3d632334379b722e483e525418c08fec8ccca913234fe95db117e10cf2a",
+          "after_sha256": "e7ce771143bcbe253b2f3bb3f1e5e83804c1d2bcdc2adb9f0efe656b37039dff",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allow draft records without fabricated last-review dates and repair malformed catalog link; clarify approval metadata.",
+      "limitations": "Empty register only; no document publication/version control executed.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "geo-audit",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/geo-audit/SKILL.md",
+          "before_sha256": "b2251fdf5be59c78d6cc1f52d58474b91b0aa1ac695677ddb116549be54f2014",
+          "after_sha256": "4b140b4cc5c67f95bfefe05a4a3fd29048f9715be51a0b5e7e894e9599b3451e",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove unsupported visibility uplift and score-prediction claims; correct automatic schema/llms/crawler severity and JS indexability assumptions; bound sampled scoring and URL scope.",
+      "limitations": "No site crawl or AI visibility test; heuristic rubric not platform ranking certification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "robius-widget-patterns",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/robius-widget-patterns/SKILL.md",
+          "before_sha256": "679f880a511b668bcb68e1181762bcc5c787eace85b54fd198bf58104d403c31",
+          "after_sha256": "7fc2c6e888b6f8b6a091acf2455ab2a93b538241b1961de152c53dd8f9ceeb5c",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Avoid self.state borrow conflict in loading state update and qualify absent production patterns, missing defaults and no-op wrapper success.",
+      "limitations": "No Rust build; framework revision and omitted application types require validation.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "oneroster-csv-validator",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/oneroster-csv-validator/SKILL.md",
+          "before_sha256": "e43e92e756c5ab2cd670cb674e2ccffea5bbf6021cb72c01d4f9dc0d2e28ba79",
+          "after_sha256": "75bb3b02bd930fa6c9ed9512da0e3eae4329354340ea28105b141239e3f3d5a1",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct bulk header/value rules,1.2 role layout and exchange/delta baseline requirements; fix multi-org splitting, strict decoding and false complete PASS.",
+      "limitations": "Illustrative linter not certified or executed; full version schemas and duplicate/cycle/manifest checks not implemented.",
+      "sources": [
+        "Complete tracked source; https://www.imsglobal.org/spec/oneroster/v1p2/bind/csv/ ; https://www.imsglobal.org/spec/oneroster/v1p2/cert/ ; https://developers.imsglobal.org/oneroster-v11-final-best-practice-and-implementation-guide"
+      ]
+    },
+    {
+      "id": "neon-postgres-branches",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/neon-postgres-branches/SKILL.md",
+          "before_sha256": "dfe269bfb415d680d1133978a07cd218de2232a8b99ca74a44f79e97daf30dc2",
+          "after_sha256": "2c88d72039a5d1580bec4567178d895f6a0f60d065eff12d0275ba522880aaad",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Scope branch creation to requested provisioning, protect connection strings and distinguish active minimum compute from scale-to-zero suspension.",
+      "limitations": "No Neon branch/API operations; historical CLI/config/quotas require current docs before execution.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "internal-communication",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/internal-communication/SKILL.md",
+          "before_sha256": "071f67dc603ce8687af440683812238dfae49fa41dcc75e27707425d79b975f4",
+          "after_sha256": "57367fbf4609f26507f5940ab477d3d499f32a3c2261e18e1e6e9edc4446642d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allow absent follow-up dates, repair catalog link and distinguish recorded delivery status from actual send/read evidence.",
+      "limitations": "Empty log template; no communication sent.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "aws-ec2",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-ec2/SKILL.md",
+          "before_sha256": "85acd756fafee4b32ca6b44313ad57f75e6e48d26d85076e03330c4985efeca4",
+          "after_sha256": "3c166b0cd4a70710c50451ce20507aa68d77ed59d86c3a59c48e5e8bbc1695bd",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove invalid EC2 target-tracking cooldown properties, wildcard IAM and blind installer execution; protect key files and qualify AMI consistency/refresh/networking.",
+      "limitations": "No cloud provisioning or Terraform plan; examples require current regional and CLI validation.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "database-migrations-migration-observability",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/database-migrations-migration-observability/SKILL.md",
+          "before_sha256": "59bd7caa9babd81aefca587de22074a5f61898ea3c8272de91e9b54875d64cef",
+          "after_sha256": "d2b6b3b7a520c3f799ee2af784817e7cff49df6815b799413d3277fd93166b1f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix missing registry/import/undefined migration, counter deltas and unsafe auto-commit baseline; document transaction retries, blocking async and incomplete CDC/CI contracts.",
+      "limitations": "No migration, Kafka connector, alerts or dashboard deployed; examples not end-to-end runnable.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "reports-analytics",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/reports-analytics/SKILL.md",
+          "before_sha256": "dd3d8716472aff471737179ec2b9abdf71ea08f47d57b5be4a66c2ddc1515b98",
+          "after_sha256": "5856938101517ec89debcfa3ac29e4806aba126b636a5601992279c45648d0b9",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allow never-run/unscheduled reports and align timestamp storage/examples with JSON date-time offsets.",
+      "limitations": "Empty report register; no data computation or distribution tested.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-eventgrid-dotnet",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-eventgrid-dotnet/SKILL.md",
+          "before_sha256": "afb8f27ddc5d2472c5d19202000e0a2fdbda3feb68903facd77e8c55a2ed66df",
+          "after_sha256": "5efe45bf18ddc56b481ae4eb97bb86306e449bd0936915b297f575fea4c3005d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace log-only acknowledgement with durable handler placeholder, correct CloudEvent required fields, serializer import and blanket failover; qualify reject/dead-letter behavior.",
+      "limitations": "No event publish/consume or SDK compilation; Functions/API modes and limits need target verification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "aws-iam",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/aws-iam/SKILL.md",
+          "before_sha256": "3667f70cf302153fdfb37ea19e57247f13322a6a162e96881e8589ffce82eba2",
+          "after_sha256": "e80da83fe8f9c927b890fb6be006aad90881577ea83fbd63a234489eb63e3f39",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix S3 read/list blocked by upload-only condition, narrow Terraform OIDC subject, use scalar ARN condition and repair tab-separated MFA enumeration.",
+      "limitations": "No IAM policy attachment/simulation; global-service exceptions, KMS and effective permissions require target review.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "spark-optimization",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/spark-optimization/SKILL.md",
+          "before_sha256": "28075c8d39c3c0183dc5bdaf07214b3b80e6a49588e546fb8bc4d0766ef99ea7",
+          "after_sha256": "08bc120c585400bb68f234050c02c88332c834ff4e2b1a550fd03bb42265b072",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix unsupported shuffle auto value and PySpark storage level, ignored checkpoint and unpersist-before-action; qualify no-shuffle/runtime-metric claims and empty skew input.",
+      "limitations": "No Spark jobs or correctness benchmarks executed; runtime-specific Delta/private API fragments remain explicitly qualified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "advanced-analytics-dashboard",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/advanced-analytics-dashboard/SKILL.md",
+          "before_sha256": "18961cf1190293325ac1edd155bdad939a9af2ed62fc54c2f7f4167752c40354",
+          "after_sha256": "18961cf1190293325ac1edd155bdad939a9af2ed62fc54c2f7f4167752c40354",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No additional actionable source defect found; existing text distinguishes metric registry from prediction and handles unknown targets.",
+      "limitations": "Empty template only; no metrics, models or connected dashboard validated.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "policy-acknowledgement",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/policy-acknowledgement/SKILL.md",
+          "before_sha256": "a66f649d6fdf7627df6dab4227e7d5490c3ee46e877a2b74565c85bf88726563",
+          "after_sha256": "1de866693c1b1631ebe08aa7546867a536a9e3515d20b93cd42a585a8832700b",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Allow pending acknowledgment date, align required booleans and nonnegative integer overdue semantics, repair broken links and distinguish signature evidence.",
+      "limitations": "Empty register only; no policy issue/reminders or legal signature validation.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "robius-app-architecture",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/robius-app-architecture/SKILL.md",
+          "before_sha256": "9ef834f94d60c589d034d813395637b6a9725aedf1b16ed16e227739fae4b43b",
+          "after_sha256": "840174e3dc8d8baf05fd6efe2f37985b1df80a9fd64b3b5445798e21dbbe3781",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Return explicit dispatch failure instead of silent request loss; qualify absent production patterns, repeated worker starts, unbounded queues and shutdown/WASM gaps.",
+      "limitations": "No Rust compilation or application runtime; snippets omit app-specific types and services.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "sbom-supply-chain",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/sbom-supply-chain/SKILL.md",
+          "before_sha256": "8dbdf2b9d472f09039f242b01a50ad63863f1fe82e552ad581310f4eb9f1beeb",
+          "after_sha256": "c0e9ec0d6659b7e0ac1e277b29b54c997d305d5daeac0fa5b4ac9cc3a7f1fb63",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix fail-open missing vulnerability report and fixed-only critical filter, narrow signing identity and remove invalid shell HTML comment; qualify attestation trust and execution effects.",
+      "limitations": "No scanner/policy/signing execution; input adapter and digest/predicate verification remain required.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "javascript-mastery",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/javascript-mastery/SKILL.md",
+          "before_sha256": "c0c8d8c794f7277fc474737f532b0339b7653a6e706d588a703fef83df9527c0",
+          "after_sha256": "c0c8d8c794f7277fc474737f532b0339b7653a6e706d588a703fef83df9527c0",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/javascript-mastery/references/detailed-guide.md",
+          "before_sha256": "9e8d50892271aa9d28b7ab9aa3e0a7032cb1d6da4b80dda8d6b991457eccac46",
+          "after_sha256": "1960d73649173b4319a47db42edca3ae8b901fc79f479f0557cfd8662068ef4d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct var initialization/top-level this and shallow freeze claims; preserve this through partial curry calls and qualify falsy/async teaching examples.",
+      "limitations": "Independent language examples not executed as a combined program.",
+      "sources": [
+        "Complete root and detailed guide."
+      ]
+    },
+    {
+      "id": "using-n8n-mcp-skills",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/using-n8n-mcp-skills/SKILL.md",
+          "before_sha256": "3e5752ecc062eab19fd1e42a1cd2f902175158ed15f656c5ec387aa12ab30a20",
+          "after_sha256": "39a68e7b96eed425179d938560e455b4cefdcf4361fa7c635816847c58c99423",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace speculative403 credential-recreation advice and arbitrary node-count claim; qualify tool/companion availability and versioned guidance.",
+      "limitations": "No n8n instance access or workflow mutation; live schemas remain authoritative.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "jev-social",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/jev-social/SKILL.md",
+          "before_sha256": "e1d44197ca52cc4400672cf28a96b5adedf81ba39b6c5b0687744ba877448f14",
+          "after_sha256": "e1d44197ca52cc4400672cf28a96b5adedf81ba39b6c5b0687744ba877448f14",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No additional actionable source defect found; explicit pinned-runtime, browser, paid-provider, media and publication boundaries are coherent.",
+      "limitations": "Source-only catalog review does not independently attest the external commit/runtime or credential-routing claims; no CLI executed.",
+      "sources": [
+        "Complete tracked source tree; embedded upstream pin baf3cd6aa4f9c881665c29ed29a10391f761760b retained as declared provenance."
+      ]
+    },
+    {
+      "id": "screen-reader-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/screen-reader-testing/SKILL.md",
+          "before_sha256": "351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4",
+          "after_sha256": "351a27532ecfefb9ed832fc525466636b6f18c4f01ae0f96e5dbc59366ccfac4",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/screen-reader-testing/resources/implementation-playbook.md",
+          "before_sha256": "c8fc33fdc5130d3a5763cc8cd24850d8f9659edfe11e8835068362548128fdd3",
+          "after_sha256": "e028b791675cf04f181dec62324aac5e5ec651d6b681e8124ebefc80282d4452",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove unsourced market shares and broken custom modal JS with undefined modal/nonfocusable heading; distinguish raw DOM hints from computed accessibility tree.",
+      "limitations": "No real reader/browser test; replacement modal behavior requirements require app implementation and testing.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "linkdigest-social-link-reader",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/linkdigest-social-link-reader/SKILL.md",
+          "before_sha256": "6dcd42d7f86971266c472e700a6e842732599f2da0601ed13ebc2b98ef3dedfd",
+          "after_sha256": "8819dbaf3f80cef870c0452b2a57797b0461206f7619ce30bb2a07dd4e1b4586",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Add missing credit ceilings to generic examples, remove exact-caption/OCR and no-local-effect guarantees, bound polling and scope hosted share-token/retention claims; align critical risk.",
+      "limitations": "No hosted call or independent service-price/privacy/runtime certification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "prompt-caching",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/prompt-caching/SKILL.md",
+          "before_sha256": "a66441b2c4538facfa2def501ed16b14dbd0a97a4ef5e771fffadb520caff3b6",
+          "after_sha256": "8568f36edcf5ea8ea6f183d63e915b1d8a47340b285a88915e5486f2a3e07565",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Stop eager paid LLM calls on cache hits, preserve semantic prompt order and handle text blocks; remove unsupported savings guarantees and require auth/source-aware cache keys.",
+      "limitations": "No provider/cache benchmark or SDK compile; incomplete cache adapters and current pricing require validation.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "recognition-rewards",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/recognition-rewards/SKILL.md",
+          "before_sha256": "8dd75f9e6053e7fa0b16501847e55fc86572908ebda3dc312fbedca157743365",
+          "after_sha256": "6c8bb06bf1b97f73426459c8e7e333d0af402f5376a54afa4a89a0154a9e449f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Replace unrelated personnel-review text in public recognition example and allow point-free recognition without fabricated amounts.",
+      "limitations": "Empty register only; no awards, payments or announcements.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "wjttc-builder",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/wjttc-builder/SKILL.md",
+          "before_sha256": "37f0e915bc927fda349bdf914a53dc3f2e233a075ea07d664a80955c2271ebe6",
+          "after_sha256": "4616ecd987fd723107891a7851eb19f9f4170e940edcf6ce314d439b7a58f57a",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Prevent missing-secret required checks from silently skipping and conversation/rubric scores replacing real gates; qualify100% coverage, production-ready and flake classification claims.",
+      "limitations": "Plan generator only; no suites/FAF hooks executed or certification authority established.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "employee-suggestion-hub",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/employee-suggestion-hub/SKILL.md",
+          "before_sha256": "d2813b8c236a712a2941b482db9f7dae11d3dac2406b4f22b69a177df4268763",
+          "after_sha256": "6e9e5f5a99e42a6713b6610c6855c0886186487b3dfd081e23bd6c8252e82d59",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Align required anonymous flag and nonnegative whole votes; repair link and contradictory example; clarify checkbox does not provide anonymity.",
+      "limitations": "Empty register; no anonymous collection/privacy system tested.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "azure-resource-manager-mysql-dotnet",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/azure-resource-manager-mysql-dotnet/SKILL.md",
+          "before_sha256": "7a621eddfd8367858537808ff6940e2f94db00aef956136ad1a6f898dd24bc94",
+          "after_sha256": "cab611475cedba1904f612cecbdcdd6f1bf0c58e7d81953fb3d6a7e4929525ad",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix synchronous default-subscription lookup and async collections, remove embedded password and weak TLS mode, qualify409/networking/token/restore semantics.",
+      "limitations": "No Azure deployment, connector or SDK compilation; historical generated types require target-version verification.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "burpsuite-project-parser",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/burpsuite-project-parser/SKILL.md",
+          "before_sha256": "6c9e53855d572d332d59f082b1607f7f68883079296d460a618410ca76c276fb",
+          "after_sha256": "f6a7b1bf70fc4b19694aeeca743f177211801d8eb7e8ec7b452cd49f58115378",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Name missing wrapper prerequisite, fix Java option order and wc output interpretation; avoid full dump for counting and qualify header safety/resource limits.",
+      "limitations": "No Burp/extension launch or captured traffic parsed; external wrapper/version not certified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "developer-newsletter",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/developer-newsletter/README.md",
+          "before_sha256": "b0fbaed9e6e811c6447d64871ce0aae6fe12d3408ed5267a535cefa57f1d2b6c",
+          "after_sha256": "ab5e97d6fe7117644ff6ec96c2114ab28b10c0a54bd4a8a33439620ef5aeec1f",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/developer-newsletter/SKILL.md",
+          "before_sha256": "72fe37c8fcfa3c56413b16d433aad6ff1e1957a0494d8e49c33ff2603b24c7a8",
+          "after_sha256": "c4971b59069c5f112ff56f80c18707db1978f0aa65ef1bf0d6cb072cff263b81",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualify unsupported cadence/benchmark/spam claims, correct Markdown-code rendering and open-rate interpretation, scope actual sends/list/tracking changes.",
+      "limitations": "No newsletter sent, ESP comparison researched or deliverability/rendering tested.",
+      "sources": [
+        "Complete two-file tracked tree."
+      ]
+    },
+    {
+      "id": "rust-async-patterns",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/rust-async-patterns/SKILL.md",
+          "before_sha256": "bd9734970b4ea016eb7176216abc73c0d5f918e1b4aa8ce033c002ac1a1ab621",
+          "after_sha256": "bd9734970b4ea016eb7176216abc73c0d5f918e1b4aa8ce033c002ac1a1ab621",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/rust-async-patterns/resources/implementation-playbook.md",
+          "before_sha256": "76fc00b38d90d2e4b9e70de5202cf1c40cef9c6131255331edb37e64d2b97e2f",
+          "after_sha256": "385069e3b0861da9f5475248178ddaae8cd0e91d30dc34f95f539863db3f17e5",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Fix channel receiver never ending, zero concurrency limit, unpinned async stream and invalid spawned borrowed Drop pool/race; qualify partial errors and shutdown.",
+      "limitations": "No Rust crate compiled; application/dependency types omitted and production pool behavior untested.",
+      "sources": [
+        "Complete root and implementation playbook."
+      ]
+    },
+    {
+      "id": "smtp-penetration-testing",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/smtp-penetration-testing/SKILL.md",
+          "before_sha256": "5407346ef2b247d70c6405447efeb528824733f2296ce7be6a6bc653ad0e048d",
+          "after_sha256": "3db49df3162e923a4790cd7b27c88192bbc7fc28ef3b0db293e8c9d21f6ce7c3",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/smtp-penetration-testing/references/detailed-guide.md",
+          "before_sha256": "781b58e4974464924581df4900dad28a5bb4352a3dbffdda7b0884b6c81f2c69",
+          "after_sha256": "86bf1785c259be1f32a2fe33914ff0159244887d4f83cab95e5d62e8767b0a31",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Correct RCPT/relay code-only conclusions and universal TLS/spoofing guarantees; remove wildcard intrusive NSE and real Gmail recipient; distinguish own-message headers from injection.",
+      "limitations": "No SMTP probes or emails; controlled delivery scope and TLS/DNS validation remain necessary.",
+      "sources": [
+        "Complete root and detailed guide."
+      ]
+    },
+    {
+      "id": "salary-benchmarking",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/salary-benchmarking/SKILL.md",
+          "before_sha256": "b3a110c4afb40ae039dd452f5a596596eef1cddd77911b64febf7c4410361a4e",
+          "after_sha256": "55ecdf2d07fb2373d8d25bc08d295f964cab20b97fce7f2e803182dd71968ce6",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair catalog link and specify missing compensation comparability/source context and unknown-value handling.",
+      "limitations": "Synthetic values only; no market salary research or compensation decision.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "filesystem-context",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/filesystem-context/SKILL.md",
+          "before_sha256": "df414a428709f70ad513d2b2c7e29233fd32d40830efe253d1314aa19de6a5c7",
+          "after_sha256": "2d658511c7e66310403055264add65ba22eb99aab05a00b454d5bb851bd5799d",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Qualify unlimited/lossless storage and character/token assumptions; scope retention/self-modification and shared-file provenance/privacy.",
+      "limitations": "No memory or transcript persistence performed; pseudohelpers not bundled.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "announcement-board",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/announcement-board/SKILL.md",
+          "before_sha256": "5b06e44cebf0722468afa2b5f659706def8faa37b63cb67e26a9c58096db11b8",
+          "after_sha256": "5b06e44cebf0722468afa2b5f659706def8faa37b63cb67e26a9c58096db11b8",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "No actionable source defect found; template consistently declares text views and explicitly excludes sending/sync.",
+      "limitations": "Empty register only; audience/status fields do not implement access or actual readership.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    },
+    {
+      "id": "geo-fundamentals",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/geo-fundamentals/SKILL.md",
+          "before_sha256": "4d6c4b12e3b3184d637d6897acf81962e2ac1b629059c6948ccad29755e44dab",
+          "after_sha256": "990037e5d9235880bc2fe925af16e455e68a428db84fd4a075519ef5e7d13efc",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/geo-fundamentals/scripts/geo_checker.py",
+          "before_sha256": "512cf855e5ab3441e2db4578a3c3a51baf3c34461a1735d02dfb079a73fb2522",
+          "after_sha256": "a6ab87ce17eac3c998f6452ab94e1153fbff04aa4954afedde67ceed4241206a",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Remove fabricated retrieval weights and crawler/citation conflation; make bundled checker no-files result not-assessed and labels explicitly source heuristics rather than original-data/visibility proof.",
+      "limitations": "No live AI citation measurements; local synthetic fixtures passed and source scan excludes public Markdown/rendered output.",
+      "sources": [
+        "Complete root and Python support."
+      ]
+    },
+    {
+      "id": "monte-carlo-context-detection",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/monte-carlo-context-detection/SKILL.md",
+          "before_sha256": "80a8092eabf0cb67b5fdee7ad1e95c791ad9227300a7f42ebd1c9a4f46140727",
+          "after_sha256": "eafb5d55c8554ad107064a3190d102131fbd73aaab80fd9a0929476c40a24a67",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/monte-carlo-context-detection/references/signal-definitions.md",
+          "before_sha256": "18e1f90552b1c83a1d637815758ece4c084f5032008257ba01eed5846b6808bd",
+          "after_sha256": "f648770c4e50ea995f7ebed2db4f645ff0daed9a5f32978d1143ac160023e364",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Prevent ambiguous key-asset auto-selection; qualify missing server/companion hooks and write authorization; distinguish API errors and filename identity.",
+      "limitations": "Source-only routing review; server availability and tenant credentials untested.",
+      "sources": [
+        "Complete root and signal reference."
+      ]
+    },
+    {
+      "id": "dev-to-hashnode",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/dev-to-hashnode/README.md",
+          "before_sha256": "3916534d10f7c1c9736e392a39bcae2eb756c85b2652ec6d79dba455eb07a869",
+          "after_sha256": "7fad36b74ff26db7f4bd5a3f8dd4dd43c3204749829a605561dd0bf4f73c45ca",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/dev-to-hashnode/SKILL.md",
+          "before_sha256": "c69f8bfd50819e6abe644b998fe5cbd88611f9be78b5ea6911146a26de35ba4f",
+          "after_sha256": "18ef0097ba95a00138f7bedca04200353a51f8b65375be46b8055970c5bd7c44",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Default publication example to draft; qualify unsupported audience/growth/platform claims and canonical timing; fix nested fence and fabricated follow link.",
+      "limitations": "Both tracked files fully read; no platform accounts or live publishing tested.",
+      "sources": [
+        "Complete root and README; historical platform advice treated as unverified."
+      ]
+    },
+    {
+      "id": "scroll-experience",
+      "status": "complete-source-review",
+      "inventory": [
+        {
+          "path": "skills/scroll-experience/SKILL.md",
+          "before_sha256": "eae6278eeb2d5c8979600d9526a9921421ead14721a3c258f9a299936efcbf29",
+          "after_sha256": "eae6278eeb2d5c8979600d9526a9921421ead14721a3c258f9a299936efcbf29",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        },
+        {
+          "path": "skills/scroll-experience/references/detailed-guide.md",
+          "before_sha256": "97b2c02c6bbfac23845e6fc99f6cf065af101b331e5fa3ea93581e55802d9666",
+          "after_sha256": "06258377b09315548aa8de544f67f3ee74d8499a234813ba563c11deade53a82",
+          "before_mode": "100644",
+          "after_mode": "100644"
+        }
+      ],
+      "findings": "Repair duplicate const and backwards scroll lifecycle; remove focus pollution, improve reduced-motion fallback and qualify GPU/frame guarantees.",
+      "limitations": "Complete root and guide; fragments not browser or assistive-technology certified.",
+      "sources": [
+        "Complete tracked source tree."
+      ]
+    }
+  ],
+  "pending": [],
+  "updated": "2026-10-23T11:04:26.233596+00:00",
+  "partial_reads": {},
+  "validation": {
+    "validate": "passed with /opt/homebrew/bin/python3.14 (2743 skills; initial default Python lacked PyYAML)",
+    "validate:references": "passed",
+    "security:docs": "passed",
+    "diff-check": "passed",
+    "script-fixtures": "Both changed Python scripts compile; empty directories yield passed:null/not-assessed; SEO decorative alt accepted and absent alt flagged.",
+    "runtime": "Source-only review. No SDK/cloud/DB/platform runtime certification; bundled instructions were not executed.",
+    "merge-review": "Tessl/manual exact-head merge attestation pending; no merge authority claimed.",
+    "full-preflight": "Parent will run after handoff.",
+    "targeted-security-boundaries": "14 tests passed with Python3.14; trusted OneRoster snapshot compared in full and refreshed; new real ZIP fixtures cover valid multi-org references, redacted missing reference, PARTIAL_CHECKS_ONLY and invalid UTF-8 rejection."
+  }
+}

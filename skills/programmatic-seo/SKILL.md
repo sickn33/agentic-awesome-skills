@@ -41,7 +41,7 @@ The Feasibility Index answers one question:
 ### Total Score: **0–100**
 
 This is a **diagnostic score**, not a vanity metric.
-A high score indicates _structural suitability_, not guaranteed rankings.
+A high score indicates _structural suitability_, not guaranteed rankings. The weights and thresholds are this workflow’s qualitative rubric, not a validated search-engine metric; mark missing demand/competition data as unknown rather than inventing scores.
 
 ---
 

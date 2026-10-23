@@ -113,12 +113,12 @@ async def update_{{resource_name}}(
             detail="{{ResourceName}} not found",
         )
 
-    # Optional: Check ownership
-    # if existing.author_id != current_user.id:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_403_FORBIDDEN,
-    #         detail="Not authorized to update this {{resource_name}}",
-    #     )
+    # Adapt the ownership field to the actual model; enforce before mutation.
+    if existing.author_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this {{resource_name}}",
+        )
 
     return await service.update_{{resource_name}}({{resource_name}}_id, data)
 
@@ -142,6 +142,12 @@ async def delete_{{resource_name}}(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="{{ResourceName}} not found",
+        )
+
+    if existing.author_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this {{resource_name}}",
         )
 
     await service.delete_{{resource_name}}({{resource_name}}_id)

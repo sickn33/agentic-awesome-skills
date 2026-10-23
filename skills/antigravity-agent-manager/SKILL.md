@@ -17,7 +17,7 @@ tools: [antigravity, gemini]
 
 A playbook for orchestrating multi-agent systems using the standalone **Antigravity 2.0 Agent Manager** (white icon) in parallel with the **Antigravity IDE** (black icon).
 
-Starting with version 2.0, Google decoupled the Agent Manager from the main IDE interface, removing the "Open Agent Manager" button. This skill outlines how to install, configure, and operate the two environments side-by-side to direct multiple AI agents on front-end and back-end projects simultaneously.
+Google introduced Antigravity 2.0 as a standalone app; the availability of an integrated Agent Manager/button depends on the installed IDE release. This skill outlines how to install, configure, and operate the two environments side-by-side to direct multiple AI agents on front-end and back-end projects simultaneously.
 
 ## When to Use This Skill
 
@@ -25,13 +25,15 @@ Starting with version 2.0, Google decoupled the Agent Manager from the main IDE 
 - Use when setting up the dual-window workspace (Antigravity IDE + Antigravity 2.0 Agent Manager).
 - Use to resolve conflicts or obsolete tutorial steps that mention the integrated "Open Agent Manager" button.
 
+Version, app names/icons and installation layout are version-specific. Verify current official documentation and the installed client before recommending a second app; icon color or a missing button is not proof of a required migration. Folder prompts and file watchers are not access controls or locks. Prefer isolated agent worktrees and integrate reviewed changes sequentially; never stage unrelated work.
+
 ## How It Works
 
 ### Step 1: Parallel Installation
 
 1. **Keep your current Antigravity IDE**: Do not uninstall the classic IDE (black icon).
 2. **Download Antigravity 2.0**: Fetch the standalone Agent Manager application from the official Antigravity downloads page.
-3. **Install**: Run the installer. It will install alongside your existing IDE without overwriting it. You should now have both:
+3. **Install**: Run the installer. Check the official installer/version behavior and preserve settings/projects before installing; do not assume side-by-side installation is guaranteed. You should now have both:
    - **Antigravity IDE** (Black Icon) — Your code editor and manual development workspace.
    - **Antigravity 2.0** (White Icon) — Your multi-agent orchestrator dashboard.
 
@@ -59,7 +61,7 @@ When configuring the Agent Manager dashboard, specify the target files or direct
 ```text
 Role: Backend Developer Agent
 Workspace Target: /server
-Task: Add a new POST /api/v1/students endpoint in server/routes/students.js and update database/models/student.js. Do not edit files outside the /server directory.
+Task: Add a new POST /api/v1/students endpoint in server/routes/students.js and update server/database/models/student.js. Do not edit files outside the /server directory.
 ```
 
 **Frontend Agent Task Prompt:**
@@ -81,7 +83,7 @@ git status
 git diff
 
 # Commit stable checkpoints so both agents stay in sync with main branch
-git add .
+git add -- server/routes/students.js client/components/StudentForm.jsx
 git commit -m "feat: synchronize parallel front-end and back-end agent changes"
 ```
 
@@ -91,12 +93,12 @@ git commit -m "feat: synchronize parallel front-end and back-end agent changes"
 - ✅ **Do:** Enforce strict folder-level boundaries (scopes) for each agent in the Agent Manager.
 - ✅ **Do:** Use git branches or commits to checkpoint progress before letting agents perform massive rewrites.
 - ❌ **Don't:** Let multiple agents edit the same file at the same time, as it causes write conflicts and git merge conflicts.
-- ❌ **Don't:** Search for the "Open Agent Manager" button in the black icon IDE; use the standalone white icon application instead.
+- ✅ **Do:** Check the installed surface/version and [official setup guidance](https://www.antigravity.google/docs) rather than assuming an integrated button exists or was removed.
 
 ## Limitations
 
 - This skill assumes you have local administrator permissions to install both applications on Windows/macOS.
-- Coordination of file locks relies on standard IDE file-system watchers. If changes do not reflect, reload the IDE workspace (`Ctrl+R` or developer reload).
+- File-system watchers report changes; they do not coordinate safe file locks between agents. If changes do not reflect, reload the IDE workspace (`Ctrl+R` or developer reload).
 
 ## Common Pitfalls
 

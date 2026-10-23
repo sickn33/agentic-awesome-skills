@@ -90,7 +90,9 @@ def test_bot(token: str) -> dict:
 
     # Test 3: getUpdates (only if no webhook)
     print("\n[3/3] Testing getUpdates...")
-    if results.get("webhook_info", {}).get("url"):
+    if results["webhook_info"] is None:
+        print("  SKIP - Webhook status unknown; avoid interfering with an active receiver")
+    elif results["webhook_info"].get("url"):
         print("  SKIP - Webhook is active (getUpdates disabled)")
     else:
         try:

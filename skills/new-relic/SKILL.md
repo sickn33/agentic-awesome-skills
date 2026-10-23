@@ -37,13 +37,16 @@ Use this skill when:
 - Application access for APM agents
 - Infrastructure access for host agents
 
+Select the account/region, ingestion scope, retention and spend limits before enabling agents. Do not send user/customer IDs or sensitive logs without authorization/redaction. Placeholder keys must not become real secrets in source, shell arguments/history or Helm release values: use protected credential providers and existing-secret chart settings. The Docker sample is host-privileged (root mount, socket, host PID/network, SYS_PTRACE); use only if explicitly approved and necessary, with a pinned image and minimum permissions. Verify installed agent/API versions: dashboard/alert JSON are illustrative fragments, the Python metric third argument is not an arbitrary attributes map, and log forwarding configuration belongs in the version-specific logging configuration. Validate alert units and delivery before activation; actual notifications require authorization.
+
 ## Infrastructure Agent
 
 ### Linux Installation
 
 ```bash
 # Add repository and install
-curl -Ls https://download.newrelic.com/install/newrelic-cli/scripts/install.sh | bash <!-- security-allowlist: curl-pipe-bash -->
+curl -fLs https://download.newrelic.com/install/newrelic-cli/scripts/install.sh -o /tmp/newrelic-install.sh
+# Review and pin the full installer before executing separately.
 
 # Configure license key
 sudo NEW_RELIC_API_KEY=<YOUR_API_KEY> NEW_RELIC_ACCOUNT_ID=<ACCOUNT_ID> /usr/local/bin/newrelic install

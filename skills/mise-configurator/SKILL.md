@@ -55,7 +55,7 @@ Create a minimal, valid, copy-paste-ready configuration using:
 
 ### Step 3: Add Bootstrap Commands
 
-Provide setup commands such as:
+Inspect `[tasks]`, `[env]`, hooks and referenced files before trusting a configuration. `mise trust` authorizes configuration evaluation and `mise install` may download and execute tool installers. Use only reviewed project configuration and approved tool sources. Provide setup commands such as:
 
 ```bash
 mise trust
@@ -72,7 +72,7 @@ If requested, generate pipeline examples using mise with caching and runtime ins
 
 ```toml
 [tools]
-node = "22.11.0"
+node = "22.11.0" # Historical example only; select a supported project-approved patch.
 pnpm = "9.15.0"
 ```
 
@@ -80,7 +80,7 @@ pnpm = "9.15.0"
 
 ```toml
 [tools]
-python = "3.12.7"
+python = "3.12.7" # Historical example only; select a supported project-approved patch.
 poetry = "1.8.4"
 ```
 

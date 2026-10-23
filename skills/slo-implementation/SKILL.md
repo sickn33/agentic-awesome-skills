@@ -68,9 +68,9 @@ sum(rate(http_request_duration_seconds_count[28d]))
 #### 3. Write Success SLI
 ```
 # Successful writes / Total writes
-sum(storage_writes_successful_total)
+sum(increase(storage_writes_successful_total[28d]))
 /
-sum(storage_writes_total)
+sum(increase(storage_writes_total[28d]))
 ```
 
 **Reference:** See `references/slo-definitions.md`
@@ -197,6 +197,8 @@ groups:
 ```
 
 The exhaustion projection below assumes a constant recent burn rate. Zero burn has no finite exhaustion time; an exhausted budget must display as already exhausted. Missing telemetry is not healthy traffic.
+
+Ensure zero-error counters are initialized or derive bad events from the same good/total population. An absent 5xx series must not silently hide burn/compliance rules; test zero-error, no-traffic and missing-telemetry cases separately.
 
 ### Additional Burn-Rate Recording Rules
 

@@ -69,7 +69,7 @@ const result = pipe(
 ### Performance-Critical Code
 
 ```typescript
-// For hot paths, imperative is faster (no intermediate arrays)
+// Benchmark hot paths on the actual runtime; no universal speed claim
 function sumLarge(numbers: number[]): number {
   let sum = 0
   for (let i = 0; i < numbers.length; i++) {
@@ -78,7 +78,7 @@ function sumLarge(numbers: number[]): number {
   return sum
 }
 
-// fp-ts creates intermediate structures
+// A.reduce does not create an intermediate array per item
 const sum = pipe(numbers, A.reduce(0, (acc, n) => acc + n))
 ```
 
@@ -90,7 +90,7 @@ If you're the only one who can read the code, it's not good code.
 // If your team knows this pattern
 async function getUser(id: string): Promise<User | null> {
   try {
-    const response = await fetch(`/api/users/${id}`)
+    const response = await fetch(`/api/users/${encodeURIComponent(id)}`)
     if (!response.ok) return null
     return await response.json()
   } catch {
@@ -101,7 +101,7 @@ async function getUser(id: string): Promise<User | null> {
 // Don't force this on them
 const getUser = (id: string): TE.TaskEither<Error, User> =>
   pipe(
-    TE.tryCatch(() => fetch(`/api/users/${id}`), E.toError),
+    TE.tryCatch(() => fetch(`/api/users/${encodeURIComponent(id)}`), E.toError),
     TE.flatMap(r => r.ok ? TE.right(r) : TE.left(new Error('Not found'))),
     TE.flatMap(r => TE.tryCatch(() => r.json(), E.toError))
   )

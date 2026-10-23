@@ -1,6 +1,6 @@
 ---
 name: socialclaw
-description: "Agent-first social media publishing skill — schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key."
+description: "Agent-first social media publishing skill — schedule and publish posts across the listed platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key."
 category: marketing
 risk: critical
 source: community
@@ -22,7 +22,7 @@ plugin:
 
 ## Overview
 
-SocialClaw is an agent-first social media publishing skill that lets you schedule and publish posts across 13 platforms using a single workspace API key. No per-platform OAuth setup required — one key covers everything.
+SocialClaw is an agent-first social media publishing skill that lets you schedule and publish posts across the listed platforms using a single workspace API key. The workspace key accesses accounts already connected to that workspace; verify current platform support, permissions and account connection requirements before claiming readiness.
 
 ## When to Use
 
@@ -61,7 +61,8 @@ npm install socialclaw@0.1.12
 Set your workspace API key:
 
 ```bash
-export SOCIALCLAW_API_KEY=your_workspace_api_key
+# Load SOCIALCLAW_API_KEY through the host secret store or a private ignored environment file.
+# Never paste the real key into chat, committed files or shell history.
 ```
 
 Get your API key at [getsocialclaw.com](https://getsocialclaw.com).

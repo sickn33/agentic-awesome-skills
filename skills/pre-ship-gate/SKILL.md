@@ -55,13 +55,17 @@ Confirm the running system, not the deploy log.
 - Tail production logs for the first errors after cutover.
 - Only after the live revision matches the intended revision may you report "shipped". If it does not match, report the mismatch, not success.
 
+## Revision comparison
+
+Compare full immutable revision identities in the same format and confirm the response came from the intended live environment. A revision match is necessary evidence, not sufficient functional acceptance; exercise the requested critical paths and migration/flag behavior too.
+
 ## Examples
 
 ### Example 1: Verifying the live revision instead of trusting the deploy log
 
 ```bash
 # You intended to ship this commit
-INTENDED="$(git rev-parse --short HEAD)"
+INTENDED="$(git rev-parse HEAD)"
 
 # Ask the running service what it is actually serving
 LIVE="$(curl -fsS https://your-service.example.com/health | jq -r '.revision')"

@@ -7,7 +7,7 @@
 **This skill supports multiple tool backends. Use whichever is available:**
 
 1. **MCP Tools (mcp__linear)** - Use if available in your tool set
-2. **Linear CLI (`linear` command)** - Always available via Bash
+2. **Linear CLI (`linear` command)** - Only if an identified CLI distribution is already installed and authenticated; inspect its help before using these illustrative commands
 3. **Helper Scripts** - For complex operations
 
 **If MCP tools are NOT available**, use the Linear CLI via Bash:
@@ -29,7 +29,7 @@ linear issues comment add ENG-123 -m "Comment text"
 linear issues list
 ```
 
-**Do NOT report "MCP tools not available" as a blocker** - use CLI instead.
+If no authenticated backend is available, provide a draft or setup instructions; do not claim a completed Linear operation. The helper scripts and reference documents named below are upstream examples, not bundled in this tree.
 
 ---
 
@@ -42,7 +42,7 @@ linear issues list
 
 ```bash
 # Validate LINEAR_API_KEY is set (masked output)
-varlock load 2>&1 | grep LINEAR
+varlock run -- node -e 'if (!process.env.LINEAR_API_KEY) process.exit(1); console.log("Linear credential present")'
 
 # Run commands with secrets injected
 varlock run -- npx tsx scripts/query.ts "query { viewer { name } }"
@@ -69,7 +69,7 @@ cat .env
    LINEAR_API_KEY=
    ```
 
-2. Add `LINEAR_API_KEY` to `.env` (never commit this file)
+2. Store the key through an approved secret manager or a private gitignored environment file; never include it in chat or tracked configuration.
 
 3. Configure MCP to use environment variable:
    ```json
@@ -118,8 +118,7 @@ read -rsp "Linear API key: " LINEAR_API_KEY
 echo
 export LINEAR_API_KEY
 
-# Option B: Add to Claude Code environment
-printf 'LINEAR_API_KEY=%s\n' "$LINEAR_API_KEY" >> ~/.claude/.env
+# Prefer the client OAuth setup below; do not append credentials to an unverified file.
 
 # Then reload your shell or restart Claude Code
 ```
@@ -326,14 +325,13 @@ Choose the right tool for the task:
   "mcpServers": {
     "linear": {
       "command": "npx",
-      "args": ["mcp-remote", "https://mcp.linear.app/sse"],
-      "env": { "LINEAR_API_KEY": "your_api_key" }
+      "args": ["mcp-remote", "https://mcp.linear.app/mcp"]
     }
   }
 }
 ```
 
-> **WARNING**: Do NOT use deprecated community servers. See troubleshooting.md for details.
+Use the official endpoint with client OAuth or documented bearer authentication. Installing `mcp-remote` requires separate trust/version review; an environment variable alone does not configure HTTP authentication. The upstream troubleshooting document is not bundled.
 
 ### MCP Reliability (Official Server)
 
@@ -389,7 +387,7 @@ See **sync.md** for parallel execution patterns.
 
 ### Issues → Projects → Initiatives
 
-**Every issue MUST be attached to a project. Every project MUST be linked to an initiative.**
+This workflow recommends projects and initiatives when they fit the workspace; they are not universal Linear requirements. Confirm the target team/project, exact IDs and authorized changes before writing. Partial-name matches must resolve uniquely; never bulk-update an ambiguous selection.
 
 | Entity | Must Link To | If Missing |
 |--------|--------------|------------|

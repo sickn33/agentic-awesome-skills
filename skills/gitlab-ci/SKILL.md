@@ -92,7 +92,7 @@ deploy:
       when: manual
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
-    - when: on_success
+    - when: never
 ```
 
 ### Parallel Jobs
@@ -188,7 +188,7 @@ build_image:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - printf '%s' "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 ```
@@ -213,6 +213,8 @@ sudo gitlab-runner register \
 
 ### Runner Configuration
 
+Default to unprivileged isolated runners. Docker-in-Docker and host Docker socket mounts require a separately reviewed trusted-runner design; they can grant host-level control and must not be exposed to untrusted merge requests. Historical runtime/image versions and runner registration flags need current GitLab validation.
+
 ```toml
 # /etc/gitlab-runner/config.toml
 [[runners]]
@@ -222,8 +224,8 @@ sudo gitlab-runner register \
   executor = "docker"
   [runners.docker]
     image = "alpine:latest"
-    privileged = true
-    volumes = ["/cache", "/var/run/docker.sock:/var/run/docker.sock"]
+    privileged = false
+    volumes = ["/cache"]
 ```
 
 ### Runner Tags

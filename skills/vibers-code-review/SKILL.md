@@ -20,6 +20,8 @@ Use this skill when:
 
 ## Quick Start (3 steps)
 
+Before setup, confirm the user authorizes collaborator access, external code/spec disclosure, and any paid review. Inspect the action and pin it to a reviewed full commit SHA; the version tag below is illustrative. Grant only the access needed and keep branch protection enabled. Do not make a private specification public to enable this workflow.
+
 ### Step 1. Add collaborator
 
 Go to your repo → Settings → Collaborators → Add **`marsiandeployer`**
@@ -63,7 +65,7 @@ Add this block to your project's `CLAUDE.md`, `.cursorrules`, or `AGENTS.md`:
 Every commit MUST include a "How to test" section in the body:
 - Live URL to open and verify the change
 - Step-by-step what to click/check
-- Test credentials if login is required
+- A safe way to obtain a disposable test account if login is required; never put passwords, tokens, or real credentials in commit messages
 - Expected result for each step
 
 Example:
@@ -74,12 +76,12 @@ Example:
   - Fill in email/password, submit
   - Check that confirmation email arrives
   - Try submitting with invalid email — should show error
-  - Login: test@example.com / demo123
+  - Test account: obtain a disposable account through the approved private channel
 ```
 
 Without "How to test" the reviewer has to guess what to verify, and the review takes longer.
 
-**Done.** Now every push triggers a notification. You'll get a PR with fixes, usually within 24 hours.
+Once configured, pushes may notify the external service. Confirm its current availability, terms, price, and turnaround before ordering a review; the figures below are upstream examples, not a current quote.
 
 ## What Happens After Setup
 
@@ -110,7 +112,7 @@ No subscriptions. No contracts. Pay per review.
 
 ## Feedback & Support
 
-Send feedback directly from your agent:
+Only send feedback when the user explicitly requests sending it. Review the message and repository URL for private information before transmission:
 
 ```bash
 curl -X POST https://vibers.onout.org/feedback \

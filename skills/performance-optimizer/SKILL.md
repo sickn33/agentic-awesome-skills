@@ -78,23 +78,23 @@ for (const user of users) {
   user.posts = await db.posts.find({ userId: user.id }); // N queries
 }
 
-// Good: Single query with JOIN
+// Alternative: batched population; inspect actual generated queries
 const users = await db.users.find()
-  .populate('posts'); // 1 query
+  .populate('posts'); // May issue additional batched queries; not necessarily a JOIN
 ```
 
 **Problem: Missing Index**
 ```sql
 -- Check slow query
 EXPLAIN SELECT * FROM users WHERE email = 'test@example.com';
--- Shows: Seq Scan (bad)
+-- A sequential scan may be optimal for small tables/low-selectivity queries.
 
 -- Add index
 CREATE INDEX idx_users_email ON users(email);
 
 -- Check again
 EXPLAIN SELECT * FROM users WHERE email = 'test@example.com';
--- Shows: Index Scan (good)
+-- Compare actual cost/latency and write/storage impact.
 ```
 
 **Problem: SELECT ***
@@ -286,6 +286,10 @@ const data = fs.readFileSync('huge-file.txt'); // 1GB
 const stream = fs.createReadStream('huge-file.txt');
 stream.on('data', chunk => process(chunk));
 ```
+
+## Correctness and benchmark boundaries
+
+The two `findDuplicates` examples have different output semantics: the nested loop repeats an item per matching pair, while the Set version emits each duplicated value once (and equality differs for NaN). Define the required contract before changing algorithms. The stats cache is suitable only for shared public data; user/tenant-specific results need authorized keys and invalidation. Streaming must handle errors/backpressure and asynchronous processing. `EXPLAIN ANALYZE` executes the query; approve target/load before use. All timings/sizes below are illustrative, not observed results: compare representative repeated runs with workload/environment/sample statistics and regression checks.
 
 ## Measuring Impact
 

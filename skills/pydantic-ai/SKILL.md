@@ -22,7 +22,9 @@ PydanticAI is a Python agent framework from the Pydantic team that brings the sa
 - Use when you need validated, typed LLM outputs (not raw strings)
 - Use when you want to write unit tests for agent logic without hitting a real LLM
 - Use when switching between LLM providers without rewriting agent code
-- Use when the user asks about `Agent`, `@agent.tool`, `RunContext`, `ModelRetry`, or `result_type`
+- Use when the user asks about `Agent`, `@agent.tool`, `RunContext`, `ModelRetry`, or `output_type`
+
+Pin a supported framework/provider version; examples use current output_type/output/output_validator names rather than legacy result_* APIs. Typed output validates shape, not factual truth or authorization. Refund tools need server-side ownership, policy checks and idempotency; an LLM tool request is not approval. TestModel may invoke tools, so supply fake dependencies and block real model requests during tests. The research/writer example has no retrieval sources and cannot claim researched facts without a real evidence tool.
 
 ## How It Works
 
@@ -51,31 +53,31 @@ agent = Agent(
 )
 
 result = agent.run_sync('What is the capital of Japan?')
-print(result.data)  # "Tokyo"
+print(result.output)  # "Tokyo"
 print(result.usage())  # Usage(requests=1, request_tokens=..., response_tokens=...)
 ```
 
 ### Step 3: Structured Output with Pydantic Models
 
 ```python
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from pydantic_ai import Agent
 
 class MovieReview(BaseModel):
     title: str
     year: int
-    rating: float  # 0.0 to 10.0
+    rating: float = Field(ge=0, le=10)
     summary: str
     recommended: bool
 
 agent = Agent(
     'openai:gpt-4o',
-    result_type=MovieReview,
+    output_type=MovieReview,
     system_prompt='You are a film critic. Return structured reviews.',
 )
 
 result = agent.run_sync('Review Inception (2010)')
-review = result.data  # Fully typed MovieReview instance
+review = result.output  # Fully typed MovieReview instance
 print(f"{review.title} ({review.year}): {review.rating}/10")
 print(f"Recommended: {review.recommended}")
 ```
@@ -86,7 +88,7 @@ Register tools with `@agent.tool` — the LLM can call them during a run:
 
 ```python
 from pydantic_ai import Agent, RunContext
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import httpx
 
 class WeatherReport(BaseModel):
@@ -96,7 +98,7 @@ class WeatherReport(BaseModel):
 
 weather_agent = Agent(
     'anthropic:claude-sonnet-4-6',
-    result_type=WeatherReport,
+    output_type=WeatherReport,
     system_prompt='Get current weather for the requested city.',
 )
 
@@ -104,7 +106,9 @@ weather_agent = Agent(
 async def get_temperature(ctx: RunContext, city: str) -> dict:
     """Fetch the current temperature for a city from the weather API."""
     async with httpx.AsyncClient() as client:
-        r = await client.get(f'https://wttr.in/{city}?format=j1')
+        from urllib.parse import quote
+        r = await client.get(f'https://wttr.in/{quote(city, safe="")}?format=j1', timeout=15)
+        r.raise_for_status()
         data = r.json()
         return {
             'temp_c': float(data['current_condition'][0]['temp_C']),
@@ -113,7 +117,7 @@ async def get_temperature(ctx: RunContext, city: str) -> dict:
 
 import asyncio
 result = asyncio.run(weather_agent.run('What is the weather in Tokyo?'))
-print(result.data)
+print(result.output)
 ```
 
 ### Step 5: Dependency Injection
@@ -123,7 +127,7 @@ Inject services (database, HTTP clients, config) into agents for testability:
 ```python
 from dataclasses import dataclass
 from pydantic_ai import Agent, RunContext
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 @dataclass
 class Deps:
@@ -137,7 +141,7 @@ class SupportResponse(BaseModel):
 support_agent = Agent(
     'openai:gpt-4o-mini',
     deps_type=Deps,
-    result_type=SupportResponse,
+    output_type=SupportResponse,
     system_prompt='You are a support agent. Use the tools to help customers.',
 )
 
@@ -155,7 +159,7 @@ async def create_refund(ctx: RunContext[Deps], order_id: str, reason: str) -> di
 async def handle_support(user_id: str, message: str):
     deps = Deps(db=get_db(), user_id=user_id)
     result = await support_agent.run(message, deps=deps)
-    return result.data
+    return result.output
 ```
 
 ### Step 6: Testing with TestModel
@@ -167,20 +171,21 @@ from pydantic_ai.models.test import TestModel
 
 def test_support_agent_escalates():
     with support_agent.override(model=TestModel()):
-        # TestModel returns a minimal valid response matching result_type
+        # TestModel returns a minimal valid response matching output_type
         result = support_agent.run_sync(
             'I want to cancel my account',
             deps=Deps(db=FakeDb(), user_id='user-123'),
         )
     # Test the structure, not the LLM's exact words
-    assert isinstance(result.data, SupportResponse)
-    assert isinstance(result.data.escalate, bool)
+    assert isinstance(result.output, SupportResponse)
+    assert isinstance(result.output.escalate, bool)
 ```
 
 **FunctionModel** for deterministic test responses:
 
 ```python
-from pydantic_ai.models.function import FunctionModel, ModelContext
+from pydantic_ai.models.function import FunctionModel
+from pydantic_ai.messages import ModelResponse, TextPart
 
 def my_model(messages, info):
     return ModelResponse(parts=[TextPart('Always this response')])
@@ -221,7 +226,7 @@ history = result1.all_messages()
 
 # Second turn — passes conversation history
 result2 = agent.run_sync('What is my name?', message_history=history)
-print(result2.data)  # "Your name is Alice."
+print(result2.output)  # "Your name is Alice."
 ```
 
 ## Examples
@@ -241,7 +246,7 @@ class CodeReview(BaseModel):
 
 code_review_agent = Agent(
     'anthropic:claude-sonnet-4-6',
-    result_type=CodeReview,
+    output_type=CodeReview,
     system_prompt="""
     You are a senior engineer performing code review.
     Evaluate code quality, identify issues, and provide actionable suggestions.
@@ -251,7 +256,7 @@ code_review_agent = Agent(
 
 def review_code(diff: str) -> CodeReview:
     result = code_review_agent.run_sync(f"Review this code:\n\n{diff}")
-    return result.data
+    return result.output
 ```
 
 ### Example 2: Agent with Retry Logic
@@ -269,9 +274,9 @@ class StrictJson(BaseModel):
             raise ValueError('value must be positive')
         return v
 
-agent = Agent('openai:gpt-4o-mini', result_type=StrictJson)
+agent = Agent('openai:gpt-4o-mini', output_type=StrictJson)
 
-@agent.result_validator
+@agent.output_validator
 async def validate_result(ctx, result: StrictJson) -> StrictJson:
     if result.value > 1000:
         raise ModelRetry('Value must be under 1000. Try again with a smaller number.')
@@ -282,7 +287,7 @@ async def validate_result(ctx, result: StrictJson) -> StrictJson:
 
 ```python
 from pydantic_ai import Agent
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 class ResearchSummary(BaseModel):
     key_points: list[str]
@@ -293,8 +298,8 @@ class BlogPost(BaseModel):
     body: str
     meta_description: str
 
-researcher = Agent('openai:gpt-4o', result_type=ResearchSummary)
-writer = Agent('anthropic:claude-sonnet-4-6', result_type=BlogPost)
+researcher = Agent('openai:gpt-4o', output_type=ResearchSummary)
+writer = Agent('anthropic:claude-sonnet-4-6', output_type=BlogPost)
 
 async def research_and_write(topic: str) -> BlogPost:
     # Stage 1: research
@@ -303,18 +308,18 @@ async def research_and_write(topic: str) -> BlogPost:
     # Stage 2: write based on research
     post = await writer.run(
         f'Write a blog post about: {topic}\n\nResearch:\n' +
-        '\n'.join(f'- {p}' for p in research.data.key_points) +
-        f'\n\nConclusion: {research.data.conclusion}'
+        '\n'.join(f'- {p}' for p in research.output.key_points) +
+        f'\n\nConclusion: {research.output.conclusion}'
     )
-    return post.data
+    return post.output
 ```
 
 ## Best Practices
 
-- ✅ Always define `result_type` with a Pydantic model — avoid returning raw strings in production
+- ✅ Always define `output_type` with a Pydantic model — avoid returning raw strings in production
 - ✅ Use `deps_type` with a dataclass for dependency injection — makes agents testable
 - ✅ Use `TestModel` in unit tests — never hit a real LLM in CI
-- ✅ Add `@agent.result_validator` for business-logic checks beyond Pydantic validation
+- ✅ Add `@agent.output_validator` for business-logic checks beyond Pydantic validation
 - ✅ Use `run_stream` for long outputs in user-facing applications to show progressive results
 - ❌ Don't put secrets (API keys) in `Agent()` arguments — use environment variables
 - ❌ Don't share a single `Agent` instance across async tasks if deps differ — create per-request instances or use `agent.run()` with per-call `deps`
@@ -325,13 +330,13 @@ async def research_and_write(topic: str) -> BlogPost:
 - Set API keys via environment variables (`OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.) — never hardcode them.
 - Validate all tool inputs before passing to external systems — use Pydantic models or manual checks.
 - Tools that mutate data (write to DB, send emails, call payment APIs) should require explicit user confirmation before the agent invokes them in production.
-- Log `result.all_messages()` for audit trails when agents perform consequential actions.
+- Store minimal redacted audit metadata for consequential actions; full messages can contain secrets and personal data.
 - Set `retries=` limits on `Agent()` to prevent runaway loops on persistent validation failures.
 
 ## Common Pitfalls
 
 - **Problem:** `ValidationError` on every LLM response — structured output never validates
-  **Solution:** Simplify `result_type` fields. Use `Optional` and `default` where appropriate. The model may struggle with overly strict schemas.
+  **Solution:** Simplify `output_type` fields. Use `Optional` and `default` where appropriate. The model may struggle with overly strict schemas.
 
 - **Problem:** Tool is never called by the LLM
   **Solution:** Write a clear, specific docstring for the tool function — PydanticAI sends the docstring as the tool description to the LLM.

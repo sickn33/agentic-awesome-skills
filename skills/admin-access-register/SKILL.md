@@ -143,10 +143,10 @@ CREATE TABLE admin_access_register (
   backup_admin VARCHAR(255),
   department VARCHAR(255),
   access_level VARCHAR(100),
-  number_of_admin_users NUMERIC,
+  number_of_admin_users INTEGER CHECK (number_of_admin_users >= 0),
   billing_owner VARCHAR(255),
   plan VARCHAR(255),
-  seats NUMERIC,
+  seats INTEGER CHECK (seats >= 0),
   renewal_date DATE,
   company_owned_account BOOLEAN,
   shared_login BOOLEAN,
@@ -179,10 +179,10 @@ CREATE INDEX idx_admin_access_register_status ON admin_access_register (status);
       "Backup Admin": { "type": "string" },
       "Department": { "type": "string" },
       "Access Level": { "type": "string" },
-      "Number of Admin Users": { "type": "number" },
+      "Number of Admin Users": { "type": ["integer", "null"], "minimum": 0 },
       "Billing Owner": { "type": "string" },
       "Plan": { "type": "string" },
-      "Seats": { "type": "number" },
+      "Seats": { "type": ["integer", "null"], "minimum": 0 },
       "Renewal Date": { "type": "string", "format": "date" },
       "Company Owned Account": { "type": "boolean" },
       "Shared Login": { "type": "boolean" },
@@ -236,16 +236,16 @@ The illustrated optional-field schema has no universal required set; choose busi
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | System or Tool | `text` | `VARCHAR(255)` | `string` | Text | `Example Product` |
+| 1 | System or Tool | `text` | `VARCHAR(255)` | `string` | Title | `Example Product` |
 | 2 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `General` |
 | 3 | Main Admin | `text` | `VARCHAR(255)` | `string` | Text | `Example Admin` |
 | 4 | Backup Admin | `text` | `VARCHAR(255)` | `string` | Text | `Example Backup Admin` |
 | 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 6 | Access Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Full` |
-| 7 | Number of Admin Users | `number` | `NUMERIC` | `number` | Number | `3` |
+| 7 | Number of Admin Users | `integer` | `INTEGER` | `integer, minimum: 0` | Number | `3` |
 | 8 | Billing Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 9 | Plan | `text` | `VARCHAR(255)` | `string` | Text | `Business` |
-| 10 | Seats | `number` | `NUMERIC` | `number` | Number | `5` |
+| 10 | Seats | `integer` | `INTEGER` | `integer, minimum: 0` | Number | `5` |
 | 11 | Renewal Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 12 | Company Owned Account | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
 | 13 | Shared Login | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
@@ -373,3 +373,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Unknown checkbox states need a separate Unknown/Yes/No select or review field before Notion import: an unchecked checkbox cannot distinguish unknown from confirmed false. Aggregate MFA status does not prove every privileged account is protected; verify account-level evidence, exception owners and review dates. Restrict the register itself because admin identities and vault references are sensitive. Use the included manual mapping if the optional companion skill is unavailable. `updated_at` is not automatic on updates without an application/trigger.

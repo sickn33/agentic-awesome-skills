@@ -50,6 +50,10 @@ client = TextAnalyticsClient(
 )
 ```
 
+## Data handling
+
+Calls send document text to Azure. Obtain authorization for private, PII or health data and verify region, retention and permitted use; redaction is probabilistic and does not guarantee de-identification. Healthcare extraction is not diagnosis. Examples are independent fragments; check each per-document error before consuming result fields.
+
 ## Sentiment Analysis
 
 ```python
@@ -103,7 +107,7 @@ for doc in result:
     if not doc.is_error:
         print(f"Redacted: {doc.redacted_text}")
         for entity in doc.entities:
-            print(f"PII: {entity.text} ({entity.category})")
+            print(f"PII category: {entity.category}")  # Do not log detected sensitive values.
 ```
 
 ## Key Phrase Extraction

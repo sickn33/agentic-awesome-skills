@@ -136,7 +136,7 @@ variable "cidr_block" {
   description = "CIDR block for VPC"
   type        = string
   validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.cidr_block))
+    condition     = can(cidrnetmask(var.cidr_block))
     error_message = "CIDR block must be valid IPv4 CIDR notation."
   }
 }
@@ -156,6 +156,16 @@ variable "enable_dns_hostnames" {
   description = "Enable DNS hostnames in VPC"
   type        = bool
   default     = true
+}
+
+variable "enable_dns_support" {
+  type    = bool
+  default = true
+}
+
+variable "create_internet_gateway" {
+  type    = bool
+  default = false
 }
 
 variable "tags" {
@@ -277,3 +287,5 @@ func TestVPCModule(t *testing.T) {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The VPC fragment does not create routing/NAT or a full private network. Validate every subnet CIDR, non-overlap, VPC containment and sufficient availability-zone entries before planning; route-table/NAT decisions require a separate design. The RDS module and other missing assets cannot be executed from this catalog. Terratest `InitAndApply`/`Destroy` create/delete billable infrastructure: use an authorized disposable account/workspace, immutable provider/module pins, cost limits and task-owned cleanup. Confirm current engine/provider compatibility rather than treating historical versions as current recommendations.

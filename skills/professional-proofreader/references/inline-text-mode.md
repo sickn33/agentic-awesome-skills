@@ -82,7 +82,7 @@ Meaning must remain intact.
 
 Before finalizing:
 
-- Confirm zero remaining grammar errors  
+- Check for remaining grammar issues and disclose ambiguous cases; do not guarantee zero defects
 - Confirm tone remains consistent  
 - Confirm meaning is unchanged  
 - Confirm no stylistic identity was erased  

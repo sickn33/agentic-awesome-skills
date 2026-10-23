@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/evidence.schema.json",
+  "title": "Product Design Harness Evidence Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_id",
+    "source_id",
+    "source_type",
+    "raw_artifact_uri",
+    "signal_type",
+    "signal",
+    "interpretation",
+    "decision_impact",
+    "evidence_tier",
+    "confidence_level",
+    "counter_signal",
+    "collected_at",
+    "source_last_verified_at",
+    "max_staleness_days"
+  ],
+  "properties": {
+    "evidence_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external",
+        "workflow",
+        "risk",
+        "direct_learning"
+      ]
+    },
+    "raw_artifact_uri": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signal_type": {
+      "type": "string",
+      "enum": [
+        "stated_opinion",
+        "quote",
+        "observed_behavior",
+        "workflow_trace",
+        "product_log",
+        "transaction",
+        "market_signal",
+        "policy",
+        "derived"
+      ]
+    },
+    "signal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interpretation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_impact": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_tier": {
+      "type": "string",
+      "enum": [
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "very_low",
+        "low",
+        "medium",
+        "high",
+        "very_high"
+      ]
+    },
+    "counter_signal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "collected_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_last_verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "max_staleness_days": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

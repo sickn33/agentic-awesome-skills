@@ -122,18 +122,18 @@ that need a number, date or currency format applied.
 
 ```csv
 Probation Record,30-Day Review Date,30-Day Score,60-Day Review Date,60-Day Score,90-Day Review Date,90-Day Score,Confirmation Letter Issued,Department,Employee Name,End Date,Manager,Mentor / Buddy,Milestones Met,Notes,Overall Score,Probation ID,Start Date,Status
-PROB-2026-014,2026-07-01,4,2026-07-31,4,2026-08-30,5,FALSE,Delivery,Aarav Sharma,2026-08-31,Sneha Iyer,Priya Nair + Rohit Verma,FALSE,First review passed in February; the second is scheduled once the handover is complete.,4.2,,2026-06-01,In Progress
+PROB-2026-014,2026-07-01,4,2026-07-31,4,2026-08-30,5,FALSE,Delivery,Aarav Sharma,2026-08-31,Sneha Iyer,Priya Nair + Rohit Verma,FALSE,Synthetic completed reviews; equal-weight mean is 4.33 out of 5.,4.33,,2026-06-01,In Progress
 ```
 
 ```sql
 CREATE TABLE probation_tracker (
   probation_record VARCHAR(255),
   "30_day_review_date" DATE NOT NULL,
-  "30_day_score" NUMERIC NOT NULL,
+  "30_day_score" NUMERIC,
   "60_day_review_date" DATE NOT NULL,
-  "60_day_score" NUMERIC NOT NULL,
+  "60_day_score" NUMERIC,
   "90_day_review_date" DATE NOT NULL,
-  "90_day_score" NUMERIC NOT NULL,
+  "90_day_score" NUMERIC,
   confirmation_letter_issued BOOLEAN NOT NULL,
   department VARCHAR(255),
   employee_name VARCHAR(255),
@@ -142,7 +142,7 @@ CREATE TABLE probation_tracker (
   mentor_buddy VARCHAR(255),  -- relation -> target record
   milestones_met BOOLEAN NOT NULL,
   notes TEXT,
-  overall_score NUMERIC NOT NULL,
+  overall_score NUMERIC,
   probation_id SERIAL PRIMARY KEY,
   start_date DATE NOT NULL,
   status VARCHAR(100) NOT NULL,
@@ -182,13 +182,11 @@ CREATE INDEX idx_probation_tracker_status ON probation_tracker (status);
   },
   "required": [
       "30-Day Review Date",
-      "30-Day Score",
       "60-Day Review Date",
-      "60-Day Score",
       "90-Day Review Date",
-      "90-Day Score",
       "End Date",
-      "Overall Score",
+      "Confirmation Letter Issued",
+      "Milestones Met",
       "Start Date",
       "Status"
   ]
@@ -240,8 +238,8 @@ and anything pointing at another table stays `relation`.
 | 12 | Manager | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 13 | Mentor / Buddy | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `Priya Nair + Rohit Verma` |
 | 14 | Milestones Met | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 15 | Notes | `long_text` | `TEXT` | `string` | Text | `First review passed in February; the second is scheduled once the handover is complete.` |
-| 16 | Overall Score | `number` | `NUMERIC` | `number` | Number | `4.2` |
+| 15 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic completed reviews; equal-weight mean is 4.33 out of 5.` |
+| 16 | Overall Score | `number` | `NUMERIC` | `number` | Number | `4.33` |
 | 17 | Probation ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 18 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-06-01` |
 | 19 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In Progress` |
@@ -300,7 +298,7 @@ We have 6 people on probation and one review was missed entirely.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not decide employment outcomes or provide legal guidance.
+- Does not decide employment outcomes or provide legal guidance. Future review scores and Overall Score remain absent until assessed; never insert zero for unknown. Agree the rubric, score bounds, weights, review evidence and authorized decision owner before calculation. The synthetic three-score equal-weight mean is (4+4+5)/3 ≈ 4.33, not an automatic confirmation decision; current status may await the decision/letter. Relation text is not an enforced foreign key.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes

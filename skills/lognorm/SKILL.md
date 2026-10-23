@@ -1,7 +1,7 @@
 ---
 name: lognorm
 description: "Work a site's SEO and AI-visibility (GEO) backlog through the hosted LogNorm MCP server: audits, fixes, content, AI-answer tracking."
-risk: safe
+risk: critical
 category: seo
 source: "https://github.com/lognorm/lognorm-mcp/tree/main/skills/lognorm"
 source_repo: lognorm/lognorm-mcp
@@ -30,6 +30,8 @@ If the `lognorm` tools are missing, tell the user:
 - Claude Code: `claude mcp add --transport http lognorm https://lognorm.com/api/mcp`, then `/mcp` → lognorm → Authenticate (one click in the browser)
 - Codex: `codex mcp add lognorm --url https://lognorm.com/api/mcp` then `codex mcp login lognorm`
 - Claude (desktop or web): Settings → Connectors → Add custom connector → `https://lognorm.com/api/mcp`
+
+Confirm the workspace/site and authorized write, communication and credit budget. A connected account or teammate identity does not authorize every dashboard action. Draft proposed comments/updates unless the user has authorized posting them; starting research/image/audit runs may spend credits. Resolve dedicated schemas and distinguish drafts, deployment, publication and successful validation. Paginate findings beyond the illustrative 500-row limit before claiming all affected URLs were reviewed.
 
 ## How to work
 

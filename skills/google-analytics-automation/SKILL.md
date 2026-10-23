@@ -18,7 +18,7 @@ Automate Google Analytics 4 (GA4) reporting and property management through Comp
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Adding an endpoint does not authorize Google access; use the host’s supported authentication and the user-approved account.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -27,6 +27,8 @@ Automate Google Analytics 4 (GA4) reporting and property management through Comp
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Confirm the exact GA4 property/account and reporting timezone. Record date ranges, attribution scope and response metadata (thresholding, sampling, data-loss/other-row flags) when interpreting results. Distinct users are not additive across rows or days. Use current metadata for key-event metric names rather than assuming `conversions` remains supported. Read-only analysis does not authorize creating/deleting key events or changing property settings; perform such writes only on a specific user request, and read back the result.
 
 ### 1. List Accounts and Properties
 

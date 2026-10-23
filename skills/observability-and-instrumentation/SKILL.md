@@ -124,7 +124,7 @@ OK as label:    route="/api/tasks/:id"   status_class="5xx"   provider="stripe"
 NEVER a label:  user_id, email, request_id, full URL, error message text
 ```
 
-Track averages never, percentiles always: an average hides the 1% of users having a terrible time. Use histograms and read p50/p95/p99.
+Do not rely on averages alone; inspect percentiles and sample size: an average hides the 1% of users having a terrible time. Use histograms and read p50/p95/p99.
 
 ### 5. Distributed tracing
 
@@ -142,7 +142,7 @@ const sdk = new NodeSDK({
 sdk.start();
 ```
 
-Add manual spans only around meaningful internal units of work (e.g., `applyDiscounts`, `chargeProvider`) and attach the attributes on-call will filter by. Propagate context across every async boundary — HTTP headers, queue message metadata — or the trace dies at the gap. Sample head-based at a low rate by default; keep 100% of errors if your backend supports tail sampling.
+Add manual spans only around meaningful internal units of work (e.g., `applyDiscounts`, `chargeProvider`) and attach the attributes on-call will filter by. Propagate context across every async boundary — HTTP headers, queue message metadata — or the trace dies at the gap. Choose a documented sampling policy. Tail sampling cannot recover spans dropped by an upstream head sampler; retaining every error requires the collector to receive those traces. Measure cost and data exposure.
 
 ### 6. Alerting
 
@@ -155,7 +155,7 @@ p99 latency > 2s                 one pod restarted
 queue age > 10 min               disk at 70%
 ```
 
-Cause-based alerts fire when nothing is wrong and miss failures you didn't predict. Symptom-based alerts fire exactly when users are hurt, regardless of the cause.
+Prefer actionable symptom/SLO alerts; capacity and cause-based alerts can also be appropriate when they identify an imminent actionable failure. Neither category guarantees complete detection.
 
 Rules for every alert you create:
 
@@ -171,7 +171,7 @@ Instrumentation is code; it can be wrong. Before calling the work done, trigger 
 - Force an error in staging → find it in the logs by `requestId`, confirm fields are structured (not `[object Object]`)
 - Send test traffic → confirm metric series appear with the expected labels and sane values
 - Follow one request across services in the tracing UI → no broken spans
-- Fire each new alert once (lower the threshold temporarily) → confirm it reaches the right channel and the runbook link works
+- Test each new alert in authorized staging with an approved test destination; restore any changed thresholds and avoid paging unrelated responders
 
 ## Common Rationalizations
 

@@ -36,14 +36,14 @@ Provides a standardized, auditable framework and data model for **Web3 Transacti
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Relayer Node ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `RELAY-001` |
+| 1 | Relayer Node ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `RELAY-001` |
 | 2 | Relayer Public Key | `text` | `VARCHAR(56)` | `string` | Text | `GRLY...` |
 | 3 | Network Environment | `select` | `VARCHAR(32)` | `string` | Select | `Stellar Public Mainnet` |
 | 4 | Fee Reserve Balance XLM | `currency` | `NUMERIC(14,7)` | `number` | Number | `450.0000000` |
 | 5 | Min Balance Alert Threshold | `currency` | `NUMERIC(14,7)` | `number` | Number | `50.0000000` |
-| 6 | Daily Sponsored Tx Limit | `number` | `INTEGER` | `number` | Number | `5000` |
-| 7 | Current Day Tx Count | `number` | `INTEGER` | `number` | Number | `1240` |
-| 8 | Max Fee Bps Per Operation | `number` | `INTEGER` | `number` | Number | `100` |
+| 6 | Daily Sponsored Tx Limit | `number` | `INTEGER` | `integer` | Number | `5000` |
+| 7 | Current Day Tx Count | `number` | `INTEGER` | `integer` | Number | `1240` |
+| 8 | Max Fee Native Base Units Per Operation | `number` | `INTEGER` | `integer` | Number | `100` |
 | 9 | Relayer Operational Health | `select` | `VARCHAR(32)` | `string` | Select | `Active Online` |
 | 10 | Automatic Rebalance Enabled | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
 | 11 | Last Health Ping Date | `date` | `DATE` | `string, format: date` | Date | `2026-10-01` |
@@ -86,6 +86,8 @@ How do I configure and track Web3 Transaction Relayer Pool Management for our pr
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+The XLM balance and 56-character public-key fields are Stellar-specific; Ethereum/Arbitrum require separate chain-specific address, native asset and fee-unit schemas. Do not treat basis points as a network fee unit. Preserve exact amounts as integer base units or validated decimal strings across JSON/SQL rather than floating point. The register does not implement nonce/sequence locking, sponsorship authorization or balance replenishment. Require bounded sponsorship policy, atomic nonce reservation, transaction reconciliation and explicit funding authorization in the actual relayer.
 
 ## Best Practices
 

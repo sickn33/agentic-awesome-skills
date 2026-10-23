@@ -24,6 +24,8 @@ tRPC lets you build fully type-safe APIs without writing a schema or code-genera
 - Use when designing multi-step middleware (auth, rate limiting, tenant scoping) on tRPC procedures
 - Use when migrating an existing REST/GraphQL API to tRPC incrementally
 
+Examples require matching tRPC/TanStack Query versions and application-specific `auth`, database models and user/session types. Cron jobs cannot assume request-bound `auth()` exists: build an explicitly authorized service context. The shown subscription router also needs root registration, a transport adapter and client link; its process-local emitter does not distribute across replicas. HTTP GET/POST handlers do not alone provide WebSockets. Type safety is not authorization: scope queries/output fields to permitted records, handle CSRF/origin for cookie-authenticated mutations, and enforce ownership atomically with writes.
+
 ## Core Concepts
 
 ### Routers and Procedures
@@ -76,6 +78,7 @@ const t = initTRPC.context<Context>().create({
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
+export const createCallerFactory = t.createCallerFactory;
 ```
 
 ### Step 2: Define Two Context Factories
@@ -104,7 +107,7 @@ export async function createTRPCContext(opts: FetchCreateContextFnOptions) {
  */
 export async function createServerContext() {
   const session = await auth();
-  return { session, db };
+  return { session, db, headers: new Headers() }; // matches Context; no HTTP request metadata
 }
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
@@ -141,7 +144,7 @@ export const postRouter = router({
   list: publicProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).default(20),
+        limit: z.number().int().min(1).max(100).default(20),
         cursor: z.string().optional(),
       })
     )
@@ -149,7 +152,7 @@ export const postRouter = router({
       const posts = await ctx.db.post.findMany({
         take: input.limit + 1,
         cursor: input.cursor ? { id: input.cursor } : undefined,
-        orderBy: { createdAt: 'desc' },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
       });
       const nextCursor =
         posts.length > input.limit ? posts.pop()!.id : undefined;
@@ -308,6 +311,7 @@ export function CreatePost() {
 
   const createPost = trpc.post.create.useMutation({
     onSuccess: () => {
+      // Reset only after confirmed success; preserve user input on failure.
       // Invalidate and refetch the post list
       utils.post.list.invalidate();
     },
@@ -321,7 +325,7 @@ export function CreatePost() {
       title: data.get('title') as string,
       body: data.get('body') as string,
     });
-    form.reset();
+    // Reset the form in the confirmed-success path, not before this mutation resolves.
   };
 
   return (
@@ -345,7 +349,7 @@ correctly without needing a synthetic or empty request object:
 ```typescript
 // app/posts/page.tsx (Next.js Server Component)
 import { appRouter } from '@/server/root';
-import { createCallerFactory } from '@trpc/server';
+import { createCallerFactory } from '@/server/trpc';
 import { createServerContext } from '@/server/context';
 
 const createCaller = createCallerFactory(appRouter);
@@ -371,6 +375,7 @@ export default async function PostsPage() {
 // server/routers/notifications.ts
 import { observable } from '@trpc/server/observable';
 import { EventEmitter } from 'events';
+import { router, protectedProcedure } from '../trpc';
 
 const ee = new EventEmitter();
 
@@ -442,7 +447,7 @@ trpc.notification.onNew.useSubscription(undefined, {
   **Solution:** Use `@trpc/server/adapters/fetch` and `fetchRequestHandler` for the App Router; the `nextjs` adapter is for Pages Router only
 
 - **Problem:** Subscriptions not connecting
-  **Solution:** Subscriptions require `splitLink` — route subscriptions to `wsLink` and queries/mutations to `httpBatchLink`
+  **Solution:** For the WebSocket pattern, configure a WS adapter/server and route subscriptions through `wsLink`; tRPC11 also supports SSE with `httpSubscriptionLink`. Select the matching transport and authentication context.
 
 ---
 

@@ -71,8 +71,7 @@ for sub in api api-v1 api-v2 apiv1 apiv2 legacy-api old-api internal-api staging
 done
 ```
 
-A `200`/`401`/`403` on an old version path (anything but `404`/connection-refused) means the
-version is still live and worth carrying into Stage 3, even if it demands auth.
+A `200`/`401`/`403` is a discovery lead, not proof an API version exists: compare a random nonexistent route and inspect content/routing because catch-all pages and gateways can return the same status for every path.
 
 ---
 
@@ -114,9 +113,7 @@ are the finding.
   curl -s -H "Authorization: Bearer $EXPIRED_TOKEN" https://$TARGET/api/v1/users/me -w '\n%{http_code}\n'
   curl -s -H "Authorization: Bearer $EXPIRED_TOKEN" https://$TARGET/api/v2/users/me -w '\n%{http_code}\n'
   ```
-- **Rate limiting.** Burst the same number of requests against both versions' equivalent
-  endpoint; a missing `429` on the old version means rate-limiting was added later and never
-  backported.
+- **Rate limiting.** Compare only within the explicitly authorized rate/request budget and test-account scope. Absence of `429` alone does not establish a missing control; rate limits may depend on identity, window, gateway or other signals. Record actual impact without brute-force escalation unless separately authorized.
 - **Input validation.** Send the identical injection/oversized/malformed payload to both; the
   old version accepting what the new one rejects means hardening happened forward-only —
   chain into whichever injection class the payload targets (`hunt-sqli`, `hunt-idor`, etc.).

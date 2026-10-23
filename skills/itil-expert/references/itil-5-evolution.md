@@ -1,6 +1,6 @@
 # ITIL 5 Evolution: From Service to Digital Product
 
-This reference guide explores the fundamental shifts introduced in the ITIL 5 (2026) framework.
+This community guide mixes framework themes with author-proposed operating ideas. It is not evidence of official practice names or mandatory controls; verify each formal claim against the relevant PeopleCert syllabus.
 
 ## 1. The Paradigm Shift: DPSM
 **Digital Product & Service Management (DPSM)** is the core of ITIL 5. While ITIL 4 introduced the Service Value System (SVS), ITIL 5 integrates the "Product" mindset as the primary unit of value.
@@ -11,11 +11,11 @@ This reference guide explores the fundamental shifts introduced in the ITIL 5 (2
 ## 2. AI-Native Infrastructure
 ITIL 5 explicitly addresses AI as a primary driver of service delivery.
 - **Predictive Ops:** Moving from "Reactive" to "Predictive" incident management using Large Language Models (LLMs) and Pattern Recognition.
-- **Governance of Algorithms:** A new practice dedicated to ensuring AI models used in services are ethical, transparent, and compliant with regional data laws (GDPR, etc.).
+- **Governance of Algorithms:** An implementation theme for ensuring AI models used in services are ethical, transparent, and compliant with regional data laws (GDPR, etc.).
 
 ## 3. Sustainability as a Dimension
-ITIL 5 adds "Sustainability" as an explicit component of every practice.
-- **Green Service Design:** Mandatory assessment of the environmental impact of new digital products.
+Consider sustainability in practice design; this guide does not establish a universal ITIL mandate.
+- **Green Service Design:** Suggested assessment of the environmental impact of new digital products.
 - **SLA to XLA+S:** Service Level Agreements (SLAs) evolve into Experience Level Agreements (XLAs) + Sustainability (S) targets.
 
 ## 4. Modernizing the 4 Dimensions

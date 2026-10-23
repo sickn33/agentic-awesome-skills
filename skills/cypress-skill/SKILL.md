@@ -48,7 +48,7 @@ User says "test" / "automate"
 // ✅ Cypress chains — no await, no async
 cy.visit('/login');
 cy.get('#username').type('user@test.com');
-cy.get('#password').type('password123');
+cy.get('#password').type(Cypress.env('TEST_PASSWORD'), { log: false });
 cy.get('button[type="submit"]').click();
 cy.url().should('include', '/dashboard');
 
@@ -86,7 +86,7 @@ describe('Login', () => {
 
   it('should login with valid credentials', () => {
     cy.get('[data-cy="username"]').type('user@test.com');
-    cy.get('[data-cy="password"]').type('password123');
+    cy.get('[data-cy="password"]').type(Cypress.env('TEST_PASSWORD'), { log: false });
     cy.get('[data-cy="submit"]').click();
     cy.url().should('include', '/dashboard');
     cy.get('[data-cy="welcome"]').should('contain', 'Welcome');
@@ -126,10 +126,10 @@ cy.wait('@dashboardLoad');
 ```javascript
 // cypress/support/commands.js
 Cypress.Commands.add('login', (email, password) => {
-  cy.session([email, password], () => {
+  cy.session([email], () => {
     cy.visit('/login');
     cy.get('[data-cy="username"]').type(email);
-    cy.get('[data-cy="password"]').type(password);
+    cy.get('[data-cy="password"]').type(password, { log: false });
     cy.get('[data-cy="submit"]').click();
     cy.url().should('include', '/dashboard');
   });
@@ -233,3 +233,5 @@ For production-grade patterns, see `reference/playbook.md`:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+The `reference/*` guides named above are not bundled. Do not claim their advanced playbook was followed; use current Cypress/provider documentation for dependent steps. Tests run application code and can submit real writes: use an authorized disposable environment and test credentials. Cloud runs upload code/artifacts and consume quota; agree on data and cost scope before dispatch. Screenshots/video can still reveal secrets despite `log: false`; redact or disable sensitive capture.

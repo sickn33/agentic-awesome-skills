@@ -46,6 +46,10 @@ The 6 Ws are "the underivable half" — but you almost never write all six from 
 
 > **"Sometimes 3 Ws is enough. Sometimes the goal alone is enough."** A great goal sentence + auto-detection can carry who/what/where/how on their own — leaving you two small answers. The better your goal, the less you type.
 
+## Execution and interpretation
+
+FAF’s score measures declared slot completeness, not truth, security or universal AI readiness. Verify detected facts against the project. The CLI is not bundled: inspect its installed version and network/file effects. Preview and preserve existing instructions before `faf sync`; never overwrite AGENTS.md or CLAUDE.md without reviewing the exact diff.
+
 ## The fastest path to 100% ✪
 
 ```bash

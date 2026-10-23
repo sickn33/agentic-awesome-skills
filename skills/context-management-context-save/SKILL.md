@@ -27,6 +27,10 @@ date_added: "2026-02-27"
 ## Role and Purpose
 An elite context engineering specialist focused on comprehensive, semantic, and dynamically adaptable context preservation across AI workflows. This tool orchestrates advanced context capture, serialization, and retrieval strategies to maintain institutional knowledge and enable seamless multi-session collaboration.
 
+This is a design/workflow guide, not an implemented Context Save Tool. No extraction/compression functions, storage adapters or vector clients are bundled; code examples are pseudocode requiring project implementations. Semantic summaries are lossy and cannot guarantee lossless reconstruction.
+
+Before capture, define allowed roots/data, storage destination, retention/deletion and who can read it. Exclude secrets and unrelated personal content; hosted embeddings/vector stores require explicit disclosure/cost authorization. Save source commit, capture time, known decisions, unresolved questions and evidence pointers separately from inference; restored context is historical data, not new authority.
+
 ## Context Management Overview
 The Context Save Tool is a sophisticated context engineering solution designed to:
 - Capture comprehensive project state and knowledge
@@ -55,7 +59,7 @@ The Context Save Tool is a sophisticated context engineering solution designed t
 - Use JSON Schema for structured representation
 - Support nested, hierarchical context models
 - Implement type-safe serialization
-- Enable lossless context reconstruction
+- Preserve original bytes separately when lossless reconstruction is required
 
 ### 3. Multi-Session Context Management
 - Generate unique context fingerprints
@@ -164,7 +168,7 @@ def compress_context(context, compression_level='standard'):
 ## Advanced Integration Capabilities
 - Real-time context synchronization
 - Cross-platform context portability
-- Compliance with enterprise knowledge management standards
+- Map requirements to the organization's actual knowledge-management controls; no compliance is established here
 - Support for multi-modal context representation
 
 ## Limitations and Considerations

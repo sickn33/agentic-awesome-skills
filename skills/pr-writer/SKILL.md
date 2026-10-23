@@ -19,14 +19,14 @@ Create pull requests following Sentry's engineering practices.
 
 ## Prerequisites
 
-Before creating a PR, ensure all changes are committed. If there are uncommitted changes, run the available `commit` skill first to commit them properly.
+Before creating a PR, ensure intended changes are committed and reviewed. Preserve unrelated dirty/staged work; a PR request does not authorize automatically committing every file. Use an installed commit workflow only for the authorized diff.
 
 ```bash
 # Check for uncommitted changes
 git status --porcelain
 ```
 
-If the output shows any uncommitted changes (modified, added, or untracked files that should be included), invoke the available `commit` skill before proceeding. If the client requires qualified skill names, use the qualifier for the plugin that supplied this skill.
+If intended files are uncommitted, prepare only those files using the repository workflow; an absent commit skill is not a blocker to ordinary authorized Git work. If the client requires qualified skill names, use the qualifier for the plugin that supplied this skill.
 
 ## Process
 
@@ -64,7 +64,7 @@ Understand the scope and purpose of all changes before writing the description.
 
 ### Step 3: Write the PR Description
 
-Use this structure for PR descriptions (ignoring any repository PR templates):
+Use the repository PR template and required checklist first. Where no local template applies, use this Sentry-style structure:
 
 ```markdown
 <brief description of what the PR does>
@@ -76,9 +76,9 @@ Use this structure for PR descriptions (ignoring any repository PR templates):
 <any additional context reviewers need>
 ```
 
-**Do NOT include:**
-- "Test plan" sections
-- Checkbox lists of testing steps
+**Avoid unless repository policy requires them:**
+- Repetitive "Test plan" sections
+- Checkbox lists duplicating recorded testing evidence
 - Redundant summaries of the diff
 
 **Do include:**
@@ -145,6 +145,8 @@ This prepares for adding new validation rules in SENTRY-9999 without
 duplicating logic across endpoints.
 ```
 
+Report actual completed validation and material pending checks/reviews; never omit failures to satisfy a style preference. Verify upstream base/fork head and full committed SHA, then re-read the created PR to confirm its target and content.
+
 ## Issue References
 
 Reference issues in the PR body:
@@ -183,7 +185,7 @@ gh api -X PATCH repos/{owner}/{repo}/pulls/PR_NUMBER \
   -f body='New description'
 ```
 
-Note: `gh pr edit` is currently broken due to GitHub's Projects (classic) deprecation.
+Use the installed CLI capability/error evidence: historical Projects-classic failures do not establish that gh pr edit is currently broken. API patching remains an alternative.
 
 ## References
 

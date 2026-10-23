@@ -18,7 +18,7 @@ Automate HelpDesk ticketing operations through Composio's HelpDesk toolkit via R
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify the client’s current MCP authentication flow and account permissions; adding an endpoint alone does not establish an authenticated HelpDesk connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds

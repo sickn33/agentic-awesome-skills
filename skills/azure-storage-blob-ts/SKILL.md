@@ -16,8 +16,7 @@ SDK for Azure Blob Storage operations — upload, download, list, and manage blo
 npm install @azure/storage-blob @azure/identity
 ```
 
-**Current Version**: 12.x  
-**Node.js**: >= 18.0.0
+Examples use the 12.x API family. Pin compatible SDK versions and a currently supported Node runtime from the package engines; this is not a latest-version claim.
 
 ## Environment Variables
 
@@ -91,6 +90,8 @@ BlobServiceClient (account level)
         ├── AppendBlobClient (append-only blobs)
         └── PageBlobClient (page blobs - VHDs)
 ```
+
+Choose the least-privilege identity/SAS, short expiry and HTTPS-only access; prefer user-delegation SAS where supported. Never expose account keys or signed URLs in browser bundles/logs. Verify exact account/container/blob before deletes or overwrites. setMetadata/setHTTPHeaders replace fields: preserve required existing values and use conditional ETags where needed. These examples are separate actions, not a sequence to execute blindly.
 
 ## Container Operations
 
@@ -183,7 +184,7 @@ await blockBlobClient.uploadData(arrayBuffer);
 const blobClient = containerClient.getBlobClient("my-file.txt");
 const downloadResponse = await blobClient.download();
 
-// Read as string (browser & Node.js)
+// Read as string (Node.js only; bounded small blobs)
 const downloaded = await streamToText(downloadResponse.readableStreamBody!);
 
 async function streamToText(readable: NodeJS.ReadableStream): Promise<string> {
@@ -194,6 +195,8 @@ async function streamToText(readable: NodeJS.ReadableStream): Promise<string> {
   return Buffer.concat(chunks).toString("utf-8");
 }
 ```
+
+In a browser, use the response's `blobBody` Promise<Blob> and read its text within a size limit; `readableStreamBody` and Buffer are Node-specific.
 
 ### Download to File (Node.js only)
 
@@ -325,7 +328,7 @@ import { ContainerSASPermissions, generateBlobSASQueryParameters } from "@azure/
 const sasToken = generateBlobSASQueryParameters(
   {
     containerName: "my-container",
-    permissions: ContainerSASPermissions.parse("racwdl"), // read, add, create, write, delete, list
+    permissions: ContainerSASPermissions.parse("rl"), // read/list example; grant writes only when requested
     expiresOn: new Date(Date.now() + 24 * 3600 * 1000), // 24 hours
   },
   sharedKeyCredential
@@ -346,7 +349,7 @@ const sasToken = generateAccountSASQueryParameters(
   {
     services: AccountSASServices.parse("b").toString(), // blob
     resourceTypes: AccountSASResourceTypes.parse("sco").toString(), // service, container, object
-    permissions: AccountSASPermissions.parse("rwdlacupi"), // all permissions
+    permissions: AccountSASPermissions.parse("rl"), // read/list only; avoid account-wide SAS when blob scope suffices
     expiresOn: new Date(Date.now() + 24 * 3600 * 1000),
   },
   sharedKeyCredential
@@ -466,7 +469,7 @@ import {
 4. **Use SAS tokens for client access** — Generate short-lived tokens for browser uploads
 5. **Handle errors gracefully** — Check `RestError.statusCode` for specific handling
 6. **Use `*IfNotExists` methods** — For idempotent container/blob creation
-7. **Close clients** — Not required but good practice in long-running apps
+7. **Lifecycle** — Use only lifecycle methods actually exposed by the pinned client; do not invent a close() call
 
 ## Platform Differences
 

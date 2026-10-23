@@ -246,12 +246,19 @@ async function moderateContent(
     throw result.body;
   }
 
-  const flaggedCategories = result.body.categoriesAnalysis
-    .filter(c => (c.severity ?? 0) > maxAllowedSeverity)
+  const analyses = result.body.categoriesAnalysis;
+  const expected = ["Hate", "SelfHarm", "Sexual", "Violence"];
+  if (!Array.isArray(analyses) || expected.some(category =>
+    !analyses.some(c => c.category === category && Number.isInteger(c.severity) && c.severity! >= 0 && c.severity! <= 7))) {
+    throw new Error("Incomplete moderation assessment");
+  }
+
+  const flaggedCategories = analyses
+    .filter(c => c.severity! > maxAllowedSeverity)
     .map(c => c.category!);
 
   const maxSeverity = Math.max(
-    ...result.body.categoriesAnalysis.map(c => c.severity ?? 0)
+    ...analyses.map(c => c.severity!)
   );
 
   const blocklistMatches = (result.body.blocklistsMatch ?? [])
@@ -308,3 +315,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+A zero severity is a model result, not proof of safety; calibrate thresholds and escalation for the application. Missing analyses and service failures remain unassessed. Authorize cloud transmission of private content and do not expose raw error bodies or blocklisted text in public logs.

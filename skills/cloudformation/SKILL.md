@@ -34,7 +34,7 @@ Deploy AWS infrastructure with native CloudFormation templates, change sets, nes
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `cloudformation:*`, plus permissions for all resources in the template
+- Least-privilege CloudFormation actions and a reviewed execution role/resource permissions scoped to the intended stacks
 - (Optional) `cfn-lint` installed for template validation (`pip install cfn-lint`)
 - S3 bucket for storing templates larger than 51,200 bytes
 
@@ -63,6 +63,10 @@ Parameters:
     Default: t3.micro
     AllowedValues: [t3.micro, t3.small, t3.medium, t3.large]
 
+  AmiId:
+    Type: AWS::EC2::Image::Id
+    Description: Verified region-specific image with the application/bootstrap prerequisites
+
   VpcId:
     Type: AWS::EC2::VPC::Id
     Description: VPC to deploy into
@@ -74,13 +78,6 @@ Parameters:
 Conditions:
   IsProd: !Equals [!Ref Environment, prod]
   CreateReadReplica: !Equals [!Ref Environment, prod]
-
-Mappings:
-  RegionAMI:
-    us-east-1:
-      AL2023: ami-0abcdef1234567890
-    us-west-2:
-      AL2023: ami-0fedcba9876543210
 
 Resources:
   SecurityGroup:
@@ -102,8 +99,8 @@ Resources:
     Properties:
       LaunchTemplateName: !Sub '${Environment}-web'
       LaunchTemplateData:
-        ImageId: !FindInMap [RegionAMI, !Ref 'AWS::Region', AL2023]
-        InstanceType: !If [IsProd, t3.large, !Ref InstanceType]
+        ImageId: !Ref AmiId
+        InstanceType: !Ref InstanceType
         MetadataOptions:
           HttpTokens: required
         SecurityGroupIds:
@@ -133,7 +130,7 @@ Resources:
         MinInstancesInService: !If [IsProd, 2, 0]
         MaxBatchSize: 1
         PauseTime: PT5M
-        WaitOnResourceSignals: true
+        WaitOnResourceSignals: false # scaffold has no cfn-signal sender
         SuspendProcesses:
           - HealthCheck
           - ReplaceUnhealthy
@@ -168,6 +165,8 @@ Outputs:
       Name: !Sub '${Environment}-WebASG'
 ```
 
+The template is an infrastructure scaffold, not a deployable production application: supply a verified region-specific AmiId and bootstrap/listener, an actual load balancer/listener and an ingress rule from its security group to target port8080. No cfn-signal sender is bundled, so resource-signal waiting is disabled; implement/test signals before enabling it. The nested child templates below are also external prerequisites.
+
 ## Stack Operations
 
 ```bash
@@ -183,6 +182,7 @@ aws cloudformation create-stack \
   --template-body file://template.yaml \
   --parameters \
     ParameterKey=Environment,ParameterValue=prod \
+    ParameterKey=AmiId,ParameterValue="$VERIFIED_AMI_ID" \
     ParameterKey=VpcId,ParameterValue=vpc-abc123 \
     ParameterKey=SubnetIds,ParameterValue="subnet-aaa\\,subnet-bbb" \
   --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
@@ -222,6 +222,7 @@ aws cloudformation create-change-set \
     ParameterKey=InstanceType,ParameterValue=t3.large \
     ParameterKey=VpcId,UsePreviousValue=true \
     ParameterKey=SubnetIds,UsePreviousValue=true \
+    ParameterKey=AmiId,UsePreviousValue=true \
   --capabilities CAPABILITY_IAM
 
 # Describe the change set to review planned changes
@@ -346,7 +347,7 @@ aws cloudformation deploy \
 SecurityGroupId: !Ref SecurityGroup
 
 # GetAtt - get an attribute of a resource
-SecurityGroupArn: !GetAtt SecurityGroup.GroupId
+SecurityGroupId: !GetAtt SecurityGroup.GroupId
 
 # Sub - string substitution
 BucketName: !Sub '${Environment}-${AWS::AccountId}-data'
@@ -437,10 +438,10 @@ aws cloudformation get-template \
 | Problem | Cause | Fix |
 |---|---|---|
 | CREATE_FAILED on IAM resource | Missing CAPABILITY_IAM | Add `--capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM` |
-| Stack stuck in UPDATE_ROLLBACK_FAILED | Resource cannot be rolled back | Use `continue-update-rollback` with `--resources-to-skip` |
+| Stack stuck in UPDATE_ROLLBACK_FAILED | Resource cannot be rolled back | Diagnose and repair the failing resource first. Skipping requires an explicit recovery plan because skipped resources may remain inconsistent |
 | Nested stack fails | Template URL wrong or S3 access denied | Use `aws cloudformation package` to upload; check bucket policy |
-| Circular dependency error | Two resources reference each other | Break the cycle with a third resource or use `DependsOn` |
-| Drift detected | Manual changes made outside CloudFormation | Re-apply the template or update template to match current state |
+| Circular dependency error | Two resources reference each other | Refactor references/ownership to remove the cycle; adding DependsOn does not remove an existing dependency cycle |
+| Drift detected | Manual changes made outside CloudFormation | Review drift and supported properties; a no-op template update may not reconcile drift. Use an approved explicit remediation/change set. |
 | Change set shows no changes | Template and parameters identical | Verify the diff; check if the change is parameter-only |
 | Template validation error | YAML syntax or invalid resource property | Run `cfn-lint`; check property names against docs |
 | Export name already exists | Another stack uses the same export name | Use unique export names with `!Sub '${AWS::StackName}-Name'` |

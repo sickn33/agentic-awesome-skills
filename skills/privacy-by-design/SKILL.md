@@ -27,7 +27,7 @@ Integrate privacy protections into software architecture from the beginning, not
 
 **LGPD (Brazil)** — Aligned with GDPR. Purpose limitation, necessity, transparency. Applies to Brazil users.
 
-Design for the strictest framework you target; it often satisfies others.
+Map each applicable jurisdiction and processing purpose separately; compliance with one framework does not establish compliance with another.
 
 ---
 
@@ -37,7 +37,7 @@ Design for the strictest framework you target; it often satisfies others.
 Collect only what is strictly necessary. Every field needs a documented justification. Avoid "we might need it later."
 
 ### 2. Purpose Limitation
-Store the purpose of each data point. Do not reuse data for purposes the user did not consent to.
+Store the purpose of each data point. Identify and document the lawful basis and compatibility of every processing purpose; consent is one basis, not the only one.
 
 ### 3. Storage Limitation
 Define retention periods. Implement automated deletion or anonymization when retention expires. Never keep data "forever" by default.
@@ -61,7 +61,7 @@ Ensure these are implementable from day one:
 |-------|---------------|
 | **Access** | Endpoint or flow to return all user data |
 | **Rectification** | Ability to update/correct data |
-| **Erasure** | Account deletion + data purge (including backups) |
+| **Erasure** | Verified erasure workflow, applicable legal exceptions and bounded backup expiry/restore suppression |
 | **Portability** | Export data in machine-readable format (JSON, CSV) |
 
 ---
@@ -70,13 +70,13 @@ Ensure these are implementable from day one:
 
 **Data minimization** — Less data = less breach impact, lower storage cost, simpler compliance. Each field is a liability.
 
-**Purpose limitation** — Reusing data without consent is illegal under GDPR. Document purpose in schema or metadata.
+**Purpose limitation** — Assess the lawful basis and compatibility of reuse under GDPR; consent is not universally required for every processing activity. Document purpose in schema or metadata.
 
 **Retention** — Indefinite storage increases risk and violates GDPR. Define `retention_days` per data type; automate cleanup.
 
 **Logging** — Logs often leak PII. Redact emails, IDs, tokens. Use structured logging with allowlists.
 
-**Third parties** — Every SDK (analytics, crash reporting, ads) may send data elsewhere. Audit dependencies; require consent before loading.
+**Third parties** — Every SDK (analytics, crash reporting, ads) may send data elsewhere. Audit dependencies and establish the applicable consent/lawful-basis requirements before loading optional tracking.
 
 ---
 
@@ -198,7 +198,7 @@ When building a feature that touches user data:
 - ✅ Use hashing or tokenization for sensitive identifiers when possible
 - ✅ Document purpose and retention in schema or metadata
 - ❌ Don't log passwords, tokens, or PII in plain text
-- ❌ Don't share data with third parties without explicit consent
+- ❌ Don't share personal data without a documented lawful basis, appropriate safeguards and applicable consent
 - ❌ Don't assume "we'll add privacy later"—it rarely happens
 - ❌ Don't expose stack traces or internal errors to clients
 
@@ -211,3 +211,5 @@ This skill is applicable when building software that collects, stores, or proces
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Hashing/tokenization usually pseudonymizes identifiers; it does not automatically anonymize data or remove privacy obligations. Assess re-identification risk and restrict keys/mappings. Retention and erasure need purpose-specific rules, lawful exceptions and tested restore/deletion handling. This is design guidance, not a compliance certification. See [EDPB lawful bases](https://www.edpb.europa.eu/topics/key-gdpr-concepts/legal-basis_en) and [ICO pseudonymisation](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-%72esources/data-sharing/anonymisation/pseudonymisation).

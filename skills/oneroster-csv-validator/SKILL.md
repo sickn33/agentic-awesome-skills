@@ -39,22 +39,21 @@ Do NOT use this skill when:
 
 2. **The Strict Bulk vs Delta Partition**:
    - One exchange bundle = strictly ONE operational mode.
-   - **Bulk Exchange Mode**: Represents a complete master snapshot. In OneRoster 1.1, rows MUST NOT contain `dateLastModified` or `status` columns. In 1.2, all status fields MUST be `active`.
+   - **Bulk Exchange Mode**: Represents a complete master snapshot. In OneRoster 1.1, retain required CSV headers while leaving `dateLastModified` and `status` values empty. OneRoster1.2 also prohibits using those fields in bulk; do not populate active by default.
    - **Delta Exchange Mode**: Represents incremental changes. Every row MUST contain a valid ISO 8601 UTC timestamp (`YYYY-MM-DDTHH:MM:SS.sssZ`) in `dateLastModified` and a valid status (`active` or `tobedeleted`).
    - Mixing bulk and delta formats within the same archive is a fatal validation failure.
 
 3. **The Foreign Key Referential Integrity Hierarchy**:
    - Relational dependency chain:
      $$\mathbf{orgs.csv} \longleftarrow \mathbf{courses.csv} \longleftarrow \mathbf{classes.csv} \longleftarrow \mathbf{enrollments.csv} \longrightarrow \mathbf{users.csv}$$
-   - Every `schoolSourcedId` in `users.csv` and `classes.csv` MUST resolve to an existing `sourcedId` in `orgs.csv`.
+   - Validate the version-specific org reference fields (including multi-valued orgSourcedIds in1.1 users and separate1.2 roles); each applicable reference must resolve to an existing `sourcedId` in `orgs.csv`.
    - Every `courseSourcedId` in `classes.csv` MUST resolve to `courses.csv`.
-   - Every `userSourcedId` and `classSourcedId` in `enrollments.csv` MUST resolve to active primary keys in `users.csv` and `classes.csv`.
+   - In a complete bulk snapshot, enrollment references must resolve. A delta may reference unchanged records already in the recipient baseline; validate against that state and deletion semantics, not the archive alone.
    - **Zero Orphan Tolerance**: A single orphan link (e.g. enrolling a deleted student ID) invalidates the batch.
 
 4. **Strict Role Enum Constraint Axioms**:
    - In `users.csv`: `role` MUST strictly match the OneRoster enum:
-     - v1.1: `administrator`, `proctor`, `student`, `teacher`.
-     - v1.2: adds `aide`, `guardian`, `parent`, `staff`.
+     - Load the exact version-specific enumeration and file layout from the binding. OneRoster1.2 moves role relationships to roles.csv; do not apply a1.1 users.role check to it.
    - In `enrollments.csv`: `role` is strictly constrained to `administrator`, `proctor`, `student`, `teacher`. Custom vendor roles (`substitute`, `dean`) must be mapped to valid specification enums.
    - Primary `sourcedId` values MUST be case-sensitively unique strings (RFC 4122 UUID format strongly recommended).
 
@@ -70,12 +69,12 @@ Do NOT use this skill when:
 | **Nested Archive Packaging** | Zipping a parent folder (`district_roster/manifest.csv`). | Manifest and CSVs MUST reside at the archive root (`/manifest.csv`). |
 | **The UTF-8 BOM Trap** | Excel export injecting `\xEF\xBB\xBF` into `sourcedId`. | Strip BOM headers during pre-flight sanitization pass. |
 | **Orphan Enrollment Links** | `enrollments.csv` pointing to non-existent user IDs. | Enforce foreign key validation across all entity files before import. |
-| **Bulk / Delta Column Bleed** | Including `dateLastModified` or `tobedeleted` in bulk. | Enforce schema separation: bulk files must not contain delta headers. |
+| **Bulk / Delta Column Bleed** | Including `dateLastModified` or `tobedeleted` in bulk. | Enforce schema separation: bulk retains schema headers with status/dateLastModified values empty. |
 | **Circular Org Hierarchies** | School A listed as parent of School B, and vice-versa. | Perform directed acyclic graph (DAG) cycle detection on `orgs.csv`. |
 | **Illegal Role Strings** | Using non-standard strings like `counselor` or `sub`. | Map all roles to standard enums (`administrator`, `teacher`, `student`). |
 | **Malformed ISO 8601 Timestamps** | Writing `"09/22/2026 14:00"` instead of ISO 8601. | Enforce strict RFC 3339 UTC format: `YYYY-MM-DDTHH:MM:SS.sssZ`. |
 | **Unescaped CSV Commas** | Unquoted commas in user names (`Doe, John`) shifting columns. | Wrap text fields containing commas in standard RFC 4180 quotes. |
-| **Missing Mandatory Core Files** | Exporting a bulk zip without `academicSessions.csv`. | Confirm all 7 mandatory core files exist in zip and manifest. |
+| **Missing Mandatory Core Files** | Exporting a bulk zip without `academicSessions.csv`. | Determine required files from the exact exchange profile; implementation support requirements do not mean every exchange must contain the full core. |
 | **Hallucinated SourcedIDs** | Inventing arbitrary IDs during reconciliation. | Preserve authoritative SIS primary keys without synthetic generation. |
 
 ## Concrete Archetypes / Presets
@@ -129,7 +128,7 @@ def validate_oneroster_archive(zip_path: str) -> dict:
                     warnings.append(f"{filename} contains UTF-8 BOM; stripped automatically.")
                     raw_bytes = raw_bytes[3:]
 
-                reader = csv.DictReader(io.StringIO(raw_bytes.decode('utf-8', errors='replace')))
+                reader = csv.DictReader(io.StringIO(raw_bytes.decode('utf-8', errors='strict')))
                 rows = []
                 for row in reader:
                     if len(rows) >= 10000:
@@ -145,8 +144,9 @@ def validate_oneroster_archive(zip_path: str) -> dict:
         if "orgs.csv" in keys and "users.csv" in data:
             for r in data["users.csv"]:
                 org_ref = r.get("orgSourcedIds") or r.get("schoolSourcedId")
-                if org_ref and org_ref not in keys["orgs.csv"]:
-                    errors.append(f"users.csv: user {r.get('sourcedId')} references non-existent org {org_ref}")
+                for org_id in (org_ref or "").split(","):
+                    if org_id and org_id not in keys["orgs.csv"]:
+                        errors.append("users.csv: unresolved org reference (identifier redacted)")
 
         if "users.csv" in keys and "classes.csv" in keys and "enrollments.csv" in data:
             for r in data["enrollments.csv"]:
@@ -162,16 +162,17 @@ def validate_oneroster_archive(zip_path: str) -> dict:
                     errors.append(f"enrollments.csv: illegal role '{role}' on user {uid}")
 
     return {
-        "status": "FAILED" if errors else "PASSED",
+        "status": "FAILED" if errors else "PARTIAL_CHECKS_ONLY",
         "errors": errors,
         "warnings": warnings,
         "total_records_checked": sum(len(v) for v in data.values())
     }
 ```
 
-### Archetype 2: Minimal Valid OneRoster v1.1 Manifest
+### Archetype 2: Partial OneRoster v1.1 Manifest Sketch (add required absent declarations)
 ```csv
 propertyName,value
+manifest.version,1.0
 oneroster.version,1.1
 file.orgs,bulk
 file.users,bulk
@@ -193,7 +194,7 @@ enr_99202,tobedeleted,2026-09-22T08:30:00.000Z,usr_0884,cls_bio101,student,false
 Before emitting validation results, CSV transforms, or roster scripts:
 - [ ] **Root Location**: Confirmed `manifest.csv` is located strictly at `/` without folder nesting.
 - [ ] **BOM Scrubbing**: Verified all CSV headers are clean UTF-8 without `\xEF\xBB\xBF`.
-- [ ] **Mode Consistency**: Verified no delta columns exist in bulk packages, and timestamps exist in deltas.
+- [ ] **Mode Consistency**: Verified bulk headers are present and status/dateLastModified values are empty, and timestamps exist in deltas.
 - [ ] **Referential Integrity**: 100% check of `userSourcedId`, `classSourcedId`, `orgSourcedIds`, and `courseSourcedId`.
 - [ ] **Role Enum Validation**: Confirmed all role values match 1EdTech specifications.
 - [ ] **Cycle-Free Orgs**: DAG validation run on `orgs.csv` to ensure no circular parent references.
@@ -211,7 +212,7 @@ Before emitting validation results, CSV transforms, or roster scripts:
 > 3. Perform foreign key referential integrity pass:
 >    - Flag 4 orphan rows in `enrollments.csv` referencing deleted student ID `usr_9914`.
 >    - Flag invalid role `"substitute_teacher"` on row 14 of `enrollments.csv` (must map to `"teacher"`).
-> 4. Verify bulk purity: confirm no `dateLastModified` or `tobedeleted` status flags are present in bulk mode.
+> 4. Verify bulk purity: confirm status/dateLastModified values are empty in bulk mode.
 > 5. Emit clean, line-numbered pre-flight audit report before committing to SIS ingestion.
 
 ## Limitations
@@ -219,3 +220,5 @@ Before emitting validation results, CSV transforms, or roster scripts:
 - OneRoster version details and required files can differ by exchange profile and vendor implementation. Validate against the exact 1EdTech specification and recipient's current import contract before rejecting or transforming a roster.
 - Student and staff roster files contain sensitive education records. Process only with authorization, minimize retained data, redact identifiers in diagnostics, and do not upload source CSVs to external services.
 - The included snippets are illustrative, not a complete certified validator; for example, large files, namespaces, delta semantics, and vendor extensions require additional handling and tests.
+
+This linter intentionally checks only a narrow1.1-style bulk subset; it does not implement manifest validation, full version/header/enumeration rules, duplicate IDs, org cycles or1.2 roles. Never report full compliance from PARTIAL_CHECKS_ONLY. Strictly decode input and preserve originals; BOM tolerance is a normalization choice, not permission to silently rewrite source rosters. Version-specific files and recipient baseline are required for deltas. References: [1.1 bulk semantics](https://developers.imsglobal.org/oneroster-v11-final-best-practice-and-implementation-guide), [1.2 CSV binding](https://www.imsglobal.org/spec/oneroster/v1p2/bind/csv/), [1.2 conformance scope](https://www.imsglobal.org/spec/oneroster/v1p2/cert/).

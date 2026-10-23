@@ -8,7 +8,7 @@ date_added: "2026-03-06"
 
 # Hosted Agent Infrastructure
 
-Hosted agents run in remote sandboxed environments rather than on local machines. When designed well, they provide unlimited concurrency, consistent execution environments, and multiplayer collaboration. The critical insight is that session speed should be limited only by model provider time-to-first-token, with all infrastructure setup completed before the user starts their session.
+Hosted agents run in remote sandboxed environments rather than on local machines. When designed well, they provide quota- and budget-bounded concurrency, consistent execution environments, and multiplayer collaboration. The critical insight is that session speed should be limited only by model provider time-to-first-token, with all infrastructure setup completed before the user starts their session.
 
 ## When to Use
 Activate this skill when:
@@ -19,9 +19,11 @@ Activate this skill when:
 - Scaling agent infrastructure beyond local machine constraints
 - Building systems where agents spawn sub-agents for parallel work
 
+Prebuilt images and snapshots must contain no live credentials or private cross-tenant artifacts. Inject short-lived, repository-scoped credentials per session and revoke them on exit. Enforce sandbox CPU/memory/disk/time/network budgets and authorization for spawned work; a model’s self-restraint is not isolation. Before editing, re-read exact-current-base instructions and affected files after synchronization completes, even if initial research began on stale data. Predictive warm-up must respect user/project access and budget consent.
+
 ## Core Concepts
 
-Hosted agents address the fundamental limitation of local agent execution: resource contention, environment inconsistency, and single-user constraints. By moving agent execution to remote sandboxed environments, teams gain unlimited concurrency, reproducible environments, and collaborative workflows.
+Hosted agents address the fundamental limitation of local agent execution: resource contention, environment inconsistency, and single-user constraints. By moving agent execution to remote sandboxed environments, teams gain quota- and budget-bounded concurrency, reproducible environments, and collaborative workflows.
 
 The architecture consists of three layers: sandbox infrastructure for isolated execution, API layer for state management and client coordination, and client interfaces for user interaction across platforms. Each layer has specific design requirements that enable the system to scale.
 
@@ -53,7 +55,7 @@ This enables instant restoration for follow-up prompts without re-running setup.
 Since git operations are not tied to a specific user during image builds:
 - Generate GitHub app installation tokens for repository access during clone
 - Update git config's `user.name` and `user.email` when committing and pushing changes
-- Use the prompting user's identity for commits, not the app identity
+- Use the repository’s authorized author/committer attribution policy; never impersonate a user without consent
 
 **Warm Pool Strategy**
 Maintain a pool of pre-warmed sandboxes for high-volume repositories:
@@ -124,7 +126,7 @@ Engineer prompts to guide when agents spawn sub-sessions:
 **Per-Session State Isolation**
 Each session requires its own isolated state storage:
 - Dedicated database per session (SQLite per session works well)
-- No session can impact another's performance
+- Resource limits reduce cross-session interference; a dedicated database alone does not isolate CPU, network or storage
 - Handles hundreds of concurrent sessions
 
 **Real-Time Streaming**
@@ -160,7 +162,7 @@ Multiplayer enables:
 - Attribute code changes to the prompting user
 - Share session links for instant collaboration
 
-With proper synchronization architecture, multiplayer support is nearly free to add.
+With proper synchronization architecture, multiplayer support still requires tenant authorization, conflict handling, presence and audit design.
 
 ### Authentication and Authorization
 
@@ -242,9 +244,9 @@ Internal adoption patterns that work:
 3. Allow file reads before git sync completes; block only writes
 4. Structure agent framework as server-first with clients as thin wrappers
 5. Isolate state per session to prevent cross-session interference
-6. Attribute commits to the user who prompted, not the app
+6. Apply the authorized author/committer attribution policy
 7. Track merged PRs as primary success metric
-8. Build for multiplayer from the start; it is nearly free with proper sync architecture
+8. Build for multiplayer from the start; budget for authorization, concurrent edits and audit behavior
 
 ## Integration
 

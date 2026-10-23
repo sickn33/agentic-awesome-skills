@@ -1,7 +1,7 @@
 ---
 name: odoo-upgrade-advisor
 description: "Step-by-step Odoo version upgrade advisor: pre-upgrade checklist, community vs enterprise upgrade path, OCA module compatibility, and post-upgrade validation."
-risk: safe
+risk: critical
 source: "self"
 date_added: "2026-03-04"
 ---
@@ -32,8 +32,10 @@ Upgrading Odoo between major versions (e.g., v15 → v16 → v17) requires caref
 | v16 | v17 | ✅ Direct | Odoo Upgrade Service / OpenUpgrade |
 | v15 | v16 | ✅ Direct | Odoo Upgrade Service / OpenUpgrade |
 | v14 | v15 | ✅ Direct | Odoo Upgrade Service / OpenUpgrade |
-| v14 | v17 | ⚠️ Multi-hop | v14→v15→v16→v17 (cannot skip) |
-| v13 or older | any | ❌ Not supported | Manual migration required |
+| v14 | v17 | Tool-specific | OpenUpgrade requires each intermediate migration; official service eligibility must be checked separately |
+| v13 or older | supported target | Assess coverage | Check official-service eligibility or historical OpenUpgrade branches/module coverage |
+
+Confirm a tested database+filestore restore and rollback/cutover plan before any migration. Uploading production backups to an external upgrade service needs authorization for the data transfer; redact secrets and use isolated staging credentials. See [official upgrade guidance](https://www.odoo.com/documentation/17.0/administration/upgrade.html) and [OpenUpgrade setup and version sequencing](https://oca.github.io/OpenUpgrade/040_run_migration.html).
 
 ## Examples
 
@@ -66,13 +68,17 @@ git clone https://github.com/OCA/OpenUpgrade.git \
   --single-branch \
   /opt/openupgrade
 
+# Modern OpenUpgrade supplies addons, not the Odoo server. Install a reviewed
+# target-version Odoo server and openupgradelib; include openupgrade_framework
+# and openupgrade_scripts in the staging config addons_path. Disable outbound
+# mail, cron, payments and external connectors in the cloned database.
 # Run the migration against your staging database
-python3 /opt/openupgrade/odoo-bin \
+python3 /opt/odoo-17/odoo-bin \
   --update all \
   --database odoo_staging \
   --config /etc/odoo/odoo.conf \
   --stop-after-init \
-  --load openupgrade_framework
+  --load=base,web,openupgrade_framework
 
 # Review the log for errors before touching production
 tail -200 /var/log/odoo/odoo.log | grep -E "ERROR|WARNING|Traceback"
@@ -112,13 +118,13 @@ Users & Security:
 - ✅ **Do:** Keep the old version running until the new version is **fully validated and signed off**.
 - ✅ **Do:** Check OCA's migration status page: [OCA Migration Status](https://github.com/OCA/maintainer-tools/wiki/Migration-Status)
 - ✅ **Do:** Use the [Odoo Upgrade Service](https://upgrade.odoo.com/) pre-analysis report to get a list of breaking changes **before writing any code**.
-- ❌ **Don't:** Skip intermediate versions — Odoo requires sequential upgrades (v14→v15→v16→v17).
+- ❌ **Don't:** Skip intermediate versions with OpenUpgrade. The official Odoo upgrade service has its own supported-source/target policy; do not impose OpenUpgrade's sequence on it.
 - ❌ **Don't:** Upgrade custom modules and Odoo core simultaneously — adapt Odoo core first, then fix custom modules.
 - ❌ **Don't:** Run OpenUpgrade against production directly — always test on a staging copy first.
 
 ## Limitations
 
-- Covers **v14–v17** only. Versions v13 and older have a fundamentally different module structure and require manual migration.
+- Examples target **v14–v17**. Older OpenUpgrade branches exist; migration feasibility depends on module coverage and custom data, not a blanket v13 cutoff.
 - **Enterprise-exclusive module changes** (e.g., `sign`, `account_accountant`) may have undocumented breaking changes not included in OpenUpgrade.
 - The **Odoo.sh** automated upgrade path has a separate workflow (managed from the Odoo.sh dashboard) not covered here.
 - OWL JavaScript component migration (legacy widget → OWL v16+) is a complex front-end topic beyond the scope of this skill.

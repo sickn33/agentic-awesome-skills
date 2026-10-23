@@ -10,7 +10,7 @@ Especialista profundo em Claude Code - CLI da Anthropic. Maximiza produtividade 
 ## How It Works
 
 Voce e o especialista definitivo em Claude Code. Seu objetivo e transformar
-cada sessao em uma experiencia 10x mais poderosa, rapida e inteligente.
+cada sessão em um fluxo verificável e adequado às permissões e ferramentas disponíveis.
 
 ---
 
@@ -27,12 +27,14 @@ diretamente no terminal. Diferente do Claude.ai web, o Claude Code:
 - Pode criar e orquestrar sub-agentes via Task tool
 
 
+Verifique `claude --version` e `claude --help` antes de copiar flags; consulte a documentação oficial da versão e o ambiente alvo. As instruções abaixo não demonstram instalação ou funcionamento local. Hooks e MCPs executam código com as permissões do processo; revise o código, a origem e o escopo antes de habilitar. Não amplie permissões para resolver um erro sem entender a operação.
+
 ## Instalacao E Setup
 
 ```bash
 npm install -g @anthropic-ai/claude-code
 claude                    # iniciar sessao interativa
-claude "sua tarefa aqui"  # modo nao-interativo
+claude "sua tarefa aqui"  # sessão interativa com prompt inicial
 claude --help             # ver todos os flags
 ```
 
@@ -41,13 +43,11 @@ claude --help             # ver todos os flags
 
 ```bash
 claude -p "prompt"              # print mode, ideal para scripts
-claude --model claude-opus-4    # especificar modelo
-claude --max-tokens 8192        # limite de tokens
-claude --no-stream              # sem streaming
+claude --model <modelo-disponivel-na-sua-conta>    # especificar modelo
 claude --output-format json     # saida em JSON
-claude --allowed-tools "Bash,Read,Write"  # limitar ferramentas
+claude -p --tools "Read" "analise os arquivos indicados"  # restringir ferramentas disponíveis
 claude --dangerously-skip-permissions     # pular confirmacoes (cuidado!)
-claude --max-turns 50                     # maximo de turnos autonomos
+claude -p --max-turns 50 "tarefa"          # limite em print mode
 ```
 
 ---
@@ -94,15 +94,15 @@ O que NUNCA fazer, invariantes do sistema
 
 Lista de skills, quando usar cada uma
 
-## Protocolo Pre-Tarefa
+## Fluxo Local
 
-Sempre rodar orchestrator antes de responder
+Siga as instruções atuais do repositório; resolva ferramentas opcionais apenas quando disponíveis e pertinentes.
 ```
 
 
 ## Dicas De Claude.Md De Elite
 
-- Use secao Protocolo Pre-Tarefa para garantir que o Claude sempre use orchestrator
+- Documente o fluxo real do projeto sem impor extensões inexistentes
 - Adicione secao Erros Conhecidos com solucoes para problemas recorrentes
 - Use secao Memoria como indice para arquivos de memoria detalhados
 - Adicione exemplos concretos de output esperado
@@ -128,16 +128,9 @@ Carregar antes de qualquer tarefa: memory/MEMORY.md
 Para projetos ativos: memory/ai-personas.md
 
 
-## Instrucao De Salvamento Automatico:
+## Memória e Extensões Opcionais
 
-Ao final de sessoes longas, execute:
-python context-agent/scripts/context_manager.py save
-```
-
-## Context Guardian - Prevenir Perda De Contexto
-
-O context-guardian skill monitora compactacao automatica e salva snapshots.
-Ativar no inicio de sessoes longas ou criticas.
+Os scripts context-agent/context-guardian e o ecossistema Auri citados pelo autor não estão neste bundle. Não os execute nem afirme que salvaram contexto sem uma instalação existente, revisada e autorizada. Leia apenas a memória pertinente; não exponha logs ou credenciais. Respeite as regras atuais de escopo e memória do cliente.
 
 ---
 
@@ -171,7 +164,7 @@ Hooks executam comandos automaticamente em eventos do Claude Code.
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -c \\"[Console]::Beep(800,300)\\""
+            "command": "powershell -c \"[Console]::Beep(800,300)\""
           }
         ]
       }
@@ -200,31 +193,14 @@ Hooks executam comandos automaticamente em eventos do Claude Code.
 }
 ```
 
-## Exemplo: Hook Scanner De Seguranca Pre-Commit
+## Hook de Segurança
 
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python C:/Users/renat/skills/cred-omega/scripts/secret_scanner.py --staged 2>/dev/null || true"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
+Um PreToolUse que pretende bloquear uma ação deve seguir o contrato documentado da versão instalada: saída apropriada e exit code 2 podem bloquear a ferramenta. Não use `|| true`, que transforma falha em sucesso. Nenhum secret_scanner.py está incluído aqui; configure apenas um scanner local revisado, teste sucesso/falha/arquivo ausente e confirme que stderr não vaza segredos. Hooks precisam consumir o JSON documentado do evento, não interpolar comandos ou caminhos recebidos sem validação.
 
 ## Ver E Validar Hooks Ativos
 
 ```bash
-cat ~/.claude/settings.json
-python -m json.tool ~/.claude/settings.json   # valida o JSON
+python -m json.tool ~/.claude/settings.json > /dev/null   # sintaxe apenas; não valida o schema nem imprime segredos
 ```
 
 ---
@@ -237,10 +213,7 @@ Cada MCP server expoe novas ferramentas que o Claude pode usar nas sessoes.
 ## Comandos Mcp
 
 ```bash
-claude mcp add filesystem       # acesso expandido a arquivos
-claude mcp add github           # integracao com GitHub (PRs, issues)
-claude mcp add postgres         # queries SQL em banco Postgres
-claude mcp add sqlite           # queries SQL em SQLite
+claude mcp add --help          # descobrir transporte, URL/comando e escopo reais
 claude mcp list                 # listar MCPs instalados
 claude mcp get nome-servidor    # detalhes de um MCP especifico
 claude mcp remove nome          # remover um MCP
@@ -257,30 +230,9 @@ claude mcp remove nome          # remover um MCP
 | slack | Notificacoes e mensagens em canais |
 | fetch | HTTP requests diretos para APIs |
 
-## Criar Mcp Server Customizado Em Node.Js
+## MCP Customizado
 
-```javascript
-// mcp-server.js
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-
-const server = new Server({ name: "meu-mcp", version: "1.0.0" });
-server.setRequestHandler("tools/call", async (req) => {
-  if (req.params.name === "minha_ferramenta") {
-    return { content: [{ type: "text", text: "resultado" }] };
-  }
-});
-const transport = new StdioServerTransport();
-await server.connect(transport);
-```
-
-## Adicionar Mcp Customizado
-
-```bash
-claude mcp add meu-mcp node /caminho/para/mcp-server.js
-```
-
----
+Nenhum servidor MCP está incluído. Use a versão revisada do SDK oficial compatível com seu runtime; registre o schema da ferramenta, handler e transporte. Teste initialize, tools/list e tools/call sem segredos, validando entrada/saída e falhas. Um handler tools/call isolado não é uma implementação completa. Ao registrar no cliente, confira `claude mcp add --help`, fixe o executável/URL e limite acesso aos diretórios/serviços necessários.
 
 ## 6. Sub-Agentes - Paralelismo Total
 
@@ -323,10 +275,7 @@ Ideal para: experimentos, refatoracoes arriscadas, POCs sem risco ao main.
 {
   "permissions": {
     "allow": [
-      "Bash(git *)",
-      "Bash(npm *)",
-      "Read(*)",
-      "Write(src/**)"
+      "Read(src/**)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -337,12 +286,14 @@ Ideal para: experimentos, refatoracoes arriscadas, POCs sem risco ao main.
 }
 ```
 
+O exemplo mínimo não autoriza comandos ou escrita. Regras de prefixo de shell não são um sandbox completo; adicionar git/npm/python amplamente permite scripts e efeitos indiretos. Teste as regras com a versão instalada e use isolamento do sistema operacional para conteúdo não confiável.
+
 ## Flags De Permissao Em Linha De Comando
 
 ```bash
 claude --dangerously-skip-permissions        # pula TODAS as confirmacoes
-claude --allowed-tools "Read,Write,Bash"     # apenas estas ferramentas
-claude --disallowed-tools "WebFetch"         # bloquear especificas
+claude -p --tools "Read" "resuma os arquivos indicados" # somente leitura
+claude --disallowedTools "WebFetch"         # bloquear especificas
 ```
 
 ## Quando Usar --Dangerously-Skip-Permissions
@@ -380,7 +331,7 @@ claude "faca code review da feature X, identifique problemas e refine"
 ## Modo Autonomo Para Ciclos Longos
 
 ```bash
-claude --max-turns 100 "complete o ciclo completo de desenvolvimento da feature X"
+claude -p --max-turns 100 "complete o ciclo completo de desenvolvimento da feature X"
 ```
 
 ## Script De Inicio De Sessao Produtiva
@@ -391,105 +342,40 @@ echo "Carregando contexto do projeto..."
 claude -p "leia memory/MEMORY.md e me da um briefing completo do estado atual"
 ```
 
-## Pipeline Ci/Cd Com Claude Code
+## Uso em CI
 
-```yaml
-
-
-## .Github/Workflows/Claude-Review.Yml
-
-- name: Claude Code Review
-  env:
-    ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-  run: |
-    claude -p "revise o diff deste PR, identifique bugs e problemas de seguranca" \n      --output-format json \n      --no-stream \n      --max-turns 5
-```
-
----
+Não execute conteúdo de PR não confiável com tokens de escrita ou segredos de produção. Prepare o diff de forma revisada, limite permissões e orçamento e gere um relatório local; um pedido de code review não autoriza postar comentários. `-p` cria uma execução própria: prompts de fases separados não compartilham necessariamente o plano sem arquivo ou resume explícito. Confirme disponibilidade do CLI e políticas de rede/dados antes de enviar código a um modelo externo.
 
 ## Tabela De Problemas Comuns
 
 | Problema | Causa Provavel | Solucao |
 |----------|----------------|----------|
-| API key not found | ANTHROPIC_API_KEY nao configurada | export ANTHROPIC_API_KEY=sk-ant-... |
-| Timeout em tarefas longas | max-turns insuficiente | Adicionar --max-turns 100 |
+| API key not found | ANTHROPIC_API_KEY nao configurada | Configurar token localmente pelo método documentado; não imprimir nem gravar no histórico |
+| Timeout em tarefas longas | max-turns insuficiente | Inspecionar timeout, erro, rede e orçamento; aumentar turnos não corrige todo timeout |
 | Context window cheio | Muitos arquivos no contexto | Usar sub-agentes com contexto focado |
 | Sub-agente nao acha arquivo | Path relativo errado | Usar path absoluto sempre |
 | Hook nao executa | JSON invalido em settings.json | python -m json.tool ~/.claude/settings.json |
 | MCP nao conecta | Servidor MCP nao iniciado | claude mcp list e checar status |
 | Compactacao inesperada | Sessao muito longa | Usar context-guardian skill |
-| Erro de permissao em Bash | Tool nao permitida | Adicionar ao allow em settings.json |
+| Erro de permissao em Bash | Tool nao permitida | Verificar a ação e o escopo; adicionar somente a permissão mínima quando autorizada |
 
 ## Ver Logs E Historico De Sessoes
 
 ```bash
 ls ~/.claude/projects/
 ls ~/.claude/projects/<hash>/
-cat ~/.claude/projects/<hash>/*.jsonl | python -m json.tool
+# JSONL contém um objeto por linha, não um único documento JSON.
+# Inspecione somente campos necessários com um leitor JSONL e redija dados sensíveis.
+# Não concatene e imprima todo o histórico.
 ```
 
 ---
 
-## ~/.Claude/Settings.Json Completo E Recomendado
+## Configuração e Dados
 
-```json
-{
-  "theme": "dark",
-  "verbose": false,
-  "cleanupPeriodDays": 30,
-  "hooks": {
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -c \\"[Console]::Beep(800,200); Start-Sleep -Milliseconds 100; [Console]::Beep(1000,200)\\""
-          }
-        ]
-      }
-    ]
-  },
-  "permissions": {
-    "allow": [
-      "Bash(git *)",
-      "Bash(npm *)",
-      "Bash(python *)",
-      "Bash(powershell *)",
-      "Read(*)",
-      "Write(*)"
-    ]
-  }
-}
-```
+Faça backup e edite apenas as configurações pertinentes, sem sobrescrever regras existentes. `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` pode reduzir tráfego não essencial; não é modo offline nem garantia de privacidade. Credenciais ficam no mecanismo local aprovado, não em exemplos export com valores. Evite recomendar uma configuração global com Write(*), Bash(python *) ou Bash(npm *) para todos os projetos.
 
-## Variaveis De Ambiente Essenciais
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-SUA_CHAVE_AQUI
-export CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192
-export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1   # modo privado
-```
-
----
-
-## Como Claude Code Se Integra Com As Skills Auri
-
-1. CLAUDE.md global lista todas as skills disponiveis e quando usar cada uma
-2. agent-orchestrator e executado em toda solicitacao para identificar skills relevantes
-3. task-intelligence enriquece tarefas moderadas/complexas com briefing pre-tarefa
-4. context-agent salva e restaura estado entre sessoes
-5. context-guardian previne perda de contexto em sessoes longas
-
-## Comandos Rapidos Do Ecossistema
-
-```bash
-python agent-orchestrator/scripts/scan_registry.py           # atualizar registry
-python agent-orchestrator/scripts/match_skills.py "tarefa"  # identificar skills
-python task-intelligence/scripts/pre_task_check.py "tarefa" # briefing
-python context-agent/scripts/context_manager.py save        # salvar contexto
-python context-agent/scripts/context_manager.py load        # carregar contexto
-```
+As extensões Auri, agent-orchestrator, task-intelligence e context-agent são contexto do autor, não dependências instaladas por este bundle. Não execute caminhos fictícios nem alegue garantia contra perda de contexto.
 
 ## Quando Esta Skill E Ativada
 
@@ -522,6 +408,9 @@ Esta skill e ativada automaticamente quando o usuario quer:
 ---
 
 ## 13. Referencias Oficiais
+
+- CLI atual: https://code.claude.com/docs/en/cli-reference
+- Hooks atuais: https://code.claude.com/docs/en/hooks
 
 - Documentacao principal: https://docs.anthropic.com/claude-code
 - Referencia de hooks: https://docs.anthropic.com/claude-code/hooks

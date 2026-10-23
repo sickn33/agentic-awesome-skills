@@ -35,7 +35,9 @@ Read the target SKILL.md file and extract YAML frontmatter.
 
 ### Step 2: Validate
 
-Apply all Free tier checks in order:
+This file summarizes check categories but does not bundle a complete numbered ruleset or validator. Inspect the actual upstream rules/installed validator before claiming exact check IDs, counts or scores. With only this file, report a qualitative review by category and mark unavailable checks as not evaluated.
+
+Apply available Free tier checks in order:
 
 | Category | Checks | What it catches |
 |----------|--------|----------------|
@@ -89,7 +91,7 @@ All 31 checks passed. No issues found.
 - Read-only: does not modify any files
 - Free tier covers structural, semantic, and naming checks only
 - Anti-slop, security, WCAG, token, enterprise, and workflow checks require [SkillCheck Pro](https://getskillcheck.com)
-- Semantic checks (contradiction detection, wisdom/platitude) are heuristic with ~5% false positive rate
+- Semantic checks are heuristic; this catalog copy includes no evaluation evidence supporting a quantified false-positive rate.
 - Does not validate referenced files or scripts; only checks SKILL.md content
 - Single-file validation; does not cross-check against other skills in the same directory
 

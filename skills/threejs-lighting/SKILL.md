@@ -104,7 +104,7 @@ dirLight.shadow.camera.top = 10;
 dirLight.shadow.camera.bottom = -10;
 
 // Shadow softness
-dirLight.shadow.radius = 4; // Blur radius (PCFSoftShadowMap only)
+dirLight.shadow.radius = 4; // Filtering behavior depends on renderer/version/shadow type; verify the installed reference
 
 // Shadow bias (fixes shadow acne)
 dirLight.shadow.bias = -0.0001;
@@ -260,20 +260,9 @@ dirLight.shadow.normalBias = 0.02; // Bias along normal
 // 4096 - very high quality (expensive)
 ```
 
-### Contact Shadows (Fake, Fast)
+### Contact Shadows
 
-```javascript
-import { ContactShadows } from "three/examples/jsm/objects/ContactShadows.js";
-
-const contactShadows = new ContactShadows({
-  resolution: 512,
-  blur: 2,
-  opacity: 0.5,
-  scale: 10,
-  position: [0, 0, 0],
-});
-scene.add(contactShadows);
-```
+Do not import `three/examples/jsm/objects/ContactShadows.js`: this guide does not identify a verified Three.js addon at that path. In a React Three Fiber project, [Drei's ContactShadows](https://drei.docs.pmnd.rs/staging/contact-shadows) is a separate component/dependency; inspect its version and performance cost before adoption. Plain Three.js projects need a reviewed render-target implementation or a supported alternative.
 
 ## Light Helpers
 
@@ -293,7 +282,7 @@ const spotHelper = new THREE.SpotLightHelper(spotLight);
 scene.add(spotHelper);
 
 // Hemisphere helper
-const hemiHelper = new THREE.HemisphereLightHelper(hemiLight, 5);
+const hemiHelper = new THREE.HemisphereLightHelper(hemi, 5);
 scene.add(hemiHelper);
 
 // RectAreaLight helper
@@ -469,13 +458,12 @@ function animate() {
 3. **Smaller shadow maps**: 512-1024 often sufficient
 4. **Tight shadow frustums**: Only cover needed area
 5. **Disable unused shadows**: Not all lights need shadows
-6. **Use light layers**: Exclude objects from certain lights
+6. **Use camera layers carefully**: Layers control camera visibility, not general per-mesh light linking
 
 ```javascript
-// Light layers
-light.layers.set(1); // Light only affects layer 1
-mesh.layers.enable(1); // Mesh is on layer 1
-otherMesh.layers.disable(1); // Other mesh not affected
+// Camera layers control visibility. Do not assume matching light/mesh layers
+// isolates that light to that mesh; verify supported light-linking mechanisms
+// for the selected renderer/version.
 
 // Selective shadows
 mesh.castShadow = true;

@@ -196,6 +196,10 @@ Google Sheets enforces strict rate limits:
 | Spreadsheet info | `GOOGLESHEETS_GET_SPREADSHEET_INFO` | `spreadsheet_id` |
 | Update tab props | `GOOGLESHEETS_UPDATE_SHEET_PROPERTIES` | `spreadsheetId`, properties |
 
+## Data and write boundaries
+
+Connect the intended Google account and grant only the required spreadsheet scopes; an MCP endpoint alone does not authorize access. Confirm the spreadsheet ID, tab and exact range before writes. UI filters do not make values reads return only visible rows: read the data and apply the intended predicate explicitly. Use RAW for untrusted literal text; USER_ENTERED can interpret formulas. Check upsert keys for duplicates and concurrent writers, and reconcile the range after an uncertain append rather than retrying blindly. Verify quota limits for the actual project/user and method before scheduling bulk work.
+
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 

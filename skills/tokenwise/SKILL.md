@@ -22,9 +22,9 @@ plugin:
 
 ## Overview
 
-A Claude Code skill that auto-routes subtasks to the cheapest model that can handle them (Haiku for grunt work, Sonnet for scoped reasoning, Opus only for synthesis), then logs every routed task to a local NDJSON with real token + cost numbers. Includes an A/B test subcommand that runs the same task across multiple tiers and scores quality, so the routing decisions are verified against the user's real workload — not estimated.
+The upstream package advertises model-tier routing, local NDJSON usage logs and an A/B comparison command. Evaluate those capabilities only in an installed, reviewed revision with the user's authorized model budget and actual workload. Task difficulty, response-quality rubrics and reported costs remain estimates unless independently measured.
 
-Anthropic's own bug tracker (Issue #27665) reports 93.8% of Max-subscriber Claude Code tokens flow to Opus. Existing routers (claude-router, wshobson, VoltAgent) either pin models statically or route by vibes-based heuristics with no measurement. TokenWise fills the measurement gap.
+This entry describes the upstream workflow; it does not bundle its commands or measurement implementation. Verify the installed revision, supported models and actual routing behavior before relying on a report. A user's workload and billing plan determine whether routing reduces paid usage.
 
 ## When to use
 
@@ -58,7 +58,7 @@ Safety caps:
 
 ## Privacy
 
-Zero telemetry. All logs in `.tokenwise/log.ndjson` local to the project. Task descriptions truncated to 80 chars and stripped of file contents before logging. No analytics endpoint exists in the source.
+Upstream describes project-local logs at `.tokenwise/log.ndjson`. Inspect the installed revision and dependencies for log contents, redaction, retention and network behavior; this single-file catalog entry cannot establish zero telemetry. Model routing and A/B runs send task context to the selected provider. Exclude secrets and obtain authorization for additional provider usage; keep logs out of public commits.
 
 ## Install
 
@@ -73,10 +73,10 @@ Then run `/tokenwise:install` and follow the guided prompts.
 
 ## Limitations
 
-- Token counts approximate to ±2% vs Anthropic billing
+- Treat reported costs as estimates until reconciled with actual provider usage and current pricing; no billing-error bound is established by this catalog entry
 - A/B test mode costs extra tokens (one task × N tiers) — intentional one-time validation
 - Anthropic-only by design (use LiteLLM or OpenRouter for cross-vendor)
-- Subagent `model:` param has known silent-fail bugs on some Claude Code builds — skill probes for this at install and refuses to configure if routing is broken
+- Verify the selected model in actual execution evidence; do not assume a model parameter or an installer probe guarantees that a specific client build honored routing
 
 ## Source
 

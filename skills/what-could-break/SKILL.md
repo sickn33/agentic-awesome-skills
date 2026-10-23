@@ -19,7 +19,7 @@ license_source: "https://github.com/stas4000/what-could-break/blob/main/LICENSE"
 ## Overview
 
 Listing callers is not the job. Grep does that in a second. This skill finds the breakage
-grep will not show you, and produces one proof that the change is safe.
+grep will not show you, and tests the specific assumptions supporting the change.
 
 Run it before design, not only before merge. Whenever a task asserts something about
 existing code ("X already handles Y", "just make X public"), that assertion is a
@@ -119,10 +119,12 @@ is false and the design changes before any code is written.
 ## Security & Safety Notes
 
 - The proof scripts this skill writes run real production code paths. Run them in a local or authorized test environment, never against production data stores.
-- Read-only by design: it inspects a diff and runs checks. It does not mutate state, and it should not be used to apply fixes.
+- The audit does not authorize source fixes. Running real code/tests can still write files or contact services; inspect side effects and execute only in an isolated authorized test environment.
 
 ## Credits
 
 Adapted from [stas4000/what-could-break](https://github.com/stas4000/what-could-break) (MIT).
 Includes material adapted from pstack by Lauren Tan (MIT); its notice ships here in
 [references/LICENSE-pstack.txt](references/LICENSE-pstack.txt).
+
+One passing proof covers its stated predicate and tested inputs, not all possible regressions. Name the searched repositories, versions, unobserved consumers and remaining risks; never convert a bounded search or replay into a whole-system safety guarantee.

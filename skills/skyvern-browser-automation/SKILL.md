@@ -16,7 +16,7 @@ license_source: "https://github.com/Skyvern-AI/skyvern/blob/main/LICENSE"
 
 # Skyvern Browser Automation -- CLI Judgment Procedure
 
-Skyvern uses AI to navigate and interact with websites. Every command below is a runnable `skyvern <command>` invocation.
+Skyvern uses AI to navigate and interact with websites. The commands illustrate a Skyvern CLI interface; confirm the installed version and discover capabilities before use. Workflow YAML and cloud credentials are external prerequisites.
 
 ## When to Use This Skill
 
@@ -46,6 +46,8 @@ Skyvern uses AI to navigate and interact with websites. Every command below is a
 4. If the user says `try this once`, `see if this works`, or clearly wants a one-off exploratory trial, use `run-task`.
 5. If the task spans multiple pages and is meant to be reusable, scheduled, repeatable, or explicitly `set up` as automation, use `workflow create`.
 6. Never type passwords. Always use stored credentials with `skyvern browser login`.
+
+Cloud sessions can send screenshots, page data and credentials to the configured provider. Verify user authorization and data policy first; local browser execution alone does not prove local-only AI processing. Bind credentials to the expected origin and reconcile uncertain submissions before retries. A screenshot/model boolean is supporting evidence, not proof of transaction acceptance.
 
 ## Step 3: Create a Session
 
@@ -93,7 +95,7 @@ skyvern browser type --text "user@co.com" --selector "#email"
 skyvern browser select --value "US" --intent "the country dropdown"
 ```
 
-Deterministic. No AI. Three targeting modes:
+Selector-only targeting is deterministic; intent and hybrid modes can invoke AI. Three targeting modes:
 1. **Intent**: `--intent "the Submit button"` (AI finds element)
 2. **Selector**: `--selector "#submit-btn"` (CSS/XPath, deterministic)
 3. **Hybrid**: both (selector narrows, AI confirms)
@@ -148,7 +150,7 @@ skyvern workflow status --run-id wr_789
 ```
 
 Split into one block per step. Use **navigation** blocks for actions, **extraction** for data.
-First run uses AI; subsequent runs replay a cached script (10-100x faster).
+First run uses AI; subsequent runs may replay cached scripts when applicable; measure speed and correctness on the actual workflow.
 Set `--run-with agent` to force AI mode for debugging.
 
 ## Step 5: Verify
@@ -176,6 +178,7 @@ skyvern browser evaluate --expression "document.title"                    # JS s
 NEVER type passwords through `skyvern browser type` or `act`. Always use stored credentials:
 
 ```bash
+# Supply SKYVERN_CRED_PASSWORD through the secret manager or non-echoed input; never literal shell history.
 skyvern credentials add --name "my-login" --type password --username "user@co.com"
 skyvern credential list                          # find the credential ID
 skyvern browser login --url "https://login.example.com" --credential-id cred_123

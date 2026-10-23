@@ -23,7 +23,7 @@ Use this skill when you need a portable, framework-agnostic discipline for the w
 > **frontend-architecture** skill (mutations live in `modules/{feature}/hooks/`, keyed by a factory).
 
 The goal: a write **feels instant** (the UI reflects it before the server confirms), is **safe**
-(a failure restores the exact prior state, and a retry never double-charges), and leaves the cache
+(a failure reconciles with authoritative state, and retries require server-enforced deduplication), and leaves the cache
 **coherent** (the detail view and every list page agree). All three at once — that's the craft.
 
 ---
@@ -42,7 +42,7 @@ The goal: a write **feels instant** (the UI reflects it before the server confir
 
 | Situation                                                                     | Strategy                                                                                                                       |
 | ----------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| High-confidence, low-conflict write (toggle status, like, mark-paid, reorder) | **Optimistic** — patch immediately, roll back on error.                                                                        |
+| High-confidence, low-conflict write (toggle nonfinancial status, like, reorder) | **Optimistic** — patch immediately, roll back on error.                                                                        |
 | Create that returns a server-generated id/number/total                        | **Pending state**, then `setQueryData` from the server response. A temporary optimistic row is optional; reconcile on success. |
 | Destructive or hard-to-reverse write (delete with cascade, send money)        | **Confirm first**, then optimistic _or_ pending — never silent-optimistic.                                                     |
 | Write whose result the user can't see yet (background job)                    | **Pending + toast**, invalidate when done. No optimistic patch.                                                                |
@@ -68,6 +68,8 @@ export function useMarkInvoicePaid() {
   const notifyError = useApiErrorToast();
 
   return useMutation<Invoice, ApiError, { id: InvoiceId }, MarkPaidContext>({
+    mutationKey: invoiceKeys.all,
+    retry: false, // a network error alone does not make this POST safe to retry
     mutationFn: ({ id }) => apiClient.post<Invoice>(INVOICE_API.markPaid(id)),
 
     // 1 + 2 + 3: cancel in-flight reads, snapshot, patch
@@ -104,12 +106,9 @@ export function useMarkInvoicePaid() {
       return { previousInvoice, previousLists };
     },
 
-    // 4: roll back verbatim
-    onError: (error, { id }, ctx) => {
-      if (ctx?.previousInvoice)
-        queryClient.setQueryData(invoiceKeys.detail(id), ctx.previousInvoice);
-      for (const [key, list] of ctx?.previousLists ?? [])
-        queryClient.setQueryData(key, list);
+    // 4: revalidate on failure; an old whole-list snapshot can erase newer writes.
+    onError: (error) => {
+      void queryClient.invalidateQueries({ queryKey: invoiceKeys.all });
       notifyError(error);
     },
 
@@ -127,10 +126,12 @@ export function useMarkInvoicePaid() {
 - **cancel** — without it, a query that was already in flight can resolve _after_ your patch and overwrite the optimistic state.
 - **snapshot** — the only safe rollback source; never reconstruct prior state by hand.
 - **patch** — the instant UX; mutate detail **and** lists together (§4).
-- **roll back** — restore snapshots verbatim, then surface the typed `ApiError`.
+- **failure** — revalidate and surface the typed ApiError; this concurrent example deliberately does not restore whole-cache snapshots. Use pending UI while authoritative data reloads.
 - **invalidate on settle** — success or failure, refetch so server-computed fields (timestamps, totals) are authoritative. Settle, not just success: a failed write may still have changed server state.
 
 ---
+
+Whole-snapshot rollback is safe only when cache writes are serialized or no newer update has occurred. The reference therefore invalidates on failure. Restoring snapshots requires serialized writes or versioned per-entity patches that prove no newer update would be overwritten. Filtered lists may change membership/sort/totals when status changes; merely editing a row is insufficient. Use pending state when those rules cannot be reproduced safely. An optimistic Paid badge does not prove a payment settled.
 
 ## 3. Non-optimistic writes: create with server-owned fields
 
@@ -140,6 +141,7 @@ seed the cache from the response.
 ```ts
 export function useCreateInvoice() {
   const queryClient = useQueryClient();
+  const notifyError = useApiErrorToast();
   return useMutation<Invoice, ApiError, CreateInvoiceInput>({
     mutationFn: ({ document, idempotencyKey }) =>
       apiClient.post<Invoice>("/invoices", document, { idempotencyKey }),
@@ -186,7 +188,8 @@ the original response for a repeated key within its window.
 
 ```ts
 // at form initialisation — stable for the lifetime of this attempt
-const idempotencyKey = useMemo(() => crypto.randomUUID(), []);
+const [idempotencyKey] = useState(() => crypto.randomUUID());
+// Start a fresh key for a NEW logical intent/payload; persist the old key for retries.
 
 // mutation forwards it; the typed client puts it on the header
 apiClient.post<Invoice>("/invoices", document, { idempotencyKey });
@@ -195,7 +198,7 @@ apiClient.post<Invoice>("/invoices", document, { idempotencyKey });
 **Hard rules:**
 
 - Generate the key at **intent time**, not inside `mutationFn` (which re-runs per retry → defeats the purpose).
-- The data client auto-detects financial routes and injects the header; an explicit key always wins so retries replay.
+- The application-owned data client must explicitly forward the key and the server must enforce it, bind it to actor/operation/payload, reject changed payloads and define expiry. No library here auto-detects financial routes.
 - Pair idempotency with **disabled-while-pending** UI so the user can't fire a second distinct write.
 
 ---
@@ -203,12 +206,12 @@ apiClient.post<Invoice>("/invoices", document, { idempotencyKey });
 ## 6. Retry policy
 
 - **Reads:** retry a few times with backoff (default in most query libs) — safe and idempotent.
-- **Writes:** do **not** auto-retry non-idempotent mutations. Retry only when an idempotency key guarantees replay, or only on network errors (status 0), never on 4xx.
+- **Writes:** do **not** auto-retry non-idempotent mutations. Retry only when an idempotency key guarantees replay, and retryable failures have been classified. A network error can occur after the server committed; it is never sufficient by itself.
 - **Conflicts (409):** don't retry — surface the typed error, invalidate, and let the user re-decide on fresh data.
 
 ```ts
 useMutation({
-  retry: (count, error: ApiError) => error.isNetworkError && count < 2, // network-only, bounded
+  retry: false, // enable bounded retries only after verifying server deduplication
 });
 ```
 

@@ -30,7 +30,7 @@ Target: **$ARGUMENTS**
 1. Read the target file and identify all data-dependent areas.
 
 2. Read the design language reference:
-   - `DESIGN-LANGUAGE.md` sections on Loading States (Skeleton), Empty States, Error States
+   - If present in the target project, `DESIGN-LANGUAGE.md` sections on Loading States (Skeleton), Empty States, Error States. This reference is not bundled; otherwise use the project’s existing components and tokens.
 
 3. For each data-dependent area, implement ALL 4 states:
 
@@ -81,7 +81,7 @@ Rules:
 - Partial failure: only affected card shows error, rest loads normally
 - Full page failure: full-screen EmptyState with retry
 - Error message: plain language, blame the system
-- Always provide retry button
+- Offer retry only when retrying is safe; otherwise provide an accurate recovery action.
 
 ### State 4: Success (Action Feedback)
 ```tsx
@@ -89,17 +89,18 @@ Rules:
 toast("Changes saved")
 
 // With undo for destructive actions
+// Only offer Undo when handleUndo genuinely restores the deleted item.
 toast("Item deleted", { action: { label: "Undo", onClick: handleUndo } })
 ```
 Rules:
 - Info toast: 3s display
-- Action toast (with undo): 5s display
+- Action toast (with undo): do not make a short-lived toast the only way to recover; provide a persistent recovery path or adjustable timing.
 - Toast position: above BottomNav
 - One toast at a time (new replaces old)
 
 4. Implementation pattern:
 ```tsx
-function DataCard({ data, isLoading, error }) {
+function DataCard({ data, isLoading, error, refetch }) {
   if (isLoading) return <DataCardSkeleton />
   if (error) return <DataCardError onRetry={refetch} />
   if (!data || data.length === 0) return <DataCardEmpty />

@@ -35,6 +35,8 @@ Authenticate Java applications with Azure services using Microsoft Entra ID (Azu
 
 ## DefaultAzureCredential (Recommended)
 
+Pin SDK versions and verify the exact chain/features before use. For production, prefer the intended managed/workload identity explicitly or constrain the chain so ambient developer credentials cannot silently select another principal. Confirm tenant, resource endpoint and least-privilege role; secret values shown below are placeholders to load from approved storage, never literals to commit. Do not enable verbose/account logging by default.
+
 The `DefaultAzureCredential` tries multiple authentication methods in order:
 
 1. Environment variables
@@ -254,12 +256,11 @@ WorkloadIdentityCredential credential = new WorkloadIdentityCredentialBuilder()
 
 ## Token Caching
 
-Enable persistent token caching for better performance.
+Token caches depend on credential/version. Account-identifier logging is diagnostics, not cache enablement; it may expose account metadata. Configure persistent caching only through the supported credential-specific cache API and an approved protected store.
 
 ```java
-// Enable token caching (in-memory by default)
+// Reuse a credential instance for supported in-memory token reuse
 DefaultAzureCredential credential = new DefaultAzureCredentialBuilder()
-    .enableAccountIdentifierLogging()
     .build();
 
 // With shared token cache (for multi-credential scenarios)
@@ -292,7 +293,7 @@ import com.azure.core.exception.ClientAuthenticationException;
 
 try {
     DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
-    AccessToken token = credential.getToken(new TokenRequestContext()
+    AccessToken token = credential.getTokenSync(new TokenRequestContext()
         .addScopes("https://management.azure.com/.default"));
 } catch (CredentialUnavailableException e) {
     // No credential could authenticate

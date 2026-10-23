@@ -65,10 +65,11 @@ flowchart LR
   bank --> hook
   raast --> hook
   hook --> db[BillingDB]
-  db --> recon[ReconciliationJob] ``` 
+  db --> recon[ReconciliationJob]
+```
 
 Data Model Requirements
-Use smallest currency unit (Rupee) as integer.
+Use integer paisa internally (100 paisa = 1 PKR). Convert exactly once at each provider adapter according to its verified merchant contract; providers may encode the amount differently.
 
 Minimum entities:
 - customers
@@ -83,17 +84,18 @@ payments must include:
 - tenant_id
 - provider
 - provider_payment_id
-- amount_rupee
+- amount_paisa
 - currency = PKR
 - status (pending|succeeded|failed|refunded|canceled)
 - idempotency_key
 - provider_raw (JSON)
 - created_at, updated_at
 Provider Abstraction Contract (Example)
+```typescript
 export type ProviderName = "jazzcash" | "easypaisa" | "bank-gateway" | "raast";
 export interface CreatePaymentParams {
   provider: ProviderName;
-  amountPaisa: number; // PKR in rupee
+  amountPaisa: number; // integer paisa; validate positive safe integer
   currency: "PKR";
   customerId: string;
   invoiceId?: string;
@@ -111,6 +113,8 @@ export interface PaymentsService {
   createPayment(params: CreatePaymentParams): Promise<CreatePaymentResult>;
   verifyAndHandleWebhook(rawBody: string, headers: Record<string, string>): Promise<void>;
 }
+```
+
 Webhook Handling Rules (Non-Negotiable)
 1. Verify signature from raw body.
 2. Resolve stable provider_payment_id.

@@ -11,18 +11,18 @@ This skill provides prioritized performance guidelines across:
 - **Bundle Optimization** - Lazy loading, `@defer`, tree-shaking
 - **Rendering Performance** - TrackBy, virtual scrolling, CDK
 - **SSR & Hydration** - Server-side rendering patterns
-- **Template Optimization** - Structural directives, pipe memoization
+- **Template Optimization** - Structural directives, pure pipes and immutable inputs
 - **State Management** - Efficient reactivity patterns
 - **Memory Management** - Subscription cleanup, detached refs
 
 ## Structure
 
-The `SKILL.md` file is organized by priority:
+The detailed guide is organized by priority:
 
 1. **Critical Priority** - Largest performance gains (change detection, async)
 2. **High Priority** - Significant impact (bundles, rendering)
 3. **Medium Priority** - Noticeable improvements (SSR, templates)
-4. **Low Priority** - Incremental gains (memory, cleanup)
+4. **Context-dependent priority** - Memory cleanup can be critical for leaks and long-lived streams
 
 Each rule includes:
 

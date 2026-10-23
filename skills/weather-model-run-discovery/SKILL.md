@@ -90,7 +90,11 @@ from datetime import datetime, timedelta, timezone
 
 
 def candidate_cycles(now, cycle_hours, lookback):
-    now = now.astimezone(timezone.utc).replace(minute=0, second=0, microsecond=0)
+    if now.tzinfo is None or now.utcoffset() is None:
+        raise ValueError("now must be timezone-aware")
+    if lookback < 0 or not cycle_hours or any(h not in range(24) for h in cycle_hours):
+        raise ValueError("invalid lookback or cycle hours")
+    now = now.astimezone(timezone.utc)
     allowed = sorted(set(cycle_hours), reverse=True)
     candidates = []
     for days_back in range((lookback // 24) + 2):
@@ -107,6 +111,8 @@ def resolve_latest(now, cycle_hours, lookback, required_objects, probe):
     attempts = []
     for cycle in candidate_cycles(now, cycle_hours, lookback):
         requested = required_objects(cycle)
+        if not requested:
+            raise ValueError("completion contract must contain at least one object")
         found = {name: probe(uri) for name, uri in requested.items()}
         missing = [name for name, metadata in found.items() if not metadata]
         attempts.append({"cycle": cycle.isoformat(), "missing": missing})

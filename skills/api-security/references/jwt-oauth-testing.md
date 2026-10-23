@@ -43,20 +43,14 @@ python3 jwt_tool.py <JWT> -X i
 
 ```python
 import jwt
-import base64
 
-# 解码（不验证）
-header, payload, sig = jwt.split('.')
-
-# 篡改 payload
+# Local test token only. Decoding without verification is NOT authentication.
+token = "<AUTHORIZED_TEST_JWT>"
+payload = jwt.decode(token, options={"verify_signature": False})
 payload['role'] = 'admin'
 payload['exp'] = 9999999999
-
-# alg:none
-new_token = base64url_encode(header) + '.' + base64url_encode(payload) + '.'
-
-# HS256 with known key
-new_token = jwt.encode(payload, 'secret', algorithm='HS256')
+# A deliberately known lab HMAC key; not a way to sign arbitrary production JWTs.
+new_token = jwt.encode(payload, 'lab-secret', algorithm='HS256')
 ```
 
 ## OAuth 2.0 攻击面
@@ -83,7 +77,7 @@ new_token = jwt.encode(payload, 'secret', algorithm='HS256')
 ### Implicit Grant（已废弃但仍有部署）
 
 ```text
-1. access_token 在 URL fragment → Referer 泄漏
+1. URL fragment 不随 HTTP Referer 发送；页面脚本、历史或错误转发仍可能泄漏 access_token
 2. token 在浏览器历史 → 物理访问风险
 3. 无客户端认证 → token 替换攻击
 ```
@@ -121,3 +115,5 @@ pip install jwt-tool pyjwt
 ```
 
 Source: OWASP API Top 10 (API2: Broken Authentication), jwt_tool, PortSwigger OAuth research
+
+Missing state/PKCE alone is not proof of an exploitable flow: verify the client type, binding protections and actual approved test effect. Use test accounts/tokens, redact evidence and verify installed tool flags rather than assuming these historical commands work.

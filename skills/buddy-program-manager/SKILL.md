@@ -94,9 +94,11 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Match buddies by department and timezone, then track a small number of check-ins. Do not build a scoring system for it.
 
-**Why this one:** Buddy programmes fail on load, not on matching. Three check-ins over 30 days is enough signal; more is admin nobody does.
+**Why this one:** Buddy programmes fail on load, not on matching. Three check-ins over 30 days is an illustrative starting cadence; adapt it to participant needs and measured programme feedback.
 
 **Workflow:** New joiner → Buddy match → Check-ins → Feedback → Buddy recognition
+
+Feedback Score is optional and must stay blank until voluntary feedback exists; define its scale and purpose before use. It is not a performance ranking. Check-in counts are nonnegative whole events; counts and snapshots do not replace the dated event log described below. Distinguish planned end from actual close, and validate date order.
 
 ### Step 5 - Build only on request
 
@@ -135,7 +137,7 @@ CREATE TABLE buddy_program_manager (
   end_date DATE NOT NULL,
   check_ins_planned NUMERIC NOT NULL,
   check_ins_done NUMERIC NOT NULL,
-  feedback_score NUMERIC NOT NULL,
+  feedback_score NUMERIC,
   status VARCHAR(100) NOT NULL,
   notes TEXT,
   buddy_id SERIAL PRIMARY KEY,
@@ -171,7 +173,6 @@ CREATE INDEX idx_buddy_program_manager_status ON buddy_program_manager (status);
       "End Date",
       "Check-ins Planned",
       "Check-ins Done",
-      "Feedback Score",
       "Status"
   ]
 }

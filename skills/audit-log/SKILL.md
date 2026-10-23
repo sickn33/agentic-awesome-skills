@@ -122,13 +122,13 @@ that need a number, date or currency format applied.
 
 ```csv
 Log Entry,Date and Time,User,Module,Record,Action,Field Changed,Old Value,New Value,Reason,Log ID
-Policy updated,2026-01-15 09:30,Example User,Invoices & Billing,INV-EXAMPLE-001,Update,Status,Draft,Sent,Correction made after a review query,
+Policy updated,2026-01-15T09:30:00Z,Example User,Invoices & Billing,INV-EXAMPLE-001,Update,Status,Draft,Sent,Correction made after a review query,
 ```
 
 ```sql
 CREATE TABLE audit_log (
   log_entry VARCHAR(255),
-  date_and_time TIMESTAMP NOT NULL,
+  date_and_time TIMESTAMPTZ NOT NULL,
   user_account VARCHAR(255),
   module VARCHAR(255),
   record VARCHAR(255),
@@ -187,12 +187,14 @@ CREATE TABLE audit_log (
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+The schema is a minimal register, not an append-only evidence system. Old/New Value must use field-specific redaction and size limits. Before compliance use, add immutable actor/event/target/result/correlation fields, protected append-only writer permissions and retention/clock controls; updated_at does not provide tamper evidence.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
 | 1 | Log Entry | `text` | `VARCHAR(255)` | `string` | Text | `Policy updated` |
-| 2 | Date and Time | `datetime` | `TIMESTAMP` | `string, format: date-time` | Date (include time) | `2026-01-15 09:30` |
+| 2 | Date and Time | `datetime` | `TIMESTAMPTZ` | `string, format: date-time` | Date (include time) | `2026-01-15T09:30:00Z` |
 | 3 | User | `text` | `VARCHAR(255)` | `string` | Text | `Example User` |
 | 4 | Module | `text` | `VARCHAR(255)` | `string` | Text | `Invoices & Billing` |
 | 5 | Record | `text` | `VARCHAR(255)` | `string` | Text | `INV-EXAMPLE-001` |
@@ -288,7 +290,7 @@ When a client questioned an approval we had nothing to show.
 
 Before treating a change record as evidence, verify the event identity, actor, timestamp, target, action, result, and correlation reference as separate values. Preserve the original event text alongside any normalized fields, record the timezone and clock source, and mark missing values as `Unknown`. Group related events by a stable correlation ID, but do not merge distinct actions into one summary row.
 
-For a review export, filter by the requested time window first, then check that the export is complete, ordered deterministically, and scoped to the authorized system. Redact secrets and personal data only after retaining a reversible reference to the source record; never rewrite the underlying audit event. Record retention, deletion, clock drift, failed writes, duplicate events, and any gap in sequence as review findings rather than silently filling them.
+For a review export, filter by the requested time window first, then check that the export is complete, ordered deterministically, and scoped to the authorized system. Exclude secrets and unnecessary personal data before writing audit events or exports. Preserve an access-controlled source reference when authorized; never copy raw credentials just to make a review reversible, and do not silently rewrite the underlying event. Record retention, deletion, clock drift, failed writes, duplicate events, and any gap in sequence as review findings rather than silently filling them.
 
 
 ## Event Taxonomy

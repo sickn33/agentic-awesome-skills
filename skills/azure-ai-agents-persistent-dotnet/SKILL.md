@@ -52,6 +52,8 @@ PersistentAgentsClient
 
 ## Core Workflow
 
+Pin compatible package versions and verify the linked SDK signatures; fragments use project-defined helper functions and are not a complete application. Confirm endpoint/deployment, authorized tool actions, upload scope and budget before runs. Use a finite cancellation deadline for polling/streaming and distinguish completed, failed, cancelled, expired and requires-action states before reading a final answer. Validate/allowlist each function name and typed argument set before execution; never execute raw model arguments as code or SQL. Delete only resources created by the current run in a finally block, preserving needed evidence.
+
 ### 1. Create Agent
 
 ```csharp
@@ -306,7 +308,7 @@ await client.Files.DeleteFileAsync(file.Id);
 
 ## Best Practices
 
-1. **Always dispose clients** — Use `using` statements or explicit disposal
+1. **Reuse SDK clients** according to the installed SDK lifetime guidance; do not assume every client implements IDisposable
 2. **Poll with appropriate delays** — 500ms recommended between status checks
 3. **Clean up resources** — Delete threads and agents when done
 4. **Handle all run statuses** — Check for `RequiresAction`, `Failed`, `Cancelled`

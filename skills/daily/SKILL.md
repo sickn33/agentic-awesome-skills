@@ -16,7 +16,7 @@ date_added: "2026-03-07"
 
 ## Capabilities
 
-Pipecat enables agents to build production-ready voice and multimodal AI applications with real-time processing. Agents can orchestrate complex AI service pipelines that handle audio, video, and text simultaneously while maintaining ultra-low latency (500-800ms round-trip). The framework abstracts away the complexity of coordinating multiple AI services, network transports, and audio processing, allowing agents to focus on application logic.
+Pipecat enables agents to build production-ready voice and multimodal AI applications with real-time processing. Agents can orchestrate complex AI service pipelines that handle audio, video, and text simultaneously while maintaining streaming latency that must be measured for the actual STT/model/TTS/network pipeline. The framework abstracts away the complexity of coordinating multiple AI services, network transports, and audio processing, allowing agents to focus on application logic.
 
 Key capabilities include:
 
@@ -27,6 +27,8 @@ Key capabilities include:
 - Automatic conversation context management with optional summarization
 - Multiple transport options (WebRTC, WebSocket, Daily, Twilio, Telnyx, etc.)
 - Production deployment across cloud platforms with built-in scaling
+
+This is primarily a Pipecat architecture reference, not the Daily API specification. Snippets require the pinned Pipecat imports, provider clients, transport configuration and lifecycle code; they are fragments, not a runnable bot. Service/SDK counts and listed integrations are examples whose availability depends on version. Verify recording/transcription consent, data residency, secret handling and provider costs before sending live audio/video. Tool calls still require server-side schema validation, authenticated resource scope and authorization for effects; spoken or generated text alone cannot authorize arbitrary API actions.
 
 ## Skills
 
@@ -289,13 +291,13 @@ Pipecat integrates with:
 
 ## Context
 
-**Real-time Processing**: Pipecat achieves 500-800ms round-trip latency by streaming data through the pipeline rather than waiting for complete responses at each step. This creates natural conversation experiences.
+**Real-time Processing**: Streaming can reduce turn latency, but this bundle establishes no500–800ms round-trip guarantee; measure endpoint/turn detection, provider queues, generation, synthesis and network transport separately. This creates natural conversation experiences.
 
-**Frame-based Architecture**: All data moves through pipelines as frames (audio, text, images, control signals). Processors receive frames, perform specialized tasks, and push frames downstream. This modular design enables swapping services without code changes.
+**Frame-based Architecture**: All data moves through pipelines as frames (audio, text, images, control signals). Processors receive frames, perform specialized tasks, and push frames downstream. Adapters can simplify service replacement, but schemas, capabilities, audio formats, authentication and timing may still require code changes.
 
 **Automatic vs Manual Control**: Context management happens automatically through aggregators, but agents can manually control context with frames for advanced scenarios like bot-initiated conversations or context editing.
 
-**Service Flexibility**: Pipecat abstracts service differences through adapters. Function schemas defined once work across all LLM providers. Context format automatically converts between OpenAI and provider-specific formats.
+**Service Flexibility**: Pipecat abstracts service differences through adapters. Check the selected provider adapter's schema and tool-call support; a common schema is not guaranteed portable across every provider. Context format automatically converts between OpenAI and provider-specific formats.
 
 **Production Considerations**: For production deployments, use WebRTC instead of WebSocket for better media transport. Pre-cache large models in Docker images. Monitor metrics for latency and token usage. Use Pipecat Cloud for managed scaling or self-host with proper resource allocation.
 

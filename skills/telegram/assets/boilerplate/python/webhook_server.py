@@ -1,116 +1,53 @@
 #!/usr/bin/env python3
-"""
-Telegram Bot - Webhook Mode with Flask
+"""Run a Telegram webhook behind an HTTPS reverse proxy.
 
-Usage:
-    python webhook_server.py
+The library owns initialization, one event loop and graceful shutdown.
+Requires python-telegram-bot[webhooks]; no network activity occurs on import.
 """
-
 import html
 import os
-import hmac
 import re
 import logging
-import asyncio
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify
-from telegram import Update, Bot
-from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters
+from telegram import Update
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
-load_dotenv()
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
-)
 logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
-WEBHOOK_SECRET = os.getenv("WEBHOOK_SECRET", "")
-PORT = int(os.getenv("PORT", "5000"))
-
-flask_app = Flask(__name__)
-
-# Build the application
-application = Application.builder().token(TOKEN).build()
-
-
-# --- Handlers (same as bot.py) ---
 
 async def start(update: Update, context):
     await update.message.reply_html(
         f"Ola, <b>{html.escape(update.effective_user.first_name or '')}</b>! Bot ativo via webhook."
     )
 
+
 async def echo(update: Update, context):
     if update.message and update.message.text:
         await update.message.reply_text(f"Voce disse: {update.message.text}")
 
-# Register handlers
-application.add_handler(CommandHandler("start", start))
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
 
-
-# --- Flask Routes ---
-
-@flask_app.route("/webhook", methods=["POST"])
-def webhook():
-    """Handle incoming Telegram updates."""
-    # Validate secret token
-    secret = request.headers.get("X-Telegram-Bot-Api-Secret-Token")
-    if not secret or not hmac.compare_digest(secret, WEBHOOK_SECRET):
-        logger.warning("Invalid secret token received")
-        return "Forbidden", 403
-
-    update = Update.de_json(request.get_json(), application.bot)
-
-    # Process update asynchronously
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    try:
-        loop.run_until_complete(application.process_update(update))
-    finally:
-        loop.close()
-
-    return "OK", 200
-
-
-@flask_app.route("/health")
-def health():
-    """Health check endpoint."""
-    return jsonify(status="ok", mode="webhook")
-
-
-# --- Setup ---
-
-def register_webhook():
-    """Register webhook with Telegram."""
-    import requests as req
-    url = f"https://api.telegram.org/bot{TOKEN}/setWebhook"
-    resp = req.post(url, json={
-        "url": f"{WEBHOOK_URL.rstrip('/')}/webhook",
-        "allowed_updates": ["message", "callback_query", "inline_query"],
-        "secret_token": WEBHOOK_SECRET,
-        "max_connections": 40
-    })
-    data = resp.json()
-    if data.get("ok"):
-        logger.info(f"Webhook registered: {WEBHOOK_URL}/webhook/***")
-    else:
-        logger.error(f"Failed to register webhook: {data}")
+def main():
+    load_dotenv()
+    token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    base_url = os.environ.get("WEBHOOK_URL", "").rstrip("/")
+    secret = os.environ.get("WEBHOOK_SECRET", "")
+    if not token or not base_url.startswith("https://"):
+        raise ValueError("Set TELEGRAM_BOT_TOKEN and an HTTPS WEBHOOK_URL")
+    if not re.fullmatch(r"[A-Za-z0-9_-]{32,256}", secret):
+        raise ValueError("Set WEBHOOK_SECRET to 32-256 random letters, digits, _ or -")
+    port = int(os.environ.get("PORT", "5000"))
+    if not 1 <= port <= 65535:
+        raise ValueError("PORT must be between 1 and 65535")
+    application = Application.builder().token(token).build()
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
+    application.run_webhook(
+        listen="127.0.0.1", port=port, url_path="webhook",
+        webhook_url=f"{base_url}/webhook", secret_token=secret,
+        allowed_updates=["message"], drop_pending_updates=False,
+    )
 
 
 if __name__ == "__main__":
-    if not TOKEN:
-        logger.error("Set TELEGRAM_BOT_TOKEN in .env")
-        exit(1)
-    if not WEBHOOK_URL:
-        logger.error("Set WEBHOOK_URL in .env")
-        exit(1)
-    if len(WEBHOOK_SECRET) < 32 or len(WEBHOOK_SECRET) > 256 or not re.fullmatch(r"[A-Za-z0-9_-]+", WEBHOOK_SECRET):
-        logger.error("Set WEBHOOK_SECRET to 32-256 random characters using letters, digits, _ or -")
-        exit(1)
-
-    register_webhook()
-    logger.info(f"Starting webhook server on port {PORT}")
-    flask_app.run(host="0.0.0.0", port=PORT)
+    logging.basicConfig(level=logging.WARNING)
+    main()

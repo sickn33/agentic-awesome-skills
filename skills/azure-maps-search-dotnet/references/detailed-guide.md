@@ -4,6 +4,8 @@
 
 ## Installation
 
+These snippets mix preview packages and service generations. Verify current package/service support, retirement notices and API signatures before installing; pin the chosen versions rather than resolving arbitrary prereleases. Treat them as separate illustrative snippets, not one program. Confirm Azure account, billable quota and approved location/IP data disclosure before calls; addresses and coordinates can be personal data. Entra data-plane roles/client ID differ from ARM account-management permissions. Do not print subscription/SAS tokens or sensitive response/error details.
+
 ```bash
 # Search (geocoding, reverse geocoding)
 dotnet add package Azure.Maps.Search --prerelease
@@ -27,7 +29,7 @@ dotnet add package Azure.ResourceManager.Maps --prerelease
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**:
+**Historical example versions (not current support assertions)**:
 - `Azure.Maps.Search`: v2.0.0-beta.5
 - `Azure.Maps.Routing`: v1.0.0-beta.4
 - `Azure.Maps.Rendering`: v2.0.0-beta.1
@@ -142,6 +144,8 @@ Azure.Maps.Weather
 
 
 ## Core Workflows
+
+Check null/empty features and per-item batch errors before dereferencing; record coordinate order explicitly as longitude, latitude. Route matrix limits/cells depend on service version and options, not the old fixed100/700 examples alone. Country-level IP geolocation does not locate a person/device precisely; weather/route results are estimates and do not replace official warnings or navigation safety decisions.
 
 ### 1. Geocoding (Address to Coordinates)
 
@@ -341,7 +345,8 @@ GetMapTileOptions options = new GetMapTileOptions(
 Response<Stream> mapTile = client.GetMapTile(options);
 
 // Save to file
-using (FileStream fileStream = File.Create("./MapTile.png"))
+// Match actual response content type to extension; create a new file, never overwrite user work.
+using (FileStream fileStream = new FileStream("./MapTile.bin", FileMode.CreateNew))
 {
     mapTile.Value.CopyTo(fileStream);
 }
@@ -438,11 +443,11 @@ foreach (var condition in result.Value.Results)
 
 1. **Use Entra ID for production** — Prefer over subscription keys
 2. **Batch operations** — Use batch geocoding for multiple addresses
-3. **Cache results** — Geocoding results don't change frequently
+3. **Cache only as permitted** — Follow current provider licensing/retention rules, use bounded TTL and refresh stale address data
 4. **Use appropriate tile sizes** — 256 or 512 pixels based on display
 5. **Handle rate limits** — Implement exponential backoff
 6. **Use async route matrix** — For large matrix calculations (>100)
-7. **Consider traffic data** — Set `UseTrafficData = true` for accurate ETAs
+7. **Treat ETA as an estimate** — Traffic availability/options depend on travel mode and current API; this does not guarantee arrival time
 
 
 ## Error Handling

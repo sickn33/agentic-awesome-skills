@@ -17,6 +17,8 @@ tools: [claude, cursor, gemini, codex]
 
 Buying a post in a Telegram channel is influencer marketing with a different measurement model: there is no likes-based engagement rate, no ranking feed, and the slot is usually sold by the channel's admin. Subscriber counts are easy to inflate and say little about who reads. This skill walks an agent through vetting a channel on its real views, spotting channels sold in networks or renamed after a purchase, and pricing a post per view instead of per subscriber.
 
+Treat the numerical tables and forecasts as author-reported observational results, not independently verified guarantees. Channel-specific ad performance and view quality can differ; do not infer unique people from view counters.
+
 Benchmarks come from TGScope's studies of public Telegram channels (see Sources). Disclosure: the skill author runs TGScope, which appears as one of several vetting options.
 
 ## When to Use This Skill
@@ -47,7 +49,7 @@ Reach = median views of week-old posts ÷ subscribers. Benchmarks for active cha
 | 300K–1M | 5.8% | 1.0% | 27% |
 | 1M+ | 4.0% | 0.7% | 27% |
 
-A channel in the bottom 10% for its size sells mostly subscribers who never open it. Size does not protect the buyer: 64 of 229 channels above a million subscribers reach fewer than 2%.
+A channel in the bottom 10% has low observed reach relative to its subscriber count; this alone does not establish fake subscribers or fraud. Size does not protect the buyer: 64 of 229 channels above a million subscribers reach fewer than 2%.
 
 ### Step 3: Adjust for topic and language
 
@@ -68,8 +70,8 @@ Judge a channel against its own topic and language: 4% is ordinary for a deals c
 
 - **Activity.** The ratio only means something for channels that post every week. Channels silent for six months or more show a median ratio of 31% against 6% for channels that posted in the last week, so a high ratio on a quiet channel is not a loyal audience.
 - **Ad load.** Among channels with 10K–100K subscribers, ad-heavy channels reach 3.9% of subscribers per post and ad-free ones 9.0%.
-- **Ad networks.** One in five channels above 10,000 subscribers lists the same ad contact as another channel; 3,866 contacts sell five channels or more. At the same size, networked channels reach less: 6.7% vs 8.2% at 10K–100K, 4.7% vs 6.6% at 100K–1M, 2.9% vs 5.4% above 1M. Search the ad contact to see what else it sells and price bundles on combined views.
-- **Channel age.** Telegram does not show a channel's creation date, but its numeric ID gives a period: since late 2017 IDs come from blocks that change every few months. A "new project" holding an ID from years earlier was created as something else and renamed or sold.
+- **Ad networks.** One in five channels above 10,000 subscribers lists the same ad contact as another channel; 3,866 contacts sell five channels or more. At the same size, networked channels reach less: 6.7% vs 8.2% at 10K–100K, 4.7% vs 6.6% at 100K–1M, 2.9% vs 5.4% above 1M. Search the ad contact to see what else it sells and price bundles using deduplicated audience estimates where available; summed views can include the same people.
+- **Channel age.** Telegram does not show a channel's creation date, but its numeric ID gives a period: since late 2017 IDs come from blocks that change every few months. An older ID can justify asking about channel history, but does not establish a sale, rename or deceptive history.
 - **Admin statistics.** Ask for screenshots of Telegram's built-in channel statistics for the last 30 days. A refusal is a signal.
 
 ### Step 5: Price the post per view
@@ -77,7 +79,7 @@ Judge a channel against its own topic and language: 4% is ordinary for a deals c
 1. Expected views ≈ the median views of recent week-old posts. Ads perform close to regular posts: across 1,104 posts marked as ads in 761 channels, the typical ad got 98% of a regular post's views.
 2. Apply the deletion window. Share of a permanent post's views collected before deletion: 24 hours 50%, 48 hours 62%, 72 hours 67%, 7 days 92%.
 3. CPM = price ÷ (expected views × window share) × 1,000. Compare channels on CPM, never on price per subscriber.
-4. Do not pay extra for a time slot: in Russian- and Ukrainian-language channels, posts published between 9:00 and 21:00 ended within 1% of each other in views after a week.
+4. Do not assume a universal premium for a time slot: in Russian- and Ukrainian-language channels, posts published between 9:00 and 21:00 ended within 1% of each other in views after a week.
 
 ### Step 6: Measure each placement
 
@@ -115,7 +117,7 @@ Output outline: measure each channel's median week-old views, compute CPM for ea
 ## Vetting Options
 
 - Manual check of the `t.me/s/<username>` preview plus the arithmetic above (free, works alone).
-- The admin's built-in Telegram statistics (exact, but shared only as screenshots).
+- The admin’s built-in Telegram statistics (screenshots can be incomplete or altered; prefer a live walkthrough and reconcile the reporting period).
 - Telegram Ads, Telegram's self-serve platform for 160-character sponsored messages in public channels with 1,000+ subscribers, if the user would rather buy impressions than individual posts.
 - Third-party Telegram analytics catalogs (coverage and free limits vary).
 - TGScope, by the skill author (free, no account): a [channel audit](https://tgscope.io/tools/telegram-channel-audit) against channels of the same size, language and topic with ad-view forecasts, a [network checker](https://tgscope.io/tools/telegram-channel-network) for shared ad contacts, and a [creation date tool](https://tgscope.io/tools/telegram-channel-creation-date) that dates a channel by its ID.

@@ -87,7 +87,7 @@ Behaviour:
 - Clicking an arrow updates the URL search param (use the framework's router — `router.replace` on Next, `navigate` on React Router, etc) so the variant is shareable and reload-stable.
 - Keyboard: `←` and `→` arrow keys also cycle. Don't intercept arrow keys when an `<input>`, `<textarea>`, or `[contenteditable]` is focused.
 - Visually distinct from the page (e.g. high-contrast pill, subtle shadow) so it's obviously not part of the design being evaluated.
-- Hidden in production builds — gate on `process.env.NODE_ENV !== 'production'` or an equivalent check, so a stray prototype merge can't ship the bar to users.
+- Gate the entire prototype route or rendering branch in the framework’s development-only mechanism, not just the bar. Unknown `?variant=` values must fall back to a valid variant; a query parameter is not authorization. Keep production authentication and access controls intact.
 
 Put the switcher in a single shared component so both sub-shapes can reuse it. Locate it wherever shared UI lives in the project.
 

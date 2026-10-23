@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/evidence-response.schema.json",
+  "title": "Product Design Harness Evidence Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "source_connector",
+    "retrieved_at",
+    "receipts",
+    "coverage_gaps"
+  ],
+  "properties": {
+    "request_id": { "type": "string", "minLength": 1 },
+    "source_connector": { "type": "string", "minLength": 1 },
+    "retrieved_at": { "type": "string", "format": "date-time" },
+    "receipts": {
+      "type": "array",
+      "items": { "$ref": "evidence.schema.json" }
+    },
+    "coverage_gaps": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

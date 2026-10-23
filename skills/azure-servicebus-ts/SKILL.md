@@ -35,6 +35,10 @@ const fullyQualifiedNamespace = process.env.SERVICEBUS_NAMESPACE!;
 const client = new ServiceBusClient(fullyQualifiedNamespace, new DefaultAzureCredential());
 ```
 
+## Delivery boundaries
+
+Examples mutate queues and independent fragments reuse names. Sending, scheduling and settling messages require authorization for the exact namespace/entity. Make business processing idempotent before completion; peek-lock can redeliver after failure. Avoid logging private bodies, renew locks where needed and close the shared client on shutdown.
+
 ## Core Workflow
 
 ### Send Messages to Queue
@@ -50,8 +54,10 @@ await sender.sendMessages({
 
 // Batch messages
 const batch = await sender.createMessageBatch();
-batch.tryAddMessage({ body: "Message 1" });
-batch.tryAddMessage({ body: "Message 2" });
+if (!batch.tryAddMessage({ body: "Message 1" }) ||
+    !batch.tryAddMessage({ body: "Message 2" })) {
+  throw new Error("Message batch exceeds size limit; split and retry deliberately");
+}
 await sender.sendMessages(batch);
 
 await sender.close();
@@ -144,8 +150,9 @@ const dlqReceiver = client.createReceiver("my-queue", { subQueueType: "deadLette
 const dlqMessages = await dlqReceiver.receiveMessages(10);
 for (const msg of dlqMessages) {
   console.log(`DLQ Reason: ${msg.deadLetterReason}`);
-  // Reprocess or log
-  await dlqReceiver.completeMessage(msg);
+  // Inspect and durably record the authorized recovery outcome first.
+  // Complete only after successful recovery; logging alone must not delete DLQ evidence.
+  // await dlqReceiver.completeMessage(msg);
 }
 ```
 

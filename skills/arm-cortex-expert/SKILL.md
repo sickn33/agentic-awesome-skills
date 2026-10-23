@@ -88,7 +88,7 @@ date_added: '2026-02-27'
 
 #### Implementation Pattern
 
-**C/C++:** Wrap register access with `__DMB()` (data memory barrier) before/after reads, `__DSB()` (data synchronization barrier) after writes. Create helper functions: `mmio_read()`, `mmio_write()`, `mmio_modify()`.
+**C/C++:** Use volatile device accesses and the barriers required by the chip reference manual and operation. Barriers do not replace cache maintenance; do not blanket-wrap every MMIO access. Create helper functions: `mmio_read()`, `mmio_write()`, `mmio_modify()`.
 
 **Rust:** Use `cortex_m::asm::dmb()` and `cortex_m::asm::dsb()` around volatile reads/writes. Create macros like `safe_read_reg!()`, `safe_write_reg!()`, `safe_modify_reg!()` that wrap HAL register access.
 
@@ -106,9 +106,9 @@ date_added: '2026-02-27'
 
 **Memory Placement Strategies (Best to Worst):**
 
-1. **DTCM/SRAM** (Non-cacheable, fastest CPU access)
-   - C++: `__attribute__((section(".dtcm.bss"))) __attribute__((aligned(32))) static uint8_t buffer[512];`
-   - Rust: `#[link_section = ".dtcm"] #[repr(C, align(32))] static mut BUFFER: [u8; 512] = [0; 512];`
+1. **DMA-accessible non-cacheable SRAM** (check the specific bus matrix; DTCM is often inaccessible to peripheral DMA)
+   - Use a linker section verified accessible to the selected DMA controller.
+   - Use an aligned buffer type with ownership/synchronization appropriate to the HAL.
 
 2. **MPU-configured Non-cacheable regions** - Configure OCRAM/SRAM regions as non-cacheable via MPU
 
@@ -129,7 +129,7 @@ uint32_t status = mmio_read(&USB1_USBSTS);
 mmio_write(&USB1_USBSTS, status);  // Write bits back to clear them
 ```
 
-**Common W1C:** `USBSTS`, `PORTSC`, CCM status. **Wrong:** `status &= ~bit` does nothing on W1C registers.
+Only write the documented W1C bits you intend to acknowledge; mixed-control registers such as PORTSC need register-specific masking. **Wrong:** `status &= ~bit` does nothing on W1C registers.
 
 ### Platform Safety & Gotchas
 
@@ -157,7 +157,7 @@ static STATE: Mutex<RefCell<Option<T>>> = Mutex::new(RefCell::new(None));
 // Access: critical_section::with(|cs| STATE.borrow_ref_mut(cs))
 ```
 
-**WRONG:** `static mut` is undefined behavior (data races).
+Avoid `static mut`: unsynchronized concurrent accesses or invalid references can cause undefined behavior; declaration alone is not undefined behavior.
 
 **Atomic Ordering:** `Relaxed` (CPU-only) • `Acquire/Release` (shared state) • `AcqRel` (CAS) • `SeqCst` (rarely needed)
 
@@ -193,7 +193,9 @@ static STATE: Mutex<RefCell<Option<T>>> = Mutex::new(RefCell::new(None));
 **C/C++:**
 
 ```cpp
-__disable_irq(); /* critical section */ __enable_irq();  // Blocks all
+uint32_t primask = __get_PRIMASK();
+__disable_irq(); /* critical section */ __set_PRIMASK(primask);
+// Preserve nesting; PRIMASK does not mask NMI or HardFault.
 
 // M3/M4/M7: Mask only lower-priority interrupts
 uint32_t basepri = __get_BASEPRI();
@@ -291,7 +293,7 @@ __set_BASEPRI(basepri);
 - Use CS pin control with proper timing
 - Abstract register read/write operations
 - Example: `sensorReadRegister(0x0F)` for WHO_AM_I
-- For high throughput (>500 kHz), use DMA transfers
+- Consider DMA after measuring transfer length, overhead and timing constraints
 
 **Platform-specific APIs:**
 
@@ -304,3 +306,5 @@ __set_BASEPRI(basepri);
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Hardware limits, memory maps, cache maintenance, NVIC priority bits, clocks and pin tolerance depend on the exact MCU revision and board. The architecture comparison is illustrative, not maximum-clock certification. Confirm datasheets before flashing or energizing connected hardware. See [CMSIS core register semantics](https://arm-software.github.io/CMSIS_6/main/Core/group__Core__Register__gr.html) for interrupt masking.

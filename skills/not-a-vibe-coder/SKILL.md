@@ -73,7 +73,7 @@ This is the foundation. Everything else depends on it.
 - Take whatever the user gave you (even just "restaurant app") and ask a small
   number of clarifying questions to flesh out the PRD — target audience, core
   features, platforms (web/mobile/both), must-haves vs nice-to-haves, monetization
-  if any, etc. Use `ask_user_input_v0` for quick multiple-choice clarifications
+  if any, etc. Use the host's available question tool, or plain text, for quick multiple-choice clarifications
   where natural.
 - The user can also choose to skip Q&A and just write directly into PRD.md
   themselves — if they say "I'll fill it in", create a skeleton PRD.md with
@@ -106,7 +106,7 @@ intent" — not "ask about every detail."
 
 Never write Design.md without asking the user:
 - Overall style direction (e.g. minimal / modern / playful / corporate / retro /
-  brutalist / glassmorphism / dark-first) — offer `ask_user_input_v0` choices
+  brutalist / glassmorphism / dark-first) — offer choices through an available question tool or plain text
   if helpful.
 - Color palette — either ask for specific colors/hex codes, or offer 2-3
   palette options matching their chosen style and let them pick.

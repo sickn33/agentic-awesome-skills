@@ -37,6 +37,10 @@ Secure SSH server and client configuration for production environments, includin
 - Root or sudo access on the server for sshd_config changes
 - Firewall rules allowing TCP port 22 (or custom SSH port)
 
+## Access preservation
+
+Inspect existing config/includes and protect private keys; do not overwrite an existing identity. Before disabling password/root access verify the intended account, authorized key and recovery console, then validate effective Match configuration and test a second session. Adapt subsystem paths/algorithms to the installed OpenSSH version; changing crypto lists is not a compliance guarantee. Restrict tunnels to approved destinations and loopback listeners. Agent forwarding exposes signing capability on the intermediate host, not the private key bytes themselves. See [sshd_config](https://man.openbsd.org/sshd_config).
+
 ## Key Generation and Management
 
 ```bash
@@ -224,7 +228,8 @@ systemctl restart sshd
 # On the bastion server, restrict forwarding to internal subnets only
 # /etc/ssh/sshd_config addition on bastion:
 AllowTcpForwarding yes
-PermitOpen 10.0.0.0/8:22 10.0.0.0/8:5432
+PermitOpen 10.0.1.10:22 10.0.2.50:5432
+# PermitOpen takes explicit host:port targets, not CIDR subnet rules.
 
 # Disable shell access for jump-only users
 Match User jump-user
@@ -293,7 +298,7 @@ command="/usr/local/bin/run-backup.sh",no-port-forwarding,no-X11-forwarding,no-a
 # Restrict a key to specific source IPs
 from="10.0.0.0/24,192.168.1.0/24" ssh-ed25519 AAAA... admin@example.com
 
-# Read-only SFTP key with chroot
+# SFTP-only key; read-only and chroot require separate server/filesystem policy
 command="internal-sftp",no-port-forwarding,no-pty ssh-ed25519 AAAA... sftp-upload@example.com
 ```
 
@@ -303,7 +308,7 @@ command="internal-sftp",no-port-forwarding,no-pty ssh-ed25519 AAAA... sftp-uploa
 |---|---|---|
 | Connection refused | `ss -tlnp \| grep 22` on server | Ensure sshd is running; check firewall rules |
 | Permission denied (publickey) | `ssh -vvv user@server` | Verify key is in authorized_keys, permissions 600/700 |
-| Host key verification failed | `ssh-keygen -R server` | Remove stale host key; verify server identity |
+| Host key verification failed | Compare the new host-key fingerprint with a trusted independent channel | Remove an old entry only after identity verification; never bypass checking to make login work |
 | Connection timeout | `ssh -o ConnectTimeout=5 user@server` | Check network path, security groups, NACLs |
 | Slow SSH login | Check `UseDNS` in sshd_config | Set `UseDNS no`; check reverse DNS |
 | Broken pipe / dropped sessions | Add `ServerAliveInterval 60` to config | Configure keepalive on both client and server |

@@ -23,6 +23,8 @@ A comprehensive guide to writing GPU shaders using GLSL (OpenGL Shading Language
 
 ### 1. Structure: Vertex vs. Fragment
 
+The basic syntax below targets GLSL ES 1.00/WebGL 1. Host engines may inject matrices/attributes; raw WebGL must bind them explicitly. GLSL ES 3.00 uses `in`/`out` and a declared fragment output instead of `attribute`/`varying`/`gl_FragColor`. Compile the vertex and fragment shaders separately, link them into a program, and inspect compile/link logs.
+
 Understand the pipeline:
 - **Vertex Shader**: Transforms 3D coordinates to 2D screen space (`gl_Position`).
 - **Fragment Shader**: Colors individual pixels (`gl_FragColor`).
@@ -40,6 +42,7 @@ void main() {
 
 ```glsl
 // Fragment Shader (basic)
+precision mediump float;
 uniform vec3 color;
 
 void main() {
@@ -53,7 +56,9 @@ void main() {
 - `varying`: Data interpolated from vertex to fragment shader.
 
 ```glsl
-// Passing UV coordinates
+// Separate vertex and fragment shader snippets; both declare varying vec2 vUv.
+// Vertex shader also needs attribute vec2 uv and the matrices/position above.
+// Raw WebGL fragment shader needs a float precision declaration.
 varying vec2 vUv;
 
 // In Vertex Shader
@@ -79,6 +84,8 @@ Access vector components freely: `vec4 color = vec4(1.0, 0.5, 0.0, 1.0);`
 
 ### Example 1: Simple Raymarching (SDF Sphere)
 
+This is a Shadertoy-style fragment entry point using host-supplied `iResolution`; it requires a host wrapper for raw WebGL.
+
 ```glsl
 float sdSphere(vec3 p, float s) {
     return length(p) - s;
@@ -90,15 +97,17 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec3 rd = normalize(vec3(uv, 1.0)); // Ray Direction
     
     float t = 0.0;
+    bool hit = false;
     for(int i = 0; i < 64; i++) {
         vec3 p = ro + rd * t;
         float d = sdSphere(p, 1.0); // Sphere radius 1.0
-        if(d < 0.001) break;
+        if(d < 0.001) { hit = true; break; }
         t += d;
+        if(t > 10.0) break;
     }
     
     vec3 col = vec3(0.0);
-    if(t < 10.0) {
+    if(hit) {
         vec3 p = ro + rd * t;
         vec3 normal = normalize(p);
         col = normal * 0.5 + 0.5; // Color by normal
@@ -119,7 +128,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 ## Troubleshooting
 
 **Problem:** Shader compiles but screen is black.
-**Solution:** Check if `gl_Position.w` is correct (usually 1.0). Check if uniforms are actually being set from the host application. Verify UV coordinates are within [0, 1].
+**Solution:** Check the full clip-space transform and homogeneous `gl_Position.w`; perspective projection does not generally produce w = 1. Check if uniforms are actually being set from the host application. Verify UV coordinates are within [0, 1].
+
+For GLSL ES fragment precision portability, see [Khronos guidance](https://wikis.khronos.org/webgl/WebGL_and_OpenGL_Differences). Profile branch/vector optimizations on the target GPU; these style suggestions do not guarantee a speedup.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

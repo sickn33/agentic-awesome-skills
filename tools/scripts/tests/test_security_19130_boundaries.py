@@ -155,7 +155,8 @@ class PublishedSecurityExamples(unittest.TestCase):
         state = {}; pipeline = scope['ESLDeltaSyncPipeline'](state)
         def item(version, price):
             return {'sku': 'A', 'tag_id': 'tag', 'price': price, 'promo_price': None,
-                    'uom': 'each', 'template': 'default', 'version': version}
+                    'uom': 'each', 'template': 'default', 'version': version,
+                    'currency': 'USD', 'barcode': 'synthetic-A'}
         pipeline.process_catalog_stream([item(10, 10), item(9, 9)], dry_run=False)
         self.assertEqual(len(sent), 1); self.assertEqual(state['A']['version'], 10)
         pipeline.process_catalog_stream([item(11, 10)], dry_run=False)
@@ -165,6 +166,22 @@ class PublishedSecurityExamples(unittest.TestCase):
         pipeline.process_catalog_stream([item(12, 12)], dry_run=True)
         self.assertEqual(state['A']['version'], 11)
         with self.assertRaises(ValueError): pipeline.process_catalog_stream([item(True, 8)])
+        with self.assertRaisesRegex(ValueError, 'Conflicting'):
+            pipeline.process_catalog_stream([item(11, 99)], dry_run=False)
+        self.assertEqual(state['A']['version'], 11)
+        original = item(12, 10)
+        for key, value in [('currency', 'EUR'), ('barcode', 'synthetic-B'), ('tag_id', 'other-tag')]:
+            changed = dict(original, **{key: value})
+            self.assertNotEqual(scope['compute_sku_hash'](original), scope['compute_sku_hash'](changed))
+        with self.assertRaises(ValueError): scope['compute_sku_hash'](item(12, float('nan')))
+
+    def test_esl_battery_rejects_nonfinite_assumptions(self):
+        scope = fixture_definitions('skills/esl-price-sync/SKILL.md', {'estimate_tag_battery_years'}, {})
+        estimate = scope['estimate_tag_battery_years']
+        for invalid in (float('nan'), float('inf'), -1, True):
+            with self.assertRaises(ValueError): estimate(invalid)
+        self.assertGreater(estimate(3), 0)
+
 
     def test_zip_bomb_is_rejected_before_member_read(self):
         import zipfile
@@ -180,6 +197,53 @@ class PublishedSecurityExamples(unittest.TestCase):
             with patch.object(zipfile.ZipFile, 'read', side_effect=AssertionError('Must not decompress')):
                 with self.assertRaisesRegex(ValueError, 'limit'):
                     scope['validate_oneroster_archive'](str(archive))
+
+    def test_oneroster_multi_org_references_and_partial_result(self):
+        import zipfile
+        import io
+        import csv
+        from typing import Dict, List, Set
+        core = ["manifest.csv", "orgs.csv", "users.csv", "courses.csv",
+                "classes.csv", "enrollments.csv", "academicSessions.csv"]
+        scope = fixture_definitions('skills/oneroster-csv-validator/SKILL.md', {'validate_oneroster_archive'},
+                                    {'zipfile': zipfile, 'io': io, 'csv': csv, 'Dict': Dict, 'List': List,
+                                     'Set': Set, 'CORE_FILES': core,
+                                     'VALID_ROLES_1_1': {'administrator', 'proctor', 'student', 'teacher'}})
+        with tempfile.TemporaryDirectory() as temp:
+            archive = Path(temp) / 'roster.zip'
+            def write_archive(org_ids):
+                with zipfile.ZipFile(archive, 'w') as z:
+                    for name in core:
+                        content = 'sourcedId\n'
+                        if name == 'manifest.csv': content = 'propertyName,value\noneroster.version,1.1\n'
+                        if name == 'orgs.csv': content = 'sourcedId\norg-a\norg-b\n'
+                        if name == 'users.csv': content = 'sourcedId,orgSourcedIds\nuser-a,"' + org_ids + '"\n'
+                        z.writestr(name, content)
+            write_archive('org-a,org-b')
+            result = scope['validate_oneroster_archive'](str(archive))
+            self.assertEqual(result['status'], 'PARTIAL_CHECKS_ONLY')
+            self.assertEqual(result['errors'], [])
+            write_archive('org-a,PRIVATE_MISSING_ID')
+            result = scope['validate_oneroster_archive'](str(archive))
+            self.assertEqual(result['status'], 'FAILED')
+            self.assertEqual(result['errors'], ['users.csv: unresolved org reference (identifier redacted)'])
+            self.assertNotIn('PRIVATE_MISSING_ID', str(result))
+
+    def test_oneroster_rejects_invalid_utf8_instead_of_replacing_identifiers(self):
+        import zipfile
+        import io
+        import csv
+        from typing import Dict, List, Set
+        scope = fixture_definitions('skills/oneroster-csv-validator/SKILL.md', {'validate_oneroster_archive'},
+                                    {'zipfile': zipfile, 'io': io, 'csv': csv, 'Dict': Dict, 'List': List,
+                                     'Set': Set, 'CORE_FILES': ['manifest.csv', 'users.csv']})
+        with tempfile.TemporaryDirectory() as temp:
+            archive = Path(temp) / 'invalid.zip'
+            with zipfile.ZipFile(archive, 'w') as z:
+                z.writestr('manifest.csv', 'propertyName,value\n')
+                z.writestr('users.csv', b'sourcedId\nuser-\xff\n')
+            with self.assertRaises(UnicodeDecodeError):
+                scope['validate_oneroster_archive'](str(archive))
 
     def test_pii_in_events_is_dropped_and_never_exported(self):
         from types import SimpleNamespace

@@ -17,7 +17,7 @@ dotnet add package Azure.ResourceManager.WeightsAndBiases --prerelease
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v1.0.0-beta.1 (preview)  
+**Example package baseline**: v1.0.0-beta.1 (preview); verify available version and generated API before adapting
 **API Version**: 2024-09-18-preview
 
 ## Environment Variables
@@ -52,6 +52,8 @@ Subscription
         └── Identity                 # Managed identity (optional)
 ```
 
+Select an explicit authorized tenant/subscription/resource group rather than relying on the default for billable creation. Import Azure/Azure.Core, Resources and Models types required by the chosen SDK. Marketplace offer/plan/term/region and SSO details below are illustrative and must match current provider terms and permissions; a missing ARM resource is not a global name-availability check. Creation may incur Marketplace charges and deletion may destroy access/data; preview exact resources and preserve exports before approved mutations. ARM management and W&B experiment tracking are distinct APIs: retrieve the actual provisioned base URL instead of constructing an assumed wandb.ai host. Keep API keys, experiment data and admin PII out of logs; verify retention/egress approval before logging runs.
+
 ## Core Workflows
 
 ### 1. Create Weights & Biases Instance
@@ -60,10 +62,8 @@ Subscription
 using Azure.ResourceManager.WeightsAndBiases;
 using Azure.ResourceManager.WeightsAndBiases.Models;
 
-ResourceGroupResource resourceGroup = await client
-    .GetDefaultSubscriptionAsync()
-    .Result
-    .GetResourceGroupAsync("my-resource-group");
+SubscriptionResource subscription = await client.GetDefaultSubscriptionAsync();
+ResourceGroupResource resourceGroup = (await subscription.GetResourceGroupAsync("my-resource-group")).Value;
 
 WeightsAndBiasesInstanceCollection instances = resourceGroup.GetWeightsAndBiasesInstances();
 
@@ -134,7 +134,7 @@ if (instance.Data.Properties.PartnerProperties != null)
 
 ```csharp
 // List in resource group
-await foreach (WeightsAndBiasesInstanceResource instance in 
+await foreach (WeightsAndBiasesInstanceResource instance in
     resourceGroup.GetWeightsAndBiasesInstances())
 {
     Console.WriteLine($"Instance: {instance.Data.Name}");
@@ -144,7 +144,7 @@ await foreach (WeightsAndBiasesInstanceResource instance in
 
 // List in subscription
 SubscriptionResource subscription = await client.GetDefaultSubscriptionAsync();
-await foreach (WeightsAndBiasesInstanceResource instance in 
+await foreach (WeightsAndBiasesInstanceResource instance in
     subscription.GetWeightsAndBiasesInstancesAsync())
 {
     Console.WriteLine($"{instance.Data.Name} in {instance.Id.ResourceGroupName}");
@@ -216,7 +216,7 @@ try
 }
 catch (RequestFailedException ex) when (ex.Status == 404)
 {
-    Console.WriteLine("Name is available");
+    Console.WriteLine("No resource with this name was found in this resource group; global partner/subdomain availability is unproven");
 }
 ```
 

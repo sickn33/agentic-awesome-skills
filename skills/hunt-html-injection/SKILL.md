@@ -33,7 +33,7 @@ report_count: 6
 
 HTML Injection occurs when user input is inserted into a page's HTML without escaping, so injected tags are rendered by the browser as markup rather than displayed as literal text. Unlike XSS, the injected content does not require JavaScript execution — injecting `<b>`, `<h1>`, `<a>`, `<img>`, or `<form>` tags is sufficient.
 
-**To PROVE impact unambiguously, escalate to an active vector carrying a unique numeric canary** — e.g. `"><img src=x onerror=alert(91234)>` or `<svg onload=alert(91234)>`. A distinctive 4+ digit number (not `alert(1)`) distinguishes YOUR reflected injection from the example payloads practice pages embed in their own hint text. Proof = the raw, unescaped vector with your canary appears in the response.
+**For an explicitly authorized XSS follow-up only, an active vector may carry a unique numeric canary** — e.g. `"><img src=x onerror=alert(91234)>` or `<svg onload=alert(91234)>`. A distinctive 4+ digit number (not `alert(1)`) distinguishes YOUR reflected injection from the example payloads practice pages embed in their own hint text. Raw reflection alone is not execution proof: verify the effective HTML context, browser parsing and actual behavior without collecting real credentials or secrets.
 
 **Impact:**
 - Phishing via injected `<form>` or `<a href="attacker.com">` tags
@@ -56,7 +56,7 @@ Any input that is reflected or stored and then displayed in an HTML context:
 
 ## Autonomous Testing Priority
 
-**Inject a recognisable HTML tag with a unique canary string. Unescaped angle brackets in the response = confirmed injection.**
+**Inject a harmless recognisable HTML tag with a unique canary string only within the approved scope. Confirm it becomes attacker-controlled DOM markup, rather than literal text, inert code, JSON or intentional sanitized rich text.**
 
 **Pattern 1 — Basic HTML tag injection:**
 ```
@@ -72,11 +72,11 @@ Use a unique string as CANARY (something distinct to this test run). **Proof:** 
 
 **For stored injection:** inject into the storage endpoint, then GET the page where the value is displayed and check for unescaped tags.
 
-**Escalate immediately:** if `<b>` injection works, try `<script>alert(1)</script>` — the same unsanitised input may allow full XSS.
+Do not automatically escalate to script execution or email/secret exfiltration. HTML formatting and XSS are different impact claims; use separately authorized harmless proof, test-only records and controlled recipients.
 
 ## Proof
 
-Confirmed when your injected tag appears in the response body with literal `<` angle brackets (not HTML-encoded). A safe app renders `&lt;b&gt;CANARY&lt;/b&gt;`; a vulnerable app renders `<b>CANARY</b>`.
+Confirmed HTML injection requires browser/DOM evidence that attacker input is parsed as disallowed markup in the actual content type and context, plus a demonstrated impact. Literal angle brackets alone do not establish a vulnerability. A safe app renders `&lt;b&gt;CANARY&lt;/b&gt;`; a vulnerable app renders `<b>CANARY</b>`.
 
 ## Distinguishing HTML Injection from XSS
 

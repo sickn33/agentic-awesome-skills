@@ -51,9 +51,9 @@ Your code uses 2 APIs that changed after claude-sonnet-4-5's training cutoff (20
 anthropic 0.60.0 -> 1.8.0 (0.60.0 was the latest release at the cutoff; pyproject.toml pins 1.8.0)
   Messages.create: temperature, top_k and top_p were removed                          uses this API
     app/main.py   calls create
-    Note: `Messages.create()` no longer accepts `temperature`, `top_k` or `top_p` as keyword
-          arguments. If the API still needs them, pass them through its `extra_body` or
-          `extra_query` argument. [diff]
+    Note: This is illustrative diff output, not current Anthropic API guidance.
+          Verify removed parameters against the pinned SDK and service documentation;
+          do not bypass removal by injecting them through extra_body/extra_query. [diff]
 ```
 
 ## Limitations
@@ -62,6 +62,8 @@ anthropic 0.60.0 -> 1.8.0 (0.60.0 was the latest release at the cutoff; pyprojec
 - It compares the shape of the public API: names, signatures, parameters and deprecation markers. A change in behaviour behind an unchanged signature is invisible to it.
 - The training cutoff only decides which changes to look at. It does not show what the model memorised; `run` measures that.
 - It needs network access to PyPI, and to models.dev for model cutoffs. The first scan downloads the releases it compares. Results are cached locally.
+
+Cutoff metadata and static API differences are hypotheses to verify against the exact pinned release; they do not prove model knowledge or service acceptance. Review the pinned runner/dependency download behavior before use; static analysis of downloaded package data is distinct from installation/runtime execution. Do not claim zero execution/network disclosure solely from this entry.
 
 ## Security Notes
 

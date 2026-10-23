@@ -19,8 +19,12 @@ Use this skill when you need maintenance orchestrator for the brooks-lint plugin
 This skill orchestrates work **on the brooks-lint repo itself**. It runs a sequential
 subagent pipeline: each stage is a dedicated agent defined in `.claude/agents/`. Spawn
 each with the `Agent` tool, `subagent_type` set to the agent name, and **always
-`model: "opus"`**. Stages depend on each other in order, so this is a pipeline, not a
+the user-selected available model**. Stages depend on each other in order, so this is a pipeline, not a
 parallel team.
+
+## Imported prerequisites
+
+This tree contains only SKILL.md, not `.claude/agents/`, eval harnesses, manifests or release tooling. Use this only in the actual reviewed upstream maintenance checkout with current user authorization for delegation and each publication effect; unavailable stages must be reported, not invented.
 
 ## Pipeline
 
@@ -100,14 +104,12 @@ CLAUDE.md harness change-log table.
 
 ## Conventions this harness enforces
 
-- **All `Agent` calls use `model: "opus"`** — harness quality tracks agent reasoning.
+- **Honor current model and delegation instructions**; no agent/tool roles are bundled here.
 - **consistency-qa must be `general-purpose`** (it runs npm scripts); the
   trigger-boundary-auditor is read-only.
 - **No slash commands are created** — short forms are auto-installed by the
   session-start hook.
-- **Direct-to-main**: changes push to `main` without a PR (per repo CLAUDE.md); the
-  global simplify→review→commit gate still applies to non-doc edits, but skill/guide
-  content is markdown and follows the validate gate instead.
+- **Repository workflow wins**: verify the exact target repository’s current instructions and protection. Never import an upstream direct-main exception into a PR-only repository or bypass required review for Markdown.
 
 ## Error handling
 

@@ -18,12 +18,14 @@ Automate Monday.com work management workflows including board creation, item man
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection. If unavailable, use the host's supported installation/authentication flow within the user's requested scope; an endpoint alone does not establish authenticated access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `monday`
 3. If connection is not ACTIVE, follow the returned auth link to complete Monday.com OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Treat listed slugs, parameters and defaults as historical examples; discovered schemas govern execution. Preserve IDs exactly in their returned representation. Select only requested mutations after verifying workspace/board/item and visibility. Comments/updates are messages and require explicit authorization. Bulk, deletion, archive and raw GraphQL actions need exact target scope; reconcile unknown write outcomes before retrying.
 
 ## Core Workflows
 
@@ -92,7 +94,7 @@ Automate Monday.com work management workflows including board creation, item man
 - `item_id`: Item ID (integer, required)
 - `column_id`: Column ID string (required)
 - `value`: Simple string value (e.g., "Done", "Working on it")
-- `create_labels_if_missing`: true to auto-create status/dropdown labels (default true)
+- `create_labels_if_missing`: set false unless new labels are requested; inspect the discovered default
 
 **Key parameters for MONDAY_UPDATE_ITEM**:
 - `board_id`: Board ID (integer, required)

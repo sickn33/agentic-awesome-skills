@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Report Name,Report Type,Source Modules,Owner,Audience,Frequency,Last Run,Next Run,Report Link,Status,Report ID
-Monthly Delivery Report,Operational,"Payments Received, Invoices & Billing",Sneha Iyer,All employees,Daily,2026-01-15 09:30,2026-01-15 09:30,https://example.com/reports/monthly-ops,Published,
+Monthly Delivery Report,Operational,"Payments Received, Invoices & Billing",Sneha Iyer,All employees,Daily,2026-01-15T09:30:00Z,2026-01-15T09:30:00Z,https://example.com/reports/monthly-ops,Published,
 ```
 
 ```sql
@@ -133,8 +133,8 @@ CREATE TABLE reports_analytics (
   owner VARCHAR(255),
   audience VARCHAR(255),
   frequency VARCHAR(100) NOT NULL,
-  last_run TIMESTAMP NOT NULL,
-  next_run TIMESTAMP NOT NULL,
+  last_run TIMESTAMPTZ,
+  next_run TIMESTAMPTZ,
   report_link TEXT,
   status VARCHAR(100) NOT NULL,
   report_id SERIAL PRIMARY KEY,
@@ -158,8 +158,8 @@ CREATE INDEX idx_reports_analytics_status ON reports_analytics (status);
       "Owner": { "type": "string" },
       "Audience": { "type": "string" },
       "Frequency": { "type": "string" },
-      "Last Run": { "type": "string", "format": "date-time" },
-      "Next Run": { "type": "string", "format": "date-time" },
+      "Last Run": { "type": ["string", "null"], "format": "date-time" },
+      "Next Run": { "type": ["string", "null"], "format": "date-time" },
       "Report Link": { "type": "string", "format": "uri" },
       "Status": { "type": "string" },
       "Report ID": { "type": "integer" }
@@ -167,8 +167,6 @@ CREATE INDEX idx_reports_analytics_status ON reports_analytics (status);
   "required": [
       "Report Type",
       "Frequency",
-      "Last Run",
-      "Next Run",
       "Status"
   ]
 }
@@ -203,8 +201,8 @@ and anything pointing at another table stays `relation`.
 | 4 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 5 | Audience | `text` | `VARCHAR(255)` | `string` | Text | `All employees` |
 | 6 | Frequency | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Daily` |
-| 7 | Last Run | `datetime` | `TIMESTAMP` | `string, format: date-time` | Date (include time) | `2026-01-15 09:30` |
-| 8 | Next Run | `datetime` | `TIMESTAMP` | `string, format: date-time` | Date (include time) | `2026-01-15 09:30` |
+| 7 | Last Run | `datetime` | `TIMESTAMPTZ` | `string or null, format: date-time` | Date (include time) | `2026-01-15T09:30:00Z` |
+| 8 | Next Run | `datetime` | `TIMESTAMPTZ` | `string or null, format: date-time` | Date (include time) | `2026-01-15T09:30:00Z` |
 | 9 | Report Link | `url` | `TEXT` | `string, format: uri` | URL | `https://example.com/reports/monthly-ops` |
 | 10 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Published` |
 | 11 | Report ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
@@ -318,3 +316,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Last Run is blank/null before execution; Next Run is blank/null for unscheduled reports. Record an actual time zone/offset for timestamps rather than assuming local time. Published status requires evidence and does not authorize distribution.

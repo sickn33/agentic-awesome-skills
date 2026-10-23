@@ -79,6 +79,8 @@ TableServiceClient serviceClient = new TableServiceClientBuilder()
 
 ## Core Patterns
 
+Examples use placeholder credentials. Select a compatible released SDK version; the beta above is historical. Keep connection strings/SAS in a secret store. Confirm the account/table and deletion scope before writes. Merge/replace/upsert examples do not demonstrate ETag concurrency checks; use conditional updates where concurrent writers matter.
+
 ### Create Table
 
 ```java
@@ -175,7 +177,7 @@ for (TableEntity entity : tableClient.listEntities()) {
 // With filtering and selection
 ListEntitiesOptions options = new ListEntitiesOptions()
     .setFilter("PartitionKey eq 'sales'")
-    .setSelect("Name", "Price");
+    .setSelect(java.util.Arrays.asList("Name", "Price"));
 
 for (TableEntity entity : tableClient.listEntities(options, null, null)) {
     System.out.printf("%s: %.2f%n",
@@ -197,7 +199,7 @@ options.setFilter("PartitionKey eq 'electronics' and Price gt 100");
 // Filter with comparison operators
 options.setFilter("Quantity ge 10 and Quantity le 100");
 
-// Top N results
+// Request page size; stop iteration explicitly if only ten total results are wanted
 options.setTop(10);
 
 for (TableEntity entity : tableClient.listEntities(options, null, null)) {
@@ -256,39 +258,12 @@ serviceClient.deleteTable("mytable");
 
 ## Typed Entities
 
+`TableEntity` is a concrete SDK class, not an interface for a POJO to implement. Map domain values explicitly:
+
 ```java
-public class Product implements TableEntity {
-    private String partitionKey;
-    private String rowKey;
-    private OffsetDateTime timestamp;
-    private String eTag;
-    private String name;
-    private double price;
-    
-    // Getters and setters for all fields
-    @Override
-    public String getPartitionKey() { return partitionKey; }
-    @Override
-    public void setPartitionKey(String partitionKey) { this.partitionKey = partitionKey; }
-    @Override
-    public String getRowKey() { return rowKey; }
-    @Override
-    public void setRowKey(String rowKey) { this.rowKey = rowKey; }
-    // ... other getters/setters
-    
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
-}
-
-// Usage
-Product product = new Product();
-product.setPartitionKey("electronics");
-product.setRowKey("laptop-001");
-product.setName("Laptop");
-product.setPrice(999.99);
-
+TableEntity product = new TableEntity("electronics", "laptop-001")
+    .addProperty("Name", "Laptop")
+    .addProperty("Price", 999.99);
 tableClient.createEntity(product);
 ```
 

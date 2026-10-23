@@ -25,6 +25,8 @@ It is **sequential design review with enforced roles**.
 
 ---
 
+Distinguish actual independently invoked reviewers from one model simulating roles; never claim independent consensus from a role-play. Use only available host agents within authorized delegation scope. Set a maximum review/revision budget and end with APPROVED, REVISE or REJECT plus unresolved issues if convergence fails; missing reviewers cannot be counted as invoked. This review does not authorize implementation or safety certification.
+
 ## Operating Model
 
 - One agent designs.
@@ -216,7 +218,7 @@ You may exit multi-agent brainstorming **only when all are true**:
 - All objections are resolved or explicitly rejected
 - Decision Log is complete
 - Arbiter has declared the design acceptable
-- 
+
 If any criterion is unmet:
 - Continue review
 - Do NOT proceed to implementation

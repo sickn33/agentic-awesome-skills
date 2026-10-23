@@ -108,7 +108,7 @@ spectral_order = [index for index, score in aspace.search(items[0], graph, tau=0
   **Solution:** Inspect graph connectivity and degenerate scores, then tune eps against the actual data; no dimension-only formula is guaranteed
 
 - **Problem:** k is too large, producing a dense graph with washed-out spectral features
-  **Solution:** Keep k ≤ 25 for most datasets
+  **Solution:** Tune k against actual corpus size, graph connectivity, library bounds and held-out relevance; no universal cap of 25 establishes quality
 
 ## Related Skills
 

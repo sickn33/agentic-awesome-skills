@@ -34,60 +34,53 @@ Use this skill when:
 
 - AWS account with appropriate IAM permissions
 - AWS CLI v2 installed and configured
-- IAM policy allowing `secretsmanager:*` actions (or scoped permissions)
+- IAM policy limited to needed Secrets Manager actions and exact secret ARNs, plus required KMS permissions
 - For rotation: Lambda execution role and VPC access to target services
 - Python 3.9+ with `boto3` for SDK examples
 
 ## Secret Creation and Management
+
+Create the referenced files privately (mode0600) using a secret-input/editor workflow, keep them out of Git and logs, and remove them according to the local secret-handling policy after use. Never put secret values directly into shell history or process arguments. `get-secret-value` prints plaintext: use only when explicitly needed in a private terminal; prefer consuming values inside the application. Confirm account/region/exact ARN before writes, rotation or scheduled deletion. Updating SecretString alone does not change the actual database password; use tested rotation for credentials.
 
 ```bash
 # Create a secret with JSON structure
 aws secretsmanager create-secret \
   --name myapp/production/database \
   --description "Production database credentials" \
-  --secret-string '{"username":"dbadmin","password":"S3cur3P@ssw0rd!","engine":"postgres","host":"db.internal.example.com","port":5432,"dbname":"myapp"}' \
+  --secret-string file://database-secret.json \
   --tags '[{"Key":"Environment","Value":"production"},{"Key":"Team","Value":"platform"}]'
-
 # Create a secret with KMS encryption (custom key)
 aws secretsmanager create-secret \
   --name myapp/production/api-key \
   --description "Third-party API key" \
-  --secret-string "ak_live_xxxxxxxxxxxx" \
+  --secret-string file://api-key.txt \
   --kms-key-id alias/secrets-key
-
 # Create a binary secret (certificates, keys)
 aws secretsmanager create-secret \
   --name myapp/production/tls-cert \
   --secret-binary fileb://server.pfx
-
 # Get secret value
 aws secretsmanager get-secret-value \
   --secret-id myapp/production/database \
   --query 'SecretString' --output text | jq .
-
 # Get a specific version
 aws secretsmanager get-secret-value \
   --secret-id myapp/production/database \
   --version-stage AWSPREVIOUS
-
 # Update secret value
 aws secretsmanager put-secret-value \
   --secret-id myapp/production/database \
-  --secret-string '{"username":"dbadmin","password":"N3wS3cur3P@ss!","engine":"postgres","host":"db.internal.example.com","port":5432,"dbname":"myapp"}'
-
+  --secret-string file://database-secret-updated.json
 # List all secrets
 aws secretsmanager list-secrets \
   --filters Key=name,Values=myapp/production
-
 # Delete secret (with recovery window)
 aws secretsmanager delete-secret \
   --secret-id myapp/production/old-key \
   --recovery-window-in-days 7
-
 # Restore a deleted secret
 aws secretsmanager restore-secret \
   --secret-id myapp/production/old-key
-
 # Tag a secret
 aws secretsmanager tag-resource \
   --secret-id myapp/production/database \
@@ -103,12 +96,10 @@ aws secretsmanager tag-resource \
 aws secretsmanager rotate-secret \
   --secret-id myapp/production/database \
   --rotation-lambda-arn arn:aws:lambda:us-east-1:123456789012:function:SecretsManagerRDSPostgreSQLRotation \
-  --rotation-rules '{"AutomaticallyAfterDays":30,"ScheduleExpression":"rate(30 days)"}'
-
+  --rotation-rules '{"ScheduleExpression":"rate(30 days)"}'
 # Trigger immediate rotation
 aws secretsmanager rotate-secret \
   --secret-id myapp/production/database
-
 # Check rotation status
 aws secretsmanager describe-secret \
   --secret-id myapp/production/database \
@@ -119,18 +110,15 @@ aws secretsmanager describe-secret \
 
 ```python
 """rotation_function.py - Custom rotation Lambda for database credentials."""
-
 import boto3
 import json
 import logging
 import psycopg2
-
+from psycopg2 import sql
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
 def lambda_handler(event, context):
     """Secrets Manager rotation handler.
-
     The rotation process has four steps:
     1. createSecret - Generate new secret value
     2. setSecret - Apply the new secret to the target service
@@ -140,17 +128,17 @@ def lambda_handler(event, context):
     secret_arn = event['SecretId']
     token = event['ClientRequestToken']
     step = event['Step']
-
     client = boto3.client('secretsmanager')
-
     metadata = client.describe_secret(SecretId=secret_arn)
     if not metadata.get('RotationEnabled'):
         raise ValueError(f"Secret {secret_arn} does not have rotation enabled")
-
     versions = metadata.get('VersionIdsToStages', {})
     if token not in versions:
         raise ValueError(f"Secret version {token} has no stage for rotation")
-
+    if "AWSCURRENT" in versions[token]:
+        return
+    if "AWSPENDING" not in versions[token]:
+        raise ValueError("Rotation token must carry AWSPENDING")
     if step == "createSecret":
         create_secret(client, secret_arn, token)
     elif step == "setSecret":
@@ -164,7 +152,12 @@ def lambda_handler(event, context):
 
 
 def create_secret(client, secret_arn, token):
-    """Generate a new secret value."""
+    """Generate once per pending token; retries reuse the same value."""
+    try:
+        client.get_secret_value(SecretId=secret_arn, VersionId=token, VersionStage="AWSPENDING")
+        return
+    except client.exceptions.ResourceNotFoundException:
+        pass
     current = client.get_secret_value(
         SecretId=secret_arn, VersionStage="AWSCURRENT"
     )
@@ -198,7 +191,20 @@ def set_secret(client, secret_arn, token):
     )
     current_dict = json.loads(current['SecretString'])
 
+    if any(current_dict.get(k) != pending_dict.get(k) for k in ("host", "username", "port", "dbname")):
+        raise ValueError("Current/pending target mismatch")
+    # A production handler must first test pending credentials: if they already work,
+    # return successfully (setSecret retry after the database password changed).
+    try:
+        pending_conn = psycopg2.connect(host=pending_dict["host"], user=pending_dict["username"],
+            password=pending_dict["password"], dbname=pending_dict.get("dbname", "postgres"),
+            port=pending_dict.get("port", 5432), sslmode="verify-full", connect_timeout=10)
+        pending_conn.close()
+        return
+    except psycopg2.OperationalError:
+        pass
     conn = psycopg2.connect(
+        sslmode="verify-full", connect_timeout=10,
         host=current_dict['host'],
         port=current_dict.get('port', 5432),
         user=current_dict['username'],
@@ -208,8 +214,8 @@ def set_secret(client, secret_arn, token):
     conn.autocommit = True
     with conn.cursor() as cur:
         cur.execute(
-            "ALTER USER %s WITH PASSWORD %s",
-            (pending_dict['username'], pending_dict['password']),
+            sql.SQL("ALTER USER {} WITH PASSWORD %s").format(sql.Identifier(pending_dict["username"])),
+            (pending_dict["password"],),
         )
     conn.close()
     logger.info(f"setSecret: Password updated in database for {secret_arn}")
@@ -223,6 +229,7 @@ def test_secret(client, secret_arn, token):
     pending_dict = json.loads(pending['SecretString'])
 
     conn = psycopg2.connect(
+        sslmode="verify-full", connect_timeout=10,
         host=pending_dict['host'],
         port=pending_dict.get('port', 5432),
         user=pending_dict['username'],
@@ -255,6 +262,8 @@ def finish_secret(client, secret_arn, token):
     )
     logger.info(f"finishSecret: Rotation complete for {secret_arn}")
 ```
+
+The handler is an illustrative single-user PostgreSQL flow, not an AWS-reviewed deployment. Use AWS’s service-specific rotation template and test retries/failures in staging. Package psycopg2 for the Lambda runtime, configure CA trust, scoped secret/KMS access and network egress; validate resource identity against an approved target before connecting. Do not log credentials or construct unescaped credential URLs. Environment-injected ECS secrets do not update running tasks automatically, and External Secrets CRD versions must match the installed operator.
 
 ### Rotation Lambda Terraform
 
@@ -311,12 +320,11 @@ def get_secret(secret_name: str, region: str = "us-east-1") -> dict:
     if "SecretString" in response:
         return json.loads(response["SecretString"])
     else:
-        import base64
-        return base64.b64decode(response["SecretBinary"])
+        return response["SecretBinary"]  # boto3 already returns decoded bytes
 
 @lru_cache(maxsize=32)
 def get_cached_secret(secret_name: str) -> dict:
-    """Cached secret retrieval. Clear cache on rotation events."""
+    """Illustrative process cache only: no TTL; unsuitable without invalidation."""
     return get_secret(secret_name)
 
 # Usage
@@ -453,7 +461,7 @@ aws secretsmanager put-resource-policy \
 
 ## Best Practices
 
-- Enable automatic rotation with 30-day intervals minimum
+- Choose a supported rotation schedule from threat model and service limits; 30 days is an example, not a minimum
 - Use resource-based policies in addition to IAM policies (defense in depth)
 - Encrypt secrets with customer-managed KMS keys (not default)
 - Implement least-privilege access (only the roles that need each secret)

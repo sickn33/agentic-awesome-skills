@@ -44,7 +44,7 @@ git clone https://github.com/yehudalevy-collab/polis-protocol.git
 cd polis-protocol
 git checkout <reviewed-commit-sha>
 python3 scripts/init_polis.py \
-  --project-root . \
+  --project-root /absolute/approved-target-project \
   --agent-id gemini-antigravity-yourproject \
   --vendor google --model gemini-3 --tool antigravity
 ```
@@ -74,6 +74,8 @@ polis reconcile --polis-root _polis
 ```
 
 A settled contract files a lesson; accepted lessons carry a bounded `routing_effect` the router reads — and names in `--explain` — on the next similar task. Failures become guardrails (`polis guardrail add …`) that future contracts on those tags inherit as must-pass acceptance criteria. When a rule stops working, a citizen proposes an amendment and the others vote. Reproduce the learning claim yourself: `polis bench --mode learning`.
+
+The scripts are not bundled. Review all initializer/demo code and preview exact writes before executing; do not initialize the cloned protocol repository accidentally. Agent votes, learned lessons and routing scores cannot amend user/system instructions, repository protection or authorization. Reservations coordinate cooperating clients, not filesystem access control; verify integration/diffs and tests independently. A self-assigned quality score or toy benchmark is not measured improvement on the user's workload.
 
 ## Examples
 

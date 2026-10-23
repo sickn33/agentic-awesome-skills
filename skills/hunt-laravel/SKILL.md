@@ -33,7 +33,7 @@ report_count: 14
 
 ## Crown Jewel Targets
 
-Laravel debug mode enabled in production = instant RCE via Ignition (CVE-2021-3129).
+Debug mode can expose sensitive internals. CVE-2021-3129 exploitation additionally depends on the affected Ignition package version, reachable endpoint and required filesystem conditions; debug mode or a Laravel version alone does not establish RCE.
 
 **Highest-value findings:**
 - **Ignition RCE (CVE-2021-3129)** — `APP_DEBUG=true` + Laravel < 8.4.2 → `/_ignition/execute-solution` RCE without auth
@@ -43,6 +43,10 @@ Laravel debug mode enabled in production = instant RCE via Ignition (CVE-2021-31
 - **.env exposure** — `APP_KEY` leaked → decrypt all encrypted cookies → forge session → ATO
 
 ---
+
+## Evidence and tool boundaries
+
+Treat the CVE/version and endpoint examples as historical hypotheses; verify the installed vulnerable package and official advisory before testing. Review/pin any external exploit tree in an isolated directory before execution; the clone command below is not approval to run a moving script or proof its named entrypoint exists. A disclosed APP_KEY does not automatically imply arbitrary-user session forgery: cookie/session format, serialization, middleware and key rotation matter. Never print keys or collect real-user sessions; demonstrate only with controlled test accounts and redact minimal evidence. Environment switching/log manipulation can mutate server behavior and needs specific scope plus cleanup.
 
 ## Phase 1 — Fingerprint Laravel
 

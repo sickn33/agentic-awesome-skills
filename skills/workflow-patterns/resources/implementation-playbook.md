@@ -16,6 +16,10 @@ Guide for implementing tasks using Conductor's TDD workflow, managing phase chec
 - Handling verification protocols
 - Recording progress in plan files
 
+## Apply the project contract first
+
+These are Conductor conventions, not universal repository requirements. Use actual project commands and acceptance criteria; Python tooling and an 80% target are examples, not installed prerequisites or proof of quality. If the user asks to keep a plan immutable, record progress in the existing task tracker instead of editing plan.md. Commit only within the established branch/workflow and inspect the staged diff; preserve unrelated changes. Scope changes require user direction or established authorization, not a silent spec rewrite.
+
 ## TDD Task Lifecycle
 
 Follow these 11 steps for each task:
@@ -102,7 +106,7 @@ If implementation deviated from plan or introduced new dependencies:
 Create a focused commit for the task:
 
 ```bash
-git add -A
+git add -- src/models/user.py tests/test_user.py # Replace with exact task-owned paths
 git commit -m "feat(user): implement email validation
 
 - Add validate_email method to User class
@@ -155,7 +159,7 @@ Update plan.md to mark task complete with commit SHA:
 Commit the plan status update:
 
 ```bash
-git add conductor/tracks/*/plan.md
+git add -- conductor/tracks/user-auth_20250115/plan.md # Exact authorized track only
 git commit -m "docs: update plan - task 2.1 complete
 
 Track: user-auth_20250115"
@@ -205,7 +209,7 @@ Create checklist of manual verifications:
 - [ ] API returns expected response codes
 ```
 
-### WAIT for User Approval
+### Apply the agreed checkpoint policy
 
 Present verification checklist to user:
 
@@ -218,14 +222,14 @@ Phase 1 complete. Please verify:
 Respond with 'approved' to continue, or note issues.
 ```
 
-Do NOT proceed without explicit approval.
+When the user explicitly requested checkpoints, wait for their approval. Otherwise report completed evidence and continue already-authorized work; do not introduce a new approval requirement for routine reversible steps.
 
 ### Create Checkpoint Commit
 
 After approval, create checkpoint commit:
 
 ```bash
-git add -A
+git add -- src/models/user.py tests/test_user.py # Replace with exact task-owned paths
 git commit -m "checkpoint: phase 1 complete - user-auth_20250115
 
 Verified:
@@ -305,7 +309,7 @@ If applicable:
 - No secrets in code
 - Input validation present
 - Authentication/authorization correct
-- Dependencies vulnerability-free
+- Run the project dependency checks and assess findings; no scan proves dependencies vulnerability-free
 
 ## Git Integration
 
@@ -345,7 +349,7 @@ git log --show-notes
 Benefits:
 
 - Preserves context without cluttering commit message
-- Enables semantic queries across commits
+- Makes notes readable alongside commits; Git notes do not implement semantic search
 - Supports track-based operations
 
 ### SHA Recording in plan.md
@@ -360,7 +364,7 @@ Always record the commit SHA when completing tasks:
 This enables:
 
 - Traceability from plan to code
-- Semantic revert operations
+- Reviewable commit selection for reverts
 - Progress auditing
 
 ## Verification Checkpoints
@@ -385,7 +389,7 @@ Create checkpoint after:
 
 Include in checkpoint commit:
 
-- All uncommitted changes
+- Only reviewed task-owned changes; inspect staged diff
 - Updated plan.md
 - Updated metadata.json
 - Any documentation updates
@@ -396,7 +400,7 @@ For reverting:
 
 ```bash
 # Revert to end of Phase 1
-git revert --no-commit <phase-2-commits>...
+git revert --no-commit <newest-phase-2-sha> <older-phase-2-sha> # Explicit reviewed commits, newest first; handle merge parents/conflicts separately
 git commit -m "revert: rollback to phase 1 checkpoint"
 ```
 
@@ -461,7 +465,7 @@ If tests fail after reaching GREEN:
 1. Do NOT proceed to REFACTOR
 2. Identify which test started failing
 3. Check if refactoring broke something
-4. Revert to last known GREEN state
+4. Preserve current work; inspect and undo only the task-specific regression, never discard unrelated changes
 5. Re-approach the implementation
 
 ### Checkpoint Rejection
@@ -607,10 +611,10 @@ Keep commits atomic:
 
 ## Best Practices
 
-1. **Never skip RED**: Always write failing tests first
+1. **Use meaningful tests**: Follow TDD when required; avoid artificial failing tests for prose-only changes
 2. **Small commits**: One logical change per commit
 3. **Immediate updates**: Update plan.md right after task completion
-4. **Wait for approval**: Never skip checkpoint verification
+4. **Verify checkpoints**: Wait for approval only when required by the agreed workflow
 5. **Rich git notes**: Include context that helps future understanding
 6. **Coverage discipline**: Don't accept coverage below target
 7. **Quality gates**: Check all gates before marking complete

@@ -32,7 +32,7 @@ Full list of options: https://www.remotion.dev/docs/cli/still.md
 
 ## Transparent videos
 
-See [Transparent videos for rendering out a video with transparency.
+See [Transparent videos](transparent-videos.md) for alpha-compatible codec/pixel-format settings. Confirm composition ID, frame range, output path and installed CLI version before rendering. Use a new output and inspect actual frames, duration, audio and alpha on a contrasting background; the command exiting successfully alone does not establish visual correctness.
 
 
 ## Examples

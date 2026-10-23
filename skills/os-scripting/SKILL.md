@@ -23,6 +23,10 @@ Use this workflow when:
 - Managing processes and services
 - Configuring system resources
 
+## Execution scope
+
+Select only needed phases. Most diagnostics below target Linux; check command availability and syntax on macOS/Windows. Inspect scripts before execution, run syntax/lint checks first, and use a disposable environment for unknown code. `bash -x`/`set -x` execute commands and can disclose secrets: do not trace credential handling. Service restarts, privileged installs and scheduled jobs require the applicable target authorization. The timer requires a matching reviewed `backup.service`; a timer alone does not perform a backup.
+
 ## Workflow Phases
 
 ### Phase 1: Environment Assessment
@@ -258,15 +262,16 @@ Use @linux-shell-scripting to automate system maintenance tasks
     [ "$status" -eq 0 ]
 }
 
-@test "script handles missing arguments" {
-    run ./script.sh
+@test "script handles unknown arguments" {
+    run ./script.sh --unknown
     [ "$status" -ne 0 ]
-    [ "$output" == *"Usage:"* ]
+    [ "$output" == *"Unknown option:"* ]
 }
 
-@test "script creates expected output" {
-    run ./script.sh --output test.txt
-    [ -f "test.txt" ]
+@test "script shows help" {
+    run ./script.sh --help
+    [ "$status" -eq 0 ]
+    [ "$output" == *"Usage:"* ]
 }
 ```
 

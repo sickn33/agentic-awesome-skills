@@ -34,7 +34,7 @@ Do NOT use for:
 
 This is the canonical structure each finding follows:
 
-```markdown
+````markdown
 ## Finding F##: <descriptive title>
 
 **Severity:** Critical / High / Medium / Low / Informational
@@ -74,10 +74,12 @@ This is the canonical structure each finding follows:
 ```
 
 **Screenshot:**
-![F##_descriptive_name] (screenshots/F##_descriptive_name.png)
-```
+Evidence attachment placeholder: screenshots/F<NN>_<descriptive>.png (insert a real local image link only after creating the sanitized file).
+````
 
 ---
+
+Before delivery, separate observed impact from plausible but untested impact; repeated exploitation is unnecessary when it would create harm. Protect raw requests, cookies, credentials and identifiers in a restricted evidence appendix, redacting client-facing excerpts. Do not execute PoCs merely to fill this template. A DOCX image-count check is not visual QA: render and inspect pages, redactions, table flow and citations. Cleanup claims require verified artifact inventory, not boilerplate.
 
 ## Severity & status disciplines
 
@@ -106,7 +108,7 @@ This is the field that distinguishes red-team deliverables from bug-bounty repor
 ## Mistakes to avoid (from authorized-engagement)
 
 ### 1. Don't retract findings that stopped reproducing
-If a finding was confirmed and then stopped working, that is almost always a CLIENT PATCH, not a finding-was-false. The correct response is "Confirmed; patched mid-engagement" with timestamps showing when it broke. See `mid-engagement-ir-detection`.
+If a previously demonstrated finding stops reproducing, preserve the original evidence and timestamps. Record the current retest result; possible causes include a patch, changed state, rate limits, configuration or initial measurement error. Use "patched" only with supporting change/retest evidence, not inference from failure alone. See `mid-engagement-ir-detection`.
 
 ### 2. Don't hedge in the Impact section
 Bad: "An attacker could potentially be able to access user data, which may lead to..."
@@ -114,7 +116,7 @@ Good: "An attacker reads any user's profile data. Demonstrated on test user `vic
 
 ### 3. Don't generic-CIA the impact
 Bad: "Loss of confidentiality and integrity of customer data"
-Good: "Read access to 247,000 customer records including PAN cards, addresses, GST numbers. India DPDPA Section 33 mandates 72-hour breach disclosure to DPB."
+Good: "Read access to 247,000 customer records including PAN cards, addresses, GST numbers. Any legal notification duty needs current jurisdiction-specific counsel review; this technical evidence alone does not establish a statutory deadline."
 
 ### 4. Don't list every recon finding as a finding
 Recon notes (subdomains found, ports open, technologies fingerprinted) belong in a separate **Recon / Attack Surface** appendix, not the findings list. A finding must have an attacker-attainable outcome.
@@ -174,14 +176,14 @@ Each finding MUST have reproducible steps. The PoC section is what proves the fi
 ## DOCX generation pipeline (markdown → docx with embedded images)
 
 ```bash
-# Prerequisite: pandoc installed
+# Prerequisite: pandoc installed; python-docx separately required for the optional check.
+# No reference.docx is bundled; provide an actually reviewed local file only if available.
 brew install pandoc
 
 # Convert
 pandoc REPORT_FINAL.md \
   -o REPORT_FINAL.docx \
   --resource-path=engagement_log/poc \
-  --reference-doc=~/.claude/skills/redteam-report-template/templates/reference.docx \
   --toc \
   --toc-depth=2 \
   --highlight-style=tango
@@ -344,7 +346,7 @@ For calibration:
 - 16 inline images (2 were inline in MD-only edge cases)
 - Time-to-deliverable: ~6 hours after engagement close for first draft
 
-These numbers are typical for a 1-week external red-team engagement on a mid-size enterprise. Scale down for short tests, up for full purple-team exercises.
+These are an upstream anecdote, not a representative benchmark or expected deliverable quota. No underlying engagement evidence is bundled here; scale the report to the actual authorized scope and supported findings.
 
 ---
 

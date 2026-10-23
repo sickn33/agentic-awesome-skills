@@ -78,7 +78,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 5. Check for high latency or packet loss
 ```
 
-**Finding**: TCP retransmissions indicating network congestion.
+**Finding**: Observed retransmission indications; corroborate capture completeness, offload effects and endpoint/path evidence before attributing them to congestion.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

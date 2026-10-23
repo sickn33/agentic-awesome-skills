@@ -53,6 +53,10 @@ client = ImageAnalysisClient(
 )
 ```
 
+## Data and inference boundary
+
+Calls disclose supplied images or URLs to Azure. Confirm rights and privacy scope, region, service availability and current supported features. OCR/captions can be wrong; people detection does not identify people or establish age, identity, consent or sensitive traits. Review output before consequential use and avoid logging private OCR text.
+
 ## Analyze Image from URL
 
 ```python
@@ -212,7 +216,8 @@ async def analyze_image():
             image_url=image_url,
             visual_features=[VisualFeatures.CAPTION]
         )
-        print(result.caption.text)
+        if result.caption:
+            print(result.caption.text)
 ```
 
 ## Visual Features

@@ -17,7 +17,7 @@ markers =
     api: marks API tests
 filterwarnings =
     error
-    ignore::DeprecationWarning
+    # Add narrowly scoped third-party warning exceptions only when justified.
 ```
 
 ```toml
@@ -50,38 +50,41 @@ from sqlalchemy.orm import Session
 
 # Session-scoped: created once per test session
 @pytest.fixture(scope="session")
-def engine():
-    engine = create_engine("sqlite:///test.db")
+def engine(tmp_path_factory):
+    database_path = tmp_path_factory.mktemp("database") / "test.sqlite"
+    engine = create_engine(f"sqlite:///{database_path}")
     Base.metadata.create_all(engine)
-    yield engine
-    Base.metadata.drop_all(engine)
+    try:
+        yield engine
+    finally:
+        Base.metadata.drop_all(engine)
+        engine.dispose()
 
 # Function-scoped: created per test (default), auto-cleanup
 @pytest.fixture
 def db_session(engine):
     connection = engine.connect()
     transaction = connection.begin()
-    session = Session(bind=connection)
-    yield session
-    session.close()
-    transaction.rollback()
-    connection.close()
+    session = Session(bind=connection, join_transaction_mode="create_savepoint")  # SQLAlchemy 2.x
+    try:
+        yield session
+    finally:
+        session.close()
+        if transaction.is_active:
+            transaction.rollback()
+        connection.close()
 
 # Factory fixture — create multiple instances
 @pytest.fixture
 def user_factory(db_session):
-    created = []
+    from uuid import uuid4
     def _create_user(name="Test User", email=None, role="viewer"):
-        email = email or f"{name.lower().replace(' ', '.')}@test.com"
+        email = email or f"user-{uuid4().hex}@example.test"
         user = User(name=name, email=email, role=role)
         db_session.add(user)
         db_session.commit()
-        created.append(user)
         return user
-    yield _create_user
-    for user in created:
-        db_session.delete(user)
-    db_session.commit()
+    return _create_user  # Outer test transaction handles rollback; no committed cleanup list.
 
 # Autouse fixture — runs for every test in module
 @pytest.fixture(autouse=True)
@@ -148,6 +151,7 @@ def test_permissions(user):
 def test_send_email(mocker):
     mock_smtp = mocker.patch("myapp.email.smtplib.SMTP")
     send_email("test@example.com", "Hello", "Body")
+    # For code using "with SMTP(...) as client", assert on __enter__.return_value.
     mock_smtp.return_value.sendmail.assert_called_once()
 
 def test_api_call(mocker):
@@ -159,7 +163,8 @@ def test_api_call(mocker):
     mock_get.assert_called_once_with("https://api.example.com/users/1")
 
 def test_database_error(mocker):
-    mocker.patch("myapp.db.session.commit", side_effect=IntegrityError("duplicate"))
+    # Import the project's errors and sqlalchemy.exc.IntegrityError first.
+    mocker.patch("myapp.db.session.commit", side_effect=IntegrityError("INSERT", {}, Exception("duplicate")))
     with pytest.raises(DuplicateError):
         create_user("Alice", "alice@test.com")
 
@@ -184,6 +189,8 @@ def test_config(monkeypatch):
 # pip install pytest-asyncio
 
 import pytest
+import pytest_asyncio
+from httpx import AsyncClient, ASGITransport
 
 @pytest.mark.asyncio
 async def test_async_fetch():
@@ -196,9 +203,9 @@ async def test_async_exception():
         await fetch_data("https://invalid.example.com")
 
 # Async fixtures
-@pytest.fixture
+@pytest_asyncio.fixture
 async def async_client():
-    async with AsyncClient(app=app, base_url="http://test") as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         yield client
 
 @pytest.mark.asyncio
@@ -295,11 +302,15 @@ class TestUserService:
             assert not viewer.can_delete()
 ```
 
+AsyncClient ASGITransport does not trigger application startup/shutdown lifespan automatically; wrap the test in the application’s supported lifespan manager when needed. The SQLite savepoint recipe requires a supported driver/transaction setup and is not proof of PostgreSQL behavior. For real database integration, use a disposable instance and verify rollback after both committed and failing test paths.
+
 ## §9 — CI/CD Integration
 
 ```yaml
 # GitHub Actions
 name: Python Tests
+permissions:
+  contents: read
 on: [push, pull_request]
 jobs:
   test:
@@ -315,21 +326,20 @@ jobs:
         run: pip install -r requirements-test.txt
       - name: Run tests
         run: pytest --cov=src --cov-report=xml --junitxml=results.xml -v
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with: { files: coverage.xml }
       - name: Upload results
         uses: actions/upload-artifact@v4
         if: always()
         with: { name: test-results-${{ matrix.python-version }}, path: results.xml }
 ```
 
+The CI example uploads only local test results. Do not send coverage or logs to external services without the project’s authorized configuration; pin actions to reviewed full commits for production use. Choose currently supported Python/package versions and retain secret-free diagnostics. Parallel workers need unique database/file/resource names; -n auto is not safe for shared mutable external fixtures.
+
 ## §10 — Debugging Quick-Reference
 
 | Problem | Cause | Fix |
 |---------|-------|-----|
 | Fixture not found | Wrong scope or missing conftest.py | Check conftest.py location, fixture name |
-| `ScopeMismatch` | Function fixture depends on session fixture | Match scope: session → module → function |
+| `ScopeMismatch` | Session/module fixture depends on a narrower-scoped fixture | Broader fixtures may only request same/broader scopes; function fixtures may request session fixtures |
 | Tests interfere | Shared mutable state | Use function-scoped fixtures, `autouse` cleanup |
 | Parametrize fails | Wrong number of params | Ensure tuple count matches parameter names |
 | Slow collection | Too many test paths | Set `testpaths` in pytest.ini |

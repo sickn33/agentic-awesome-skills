@@ -6,6 +6,8 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 ### 1. Index Type Selection
 
+The size bands are starting hypotheses, not production thresholds. Dimension, metric, filters, update rate, memory and concurrent load determine the choice; establish an exact-search baseline with held-out queries.
+
 ```
 Data Size           Recommended Index
 ────────────────────────────────────────
@@ -17,7 +19,7 @@ Data Size           Recommended Index
 
 ### 2. HNSW Parameters
 
-| Parameter | Default | Effect |
+| Parameter | Illustrative starting value | Effect |
 |-----------|---------|--------|
 | **M** | 16 | Connections per node, ↑ = better recall, more memory |
 | **efConstruction** | 100 | Build quality, ↑ = better index, slower build |
@@ -29,8 +31,8 @@ Data Size           Recommended Index
 Full Precision (FP32): 4 bytes × dimensions
 Half Precision (FP16): 2 bytes × dimensions
 INT8 Scalar:           1 byte × dimensions
-Product Quantization:  ~32-64 bytes total
-Binary:                dimensions/8 bytes
+Product Quantization:  subvector_count × bits_per_code / 8, plus codebooks
+Binary:                ceil(dimensions/8) bytes, plus metadata
 ```
 
 ## Templates
@@ -53,6 +55,12 @@ def benchmark_hnsw_parameters(
     """Benchmark different HNSW configurations."""
     import hnswlib
 
+    if vectors.ndim != 2 or queries.ndim != 2 or queries.shape[1] != vectors.shape[1]:
+        raise ValueError("Vector/query dimensions differ")
+    if len(vectors) < 10 or len(queries) == 0 or ground_truth.shape != (len(queries), 10):
+        raise ValueError("Need >=10 vectors, nonempty queries and exact top-10 truth")
+    if not np.isfinite(vectors).all() or not np.isfinite(queries).all():
+        raise ValueError("Vectors must be finite")
     results = []
     dim = vectors.shape[1]
     n = vectors.shape[0]
@@ -63,9 +71,9 @@ def benchmark_hnsw_parameters(
             index = hnswlib.Index(space='cosine', dim=dim)
             index.init_index(max_elements=n, M=m, ef_construction=ef_construction)
 
-            build_start = time.time()
-            index.add_items(vectors)
-            build_time = time.time() - build_start
+            build_start = time.perf_counter()
+            index.add_items(vectors, np.arange(n))
+            build_time = time.perf_counter() - build_start
 
             # Get memory usage
             memory_bytes = index.element_count * (
@@ -74,12 +82,13 @@ def benchmark_hnsw_parameters(
             )
 
             for ef_search in ef_search_values:
-                index.set_ef(ef_search)
+                index.set_ef(max(ef_search, 10))
+                index.knn_query(queries[:min(10, len(queries))], k=10)  # warm-up
 
                 # Measure search
-                search_start = time.time()
+                search_start = time.perf_counter()
                 labels, distances = index.knn_query(queries, k=10)
-                search_time = time.time() - search_start
+                search_time = time.perf_counter() - search_start
 
                 # Calculate recall
                 recall = calculate_recall(labels, ground_truth, k=10)
@@ -91,7 +100,7 @@ def benchmark_hnsw_parameters(
                     "build_time_s": build_time,
                     "search_time_ms": search_time * 1000 / len(queries),
                     "recall@10": recall,
-                    "memory_mb": memory_bytes / 1024 / 1024
+                    "estimated_memory_mb": memory_bytes / 1024 / 1024
                 })
 
     return results
@@ -99,6 +108,8 @@ def benchmark_hnsw_parameters(
 
 def calculate_recall(predictions: np.ndarray, ground_truth: np.ndarray, k: int) -> float:
     """Calculate recall@k."""
+    if k <= 0 or predictions.shape != ground_truth.shape or len(predictions) == 0 or predictions.shape[1] < k:
+        raise ValueError("Expected nonempty aligned top-k arrays")
     correct = 0
     for pred, truth in zip(predictions, ground_truth):
         correct += len(set(pred[:k]) & set(truth[:k]))
@@ -136,7 +147,7 @@ def recommend_hnsw_params(
         "M": m,
         "ef_construction": ef_construction,
         "ef_search": ef_search,
-        "notes": f"Estimated for {num_vectors:,} vectors, {target_recall:.0%} recall"
+        "notes": f"Unmeasured starting candidate for {num_vectors:,} vectors; target recall {target_recall:.0%} is not guaranteed. Latency/memory inputs are not enforced."
     }
 ```
 
@@ -144,7 +155,7 @@ def recommend_hnsw_params(
 
 ```python
 import numpy as np
-from typing import Optional
+from typing import Optional, Tuple
 
 class VectorQuantizer:
     """Quantization strategies for vector compression."""
@@ -156,11 +167,18 @@ class VectorQuantizer:
         max_val: Optional[float] = None
     ) -> Tuple[np.ndarray, dict]:
         """Scalar quantization to INT8."""
+        if not np.isfinite(vectors).all() or vectors.size == 0:
+            raise ValueError("Need nonempty finite vectors")
         if min_val is None:
             min_val = vectors.min()
         if max_val is None:
             max_val = vectors.max()
 
+        if not np.isfinite(min_val) or not np.isfinite(max_val) or max_val < min_val:
+            raise ValueError("Invalid quantization range")
+        if max_val == min_val:
+            return np.zeros_like(vectors, dtype=np.uint8), {"min_val": min_val, "max_val": max_val, "scale": 1.0}
+        # This is unsigned UINT8 scalar coding, despite the historical method name.
         # Scale to 0-255 range
         scale = 255.0 / (max_val - min_val)
         quantized = np.clip(
@@ -189,7 +207,8 @@ class VectorQuantizer:
         from sklearn.cluster import KMeans
 
         n, dim = vectors.shape
-        assert dim % n_subvectors == 0
+        if n_subvectors <= 0 or dim % n_subvectors or not 1 <= n_centroids <= min(256, n):
+            raise ValueError("Invalid subvector/uint8 centroid configuration")
         subvector_dim = dim // n_subvectors
 
         codebooks = []
@@ -200,7 +219,7 @@ class VectorQuantizer:
             end = (i + 1) * subvector_dim
             subvectors = vectors[:, start:end]
 
-            kmeans = KMeans(n_clusters=n_centroids, random_state=42)
+            kmeans = KMeans(n_clusters=n_centroids, random_state=42, n_init=10)
             codes[:, i] = kmeans.fit_predict(subvectors)
             codebooks.append(kmeans.cluster_centers_)
 
@@ -235,7 +254,8 @@ def estimate_memory_usage(
     dimensions: int,
     quantization: str = "fp32",
     index_type: str = "hnsw",
-    hnsw_m: int = 16
+    hnsw_m: int = 16,
+    pq_bytes_per_vector: int = 32
 ) -> dict:
     """Estimate memory usage for different configurations."""
 
@@ -244,11 +264,11 @@ def estimate_memory_usage(
         "fp32": 4,
         "fp16": 2,
         "int8": 1,
-        "pq": 0.05,  # Approximate
+        "pq": 0,  # Explicit pq_bytes_per_vector used below
         "binary": 0.125
     }
 
-    vector_bytes = num_vectors * dimensions * bytes_per_dimension[quantization]
+    vector_bytes = num_vectors * (pq_bytes_per_vector if quantization == "pq" else ((dimensions + 7) // 8 if quantization == "binary" else dimensions * bytes_per_dimension[quantization]))
 
     # Index overhead
     if index_type == "hnsw":
@@ -354,8 +374,8 @@ def tune_search_parameters(
     client: QdrantClient,
     collection_name: str,
     target_recall: float = 0.95
-) -> dict:
-    """Tune search parameters for target recall."""
+) -> models.SearchParams:
+    """Return an unmeasured candidate; benchmark to establish actual recall."""
 
     # Search parameter recommendations
     if target_recall >= 0.99:
@@ -403,7 +423,7 @@ class SearchMetrics:
     latency_p50_ms: float
     latency_p95_ms: float
     latency_p99_ms: float
-    recall: float
+    recall: float | None
     qps: float
 
 
@@ -423,6 +443,8 @@ class VectorSearchMonitor:
         num_iterations: int = 100
     ) -> SearchMetrics:
         """Benchmark search performance."""
+        if len(query_vectors) == 0 or num_iterations <= 0 or k <= 0:
+            raise ValueError("Nonempty queries and positive iterations/k required")
         latencies = []
 
         for _ in range(num_iterations):
@@ -440,7 +462,7 @@ class VectorSearchMonitor:
             latency_p50_ms=np.percentile(latencies, 50),
             latency_p95_ms=np.percentile(latencies, 95),
             latency_p99_ms=np.percentile(latencies, 99),
-            recall=self._calculate_recall(search_fn, query_vectors, k) if self.ground_truth_fn else 0,
+            recall=self._calculate_recall(search_fn, query_vectors, k) if self.ground_truth_fn else None,
             qps=total_queries / total_time
         )
 
@@ -462,7 +484,7 @@ class VectorSearchMonitor:
 
 
 def profile_index_build(
-    build_fn,
+    build_factory,
     vectors: np.ndarray,
     batch_sizes: List[int] = [1000, 10000, 50000]
 ) -> dict:
@@ -470,6 +492,9 @@ def profile_index_build(
     results = {}
 
     for batch_size in batch_sizes:
+        if len(vectors) == 0 or batch_size <= 0:
+            raise ValueError("Need vectors and positive batch size")
+        build_fn = build_factory()  # Fresh independent index for each experiment
         times = []
         for i in range(0, len(vectors), batch_size):
             batch = vectors[i:i + batch_size]
@@ -479,11 +504,13 @@ def profile_index_build(
 
         results[batch_size] = {
             "avg_batch_time_s": np.mean(times),
-            "vectors_per_second": batch_size / np.mean(times)
+            "vectors_per_second": len(vectors) / sum(times)
         }
 
     return results
 ```
+
+Memory formulas exclude allocator, labels, upper graph levels, retained originals/codebooks and query buffers; measure process RSS/serialized index size and peak build memory separately. Qdrant indexing/memmap thresholds use the server version’s documented storage units, not vector counts; num_vectors is not used to size this configuration. Validate SDK/server schema before creating a new authorized collection; never recreate or overwrite a production collection to benchmark. Search functions in the monitor must return ordered IDs, not scored objects; reported QPS is serial service throughput, not concurrent capacity. Separate warm/cold, batch-average and single-query tail latency and keep metric/filter settings identical to exact ground truth.
 
 ## Best Practices
 

@@ -13,8 +13,10 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 # Pytest Testing Skill
 ## When to Use
 
-Use this skill when you need generates production-grade pytest tests in Python with fixtures, parametrize, markers, mocking, and conftest patterns. Use when user mentions "pytest", "conftest", "@pytest.fixture", "@pytest.mark", "Python test". Triggers on: "pytest", "conftest", "Python test", "parametrize", "Python...
+Use this skill when you need generates production-grade pytest tests in Python with fixtures, parametrize, markers, mocking, and conftest patterns. Use when user mentions "pytest", "conftest", "@pytest.fixture", "@pytest.mark", "Python test". Triggers on: "pytest", "conftest", "Python test", "parametrize", "Python fixtures".
 
+
+Examples with Calculator, Database, APIClient or myapp functions require the project’s actual imports; they are patterns, not a bundled application. Inspect tests/conftest/plugins before running: collection imports code and tests can send email, mutate databases or call external APIs. Use synthetic fixtures and isolated targets; mock at the namespace where the code looks up a dependency. pytest-mock, pytest-asyncio, pytest-cov and pytest-xdist are optional plugins required by their specific examples.
 
 ## Core Patterns
 
@@ -27,7 +29,7 @@ def test_addition():
     assert 2 + 3 == 5
 
 def test_exception():
-    with pytest.raises(ValueError, match="invalid"):
+    with pytest.raises(ValueError, match="invalid literal"):
         int("not_a_number")
 
 class TestCalculator:
@@ -50,9 +52,13 @@ def calculator():
 @pytest.fixture
 def db_connection():
     conn = Database.connect("test_db")
-    yield conn  # teardown after yield
-    conn.rollback()
-    conn.close()
+    try:
+        yield conn
+    finally:
+        try:
+            conn.rollback()
+        finally:
+            conn.close()
 
 @pytest.fixture(scope="module")
 def api_client():
@@ -96,6 +102,8 @@ def test_large_dataset(): ...
 
 @pytest.mark.skip(reason="Not implemented")
 def test_future_feature(): ...
+
+import sys
 
 @pytest.mark.skipif(sys.platform == "win32", reason="Unix only")
 def test_unix_permissions(): ...

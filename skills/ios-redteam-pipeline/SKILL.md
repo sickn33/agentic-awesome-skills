@@ -40,10 +40,12 @@ Trigger when:
 
 DO NOT use for:
 - Android-only targets — that's `apk-redteam-pipeline`
-- React Native / Flutter apps already fully covered by JS-bundle analysis on the web side
+- A task limited to web bundles with no authorized iOS scope; React Native/Flutter native bridges, entitlements and platform storage still need iOS-specific review when in scope
 - Server-side only assessments with no mobile client in scope
 
 ---
+
+Use a dedicated authorized test device/account and private evidence directory. Establish whether app binary, backend, credential validation, TLS instrumentation and test-CA/profile changes are each in scope; record/remove test profiles and artifacts afterward. Never use discovered keys merely because they exist: public Firebase config is not automatically a secret, and network access needs separate target confirmation. Create a virtual environment before Python installs, pin/review tools/scripts and check installed --help; legacy flags such as --no-pause and objection subcommands may differ. No universal TLS hook guarantees coverage across all stacks.
 
 ## Stage 0 — Inventory all org-owned iOS apps
 
@@ -67,8 +69,8 @@ multi-brand conglomerate usually reuses `com.<corp>.<sub-brand>` naming on both 
 
 ### Primary: from a real device you control (no jailbreak needed for a purchased/free app)
 ```bash
-# Install the app on a real device via Apple Configurator 2 or Xcode, then pull the .ipa
-# Apple Configurator 2 (macOS): Devices > select device > right-click installed app > "Save to..."
+# Obtain an owner-provided test IPA/build when possible. Installing/listing apps does not
+# itself export a decryptable IPA; Configurator/Xcode extraction depends on supported workflow.
 # Or via libimobiledevice:
 brew install libimobiledevice ideviceinstaller
 ideviceinstaller -l              # list installed apps + bundle IDs
@@ -77,14 +79,14 @@ ideviceinstaller -l              # list installed apps + bundle IDs
 ### Secondary: TestFlight (if the program distributes betas publicly)
 Open the public TestFlight link, install via the TestFlight app, then extract as above.
 TestFlight builds are frequently LESS hardened than App Store releases (debug logging left on,
-staging API hosts hardcoded) — always prefer a TestFlight build over the Store build if both exist.
+staging API hosts hardcoded) — compare channel/build/version; a beta finding does not establish production exposure.
 
 ### Tertiary: enterprise / ad-hoc distribution (OTA install)
 ```bash
 # itms-services:// links embed a manifest.plist with a direct .ipa URL
 curl -s "https://<target>/manifest.plist" | plutil -convert xml1 -o - -
 # Look for <key>software-package</key> — that URL is a directly downloadable, unencrypted IPA
-curl -sk -L "<software-package-url>" -o target.ipa
+curl --fail --show-error --proto =https --proto-redir =https --max-time 120 "<approved-software-package-url>" -o target.ipa
 ```
 Enterprise/ad-hoc IPAs are **not FairPlay-encrypted** — no jailbreak or decryption tooling needed,
 unlike an App Store binary pulled from a device.
@@ -94,7 +96,7 @@ App Store binaries are FairPlay-encrypted at rest; a binary copied off a jailbro
 needs runtime decryption (`frida-ios-dump`, `bagbak`, or `flexdecrypt`) before static tools can
 read it meaningfully:
 ```bash
-pip install --break-system-packages frida-tools
+python -m pip install frida-tools
 # with frida-server running on the jailbroken device and the app in foreground:
 python3 dump.py <bundle_id>          # frida-ios-dump — outputs a decrypted .ipa
 ```
@@ -105,14 +107,16 @@ python3 dump.py <bundle_id>          # frida-ios-dump — outputs a decrypted .i
 
 ```bash
 # An IPA is just a zip
-unzip -o target.ipa -d extracted_target/
+unzip -l target.ipa  # inspect archive paths/size first; reject traversal/symlinks/oversized entries
+# Extract only in a fresh private directory with an archive tool that enforces containment.
+unzip target.ipa -d extracted_target/
 cd extracted_target/Payload/*.app
 
 # Info.plist — bundle ID, URL schemes, ATS config, entitlements hint
 plutil -convert xml1 -o - Info.plist
 
 # Entitlements — codesign reads the .app bundle (or the Mach-O binary), NOT Info.plist
-codesign -d --entitlements :- Payload/<AppName>.app 2>/dev/null || \
+codesign -d --entitlements :- . 2>/dev/null || \
   security cms -D -i embedded.mobileprovision | plutil -convert xml1 -o - -
 
 # class-dump for Objective-C symbol/class recovery (compiled binary, not the .app bundle)
@@ -136,17 +140,17 @@ what Stage 3 is looking for.
 grep -oE 'https?://[a-zA-Z0-9.-]+\.(target1|target2|target3)\.(com|io|net)[a-zA-Z0-9./_?=&%-]*' strings_target.txt | sort -u
 
 # Cloud credentials (same 60-pattern catalog as Android — reuse verbatim)
-grep -oE 'AKIA[A-Z0-9]{16}'                             # AWS Access Key
-grep -oE 'AIza[A-Za-z0-9_-]{35}'                        # Google API key
+grep -oE 'AKIA[A-Z0-9]{16}' strings_target.txt          # candidate ID, not proof of valid credential
+grep -oE 'AIza[A-Za-z0-9_-]{35}' strings_target.txt     # may be public/restricted app configuration
 grep -oE 'eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*' strings_target.txt   # JWT
 
 # iOS-specific: GoogleService-Info.plist (Firebase config bundled per-platform)
-find extracted_target -iname "GoogleService-Info.plist" -exec plutil -convert xml1 -o - {} \;
+find . -iname "GoogleService-Info.plist" -exec plutil -convert xml1 -o - {} \;
 # Look for API_KEY, PROJECT_ID, STORAGE_BUCKET, GCM_SENDER_ID, GOOGLE_APP_ID — same Firebase
 # public-read tests as apk-redteam-pipeline Stage 6.
 
 # iOS-specific: hardcoded config plists shipped in the bundle
-find extracted_target -iname "*.plist" ! -iname "Info.plist" -exec sh -c 'echo "=== {} ==="; plutil -convert xml1 -o - "{}"' \;
+find . -iname '*.plist' ! -iname 'Info.plist' -exec sh -c 'for p do printf "=== %s ===\n" "$p"; plutil -convert xml1 -o - "$p"; done' sh {} +
 
 # App Transport Security exceptions (Info.plist) — tells you if arbitrary/insecure loads are allowed
 plutil -extract NSAppTransportSecurity xml1 -o - Info.plist 2>/dev/null
@@ -154,7 +158,7 @@ plutil -extract NSAppTransportSecurity xml1 -o - Info.plist 2>/dev/null
 
 ### Keychain items left in a backup (if you have a device backup, encrypted or not)
 ```bash
-pip install --break-system-packages iphone_backup_decrypt   # for encrypted local backups
+python -m pip install iphone_backup_decrypt   # for encrypted local backups
 # keychain-dumper (run ON a jailbroken device) for live keychain contents:
 ./keychain-dumper -e   # -e also decodes entitlements per item, showing which app owns which secret
 ```
@@ -177,7 +181,7 @@ plaintext credential/token interception without touching pinning at all.
 
 ### Certificate-pinning bypass (when pinning IS present and correctly configured)
 ```bash
-pip install --break-system-packages frida-tools objection
+python -m pip install frida-tools objection
 objection --gadget <bundle_id> explore
 # inside objection:
 ios sslpinning disable
@@ -205,7 +209,7 @@ pinning implementations (`NSURLSession`, `AFNetworking`, `TrustKit`) without per
 plutil -extract CFBundleURLTypes xml1 -o - Info.plist
 
 # Universal Links / Associated Domains (applinks:) — requires a matching apple-app-site-association
-plutil -extract com.apple.developer.associated-domains xml1 -o - Info.plist 2>/dev/null
+codesign -d --entitlements :- .  # associated-domains belongs to signed entitlements, not Info.plist
 curl -s "https://<domain>/.well-known/apple-app-site-association" | python3 -m json.tool
 ```
 
@@ -216,19 +220,17 @@ For each custom scheme found (e.g. `myapp://`):
   WebView-XSS chain) or use it to bypass an auth screen?
 - If the scheme is also registered by another app on the device (scheme squatting), a malicious
   app can intercept traffic intended for the legitimate app — check `CFBundleURLName` uniqueness.
-- Universal Links degrade to the custom scheme when the AASA validation fails or is absent —
-  test both paths for the same parameter-injection surface.
+- Failed Universal Link association normally leaves an HTTPS web link; any custom-scheme fallback is application-specific and must be observed, not assumed.
 
 ---
 
 ## Stage 6 — Runtime instrumentation (Frida / objection)
 
-Requires a jailbroken device (checkra1n/palera1n for older iOS, or a Corellium virtual device) —
-unlike Android, there is no practical rooted-emulator equivalent for iOS.
+Use an authorized compatible test environment. Frida supports jailbroken devices and debuggable apps without jailbreak (Gadget/developer setup); support depends on the build/device.
 
 ```bash
 # Setup
-pip install --break-system-packages frida-tools objection
+python -m pip install frida-tools objection
 # Install frida-server on the jailbroken device via Cydia/Sileo (frida repo), matching the
 # host frida-tools version exactly — version skew is the #1 cause of "failed to attach" errors.
 
@@ -286,7 +288,7 @@ mitmproxy --listen-port 8080
 
 ```bash
 brew install libimobiledevice ideviceinstaller class-dump
-pip install --break-system-packages frida-tools objection iphone_backup_decrypt
+python -m pip install frida-tools objection iphone_backup_decrypt
 # Jailbroken test device (checkra1n/palera1n) or a Corellium virtual iOS device for runtime work
 # frida-server installed on-device via the Frida Cydia/Sileo repo
 ```

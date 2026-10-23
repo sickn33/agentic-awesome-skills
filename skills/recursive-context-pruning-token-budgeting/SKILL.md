@@ -31,7 +31,7 @@ This skill implements a "Gatekeeper" logic to prevent context window bloat and u
 
 ### Step 1: Metadata Sharding
 
-Scan the available data for headers, summaries, and key indicators. Create a "map" of the context rather than injecting the full source. Never pull the entire file into the prompt unless a specific, narrowed fragment is requested.
+Scan the available data for headers, summaries, and key indicators. Create a "map" of the context rather than injecting the full source. Read relevant files completely when correctness, security, repository policy or the task requires it; metadata sharding is navigation, not proof of review. Preserve exact evidence locations for omitted material.
 
 ### Step 2: Token Budget Allocation
 
@@ -59,11 +59,13 @@ User: "Update the Firebase config to use environment variables."
 
 ```javascript
 const firebaseConfig = {
-  apiKey: process.env.VITE_FIREBASE_API_KEY,
-  authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.VITE_FIREBASE_PROJECT_ID
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID
 };
 ```
+
+This example assumes Vite. `VITE_*` values are exposed to browser code; Firebase client configuration is not a place for server credentials. Access controls and security rules remain necessary.
 
 ### Example 2: Essential Clarification
 

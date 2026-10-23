@@ -22,7 +22,7 @@ dotnet add package Microsoft.Extensions.Azure
 dotnet add package Azure.Identity.Broker
 ```
 
-**Current Versions**: Stable v1.17.1, Preview v1.18.0-beta.2
+**Version context**: Examples reference the 1.17/1.18 generation; verify the installed package and target framework rather than treating these as current releases.
 
 ## Environment Variables
 
@@ -45,6 +45,8 @@ AZURE_CLIENT_CERTIFICATE_PASSWORD=<certificate-password>  # Optional
 ```bash
 AZURE_CLIENT_ID=<user-assigned-managed-identity-client-id>  # Only for user-assigned
 ```
+
+Credential chains and broker inclusion change with SDK version and optional packages. Check the effective identity/tenant and constrain production credentials explicitly; authentication alone grants no resource-operation authority. Keep tokens, certificate passwords and diagnostic output private. The certificate-loading example needs a runtime supporting X509CertificateLoader and a private-key-bearing PKCS#12 file. See [credential chains](https://learn.microsoft.com/en-us/dotnet/azure/sdk/authentication/credential-chains) and [PKCS#12 loading](https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12fromfile).
 
 ## DefaultAzureCredential
 
@@ -141,7 +143,8 @@ var client = new SecretClient(
 ### ClientCertificateCredential
 
 ```csharp
-var certificate = X509CertificateLoader.LoadCertificateFromFile("MyCertificate.pfx");
+var certificate = X509CertificateLoader.LoadPkcs12FromFile(
+    "MyCertificate.pfx", Environment.GetEnvironmentVariable("CERTIFICATE_PASSWORD"));
 var credential = new ClientCertificateCredential(
     tenantId: "<tenant-id>",
     clientId: "<client-id>",

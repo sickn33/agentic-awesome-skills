@@ -80,6 +80,10 @@ PATCH: Bug fixes (fix)
 
 ## Implementation
 
+Choose one release authority; do not combine version/tag publishers. Respect repository branch protection and existing release scripts. Preview notes from an exact tag range, inspect actual source changes and contributor attribution, run required checks, and obtain publication authorization before enabling a publishing workflow. Examples are independent configurations with placeholder identities/metrics/CVEs, not verified release claims. Pin reviewed package/action versions and their runtime requirements; install every referenced semantic-release plugin explicitly. standard-version is legacy/deprecated; use only for an existing reviewed installation or choose a maintained replacement.
+
+## Implementation
+
 ### Method 1: Conventional Changelog (Node.js)
 
 ```bash
@@ -91,7 +95,7 @@ npm install -D standard-version
 npm install -D semantic-release
 
 # Setup commitlint
-cat > commitlint.config.js << 'EOF'
+cat > commitlint.config.cjs << 'EOF'
 module.exports = {
   extends: ['@commitlint/config-conventional'],
   rules: {
@@ -120,13 +124,13 @@ EOF
 
 # Setup husky
 npx husky init
-echo "npx --no -- commitlint --edit \$1" > .husky/commit-msg
+printf '%s\n' 'npx --no -- commitlint --edit "$1"' > .husky/commit-msg
 ```
 
 ### Method 2: standard-version Configuration
 
 ```javascript
-// .versionrc.js
+// .versionrc.cjs
 module.exports = {
   types: [
     { type: 'feat', section: 'Features' },
@@ -171,7 +175,7 @@ module.exports = {
 ### Method 3: semantic-release (Full Automation)
 
 ```javascript
-// release.config.js
+// release.config.cjs
 module.exports = {
   branches: [
     'main',
@@ -219,25 +223,17 @@ name: Release
 on:
   push:
     branches: [main]
-  workflow_dispatch:
-    inputs:
-      release_type:
-        description: 'Release type'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+  workflow_dispatch: # semantic-release determines the version from reviewed commits
 
 permissions:
   contents: write
-  pull-requests: write
+  # Grant pull-request write only if the selected release process actually creates PRs.
 
 jobs:
   release:
     runs-on: ubuntu-latest
+    environment: release # Configure required reviewers before enabling this publishing workflow.
+    concurrency: release-${{ github.ref }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -246,7 +242,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - run: npm ci
@@ -262,38 +258,8 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
 
-  # Alternative: manual release with standard-version
-  manual-release:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - run: npm ci
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump version and generate changelog
-        run: npx standard-version --release-as ${{ inputs.release_type }}
-
-      - name: Push changes
-        run: git push --follow-tags origin main
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          body_path: CHANGELOG.md
-          generate_release_notes: true
+  # Manual dispatch uses the same single release job above after environment approval.
+  # Do not add a second version/tag publisher or directly push release commits to protected main.
 ```
 
 ### Method 5: git-cliff (Rust-based, Fast)
@@ -371,7 +337,7 @@ git cliff -o CHANGELOG.md
 git cliff v1.0.0..v2.0.0 -o CHANGELOG.md
 
 # Preview without writing
-git cliff --unreleased --dry-run
+git cliff --unreleased # Print to stdout without an output file
 ```
 
 ### Method 6: Python (commitizen)
@@ -525,7 +491,7 @@ Reviewed-by: @alice
 ### Don'ts
 - **Don't mix changes** - One logical change per commit
 - **Don't skip validation** - Use commitlint
-- **Don't manual edit** - Generated changelogs only
+- **Review generated notes** - Curate user-facing accuracy and missing context according to the project policy
 - **Don't forget breaking changes** - Mark with `!` or footer
 - **Don't ignore CI** - Validate commits in pipeline
 

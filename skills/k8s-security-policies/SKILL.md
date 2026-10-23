@@ -1,6 +1,6 @@
 ---
 name: k8s-security-policies
-description: "Comprehensive guide for implementing NetworkPolicy, PodSecurityPolicy, RBAC, and Pod Security Standards in Kubernetes."
+description: "Guide for NetworkPolicy, RBAC, and Pod Security Admission/Standards (PodSecurityPolicy was removed in Kubernetes1.25) in Kubernetes."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -16,7 +16,7 @@ Ask for the original supporting material or an existing installation before usin
 
 # Kubernetes Security Policies
 
-Comprehensive guide for implementing NetworkPolicy, PodSecurityPolicy, RBAC, and Pod Security Standards in Kubernetes.
+Guide for NetworkPolicy, RBAC, and Pod Security Admission/Standards (PodSecurityPolicy was removed in Kubernetes1.25) in Kubernetes.
 
 ## Do not use this skill when
 
@@ -82,6 +82,8 @@ metadata:
 
 ## Network Policies
 
+NetworkPolicy requires an enforcing CNI; listing nodes/policies alone does not prove enforcement. Policies are additive and both source egress/destination ingress must permit a connection. With default-deny-all, the backend ingress example also needs a matching frontend egress allowance. DNS may use NodeLocal DNS rather than kube-system pod destinations; inspect actual resolver and selectors. Standard policy is L3/L4 and does not enforce FQDN/HTTP or universal metadata isolation; NAT/host networking/IPv6 behavior depends on CNI. Stage/dry-run and test approved positive/negative flows before enforcing to avoid outages. Pod Security privileged mode removes restrictions; use audit/warn first and pin the intended policy version before enforcing.
+
 ### Default Deny All
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -134,9 +136,11 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          name: kube-system
+          kubernetes.io/metadata.name: kube-system
     ports:
     - protocol: UDP
+      port: 53
+    - protocol: TCP
       port: 53
 ```
 
@@ -180,9 +184,6 @@ subjects:
 - kind: User
   name: jane
   apiGroup: rbac.authorization.k8s.io
-- kind: ServiceAccount
-  name: default
-  namespace: production
 roleRef:
   kind: Role
   name: pod-reader

@@ -163,6 +163,10 @@ Or paste a JD directly to run the full pipeline.
 
 ---
 
+## Evidence and automation limits
+
+Do not infer skills/employment/credentials from profile links without evidence and user confirmation. Tailoring may rephrase truthful experience, not invent qualifications. The menu’s PDF, portal scan, batch, zero-token and watch modes describe upstream capabilities, not tools included here; report unavailable runtime-dependent modes honestly. Monitoring/scheduling and sending/submitting require the host’s supported authorized workflow. User language preferences supersede a stale profile file.
+
 ## Context Loading by Mode
 
 Docs-only bundle: do not read `modes/*.md` from disk. Follow the routing table and mode summaries in this skill using general agent capabilities.

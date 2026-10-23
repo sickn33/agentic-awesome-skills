@@ -16,11 +16,11 @@ This skill provides comprehensive guidance for AWS cost optimization, monitoring
 
 ## AWS Documentation Requirement
 
-Always verify AWS facts using MCP tools (`mcp__aws-mcp__*` or `mcp__*awsdocs*__*`) before answering. The `aws-mcp-setup` dependency is auto-loaded — if MCP tools are unavailable, guide the user through that skill's setup flow.
+Always verify AWS facts using MCP tools (`mcp__aws-mcp__*` or `mcp__*awsdocs*__*`) before answering. This catalog tree does not bundle MCP servers, setup dependencies or the references named below. Discover actual tools; if unavailable, use current official AWS documentation or report missing account data. Do not claim setup auto-loaded or install/connect a server without authorization.
 
 ## Integrated MCP Servers
 
-This plugin provides 3 MCP servers:
+The upstream plugin describes these 3 MCP servers; this skill alone does not provide them:
 
 ### Bundled Servers
 
@@ -66,6 +66,8 @@ Use this skill when:
 - Implementing operational excellence
 
 ## Cost Optimization Best Practices
+
+Confirm payer/member account, region, currency, billing period and cost basis (unblended/amortized/net) before comparing totals. Billing data can lag; budgets/alerts are not hard spend caps. Cost Explorer/Logs Insights queries may themselves incur charges. Missing CloudTrail events do not prove no action occurred: check retention, region and event coverage. EC2 guest memory requires agent/custom metrics. Deletion, commitments, alarm actions and rightsizing require a scoped approved change and recovery analysis; do not remove backups solely because they look unused.
 
 ### Pre-Deployment Cost Estimation
 

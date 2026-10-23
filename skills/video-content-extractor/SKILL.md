@@ -91,7 +91,7 @@ python scripts/extract_video.py lecture.mp4 . 15 chi_sim+eng
 
 - This skill only reads video files and writes extracted frames and Markdown reports.
 - It does NOT send any data over the network - all processing is local.
-- FFmpeg and Tesseract are invoked with fixed, pre-vetted arguments.
+- No invocation script is bundled or vetted by this entry. Review actual subprocess argument handling and output paths in the installed runtime; use local media inputs and bounded output/frame counts. Sampled OCR can miss transient text and is not a complete transcript.
 - The skill does not modify or delete the original video file.
 
 ## Common Pitfalls

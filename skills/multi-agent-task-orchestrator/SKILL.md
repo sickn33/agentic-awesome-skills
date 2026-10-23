@@ -16,7 +16,7 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-A production-tested pattern for coordinating multiple AI agents through a single orchestrator. Instead of letting agents work independently (and conflict), one orchestrator decomposes tasks, routes them to specialists, prevents duplicate work, and verifies results before marking anything done. Battle-tested across 10,000+ tasks over 6 months.
+A coordination pattern for coordinating multiple AI agents through a single orchestrator. Instead of letting agents work independently (and conflict), one orchestrator decomposes tasks, routes them to specialists, prevents duplicate work, and verifies results before marking anything done. No workload/measurement evidence is bundled for production performance claims.
 
 ## When to Use This Skill
 
@@ -42,7 +42,7 @@ WHAT YOU ARE NOT:
 - NOT a tester — delegate to test agents
 ```
 
-This "NOT-block" pattern reduces task drift by ~35% in production.
+Role boundaries can clarify scope; no quantified drift-reduction result is established here.
 
 ### Step 2: Build a Task Registry
 
@@ -98,15 +98,17 @@ After agent reports completion:
 Mark done ONLY after ALL checks pass.
 ```
 
-### Step 5: Run 30-Minute Heartbeats
+### Step 5: Monitor authorized work
 
 ```
 Every 30 minutes, ask:
 1. "What have I DELEGATED in the last 30 minutes?"
-2. If nothing → open the task backlog and assign the next task
+2. If nothing → report/finish the authorized scope; do not start unrelated backlog work
 3. Check for idle agents (no message in >30min on assigned task)
-4. Relance idle agents or reassign their tasks
+4. Check actual agent status before bounded retry/reassignment; absence of messages is not proof it stopped
 ```
+
+The code is illustrative: tasks table creation and atomic transaction/unique claim/file-ownership enforcement are not implemented here. String similarity is only a duplicate candidate signal; review actual scope/dependencies before skipping work. Keyword scores do not establish expertise. Recurring heartbeat setup needs an explicit user request and supported scheduler; do not create background work from this guide. Delegate only within user/host permissions and use proportionate verification (read-only findings need not modify files).
 
 ## Examples
 

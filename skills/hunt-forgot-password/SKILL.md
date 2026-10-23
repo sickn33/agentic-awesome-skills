@@ -48,7 +48,7 @@ Some APIs return the reset token directly in the response body (instead of only 
 3. If the second submission returns 200 or "success" → token not invalidated after use
 
 **Pattern 4 — No rate limit on reset requests:**
-Submit the forgot-password endpoint 10-20 times rapidly with the same email. If all succeed without a 429, lockout, or CAPTCHA → no rate limit (enumeration + token flooding is possible).
+Submit the forgot-password endpoint 10-20 times rapidly with the same email. A short run without a 429 does not prove limits are absent: inspect email delivery/cooldowns and authorized thresholds, and report only the measured rate/window. Do not flood real inboxes.
 
 **Content-type:** Forgot-password endpoints are often JSON-based REST APIs. Use `application/x-www-form-urlencoded` only if the endpoint is a traditional HTML form (check the login page's HTML to determine form encoding).
 
@@ -66,13 +66,13 @@ High-value targets: admin accounts, employee email patterns, API keys derived fr
 ### 2. Weak / Predictable Reset Tokens
 A reset token derived from timestamp, username, or sequential IDs can be brute-forced:
 - `base64(email + timestamp)` — decodable
-- 4-6 digit numeric code — 10K guesses, easily feasible with no rate limit
+- 4-6 digit numeric code — 10,000 to 1,000,000 possibilities before considering expiry and server-side attempt limits
 - Sequential `token=1234`, `token=1235` — trivially enumerable
 
-### 3. Token Not Bound to Session or IP
-Most apps generate a token, email it, and accept it from any browser. A truly bound token should only work from the same IP or require the original session cookie. If neither is enforced → link forwarding = account takeover.
+### 3. Token Scope and Account Binding
+Email reset links commonly work across browsers and networks. This alone is not a vulnerability. Verify that the token is unguessable, short-lived, single-use and bound to the intended account/reset purpose; demonstrate a concrete unauthorized path using only approved test accounts.
 
-**Token leak via `Referer` / third-party resources.** When the token rides in the reset-page URL (`/reset?token=…`) and that page loads any cross-origin resource (analytics, ads, fonts, a CDN image), the full URL — token included — leaks to that third party in the `Referer` header. Check the reset page's outbound requests: if the token appears in any cross-origin `Referer`, it's harvestable without the victim's inbox. Same leak via a `<meta name=referrer>` misconfig or an outbound link the victim clicks from the reset page. Disclosed token-leak→ATO class: <https://hackerone.com/reports/173551>.
+**Token leak via `Referer` / third-party resources.** When the token rides in the reset-page URL (`/reset?token=…`) and that page loads any cross-origin resource (analytics, ads, fonts, a CDN image), a permissive referrer policy may leak the full URL. Modern default cross-origin policies generally send only the origin; prove leakage from captured requests rather than assuming it. Check the reset page's outbound requests: if the token appears in any cross-origin `Referer`, it's harvestable without the victim's inbox. Same leak via a `<meta name=referrer>` misconfig or an outbound link the victim clicks from the reset page. Disclosed token-leak→ATO class: <https://hackerone.com/reports/173551>.
 
 ### 4. Reset Link Doesn't Expire
 Common best practice: reset tokens expire within ~15–60 minutes (no hard RFC mandates the exact value; OWASP recommends a short, single-use lifetime). If a token from 24 hours ago still works → persistence risk for phishing attacks.
@@ -112,3 +112,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+Length/status differences are leads, not sufficient proof by themselves: repeat controlled valid/invalid test-account comparisons to exclude dynamic content, timing noise and localization. A replay requires observing that the second request really changes the approved account state, not merely HTTP 200. [OWASP reset guidance](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html).

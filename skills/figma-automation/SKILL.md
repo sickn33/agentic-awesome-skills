@@ -1,7 +1,7 @@
 ---
 name: figma-automation
 description: "Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools first for current schemas."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -18,13 +18,17 @@ Automate Figma operations through Composio's Figma toolkit via Rube MCP.
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify actual MCP authentication and authorized Figma account/file access; endpoint configuration alone is insufficient.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `figma`
 3. If connection is not ACTIVE, follow the returned auth link to complete Figma auth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Comment and export boundary
+
+Reading design data does not authorize posting comments or notifying collaborators. Require exact file/thread/message user authorization for comments. Export only requested nodes to a new safe destination, preserve private design data and validate temporary URLs without forwarding credentials to unrelated hosts.
 
 ## Core Workflows
 

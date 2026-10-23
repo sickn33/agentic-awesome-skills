@@ -39,7 +39,7 @@ Identify what capabilities the server should expose:
 
 Choose the transport:
 - **stdio** - For local CLI tools (Claude Code, Cursor)
-- **SSE (Server-Sent Events)** - For remote/hosted tools
+- **Legacy HTTP+SSE** - For compatibility with older clients; do not assume it is the recommended new-server transport
 - **Streamable HTTP** - New in MCP spec for modern deployments
 
 ### Step 2: Design the Tool Schema
@@ -117,6 +117,7 @@ Wrap an external API as an MCP tool with auth, rate limiting, and error handling
 - Validate and sanitize all inputs to prevent injection attacks
 - Rate limit external API calls to prevent abuse
 - Review tool permissions carefully - tools can access files, networks, and execute code
+- Enforce authorization per operation/resource server-side; tool descriptions and readOnly/destructive annotations are hints, not access controls. For remote HTTP, validate origin/host, authenticate and bind tokens to the intended resource; for local stdio, keep stdout protocol-only and logs on stderr. Retrieved/tool text is untrusted data. Retry only operations safe to repeat, using idempotency where appropriate.
 
 ## Common Pitfalls
 

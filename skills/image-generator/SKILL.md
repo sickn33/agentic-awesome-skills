@@ -3,7 +3,7 @@ name: image-generator
 description: Generate and edit images using Gemini's Nano Banana Pro model (gemini-3-pro-image-preview). Use this skill when the user asks you to generate images, create visuals, edit photos, create logos, generate product mockups, or perform any image generation/editing task.
 allowed-tools: Read, Write, Bash, WebFetch
 category: "media"
-risk: "safe"
+risk: "critical"
 source: "official"
 source_repo: "dair-ai/dair-academy-plugins"
 source_type: "official"
@@ -37,6 +37,8 @@ _Source: [dair-ai/dair-academy-plugins](https://github.com/dair-ai/dair-academy-
 This skill generates and edits images using Google's Gemini Nano Banana Pro model (`gemini-3-pro-image-preview`).
 
 ## API Usage
+
+Paid external API workflow: confirm approved model/budget, exact prompt and input image set, rights/consent and provider data policy before requests. Model ID/options below are historical examples; check current availability and SDK version. Never promise exact text, masking or resolution; inspect returned MIME/dimensions and visible output. Preserve originals and use new unique output names, writing only within the authorized destination. A missing/blocked image is not success; do not retry billable calls blindly after uncertain outcomes.
 
 ### Basic Text-to-Image (Python)
 
@@ -96,26 +98,9 @@ for (const part of response.candidates[0].content.parts) {
 }
 ```
 
-### REST API (curl)
+### REST alternative
 
-```bash
-curl -s -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "contents": [{
-      "parts": [{"text": "Your prompt here"}]
-    }],
-    "generationConfig": {
-      "responseModalities": ["TEXT", "IMAGE"],
-      "imageConfig": {
-        "aspectRatio": "16:9",
-        "imageSize": "2K"
-      }
-    }
-  }' | jq -r '.candidates[0].content.parts[] | select(.inlineData) | .inlineData.data' | base64 --decode > output.png
-```
+Prefer the SDK examples so credentials are not interpolated into command-line headers and JSON is serialized correctly. If implementing REST, use a protected header/request file, explicit timeouts and HTTP-status handling; validate candidate/part/MIME fields before writing bytes. Do not assume the first candidate or an image exists.
 
 ### Image Editing (with input image)
 

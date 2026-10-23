@@ -1,7 +1,7 @@
 ---
 name: nextjs-supabase-auth
 description: Expert integration of Supabase Auth with Next.js App Router
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -55,9 +55,10 @@ export async function createClient() {
           return cookieStore.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            cookieStore.set(name, value, options)
-          })
+          // This helper is for a Route Handler/Server Action with writable cookies.
+          // In a Server Component use the official read-only client pattern and
+          // refresh sessions in middleware/proxy; do not attempt cookie writes here.
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
         },
       },
     }
@@ -86,9 +87,9 @@ export async function middleware(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options)
-          })
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          response = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options))
         },
       },
     }
@@ -122,13 +123,14 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const candidate = searchParams.get('next') ?? '/'
+  const next = candidate.startsWith('/') && !candidate.startsWith('//') && !candidate.includes('\\') ? candidate : '/'
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(new URL(next, process.env.APP_ORIGIN!)) // validated trusted deployment origin
     }
   }
 
@@ -311,3 +313,5 @@ Works well with: `nextjs-app-router`, `supabase-backend`
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These are separate-file fragments, not a complete auth deployment. Configure and validate the trusted `APP_ORIGIN`, callback allowlist and exact Next.js/Supabase versions first. Server Components cannot write cookies; use the current official context-specific helper rather than suppressing arbitrary refresh failures. Preserve refreshed cookies on returned redirects. Middleware is not the sole authorization layer: validate sessions/claims and tenant/resource permissions on every server data/action path and enforce RLS. Never expose a service-role key to browsers. See [Supabase server-side client guidance](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs).

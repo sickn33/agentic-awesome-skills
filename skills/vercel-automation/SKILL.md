@@ -18,7 +18,7 @@ Automate Vercel platform operations through Composio's Vercel toolkit via Rube M
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Adding the endpoint does not authenticate Vercel; use a host-supported authorized connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -27,6 +27,8 @@ Automate Vercel platform operations through Composio's Vercel toolkit via Rube M
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Resolve the exact team/project/environment and immutable source revision before changes. Deployment creation publishes code and can incur cost; production promotion, DNS changes and secret updates require the user’s scoped request. Inspect existing DNS records and preserve mail/verification entries. Never print secret values while listing environment variables; respect current sensitive/encrypted types and branch scopes. A timeout may leave a deployment created: reconcile before retrying. Use bounded polling, verify the live URL/alias and report logs with credentials/personal data redacted.
 
 ### 1. Monitor and Inspect Deployments
 
@@ -118,7 +120,7 @@ Automate Vercel platform operations through Composio's Vercel toolkit via Rube M
 **Pitfalls**:
 - Domain must be added to the Vercel account before DNS management
 - SSL certificates are auto-provisioned but may take time for new domains
-- CNAME records at the apex domain are not supported; use A records instead
+- Use the exact DNS recommendations returned for the domain/provider; apex alias/flattening support is provider-dependent
 - MX records require priority values
 
 ### 5. Manage Projects
@@ -188,7 +190,7 @@ Automate Vercel platform operations through Composio's Vercel toolkit via Rube M
 
 **Deployment States**:
 - States include: INITIALIZING, ANALYZING, BUILDING, DEPLOYING, READY, ERROR, CANCELED, QUEUED
-- Only READY deployments are live and serving traffic
+- READY indicates build/deployment readiness, not correct routing or application health; verify the exact URL and production alias
 - ERROR deployments should be inspected via logs for failure details
 
 **Environment Variables**:

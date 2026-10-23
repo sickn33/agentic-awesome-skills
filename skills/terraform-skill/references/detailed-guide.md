@@ -130,12 +130,12 @@ var.database_instance_class # Not just "instance_class"
 
 2. **Choose correct command mode:**
    - `command = plan` - Fast, for input validation
-   - `command = apply` - Required for computed values and set-type blocks
+   - `command = apply` - Creates real resources unless providers are mocked; use only for assertions requiring apply-time values in an authorized isolated account
 
 3. **Handle set-type blocks correctly:**
    - Cannot index with `[0]`
    - Use `for` expressions to iterate
-   - Or use `command = apply` to materialize
+   - Applying does not turn sets into indexable lists; use for expressions or a validated deterministic conversion
 
 **Common patterns:**
 - S3 encryption rules: **set** (use for expressions)
@@ -214,7 +214,7 @@ variable "environment" {
 
 locals {
   # References secondary CIDR first, falling back to VPC
-  # Forces Terraform to delete subnets before CIDR association
+  # Creates a reference dependency on the optional CIDR association
   vpc_id = try(
     aws_vpc_ipv4_cidr_block_association.this[0].vpc_id,
     aws_vpc.this.id,
@@ -235,7 +235,7 @@ resource "aws_vpc_ipv4_cidr_block_association" "this" {
 
 resource "aws_subnet" "public" {
   vpc_id     = local.vpc_id  # Uses local, not direct reference
-  cidr_block = "10.1.0.0/24"
+  cidr_block = var.add_secondary_cidr ? "10.1.0.0/24" : "10.0.0.0/24"
 }
 ```
 
@@ -311,8 +311,8 @@ my-module/
 ### Version Constraint Syntax
 
 ```hcl
-version = "5.0.0"      # Exact (avoid - inflexible)
-version = "~> 5.0"     # Recommended: 5.0.x only
+version = "5.0.0"      # Exact; valid when deliberate reproducibility is required
+version = "~> 5.0"     # Allows >=5.0.0 and <6.0.0
 version = ">= 5.0"     # Minimum (risky - breaking changes)
 ```
 
@@ -320,10 +320,10 @@ version = ">= 5.0"     # Minimum (risky - breaking changes)
 
 | Component | Strategy | Example |
 |-----------|----------|---------|
-| **Terraform** | Pin minor version | `required_version = "~> 1.9"` |
+| **Terraform** | Pin minor version | `required_version = "~> 1.9.0"` |
 | **Providers** | Pin major version | `version = "~> 5.0"` |
 | **Modules (prod)** | Pin exact version | `version = "5.1.2"` |
-| **Modules (dev)** | Allow patch updates | `version = "~> 5.1"` |
+| **Modules (dev)** | Allow patch updates | `version = "~> 5.1.0"` |
 
 ### Update Workflow
 
@@ -347,7 +347,7 @@ terraform plan
 
 | Feature | Version | Use Case |
 |---------|---------|----------|
-| `try()` function | 0.13+ | Safe fallbacks, replaces `element(concat())` |
+| `try()` function | 0.12.20+ | Safe fallbacks, replaces `element(concat())` |
 | `nullable = false` | 1.1+ | Prevent null values in variables |
 | `moved` blocks | 1.1+ | Refactor without destroy/recreate |
 | `optional()` with defaults | 1.3+ | Optional object attributes |
@@ -360,7 +360,7 @@ terraform plan
 ### Quick Examples
 
 ```hcl
-# try() - Safe fallbacks (0.13+)
+# try() - Safe fallbacks (Terraform 0.12.20+)
 output "sg_id" {
   value = try(aws_security_group.this[0].id, "")
 }
@@ -409,9 +409,11 @@ variable "backup_days" {
 Both are fully supported by this skill. For licensing, governance, and feature comparison, see Quick Reference: Terraform vs OpenTofu.
 
 
+Terraform and OpenTofu have independent feature/version timelines; the Terraform version table is not an OpenTofu compatibility matrix. Verify the selected tool’s test and mock-provider syntax, and do not label all tests cost-free: providers, data sources, external programs and apply-mode runs can create charges or side effects. Native test defaults can apply real infrastructure. Use scoped ephemeral credentials, quotas, reviewed cleanup and failure reconciliation; a main-branch condition is not authorization. Provider lockfiles do not lock remote modules or the Terraform binary. Pin those separately and review init -upgrade changes.
+
 ## Detailed Guides
 
-This skill uses **progressive disclosure** - essential information is in this main file, detailed guides are available when needed:
+Only SKILL.md and this detailed guide are bundled. The conceptual guide names below are not separate local files or automatically loadable resources:
 
 📚 **Reference Files:**
 - **Testing Frameworks** - In-depth guide to static analysis, native tests, and Terratest
@@ -420,11 +422,11 @@ This skill uses **progressive disclosure** - essential information is in this ma
 - **Security & Compliance** - Trivy/Checkov integration, secrets management, compliance testing
 - **Quick Reference** - Command cheat sheets, decision flowcharts, troubleshooting guide
 
-**How to use:** When you need detailed information on a topic, reference the appropriate guide. Claude will load it on demand to provide comprehensive guidance.
+**How to use:** When you need detailed information on a topic, use the inline material or verified official documentation; do not claim a nonexistent reference was loaded.
 
 
 ## License
 
-This skill is licensed under the **Apache License 2.0**. See the LICENSE file for full terms.
+This skill is licensed under the **Apache License 2.0**. The catalog tree does not bundle a LICENSE file; verify the exact upstream license before redistribution. Preserve this attribution without treating it as an independent license audit.
 
 **Copyright © 2026 Anton Babenko**

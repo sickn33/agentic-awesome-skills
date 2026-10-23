@@ -276,6 +276,8 @@ Free tools attract links because:
 - Show preview of what they'll get
 - Optional: Segment by asking one qualifying question
 
+Explain data collection and retention, separate requested report delivery from optional marketing consent, and respect unsubscribe preferences. Never add contacts to campaigns merely because they requested a tool result. Scanners that fetch submitted URLs need SSRF protections, bounded resources and authorized targets. Financial/tax tools must label assumptions, jurisdiction/date and limitations rather than implying certified advice. Scorecard thresholds are heuristics, not validated lead forecasts.
+
 ### Post-Capture
 
 - Immediate email with results/link
@@ -469,7 +471,8 @@ Monthly value: X × Y% × $Z = $___
 Build cost: $___
 Monthly maintenance: $___
 
-Payback period: Build cost / (Monthly value - Monthly maintenance)
+Payback period: Build cost / Positive monthly contribution after acquisition, delivery and maintenance costs
+If contribution is zero or negative, no finite payback is established.
 ```
 
 ---

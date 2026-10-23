@@ -6,7 +6,7 @@ source: community
 date_added: '2026-02-27'
 ---
 
-# C4 Container Level: System Deployment
+# C4 Container Level: Applications and Data Stores
 
 ## Use this skill when
 
@@ -23,6 +23,8 @@ date_added: '2026-02-27'
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
+
+C4 containers are applications or data stores, not necessarily Docker containers or runtime nodes. Model physical instances/regions separately in a deployment diagram. Base each boundary/relationship on observed code/configuration and mark unknowns; templates below are placeholders, not discovered architecture.
 
 ## Containers
 
@@ -58,7 +60,9 @@ This container deploys the following components:
 
 ## Dependencies
 
-### Containers Used
+#C4 containers are applications or data stores, not necessarily Docker containers or runtime nodes. Model physical instances/regions separately in a deployment diagram. Base each boundary/relationship on observed code/configuration and mark unknowns; templates below are placeholders, not discovered architecture.
+
+## Containers Used
 
 - [Container Name]: [How it's used, communication protocol]
 
@@ -85,7 +89,7 @@ C4Container
         Container(webApp, "Web Application", "Spring Boot, Java", "Provides web interface")
         Container(api, "API Application", "Node.js, Express", "Provides REST API")
         ContainerDb(database, "Database", "PostgreSQL", "Stores data")
-        Container_Queue(messageQueue, "Message Queue", "RabbitMQ", "Handles async messaging")
+        ContainerQueue(messageQueue, "Message Queue", "RabbitMQ", "Handles async messaging")
     }
     System_Ext(external, "External System", "Third-party service")
 
@@ -95,7 +99,6 @@ C4Container
     Rel(api, messageQueue, "Publishes messages to")
     Rel(api, external, "Uses", "API")
 ```
-````
 
 **Key Principles** (from [c4model.com](https://c4model.com/diagrams/container)):
 
@@ -105,7 +108,6 @@ C4Container
 - Show **communication protocols** between containers
 - Include **external systems** that containers interact with
 
-````
 
 ## API Specification Template
 
@@ -137,7 +139,7 @@ paths:
             application/json:
               schema:
                 type: object
-````
+```
 
 ## Example Interactions
 
