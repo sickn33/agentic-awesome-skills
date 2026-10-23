@@ -15294,7 +15294,7 @@
         {
           "path": "skills/pentest-tools/src-hunter/references/payloader/tools/windows渗透.md",
           "beforeSha256": "34fe6e5a640dc9fde629ccd83cf745acd300c4436925ac9b4eb264ac9748ede4",
-          "afterSha256": "25dd2fab1d6f108d34e1757090d9f8c24943d2993d6704ac6ee4887126755b65",
+          "afterSha256": "f112a8db6a34bc0dc5eaeb72f05da4ac01bc5327c9c212efa49e613a09887504",
           "gitMode": "100644",
           "readInFull": true,
           "beforeGitMode": "100644",
@@ -15312,7 +15312,7 @@
         {
           "path": "skills/pentest-tools/src-hunter/references/payloader/tools/内网渗透.md",
           "beforeSha256": "67eeb8f7aaa2db881f91b71ed879454746c6161c6b70591673d2dfdddc72adbf",
-          "afterSha256": "9cf11259f76aad1447552a38d21764c8f008f1611c53bdbb730263be6486c567",
+          "afterSha256": "14e4ecc659cbf1714fce4ad0854a056a7dc2f9e7315306a395b08cdc8aab6035",
           "gitMode": "100644",
           "readInFull": true,
           "beforeGitMode": "100644",
