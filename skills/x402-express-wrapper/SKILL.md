@@ -42,10 +42,10 @@ un wrapper, contrato desplegado ni una API verificada del paquete npm.
 
 ## Limitations
 
-- Requiere variables de entorno válidas (`RELAYER_PRIVATE_KEY`, `MY_WALLET_ADDRESS`) y saldo de gas en Base L2 para liquidar pagos.
+- La configuración, red, credenciales y costes dependen de la implementación verificada; esta guía no establece nombres de variables ni un contrato desplegado.
 - Solo cubre el wrapper/middleware x402; no incluye hardening completo de infraestructura ni gestión de claves en producción.
 - Está orientado a Node.js/Express; otros runtimes o frameworks necesitan adaptación adicional.
 
 ## Execution boundaries
 
-Esta entrada no incluye el wrapper ni demuestra la identidad del paquete publicado. Antes de instalar, comprueba repositorio, editor, versión y API reales: un nombre de npm no prueba que sea el wrapper M2MCent. El código es una ilustración histórica, no una receta verificada. No uses claves reales ni mainnet para validar; emplea una red de pruebas y credenciales desechables. Verifica chain ID, contrato, token, importe, destinatario, protección contra replay y recibo confirmado. No afirmes que hubo liquidación porque el middleware llamó next(). Requiere autorización explícita antes de firmar, financiar o transmitir transacciones; una petición de arquitectura no la concede.
+Esta entrada no incluye el wrapper ni demuestra la identidad del paquete publicado. Antes de instalar, comprueba repositorio, editor, versión y API reales: un nombre de npm no prueba que sea el wrapper M2MCent. La descripción histórica no es una receta verificada. No uses claves reales ni mainnet para validar; emplea una red de pruebas y credenciales desechables. Verifica chain ID, contrato, token, importe, destinatario, protección contra replay y recibo confirmado. No afirmes que hubo liquidación porque el middleware llamó next(). Requiere autorización explícita antes de firmar, financiar o transmitir transacciones; una petición de arquitectura no la concede.
