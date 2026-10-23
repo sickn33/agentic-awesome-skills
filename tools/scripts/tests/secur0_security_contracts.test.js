@@ -23,10 +23,10 @@ assert.match(downloader, /server_hostname=parsed\.hostname/);
 assert.match(downloader, /Download redirects are refused/);
 assert.doesNotMatch(downloader, /requests\.get\(download_url/);
 
-const pptx = read("skills/pptx-official/scripts/html2pptx.js");
-assert.match(pptx, /function resolveTrustedAsset/);
-assert.match(pptx, /Slide asset escapes the HTML directory/);
-assert.match(pptx, /constrainSlideAssets\(slideData, assetRoot\)/);
+// Restricted upstream implementation was removed, not moved into fixtures.
+for (const removed of ["docx-official", "pptx-official"]) {
+  assert.ok(!fs.existsSync(path.join(root, "skills", removed)), `${removed} must remain absent`);
+}
 
 const vercel = read("skills/deploy-to-vercel/resources/deploy.sh");
 assert.match(vercel, /\.vercelignore is present/);

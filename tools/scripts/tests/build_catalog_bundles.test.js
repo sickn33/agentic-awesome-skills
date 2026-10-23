@@ -81,6 +81,11 @@ assert.ok(
   "seo-fundamentals should be included in seo-core",
 );
 assert.ok(
-  bundles["docs-core"].skills.includes("docx-official"),
-  "docx-official should be included in docs-core",
+  bundles["docs-core"].skills.includes("office-productivity"),
+  "office-productivity should be included in docs-core",
 );
+
+for (const removed of ["docx-official", "pptx-official"]) {
+  assert.ok(!skillsById.has(removed), `${removed} must stay absent after restrictive-license removal`);
+  assert.ok(!bundles["docs-core"].skills.includes(removed));
+}

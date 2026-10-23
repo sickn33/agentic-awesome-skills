@@ -27,7 +27,7 @@ function fixture(t, bytes = Buffer.from("# Reference\nA concrete example.\n")) {
 
 test("real canonical bundle inventory paginates completely and reads nested reference text", () => {
   const catalog = loadBundledCatalog({ root: ROOT });
-  for (const id of ["debugging-strategies", "pptx-official", "2d-games", "android_ui_verification"]) {
+  for (const id of ["debugging-strategies", "claude-api", "2d-games", "android_ui_verification"]) {
     const all = [];
     let cursor = 0;
     do {
@@ -39,6 +39,7 @@ test("real canonical bundle inventory paginates completely and reads nested refe
     assert.deepEqual(all, catalog.skills.find((skill) => skill.id === id).untrustedFiles);
     assert.equal(new Set(all.map((file) => file.path)).size, all.length);
     assert.ok(all.some((file) => file.path === "SKILL.md"));
+    if (id === "claude-api") assert.ok(all.length > 2, "retained multi-file bundle must exercise pagination");
   }
   const result = readSkillFile(catalog, ROOT, { id: "debugging-strategies", path: "resources/implementation-playbook.md" });
   assert.equal(result.authority, "untrusted");
