@@ -136,7 +136,8 @@ fig.update_traces(
 fig.update_xaxes(rangeslider_visible=True)
 
 # Animations
-fig = px.scatter(df, x='x', y='y', animation_frame='year')
+animation_df = pd.DataFrame({'x': [1, 2], 'y': [10, 11], 'year': [2025, 2026]})
+fig = px.scatter(animation_df, x='x', y='y', animation_frame='year')
 ```
 
 For complete interactivity guide, see reference/export-interactivity.md.
@@ -254,7 +255,7 @@ app.layout = html.Div([
     dcc.Graph(figure=fig)
 ])
 
-app.run_server(debug=True)
+app.run(debug=True)  # local development only; disable debug for deployment
 ```
 
 ## Reference Files
@@ -275,3 +276,5 @@ app.run_server(debug=True)
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The `reference/*.md` guides listed above are upstream references and are not bundled here. Use the official documentation for those dependent details. Exported HTML contains the plotted data (including hover fields); inspect it before sharing. CDN export needs network access, and current Kaleido versions may require an available Chrome installation. [Dash 3 migration](https://dash.plotly.com/dash-3-0-migration).

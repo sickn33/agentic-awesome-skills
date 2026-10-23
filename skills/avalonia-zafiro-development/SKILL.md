@@ -25,6 +25,10 @@ This skill defines the mandatory conventions and behavioral rules for developing
 - [Zafiro Shortcuts](zafiro-shortcuts.md): Concise mappings for common Rx/Zafiro operations.
 - [Common Patterns](patterns.md): Advanced patterns like `RefreshableCollection` and Validation.
 
+## Compatibility and validation
+
+These are project/toolkit conventions, not universal .NET rules; follow the actual repository’s requirements and pinned Zafiro/ReactiveUI/DynamicData APIs. Verify shortcut semantics (especially null/empty/whitespace distinctions) instead of assuming table equivalence. Validate the collection’s intended empty/all-valid behavior: filtering valid items then testing non-empty does not prove every item is valid. Preserve cancellation, UI-thread scheduling and disposal ownership when adapting reactive examples.
+
 ## Procedure Before Writing Code
 
 1.  **Search First**: Search the codebase for similar implementations or existing Zafiro helpers.

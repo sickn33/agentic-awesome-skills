@@ -18,13 +18,17 @@ Automate Wrike project management operations through Composio's Wrike toolkit vi
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Wrike operations require a valid authenticated connection and its granted permissions; adding an endpoint alone does not grant access.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `wrike`
 3. If connection is not ACTIVE, follow the returned auth link to complete Wrike OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Write and schema boundaries
+
+Discover the installed tool schema and current vendor behavior before using any slug or parameter below. Confirm the exact workspace, folder and IDs; task creation, assignments, invitations, sharing and deletion are separate user-visible writes. Preview destructive scope and obtain the applicable explicit authorization. Never guess delete/recycle/restore semantics from this historical table, retry an uncertain write, or infer success from an asynchronous launch response; read back the resulting state first.
 
 ## Core Workflows
 

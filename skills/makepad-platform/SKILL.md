@@ -45,7 +45,7 @@ Refer to the local files for detailed documentation:
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
-   - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
+   - Report the missing reference; `/sync-crate-skills` is not bundled and must not be invented or run with --force as an automatic fallback.
    - Still answer based on SKILL.md patterns + built-in knowledge
 3. If reference file exists, incorporate its content into the answer
 
@@ -87,6 +87,8 @@ fn handle_event(&mut self, cx: &mut Cx, event: &Event) {
     }
 }
 ```
+
+The enum/platform table and API declarations are historical dev-branch illustrations. Pin a commit/crate version and inspect its actual declarations; the semicolon-only impl signatures below are an API sketch, not compilable Rust.
 
 ## Platform Detection
 
@@ -172,7 +174,7 @@ impl AppMain for App {
 ## When Answering Questions
 
 1. Makepad compiles to native code for each platform (no runtime interpreter)
-2. Shaders are compiled at build time for each graphics backend
+2. Shader compilation timing and supported backends depend on the pinned Makepad revision; inspect that backend implementation rather than assuming all shaders compile at build time
 3. Platform-specific code is in `platform/src/os/` directory
 4. Use `cx.os_type()` for runtime platform detection
 5. Use `#[cfg(target_os = "...")]` for compile-time platform detection

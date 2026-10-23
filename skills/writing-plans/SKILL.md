@@ -16,7 +16,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Context:** This should be run in a dedicated worktree (created by brainstorming skill).
+**Context:** Use the project's existing planning location and workflow. A dedicated worktree is useful when code isolation is needed, but planning does not require an unavailable brainstorming skill or authorize implementation.
 
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
@@ -36,7 +36,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
+> **Execution:** Follow this plan task-by-task within the user-authorized scope. If the installed environment provides an executing-plans skill, read it before use; this catalog entry does not bundle that dependency.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -49,7 +49,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 ## Task Structure
 
-```markdown
+````markdown
 ### Task N: [Component Name]
 
 **Files:**
@@ -88,7 +88,9 @@ Expected: PASS
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add specific feature"
 ```
-```
+````
+
+The outer Task Structure template should be copied as Markdown with its inner code blocks intact. Commands and expected outputs are planned checks, not evidence that those checks ran; verify file paths and tool availability against the actual repository. Scale tests and commits to meaningful behavior and the repository policy rather than adding a test or commit mechanically for every edit.
 
 ## Remember
 - Exact file paths always
@@ -110,13 +112,13 @@ After saving the plan, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
+- Use an installed subagent-driven-development procedure if available; otherwise describe the available execution workflow without claiming this dependency is bundled.
 - Stay in this session
 - Fresh subagent per task + code review
 
 **If Parallel Session chosen:**
 - Guide them to open new session in worktree
-- **REQUIRED SUB-SKILL:** New session uses superpowers:executing-plans
+- Use an installed executing-plans procedure if available; otherwise carry the saved plan and project instructions into the new session.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

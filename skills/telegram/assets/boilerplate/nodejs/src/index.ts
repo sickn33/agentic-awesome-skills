@@ -12,7 +12,7 @@ async function main() {
   }
 
   const useWebhook = !!process.env.WEBHOOK_URL;
-  const client = new TelegramBotClient(token, useWebhook);
+  const client = new TelegramBotClient(token);
 
   // Register all command and message handlers
   registerHandlers(client);

@@ -108,3 +108,5 @@ Each sandbox (test inbox) has an address like `alias@inbox.mailtrap.io` for inbo
 ## Limitations
 
 - This skill covers sandbox usage patterns; use Mailtrap's current API docs for full endpoint schemas.
+
+A sandbox destination does not by itself prove mail can never reach a real inbox: review forwarding/routing settings and connected automations for the exact sandbox before testing private content. Use synthetic recipients/content by default and distinguish sandbox acceptance from live delivery. Never switch to the live Sending API to make a sandbox test pass.

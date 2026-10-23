@@ -17,7 +17,7 @@ Say clearly in the report when a number is missing because Meta does not publish
 - `count` defaults to 100. `0` means every ad: a big brand can have thousands.
 - One ad can show as several rows with one `collation_id`.
 
-## Cost examples (Free plan price, $0.50 per 1,000)
+## Historical cost examples (verify live pricing before spending)
 
 | Run | Ads | Cost |
 |---|---|---|
@@ -42,4 +42,4 @@ Paid plans pay $0.40 to $0.47 per 1,000.
 | `mcpMessage` | Template with `{{field}}` placeholders, for example `*{{page_name}}*\n{{ad_text}}\n{{ad_library_url}}`. |
 | `mcpMaxItems` | Most ads to send. Default 50. |
 
-A delivery problem never fails the scrape.
+A scrape success does not prove connector delivery. Inspect delivery status separately and report any unavailable destination; sending to Slack or another shared workspace requires authorization.

@@ -122,31 +122,31 @@ that need a number, date or currency format applied.
 
 ```csv
 Project Name,Actual Cost,Budget,Currency,Invoices,Client / Stakeholder,Client Account,Client Satisfaction Score,Deliverables,Department,End Date,Milestones,Notes,Priority,Progress %,Project ID,Project Manager,Project Type,Sprint,Start Date,Status,Team Members
-Website Redesign,98000.00,250000.00,INR,"INV-1041, INV-1042",Northwind Traders,Northwind Traders,4,"Wireframes, Build, Launch",Delivery,2026-04-30,"Wireframes, Build, Launch",Client check-in on 12 Feb; scope revisit agreed for March.,Low,60,,Sneha Iyer,Fixed Price,Sprint 3,2026-01-05,Active,"Priya Nair, Rohit Verma"
+Website Redesign,98000.00,250000.00,INR,"INV-1041, INV-1042",Northwind Traders,Northwind Traders,4,"Wireframes, Build, Launch",Delivery,2026-04-30,"Wireframes, Build, Launch",Client check-in on 12 Feb; scope revisit agreed for March.,Low,60,,Example Manager,Fixed Price,Sprint 3,2026-01-05,Active,"Example Member A, Example Member B"
 ```
 
 ```sql
 CREATE TABLE projects_work_management (
   project_name VARCHAR(255),
-  actual_cost NUMERIC(14,2) NOT NULL,
-  budget NUMERIC(14,2) NOT NULL,
-  currency VARCHAR(255),
+  actual_cost NUMERIC(14,2),
+  budget NUMERIC(14,2),
+  currency VARCHAR(255) NOT NULL,
   invoices VARCHAR(255),  -- relation -> target record
   client_stakeholder VARCHAR(255),
   client_account VARCHAR(255),  -- relation -> target record
-  client_satisfaction_score NUMERIC NOT NULL,
+  client_satisfaction_score NUMERIC,
   deliverables VARCHAR(255),
   department VARCHAR(255),
-  end_date DATE NOT NULL,
+  end_date DATE,
   milestones VARCHAR(255),
   notes TEXT,
   priority VARCHAR(100) NOT NULL,
-  progress_pct NUMERIC NOT NULL,
+  progress_pct NUMERIC CHECK (progress_pct BETWEEN 0 AND 100),
   project_id SERIAL PRIMARY KEY,
   project_manager VARCHAR(255),
   project_type VARCHAR(100) NOT NULL,
   sprint VARCHAR(255),
-  start_date DATE NOT NULL,
+  start_date DATE,
   status VARCHAR(100) NOT NULL,
   team_members VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),
@@ -177,7 +177,7 @@ CREATE INDEX idx_projects_work_management_status ON projects_work_management (st
       "Milestones": { "type": "string" },
       "Notes": { "type": "string" },
       "Priority": { "type": "string" },
-      "Progress %": { "type": "number" },
+      "Progress %": { "type": "number", "minimum": 0, "maximum": 100 },
       "Project ID": { "type": "integer" },
       "Project Manager": { "type": "string" },
       "Project Type": { "type": "string" },
@@ -187,14 +187,9 @@ CREATE INDEX idx_projects_work_management_status ON projects_work_management (st
       "Team Members": { "type": "string" }
   },
   "required": [
-      "Actual Cost",
-      "Budget",
-      "Client Satisfaction Score",
-      "End Date",
+      "Currency",
       "Priority",
-      "Progress %",
       "Project Type",
-      "Start Date",
       "Status"
   ]
 }
@@ -250,12 +245,14 @@ and anything pointing at another table stays `relation`.
 | 14 | Priority | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Low` |
 | 15 | Progress % | `number` | `NUMERIC` | `number` | Number | `60` |
 | 16 | Project ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
-| 17 | Project Manager | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
+| 17 | Project Manager | `text` | `VARCHAR(255)` | `string` | Text | `Example Manager` |
 | 18 | Project Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Fixed Price` |
 | 19 | Sprint | `text` | `VARCHAR(255)` | `string` | Text | `Sprint 3` |
 | 20 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-05` |
 | 21 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
-| 22 | Team Members | `text` | `VARCHAR(255)` | `string` | Text | `Priya Nair, Rohit Verma` |
+| 22 | Team Members | `text` | `VARCHAR(255)` | `string` | Text | `Example Member A, Example Member B` |
+
+Draft projects may have unknown cost, budget, dates, satisfaction and progress; leave those blank rather than inventing zero or a rating. The synthetic satisfaction score uses a 1–5 scale, while progress is 0–100 stored as a plain number (60, not 0.60); document the actual scale and progress basis used. End Date means planned finish here; record actual completion separately when needed and require end ≥ start when both are known. Invoices and Client Account contain source identifiers for manual relation resolution, not enforced SQL foreign keys; use normalized link tables if multiple IDs must be queryable. Actual cost, invoiced revenue and paid cash are different measures and must not be summed interchangeably.
 
 ## Select Options
 

@@ -19,7 +19,7 @@ pip install azure-monitor-opentelemetry-exporter
 ## Environment Variables
 
 ```bash
-APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;IngestionEndpoint=https://xxx.in.applicationinsights.azure.com/
+export APPLICATIONINSIGHTS_CONNECTION_STRING='InstrumentationKey=xxx;IngestionEndpoint=https://xxx.in.applicationinsights.azure.com/'
 ```
 
 ## When to Use
@@ -28,6 +28,10 @@ APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;IngestionEndpoint=h
 | Quick setup, auto-instrumentation | `azure-monitor-opentelemetry` (distro) |
 | Custom OpenTelemetry pipeline | `azure-monitor-opentelemetry-exporter` (this) |
 | Fine-grained control over telemetry | `azure-monitor-opentelemetry-exporter` (this) |
+
+## Export and privacy boundary
+
+Telemetry leaves the application for Azure and may also persist locally in offline storage. Review fields, endpoints, credentials, retention and cost; redact secrets and personal data before export. Reuse an existing provider instead of repeatedly resetting global providers, and flush/shut down providers during process termination. The independent snippets below are alternatives, not a single combined initialization script.
 
 ## Trace Exporter
 
@@ -161,7 +165,7 @@ exporter = AzureMonitorTraceExporter(
 ```python
 exporter = AzureMonitorTraceExporter(
     connection_string="...",
-    disable_offline_storage=True  # No retry on failure
+    disable_offline_storage=True  # Disable disk persistence; transport retry behavior is separate
 )
 ```
 

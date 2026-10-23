@@ -51,7 +51,7 @@ $ARGUMENTS
 - Metadata tracking (_extracted_at, _source)
 
 **Streaming**
-- Kafka consumers with exactly-once semantics
+- Define the exact delivery boundary; Kafka transactions do not automatically make external database/API side effects exactly-once. Use transactional/idempotent sinks and crash/replay tests.
 - Manual offset commits within transactions
 - Windowing for time-based aggregations
 - Error handling and replay capability
@@ -121,6 +121,8 @@ $ARGUMENTS
 - Query optimization: partition pruning, clustering, predicate pushdown
 
 ## Example: Minimal Batch Pipeline
+
+Pseudocode only: BatchDataIngester, DeltaLakeManager and DataQualityFramework are unbundled application classes, not supplied libraries. A watermark plus append can duplicate replayed rows; define stable keys, deduplication, late-update handling and atomic checkpoint advancement before claiming reliable incremental loading. Vacuum/snapshot expiry can destroy recovery history and need a retention plan.
 
 ```python
 # Batch ingestion with validation
@@ -199,7 +201,7 @@ ingester.save_dead_letter_queue('s3://lake/dlq/orders')
 - Automatic retry and alerting on failures
 - Comprehensive monitoring shows health and performance
 - Documentation enables team maintenance
-- Cost optimization reduces infrastructure costs by 30-50%
+- Cost changes are measured against an equivalent workload baseline; no fixed savings guarantee
 - Schema evolution without downtime
 - End-to-end data lineage tracked
 

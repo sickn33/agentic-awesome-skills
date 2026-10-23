@@ -30,6 +30,8 @@ Run resilient and cost-efficient GPU clusters for production AI workloads.
 - Monitoring GPU health with DCGM and Prometheus
 - Troubleshooting GPU scheduling, driver, or OOM issues
 
+All versions, profiles and metrics below are historical examples. Verify the current GPU/driver/CUDA/Kubernetes/operator compatibility matrix and exact supported MIG profiles. MIG reconfiguration, drains and driver changes disrupt workloads: require authorized maintenance scope, capacity and tested recovery. Time-slicing shares execution without MIG-style memory/fault isolation and does not multiply physical capacity.
+
 ## Prerequisites
 
 - Kubernetes 1.28+ cluster with GPU-capable nodes
@@ -258,7 +260,7 @@ groups:
           summary: "GPU {{ $labels.gpu }} temperature above 85C on {{ $labels.node }}"
 
       - alert: GPUMemoryPressure
-        expr: (DCGM_FI_DEV_FB_USED / DCGM_FI_DEV_FB_FREE) > 0.90
+        expr: (DCGM_FI_DEV_FB_USED / (DCGM_FI_DEV_FB_USED + DCGM_FI_DEV_FB_FREE)) > 0.90
         for: 5m
         labels:
           severity: warning
@@ -273,7 +275,7 @@ groups:
           summary: "Double-bit ECC errors detected on {{ $labels.node }} GPU {{ $labels.gpu }}"
 
       - alert: GPUXidErrors
-        expr: increase(DCGM_FI_DEV_XID_ERRORS[5m]) > 0
+        expr: DCGM_FI_DEV_XID_ERRORS != 0
         labels:
           severity: warning
         annotations:
@@ -356,12 +358,12 @@ spec:
               nvidia.com/gpu: 1
               cpu: "8"
               memory: "64Gi"
-          env:
-            - name: CUDA_VISIBLE_DEVICES
-              value: "all"
+          # Let the device plugin/runtime inject assigned GPU visibility.
 ```
 
 ## GPU Autoscaling
+
+The HPA requires an installed custom-metrics adapter and correctly mapped per-pod metrics. The autoscaler ConfigMap is conceptual input, not a universally consumed API; wire supported flags/settings through the installed distribution. Node snippets illustrate labels/taints on existing named nodes, not provisionable GPU capacity. Validate every metric name/label/type against actual exporter output; do not infer counters from names.
 
 ```yaml
 # gpu-hpa.yaml
@@ -446,7 +448,7 @@ data:
 | Symptom | Check | Fix |
 |---------|-------|-----|
 | Pod stuck in Pending | `kubectl describe pod` for GPU resource events | Verify node has allocatable GPUs, check taints/tolerations |
-| CUDA OOM during inference | Model too large for GPU memory | Reduce batch size, use quantization, or use MIG slice |
+| CUDA OOM during inference | Model too large for GPU memory | Reduce batch size/model footprint or request a larger supported memory allocation; a smaller MIG slice worsens memory shortage |
 | DCGM metrics missing | ServiceMonitor labels matching | Verify DCGM exporter pod is running and scrape config |
 | Driver mismatch after upgrade | `nvidia-smi` on each node | Cordon node, drain, upgrade driver, uncordon |
 | GPU not detected | Device plugin pod logs | Restart device plugin, check NVIDIA container toolkit |

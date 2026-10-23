@@ -44,8 +44,9 @@ Most users prefer option 1. After presenting the draft, ask: "What needs correct
 **If auto-drafting:**
 1. Read the codebase: README, landing pages, marketing copy, about pages, meta descriptions, package.json, any existing docs
 2. Draft all sections based on what you find
-3. Present the draft and ask what needs correcting or is missing
-4. Iterate until the user is satisfied
+3. Label code-derived claims as inferred, leave unverified metrics/logos/testimonials unknown, and cite the source file or customer evidence
+4. Present the draft and ask what needs correcting or is missing
+5. Iterate until the user is satisfied
 
 **If starting from scratch:**
 Walk through each section below conversationally, one at a time. Don't dump all questions at once.
@@ -237,7 +238,7 @@ After gathering information, create `.agents/product-marketing.md` with this str
 - Show the completed document
 - Ask if anything needs adjustment
 - Save to `.agents/product-marketing.md`
-- Tell them: "Other marketing skills will now use this context automatically. Run `/product-marketing` anytime to update it."
+- Tell them: "The context is saved. Other skills can use it when they explicitly load this path; verify their discovery conventions. Run `/product-marketing` anytime to update it."
 
 ---
 

@@ -15,13 +15,9 @@ date_added: "2026-02-27"
 > Show the exact command(s), explain their expected effect, and wait for explicit confirmation in the current conversation.
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 # SSH Penetration Testing
-
 ## Purpose
-
 Conduct comprehensive SSH security assessments including enumeration, credential attacks, vulnerability exploitation, tunneling techniques, and post-exploitation activities. This skill covers the complete methodology for testing SSH service security.
-
 ## Prerequisites
-
 ### Required Tools
 - Nmap with SSH scripts
 - Hydra or Medusa for brute-forcing
@@ -111,6 +107,8 @@ Key configuration weaknesses to identify:
 - Deprecated protocol versions
 
 ### Phase 4: Credential Attacks
+
+Use only approved synthetic/test accounts, a bounded attempt/rate/time budget and explicit lockout/stop conditions. Recovered private keys, password cracking, persistence and pivoting each need separate scope. Do not print credentials or read unrelated users' histories. Host identity must be verified out of band; never disable host-key validation to make a test connect.
 
 #### Brute-Force with Hydra
 
@@ -345,14 +343,15 @@ import sys
 def ssh_connect(host, username, password):
     """Attempt SSH connection with credentials"""
     client = paramiko.SSHClient()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.load_system_host_keys()
+    client.set_missing_host_key_policy(paramiko.RejectPolicy())
     
     try:
         client.connect(host, username=username, password=password, timeout=5)
-        print(f"[+] Success: {username}:{password}")
+        print("[+] Authentication succeeded for authorized test account")
         return client
     except paramiko.AuthenticationException:
-        print(f"[-] Failed: {username}:{password}")
+        print("[-] Authentication failed (credential redacted)")
         return None
     except Exception as e:
         print(f"[!] Error: {e}")
@@ -439,7 +438,7 @@ sessions -i 1
 |---------|---------|
 | `nc <host> 22` | Banner grabbing |
 | `ssh-audit <host>` | Configuration audit |
-| `nmap --script ssh*` | SSH NSE scripts |
+| Select reviewed individual NSE scripts | Do not run a wildcard including unreviewed intrusive scripts |
 | `searchsploit openssh` | Find exploits |
 
 ### Brute-Force Options
@@ -483,7 +482,7 @@ sessions -i 1
 
 ### Evasion Techniques
 - Use slow brute-force: `-t 1 -w 5`
-- Distribute attacks across IPs
+- Do not distribute attempts to evade lockouts/rate limits; respect the agreed test budget
 - Use timing-based enumeration carefully
 - Respect lockout thresholds
 

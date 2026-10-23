@@ -23,6 +23,8 @@ Do **not** use this skill when:
 
 ## Initial Incident Triage
 
+First rule out measurement failure: tag/consent changes, filters, timezone/date-window mismatch, reporting latency, incomplete exports and tracking outages. Compare GSC clicks with analytics organic sessions; a discrepancy is not automatically a ranking loss. Verify update dates in Google’s official status history; coincidence, AI authorship and branded-query drops alone do not prove an algorithmic or manual penalty. Report evidence and competing hypotheses; the phase dates below are planning estimates, not recovery promises. Investigation does not authorize rollbacks, pruning, disavowals or production changes.
+
 Before deep analysis, clarify the incident context:
 
 1. **Incident Description**
@@ -76,7 +78,7 @@ Classify the incident into one or more buckets to guide the investigation:
 
 4. **Content / Quality Reassessment**
    - Specific sections or topics hit harder
-   - Content thin, outdated, or heavily AI-generated
+   - Content unhelpful, inaccurate, thin or outdated (generation method alone does not establish low quality)
    - Competitors significantly improved content around the same topics
 
 5. **Demand / Seasonality / External Factors**

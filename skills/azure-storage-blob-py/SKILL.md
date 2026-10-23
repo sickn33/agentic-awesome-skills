@@ -44,6 +44,10 @@ blob_service_client = BlobServiceClient(account_url, credential=credential)
 | `ContainerClient` | Container operations | `blob_service_client.get_container_client()` |
 | `BlobClient` | Single blob operations | `container_client.get_blob_client()` |
 
+## Execution boundaries
+
+Confirm the account, container and exact blob before writes or deletion. `overwrite=True` replaces content; deleting snapshots can be irreversible without an independently verified recovery policy. Use least-privilege RBAC and short-lived read-only SAS where needed; never log SAS URLs or account keys. A BytesIO buffer still retains the entire download in memory; use a file stream for large data.
+
 ## Core Workflow
 
 ### Create Container
@@ -191,9 +195,7 @@ from azure.identity.aio import DefaultAzureCredential
 from azure.storage.blob.aio import BlobServiceClient
 
 async def upload_async():
-    credential = DefaultAzureCredential()
-    
-    async with BlobServiceClient(account_url, credential=credential) as client:
+    async with DefaultAzureCredential() as credential, BlobServiceClient(account_url, credential=credential) as client:
         blob_client = client.get_blob_client("mycontainer", "sample.txt")
         
         with open("./file.txt", "rb") as data:
@@ -201,7 +203,7 @@ async def upload_async():
 
 # Download async
 async def download_async():
-    async with BlobServiceClient(account_url, credential=credential) as client:
+    async with DefaultAzureCredential() as credential, BlobServiceClient(account_url, credential=credential) as client:
         blob_client = client.get_blob_client("mycontainer", "sample.txt")
         
         stream = await blob_client.download_blob()

@@ -17,6 +17,19 @@
 ---
 
 
+## 本副本的可用性与营养证据
+
+本包不含 data/food-database.json、data/food-categories.json 或 nutrition 命令。
+不能声称拥有50种食物数据库、运行测试、自动记录或完成集成。以下结构、数值和
+命令是说明性示例；使用前取得用户提供的可追溯食物记录，或查询
+[USDA FoodData Central](https://fdc.nal.usda.gov/)，记录食品ID、数据类型、日期、
+生/熟状态、可食部与单位。未知营养素保持 unknown/null，不当作0。
+
+[NIH DRI说明](https://ods.od.nih.gov/HealthInformation/nutrientrecommendations.aspx)
+区分RDA、AI、UL和食品标签DV；本页旧表混用了这些指标，不能作为个人处方。
+能量需要取决于个人条件；没有通用“2500/2000 RDA”。不得仅凭GI或单项营养素
+建议糖尿病、肾病、贫血等疾病饮食；应交由合格临床营养师处理个体情况。
+
 ## 数据源
 
 ### 主数据库
@@ -98,8 +111,8 @@
 def search_foods(criteria):
     results = []
     for food in database:
-        protein = food.nutrition_per_100g.protein_g
-        calories = food.nutrition_per_100g.calories
+        protein = food["nutrition_per_100g"]["protein_g"]
+        calories = food["nutrition_per_100g"]["calories"]
 
         # 定义阈值
         high_protein = protein >= 15  # 每100g≥15g蛋白质
@@ -108,7 +121,7 @@ def search_foods(criteria):
         if high_protein and low_calorie:
             results.append(food)
 
-    return sorted(results, key=lambda x: x.protein_g, reverse=True)
+    return sorted(results, key=lambda x: x["nutrition_per_100g"]["protein_g"], reverse=True)
 ```
 
 **返回格式**:
@@ -159,17 +172,17 @@ def compare_foods(food1, food2):
 
     # 宏量营养素差异
     for nutrient in ["calories", "protein_g", "fiber_g"]:
-        val1 = food1.nutrition_per_100g[nutrient]
-        val2 = food2.nutrition_per_100g[nutrient]
+        val1 = food1["nutrition_per_100g"][nutrient]
+        val2 = food2["nutrition_per_100g"][nutrient]
         diff = val1 - val2
-        percent = (diff / val2) * 100
+        percent = None if val2 == 0 else (diff / val2) * 100
 
         comparison[nutrient] = {
             "food1": val1,
             "food2": val2,
             "difference": diff,
             "percent_change": percent,
-            "better": "food1" if diff > 0 else "food2"
+            "higher": "equal" if diff == 0 else ("food1" if diff > 0 else "food2")
         }
 
     return comparison
@@ -203,18 +216,18 @@ def recommend_by_nutrient(nutrient, min_value=None, max_value=None):
     recommendations = []
 
     for food in database:
-        value = food.nutrition_per_100g[nutrient]
+        value = food["nutrition_per_100g"][nutrient]
 
         # 筛选符合条件
-        if min_value and value < min_value:
+        if min_value is not None and value < min_value:
             continue
-        if max_value and value > max_value:
+        if max_value is not None and value > max_value:
             continue
 
         recommendations.append({
             "food": food,
             "value": value,
-            "rda_percent": (value / RDA[nutrient]) * 100
+            "rda_percent": (value / RDA[nutrient]) * 100 if nutrient in RDA and RDA[nutrient] > 0 else None
         })
 
     # 按含量排序
@@ -335,7 +348,7 @@ def parse_food_input(text):
 def calculate_nutrition(food, portion_grams):
     nutrition = {}
 
-    for nutrient, value_per_100g in food.nutrition_per_100g.items():
+    for nutrient, value_per_100g in food["nutrition_per_100g"].items():
         # 按100g比例计算
         nutrition[nutrient] = (value_per_100g * portion_grams) / 100
 
@@ -372,13 +385,13 @@ def find_food(name):
 
     # 2. 匹配别名
     for food in database:
-        if name in food.aliases:
+        if name in food.get("aliases", []):
             return food
 
     # 3. 模糊匹配
     matches = fuzzy_search(name)
     if matches:
-        return matches[0]
+        return matches[0][0]
 
     return None
 ```
@@ -392,7 +405,7 @@ def fuzzy_search(name, max_distance=2):
 
     for food in database:
         # 计算编辑距离
-        distance = levenshtein_distance(name, food.name)
+        distance = levenshtein_distance(name, food["name"])
 
         if distance <= max_distance:
             matches.append((food, distance))
@@ -553,7 +566,7 @@ RDA = {
   "magnesium_mg": 400,
   "phosphorus_mg": 700,
   "potassium_mg": 3400,
-  "sodium_mg": 1500,  # 上限
+  "sodium_mg": 1500,  # 旧示例值；不是UL或通用上限
   "zinc_mg": 11,
   "copper_mg": 0.9,
   "manganese_mg": 2.3,
@@ -617,7 +630,7 @@ RDA_FEMALE = {
 
 **返回结果**:
 ```markdown
-✅ 早餐已记录
+说明性输出（未实际记录）
 
 **食物**: 燕麦粥(1杯) + 鸡蛋(1个) + 牛奶(250ml)
 
@@ -712,7 +725,7 @@ RDA_FEMALE = {
 ## 扩展计划
 
 ### 短期 (1-2个月)
-- ✅ 完成50种常见食物
+- 未随本包提供；不能验证50种数据已完成
 - ⏳ 扩展至100种食物
 - ⏳ 添加更多常见份量
 - ⏳ 优化搜索算法
@@ -735,8 +748,8 @@ RDA_FEMALE = {
 ## 质量保证
 
 ### 数据准确性
-- 来源: 《中国食物成分表(第6版)》+ USDA
-- 验证: 交叉验证多个来源
+- 原文声称来源: 《中国食物成分表(第6版)》+ USDA；本包无数据记录或来源ID，尚未验证
+- 建议验证: 逐项核对原始记录，不能声称已经交叉验证
 - 更新: 定期更新数据
 
 ### 功能测试
@@ -783,3 +796,5 @@ RDA_FEMALE = {
 **技能版本**: v1.0
 **最后更新**: 2026-01-06
 **维护者**: WellAlly Tech
+
+算法片段仍需调用方提供 database、食物解析、编辑距离与可信参考摄入表，不能直接运行。不要把熟燕麦粥自动映射到同重量干燕麦；体积转克需要食物密度与制备状态。烹饪保留率须按具体食物/营养素来源验证，不可统一应用60–80%。每100g的GI/GL示例缺少可利用碳水和份量定义，不用于临床判断。对照表百分比需标明分母和比较方向；数值更高不等于更健康。食物过敏/乳糜泻安全取决于配料、认证和交叉接触，标签不能保证。

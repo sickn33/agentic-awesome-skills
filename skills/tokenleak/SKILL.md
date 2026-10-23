@@ -18,7 +18,7 @@ license_source: "https://github.com/Pazificateur69/tokenleak/blob/main/LICENSE"
 
 ## Overview
 
-Every tool result an agent pulls into context is re-sent on every later call until compaction, so a 6k-token log read early in a 60-call session is paid about 55 more times. These rules make the agent let in only what the next decision needs: locate before reading, compute instead of reading data, bound command output, never re-read, batch independent calls. Over 80 A/B runs in Claude Code (Sonnet 5) they cut cost by 32% with the same 40/40 pass rate; on Haiku 4.5 they only help together with the plugin's read guard (-20%). Method and raw results are in the source repo.
+Every tool result an agent pulls into context is re-sent on every later call until compaction, so a 6k-token log read early in a 60-call session is paid about 55 more times. These rules make the agent let in only what the next decision needs: locate before reading, compute instead of reading data, bound command output, never re-read, batch independent calls. The upstream reports benchmark savings in its source repository; this AAS tree does not bundle those runs. Treat percentages as upstream workload-specific claims, not measured savings in the current task. Billing also depends on actual caching, token accounting and compaction behavior.
 
 ## When to Use This Skill
 
@@ -39,7 +39,7 @@ Every tool result an agent pulls into context is re-sent on every later call unt
 6. **Diffs over files.** `git status -s`, `git diff --stat` then `git diff -- <path>`, `git log --oneline -n 15`, `git show --stat <sha>`.
 7. **Edit, don't rewrite.** Targeted edits only. Never rewrite a whole file to change a few lines, and never paste back into chat code that is already on disk.
 8. **Narrow searches and fetches.** Scope by path and file type, cap results (`-m`, `head_limit`, `| head -n 30`, `-l` for names only). Pick fields from APIs and JSON (`--json a,b`, `jq '.items[] | {id,name}'`, `per_page`). Ask a web fetch a precise question instead of dumping the page.
-9. **Delegate wide exploration.** If an answer means opening 10+ files and you only need the conclusion, hand it to a subagent if your agent has them. Only its summary enters your context.
+9. **Scope wide exploration.** Use available subagents only when delegation is authorized by the user or governing workflow. Otherwise review directly. A summary is not proof that required files or supports were inspected; retain evidence and explicit coverage limits.
 10. **Answer lean.** Lead with the result. No step-by-step recap, no restating the diff, no closing summary of what the user can already see, no filler.
 
 ## Never save tokens by

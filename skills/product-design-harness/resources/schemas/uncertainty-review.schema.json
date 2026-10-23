@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/uncertainty-review.schema.json",
+  "title": "Product Design Harness Uncertainty Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_tier",
+    "confidence_level",
+    "risk_class",
+    "reversibility",
+    "main_uncertainty",
+    "false_confidence_risk",
+    "stale_evidence_ids",
+    "proof_bar",
+    "verdict_impact",
+    "human_owned_decision"
+  ],
+  "properties": {
+    "evidence_tier": {
+      "type": "string",
+      "enum": ["t0", "t1", "t2", "t3", "t4"]
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": ["very_low", "low", "medium", "high", "very_high"]
+    },
+    "risk_class": {
+      "type": "string",
+      "enum": ["r1", "r2", "r3", "r4"]
+    },
+    "reversibility": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "main_uncertainty": { "type": "string", "minLength": 1 },
+    "false_confidence_risk": { "type": "string" },
+    "stale_evidence_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "proof_bar": { "type": "string", "minLength": 1 },
+    "verdict_impact": {
+      "type": "string",
+      "enum": ["continue", "verify", "stop_reframe"]
+    },
+    "human_owned_decision": {
+      "type": "string",
+      "enum": ["taste", "risk", "strategy", "ethics", "meaning", "none"]
+    }
+  }
+}

@@ -1,7 +1,7 @@
 ---
 name: drizzle-orm-expert
 description: "Expert in Drizzle ORM for TypeScript — schema design, relational queries, migrations, and serverless database integration. Use when building type-safe database layers with Drizzle."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-04"
 ---
@@ -24,10 +24,10 @@ You are a production-grade Drizzle ORM expert. You help developers build type-sa
 
 ### Why Drizzle
 
-Drizzle ORM is a TypeScript-first ORM that generates zero runtime overhead. Unlike Prisma (which uses a query engine binary), Drizzle compiles to raw SQL — making it ideal for edge runtimes and serverless. Key advantages:
+Drizzle ORM provides TypeScript query builders that generate SQL at runtime. Runtime/driver compatibility and overhead depend on the selected adapter and deployment. Key properties:
 
 - **SQL-like API**: If you know SQL, you know Drizzle
-- **Zero dependencies**: Tiny bundle, works in Cloudflare Workers, Vercel Edge, Deno
+- **Adapter-specific deployment**: Verify the driver and bundle for Cloudflare Workers, edge runtimes or Deno
 - **Full type inference**: Schema → types → queries are all connected at compile time
 - **Relational Query API**: Prisma-like nested includes without N+1 problems
 
@@ -91,6 +91,8 @@ export type NewUser = InferInsertModel<typeof users>;
 export type Post = InferSelectModel<typeof posts>;
 export type NewPost = InferInsertModel<typeof posts>;
 ```
+
+The schema/relations examples use one relational-query API generation; verify it against the installed Drizzle version. db/relations.ts needs explicit imports and its exports must be included in the schema passed to drizzle. updatedAt defaultNow initializes only; it does not automatically change on updates. Driver support differs: neon-http does not support the interactive transaction callback shown below, and db.batch/prepared statements/returning are adapter-specific. Choose a supported transactional driver or a documented non-interactive batch when atomic dependent writes are required. Preview migration SQL against a backed-up target; generated SQL is not proof of safe data preservation.
 
 ## Query Patterns
 
@@ -322,6 +324,8 @@ export default async function UsersPage() {
   );
 }
 ```
+
+The minimal action is incomplete: authenticate and authorize callers, validate FormData values (which may be null or File), constrain lengths/email format and handle duplicate/errors before inserting. A TypeScript cast is not runtime validation. Never accept an application role from untrusted input.
 
 ### Server Action
 

@@ -24,13 +24,13 @@ n = symbols('n', integer=True)
 
 **Simplification and manipulation:**
 ```python
-from sympy import simplify, expand, factor, cancel
+from sympy import simplify, expand, factor, cancel, sin, cos
 simplify(sin(x)**2 + cos(x)**2)  # Returns 1
 expand((x + 1)**3)  # x**3 + 3*x**2 + 3*x + 1
 factor(x**2 - 1)    # (x - 1)*(x + 1)
 ```
 
-**For detailed basics:** See `references/core-capabilities.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 2. Calculus
 
@@ -44,7 +44,7 @@ diff(x**2*y**3, x, y)  # 6*x*y**2 (partial derivatives)
 
 **Integrals:**
 ```python
-from sympy import integrate, oo
+from sympy import integrate, oo, exp
 integrate(x**2, x)              # x**3/3 (indefinite)
 integrate(x**2, (x, 0, 1))      # 1/3 (definite)
 integrate(exp(-x), (x, 0, oo))  # 1 (improper)
@@ -52,18 +52,19 @@ integrate(exp(-x), (x, 0, oo))  # 1 (improper)
 
 **Limits and Series:**
 ```python
-from sympy import limit, series
+from sympy import limit, series, sin, exp
 limit(sin(x)/x, x, 0)  # 1
 series(exp(x), x, 0, 6)  # 1 + x + x**2/2 + x**3/6 + x**4/24 + x**5/120 + O(x**6)
 ```
 
-**For detailed calculus operations:** See `references/core-capabilities.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 3. Equation Solving
 
 **Algebraic equations:**
 ```python
-from sympy import solveset, solve, Eq
+from sympy import solveset, solve, Eq, symbols
+x = symbols("x")  # unconstrained symbol for both roots
 solveset(x**2 - 4, x)  # {-2, 2}
 solve(Eq(x**2, 4), x)  # [-2, 2]
 ```
@@ -82,7 +83,7 @@ f = symbols('f', cls=Function)
 dsolve(Derivative(f(x), x) - f(x), f(x))  # Eq(f(x), C1*exp(x))
 ```
 
-**For detailed solving methods:** See `references/core-capabilities.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 4. Matrices and Linear Algebra
 
@@ -109,14 +110,14 @@ b = Matrix([5, 6])
 x = A.solve(b)  # Solve Ax = b
 ```
 
-**For comprehensive linear algebra:** See `references/matrices-linear-algebra.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 5. Physics and Mechanics
 
 **Classical mechanics:**
 ```python
 from sympy.physics.mechanics import dynamicsymbols, LagrangesMethod
-from sympy import symbols
+from sympy import symbols, cos
 
 # Define system
 q = dynamicsymbols('q')
@@ -141,13 +142,13 @@ cross(v1, v2)  # Cross product
 
 **Quantum mechanics:**
 ```python
-from sympy.physics.quantum import Ket, Bra, Commutator
+from sympy.physics.quantum import Ket, Bra, Commutator, Operator
 psi = Ket('psi')
-A = Operator('A')
+A, B = Operator('A'), Operator('B')
 comm = Commutator(A, B).doit()
 ```
 
-**For detailed physics capabilities:** See `references/physics-mechanics.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 6. Advanced Mathematics
 
@@ -161,7 +162,7 @@ The skill includes comprehensive support for:
 - **Special Functions:** Gamma, Bessel, orthogonal polynomials, hypergeometric functions
 - **Polynomials:** Polynomial algebra, roots, factorization, Groebner bases
 
-**For detailed advanced topics:** See `references/advanced-topics.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
 ### 7. Code Generation and Output
 
@@ -190,8 +191,10 @@ from sympy import latex
 latex_str = latex(expr)  # Convert to LaTeX for documents
 ```
 
-**For comprehensive code generation:** See `references/code-generation-printing.md`
+These additional upstream reference files are not bundled; consult the official SymPy documentation for details.
 
+
+`lambdify` generates/executes code and must not receive unsanitized untrusted expressions. String parsing with sympify/parse_expr is also not a safe sandbox. Treat examples as fragments with their own imports and explicit symbol assumptions; numerical results are not proofs.
 
 ## Working with SymPy: Best Practices
 
@@ -256,23 +259,7 @@ results = f(np.arange(1000))
 
 ## Reference Files Structure
 
-This skill uses modular reference files for different capabilities:
-
-1. **`core-capabilities.md`**: Symbols, algebra, calculus, simplification, equation solving
-   - Load when: Basic symbolic computation, calculus, or solving equations
-
-2. **`matrices-linear-algebra.md`**: Matrix operations, eigenvalues, linear systems
-   - Load when: Working with matrices or linear algebra problems
-
-3. **`physics-mechanics.md`**: Classical mechanics, quantum mechanics, vectors, units
-   - Load when: Physics calculations or mechanics problems
-
-4. **`advanced-topics.md`**: Geometry, number theory, combinatorics, logic, statistics
-   - Load when: Advanced mathematical topics beyond basic algebra and calculus
-
-5. **`code-generation-printing.md`**: Lambdify, codegen, LaTeX output, printing
-   - Load when: Converting expressions to code or generating formatted output
-
+Only this detailed guide is bundled. Upstream topic-specific reference files listed in earlier versions are unavailable here.
 
 ## Common Use Case Patterns
 
@@ -428,7 +415,7 @@ from sympy import evalf, N, nsimplify
 5. **Simplification not working as expected**
    - Try different simplification functions: `simplify`, `factor`, `expand`, `trigsimp`
    - Add assumptions to symbols (e.g., `positive=True`)
-   - Use `simplify(expr, force=True)` for aggressive simplification
+   - Use explicit assumptions and targeted functions such as `refine`; forced transformations may change the domain or branch semantics
 
 
 ## Additional Resources

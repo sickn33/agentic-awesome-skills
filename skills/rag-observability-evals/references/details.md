@@ -19,8 +19,8 @@ groups:
 
       - alert: HallucinationSpike
         expr: |
-          rate(rag_hallucination_detected_total[15m])
-          / rate(rag_requests_total[15m]) > 0.10
+          sum by (route) (rate(rag_hallucination_detected_total[15m]))
+          / sum by (route) (rate(rag_requests_total[15m])) > 0.10
         for: 5m
         labels:
           severity: sev1
@@ -35,8 +35,8 @@ groups:
 
       - alert: HighFallbackRate
         expr: |
-          rate(rag_fallback_triggered_total[10m])
-          / rate(rag_requests_total[10m]) > 0.20
+          sum by (route) (rate(rag_fallback_triggered_total[10m]))
+          / sum by (route) (rate(rag_requests_total[10m])) > 0.20
         for: 10m
         labels:
           severity: sev2
@@ -51,6 +51,8 @@ groups:
           severity: sev2
 ```
 
+
+Ratio alerts must use compatible label sets and denominators representing evaluated requests, not claims divided by all requests. Add eval timestamp/coverage gauges and missing-data alerts; stale offline gauges otherwise look current. Thresholds are examples requiring route-specific calibration.
 
 ## Practical Guardrails
 

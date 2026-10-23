@@ -1,7 +1,7 @@
 ---
 name: reverse-browser-automation
 description: "Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network observation during analysis."
-risk: safe
+risk: offensive
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -9,6 +9,20 @@ date_added: "2026-08-25"
 license: "MIT"
 license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 ---
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
+
+> **Mandatory confirmation gate**
+> Before running any command that probes, exploits, changes, persists on, extracts data from, or attempts credential access against a target:
+> 1. Ask the user to state the exact target URL, IP, account, or resource.
+> 2. Ask the user to confirm written authorization and the permitted scope.
+> 3. Show the exact command(s) and explain their expected effect.
+> 4. Wait for explicit confirmation in the current conversation.
+>
+> Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
+
 # 自动化操作 (Desktop & Browser Automation)
 ## When to Use
 
@@ -104,7 +118,7 @@ agent-browser wait --load networkidle
 ### 注意事项
 - 必须执行 `agent-browser close`，否则进程泄漏
 - 操作前先 snapshot，不要猜元素引用
-- 提交表单后用 `wait --load networkidle` 等页面稳定
+- 提交后等待具体成功状态/URL/元素；持续联网页面不一定达到 networkidle
 
 ---
 
@@ -142,7 +156,7 @@ cd openreverse
 npm install
 
 # 3. 接入 Agent 宿主（Claude Code / Codex / Zed）
-npm run init:agents -- --target=all /path/to/project
+npm run init:agents -- --target=<authorized-host> /path/to/project
 
 # 4. 安装 CUA runtime（如果需要视觉驱动模式）
 npm run install:cua-runtime
@@ -199,7 +213,7 @@ npm run doctor:network
 
 ### 自举触发
 
-- 浏览器操作缺 Playwright → 自动 bootstrap
+- 浏览器操作缺 Playwright → 报告缺少工具；没有随包提供的自动 bootstrap
 - 桌面操作需要 OpenReverse → 引导用户手动安装（给出完整步骤）
 
 ### OpenReverse 手动安装引导
@@ -212,7 +226,7 @@ npm run doctor:network
 **安装步骤**：
 1. `git clone https://github.com/zhexulong/openreverse.git`
 2. `cd openreverse && npm install`
-3. `npm run init:agents -- --target=all <你的项目路径>`
+3. `npm run init:agents -- --target=<authorized-host> <你的项目路径>`
 4. 如需视觉模式：`npm run install:cua-runtime`
 5. 如需网络观察：`npm run install:mitmproxy`
 
@@ -247,3 +261,7 @@ npm run doctor:network
 - Windows desktop automation requires an OS with the matching accessibility stack.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).
+
+## Execution boundaries
+
+This is documentation only: no bootstrap, OpenReverse runtime, tool-index or RULES file is bundled. Verify pinned upstream code, installed help and actual tool capabilities before installation or host changes. Use existing authorized browser connectors when available. CAPTCHA is an access-control boundary: hand it to the user rather than bypass it. Batch submissions, payload injection, credential reads and proxy capture require the exact scope/command gate above. Debug unknown programs only in an isolated disposable environment. Capture only selected application traffic with private storage, redact HAR/screenshots and remove temporary proxy trust/configuration afterward; never install a global interception CA silently.

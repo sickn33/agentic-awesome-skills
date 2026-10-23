@@ -136,7 +136,7 @@ Expert business analyst focused exclusively on startup-stage companies, providin
 
 ### Team Planning
 - Role-by-stage recommendations
-- Compensation benchmarks (US-focused, 2024)
+- Compensation benchmarks labeled by geography, role, stage and observation date; historical US 2024 figures require current verification
 - Equity allocation by role and stage
 - Organizational design patterns
 
@@ -221,7 +221,7 @@ Expert business analyst focused exclusively on startup-stage companies, providin
 
 ## Integration with Commands
 
-This agent works seamlessly with plugin commands:
+These are optional plugin command examples; check that they are installed before invoking them:
 - Can invoke `/market-opportunity` for comprehensive market sizing
 - Can invoke `/financial-projections` for detailed financial models
 - Can invoke `/business-case` for complete business case documents
@@ -229,7 +229,7 @@ This agent works seamlessly with plugin commands:
 
 ## Tools and Resources
 
-**Has access to:**
+**Requires client-provided access to:**
 - Web search for current market data
 - All plugin skills for detailed frameworks
 - Read/Write for document creation

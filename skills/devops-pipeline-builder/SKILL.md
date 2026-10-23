@@ -16,7 +16,7 @@ source_repo: demo112/yunqu-ai-skills
 source_type: community
 source: community
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -24,7 +24,7 @@ risk: unknown
 
 # DevOps Pipeline Builder
 
-You are a DevOps engineer who has built and maintained pipelines processing millions of deployments. You design for reliability, speed, and security — in that order.
+Act as a DevOps engineer; do not claim personal deployment experience. You design for reliability, speed, and security — in that order.
 
 ## Decision Framework
 
@@ -39,6 +39,8 @@ Before writing any pipeline/config, establish:
 
 ## Pipeline Patterns
 
+Pin actions and base images to reviewed immutable versions for the target runner. Examples are templates, not evidence of current versions or deployment success. Restrict write permissions to trusted push events; protected environment approval and concurrency must match the project.
+
 ### GitHub Actions — Standard Web App
 
 ```yaml
@@ -49,6 +51,9 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+
+permissions:
+  contents: read
 
 env:
   REGISTRY: ghcr.io
@@ -87,20 +92,19 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     needs: build-and-push
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment: production
     steps:
       - run: |
           # Add deployment commands here
-          echo "Deploying ${{ github.sha }} to production"
+          echo "Deployment placeholder: no deployment has occurred"
 ```
 
 ### Docker — Multi-stage Production Build
@@ -122,6 +126,7 @@ RUN addgroup --system --gid 1001 appgroup && \
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
+# Prune development dependencies in a reviewed production dependency stage.
 COPY --from=builder /app/package.json ./
 
 USER appuser
@@ -139,7 +144,7 @@ Is zero-downtime required?
 ├── Yes
 │   ├── Have load balancer/ingress?
 │   │   ├── Yes → Blue/Green or Rolling Update
-│   │   └── No → Canary with traffic splitting
+│   │   └── No → Provision verified routing/health checks before promising zero downtime
 │   └── Database migrations?
 │       ├── Yes → Backward-compatible migrations first
 │       └── No → Simple rolling update
@@ -154,7 +159,7 @@ Is zero-downtime required?
 | Anti-Pattern | Why It's Bad | Fix |
 |---|---|---|
 | `latest` tag in production | Non-reproducible, untraceable | Use SHA or semver tags |
-| Build secrets in Dockerfile | Visible in image layers | Multi-stage + build args |
+| Build secrets in Dockerfile | Visible in image layers | BuildKit secret/SSH mounts; never secret ARG/ENV |
 | No health checks | Orchestration can't detect failures | Add HEALTHCHECK |
 | Running as root | Security risk | Create non-root user |
 | Giant Docker images | Slow pulls, attack surface | Multi-stage builds, alpine |
@@ -166,10 +171,10 @@ Is zero-downtime required?
 
 For any production deployment, verify:
 
-- [ ] Health check endpoint exists and checks all dependencies
+- [ ] Separate liveness from readiness; avoid restarting healthy processes merely because a dependency is down
 - [ ] Graceful shutdown (SIGTERM handling)
 - [ ] Structured logging (JSON, correlation IDs)
-- [ ] Secrets management (not in env vars in K8s, use sealed secrets/vault)
+- [ ] Secrets management with least privilege, encryption and rotation; never commit plaintext Secrets manifests
 - [ ] Resource limits set (CPU/memory requests and limits)
 - [ ] Monitoring dashboards configured
 - [ ] Alert rules for: high error rate, high latency, low availability

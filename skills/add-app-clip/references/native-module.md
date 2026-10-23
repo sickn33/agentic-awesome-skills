@@ -14,7 +14,7 @@ import StoreKit
 
 internal class MissingCurrentWindowSceneException: Exception {
   override var reason: String {
-    "Cannot determine the current window scene in which to present the modal for requesting a review."
+    "Cannot determine the current window scene in which to present the App Clip overlay."
   }
 }
 
@@ -43,7 +43,9 @@ public class AppClipModule: Module {
     // https://developer.apple.com/documentation/app_clips/recommending_your_app_to_app_clip_users
     AsyncFunction("prompt") {
       if #available(iOS 16, *) {
-        guard let currentScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+        guard let currentScene = UIApplication.shared.connectedScenes
+          .compactMap({ $0 as? UIWindowScene })
+          .first(where: { $0.activationState == .foregroundActive }) else {
           throw MissingCurrentWindowSceneException()
         }
 
@@ -62,7 +64,7 @@ public class AppClipModule: Module {
 import { NativeModule, requireOptionalNativeModule } from "expo";
 
 declare class AppClipModule extends NativeModule<{}> {
-  prompt(): void;
+  prompt(): Promise<void>;
   isAppClip?: boolean;
 }
 
@@ -82,7 +84,7 @@ declare global {
      */
     appClip?: {
       /** Open the SKOverlay */
-      prompt: () => void;
+      prompt: () => Promise<void>;
     };
   }
 }

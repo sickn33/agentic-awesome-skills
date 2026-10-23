@@ -3,7 +3,7 @@ name: plan-ledger-tasks-yylo
 description: Create a concise Product Development Requirement and one or more implementation-sized
   YYLO Ledger tasks when the user explicitly asks to plan or register work.
 category: project-management
-risk: safe
+risk: critical
 source: https://github.com/yylo-dev/yylo-skills
 source_repo: yylo-dev/yylo-skills
 source_type: community

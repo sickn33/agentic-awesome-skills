@@ -27,6 +27,8 @@ Secure every SaaS tool your company relies on with practical, command-driven har
 - **SaaS sprawl** — teams sign up for tools with company email and nobody tracks them.
 - **Post-incident hardening** — after phishing or credential leaks, tighten every surface.
 
+Start with authorized read-only inventory. Broad MFA/OAuth/SSO/retention/SCP changes can lock out users, destroy retained evidence or stop services. Record exact targets and existing state, validate recovery, and apply only approved changes in staged scope. Export files may contain sensitive grants/identifiers: use restrictive permissions and minimize/redact output. Before branch-protection PUT, fetch and merge existing settings rather than replacing required checks or actor restrictions with this example.
+
 ## 2. SaaS Inventory Audit
 
 ### Google Workspace — OAuth Grants
@@ -88,16 +90,15 @@ tools:
 
 ```bash
 # Enforce 2FA and find non-compliant members
-gh api -X PATCH /orgs/{ORG} -f two_factor_requirement_enabled=true
-gh api /orgs/{ORG}/members?filter=2fa_disabled --paginate --jq '.[].login'
+gh api -X PATCH /orgs/{ORG} -F two_factor_requirement_enabled=true
+gh api "/orgs/{ORG}/members?filter=2fa_disabled" --paginate --jq '.[].login'
 
 # Verify SAML SSO identities
 gh api /orgs/{ORG}/credential-authorizations --paginate \
   --jq '.[] | {login: .login, saml_name_id: .saml_name_id}'
 
-# Add IP allow list entry
-gh api -X POST /orgs/{ORG}/ip-allow-list \
-  -f allow_list_value="203.0.113.0/24" -f name="Office VPN" -F is_active=true
+# Review the org IP allow list in supported enterprise settings or GraphQL.
+# The REST /orgs/{ORG}/ip-allow-list endpoint is not supplied here.
 
 # Branch protection on main
 gh api -X PUT /repos/{ORG}/{REPO}/branches/main/protection \
@@ -132,68 +133,19 @@ gh api /orgs/{ORG}/hooks --jq '.[] | {url: .config.url, events: .events, active:
 
 ## 4. Slack Security
 
-```bash
-# Require app approval
-curl -s -X POST -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  -H "Content-Type: application/json" \
-  "https://slack.com/api/admin.apps.config.set" -d '{"app_approval_enabled": true}'
+Use the supported admin console to review app approval, session duration, retention and export permissions for the actual plan; do not invent admin Web API methods for these settings. Record current values, stage the proposed changes and verify them after authorized application. Retention changes can delete evidence and require the organization's approved policy.
 
-# Set workspace to invite-only
-curl -s -X POST -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  -H "Content-Type: application/json" \
-  "https://slack.com/api/admin.teams.settings.setDiscoverability" \
-  -d '{"team_id": "T0XXXXXXX", "discoverability": "invite_only"}'
-
-# Force re-authentication every 24 hours
-curl -s -X POST -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  -H "Content-Type: application/json" \
-  "https://slack.com/api/admin.teams.settings.setSessionDuration" \
-  -d '{"team_id": "T0XXXXXXX", "session_duration": 86400}'
-
-# Set message retention to 1 year
-curl -s -X POST -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  -H "Content-Type: application/json" \
-  "https://slack.com/api/admin.teams.settings.setRetentionPolicy" \
-  -d '{"team_id": "T0XXXXXXX", "retention_type": "all", "retention_duration": 365}'
-
-# Audit Slack Connect shared channels
-curl -s -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  "https://slack.com/api/admin.conversations.search?search_channel_types=connect" \
-  | jq '.conversations[] | {name: .name, is_ext_shared: .is_ext_shared}'
-```
-
----
+For Enterprise workspace discoverability, the supported `admin.teams.settings.setDiscoverability` method accepts team_id and one of open, invite_only, closed or unlisted; it requires an org-installed admin token with the documented scope. Always check the JSON `ok` field, not just HTTP200. Discoverability is not a substitute for access policy.
 
 ## 5. Google Workspace Hardening
 
-```bash
-# Enforce 2-Step Verification and strong passwords
-gam update org "/" settings 2sv enforced
-gam update org "/" settings password_length 14
+Use the Admin console and the installed GAM version's documented commands; the generic `gam update org ... settings` examples are not a validated GAM interface. Review and stage:
 
-# Block all third-party OAuth apps, then whitelist specific ones
-gam update org "/" settings oauth_access block_all
-gam update org "/" settings oauth_access whitelist client_id:APP_CLIENT_ID_1
-
-# Disable external Drive sharing and file transfers
-gam update org "/" settings drive sharing_outside_domain off
-gam update org "/" settings drive transfer_to_personal off
-gam update org "/" settings groups external_members off
-
-# Verify email authentication records
-dig TXT company.com | grep "v=spf1"
-dig TXT google._domainkey.company.com
-dig TXT _dmarc.company.com
-# Expected: v=DMARC1; p=reject; rua=mailto:dmarc-reports@company.com; pct=100
-
-# Mobile device management
-gam update org "/" settings mobile management advanced
-gam update org "/" settings mobile screen_lock required
-gam update org "/" settings mobile encryption required
-gam update mobile ${DEVICE_ID} action wipe   # compromised device
-```
-
----
+1. 2-Step Verification enrollment/enforcement for the intended organizational unit, with recovery access verified first.
+2. Third-party OAuth app access and explicitly trusted client IDs.
+3. External Drive sharing, transfer and group membership policies.
+4. Device management/lock/encryption requirements on managed devices. A wipe is destructive; verify exact device, ownership and approved recovery before issuing it.
+5. SPF, DKIM and DMARC records for the actual sending domain; do not enforce reject before authorized senders and reports are validated.
 
 ## 6. AWS Account Security
 
@@ -277,39 +229,9 @@ LOW — generally safe:
 
 ## 8. Admin Account Protection
 
-```bash
-# Dedicated admin account in Google Workspace
-gam create user admin-jdoe@company.com firstname "John (Admin)" lastname "Doe" \
-  password "$(openssl rand -base64 32)" org "/Admins"
-gam update user admin-jdoe@company.com admin on
+Create dedicated least-privilege admin identities through the supported identity provider. Never pass passwords as CLI arguments (including generated command substitutions); use the supported secret-manager or secure interactive provisioning path. Verify recovery before enforcing hardware-backed MFA. Maintain an authorized break-glass process with restricted credential storage, tested recovery, audited use and post-use rotation.
 
-# Require hardware security keys for the Admins OU
-gam update org "/Admins" settings 2sv security_key_only
-
-# AWS MFA enforcement policy
-cat <<'EOF' > enforce-mfa-policy.json
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Sid": "DenyUnlessMFA", "Effect": "Deny",
-    "NotAction": ["iam:CreateVirtualMFADevice","iam:EnableMFADevice",
-                  "iam:GetUser","iam:ListMFADevices","sts:GetSessionToken"],
-    "Resource": "*",
-    "Condition": {"BoolIfExists": {"aws:MultiFactorAuthPresent": "false"}}
-  }]
-}
-EOF
-aws iam create-policy --policy-name EnforceMFA --policy-document file://enforce-mfa-policy.json
-
-# Break-glass account for SSO outages
-BREAK_GLASS_PW=$(openssl rand -base64 48)
-gam create user breakglass@company.com firstname "Break" lastname "Glass" \
-  password "${BREAK_GLASS_PW}" org "/Admins" admin on
-# Store password in a sealed envelope in a physical safe
-# After every use: rotate password, re-seal, log the incident
-```
-
----
+MFA policies must account for IAM-user sessions, service roles and federated/SSO identities. A blanket deny based on a missing `aws:MultiFactorAuthPresent` key can block automation or federation; test scoped policies and recovery in a nonproduction account before attachment.
 
 ## 9. Data Loss Prevention
 
@@ -319,16 +241,13 @@ gam update org "/" settings drive sharing_outside_domain off
 gam update org "/" settings drive disable_download_print_copy_for_viewers on
 
 # GitHub — enable secret scanning and push protection org-wide
-gh api -X PATCH /orgs/{ORG} -f security_product=secret_scanning -f enablement=enable_all
-gh api -X PATCH /orgs/{ORG} -f security_product=secret_scanning_push_protection -f enablement=enable_all
+# Configure secret scanning/push protection using organization security configurations
+# in Settings > Advanced Security, reviewing repository scope and license impact.
 gh api /orgs/{ORG}/secret-scanning/alerts --paginate \
   --jq '.[] | {repo: .repository.name, secret_type: .secret_type, state: .state}'
 
-# Slack — restrict data export to org admins
-curl -s -X POST -H "Authorization: Bearer ${SLACK_ADMIN_TOKEN}" \
-  -H "Content-Type: application/json" \
-  "https://slack.com/api/admin.teams.settings.setExportRestrictions" \
-  -d '{"team_id": "T0XXXXXXX", "export_type": "org_admins_only"}'
+# Slack export permissions: use supported plan-specific admin settings.
+# No setExportRestrictions Web API method is assumed here.
 
 # AWS — block all public S3 access at account level
 aws s3control put-public-access-block --account-id "${AWS_ACCOUNT_ID}" \
@@ -347,7 +266,7 @@ SHADOW_IT_DOMAINS=("airtable.com" "notion.so" "trello.com" "asana.com"
   "monday.com" "clickup.com" "figma.com" "canva.com" "miro.com"
   "zapier.com" "dropbox.com" "box.com" "wetransfer.com")
 for domain in "${SHADOW_IT_DOMAINS[@]}"; do
-  count=$(grep -c "${domain}" /var/log/dns/query.log 2>/dev/null || echo "0")
+  count=$(grep -Fc -- "$domain" /var/log/dns/query.log) || { code=$?; [ "$code" -eq 1 ] || exit "$code"; }
   [ "${count}" -gt 0 ] && echo "DETECTED: ${domain} — ${count} queries"
 done
 ```
@@ -371,21 +290,7 @@ comm -23 <(awk '{print $2}' top_domains.txt | sort) \
 
 ### Automated Alerting
 
-```bash
-cat <<'SCRIPT' > /usr/local/bin/shadow-it-check.sh
-#!/usr/bin/env bash
-set -euo pipefail
-APPROVED="/etc/security/approved-saas-domains.txt"
-YESTERDAY=$(date -d "yesterday" +%d-%b-%Y)
-grep "${YESTERDAY}" /var/log/dns/query.log | awk '{print $4}' | sort -u > /tmp/today.txt
-NEW=$(comm -23 /tmp/today.txt <(sort "${APPROVED}"))
-[ -n "${NEW}" ] && mail -s "[ALERT] Shadow IT" security@company.com <<< "${NEW}"
-SCRIPT
-chmod +x /usr/local/bin/shadow-it-check.sh
-echo "0 8 * * * root /usr/local/bin/shadow-it-check.sh" >> /etc/cron.d/shadow-it-check
-```
-
----
+Prepare a local review report first. Validate the DNS log format, exact domain normalization, date parsing and approved inventory schema with trusted fixtures. Use a private temporary directory, not a shared predictable /tmp file. DNS queries are leads, not proof a user adopted a service. Scheduling privileged collectors and sending mail require authorization for the target host, schedule and recipient; do not append cron entries or install a root script during discovery.
 
 ## Quick Reference — Top 10 Priority Actions
 

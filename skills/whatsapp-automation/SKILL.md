@@ -27,6 +27,10 @@ Automate WhatsApp Business operations through Composio's WhatsApp toolkit via Ru
 3. If connection is not ACTIVE, follow the returned auth link to complete WhatsApp Business setup
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## Messaging boundaries
+
+Require explicit user authorization for the intended recipients/content, verify the sending business number, opt-in and applicable messaging policy. A connected account or approved template alone is not permission to contact someone. Never upload unauthorized media or publish private files to satisfy a URL field. Inspect message IDs/status after an uncertain send; do not blindly retry and duplicate messages. Live discovered schemas override static tool/parameter examples. See [current Meta pricing](https://business.whatsapp.com/products/platform-pricing).
+
 ## Core Workflows
 
 ### 1. Send a Text Message
@@ -154,7 +158,7 @@ Automate WhatsApp Business operations through Composio's WhatsApp toolkit via Ru
 - Customers must message you first to open a conversation window
 - Within 24 hours of their last message, you can send free-form messages
 - After 24 hours, only approved template messages can be sent
-- Template messages can re-open the conversation window
+- Only a new customer message opens/resets the 24-hour customer-service window; sending a template does not by itself permit free-form follow-ups.
 
 ### Phone Number Resolution
 
@@ -182,7 +186,7 @@ Automate WhatsApp Business operations through Composio's WhatsApp toolkit via Ru
 
 **Messaging Restrictions**:
 - Business-initiated messages require templates outside the 24-hour window
-- Template messages cost money per conversation
+- Delivered messages may be charged per message according to category/market and applicable free windows; check current Meta pricing before a campaign.
 - Rate limits apply per phone number and per account
 
 **Media Handling**:

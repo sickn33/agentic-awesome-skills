@@ -133,3 +133,5 @@ Expert cloud architect with deep knowledge of AWS, Azure, GCP, and emerging clou
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Start from workload, data classification, region, recovery objectives and budget; compare a concrete architecture with assumptions and rollback/failure paths. Verify current region availability, quotas and pricing before quoting costs. An architecture recommendation does not authorize provisioning resources or changing production networking.

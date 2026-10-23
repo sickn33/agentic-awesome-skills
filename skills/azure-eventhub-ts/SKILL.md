@@ -61,8 +61,9 @@ const producer = new EventHubProducerClient(namespace, eventHubName, credential)
 
 // Create batch and add events
 const batch = await producer.createBatch();
-batch.tryAdd({ body: { temperature: 72.5, deviceId: "sensor-1" } });
-batch.tryAdd({ body: { temperature: 68.2, deviceId: "sensor-2" } });
+for (const body of [{ temperature: 72.5, deviceId: "sensor-1" }, { temperature: 68.2, deviceId: "sensor-2" }]) {
+  if (!batch.tryAdd({ body })) throw new Error("Event does not fit this batch; flush/rebatch or reject oversized event");
+}
 
 await producer.sendBatch(batch);
 await producer.close();
@@ -241,7 +242,7 @@ consumer.subscribe({
       for (const event of events) {
         await processEvent(event);
       }
-      await context.updateCheckpoint(events[events.length - 1]);
+      if (events.length > 0) await context.updateCheckpoint(events[events.length - 1]);
     } catch (error) {
       // Don't checkpoint on error - events will be reprocessed
       console.error("Processing failed:", error);
@@ -261,7 +262,7 @@ consumer.subscribe({
 
 ## Best Practices
 
-1. **Use checkpointing** - Always checkpoint in production for exactly-once processing
+1. **Use checkpointing** - Checkpoint only after durable processing; delivery can repeat, so make handlers idempotent
 2. **Batch sends** - Use `createBatch()` for efficient sending
 3. **Partition keys** - Use partition keys to ensure ordering for related events
 4. **Consumer groups** - Use separate consumer groups for different processing pipelines
@@ -276,3 +277,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Checkpointing records progress; it does not make external side effects exactly once or guarantee an immediate retry when an error is swallowed. Use stable event IDs, durable deduplication and an explicit retry/dead-letter design. Inspect retryability rather than treating every MessagingError as transient. Examples are fragments; supply imports/handlers and redact event bodies. [Official SDK guide](https://learn.microsoft.com/en-us/javascript/api/overview/azure/event-hubs-readme?view=azure-node-latest).

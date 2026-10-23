@@ -48,6 +48,8 @@ This skill has two components with distinct roles:
 
 ## Prerequisites
 
+The installer, agent and scripts named below are not bundled here. Do not execute a guessed path or install an extension automatically; use an inspected, fixed upstream revision only with setup authorization. Tool availability, model IDs, costs and quotas must be checked against the actual provider before use; historical estimates below are not a billing guarantee. Respect the host/user’s chosen image tool. Generation does not authorize publishing, and supplied private images need permission for provider upload.
+
 This skill requires the banana extension to be installed:
 ```bash
 ./extensions/banana/install.sh
@@ -75,7 +77,7 @@ Each use case maps to pre-configured banana parameters:
 
 | Use Case | Aspect Ratio | Resolution | Domain Mode | Notes |
 |----------|-------------|------------|-------------|-------|
-| **OG/Social Preview** | `16:9` | `1K` | Product or UI/Web | Clean, professional, text-friendly |
+| **OG/Social Preview** | `1200:630` (crop/resize if unsupported) | `1K` | Product or UI/Web | Clean, professional, text-friendly |
 | **Blog Hero** | `16:9` | `2K` | Cinema or Editorial | Dramatic, atmospheric, editorial quality |
 | **Schema Image** | `4:3` | `1K` | Product | Clean, descriptive, schema ImageObject |
 | **Social Square** | `1:1` | `1K` | UI/Web | Platform-optimized square |
@@ -111,7 +113,7 @@ for SEO-specific preset templates.
 
 After every successful generation, guide the user on:
 
-1. **Alt text**:Write descriptive, keyword-rich alt text for the generated image
+1. **Alt text**:Write concise descriptive alt text for the image’s purpose; use empty alt for decorative images and avoid keyword stuffing for the generated image
 2. **File naming**:Rename to SEO-friendly format: `keyword-description-widthxheight.webp`
 3. **WebP conversion**:Convert to WebP for optimal page speed:
    ```bash
@@ -143,7 +145,7 @@ Image generation costs money. Be transparent:
 - Log every generation: `python3 ~/.claude/skills/seo-image-gen/scripts/cost_tracker.py log --model MODEL --resolution RES --prompt "brief"`
 - Run `cost_tracker.py summary` if user asks about usage
 
-Approximate costs (gemini-3.1-flash):
+Historical illustrative costs (verify current model/pricing first):
 - 512: ~$0.02/image
 - 1K resolution: ~$0.04/image
 - 2K resolution: ~$0.08/image
@@ -164,7 +166,7 @@ Approximate costs (gemini-3.1-flash):
 |-------|-----------|
 | MCP not configured | Run `./extensions/banana/install.sh` |
 | API key invalid | New key at https://aistudio.google.com/apikey |
-| Rate limited (429) | Wait 60s, retry. Free tier: ~10 RPM / ~500 RPD |
+| Rate limited (429) | Honor Retry-After and use bounded backoff; quota depends on the current account/model |
 | `IMAGE_SAFETY` | Rephrase prompt - see `references/prompt-engineering.md` Safety section |
 | MCP unavailable | Fall back: `python3 ~/.claude/skills/seo-image-gen/scripts/generate.py --prompt "..." --aspect-ratio "16:9"` |
 | Extension not installed | Show install instructions: `./extensions/banana/install.sh` |

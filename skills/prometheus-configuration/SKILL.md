@@ -62,6 +62,8 @@ Configure Prometheus for comprehensive metric collection, alerting, and monitori
        └─→ Long-term storage (Thanos/Cortex)
 ```
 
+Pin and inspect chart/image versions and values before installing. The Helm PVC fragment also needs a suitable StorageClass and capacity; verify rendered manifests. The Compose example lacks Alertmanager, exporters, Kubernetes API credentials/RBAC, TLS files and rule mounts referenced by the full configuration: provide those explicitly or remove unused jobs. Keep monitoring APIs private and protect labels/config responses from exposing tenant data or secrets. Bound metric label cardinality and validate rules with promtool; thresholds are illustrative, not universal SLOs. An absent error series may require a deliberate zero-fill strategy and zero traffic should not become an assumed healthy percentage.
+
 ## Installation
 
 ### Kubernetes with Helm
@@ -74,7 +76,8 @@ helm install prometheus prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --create-namespace \
   --set prometheus.prometheusSpec.retention=30d \
-  --set prometheus.prometheusSpec.storageVolumeSize=50Gi
+  --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.accessModes[0]=ReadWriteOnce \
+  --set prometheus.prometheusSpec.storageSpec.volumeClaimTemplate.spec.resources.requests.storage=50Gi
 ```
 
 ### Docker Compose
@@ -85,7 +88,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus-data:/prometheus
@@ -147,7 +150,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
-        regex: true
+        regex: "true"
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
         action: replace
         target_label: __metrics_path__
@@ -229,7 +232,7 @@ scrape_configs:
     relabel_configs:
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
         action: keep
-        regex: true
+        regex: "true"
       - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
         action: replace
         target_label: __scheme__

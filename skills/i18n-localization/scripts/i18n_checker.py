@@ -85,7 +85,8 @@ def check_locale_completeness(locale_files: list) -> dict:
                 if lang not in locales:
                     locales[lang] = {}
                 locales[lang][f.stem] = set(flatten_keys(content))
-            except:
+            except (OSError, ValueError, AttributeError, TypeError) as exc:
+                issues.append(f"[X] Invalid/unreadable locale file: {f.name} ({type(exc).__name__})")
                 continue
     
     if len(locales) < 2:
@@ -154,7 +155,8 @@ def check_hardcoded_strings(project_path: Path) -> dict:
     files_with_hardcoded = 0
     hardcoded_examples = []
     
-    for file_path in code_files[:50]:  # Limit
+    sampled_files = sorted(code_files)[:50]
+    for file_path in sampled_files:  # Explicit bounded sample
         try:
             content = file_path.read_text(encoding='utf-8', errors='ignore')
             ext = file_path.suffix
@@ -171,7 +173,7 @@ def check_hardcoded_strings(project_path: Path) -> dict:
             
             for pattern in patterns:
                 matches = re.findall(pattern, content)
-                if matches and not has_i18n:
+                if matches:
                     hardcoded_found = True
                     if len(hardcoded_examples) < 5:
                         hardcoded_examples.append(f"{file_path.name}: {str(matches[0])[:40]}...")
@@ -182,7 +184,7 @@ def check_hardcoded_strings(project_path: Path) -> dict:
         except:
             continue
     
-    passed.append(f"[OK] Analyzed {len(code_files)} code files")
+    passed.append(f"[OK] Sampled {len(sampled_files)} of {len(code_files)} discovered code files (cap 50)")
     
     if files_with_i18n > 0:
         passed.append(f"[OK] {files_with_i18n} files use i18n")
@@ -231,7 +233,7 @@ def main():
     
     print("\n" + "=" * 60)
     if critical_issues == 0:
-        print("[OK] i18n CHECK: PASSED")
+        print("[OK] No flagged issues in this heuristic sample; not a complete localization audit")
         sys.exit(0)
     else:
         print(f"[X] i18n CHECK: {critical_issues} issues found")

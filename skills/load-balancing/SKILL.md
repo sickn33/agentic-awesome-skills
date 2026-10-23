@@ -29,6 +29,8 @@ Distribute traffic across application servers for high availability, scalability
 - Enabling blue/green or canary deployments with traffic shifting.
 - Scaling horizontally behind a single entry point.
 
+Confirm the exact hosts/account, exposure, maintenance window and rollback before changes. The examples are alternatives with placeholders, not a complete production deployment. Keep stats/admin endpoints private and restrict socket access. `/health` returning a local static 200 proves only proxy liveness, not backend readiness. Trust forwarded headers only from known proxies and validate client-address handling. Plain HTTP backend hops require an explicit private-network trust model or authenticated TLS.
+
 ## Prerequisites
 
 - Two or more backend servers running the same application.
@@ -128,7 +130,7 @@ upstream app_backend {
 
 ## HAProxy Configuration
 
-### Full Production Config
+### Illustrative HAProxy Config
 
 ```
 # /etc/haproxy/haproxy.cfg
@@ -136,6 +138,7 @@ global
     log /dev/log local0
     maxconn 4096
     daemon
+    stats socket /var/run/haproxy/admin.sock mode 660 level admin
     ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256
     ssl-default-bind-options no-sslv3 no-tlsv10 no-tlsv11
     tune.ssl.default-dh-param 2048
@@ -196,7 +199,7 @@ backend ws_servers
     server ws2 10.0.3.11:8080 check inter 5s fall 3 rise 2
 
 listen stats
-    bind *:8404
+    bind 127.0.0.1:8404
     stats enable
     stats uri /stats
     stats refresh 10s

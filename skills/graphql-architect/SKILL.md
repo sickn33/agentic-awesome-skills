@@ -182,3 +182,7 @@ Expert GraphQL architect focused on building scalable, performant, and secure Gr
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+### Concrete review workflow
+
+For a schema/resolver request, first record runtime versions, caller roles, data sources and one representative operation. Map that operation through validation, resolver authorization, batching and cache keys. Test an authorized caller, a different tenant and an unauthenticated caller; measure resolver calls and latency against a baseline. Scope DataLoader caches to a request or authorization context. Return the proposed SDL/API diff, compatibility impact, measured checks and remaining gaps; capability lists above are areas to consider, not evidence of completed work.

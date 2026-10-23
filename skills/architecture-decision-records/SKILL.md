@@ -100,12 +100,11 @@ compliance for financial transactions.
 
 ### Option 2: MySQL
 - **Pros**: Very familiar to team, simple replication, large community
-- **Cons**: Weaker JSON support, no built-in full-text search (need
-  Elasticsearch), no geospatial without extensions
+- **Cons**: Compare version-specific JSON, full-text and spatial capabilities against measured requirements; MySQL includes full-text indexes and spatial features.
 
 ### Option 3: MongoDB
 - **Pros**: Flexible schema, native JSON, horizontal scaling
-- **Cons**: No ACID for multi-document transactions (at decision time),
+- **Cons**: Multi-document transactions are supported on qualifying modern deployments; assess their overhead and topology constraints,
   team has limited experience, requires schema design discipline
 
 ## Decision
@@ -116,7 +115,7 @@ We will use **PostgreSQL 15** as our primary database.
 
 PostgreSQL provides the best balance of:
 1. **ACID compliance** essential for e-commerce transactions
-2. **Built-in capabilities** (full-text search, JSONB, PostGIS) reduce
+2. **Capabilities** (built-in full-text search/JSONB plus the PostGIS extension) reduce
    infrastructure complexity
 3. **Team familiarity** with SQL databases reduces learning curve
 4. **Mature ecosystem** with excellent tooling and community support
@@ -298,11 +297,11 @@ OrderShipped { orderId, trackingNumber, timestamp }
 - Learning curve for team
 - Increased complexity vs. CRUD
 - Need to design events carefully (immutable once stored)
-- Storage growth (events never deleted)
+- Storage growth (event retention and privacy/deletion requirements need an explicit policy)
 
 ## Alternatives
 
-1. **Audit tables**: Simpler but doesn't enable temporal queries
+1. **Audit tables**: Simpler; temporal queries depend on which history and ordering are captured
 2. **CDC from existing DB**: Complex, doesn't change data model
 3. **Hybrid**: Event source only for order state changes
 
@@ -447,3 +446,5 @@ adr link 2 "Complements" 1 "Is complemented by"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+All decisions, benchmarks, dates and staffing/timelines in these templates are fictional examples, not evidence about the user's project. Mark new proposals Proposed until authorized deciders accept them. Review deployment-specific vendor capabilities before comparing options, record uncertainty, and require a rollback/reconciliation design for dual writes. Review ADR index output before replacing a hand-maintained README.

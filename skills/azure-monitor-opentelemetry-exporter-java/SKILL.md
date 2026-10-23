@@ -30,7 +30,7 @@ Export OpenTelemetry telemetry data to Azure Monitor / Application Insights.
 <dependency>
     <groupId>com.azure</groupId>
     <artifactId>azure-monitor-opentelemetry-autoconfigure</artifactId>
-    <version>LATEST</version>
+    <version>REPLACE_WITH_REVIEWED_COMPATIBLE_VERSION</version>
 </dependency>
 ```
 
@@ -39,6 +39,10 @@ Export OpenTelemetry telemetry data to Azure Monitor / Application Insights.
 ```bash
 APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=xxx;IngestionEndpoint=https://xxx.in.applicationinsights.azure.com/
 ```
+
+## Version and telemetry scope
+
+Resolve an actual compatible version from the linked official migration/package docs; placeholder versions are not buildable dependencies. Configuring exporters is not proof every application library is instrumented: verify trace/metric/log export for the pinned integration and do not initialize duplicate SDKs. Redact sensitive attributes/exceptions, use an approved telemetry destination and manage SDK shutdown/flush through the application lifecycle.
 
 ## Basic Setup with Autoconfigure (Recommended)
 

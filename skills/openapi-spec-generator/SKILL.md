@@ -13,10 +13,14 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 # OpenAPI / Swagger Specification Generator
 ## When to Use
 
-Use this skill when you need generate complete, production-ready OpenAPI 3.x and Swagger 2.0 specifications from natural language descriptions, code, or partial specs. Use this skill whenever the user mentions OpenAPI, Swagger, API spec, REST API documentation, YAML/JSON API schema, endpoint documentation, API...
+Use when extracting or drafting OpenAPI/Swagger descriptions from actual routes, models, requirements or an existing specification. State unconfirmed behavior separately rather than inventing a complete production contract.
 
 
 Generate complete, valid OpenAPI 3.x or Swagger 2.0 specifications from descriptions, code, or partial specs.
+
+## Version and completeness boundaries
+
+This tree does not bundle the named reference/security-schemes.md or common-patterns.md files. Use available inline guidance and current version-specific specification, not fabricated reference contents. Skeletons below are incomplete until every reference/security scheme is defined; never label them validated as-is. OpenAPI 3.1 nullability uses JSON Schema types/unions rather than 3.0 nullable. Do not invent status codes, auth, examples or required fields just to fill the checklist; distinguish observed contract from proposed design. Limit/disable remote reference fetching when validating untrusted specs. See [OpenAPI 3.1](https://spec.openapis.org/oas/v3.1.0.html).
 
 ## Workflow
 

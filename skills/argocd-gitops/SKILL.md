@@ -37,6 +37,8 @@ Use this skill when:
 - Git repository for manifests
 - ArgoCD CLI (optional)
 
+Pin and review an Argo CD release manifest before applying it; the moving stable URL below is illustrative. Confirm cluster context and namespace, retain bootstrap secrets outside assistant output, rotate the admin credential and configure scoped SSO/RBAC. Start with an application diff and manual sync. Automated prune deletes resources and self-heal reverts emergency edits; enable these only after an approved reconciliation/rollback policy. A Git revert is normally the durable rollback for an auto-synced app. Repository Secret examples contain placeholders, not credentials to commit. Narrow AppProject source/destination/resource permissions before production.
+
 ## Installation
 
 ```bash
@@ -342,7 +344,7 @@ argocd app get myapp
 # Sync application
 argocd app sync myapp
 
-# Force sync (ignore differences)
+# Force apply (can recreate resources; does not mean ignore differences)
 argocd app sync myapp --force
 
 # View diff

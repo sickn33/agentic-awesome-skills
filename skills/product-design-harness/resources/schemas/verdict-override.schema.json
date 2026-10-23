@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/verdict-override.schema.json",
+  "title": "Product Design Harness Verdict Override",
+  "description": "Authorizes execution despite a verify or stop_reframe verdict. An override never modifies the review-result: the review's verdict stays on record, and this artifact records who chose to execute anyway, within what scope, until when, and what voids the authorization. Validate with scripts/check_override.py, which also cross-checks the referenced review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "override_id",
+    "review_id",
+    "overridden_verdict",
+    "acknowledged_weakest_flow",
+    "authorized_scope",
+    "accountable_owner",
+    "rationale",
+    "expires_at",
+    "tripwires",
+    "renewal_requires"
+  ],
+  "properties": {
+    "override_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable identifier; any document that references the overridden review must carry it."
+    },
+    "review_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The review_id of the review-result being overridden."
+    },
+    "overridden_verdict": {
+      "type": "string",
+      "enum": ["verify", "stop_reframe"],
+      "description": "Must equal the review's combined_verdict. A continue verdict needs no override."
+    },
+    "acknowledged_weakest_flow": {
+      "type": "string",
+      "enum": ["user", "evidence", "business"],
+      "description": "Must equal the review's weakest_flow; the owner restates the gap they are accepting."
+    },
+    "authorized_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["may_do", "must_not_do"],
+      "description": "Execution scope granted despite the verdict. No may_do entry may repeat an entry from the review's must_not_do.",
+      "properties": {
+        "may_do": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1
+        },
+        "must_not_do": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1
+        },
+        "must_ask": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "minItems": 1
+        }
+      }
+    },
+    "accountable_owner": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A named person, not a team."
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why executing despite the verdict is the right call."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$",
+      "description": "Every override is time-boxed. When it lapses, the original verdict is in force again."
+    },
+    "tripwires": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "description": "Measurable conditions; any one tripping voids the override immediately."
+    },
+    "renewal_requires": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "minItems": 1,
+      "description": "Evidence a renewal review must present. Renewal is a new review, never an edit."
+    }
+  }
+}

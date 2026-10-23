@@ -50,6 +50,8 @@ Configure and manage DNS zones, records, and resolution for production infrastru
 | CAA   | Certificate Authority Authorization | `0 issue "letsencrypt.org"` |
 | PTR   | Reverse DNS lookup | `34.216.184.93.in-addr.arpa` |
 
+Confirm provider account, public/private zone ID and authoritative delegation before writes; same domain names can exist in multiple zones. Export current records and define rollback, especially MX/NS/DS changes. Cloudflare lookup must check success and exactly one expected zone, handle pagination/errors and include application/json on JSON writes. Use protected token inputs rather than exposing credentials in process/log output. Querying +dnssec requests DNSSEC data; use a validating resolver AD result or a validator such as delv for actual chain verification. Provider Terraform resource names vary by major. Email records are provider-specific examples: verify legitimate senders/alignment and reporting privacy before enforcement. Changing authoritative TTL does not shorten already cached TTLs or negative caches; DNS failover is not immediate.
+
 ## AWS Route 53
 
 ### Hosted Zone Management
@@ -291,7 +293,7 @@ dig example.com MX +short
 # Trace the full resolution path
 dig app.example.com +trace
 
-# Check DNSSEC validation
+# Request DNSSEC records (DO flag; this alone does not validate signatures)
 dig example.com +dnssec +short
 
 # Query TXT records (SPF, DKIM)
@@ -356,7 +358,7 @@ done
 | DNS changes not visible | TTL not expired on recursive resolvers | Wait for old TTL to expire; lower TTL before next change |
 | `SERVFAIL` response | DNSSEC validation failure or broken delegation | Check NS records at registrar; verify DNSSEC signatures |
 | `NXDOMAIN` for valid record | Wrong hosted zone or missing record | Verify record exists with `dig @<authoritative-ns> domain` |
-| CNAME at zone apex returns error | CNAME not allowed at zone apex per RFC | Use ALIAS (Route53) or proxied A record (Cloudflare) |
+| CNAME at zone apex returns error | CNAME not allowed at zone apex per RFC | Use a supported Route53 alias target or Cloudflare CNAME flattening; proxying an A record is not a CNAME replacement |
 | Email going to spam | Missing or broken SPF/DKIM/DMARC | Verify TXT records with `dig example.com TXT`; test at mail-tester.com |
 | Slow resolution | Recursive resolver far from authoritative NS | Use Anycast DNS providers (Cloudflare, Route53) |
 | Inconsistent results across resolvers | Partial propagation or cache poisoning | Query authoritative NS directly; check for conflicting records |

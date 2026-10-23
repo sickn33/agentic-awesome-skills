@@ -121,7 +121,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Request Title,Employee Name,Department,Course Name,Provider,Course Link,Linked Skill Gap,Reason,Cost,Currency,Duration (Hours),Start Date,Manager Approval,HR Approval,Finance Approval,Budget Line,Service Bond (Months),Enrolled in LMS,Completion Date,Certificate Received,Status,Course Request ID
-Promotion to L3,Aarav Sharma,Delivery,Advanced SQL, Udemy,https://example.com/courses/safety,GAP-2026-003,Skill gap identified in the quarterly review,98000.00,INR,2.5,2026-01-15,FALSE,FALSE,FALSE,BL-114 Travel,12,FALSE,2026-01-15,FALSE,Approved,
+Promotion to L3,Aarav Sharma,Delivery,Advanced SQL, Udemy,https://example.com/courses/safety,GAP-2026-003,Skill gap identified in the quarterly review,98000.00,INR,2.5,2026-01-15,FALSE,FALSE,FALSE,BL-114 Travel,12,FALSE,,FALSE,Requested,
 ```
 
 ```sql
@@ -137,14 +137,14 @@ CREATE TABLE course_upskilling_requests (
   cost NUMERIC(14,2) NOT NULL,
   currency VARCHAR(255),
   duration_hours NUMERIC NOT NULL,
-  start_date DATE NOT NULL,
+  start_date DATE,
   manager_approval BOOLEAN NOT NULL,
   hr_approval BOOLEAN NOT NULL,
   finance_approval BOOLEAN NOT NULL,
   budget_line VARCHAR(255),
-  service_bond_months NUMERIC NOT NULL,
+  service_bond_months INTEGER CHECK (service_bond_months >= 0),
   enrolled_in_lms BOOLEAN NOT NULL,
-  completion_date DATE NOT NULL,
+  completion_date DATE,
   certificate_received BOOLEAN NOT NULL,
   status VARCHAR(100) NOT NULL,
   course_request_id SERIAL PRIMARY KEY,
@@ -187,10 +187,13 @@ CREATE INDEX idx_course_upskilling_requests_status ON course_upskilling_requests
   },
   "required": [
       "Cost",
+      "Currency",
+      "Manager Approval",
+      "HR Approval",
+      "Finance Approval",
+      "Enrolled in LMS",
+      "Certificate Received",
       "Duration (Hours)",
-      "Start Date",
-      "Service Bond (Months)",
-      "Completion Date",
       "Status"
   ]
 }
@@ -225,6 +228,8 @@ CREATE INDEX idx_course_upskilling_requests_status ON course_upskilling_requests
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Completion Date is absent until actual completion; Start Date may be unknown at request stage and a service bond may be not applicable. A FALSE approval means unapproved, so the sample is Requested, not Approved. Define which approvals apply and record decision-maker, timestamp and decision reference; checkboxes alone do not prove authorization or enforce routing. Service bonds are optional contract terms needing qualified legal/HR review, not a default12-month obligation. Never enrol/pay from this template alone.
 
 ## Field Reference
 

@@ -18,7 +18,7 @@ Automate Stripe payment operations through Composio's Stripe toolkit via Rube MC
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The MCP endpoint still requires the provider connection and authorization flow returned by the installed Rube service; adding a URL alone does not grant account access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `stripe`
@@ -106,7 +106,7 @@ Automate Stripe payment operations through Composio's Stripe toolkit via Rube MC
 - `days_until_due`: Days until invoice is due
 
 **Pitfalls**:
-- Invoices auto-finalize by default; use `auto_advance: false` for draft invoices
+- Set `auto_advance` explicitly according to the intended invoice workflow; do not assume tool/API defaults. Draft preparation does not authorize finalization, payment or email delivery.
 
 ### 5. Manage Products and Prices
 
@@ -210,3 +210,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Establish the exact connected account, test/live mode, amount in the currency-specific minor unit, currency, customer and intended financial effect. A search match does not establish authorization or prevent races. Use the provider-supported idempotency key for writes, preserve it across retries and reconcile unknown outcomes before issuing another charge/refund/subscription change. Never log full payment/customer data or infer settlement from a tool invocation.

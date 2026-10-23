@@ -84,7 +84,8 @@ exports.config = {
     user: process.env.LT_USERNAME,
     key: process.env.LT_ACCESS_KEY,
     hostname: 'hub.lambdatest.com',
-    port: 80,
+    protocol: 'https',
+    port: 443,
     path: '/wd/hub',
     services: ['lambdatest'],
     capabilities: [{
@@ -125,7 +126,11 @@ await browser.waitUntil(
 | Parallel | Set `maxInstances: 5` in config |
 | Screenshot | `await browser.saveScreenshot('./screenshot.png')` |
 
+Cloud runs transmit test inputs, network/video captures and credentials to a third party and can spend quota. Use authorized test accounts/data, verify current endpoint/service capabilities and disable captures containing private data unless approved. Match module format and installed WDIO major; do not infer API support from this sketch.
+
 ## Reference Files
+
+The reference paths below are upstream topics, not bundled files in this AAS tree:
 
 | File | When to Read |
 |------|-------------|

@@ -40,16 +40,16 @@ Use this skill when:
 - Understanding of TCP/IP, ports, and protocols
 - Network diagram showing required traffic flows
 
+Before writes, inventory the active firewall manager, IPv4/IPv6 policy, container/CNI rules and current management path. Preserve a verified rules backup, out-of-band console and tested rollback. Use an atomic reviewed ruleset where supported; do not flush NAT/mangle or an entire ruleset on a shared host. Examples are alternative local-lab sketches, not a script to run sequentially.
+
 ## iptables
 
 ### Basic Setup with Default Deny
 
 ```bash
-# Flush existing rules
-iptables -F
-iptables -X
-iptables -t nat -F
-iptables -t mangle -F
+# Preserve existing rules; do not flush production/container-managed tables.
+# Build and validate a complete candidate offline, including management allows,
+# before atomically applying it within authorized scope.
 
 # Default policies - deny all inbound, allow outbound
 iptables -P INPUT DROP
@@ -86,8 +86,9 @@ ip6tables-save > /etc/iptables/rules.v6
 
 ```bash
 # SYN flood protection
-iptables -A INPUT -p tcp --syn -m limit --limit 25/s --limit-burst 50 -j ACCEPT
-iptables -A INPUT -p tcp --syn -j DROP
+# Do not add a global SYN ACCEPT: it bypasses service/source restrictions.
+# Apply a measured, service-specific limiter before the matching service allow;
+# a host firewall cannot guarantee mitigation of upstream bandwidth exhaustion.
 
 # Limit new connections per source IP
 iptables -A INPUT -p tcp --dport 80 -m connlimit --connlimit-above 50 -j REJECT
@@ -127,10 +128,12 @@ iptables -I INPUT 1 -s 203.0.113.50 -j DROP
 # Enable UFW with default deny
 ufw default deny incoming
 ufw default allow outgoing
-ufw enable
 
 # Allow SSH from management network
 ufw allow from 10.0.100.0/24 to any port 22 proto tcp
+
+# Enable only after confirming this allow matches the actual management path.
+ufw enable
 
 # Allow HTTP/HTTPS
 ufw allow 80/tcp
@@ -162,7 +165,9 @@ ufw app info 'Nginx Full'
 
 ## nftables
 
-### Complete Server Configuration
+### Illustrative Server Configuration
+
+Not a complete router/container policy: the forward chain drops traffic, so the DNAT example below also needs narrowly scoped forwarding and IP forwarding configuration. Validate required ICMPv6 control/error traffic for the actual network before use. The late SYN limiter does not affect earlier accepted HTTP/HTTPS packets.
 
 ```bash
 #!/usr/sbin/nft -f
@@ -193,7 +198,7 @@ table inet filter {
 
     # ICMP and ICMPv6
     ip protocol icmp icmp type { echo-request, destination-unreachable, time-exceeded } limit rate 10/second accept
-    ip6 nexthdr icmpv6 icmpv6 type { echo-request, nd-neighbor-solicit, nd-router-advert } accept
+    ip6 nexthdr icmpv6 icmpv6 type { echo-request, nd-neighbor-solicit, nd-neighbor-advert, nd-router-solicit, nd-router-advert, destination-unreachable, packet-too-big, time-exceeded, parameter-problem } accept
 
     # SSH from management only
     tcp dport 22 ip saddr $MGMT accept
@@ -439,8 +444,8 @@ fi
 |---------|-------|----------|
 | Locked out of SSH | Rule order or default deny applied before allow | Use out-of-band console access; add SSH allow rule first |
 | Rules lost after reboot | Rules not persisted | Install `iptables-persistent` or save to `/etc/nftables.conf` |
-| Docker bypasses iptables | Docker modifies iptables FORWARD chain | Use `DOCKER-USER` chain for custom rules; set `"iptables": false` in daemon.json |
-| nftables and iptables conflict | Both running simultaneously | Migrate fully to nftables; remove iptables packages |
+| Docker bypasses iptables | Docker modifies iptables FORWARD chain | Review the Docker backend and supported policy chain; disabling Docker firewall management can break isolation/NAT and is not a routine fix |
+| nftables and iptables conflict | Both running simultaneously | Identify whether iptables uses the nft backend and which manager owns rules; do not remove packages or flush blindly |
 | AWS SG rule limit reached | Max 60 inbound rules per SG | Use prefix lists or consolidate CIDR ranges |
 | Legitimate traffic blocked | Rule ordering issue | Place more specific allow rules before general deny rules |
 

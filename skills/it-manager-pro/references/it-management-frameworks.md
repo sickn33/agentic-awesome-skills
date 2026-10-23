@@ -19,14 +19,14 @@ Este guia consolida as melhores práticas mundiais para alinhar a TI aos objetiv
 
 ## 4. Gestão de Projetos e Agilidade
 
-* **PMBOK (Project Management Body of Knowledge):** Guia para gestão de projetos tradicionais (Cascata/Predictive).
+* **PMBOK (Project Management Body of Knowledge):** Guia de gestão de projetos que pode apoiar abordagens preditivas, adaptativas e híbridas; selecionar conforme o contexto.
 * **PRINCE2 (Projects in Controlled Environments):** Método estruturado focado no controle, organização e justificativa contínua do negócio.
 * **Scrum / Agile:** Frameworks para gestão de projetos complexos com foco em entregas rápidas, iterativas e adaptativas.
 * **SAFe (Scaled Agile Framework):** Metodologia para escalar práticas ágeis em organizações de grande porte.
 
 ## 5. Segurança e Riscos
 
-* **NIST Cybersecurity Framework:** Diretrizes para reduzir riscos de segurança cibernética em infraestruturas críticas e governamentais.
+* **NIST Cybersecurity Framework:** Estrutura para gerir riscos de cibersegurança em organizações de diferentes setores, tamanhos e maturidades.
 * **ISO/IEC 27001:** Padrão internacional para implementação de um Sistema de Gestão de Segurança da Informação (SGSI).
 * **FAIR (Factor Analysis of Information Risk):** Modelo quantitativo para entender e medir o risco de informação em termos financeiros.
 

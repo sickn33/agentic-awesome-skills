@@ -15,6 +15,8 @@ Master essential security scanning tools for network discovery, vulnerability as
 4. **Compliance Reports** - CIS benchmarks, PCI-DSS, HIPAA checks
 
 
+Examples require installed, version-verified tools and an exact authorized target inventory, rate/time window, exclusion list and stop conditions. Private sample IPs are not permission. NSE vuln/default categories and active crawlers can modify state or disrupt services; inspect selected scripts/rules first. Wireless deauthentication disrupts clients and requires explicit channel/BSSID/client scope; restore monitor-mode changes afterwards. Use a separate test-browser profile for proxy CAs and remove the test trust afterwards. Keep scanner reports private; findings and compliance checks are evidence, not proof of complete coverage or regulatory compliance. No distro package names, subscriptions or CLI wrappers are guaranteed installed.
+
 ## Core Workflow
 
 ### Phase 1: Network Scanning Tools
@@ -30,7 +32,7 @@ nmap -sL 192.168.1.0/24              # List scan (DNS resolution)
 nmap -Pn 192.168.1.100               # Skip host discovery
 
 # Port scanning techniques
-nmap -sS 192.168.1.100               # TCP SYN scan (stealth)
+nmap -sS 192.168.1.100               # TCP SYN scan (detectable; usually requires privileges)
 nmap -sT 192.168.1.100               # TCP connect scan
 nmap -sU 192.168.1.100               # UDP scan
 nmap -sA 192.168.1.100               # ACK scan (firewall detection)
@@ -54,7 +56,7 @@ nmap -T5 192.168.1.100               # Insane (fastest)
 # NSE Scripts
 nmap --script=vuln 192.168.1.100     # Vulnerability scripts
 nmap --script=http-enum 192.168.1.100  # Web enumeration
-nmap --script=smb-vuln* 192.168.1.100  # SMB vulnerabilities
+nmap --script='smb-vuln*' 192.168.1.100  # SMB vulnerabilities
 nmap --script=default 192.168.1.100  # Default script set
 
 # Output formats
@@ -77,7 +79,7 @@ masscan -p80,443,8080 192.168.1.0/24 --rate=10000
 masscan -p0-65535 192.168.1.0/24 --rate=5000
 
 # Large-scale scanning
-masscan 0.0.0.0/0 -p443 --rate=100000 --excludefile exclude.txt
+masscan -iL approved-targets.txt -p443 --rate=100 --excludefile exclude.txt # Exact authorized inventory, never an Internet-wide default
 
 # Output formats
 masscan -p80 192.168.1.0/24 -oG results.gnmap
@@ -102,10 +104,7 @@ sudo systemctl start nessusd
 # https://localhost:8834
 
 # Command-line (nessuscli)
-nessuscli scan --create --name "Internal Scan" --targets 192.168.1.0/24
-nessuscli scan --list
-nessuscli scan --launch <scan_id>
-nessuscli report --format pdf --output report.pdf <scan_id>
+# nessuscli manages scanner configuration; use the licensed UI or documented scan API for creation/launch/reporting.
 ```
 
 Key Nessus features:
@@ -191,17 +190,18 @@ zap-cli active-scan https://target.com
 zap-cli report -o report.html -f html
 
 # API mode
-zap.sh -daemon -port 8080 -config api.key=<your_key>
+# Load the API key from a private, reviewed ZAP config file; never place it in argv.
+zap.sh -daemon -host 127.0.0.1 -port 8080 -configfile /private/path/zap.properties
 ```
 
 ZAP automation:
 ```bash
 # Docker-based scanning
-docker run -t owasp/zap2docker-stable zap-full-scan.py \
+docker run -t ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
   -t https://target.com -r report.html
 
-# Baseline scan (passive only)
-docker run -t owasp/zap2docker-stable zap-baseline.py \
+# Baseline uses an active spider plus passive analysis; it still sends requests and can trigger side effects.
+docker run -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
   -t https://target.com -r report.html
 ```
 
@@ -300,7 +300,8 @@ clamscan -r -v /path/to/scan
 clamscan -r --move=/quarantine /path/to/scan
 
 # Remove infected files
-clamscan -r --remove /path/to/scan
+# Do not auto-delete detections; quarantine only with explicit authorization after preserving original evidence.
+clamscan -r /path/to/scan
 
 # Scan specific file types
 clamscan -r --include='\.exe$|\.dll$' /path/to/scan
@@ -348,7 +349,7 @@ pip install prowler
 prowler aws
 
 # Specific checks
-prowler aws -c iam s3 ec2
+prowler aws --services iam s3 ec2
 
 # Compliance framework
 prowler aws --compliance cis_aws
@@ -478,7 +479,7 @@ Generate professional reports:
 
 ```bash
 # Nmap XML to HTML
-xsltproc nmap-output.xml -o report.html
+xsltproc --nonet -o report.html /reviewed/local/nmap.xsl nmap-output.xml
 
 # OpenVAS report export
 gvm-cli socket --xml '<get_reports report_id="<id>" format_id="<pdf_format>"/>'
@@ -540,7 +541,7 @@ gvm-cli socket --xml '<get_reports report_id="<id>" format_id="<pdf_format>"/>'
 ### Slow Scan Performance
 
 **Solutions:**
-1. Increase timing: `nmap -T4` or `-T5`
+1. Tune timing only within the agreed rate/window; reduce scope before increasing load
 2. Reduce port range: `--top-ports 100`
 3. Use Masscan for initial discovery
 4. Disable DNS resolution: `-n`

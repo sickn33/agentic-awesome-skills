@@ -85,6 +85,10 @@ BlobClient blobClient = new BlobClientBuilder()
     .buildClient();
 ```
 
+## Storage and bearer-token scope
+
+Verify the account/container/key and current SDK signatures before adapting these independent snippets. Overwrite, snapshot deletion, metadata/header replacement and cross-account copies require exact-target authority and concurrency conditions where needed. Bound in-memory downloads; prefer streaming for large blobs. A SAS is a bearer credential: authorize the object and caller, minimize permission/expiry, use HTTPS, avoid logs and prefer user-delegation SAS where applicable. `generateSas` needs the appropriate signing credential; DefaultAzureCredential alone does not make that method account-key signing. Check copy completion status and failures rather than assuming waiting guarantees success.
+
 ## Core Patterns
 
 ### Create Container
@@ -130,8 +134,9 @@ import com.azure.storage.blob.specialized.BlockBlobClient;
 
 BlockBlobClient blockBlobClient = blobClient.getBlockBlobClient();
 
-try (ByteArrayInputStream dataStream = new ByteArrayInputStream(data.getBytes())) {
-    blockBlobClient.upload(dataStream, data.length());
+byte[] utf8 = data.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+try (ByteArrayInputStream dataStream = new ByteArrayInputStream(utf8)) {
+    blockBlobClient.upload(dataStream, utf8.length);
 }
 ```
 

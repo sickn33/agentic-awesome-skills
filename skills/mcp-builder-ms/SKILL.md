@@ -17,6 +17,8 @@ Create MCP (Model Context Protocol) servers that enable LLMs to interact with ex
 
 ---
 
+The emoji-named implementation/evaluation guides below are not bundled in this tree. Resolve official SDK documentation rather than claiming those guides or scripts were read. Endpoint/service counts are examples and require current verification. stdio is a transport: its server can still make network requests. Tool annotations are hints, not authorization controls. Enforce tenant/identity checks, least privilege, input/output limits, timeouts and redacted errors in server code; remote services need the protocol’s supported authentication and request-origin protections. Never log protocol messages to stdout on stdio.
+
 ## Microsoft MCP Ecosystem
 
 Microsoft provides extensive MCP infrastructure for Azure and Foundry services. Understanding this ecosystem helps you decide whether to build custom servers or leverage existing ones.
@@ -104,7 +106,7 @@ Key pages to review:
 | Transport | Use Case | Characteristics |
 |-----------|----------|-----------------|
 | **Streamable HTTP** | Remote servers, multi-tenant, Agent Service | Stateless, scalable, requires auth |
-| **stdio** | Local servers, desktop apps | Simple, single-user, no network |
+| **stdio** | Local servers, desktop apps | Simple local process transport; server may access networks |
 
 **Load framework documentation:**
 

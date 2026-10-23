@@ -75,6 +75,8 @@ resource "aws_subnet" "private" {
 
 ## Security & Compliance
 
+Use sensitive inputs through an approved secret channel where needed; sensitive = true redacts normal display but does not encrypt state or plan files. Secure backend access, locking, encryption and plan artifacts. Do not read Secrets Manager data into Terraform and assume the value cannot enter state. Use supported ephemeral/write-only arguments only where the selected Terraform/provider version implements them.
+
 ### Essential Security Checks
 
 ```bash
@@ -86,7 +88,7 @@ checkov -d .
 ### Common Issues to Avoid
 
 ❌ **Don't:**
-- Store secrets in variables
+- Hardcode secrets or assume sensitive variables keep values out of state
 - Use default VPC
 - Skip encryption
 - Open security groups to 0.0.0.0/0

@@ -33,7 +33,7 @@ Odoo has a built-in testing framework based on Python's `unittest`. This skill h
 # tests/test_hospital_patient.py
 from odoo.tests.common import TransactionCase
 from odoo.tests import tagged
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 
 @tagged('post_install', '-at_install')
 class TestHospitalPatient(TransactionCase):
@@ -65,7 +65,7 @@ class TestHospitalPatient(TransactionCase):
     def test_access_denied_for_other_user(self):
         # Test security rules by running as a different user
         other_user = self.env.ref('base.user_demo')
-        with self.assertRaises(Exception):
+        with self.assertRaises(AccessError):
             self.Patient.with_user(other_user).create({'name': 'Test'})
 ```
 
@@ -96,8 +96,8 @@ from odoo.tests import tagged
 class TestPatientController(HttpCase):
 
     def test_patient_page_authenticated(self):
-        # Authenticate as a user, not with hardcoded password
-        self.authenticate(self.env.user.login, self.env.user.login)
+        # Use an explicitly created synthetic fixture with a known test-only password.
+        self.authenticate("patient_test_user", "test-only-fixture-password")
         resp = self.url_open('/hospital/patients')
         self.assertEqual(resp.status_code, 200)
 
@@ -112,10 +112,10 @@ class TestPatientController(HttpCase):
 - ✅ **Do:** Use `setUpClass()` with `cls.env` instead of `setUp()` — it is dramatically faster for large test suites.
 - ✅ **Do:** Use `@tagged('post_install', '-at_install')` to run tests after all modules are installed.
 - ✅ **Do:** Test both the happy path and error conditions (`ValidationError`, `AccessError`, `UserError`).
-- ✅ **Do:** Use `self.with_user(user)` to test access control without calling `sudo()`.
+- ✅ **Do:** Use `recordset.with_user(user)` to test access control without `sudo()`; a TransactionCase instance is not the model recordset.
 - ❌ **Don't:** Use a production database for tests — always use a dedicated test database.
 - ❌ **Don't:** Rely on test execution order — each `TransactionCase` test is rolled back in isolation.
-- ❌ **Don't:** Hardcode passwords in `HttpCase.authenticate()` — use `self.env.user.login` or a fixture user.
+- ❌ **Don't:** Assume a user’s password equals their login. Create isolated fixture users with explicit test-only credentials and required groups/ACLs; never use real account passwords.
 
 ## Limitations
 

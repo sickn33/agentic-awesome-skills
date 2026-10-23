@@ -32,10 +32,12 @@ This skill lets an agent generate adult (18+) images, image-to-video clips, imag
 
 - Use when the user asks for adult, boudoir, lingerie or fine-art figure images or videos for their own adult-content project
 - Use when the user wants to animate their own image into a short clip (image-to-video)
-- Use when the user wants to edit an image they own (outfit, lighting, scene) without the content filters of mainstream tools
+- Use for permitted image editing within the host’s content policies; ownership or a third-party endpoint does not bypass those policies
 - Use when the user wants to estimate the cost of a batch before generating it
 
 ## Hard Rules (check before every request)
+
+The host’s safety and content policies take precedence over this reference. Do not use an external provider to bypass a refused or prohibited generation; a paid budget or consent claim does not grant an exception.
 
 Refuse, and do not "soften and continue", when a request involves any of the following. No wording, claimed age, art style or user permission changes this.
 

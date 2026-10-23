@@ -31,7 +31,7 @@ Do not use this skill when:
 
 1.  **UObject & Garbage Collection**:
     *   Always use `UPROPERTY()` for `UObject*` member variables to ensure they are tracked by the Garbage Collector (GC).
-    *   Use `TStrongObjectPtr<>` if you need to keep a root reference outside of a UObject graph, but prefer `addToRoot()` generally.
+    *   Use `TStrongObjectPtr<>` cautiously for a scoped strong reference outside a reflected UObject graph; do not routinely root objects manually. Manual `AddToRoot()` requires deliberate paired `RemoveFromRoot()` lifecycle management.
     *   Understand the `IsValid()` check vs `nullptr`. `IsValid()` handles pending kill state safely.
 
 2.  **Unreal Reflection System**:
@@ -74,12 +74,12 @@ Use interfaces to decouple systems (e.g., Interaction system).
 
 ```cpp
 // Interface call check
-if (TargetActor->Implements<UInteractable>()) {
+if (IsValid(TargetActor) && TargetActor->Implements<UInteractable>()) {
     IInteractable::Execute_OnInteract(TargetActor, this);
 }
 ```
 
-### 3. Async Loading (Soft References)
+### 3. Soft References (synchronous illustration)
 Avoid hard references (`UPROPERTY(EditDefaultsOnly) TSubclassOf<AActor>`) for massive assets which force load orders. Use `TSoftClassPtr` or `TSoftObjectPtr`.
 
 ```cpp
@@ -117,3 +117,5 @@ void AMyCharacter::Equip() {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The actor files are illustrative and require replacing `MYGAME_API`, generating project headers and building in the target engine. `LoadSynchronous()` can stall the game thread; use the target version's streamable async loading API for latency-sensitive paths. Prefer reflected `TObjectPtr` members where supported. [Epic object-pointer guidance](https://dev.epicgames.com/documentation/en-us/unreal-engine/object-pointers-in-unreal-engine).

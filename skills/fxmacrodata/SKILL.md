@@ -32,7 +32,7 @@ This skill covers discovering indicator slugs, pulling release history, reading 
 - Base URL: `https://api.fxmacrodata.com/v1`
 - Authentication is optional. If the user has a key, read it from the `FXMACRODATA_API_KEY` environment variable and send it in the `X-API-Key` header. Never put the key in the URL or print it in output.
 - Without a key:
-  - USD indicators, the USD release calendar, the USD data catalogue and USD COT data work.
+  - USD indicators, the USD release calendar and USD COT data work. Catalogue discovery is described separately below; verify live access rules before concluding another currency requires a key.
   - USD announcement data is delayed by 15 minutes. Each response includes a `freemium_delay` object with the cutoff time and `withheld_count`, the number of releases newer than the cutoff.
   - History is limited to the most recent 90 days. The `freemium_window` object shows the applied cutoff date, and `requested_start_date` in the response shows the start date actually used.
 - Every other currency, `/forex`, `/rate_differentials` and `/commodities` need a key. Without one they return HTTP 401 with `"code": "api_key_required"`. That means the data exists but needs a subscription; do not report it as missing.
@@ -196,7 +196,7 @@ FXMacroData also runs a hosted MCP server at `https://fxmacrodata.com/mcp` (Stre
 
 ## Limitations
 
-- Without a key, only USD data is returned, with a 15-minute release delay and 90 days of history. A request for older data is clipped to the last 90 days rather than rejected, so check `requested_start_date` and `freemium_window`.
+- Without a key, time-series data is limited to USD (catalogue discovery may include other currencies), with a 15-minute release delay and 90 days of history. A request for older data is clipped to the last 90 days rather than rejected, so check `requested_start_date` and `freemium_window`.
 - All timestamps are UTC (Unix seconds or ISO 8601 with offset). Calendar times are scheduled times and can move; check `release_date_confirmed`.
 - FX rates are daily official reference rates, not live dealing quotes.
 - COT data is weekly and covers only the contracts listed above.

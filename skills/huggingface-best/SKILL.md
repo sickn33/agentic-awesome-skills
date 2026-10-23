@@ -37,7 +37,7 @@ When a device is specified, extract its available memory (unified RAM for Apple 
 - **fp16 max params (B)** ≈ memory (GB) ÷ 2
 - **Q4 max params (B)** ≈ memory (GB) × 2
 
-Examples: 16GB → 8B fp16 / 32B Q4 — 24GB VRAM → 12B fp16 / 48B Q4 — 8GB → 4B fp16 / 16B Q4
+These are raw-weight upper bounds, not fit guarantees. Reserve memory for the OS, quantization metadata, unquantized tensors, runtime buffers, activations and KV cache; verify the exact model, backend, context length and concurrency before saying it fits.
 
 ---
 
@@ -83,7 +83,7 @@ hf models info org/model1 --json | jq '{safetensors, tags, cardData}'
 Extract from each response:
 - **Parameters**: `safetensors.total` → convert to B (e.g., 7_241_748_480 → "7.2B")
 - **License**: from model card tags (look for `license:apache-2.0`, `license:mit`, etc.)
-- If `safetensors` is absent, parse size from the model name (look for "7b", "8b", "13b", "70b", "72b", etc.)
+- If safetensors metadata is absent, inspect the model card/configuration. A number in the model name is an unverified hint; label parameter count unknown until confirmed.
 
 ---
 
@@ -96,7 +96,7 @@ Extract from each response:
 
 **If no device was mentioned:** skip all size filtering — just rank by benchmark score.
 
-Then: rank by benchmark score (descending), keep top 5-8 models.
+Then compare scores only within the same benchmark revision, metric direction and evaluation setup; do not collapse incompatible benchmarks into a universal ranking. Keep 5–8 relevant candidates and report missing data.
 
 Include proprietary models (GPT-4, Claude, Gemini) if they appear on leaderboards, but flag them as "API only / not self-hostable". If the user explicitly asked for local/open models only, exclude them.
 
@@ -133,7 +133,7 @@ If they say yes, ask whether they'd prefer to:
 
 - **Leaderboard not found**: skip, note "leaderboard unavailable" in output
 - **Model missing from hub_repo_details**: fall back to parsing size from model name
-- **No benchmarks found for task**: use the curated fallback table above, or try `hub_repo_search` with `filters=["<task>"]` sorted by `trendingScore`
+- **No benchmarks found for task**: no curated fallback is bundled; inspect available search tool schemas and try `hub_repo_search` with `filters=["<task>"]` sorted by `trendingScore`
 - **All leaderboards fail**: fall back to `hub_repo_search` for popular models tagged with the task, note that results are by popularity rather than benchmark score
 
 ## Limitations

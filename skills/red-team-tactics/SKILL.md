@@ -28,9 +28,9 @@ date_added: "2026-02-27"
 
 ---
 
-## 1. MITRE ATT&CK Phases
+## 1. ATT&CK-aligned tactic overview
 
-### Attack Lifecycle
+### Illustrative assessment flow (not a mandatory ordered ATT&CK lifecycle)
 
 ```
 RECONNAISSANCE → INITIAL ACCESS → EXECUTION → PERSISTENCE
@@ -113,6 +113,8 @@ LATERAL MOVEMENT → COLLECTION → C2 → EXFILTRATION → IMPACT
 | Cron jobs | Writable scripts |
 
 ---
+
+Persistence, credential access, lateral movement, phishing and exfiltration need technique-specific written scope and owned synthetic targets/data. Retain defender evidence: never clear real security logs or hide activity outside the agreed exercise. Define cleanup and incident stop/notification paths before any active action; a framework category does not authorize an attack.
 
 ## 5. Defense Evasion Principles
 

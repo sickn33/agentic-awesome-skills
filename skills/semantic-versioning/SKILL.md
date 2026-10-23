@@ -22,6 +22,8 @@ metadata:
 
 Automate version management and changelog generation following SemVer principles.
 
+Follow the target repository’s release workflow and protected-branch rules before any commit/tag/publish. These configurations are alternatives, not permission to bypass a PR-only branch. A version bump does not authorize registry or GitHub publication. Derive breaking changes from public API compatibility, not commit type alone; refactor/docs release rules are configurable. Version scripts below support only plain numeric MAJOR.MINOR.PATCH and simple metadata files; use a SemVer-aware library for prereleases/builds and verify exact file changes before committing. Do not delete or move published tags to resolve duplicates.
+
 ## Prerequisites
 
 - Git repository with commit history
@@ -365,7 +367,7 @@ import subprocess
 def get_current_version():
     with open('setup.py', 'r') as f:
         content = f.read()
-        match = re.search(r"version=['\"] ([^'\"]+)['\"]", content)
+        match = re.search(r"version\s*=\s*['\"]" + r"([^'\"]+)['\"]", content)
         return match.group(1) if match else None
 
 def bump_version(current, bump_type):
@@ -397,9 +399,9 @@ if __name__ == '__main__':
     print(f'Bumping version: {current} → {new}')
     update_version(current, new)
     
-    subprocess.run(['git', 'add', 'setup.py'])
-    subprocess.run(['git', 'commit', '-m', f'chore: bump version to {new}'])
-    subprocess.run(['git', 'tag', '-a', f'v{new}', '-m', f'Version {new}'])
+    subprocess.run(['git', 'add', 'setup.py'], check=True)
+    subprocess.run(['git', 'commit', '-m', f'chore: bump version to {new}'], check=True)
+    subprocess.run(['git', 'tag', '-a', f'v{new}', '-m', f'Version {new}'], check=True)
 ```
 
 

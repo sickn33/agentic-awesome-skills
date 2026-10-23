@@ -71,6 +71,10 @@ The `--statistics` output helps compare debug info quality across compiler versi
 - **Debugging debuggers**: Identify malformed DWARF causing debugger issues
 - **DWARF tool development**: Validate parser output against known-good binaries
 
+# Supporting references
+
+The `reference/readelf.md`, `reference/dwarfdump.md` and `reference/coding.md` paths below are not bundled in this single-file catalog copy. Use an existing reviewed upstream installation or the official tool/specification documentation; do not claim these references were loaded. Verify installed tool flags against [LLVM documentation](https://llvm.org/docs/CommandGuide/llvm-dwarfdump.html). Treat binaries as untrusted parser input: use patched tools, bounded resources and an isolated directory; reading debug information does not require executing the binary.
+
 # Parsing DWARF Debug Information
 ## readelf
 ELF files can be parsed via the `readelf` command ({baseDir}/reference/readelf.md). Use this for general ELF information, but prefer `dwarfdump` for DWARF-specific parsing.

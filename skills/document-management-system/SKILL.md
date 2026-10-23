@@ -134,7 +134,7 @@ CREATE TABLE document_management_system (
   uploaded_by VARCHAR(255),
   upload_date DATE NOT NULL,
   signature_required BOOLEAN NOT NULL,
-  signed_date DATE NOT NULL,
+  signed_date DATE,
   version VARCHAR(255),
   storage_link TEXT,
   confidentiality VARCHAR(100) NOT NULL,
@@ -161,7 +161,7 @@ CREATE INDEX idx_document_management_system_status ON document_management_system
       "Uploaded By": { "type": "string" },
       "Upload Date": { "type": "string", "format": "date" },
       "Signature Required": { "type": "boolean" },
-      "Signed Date": { "type": "string", "format": "date" },
+      "Signed Date": { "type": ["string", "null"], "format": "date" },
       "Version": { "type": "string" },
       "Storage Link": { "type": "string", "format": "uri" },
       "Confidentiality": { "type": "string" },
@@ -171,7 +171,7 @@ CREATE INDEX idx_document_management_system_status ON document_management_system
   "required": [
       "Document Type",
       "Upload Date",
-      "Signed Date",
+      "Signature Required",
       "Confidentiality",
       "Status"
   ]
@@ -313,7 +313,7 @@ We have the same policy in six folders with different names.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

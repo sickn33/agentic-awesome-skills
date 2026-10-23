@@ -1,7 +1,7 @@
 ---
 name: azure-monitor-query-java
 description: Azure Monitor Query SDK for Java. Execute Kusto queries against Log Analytics workspaces and query metrics from Azure resources.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -385,7 +385,7 @@ try {
     LogsQueryResult result = logsClient.queryWorkspace(workspaceId, query, timeInterval);
     
     // Check partial failure
-    if (result.getStatus() == LogsQueryResultStatus.PARTIAL_FAILURE) {
+    if (result.getError() != null) {
         System.err.println("Partial failure: " + result.getError().getMessage());
     }
 } catch (HttpResponseException e) {
@@ -401,7 +401,7 @@ try {
 3. **Limit result size** — Use `top` or `take` in Kusto queries
 4. **Use projections** — Select only needed columns with `project`
 5. **Check query status** — Handle PARTIAL_FAILURE results gracefully
-6. **Cache results** — Metrics don't change frequently; cache when appropriate
+6. **Cache deliberately** — Define freshness and tenant/access-scoped cache keys; metrics may update or arrive late
 7. **Migrate to new packages** — Plan migration to `azure-monitor-query-logs` and `azure-monitor-query-metrics`
 
 ## Reference Links
@@ -422,3 +422,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These are historical snippets for the deprecated combined package; migrated packages use different namespaces/types. Verify the exact pinned SDK API and imports, credential authority/audience for sovereign clouds, table availability and valid metric/aggregation combinations. Single-query errors and batch statuses are different interfaces; partial results are incomplete, not successful evidence. Bound query timespans, data export and scan cost; a returned row limit does not necessarily reduce scanning work. Do not log raw health/tenant/person data or service errors.

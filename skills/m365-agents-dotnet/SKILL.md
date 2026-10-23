@@ -33,6 +33,8 @@ dotnet add package Microsoft.Agents.CopilotStudio.Client
 dotnet add package Microsoft.Identity.Client.Extensions.Msal
 ```
 
+Use placeholders only in committed configuration; supply real secrets through protected providers. The development bypass below must remain loopback-only, never a publicly reachable unauthenticated endpoint. Validate channel/service URLs rather than trusting arbitrary inbound ServiceUrl values. Reuse the MSAL client across requests for meaningful token caching; its reconstruction in the minimal handler loses the in-memory cache. Interactive login belongs in a user-facing native/dev context, not unattended server requests. SampleConnectionSettings and complete project imports are application prerequisites; the inline fragments are not a full buildable project.
+
 ## Configuration (appsettings.json)
 
 ```json
@@ -175,7 +177,7 @@ public sealed class MyAgent : AgentApplication
 
         var endOfConversation = Activity.CreateEndOfConversationActivity();
         endOfConversation.Code = EndOfConversationCodes.Error;
-        endOfConversation.Text = exception.Message;
+        endOfConversation.Text = "An internal error occurred. Please try again."; // Log details privately with redaction
         await turnContext.SendActivityAsync(endOfConversation, ct);
     }
 }

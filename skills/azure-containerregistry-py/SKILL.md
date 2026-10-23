@@ -27,6 +27,7 @@ AZURE_CONTAINERREGISTRY_ENDPOINT=https://<registry-name>.azurecr.io
 ### Entra ID (Recommended)
 
 ```python
+import os
 from azure.containerregistry import ContainerRegistryClient
 from azure.identity import DefaultAzureCredential
 
@@ -213,6 +214,8 @@ async def list_repos():
 ```
 
 ## Clean Up Old Images
+
+Do not execute deletion directly from age or missing tags alone: untagged digests can still be deployed or referenced by multi-architecture manifests. Inventory dependencies and current workloads, present the exact candidate digests and obtain deletion authorization with a retention/recovery policy. Use a dry-run candidate report before the mutating loop below.
 
 ```python
 from datetime import datetime, timedelta, timezone

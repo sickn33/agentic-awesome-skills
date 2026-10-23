@@ -89,9 +89,9 @@ function List({ items }: { items: Item[] }) {
   return items.map(item => <Row key={item.id} item={item} onClick={handleClick} />);
 }
 
-// ✅ After – stable handler; Row only re-renders when its own item changes
+// ✅ After – stable handler; memo can skip parent-driven re-renders when props compare equal; state/context can still re-render Row
 const Row = memo(({ item, onClick }: RowProps) => (
-  <li onClick={() => onClick(item.id)}>{item.name}</li>
+  <li><button type="button" onClick={() => onClick(item.id)}>{item.name}</button></li>
 ));
 
 function List({ items }: { items: Item[] }) {

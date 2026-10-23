@@ -13,7 +13,7 @@ license_source: https://github.com/neondatabase/agent-skills/blob/main/LICENSE
 # Neon Serverless Postgres
 ## When to Use
 
-Use this skill when you need guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK. Use when users ask about...
+Use this skill when you need guides and best practices for working with Neon Serverless Postgres. Covers setup, connection methods, branching, autoscaling, scale-to-zero, read replicas, connection pooling, Neon Auth, and the Neon CLI, MCP server, REST API, TypeScript SDK, and Python SDK. Use for concrete Neon database or tooling questions.
 
 
 Guide the user through any Neon-related task: setup, connections, branching, and advanced features. Deliver a working Neon connection, a completed feature configuration, or a specific answer from the official Neon docs.
@@ -64,7 +64,7 @@ Before starting setup, inspect the user's codebase and environment:
 
 ### Self-Driving Setup With Neon's CLI or MCP Server
 
-Offer to inspect existing connected Neon projects or create new ones using the Neon CLI or MCP server. If neither is set up yet, run init with the `--agent` flag. Use `npx -y` to skip the package install prompt. Auth is handled automatically. If the user is not logged in, it opens their browser for OAuth and waits for completion before proceeding.
+Offer to inspect existing connected Neon projects or create new ones using the Neon CLI or MCP server. If neither is set up, first explain installation, API-key creation and host configuration changes and obtain authorization for that scope. Review a pinned CLI release and its current help before using the `--agent` flag. Auth is handled automatically. If the user is not logged in, it opens their browser for OAuth and waits for completion before proceeding.
 
 ```bash
 npx -y neon@latest init --agent <agent-name>
@@ -90,7 +90,7 @@ Use MCP server or CLI to list organizations and projects. Let the user select an
 
 **2. Get Connection String**
 
-Use MCP server or CLI to get the connection string. Store it in `.env` as `DATABASE_URL`. Read the file first before modifying to avoid overwriting existing values.
+Use MCP server or CLI to get the connection string. Store it in a private, gitignored `.env` as `DATABASE_URL`, preserving existing keys. Inspect key names without printing credential values to chat/logs. Use a secret manager for deployment.
 
 **3. Pick Connection Method & Driver**
 
@@ -125,10 +125,10 @@ Link: https://neon.com/docs/connect/choose-connection.md
 
 ### Recommended: Drizzle + the right driver for your runtime
 
-Always pair Neon with an ORM such as **Drizzle** for easy schema management and migrations. Pick the driver based on how the runtime treats your code:
+Optionally pair Neon with an ORM such as **Drizzle** for easy schema management and migrations. Pick the driver based on how the runtime treats your code:
 
 - **Long-running or shared-runtime environments → node-postgres (`pg`).** Neon Functions, and any host where the function runtime is shared across requests / runs on fluid compute (e.g. **Vercel** with Fluid compute), keep a module-scope process alive across many requests. Open a `pg` pool **once at module scope** and reuse it across requests.
-- **Fully isolated serverless (Lambda-style) → Neon's serverless driver (`@neondatabase/serverless`).** Hosts like **Netlify** spin up a fresh, isolated instance per request, so a persistent TCP pool can't be reused; the serverless driver queries over HTTP and is built for this.
+- **Fully isolated serverless (Lambda-style) → Neon's serverless driver (`@neondatabase/serverless`).** Do not assume a host destroys every instance per request; check reuse and concurrency for the actual deployment. the serverless driver queries over HTTP and is built for this.
 
 **Neon Functions / Vercel / fluid compute — Drizzle + node-postgres:**
 
@@ -249,7 +249,7 @@ export default defineConfig({
       ttl: "7d", // non-prod branches auto-expire (max 30d)
       postgres: {
         computeSettings: {
-          autoscalingLimitMinCu: 0.25, // scale to zero
+          autoscalingLimitMinCu: 0.25, // active compute floor; suspension is configured separately
           autoscalingLimitMaxCu: 1, // keep dev/preview cheap
           suspendTimeout: "5m",
         },
@@ -289,7 +289,7 @@ Use this when the user is planning isolated environments, schema migration testi
 Key points:
 
 - Branches are instant, copy-on-write clones (no full data copy).
-- Each branch has its own compute endpoint.
+- Branches may have attached compute endpoints; inspect the actual branch and endpoint state rather than assuming each branch already has one.
 - Use the neon CLI or MCP server to create, inspect, and compare branches.
 
 Link: https://neon.com/docs/introduction/branching.md
@@ -382,3 +382,5 @@ Link: https://neon.com/docs/guides/logical-replication-guide.md
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Commands that install integrations, create branches or reconcile configuration mutate local/remote state and may incur cost. Read-only status/plan precedes an authorized apply; branch clones may contain production personal data, so prefer schema-only or sanitized fixtures for previews. This bundle contains no CLI implementation or companion `neon` skill. Product APIs, host behavior and examples must be checked against the linked current docs before use; documentation retrieval may fail and must not be reported as verification.

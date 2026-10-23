@@ -212,6 +212,8 @@ Use @verification-before-completion to verify changes
     /--------   /          \ Unit Tests (70%)
   /------------```
 
+The 70/20/10 pyramid and coverage percentages are illustrative planning heuristics, not universal pass thresholds. Choose tests from actual failure risks and repository policy. Use isolated accounts/data, bound load tests and avoid production side effects; remote browser captures and paid runners need their actual scope. A code-review phase does not grant approval/merge authority.
+
 ## Quality Gates Checklist
 
 - [ ] Unit test coverage > 80%

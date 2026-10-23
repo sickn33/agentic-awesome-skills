@@ -75,6 +75,8 @@ Or chain with other tools:
 cat draft.md | unslop --stdin --deterministic | pbcopy   # macOS: copy clean text to clipboard
 ```
 
+Never redirect output into the input path: shell redirection truncates it before the tool reads it. Keep separate output and check the CLI exit status before comparing or replacing files. Pin the CLI version/configuration for reproducibility.
+
 ### Step 3: Integrate into Commit Hooks or CI
 
 Add to a pre-commit hook or CI step to enforce quality gates on any generated content before it ships:
@@ -82,9 +84,9 @@ Add to a pre-commit hook or CI step to enforce quality gates on any generated co
 ```bash
 # In .git/hooks/pre-commit or a CI script
 CONTENT=$(cat docs/changelog.md)
-CLEANED=$(echo "$CONTENT" | unslop --stdin --deterministic)
+CLEANED=$(printf '%s\n' "$CONTENT" | unslop --stdin --deterministic) || exit 1
 if [ "$CONTENT" != "$CLEANED" ]; then
-  echo "Changelog contains AI writing patterns. Run: cat docs/changelog.md | unslop --stdin --deterministic > docs/changelog.md"
+  echo "Review cleanup separately: unslop --stdin --deterministic < docs/changelog.md > docs/changelog.clean.md"
   exit 1
 fi
 ```
@@ -101,7 +103,8 @@ cat blog-post-draft.md | unslop --stdin --deterministic > blog-post-final.md
 
 ```bash
 # Write content, pipe through unslop, write result back
-cat README.md | unslop --stdin > README.clean.md && mv README.clean.md README.md
+unslop --stdin --deterministic < README.md > README.clean.md
+# Review the diff before explicitly replacing README.md; preserve the original.
 ```
 
 ### Example 3: Validate Before Submitting a PR
@@ -110,7 +113,7 @@ cat README.md | unslop --stdin > README.clean.md && mv README.clean.md README.md
 # Check if any generated docs need cleanup
 for f in docs/*.md; do
   ORIGINAL=$(cat "$f")
-  CLEANED=$(echo "$ORIGINAL" | unslop --stdin --deterministic)
+  CLEANED=$(printf '%s\n' "$ORIGINAL" | unslop --stdin --deterministic) || exit 1
   [ "$ORIGINAL" != "$CLEANED" ] && echo "Needs cleanup: $f"
 done
 ```

@@ -92,7 +92,7 @@ Use the framework's native testing - Jest, pytest, Vitest, etc.
 - Standard assertions
 - Coverage requirements
 
-**This is the baseline. Non-negotiable.**
+Coverage goals are project-specific and must be approved;100% code coverage does not mean all behaviors are tested.
 
 ### Layer 2: WJTTC Expert (Stress + Edge Cases)
 The championship layer that catches what industry tests miss:
@@ -139,7 +139,7 @@ For any test suite under review, classify the last 30 days of CI failures into t
 | Bucket | Meaning | Action |
 |--------|---------|--------|
 | **Real bug** | Red corresponded to an actual code defect that was fixed by a code change | ✓ Signal worked |
-| **Flake** | Red was timing/network/concurrency noise; passed on rerun with no code change | ✗ Test design defect |
+| **Flake** | Failure suspected to be nondeterministic; rerun success alone does not distinguish a flaky test from a real intermittent product defect | ✗ Test design defect |
 | **Infra** | Red was missing secret, runner image change, dep upstream — not the code under test | ✗ Workflow design defect |
 
 ### Signal Integrity Score
@@ -164,7 +164,7 @@ SI = (Real bugs) / (Real bugs + Flakes + Infra) × 100
 - **Network-dependent tests in main suite** — mock at the boundary or route to integration tier.
 - **Concurrency tests without explicit ordering** — use deterministic schedulers.
 - **OS scheduler-dependent timing** — replace with statistical (P95 over N) or relative (vs same-run baseline) assertions.
-- **Secret-dependent steps that fail when missing** — grey-skip, don't fail.
+- **Secret-dependent steps** — skip only explicitly optional checks; required deployment/security gates must fail closed or remain blocked when prerequisites are absent.
 
 ### The Inverse Rule
 
@@ -172,7 +172,7 @@ SI = (Real bugs) / (Real bugs + Flakes + Infra) × 100
 
 ### When the Conversation Is the Real Gate
 
-Automated CI is supporting infrastructure. **The human + AI conversational audit — noticing patterns, tracing root causes, fixing systems — is the actual quality gate.** Flaky CI wastes the conversation's bandwidth. Signal Integrity exists to keep CI worthy of the conversation it serves.
+Automated CI is supporting infrastructure. **Human review complements the project's mandatory automated gates; conversation cannot replace required CI or protected approval.** Flaky CI wastes the conversation's bandwidth. Signal Integrity exists to keep CI worthy of the conversation it serves.
 
 ## When to Use This Skill
 
@@ -302,7 +302,7 @@ Pass rate maps to the canonical FAF tier system (the same tiers FAF uses everywh
 | 100% | Trophy | ✪ | Perfect — Gold Code |
 | 99% | Gold | ★ | Exceptional |
 | 95% | Silver | ◆ | Top tier |
-| 85% | Bronze | ◇ | Production ready |
+| 85% | Bronze | ◇ | Rubric label only; release readiness unestablished |
 | 70% | Green | ● | Solid foundation |
 | 55% | Yellow | ● | Needs improvement |
 | 1% | Red | ○ | Major work needed |
@@ -353,3 +353,5 @@ This skill is the **builder**: it plans and generates. It does **not** run the s
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+WJTTC/GOLD/Championship labels and percentage thresholds are this author's rubric, not an industry certification. Report numerator/denominator, skipped/unrun tests, coverage type and critical failures; never promote readiness solely from pass rate. SI is undefined when no failures occur and does not measure missed defects. Investigate rerun-only passes before classifying them as noise; do not automatically disable performance/security gates or block all unrelated merges from a heuristic score. No FAF tools, hooks or tester skills are bundled here; installing receipts is a separate authorized project change.

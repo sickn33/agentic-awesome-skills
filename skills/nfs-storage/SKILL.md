@@ -58,12 +58,14 @@ rpcinfo -p | grep nfs
 
 ### Export Configuration (/etc/exports)
 
-```bash
+These are export-file entries, not shell commands. Limit clients and exports explicitly; root_squash is the safer baseline, not a substitute for client trust or authentication.
+
+```text
 # /etc/exports
 # Syntax: <directory> <client-spec>(options)
 
 # Share /data to a specific subnet with read-write access
-/data 10.0.0.0/24(rw,sync,no_subtree_check,no_root_squash)
+/data 10.0.0.0/24(rw,sync,no_subtree_check,root_squash)
 
 # Share /shared read-only to everyone
 /shared *(ro,sync,no_subtree_check)
@@ -77,7 +79,7 @@ rpcinfo -p | grep nfs
 
 # NFSv4 pseudo-root export (recommended for NFSv4)
 /srv/nfs 10.0.0.0/24(rw,sync,fsid=0,crossmnt,no_subtree_check)
-/srv/nfs/data 10.0.0.0/24(rw,sync,no_subtree_check,no_root_squash)
+/srv/nfs/data 10.0.0.0/24(rw,sync,no_subtree_check,root_squash)
 /srv/nfs/shared 10.0.0.0/24(ro,sync,no_subtree_check)
 ```
 
@@ -161,7 +163,9 @@ umount /mnt/data
 
 ### Persistent Mounts via /etc/fstab
 
-```bash
+These entries belong in fstab, not a shell.
+
+```text
 # /etc/fstab entries for NFS
 
 # Basic NFSv4 mount
@@ -173,8 +177,8 @@ nfs-server.example.com:/data  /mnt/data  nfs4  hard,intr,rsize=1048576,wsize=104
 # Read-only mount
 nfs-server.example.com:/shared  /mnt/shared  nfs4  ro,_netdev  0  0
 
-# Mount with specific UID/GID mapping (useful for containers)
-nfs-server.example.com:/data  /mnt/data  nfs4  defaults,_netdev,uid=1000,gid=1000  0  0
+# NFS identity mapping is configured through consistent server/client identities
+# or supported NFSv4 idmapping/Kerberos, not generic uid=/gid= mount options.
 ```
 
 ```bash
@@ -191,7 +195,7 @@ mount --fake -a -v
 |---|---|
 | `hard` | Retry NFS requests indefinitely (recommended for data integrity) |
 | `soft` | Return error after `retrans` retries (risk of data corruption) |
-| `intr` | Allow interruption of hard-mounted NFS requests |
+| `intr` | Historical option, ignored by modern Linux kernels; do not rely on it for interruption |
 | `rsize=1048576` | Read buffer size in bytes (1 MB, max for NFSv4) |
 | `wsize=1048576` | Write buffer size in bytes (1 MB) |
 | `timeo=600` | Timeout in tenths of a second (60 seconds) |
@@ -239,6 +243,8 @@ ls /mnt/nfs/data    # Triggers auto-mount
 systemctl status autofs
 automount -v    # Verbose debugging mode (foreground)
 ```
+
+Before mutable exports, firewall/fstab changes, remounts or benchmarks, confirm host/path/client scope, preserve config and validate access/recovery. The dd/fio examples create/delete data and generate load: use an empty dedicated scratch export and unique file names, verify capacity, never run against user data. Kerberos is mentioned but not fully configured here; consult target distro guidance. See [Linux NFS mount semantics](https://man7.org/linux/man-pages/man5/nfs.5.html).
 
 ## Performance Tuning
 

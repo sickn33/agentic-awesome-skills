@@ -1,6 +1,6 @@
 ---
 name: assay
-description: "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Deterministic, no API key, no network."
+description: "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Local browser checks without an LLM API key."
 category: testing
 risk: safe
 source: "https://github.com/awss1i/assay"
@@ -18,7 +18,7 @@ license_source: "https://github.com/awss1i/assay/blob/main/LICENSE"
 
 ## Overview
 
-A page you have just written has no tests yet. `assay` serves the page locally, opens it in a real Chromium browser through Playwright, finds every control on it, uses all of them, and reports where the page contradicts itself. There are no tests to write, no LLM, no API key, and no network. The same page gives the same result every time.
+A page you have just written has no tests yet. `assay` serves the page locally, opens it in a real Chromium browser through Playwright, finds every control on it, uses all of them, and reports where the page contradicts itself. There is no LLM API key requirement. Browser behavior can vary with application state, timing, browser version and network dependencies; repeated results are evidence only for the tested environment.
 
 Use this skill after you create or change a web page, to run assay on that page and report the one line it prints. The skill reports the result and does not change code because of it unless you ask.
 
@@ -49,7 +49,7 @@ Point assay at the page itself and ask for the one-line summary.
 assay <the page you changed> --one-line
 ```
 
-Point it at a file such as `todo.html` or `dist/index.html`. A folder also works and opens the `index.html` inside it. The page is often a folder or two above the file you edited, so a change to a script or stylesheet still means running assay on the page that loads it. assay needs no key, network, or configuration. A small page takes seconds, and a busy one can take a minute or more.
+Point it at a file such as `todo.html` or `dist/index.html`. A folder also works and opens the `index.html` inside it. The page is often a folder or two above the file you edited, so a change to a script or stylesheet still means running assay on the page that loads it. assay needs no LLM API key; initial browser installation and page dependencies may use the network. A small page takes seconds, and a busy one can take a minute or more.
 
 ### Step 3: Report the one line assay printed, verbatim
 
@@ -134,7 +134,7 @@ Say that assay did not run, name the page, and quote the message. Do not report 
 
 ## Security & Safety Notes
 
-- assay runs locally, needs no API key, and makes no network calls of its own. It serves the folder over loopback rather than opening the file directly.
+- assay runs locally, needs no API key, and does not itself require an LLM API call. It serves the folder over loopback rather than opening the file directly.
 - assay drives every control it finds in the browser, so if the page is wired to a live backend, a click can trigger that backend. Point assay at a local page or a local build, not at a production URL.
 - assay is read-only toward your code. It does not edit your files and writes nothing to disk unless you pass `--report` to save an HTML report.
 - assay will not run a project's build or install steps, because installing dependencies runs their setup scripts and this is a tool for checking code nobody has read yet.
@@ -160,3 +160,5 @@ Say that assay did not run, name the page, and quote the message. Do not report 
 - [assay on GitHub](https://github.com/awss1i/assay) holds the source, the Python API, and the HTML report.
 - [assay-ui on PyPI](https://pypi.org/project/assay-ui/) is the package that `pip install assay-ui` installs.
 - [assay usage and flags](https://github.com/awss1i/assay/blob/main/docs/usage.md) documents the full command-line flags and the report output.
+
+Use a reviewed pinned assay/browser installation. Serving a page on loopback does not sandbox its scripts: controls may send mail, charge accounts or mutate remote backends. Run against authorized test accounts with isolated data and controlled network access. Report which controls actually ran and any untested browser states rather than claiming every possible path was exercised.

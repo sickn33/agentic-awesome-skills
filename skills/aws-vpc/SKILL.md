@@ -34,11 +34,13 @@ Design and manage Virtual Private Cloud networking for production AWS environmen
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `ec2:*` (or scoped to VPC-related actions)
+- IAM permissions scoped to the needed VPC actions/resources and approved account/region
 - CIDR range planning completed (avoid overlaps with on-premises or other VPCs)
 - For VPC peering: access to both VPCs (same or different accounts)
 
 ## Network Architecture
+
+Diagram address counts are total addresses; AWS reserves five per subnet, so a /24 normally has251 assignable addresses. Confirm account/region, AZ availability, nonoverlapping CIDRs, routing and approved cost before creation. CLI examples create twoAZs; the Terraform example creates three. Inspect existing resources and plan rollback rather than rerunning non-idempotent create commands. VPC/subnet tags do not enforce isolation: explicitly associate data subnets with local-only route tables and verify no inherited default route. New security groups allow all outbound by default; scope egress to actual dependencies.
 
 ```
 VPC (10.0.0.0/16) - 65,536 IPs
@@ -236,13 +238,18 @@ aws ec2 create-vpc-endpoint \
   --service-name com.amazonaws.us-east-1.dynamodb \
   --route-table-ids $PRIV_RT_A $PRIV_RT_B
 
+# Create a dedicated endpoint SG: app must reach endpoint443, not app-SG8080 ingress.
+ENDPOINT_SG=$(aws ec2 create-security-group --group-name secrets-endpoint-sg \
+  --description "Secrets Manager endpoint TLS" --vpc-id "$VPC_ID" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --group-id "$ENDPOINT_SG" --protocol tcp --port 443 --source-group "$APP_SG"
+
 # Interface endpoint for Secrets Manager (ENI-based, has hourly cost)
 aws ec2 create-vpc-endpoint \
   --vpc-id $VPC_ID \
   --vpc-endpoint-type Interface \
   --service-name com.amazonaws.us-east-1.secretsmanager \
   --subnet-ids $PRIV_SUB_A $PRIV_SUB_B \
-  --security-group-ids $APP_SG \
+  --security-group-ids "$ENDPOINT_SG" \
   --private-dns-enabled \
   --tag-specifications 'ResourceType=vpc-endpoint,Tags=[{Key=Name,Value=secretsmanager-endpoint}]'
 ```
@@ -348,16 +355,17 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "nat" {
-  count  = 2
+  count  = 3
   domain = "vpc"
   tags   = { Name = "nat-eip-${count.index}" }
 }
 
 resource "aws_nat_gateway" "main" {
-  count         = 2
+  count         = 3
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
   tags          = { Name = "nat-${count.index}" }
+  depends_on    = [aws_internet_gateway.main]
 }
 
 resource "aws_route_table" "public" {
@@ -376,7 +384,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_route_table" "private" {
-  count  = 2
+  count  = 3
   vpc_id = aws_vpc.main.id
   route {
     cidr_block     = "0.0.0.0/0"
@@ -386,7 +394,7 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route_table_association" "private" {
-  count          = 2
+  count          = 3
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
@@ -406,6 +414,8 @@ resource "aws_flow_log" "main" {
   max_aggregation_interval = 60
 }
 ```
+
+The Terraform fragment also needs provider constraints, `aws_availability_zones`/`aws_region` data sources, flow-log bucket policy/retention and explicit isolated data route associations; it is not a standalone module. An S3 gateway endpoint has no endpoint hourly fee, but storage/request/transfer charges can still apply. Peering is non-transitive and needs explicit accepter account/region credentials, security rules and DNS options; it does not permit using a peer’s NAT/IGW. More NAT gateways can reduce cross-AZ traffic but increase hourly cost: evaluate both instead of claiming automatic savings.
 
 ## Troubleshooting
 

@@ -168,6 +168,8 @@ async def batch_inference_flow(input_file: str, output_file: str, model: str, ba
         results = await process_batch(batch, model)
         all_results.extend(results)
 
+    # A full implementation reserves the output/checkpoint before any billed calls;
+    # late file creation can otherwise fail after the whole batch has been charged.
     with open(output_file, "x", encoding="utf-8") as f:
         for result in all_results:
             f.write(json.dumps(result) + "\n")

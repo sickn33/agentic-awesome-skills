@@ -13,7 +13,7 @@ license_source: https://github.com/MohamedAbdallah-14/unslop/blob/main/LICENSE
 # Unslop Humanize
 ## When to Use
 
-Use this skill when you need humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL, path, command, and heading exactly. Two modes: --deterministic (fast, regex-based, no API) and LLM (default, calls Claude for...
+Use this skill when you need humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL, path, command, and heading exactly. Use the deterministic or optional LLM workflow described below, subject to the implementation availability check.
 
 
 ## Purpose
@@ -52,7 +52,7 @@ humanize doc.md                                         # optional LLM polish on
 
 ## Process
 
-The scripts live in a `scripts/` directory adjacent to this SKILL.md.
+This catalog tree does not bundle `scripts/` or the referenced implementation trace. The commands below describe the upstream implementation, not an installed helper. If the sibling is absent, do not run `python3 -m scripts` from an arbitrary directory; use a separately inspected upstream installation or edit the requested prose directly. Do not claim its backup, validation or restoration behavior occurred without observing it.
 
 Common layouts:
 - Full repo: `unslop/SKILL.md` + `unslop/scripts/`
@@ -69,6 +69,8 @@ Steps:
 4. On final failure: report errors, restore original, exit 2.
 5. On success: report path of humanized file and `.original.md` backup, exit 0.
 6. Return result to user.
+
+Before using LLM mode, confirm authorization to send the file contents to the selected external service. Filenames alone cannot detect embedded secrets or confidential prose: inspect and redact sensitive material locally, and protect backups and audit reports. Preserve substantive uncertainty, legal conditions and distinct list requirements; stylistic “tightening” must never delete meaning or make factual claims more certain. Review the diff before replacing the source.
 
 ## Humanization Rules
 

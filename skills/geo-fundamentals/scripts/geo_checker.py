@@ -117,7 +117,7 @@ def check_page(file_path: Path) -> dict:
             if 'Organization' in content or 'Person' in content:
                 passed.append("Entity schema present")
     else:
-        issues.append("No JSON-LD structured data (AI engines prefer structured content)")
+        issues.append("No JSON-LD marker in source (advisory; not a platform requirement)")
     
     # 2. Heading Structure
     h1_count = len(re.findall(r'<h1[^>]*>', content, re.I))
@@ -155,7 +155,7 @@ def check_page(file_path: Path) -> dict:
     faq_patterns = [r'<details', r'faq', r'frequently.?asked', r'"FAQPage"']
     has_faq = any(re.search(p, content, re.I) for p in faq_patterns)
     if has_faq:
-        passed.append("FAQ section detected (highly citable)")
+        passed.append("FAQ pattern detected (citation likelihood not measured)")
     
     # 6. Lists (Structured content)
     list_count = len(re.findall(r'<(ul|ol)[^>]*>', content, re.I))
@@ -177,7 +177,7 @@ def check_page(file_path: Path) -> dict:
     ]
     has_entity = any(re.search(p, content, re.I) for p in entity_patterns)
     if has_entity:
-        passed.append("Entity/Brand recognition (E-E-A-T)")
+        passed.append("Entity markup pattern detected (recognition not verified)")
     
     # 9. Original Statistics/Data (AI citation magnet) - NEW 2025
     stat_patterns = [
@@ -191,7 +191,7 @@ def check_page(file_path: Path) -> dict:
     ]
     stat_matches = sum(1 for p in stat_patterns if re.search(p, content, re.I))
     if stat_matches >= 2:
-        passed.append("Original statistics/data (citation magnet)")
+        passed.append("Numeric/research wording detected (originality not verified)")
     
     # 10. Conversational/Direct answers - NEW 2025
     direct_answer_patterns = [
@@ -236,11 +236,11 @@ def main():
         print("\n[!] No public web pages found.")
         print("    Looking for: HTML, JSX, TSX files in pages/app directories")
         print("    Skipping: docs, tests, config files, node_modules")
-        output = {"script": "geo_checker", "pages_found": 0, "passed": True}
+        output = {"script": "geo_checker", "pages_found": 0, "passed": None, "status": "not-assessed"}
         print("\n" + json.dumps(output, indent=2))
         sys.exit(0)
     
-    print(f"Found {len(pages)} public pages to analyze\n")
+    print(f"Selected {len(pages)} candidate source files (maximum30; no rendering) to analyze\n")
     
     # Check each page
     results = []
@@ -264,7 +264,7 @@ def main():
     print("=" * 60)
     
     if avg_score >= 80:
-        print("[OK] Excellent - Content well-optimized for AI citations")
+        print("[OK] Many heuristic source markers found; citation readiness unverified")
     elif avg_score >= 60:
         print("[OK] Good - Some improvements recommended")
     elif avg_score >= 40:
@@ -277,6 +277,7 @@ def main():
         "script": "geo_checker",
         "project": str(target_path),
         "pages_checked": len(results),
+        "scope": "advisory source-pattern scan; maximum30 files; not an AI visibility certification",
         "average_score": round(avg_score),
         "passed": avg_score >= 60
     }

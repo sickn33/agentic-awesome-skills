@@ -14,8 +14,7 @@ date_added: 2026-02-27
 Expert in LangGraph - the production-grade framework for building stateful, multi-actor
 AI applications. Covers graph construction, state management, cycles and branches,
 persistence with checkpointers, human-in-the-loop patterns, and the ReAct agent pattern.
-Used in production at LinkedIn, Uber, and 400+ companies. This is LangChain's recommended
-approach for building agents.
+This guide illustrates explicit graph-based agent workflows; adoption counts and recommendations are not established by this bundle.
 
 **Role**: LangGraph Agent Architect
 
@@ -45,7 +44,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - 1: LLM API basics
 - 2: Async programming concepts
 - 3: Graph theory fundamentals
-- Required skills: Python 3.9+, langgraph package, LLM API access (OpenAI, Anthropic, etc.), Understanding of graph concepts
+- Required skills: A Python version supported by the pinned langgraph package, LLM API access (OpenAI, Anthropic, etc.), Understanding of graph concepts
 
 ## When to Use
 - User mentions or implies: langgraph

@@ -25,6 +25,10 @@ Inspect a document for forensic authenticity signals — not a fraud verdict, bu
 - Before relying on a bank statement, payslip, or certificate in any workflow
 - Reviewing documents in due diligence, claims processing, or loan applications
 
+## Service availability check
+
+The documented Stipple endpoints, schemas and allowances are historical examples, not a verified current service contract. Confirm the intended provider and current official API documentation, pricing and privacy terms before any request or upload. If the document-verification/screening API cannot be confirmed, stop the API workflow and report it unavailable; do not send data to a guessed endpoint or a repurposed domain.
+
 ## Instructions
 
 1. **Get the document.** URL or local file path (PDF, PNG, JPEG, BMP, TIFF).
@@ -89,6 +93,6 @@ evidence (signals):
 ## Notes
 
 - Document types the engine recognizes (payslips, invoices, bank statements) get type-specific checks; unrecognized types get generic checks only — say so in your report
-- Identical files are cached by content hash — re-checking the same bytes returns instantly and free
-- This measures *forensic integrity*, not *authorship style* — for "was this written by AI", use AI-text detection instead
-- Anonymous free tier: shared weekly allowance. Free key at https://www.stipple.sh
+- Historical content-hash caching claims do not establish current speed, retention or cost; verify the active service contract.
+- This measures forensic signals, not authorship style. AI-text detectors cannot establish who wrote a document and should not be used as proof of misconduct.
+- Historical anonymous/key allowances are unverified; do not assume a free tier or enter credentials at an unconfirmed provider domain.

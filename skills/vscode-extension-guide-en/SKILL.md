@@ -58,7 +58,7 @@ npx @vscode/vsce package  # Creates .vsix
 
 ## Reference Topics
 
-The full skill includes detailed reference documents on:
+The upstream full skill advertises reference documents on the following topics; this AAS entry contains only this overview, not those files:
 
 - **Webview patterns** with CSP security and message passing
 - **TreeView** data providers and drag-and-drop
@@ -79,7 +79,8 @@ npx skills add lewiswigmore/agent-skills --skill vscode-extension-guide-en
 ## Best Practices
 
 - Unify package name, setting keys, command IDs and view IDs before publishing
-- Keep package size under 5MB using `.vscodeignore`
+- Inspect the VSIX file list with `npx @vscode/vsce ls`; exclude credentials, local data and unnecessary dependencies using the packaging configuration. A small package is a goal, not a universal 5MB Marketplace limit.
+- For webviews, start with scripts disabled unless needed; use a restrictive CSP, webview resource URIs and narrow local resource roots. Validate message shapes and allowed actions in the extension host; never pass arbitrary received strings to a shell or command dispatcher.
 - Since VS Code 1.74, `activationEvents` are auto-detected for contributed commands and views
 - Always test with the Extension Development Host (F5) before packaging
 

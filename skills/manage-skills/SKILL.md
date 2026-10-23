@@ -37,7 +37,7 @@ Each skill lives in its own subdirectory with a `SKILL.md` file containing YAML 
 | Tool | Global Path | Project Path |
 |------|------------|--------------|
 | Copilot | `~/.github/copilot-instructions.md` | `.github/copilot-instructions.md` |
-| Codex | `~/.codex/AGENTS.md` | `.codex/AGENTS.md` |
+| Codex | `~/.codex/AGENTS.md` | `AGENTS.md` in repository/directory ancestry; verify current host configuration |
 | Aider | `~/.aider.conf.yml` | `.aider.conf.yml` |
 | Augment | `~/augment-guidelines.md` | `augment-guidelines.md` |
 
@@ -131,7 +131,7 @@ EOF
 
 ### Enable / Disable a skill
 
-Disabling renames the file to `.disabled` so the tool ignores it but the content is preserved:
+Renaming to `.disabled` is only a suggested local convention: verify the actual tool no longer loads it and preserve supporting files. It is not a portable enable/disable API:
 
 ```bash
 # Disable
@@ -192,7 +192,7 @@ find ~/.agents/skills ~/.cursor/skills ~/.claude/skills -name "*.disabled" 2>/de
 - Always confirm before deleting skills.
 - When copying between tools with different formats (e.g., Cursor SKILL.md to Windsurf plain .md), adapt the file naming accordingly.
 - Project-scoped skills override global skills of the same name.
-- For single-file tools (Copilot, Codex, Aider, Augment), editing means replacing the entire file content.
+- For single-file tools, preserve unrelated instructions and edit only the authorized section. Inspect existing contents, symlinks and tool-version discovery rules; do not replace the entire file as a default.
 - When creating skills, use kebab-case for directory names (e.g., `my-new-skill`).
 
 ## Limitations

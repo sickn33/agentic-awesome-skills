@@ -74,7 +74,7 @@ The market-sizing-analysis skill provides comprehensive methodologies. Reference
 1. Define target user demographics
 2. Estimate total addressable users
 3. Determine average revenue per user (ARPU)
-4. Calculate TAM: Total Users × ARPU × Frequency
+4. Calculate annual TAM as users × annual ARPU; if using revenue per transaction instead, multiply by annual transaction frequency exactly once.
 
 **For Transactions/E-commerce:**
 1. Estimate total transaction volume (GMV)
@@ -101,7 +101,7 @@ Validate bottom-up calculation:
 1. Find total market category size from research
 2. Apply geographic filters
 3. Apply segment/product filters
-4. Compare to bottom-up TAM (should be within 30%)
+4. Compare scopes, units, periods and overlap with bottom-up TAM; 30% is a diagnostic heuristic, not a validity threshold
 
 If variance > 30%, investigate and explain differences.
 
@@ -122,9 +122,9 @@ SAM = TAM × Geographic % × Product Fit % × Market Readiness %
 
 Calculate realistic obtainable market share:
 
-**Conservative Approach (Recommended):**
-- Year 3: 2-3% of SAM
-- Year 5: 4-6% of SAM
+**Capacity-backed approach:**
+- Derive year-3 and year-5 customers from reachable accounts, acquisition capacity, conversion, sales-cycle length, retention and budget.
+- Treat any percentage of SAM as an explicit scenario, not a conservative default or forecast.
 
 **Consider:**
 - Competitive intensity

@@ -223,3 +223,5 @@ curl -s https://example.com/llms.txt
 ```
 
 > Adapted from [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: upstream runtime helpers not bundled.
+
+Slash commands are workflow notation, not installed runtime commands in this docs-only copy. Confirm persistent storage location and personal-data scope first. Validate domains as hostnames, reject path separators/dot segments and keep all derived paths within the chosen root; protect files and use atomic locked writes to avoid lost updates/duplicate IDs. A low GEO score is a heuristic audit lead, not proof of commercial need; “won”/committed MRR requires actual contract evidence. Pipeline sums are unweighted possibilities, not revenue forecasts. Never send outreach from a CRM-read request.

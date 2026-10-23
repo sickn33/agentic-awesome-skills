@@ -103,8 +103,7 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation from confirmed facts only, then ask whether to build it. Do not
-build unprompted. Ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an
+If artifacts were requested, build from confirmed facts after resolving essential gaps. For advice-only requests, give a short recommendation and offer: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an
 Excel workbook from these confirmed rules?"
 
 **Recommended approach:** Define a small set of proficiency levels and attach each competency
@@ -150,7 +149,7 @@ CREATE TABLE competency_matrix (
   competency VARCHAR(255),
   category VARCHAR(100) NOT NULL,
   job_title VARCHAR(255),
-  grade_level VARCHAR(100) NOT NULL,
+  grade_level VARCHAR(100),
   expected_level VARCHAR(100) NOT NULL,
   description TEXT,
   assessment_method VARCHAR(255),
@@ -180,7 +179,6 @@ CREATE TABLE competency_matrix (
   },
   "required": [
       "Category",
-      "Grade Level",
       "Expected Level"
   ]
 }
@@ -243,8 +241,7 @@ Link fields: none
 
 `Linked Skill Area` is text, not a relation. It holds a reference such as `SKL-EXAMPLE-001`.
 The `skill-gap-analysis` table is a separate skill and is not created by this build, so there
-is no target database to link to. It becomes a real foreign key only if that table is built in
-the same artifact set.
+is no target database to link to. It becomes a real foreign key only after an appropriate stable-key target is identified and the constraint is explicitly created; merely building a second table does not enforce a relationship.
 
 ## Examples
 

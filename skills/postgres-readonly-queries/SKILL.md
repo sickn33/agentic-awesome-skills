@@ -2,7 +2,7 @@
 name: postgres-readonly-queries
 description: "Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection."
 category: data
-risk: safe
+risk: critical
 source: https://github.com/sanjay3290/ai-skills/tree/main/skills/postgres
 source_repo: sanjay3290/ai-skills
 source_type: community
@@ -49,7 +49,7 @@ chmod 600 connections.json
       "database": "app_prod",
       "user": "readonly_user",
       "password": "your-password",
-      "sslmode": "require"
+      "sslmode": "verify-full"
     }
   ]
 }
@@ -66,7 +66,7 @@ chmod 600 connections.json
 | database | Yes | Database name |
 | user | Yes | Username |
 | password | Yes | Password |
-| sslmode | No | SSL mode: disable, allow, prefer (default), require, verify-ca, verify-full |
+| sslmode | No | SSL mode: disable, allow, verify-full (default), require, verify-ca, verify-full |
 
 ## Usage
 
@@ -111,11 +111,11 @@ If unclear, run `--list` and ask user which database.
 ## Safety Features
 
 - **Read-only session**: Connection uses PostgreSQL `readonly=True` mode (primary protection)
-- **Query validation**: Only SELECT, SHOW, EXPLAIN, WITH queries allowed
+- **Query validation**: Conservative keyword/semicolon checks, not a SQL parser or authorization boundary
 - **Single statement**: Multiple statements per query rejected
 - **SSL support**: Configurable SSL mode for encrypted connections
 - **Query timeout**: 30-second statement timeout enforced
-- **Memory protection**: Max 10,000 rows per query to prevent OOM
+- **Display cap**: At most 10,000 rows printed; the client/server may still buffer or compute a much larger result
 - **Column width cap**: 100 char max per column for readable output
 - **Credential sanitization**: Error messages don't leak passwords
 
@@ -126,7 +126,7 @@ If unclear, run `--list` and ask user which database.
 | Config not found | Create `connections.json` in skill directory |
 | Authentication failed | Check username/password in config |
 | Connection timeout | Verify host/port, check firewall/VPN |
-| SSL error | Try `"sslmode": "disable"` for local databases |
+| SSL error | Check certificate hostname, root CA and server TLS configuration; do not disable verification to bypass errors |
 | Permission warning | Run `chmod 600 connections.json` |
 
 ## Exit Codes
@@ -150,3 +150,5 @@ If unclear, run `--list` and ask user which database.
   database and avoid exporting or sharing results without explicit authorization.
 - The script is not a replacement for backups, auditing, access reviews, or production change
   controls.
+
+Use `bash` only for shell examples and `python3 scripts/query.py` for the inert helper. Keep credential config outside version control, restrict file permissions before adding credentials, and never print values. `--limit` caps displayed rows without rewriting SQL; include a reviewed SQL LIMIT for server-side work where appropriate. Keyword/semicolon checks reject some valid SQL and cannot prevent SELECT function side effects, external calls or all temporary writes. Read-only privileges and a trusted, restricted function environment are essential. `EXPLAIN ANALYZE` actually executes its query. Python buffering and large individual values can still exhaust memory; use a dedicated bounded reporting query.

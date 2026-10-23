@@ -2,6 +2,8 @@
 
 This file contains detailed patterns, checklists, and code samples referenced by the skill.
 
+Examples target Airflow 2.x (notably 2.10-style imports). Airflow 3 moves public APIs/providers: choose the installed version before adapting. These are teaching patterns, not deployed production DAGs. Configure Connections/secret backends, constrained worker permissions and approved bucket/API destinations. Provider dependencies (`pandas`, S3/parquet engines, requests and amazon provider) are not bundled. Keep XCom payloads small; return materialized artifact URIs/row counts for real datasets rather than complete DataFrames.
+
 ## Core Concepts
 
 ### 1. DAG Design Principles
@@ -99,11 +101,11 @@ def taskflow_etl():
     """ETL pipeline using TaskFlow API"""
 
     @task()
-    def extract(source: str) -> dict:
+    def extract(source: str, ds=None) -> dict:
         """Extract data from source"""
         import pandas as pd
 
-        df = pd.read_csv(f's3://bucket/{source}/{{ ds }}.csv')
+        df = pd.read_csv(f's3://bucket/{source}/{ds}.csv')
         return {'data': df.to_dict(), 'rows': len(df)}
 
     @task()
@@ -117,12 +119,12 @@ def taskflow_etl():
         return {'data': df.to_dict(), 'rows': len(df)}
 
     @task()
-    def load(transformed: dict, target: str):
+    def load(transformed: dict, target: str, ds=None):
         """Load data to target"""
         import pandas as pd
 
         df = pd.DataFrame(transformed['data'])
-        df.to_parquet(f's3://bucket/{target}/{{ ds }}.parquet')
+        df.to_parquet(f's3://bucket/{target}/{ds}.parquet')
         return transformed['rows']
 
     @task()
@@ -217,6 +219,7 @@ for config in PIPELINE_CONFIGS:
 
 ```python
 # dags/branching_example.py
+from datetime import datetime
 from airflow.decorators import dag, task
 from airflow.operators.python import BranchPythonOperator
 from airflow.operators.empty import EmptyOperator
@@ -274,6 +277,8 @@ branching_pipeline()
 
 ```python
 # dags/sensor_patterns.py
+from airflow.decorators import task
+from airflow.sensors.base import PokeReturnValue
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.sensors.filesystem import FileSensor
@@ -315,10 +320,10 @@ with DAG(
         """Custom sensor for API availability"""
         import requests
 
-        response = requests.get('https://api.example.com/health')
+        response = requests.get('https://api.example.com/health', timeout=10)
         is_done = response.status_code == 200
 
-        return PokeReturnValue(is_done=is_done, xcom_value=response.json())
+        return PokeReturnValue(is_done=is_done, xcom_value=response.json() if is_done else None)
 
     api_ready = wait_for_api()
 
@@ -435,7 +440,7 @@ def test_dag_structure(dagbag):
 
     assert dag is not None
     assert len(dag.tasks) == 3
-    assert dag.schedule_interval == '0 6 * * *'
+    assert dag.timetable is not None  # Inspect schedule semantics using the installed version’s API.
 
 def test_task_dependencies(dagbag):
     """Test task dependencies are correct"""
@@ -448,7 +453,8 @@ def test_task_dependencies(dagbag):
 def test_dag_integrity(dagbag):
     """Test DAG has no cycles and is valid"""
     for dag_id, dag in dagbag.dags.items():
-        assert dag.test_cycle() is None, f"Cycle detected in {dag_id}"
+        from airflow.utils.dag_cycle_tester import check_cycle
+        check_cycle(dag)  # Raises AirflowDagCycleException on a cycle (Airflow 2.x).
 
 # Test individual task logic
 def test_extract_function():
@@ -496,8 +502,8 @@ airflow/
 - **Idempotent tasks** - Safe to retry
 
 ### Don'ts
-- **Don't use `depends_on_past=True`** - Creates bottlenecks
-- **Don't hardcode dates** - Use `{{ ds }}` macros
+- **Use `depends_on_past` deliberately** - Necessary for some sequential stateful jobs; document recovery and backfill semantics
+- **Use stable timezone-aware start dates** - Use logical/data-interval context for partition selection; Jinja inside a Python callable is not rendered automatically
 - **Don't use global state** - Tasks should be stateless
 - **Don't skip catchup blindly** - Understand implications
 - **Don't put heavy logic in DAG file** - Import from modules

@@ -1,6 +1,6 @@
 ---
 name: gcp-cloud-sql
-description: Provision Cloud SQL and Spanner databases. Configure high availability,
+description: Provision Cloud SQL databases. Configure high availability,
   backups, and security. Use when deploying managed databases on GCP.
 category: devops
 risk: critical
@@ -29,6 +29,8 @@ Deploy and manage fully managed relational databases (PostgreSQL, MySQL, SQL Ser
 - Workloads that need automated high availability with regional failover
 
 ## Prerequisites
+
+Confirm project/region, database edition/version and cost before provisioning. Examples require adaptation: IAM database auth needs the database flag, an IAM database user and login permissions in addition to cloudsql.client; a built-in appuser is not automatically IAM-enabled. Grant application database privileges explicitly. Auth Proxy does not create private network connectivity; use --private-ip and an existing route for private-only instances. Pin and verify the proxy binary from official releases. Backups/HA are not a tested DR plan; exports expose data and imports/promotion/restarts require an approved target/recovery plan. Terraform stores passwords in state; protect it. Preserve existing authorized-network/flag settings when patching rather than replacing them accidentally.
 
 - Google Cloud SDK (`gcloud`) installed and authenticated
 - Cloud SQL Admin API and Service Networking API enabled
@@ -61,12 +63,11 @@ gcloud sql instances create prod-db \
   --retained-backups-count=14 \
   --maintenance-window-day=SUN --maintenance-window-hour=4 \
   --database-flags=max_connections=200,log_min_duration_statement=1000 \
-  --root-password=$(openssl rand -base64 24) \
   --labels=env=production,team=backend
 
 gcloud sql databases create myapp --instance=prod-db --charset=UTF8
-gcloud sql users create appuser --instance=prod-db \
-  --password=$(openssl rand -base64 24)
+# Create the application identity/password through a supported protected prompt/secret workflow.
+# Persist credentials securely before use; never generate and discard a password in process arguments.
 ```
 
 ## Create a MySQL Instance
@@ -79,7 +80,7 @@ gcloud sql instances create mysql-prod \
   --storage-type=SSD --storage-size=100GB --storage-auto-increase \
   --backup-start-time=02:00 --enable-bin-log --retained-backups-count=14 \
   --database-flags=slow_query_log=on,long_query_time=2,max_connections=500 \
-  --root-password=$(openssl rand -base64 24)
+  --labels=env=production
 ```
 
 ## Private IP Configuration
@@ -185,8 +186,14 @@ resource "google_sql_database_instance" "main" {
       require_ssl     = true
     }
 
-    maintenance_window { day = 7; hour = 4 }
-    database_flags { name = "max_connections"; value = "200" }
+    maintenance_window {
+      day = 7
+      hour = 4
+    }
+    database_flags {
+      name = "max_connections"
+      value = "200"
+    }
 
     user_labels = { env = "production" }
   }

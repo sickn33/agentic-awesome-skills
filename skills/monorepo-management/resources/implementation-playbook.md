@@ -45,7 +45,7 @@ Build efficient, scalable monorepos that enable code sharing, consistent tooling
 **Build Systems:**
 - Turborepo (recommended for most)
 - Nx (feature-rich, complex)
-- Lerna (older, maintenance mode)
+- Lerna (versioning/task tooling; evaluate the supported release for your needs)
 
 ## Turborepo Setup
 
@@ -75,7 +75,7 @@ cd my-monorepo
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
@@ -114,10 +114,10 @@ cd my-monorepo
     "test": "turbo run test",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "clean": "turbo run clean && rm -rf node_modules"
+    "clean": "turbo run clean"
   },
   "devDependencies": {
-    "turbo": "^1.10.0",
+    "turbo": "^2.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.0.0"
   },
@@ -137,17 +137,17 @@ cd my-monorepo
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     },
     "./button": {
-      "import": "./dist/button.js",
-      "types": "./dist/button.d.ts"
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.js"
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "dev": "tsup src/index.ts --format esm,cjs --dts --watch",
+    "build": "tsup src/index.ts src/button.tsx --format esm,cjs --dts",
+    "dev": "tsup src/index.ts src/button.tsx --format esm,cjs --dts --watch",
     "lint": "eslint src/",
     "type-check": "tsc --noEmit"
   },
@@ -174,10 +174,10 @@ packages:
   - 'tools/*'
 ```
 
-```json
-// .npmrc
+```ini
+# .npmrc
 # Hoist shared dependencies
-shamefully-hoist=true
+shamefully-hoist=false
 
 # Strict peer dependencies
 auto-install-peers=true
@@ -223,7 +223,7 @@ pnpm -r --parallel dev
 
 # Filter by pattern
 pnpm --filter "@repo/*" build
-pnpm --filter "...web" build  # Build web and dependencies
+pnpm --filter "web..." build  # Build web and its dependencies
 ```
 
 ## Nx Monorepo
@@ -286,8 +286,8 @@ nx test ui-components
 nx lint utils
 
 # Run for affected projects
-nx affected:build
-nx affected:test --base=main
+nx affected -t build
+nx affected -t test --base=main --head=HEAD
 
 # Visualize dependencies
 nx graph
@@ -407,7 +407,7 @@ export function Button({ variant = 'primary', children, onClick }: ButtonProps) 
 
 // packages/ui/src/index.ts
 export { Button, type ButtonProps } from './button';
-export { Input, type InputProps } from './input';
+// Add Input exports only when ./input is implemented.
 
 // apps/web/src/app.tsx
 import { Button } from '@repo/ui';
@@ -431,8 +431,7 @@ export function truncate(str: string, length: number): string {
 
 // packages/utils/src/index.ts
 export * from './string';
-export * from './array';
-export * from './date';
+// Add array/date exports only when those modules exist.
 
 // Usage in apps
 import { capitalize, truncate } from '@repo/utils';
@@ -466,7 +465,7 @@ import type { User, CreateUserInput } from '@repo/types';
 ```json
 // turbo.json
 {
-  "pipeline": {
+  "tasks": {
     "build": {
       // Build depends on dependencies being built first
       "dependsOn": ["^build"],
@@ -475,7 +474,7 @@ import type { User, CreateUserInput } from '@repo/types';
       "outputs": ["dist/**", ".next/**"],
 
       // Cache based on these inputs (default: all files)
-      "inputs": ["src/**/*.tsx", "src/**/*.ts", "package.json"]
+      "inputs": ["$TURBO_DEFAULT$", "tsconfig.json"]
     },
     "test": {
       // Run tests in parallel, don't depend on build
@@ -557,7 +556,9 @@ jobs:
 # Deploy only changed apps
 - name: Deploy affected apps
   run: |
-    if pnpm nx affected:apps --base=origin/main --head=HEAD | grep -q "web"; then
+    set -euo pipefail
+    pnpm nx show projects --affected --base=origin/main --head=HEAD --json > affected.json
+    if jq -e 'index("web") != null' affected.json >/dev/null; then
       echo "Deploying web app"
       pnpm --filter web deploy
     fi
@@ -583,6 +584,8 @@ jobs:
 - **Under-Sharing**: Duplicating code across packages
 - **Large Monorepos**: Without proper tooling, builds slow down
 
+Review cache trust and upload contents before enabling remote caching; never cache credentials, personal data or privileged outputs for untrusted pull requests. The examples mix separate tool setups: pin compatible Node/package-manager/tool releases and adapt legacy ESLint config before use.
+
 ## Publishing Packages
 
 ```bash
@@ -596,7 +599,7 @@ pnpm changeset
 # Version packages
 pnpm changeset version
 
-# Publish
+# Publish only after release authorization and package/version/access review
 pnpm changeset publish
 ```
 
@@ -611,7 +614,7 @@ pnpm changeset publish
     NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 ```
 
-## Resources
+## Resources (upstream, not bundled)
 
 - **references/turborepo-guide.md**: Comprehensive Turborepo documentation
 - **references/nx-guide.md**: Nx monorepo patterns

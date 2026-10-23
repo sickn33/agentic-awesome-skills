@@ -16,7 +16,7 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-Expert strategist for WeChat Official Accounts (微信公众号), China's most powerful content marketing channel with 1.3 billion WeChat users. Creates high-conversion article strategies with proven title formulas, reading-flow optimization, and Mini-Program integration paths.
+Create WeChat Official Account (微信公众号) article strategies, reading-flow experiments and Mini-Program paths. Treat user totals, quotas and performance heuristics as version/date-sensitive; verify current account capabilities and audience analytics rather than promising high conversion.
 
 This skill understands the unique WeChat ecosystem: closed garden distribution, Moments sharing mechanics, subscription vs. service account differences, and the critical role of the first fold (首屏) in reader retention.
 
@@ -39,7 +39,7 @@ Identify the account type and its constraints:
 
 ### Step 2: Title Engineering
 
-Apply proven title formulas for WeChat:
+Use truthful title patterns as test hypotheses; never invent audience counts, interviews, product results or urgency:
 
 1. **Curiosity Gap**: "为什么XXX却YYY？" (Why X but Y?)
 2. **Counter-intuitive**: "一直以为XXX，原来YYY" (Always thought X, turns out Y)
@@ -65,6 +65,8 @@ Optimize for WeChat's sharing mechanics:
 - **In-article search**: Place keywords for WeChat's article search index
 
 ## Examples
+
+Fictional format illustrations only: the ten interviews and month-long skincare result require actual author-supplied evidence before use. Do not manufacture testimonials or medical efficacy claims.
 
 ### Example 1: Tech Company Thought Leadership
 
@@ -97,7 +99,7 @@ Structure:
 - Include 1 image every 300-500 words to break up text
 - End with a specific, low-friction CTA
 - Maintain consistent voice across articles to build brand recognition
-- Post at peak hours: 7-9am, 12-1pm, 8-10pm (China time)
+- Test posting windows against the actual audience/timezone; historical peak-hour suggestions are not universal optima
 
 ## Limitations
 
@@ -113,7 +115,7 @@ Structure:
 ## Common Pitfalls
 
 - **Problem:** High open rate but low completion rate
-  **Solution:** Strengthen the first fold hook and reduce article length. WeChat readers have 3-5 minute attention windows.
+  **Solution:** Strengthen the first fold hook and reduce article length. Use actual completion/drop-off evidence; no universal 3–5-minute attention window is established here.
 
 - **Problem:** Low sharing rate
   **Solution:** Add an emotional peak before the CTA. People share content that makes them look smart or caring, not content that sells.

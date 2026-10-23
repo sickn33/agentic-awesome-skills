@@ -34,7 +34,7 @@ You systematically evaluate all dependencies of a project to identify red flags 
 
 ### Risk Criteria
 
-A dependency is considered high-risk if it features any of the following risk factors:
+These are contextual triage factors, not proof of compromise. Assess exact version, reachable behavior, release permissions, provenance, security response and compensating controls. Small maintainer count, anonymity or popularity alone must not classify a project as insecure. Factors to investigate:
 
 * **Single maintainer or team of individuals** - The project is primarily or solely maintained by a single individual, or a small number of individuals. The project is not managed by an organization such as the Linux Foundation or a company such as Microsoft. If the individual is an extremely prolific and well-known contributor to the ecosystem, such as `sindresorhus` or Drew Devault, the risk is lessened but not eliminated. Conversely, if the individual is anonymous — that is, their GitHub identity is not readily tied to a real-world identity — the risk is significantly greater. **Justification:** If a developer is bribed or phished, they could unilaterally push malicious code. Consider the left-pad incident.
 * **Unmaintained** - The project is stale (no updates for a long period of time) or explicitly deprecated/archived. The maintainer may have put a note in the README.md or a GitHub issue that the project is inactive, understaffed, or seeking new maintainers. The project's GitHub repository may have a large number of issues noting bugs or security issues that the maintainers have not responded to. Feature request issues do NOT count.  **Justification:** If vulnerabilities are identified in the project, they may not be patched in a timely manner.
@@ -59,14 +59,14 @@ You achieve your purpose by:
 ## Workflow (Dependency Audit)
 1. For each dependency whose repository you identified in Initial Setup, evaluate its risk according to the Risk Criteria noted above.
 	* For any criteria that require actions such as counting open GitHub issues, use the `gh` tool to query the exact data. It is vitally important that any numbers you cite (such as number of stars, open issues, and so on) are accurate. You may round numbers of issues and stars using ~ notation, e.g. "~4000 stars".
-2. If a dependency satisfies any of the Risk Criteria noted above, add it to the High-Risk Dependencies table in `results.md`, clearly noting your reason for flagging it as high-risk. For conciseness, skip low-risk dependencies; only note dependencies with at least one risk factor. Do not note "opposites" of risk factors like having a column for "organization backed (lower risk)" dependencies. The absence of a dependency from the report should be the indicator that it is low- or no-risk.
+2. If a dependency satisfies any of the Risk Criteria noted above, add it to the High-Risk Dependencies table in `results.md`, clearly noting your reason for flagging it as high-risk. For conciseness, skip low-risk dependencies; only note dependencies with at least one risk factor. Do not note "opposites" of risk factors like having a column for "organization backed (lower risk)" dependencies. Maintain an inventory distinguishing reviewed-with-no-specific-finding from unreviewed or unavailable data. Absence from the findings table is not evidence of low risk.
 
 ## Workflow (Post-Audit)
 1. For each dependency in the High-Risk Dependencies table, fill out the Suggested Alternative field with an alternative dependency that performs the same or similar function but is more popular, better maintained, and so on. Prefer direct successors and drop-in replacements if available. Provide a short justification of your suggestion.
 2. Note the total counts for each risk factor category in the Counts by Risk Factor table, and summarize the overall security posture in the Executive Summary section.
 3. Summarize your recommendations under the Recommendations section
 
-**NOTE:** Do not add sections beyond those noted in `results-template.md`.
+The referenced `results-template.md` is not bundled. If unavailable, use explicit sections for scope/version inventory, evidence-backed findings, unknowns, counts and recommendations; do not claim the template was followed.
 
 ## Example
 

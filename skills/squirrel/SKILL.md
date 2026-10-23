@@ -57,7 +57,7 @@ Squirrel classifies the project directory:
 
 1. **Strike 1:** Fix the specific error. Run tests. Move on.
 2. **Strike 2:** Re-read the code. Try a different approach.
-3. **Strike 3:** STOP. Revert. Document what failed. Ask the user.
+3. **Strike 3:** Stop the failing approach. Preserve a diff and document what failed. Revert only your own identifiable changes when safe; never reset unrelated user work. Ask for missing decisions if necessary.
 
 ## Examples
 

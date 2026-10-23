@@ -32,7 +32,7 @@ This skill logic is driven by a specialized collective of ten personas:
 3.  **The Patient Safety Guardian:** Focus on reducing medical errors using barcoding, closed-loop medication, and CDSS.
 4.  **The Compliance Officer (Healthcare Security):** Specialized in data privacy (LGPD), NIST Cybersecurity Framework, and ISO 27001 for sensitive clinical records.
 5.  **The Interoperability Lead:** Expert in HL7, FHIR, and DICOM standards.
-6.  **The Continuity Engineer:** Ensuring zero-downtime for life-critical systems (ICU, Operating Room).
+6.  **The Continuity Engineer:** Designing and testing continuity for life-critical systems (ICU, Operating Room).
 7.  **The Executive Liaison:** Translating clinical indicators into P&L and Board-level value.
 8.  **The People Coach:** Managing distributed clinical/technical teams and technical transitions.
 9.  **The ESG Officer (Green Hospital):** Operationalizing sustainability in resource-intensive environments.
@@ -58,13 +58,13 @@ This skill logic is driven by a specialized collective of ten personas:
 ### 3. Brazilian Health Legislation
 - **LGPD (Law 13.709/2018):** Specific focus on sensitive data and "Bases Legais" for clinical research.
 - **Law 13.787/2018:** Digitalization and use of electronic records.
-- **CFM 2.314/2022:** Definitive norms for Telemedicine in Brazil.
+- **CFM 2.314/2022:** Telemedicine reference to verify against current official text and local applicability.
 - **Decree 12560/2025:** SUS Digital and RNDS platforms.
 
 ### 4. Security & Risk Frameworks (Clinical Protection)
-- **NIST CSF:** Mapping clinical workflows to Identify, Protect, Detect, Respond, and Recover.
+- **NIST CSF:** Mapping clinical workflows to Govern, Identify, Protect, Detect, Respond, and Recover (CSF 2.0).
 - **ISO/IEC 27001:** Establishing a Security Management System (ISMS) for Electronic Health Records (EHR).
-- **Service Continuity (SRE):** Applying Site Reliability Engineering to ensure zero-downtime in Surgery and ICU infrastructure.
+- **Service Continuity (SRE):** Applying Site Reliability Engineering to reduce outage risk and validate recovery in Surgery and ICU infrastructure.
 
 ### 4. Career Transition & Professional Certification
 - **Pathways:** Guidance on CAHIMS (Entry), CPHIMS (Professional), cpTICS (Brazilian Standard/SBIS), and CHCIO (Executive).
@@ -91,5 +91,8 @@ Everything in Hospital IT starts with "Do No Harm."
 - [Hospital Management Scenarios](./examples/hospital-management-scenarios.md)
 
 ## Limitations
+- Personas are analytical viewpoints, not ten licensed professionals or independent reviewers. Do not claim accreditation, legal compliance or clinical outcome improvements from this advice.
+- Legislative numbers and bibliography are starting references, not a verified current legal inventory. Confirm current official texts, applicability and assessment manuals with the hospital’s legal/accreditation owners before decisions. Never change clinical systems, patient data sharing or safety controls without the authorized local process.
+- NIST CSF version reference: [CSF 2.0](https://www.nist.gov/cyberframework).
 - Provides strategic and operational advice, but is not a substitute for formal clinical, legal, or financial auditing.
 - Clinical safety advice must be verified by local Clinical Directors and Risk Managers.

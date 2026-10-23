@@ -43,8 +43,8 @@ once so later steps never have to ask.
              resolved or retired.
 
    Git impact: The pipeline edits files. It does NOT commit, push, or amend.
-             If you have uncommitted work you want to preserve, commit or stash
-             first.
+             Preserve existing changes and stage/edit only task-owned paths; never
+             discard, commit or stash unrelated work automatically.
 
    Proceed with full autonomous sweep? [Y/n]
    ```
@@ -55,7 +55,7 @@ once so later steps never have to ask.
    3. **Soft pause** (`wait`, `hold on`, `等一下`, `等我`, `let me`): acknowledge in one line ("Understood, waiting"), then wait for the user's next message and re-evaluate from rule 1.
    4. **Question**: answer it, then re-show the notice once and wait for the next reply. If the next reply is not Consent (rule 2) — whether a second question, another pause, or anything else — abort with "Aborted — did not receive consent after clarification."
 
-0d. After consent, do not ask further questions until Step 8.
+0d. Existing scoped authorization suffices for routine fixes. Stop for a material scope change, destructive action or missing required input; a one-time approval does not authorize unknown future effects.
 
 ---
 
@@ -71,7 +71,7 @@ once so later steps never have to ask.
 
 1c. Initialize pipeline state (persists across all rounds):
 
-   - **`unresolvable`** (set): findings retired after 3 failed attempts — keyed by `(file, line_range, risk_code)`; `signature` breaks ties. Never re-queued.
+   - **`unresolvable`** (set): findings retired after 3 failed attempts — keyed by stable `(file, risk_code, symptom_signature)`; line ranges are evidence only and can shift. Never re-queued.
    - **`non_critical_rounds`** (int, 0): incremented each round producing Warning/Suggestion; reset on clean round.
    - **`fix_log`** (list): each fix with file, line range, risk code, description, and outcome (`applied` / `reverted` / `retired`).
 
@@ -94,7 +94,7 @@ Scan every file in scope against all R-series risks defined in
    | Class | Criteria |
    |-------|----------|
    | **Safe** | Single-file AND fully local: rename a non-exported symbol, extract a constant, remove dead code, add a null guard at a leaf, add a test scaffold for an untested pure function. Any change that modifies or removes an exported symbol is NOT Safe even if in one file. |
-   | **Extended-Safe** | Multi-file but (a) a project test command exists and passes pre-fix, AND (b) the change does not rename, remove, or alter the signature of any publicly exported symbol, AND (c) touches ≤ 5 files in this pass. |
+   | **Extended-Safe** | Multi-file but (a) a project test command exists and passes pre-fix, AND affected behavior has meaningful test coverage, AND (b) the change does not rename, remove, or alter the signature of any publicly exported symbol, AND (c) touches ≤ 5 files in this pass. |
    | **Residual** | Public API break, cross-service boundary change, no test coverage to fall back on, or remedy ambiguous. NOT applied — carried to the Step 8 residual report. |
 
 2c. Skip any finding that matches an entry in the `unresolvable` set.
@@ -107,7 +107,7 @@ Scan every file in scope against all R-series risks defined in
 
 2e. After all fixes in this dimension, run the project test/lint command if one
    exists (`package.json` scripts, `pytest`, `cargo test`, `go test ./...`, etc.).
-   If tests fail: revert fixes from this dimension in reverse order one at a
+   If tests fail: undo only the exact task-owned patches from this dimension in reverse order one at a
    time, re-running the test command after each revert, until tests pass.
    Mark each reverted fix with outcome `reverted` in `fix_log` and promote the
    finding to **Residual**. If no test command is found, note this once in the
@@ -124,8 +124,7 @@ Scan test files (and untested production code) against T-series risks defined
 in `../_shared/test-decay-risks.md`.
 
 Follow the same sub-steps as Step 2 (classify → apply → verify → summarize),
-using T-prefix risk codes. For production files with no test coverage at all,
-record as T5 (Coverage Illusion). A test scaffold that adds a pure-function test is
+using T-prefix risk codes. For production files with no test coverage, record the observed gap; assign T5 only if the retrieved taxonomy actually defines that case. A test scaffold that adds a pure-function test is
 **Safe**; adding tests that require new test infrastructure is **Residual**.
 
 ---
@@ -182,7 +181,7 @@ cap, or no progress.
      resolved OR retired (3 failed attempts → `unresolvable`).
    - Else 🟡 Warning / 🟢 Suggestion → queue and fix, subject to cap below.
 
-6c. Classify the round after all fixes attempted:
+6c. Enforce a global time/round budget (default 3 total rounds), including critical-only rounds; stop on no progress and carry remaining findings as residual. Classify the round after all fixes attempted:
    - **Clean round** (no new findings outside `unresolvable`): pipeline
      converged → proceed to Step 7.
    - **Critical-only round**: do NOT increment `non_critical_rounds`; return
@@ -245,8 +244,7 @@ Stopped at: clean round | iteration cap | no outstanding criticals
 ...
 
 ## Health Score Delta
-Before: <estimated score>/100  →  After: <estimated score>/100
-(Re-run /brooks-health for an exact recalculation.)
+Unavailable unless a documented matching rubric and actual complete evidence support calculation; no score inferred from these examples.
 
 ## Residual Items  (<K> not applied)
 <Iron Law entries, sorted Critical → Suggestion, with "Not applied because: ..." line>
@@ -259,6 +257,7 @@ Before: <estimated score>/100  →  After: <estimated score>/100
 ```
 
 If there are zero residual items and zero unresolvable entries, end with:
-**"Sweep complete — codebase is clean."**
+**"No additional findings in the reviewed scope under the available checks."**
+Never call unread files, unavailable taxonomy checks or unexecuted tests clean.
 
 **Mode line in report:** `Full Sweep`

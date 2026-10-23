@@ -44,7 +44,8 @@ Does it need...?
 
 | Pattern | Use |
 |---------|-----|
-| **Default** | Static (cached at build) |
+| **Default** | Version/config dependent; current fetch defaults are uncached |
+| **Explicit cache** | `fetch(url, { cache: "force-cache" })` when data may be shared |
 | **Revalidate** | ISR (time-based refresh) |
 | **No-store** | Dynamic (every request) |
 
@@ -96,7 +97,7 @@ Does it need...?
 - Validate input with Zod
 - Return proper status codes
 - Handle errors gracefully
-- Use Edge runtime when possible
+- Choose Node.js or Edge runtime according to dependency and deployment support; do not assume Node APIs are available on Edge
 
 ---
 
@@ -166,6 +167,7 @@ Does it need...?
 ### Best Practices
 
 - Mark with 'use server'
+- Authenticate and authorize each action/handler on the server; exported actions are callable endpoints
 - Validate all inputs
 - Return typed responses
 - Handle errors
@@ -206,6 +208,10 @@ app/
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Version scope
+
+Check the installed Next.js version and whether Cache Components is enabled before applying caching advice. The [official caching guide](https://nextjs.org/docs/app/guides/caching) distinguishes these models. Test freshness and invalidation explicitly; never put user-specific secrets or authorization-dependent responses into a shared cache.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

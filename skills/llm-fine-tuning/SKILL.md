@@ -33,6 +33,8 @@ Use this skill when:
 
 ## Prerequisites
 
+Pin a compatible training stack and validate model/dataset permissions and sensitive-data handling. Hardware figures are examples, not capacity guarantees (70B QLoRA may require multiple GPUs/offload). Split held-out evaluation before preprocessing to avoid leakage. External tracking can upload data; disable it unless approved. `train.py` is not bundled, and the Kubernetes image must be built with Axolotl/dependencies; set output_dir to the mounted /output and bound retries/checkpoint resume to avoid duplicate expensive runs.
+
 - NVIDIA GPU(s) with 24GB+ VRAM (RTX 4090 / A100 / H100)
 - CUDA 12.1+ and `nvidia-smi` working
 - Python 3.10+ with `pip`
@@ -160,7 +162,6 @@ accelerate launch -m axolotl.cli.train config.yaml
 ## Distributed Training with DeepSpeed
 
 ```json
-// deepspeed_zero3.json — ZeRO Stage 3 (split optimizer + gradients + params)
 {
   "zero_optimization": {
     "stage": 3,
@@ -240,8 +241,7 @@ merged_model = model.merge_and_unload()
 merged_model.save_pretrained("./merged-model", safe_serialization=True)
 tokenizer.save_pretrained("./merged-model")
 
-# Push to Hugging Face Hub
-merged_model.push_to_hub("your-org/your-fine-tuned-model")
+# Publishing weights is a separate authorized action after license/privacy review.
 ```
 
 ## Kubernetes Training Job
@@ -309,8 +309,8 @@ spec:
 
 ## Best Practices
 
-- Use Flash Attention 2 — it's 2–4× faster and uses less memory.
-- Monitor training loss/eval loss via W&B or MLflow; overfit = more dropout or less data.
+- Benchmark compatible attention implementations; gains depend on hardware, shapes and software versions.
+- Monitor training loss/eval loss via W&B or MLflow; investigate overfitting with held-out data, regularization or fewer training steps; reducing data can worsen it.
 - Validate with a held-out eval set (5–10%); MMLU or custom evals for quality gates.
 - Start with LoRA r=16 before increasing — higher rank = more parameters, diminishing returns.
 - Use `sample_packing` in Axolotl to maximize GPU utilization on short sequences.

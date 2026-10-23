@@ -1,0 +1,777 @@
+{
+  "schema_version": "1.0.0",
+  "rules": [
+    {
+      "rule_id": "ux3.rule.actor_boundary",
+      "title": "Actor boundary",
+      "flow": "user_flow",
+      "strength": "required",
+      "trigger": [
+        "A review names a user, customer, operator, beneficiary, machine actor, buyer, issuer, owner, or affected group."
+      ],
+      "must_inspect": [
+        "Primary and secondary users, beneficiaries, affected people, excluded groups, machine actors, buyers, issuers, and accountable owners."
+      ],
+      "must_do": [
+        "Separate who operates the product, who benefits, who pays, who decides, who issues claims, who owns accountability, and who absorbs risk."
+      ],
+      "must_not_do": [
+        "Treat user, customer, buyer, beneficiary, operator, and affected person as interchangeable."
+      ],
+      "evidence_required": [
+        "Named roles with source, relationship to the workflow, authority, benefit, burden, and risk exposure."
+      ],
+      "counter_signal": [
+        "A stakeholder is affected or pays but is missing from the actor map, or a machine actor can act without a named accountable owner."
+      ],
+      "human_boundary": [
+        "A named human decides whether excluded or indirectly affected groups are acceptable for the current proof step."
+      ],
+      "stop_condition": [
+        "Stop or reframe when the accountable owner, affected population, or machine actor authority cannot be identified."
+      ],
+      "output_requirement": [
+        "Emit an actor map with operator, beneficiary, affected_person, excluded_group, buyer, issuer, and accountable_owner fields or explicit not_applicable reasons."
+      ],
+      "source": [
+        "UX3 canonical model: User Flow and Business Flow actor definitions."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.problem_hypothesis",
+      "title": "Problem hypothesis",
+      "flow": "user_flow",
+      "strength": "required",
+      "trigger": [
+        "A request proposes a feature, workflow, product direction, launch, or change."
+      ],
+      "must_inspect": [
+        "Target situation, current workaround, actor cost, friction, risk, urgency, and falsification criteria."
+      ],
+      "must_do": [
+        "Restate the request as a testable problem hypothesis before recommending build or launch."
+      ],
+      "must_not_do": [
+        "Treat a requested solution, executive preference, or novelty claim as proof that the problem exists."
+      ],
+      "evidence_required": [
+        "Observed behavior, direct quote, workflow trace, support issue, willingness signal, or comparable source tied to a specific actor and situation."
+      ],
+      "counter_signal": [
+        "Actors do not experience the cost, already have a sufficient workaround, or would not change behavior if the product existed."
+      ],
+      "human_boundary": [
+        "A named human may choose to explore a weakly evidenced problem only by recording the learning reason and proof bar."
+      ],
+      "stop_condition": [
+        "Stop or reframe when the problem, actor, situation, or disconfirming test cannot be stated."
+      ],
+      "output_requirement": [
+        "Emit a problem_hypothesis with actor, situation, current_workaround, cost, falsification_criteria, and next_learning_step."
+      ],
+      "source": [
+        "UX3 knowledge kernel: problem requests remain hypotheses until situated evidence is known."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.behavior_subjective_separation",
+      "title": "Behavior and subjective experience separation",
+      "flow": "evidence_flow",
+      "strength": "required",
+      "trigger": [
+        "A review uses user opinion, interview language, sentiment, analytics, logs, observed workflow, or behavioral metrics."
+      ],
+      "must_inspect": [
+        "Observed behavior, stated experience, context, intensity, timing, and whether either signal changes the product decision."
+      ],
+      "must_do": [
+        "Record behavior and subjective experience as different signals and compare whether they support the same interpretation."
+      ],
+      "must_not_do": [
+        "Use praise as behavior, use behavior as motivation, or let either signal impersonate the other."
+      ],
+      "evidence_required": [
+        "At least one source-labeled behavior signal or source-labeled subjective signal with context and decision impact."
+      ],
+      "counter_signal": [
+        "Users praise the idea but do not act, or users act while stated motivation contradicts the assumed reason."
+      ],
+      "human_boundary": [
+        "A named human decides how much subjective meaning or emotional intensity should influence taste and positioning."
+      ],
+      "stop_condition": [
+        "Stop or downgrade when behavior and subjective experience are collapsed into one unsupported evidence claim."
+      ],
+      "output_requirement": [
+        "Emit separate behavior_signal and subjective_signal entries, each with source, interpretation, counter_signal, and decision_impact."
+      ],
+      "source": [
+        "UX3 canonical model: Evidence Flow separates behavior, subjective experience, and interpretation."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.disconfirm_first",
+      "title": "Disconfirm first",
+      "flow": "evidence_flow",
+      "strength": "required",
+      "trigger": [
+        "A review supports a product direction, proof claim, investment, launch, or automation step."
+      ],
+      "must_inspect": [
+        "The strongest material counter-evidence, missing evidence, alternate explanations, and failure criteria."
+      ],
+      "must_do": [
+        "Present disconfirming evidence and uncertainty before supporting evidence."
+      ],
+      "must_not_do": [
+        "List only positive signals or bury counter-signals after a confident recommendation."
+      ],
+      "evidence_required": [
+        "A source-labeled counter-signal or an explicit statement that no material counter-signal is currently known and what search was performed."
+      ],
+      "counter_signal": [
+        "The main support can be explained by novelty, selection bias, channel pressure, one-off urgency, or reviewer preference."
+      ],
+      "human_boundary": [
+        "A named human may proceed despite counter-evidence only with recorded rationale, accepted risk, and reversal condition."
+      ],
+      "stop_condition": [
+        "Stop or reframe when no plausible counter-signal has been inspected for a material decision."
+      ],
+      "output_requirement": [
+        "Emit counter_signal_first with counter_signal, alternate_explanation, decision_impact, and reversal_condition."
+      ],
+      "source": [
+        "UX3 distilled rule family: Disconfirm first."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.evidence_separation",
+      "title": "Evidence separation",
+      "flow": "evidence_flow",
+      "strength": "required",
+      "trigger": [
+        "Any evidence receipt, claim, metric, quote, benchmark, incident, or evaluation is used to change a decision."
+      ],
+      "must_inspect": [
+        "Source, signal, interpretation, counter-signal, freshness, reliability, and decision impact."
+      ],
+      "must_do": [
+        "Keep source, signal, interpretation, counter-signal, and decision impact as separate fields."
+      ],
+      "must_not_do": [
+        "Embed interpretation inside a metric or quote, or let a source label stand in for decision impact."
+      ],
+      "evidence_required": [
+        "Traceable evidence receipt with provenance and a decision-changing interpretation."
+      ],
+      "counter_signal": [
+        "The same signal supports multiple interpretations, is stale, lacks provenance, or conflicts with another material source."
+      ],
+      "human_boundary": [
+        "A named human owns any taste, ethics, or strategy input that is not observed evidence."
+      ],
+      "stop_condition": [
+        "Stop or downgrade when source, signal, interpretation, or decision impact is missing for material evidence."
+      ],
+      "output_requirement": [
+        "Emit evidence entries with source, signal, interpretation, counter_signal, and decision_impact fields."
+      ],
+      "source": [
+        "UX3 canonical model: Evidence Flow separation."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.evidence_sized_action",
+      "title": "Evidence-sized action",
+      "flow": "cross_flow",
+      "strength": "required",
+      "trigger": [
+        "A review recommends build, launch, spend, automation, external communication, irreversible change, or broader rollout."
+      ],
+      "must_inspect": [
+        "Evidence tier, risk, reversibility, blast radius, uncertainty, stakeholder exposure, and next smallest learning step."
+      ],
+      "must_do": [
+        "Limit the next action to what the current evidence tier, risk, and reversibility justify."
+      ],
+      "must_not_do": [
+        "Upgrade weak proof with confidence language, urgency, taste, or stakeholder pressure."
+      ],
+      "evidence_required": [
+        "Evidence tier and rationale for why the proposed action size is proportional to observed proof and recoverability."
+      ],
+      "counter_signal": [
+        "The action affects more people, spends more, grants more authority, or becomes harder to reverse than the evidence supports."
+      ],
+      "human_boundary": [
+        "A named human may accept a larger action only by recording risk appetite, owner, limit, and reversal condition."
+      ],
+      "stop_condition": [
+        "Stop or reduce scope when action size exceeds evidence tier or recovery capacity."
+      ],
+      "output_requirement": [
+        "Emit bounded_action with evidence_tier, max_scope, risk_limit, reversibility, owner, stop_condition, and observation_plan."
+      ],
+      "source": [
+        "UX3 distilled rule family: Evidence-sized action."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.minimum_authority",
+      "title": "Minimum authority",
+      "flow": "cross_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A machine actor, automation, agent, workflow, integration, or delegated process can read, write, decide, spend, message, publish, or call tools."
+      ],
+      "must_inspect": [
+        "Requested permissions, tool access, data access, execution boundary, approval path, trace, and recovery option."
+      ],
+      "must_do": [
+        "Grant the least authority needed for the current proof step and require a named accountable owner."
+      ],
+      "must_not_do": [
+        "Grant broad, persistent, external, or irreversible authority for a narrow learning step."
+      ],
+      "evidence_required": [
+        "Specific task need, minimum permission set, duration, owner, audit trace, and revocation path."
+      ],
+      "counter_signal": [
+        "The actor requests unused permissions, lacks an owner, cannot be audited, or can affect parties outside the proof boundary."
+      ],
+      "human_boundary": [
+        "A named human approves any external, irreversible, sensitive, financial, or reputation-bearing authority."
+      ],
+      "stop_condition": [
+        "Stop when minimum permission, owner, trace, or revocation path is absent."
+      ],
+      "output_requirement": [
+        "Emit authority_boundary with actor, allowed_actions, denied_actions, data_scope, time_limit, owner, audit_trace, and revocation_path."
+      ],
+      "source": [
+        "UX3 distilled rule family: Minimum authority."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.high_risk_action_bundle",
+      "title": "High-risk action bundle",
+      "flow": "cross_flow",
+      "strength": "conditional",
+      "trigger": [
+        "The next action is external, irreversible, sensitive, financial, legal, reputation-bearing, safety-relevant, or hard to recover."
+      ],
+      "must_inspect": [
+        "Owner, approval, scope limit, blast radius, trace, failure handling, rollback, recovery path, and user or stakeholder impact."
+      ],
+      "must_do": [
+        "Require an owner, explicit approval, limit, trace, failure handling, and recovery path before execution."
+      ],
+      "must_not_do": [
+        "Execute high-risk actions from an implicit approval, vague owner, or unbounded scope."
+      ],
+      "evidence_required": [
+        "Approval record, action boundary, risk assessment, recovery plan, and evidence that the action is necessary for the current proof step."
+      ],
+      "counter_signal": [
+        "No rollback exists, affected parties are not identified, approval is ambiguous, or failure handling depends on manual discovery after harm."
+      ],
+      "human_boundary": [
+        "A named human retains final approval and responsibility for high-risk execution."
+      ],
+      "stop_condition": [
+        "Stop when owner, approval, limit, trace, failure handling, or recovery path is missing."
+      ],
+      "output_requirement": [
+        "Emit high_risk_action_bundle with owner, approval_record, scope_limit, trace_id, failure_handling, recovery_path, and abort_condition."
+      ],
+      "source": [
+        "UX3 distilled rule family: High-risk action bundle."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.minimum_validated_proof",
+      "title": "Minimum Validated Proof",
+      "flow": "cross_flow",
+      "strength": "required",
+      "trigger": [
+        "A review proposes an MVP, prototype, pilot, experiment, launch slice, or validation step."
+      ],
+      "must_inspect": [
+        "Riskiest assumption, actor behavior needed to prove it, proof bar, smallest test, and what would invalidate the direction."
+      ],
+      "must_do": [
+        "Design the smallest proof that tests the riskiest assumption, not the smallest feature list."
+      ],
+      "must_not_do": [
+        "Call a reduced feature set an MVP when it does not test the core risk."
+      ],
+      "evidence_required": [
+        "A named riskiest assumption, measurable behavior or outcome, proof bar, observation plan, and disconfirming threshold."
+      ],
+      "counter_signal": [
+        "The proposed MVP mainly demonstrates build ability, visual appeal, or internal preference while leaving the riskiest assumption untested."
+      ],
+      "human_boundary": [
+        "A named human chooses which assumption is strategic enough to test first when multiple material risks remain."
+      ],
+      "stop_condition": [
+        "Stop or reframe when the proof step does not observe the riskiest assumption."
+      ],
+      "output_requirement": [
+        "Emit minimum_validated_proof with riskiest_assumption, test_actor, proof_bar, smallest_test, disconfirming_threshold, and next_decision."
+      ],
+      "source": [
+        "UX3 distilled rule family: Minimum Validated Proof."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.feedback_classification",
+      "title": "Feedback classification",
+      "flow": "evidence_flow",
+      "strength": "required",
+      "trigger": [
+        "Incoming feedback, complaint, praise, support request, metric change, incident, review, or stakeholder request may affect product direction."
+      ],
+      "must_inspect": [
+        "Source, actor role, recency, repeatability, severity, behavior link, decision impact, and whether the signal is evidence, noise, incident, or drift."
+      ],
+      "must_do": [
+        "Classify feedback before changing direction or adding work."
+      ],
+      "must_not_do": [
+        "Treat all feedback as equal, or convert a single loud signal into a roadmap change without classification."
+      ],
+      "evidence_required": [
+        "Feedback source, classification, rationale, related evidence, counter-signal, and proposed action or no-action reason."
+      ],
+      "counter_signal": [
+        "The feedback is isolated, unactionable, mismatched to the target actor, contradicted by behavior, or already covered by an accepted risk."
+      ],
+      "human_boundary": [
+        "A named human decides whether strategically important but weak feedback deserves exploration despite low evidence."
+      ],
+      "stop_condition": [
+        "Stop or defer when feedback cannot be classified or lacks a decision impact."
+      ],
+      "output_requirement": [
+        "Emit feedback_classification with category, source, actor_role, severity, repeatability, decision_impact, and next_action."
+      ],
+      "source": [
+        "UX3 distilled rule family: Feedback classification."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.false_product_market_fit",
+      "title": "False product-market fit",
+      "flow": "cross_flow",
+      "strength": "required",
+      "trigger": [
+        "A review claims traction, product-market fit, strong demand, adoption, retention, or launch readiness."
+      ],
+      "must_inspect": [
+        "Repeated use, workflow dependence, payment or budget movement, switching cost, referral with reputation at stake, retention, and cohort quality."
+      ],
+      "must_do": [
+        "Rank praise and novelty below repeated behavior, workflow dependence, payment, and reputation-bearing referral."
+      ],
+      "must_not_do": [
+        "Treat excitement, signups, demos, vanity metrics, or novelty as product-market fit."
+      ],
+      "evidence_required": [
+        "Behavioral proof tied to a target actor and repeated or costly enough to show real demand."
+      ],
+      "counter_signal": [
+        "Users praise but do not return, do not pay, do not integrate, do not depend on the workflow, or churn after novelty fades."
+      ],
+      "human_boundary": [
+        "A named human may pursue a strategic wedge before fit only by recording that fit is unproven and naming the next proof bar."
+      ],
+      "stop_condition": [
+        "Stop or downgrade fit claims when proof is limited to praise, novelty, signups, or one-off usage."
+      ],
+      "output_requirement": [
+        "Emit fit_evidence with signal_strength, behavior_frequency, workflow_dependence, payment_signal, referral_risk, counter_signal, and fit_claim_limit."
+      ],
+      "source": [
+        "UX3 distilled rule family: False product-market fit."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.whole_ownership_cost",
+      "title": "Whole ownership cost",
+      "flow": "business_flow",
+      "strength": "required",
+      "trigger": [
+        "A review recommends building, launching, integrating, automating, scaling, or maintaining a product capability."
+      ],
+      "must_inspect": [
+        "Support, trust, measurement, maintenance, confusion, governance, dependency, opportunity cost, recovery cost, and stakeholder burden."
+      ],
+      "must_do": [
+        "Include whole ownership cost in viability and value exchange decisions."
+      ],
+      "must_not_do": [
+        "Use build cost, model cost, or implementation effort as the full cost of ownership."
+      ],
+      "evidence_required": [
+        "Cost categories, responsible owner, expected operating load, measurement plan, and what cost would make the direction nonviable."
+      ],
+      "counter_signal": [
+        "Hidden support, trust, compliance, maintenance, or confusion cost exceeds the value created or cannot be owned."
+      ],
+      "human_boundary": [
+        "A named human accepts or rejects ownership cost trade-offs and opportunity cost."
+      ],
+      "stop_condition": [
+        "Stop or reframe when ownership cost is unknown, unowned, or larger than the justified proof step."
+      ],
+      "output_requirement": [
+        "Emit ownership_cost with support, trust, measurement, maintenance, governance, opportunity_cost, owner, and nonviable_threshold."
+      ],
+      "source": [
+        "UX3 distilled rule family: Whole ownership cost."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.depth_accumulation",
+      "title": "Depth accumulation",
+      "flow": "business_flow",
+      "strength": "advisory",
+      "trigger": [
+        "A review claims defensibility, moat, compounding advantage, quality, expertise, or long-term product strength."
+      ],
+      "must_inspect": [
+        "Domain terms, edge cases, failure history, workflow rules, evaluation suites, expert judgment, proprietary learning, and switching cost."
+      ],
+      "must_do": [
+        "Identify what durable depth accumulates from use, learning, failures, and expert review."
+      ],
+      "must_not_do": [
+        "Describe feature count, generic automation, or visual polish as durable product depth."
+      ],
+      "evidence_required": [
+        "A depth asset with source, owner, reuse path, evaluation method, and evidence that it improves future decisions or workflow lock-in."
+      ],
+      "counter_signal": [
+        "The asset is generic, easily copied, not reused, not evaluated, or disconnected from the target workflow."
+      ],
+      "human_boundary": [
+        "A named human judges whether the depth aligns with strategy and is worth compounding."
+      ],
+      "stop_condition": [
+        "Stop claiming defensibility when no durable depth asset or accumulation path is identified."
+      ],
+      "output_requirement": [
+        "Emit depth_asset with asset_type, source, reuse_path, evaluation_method, owner, counter_signal, and compounding_decision."
+      ],
+      "source": [
+        "UX3 distilled rule family: Depth accumulation."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.failure_to_rule_learning",
+      "title": "Failure-to-rule learning",
+      "flow": "evidence_flow",
+      "strength": "required",
+      "trigger": [
+        "An edge case, incident, repeated failure, surprising outcome, or recurring review correction appears."
+      ],
+      "must_inspect": [
+        "Failure pattern, recurrence, affected actors, missing evidence, broken assumption, reproducible case, and whether the system should change."
+      ],
+      "must_do": [
+        "Convert repeated failure into a reproducible case, test, evaluation, rule, or explicit accepted risk."
+      ],
+      "must_not_do": [
+        "Leave repeated failures as chat memory, undocumented judgment, or one-off manual caution."
+      ],
+      "evidence_required": [
+        "Failure description, recurrence evidence, affected scope, root assumption, selected learning artifact, and owner."
+      ],
+      "counter_signal": [
+        "The failure is non-reproducible, isolated, outside the product boundary, or already covered by a sufficient rule and test."
+      ],
+      "human_boundary": [
+        "A named human may accept a recurring risk only with rationale, owner, review date, and reversal condition."
+      ],
+      "stop_condition": [
+        "Stop or block repetition when a repeated failure has no test, evaluation, rule, or accepted-risk record."
+      ],
+      "output_requirement": [
+        "Emit learning_update with failure_pattern, recurrence, artifact_type, owner, due_condition, and accepted_risk if applicable."
+      ],
+      "source": [
+        "UX3 distilled rule family: Failure-to-rule learning."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.mental_model_alignment",
+      "title": "Mental model alignment",
+      "flow": "user_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A product introduces a novel interaction, agent capability, automated decision, unfamiliar state, hidden system behavior, or changed responsibility that a target actor must understand."
+      ],
+      "must_inspect": [
+        "The actor's current mental model, the product team's conceptual model, prior expectation, predicted system behavior, visible state, error expectation, and responsibility boundary."
+      ],
+      "must_do": [
+        "Compare what the actor expects with what the product or agent will actually do, then expose the smallest explanation, preview, feedback, or control needed for accurate prediction."
+      ],
+      "must_not_do": [
+        "Treat first-use success, visual familiarity, or confident language as proof that the actor understands capability, uncertainty, hidden action, or consequence."
+      ],
+      "evidence_required": [
+        "A comprehension or prediction test in which a target actor explains what will happen, what data or authority is involved, what failure looks like, and how to intervene."
+      ],
+      "counter_signal": [
+        "The actor can complete the happy path but predicts the wrong capability, state, error, data use, automation boundary, or recovery path."
+      ],
+      "human_boundary": [
+        "A named human decides which complexity is essential to the product promise and which complexity must be removed rather than explained away."
+      ],
+      "stop_condition": [
+        "Stop or reduce autonomy when the target actor cannot form an accurate mental model of material behavior, consequence, or intervention."
+      ],
+      "output_requirement": [
+        "Emit mental_model_record with target_actor, current_expectation, conceptual_model, prediction_test, mismatch, intervention, evidence_needed, owner, and stop_condition."
+      ],
+      "source": [
+        "UX3 chapter 0-2: mental model and conceptual model alignment.",
+        "UX3 chapter 1-3: iterative user-centered design.",
+        "UX3 chapter 2-3: interaction feedback and system-state understanding."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.human_factors_load",
+      "title": "Human factors load",
+      "flow": "user_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A workflow has material cognitive, physical, attention, accessibility, safety, interruption, handoff, automation-bias, or recovery risk, or observed evidence shows that the target actor is overloaded or losing situation awareness."
+      ],
+      "must_inspect": [
+        "The human, task, tool, and environment as one system; attention demand, working memory demand, situation awareness, action mapping, interruption, handoff, error visibility, and recovery burden."
+      ],
+      "must_do": [
+        "Reduce memory-dependent action, keep material state in the world, make task progress and automation state visible, and provide a recoverable path after interruption or error."
+      ],
+      "must_not_do": [
+        "Optimize the interface in isolation while ignoring the surrounding task, environment, cognitive load, automation bias, overtrust, handoff fatigue, or recovery work."
+      ],
+      "evidence_required": [
+        "Observed task performance in the intended context, including attention shifts, memory failures, completion, error, hesitation, interruption, handoff, and recovery behavior."
+      ],
+      "counter_signal": [
+        "The flow appears efficient in a scripted demo but fails under interruption, divided attention, real environment constraints, automation bias, overtrust, or recovery."
+      ],
+      "human_boundary": [
+        "A named human accepts any residual cognitive or physical burden and confirms that safety, accessibility, and operator responsibility remain supportable."
+      ],
+      "stop_condition": [
+        "Stop or simplify when material state is hidden, recovery depends on memory, or observed cognitive burden exceeds the target actor's context and capacity."
+      ],
+      "output_requirement": [
+        "Emit human_factors_review with actor, task, tool, environment, attention_load, memory_load, automation_risk, interruption_path, recovery_path, observed_evidence, owner, and required_change."
+      ],
+      "source": [
+        "UX3 chapter 1-7: human, task, tool, and environment system; attention, memory, situation awareness, and knowledge in the world.",
+        "UX3 chapter 2-3: action, feedback, mapping, and interaction principles.",
+        "UX3 chapter 3-8: contextual usability, effectiveness, efficiency, satisfaction, error, and recovery."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.research_validity",
+      "title": "Research validity",
+      "flow": "evidence_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A decision cites an interview, survey, usability test, analytics result, field observation, experiment, synthetic user, simulation, model-generated synthesis, or research claim."
+      ],
+      "must_inspect": [
+        "The research question, decision uncertainty, method fit, target actor, sample, context, attitude signal, behavior signal, comparison, bias, limitation, and disconfirming result."
+      ],
+      "must_do": [
+        "Match the method to the decision uncertainty, separate exploratory from evaluative work, and distinguish attitude, behavior, qualitative meaning, and quantitative frequency. Reference canonical evidence receipts and behavior or subjective signal records instead of copying their contents into the research-validity record."
+      ],
+      "must_not_do": [
+        "Use synthetic users, simulation, AI summaries, convenience samples, stated preference, or a usability test as substitutes for evidence they cannot produce. Do not duplicate evidence entries, behavior signals, subjective signals, counter-signals, or decision-impact records."
+      ],
+      "evidence_required": [
+        "A research receipt naming the research question, target actor, method, sample, context, raw source, observed attitude or behavior, limitation, counter-signal, and decision impact."
+      ],
+      "counter_signal": [
+        "The result changes when context, sample, task, facilitator, metric, interpretation, or comparison changes, or attitude and behavior point in different directions."
+      ],
+      "human_boundary": [
+        "A named human owns method selection, interpretation, ethical treatment of participants, and any decision to proceed with known evidence limitations."
+      ],
+      "stop_condition": [
+        "Stop or downgrade the claim when the method cannot answer the research question, the sample misses the target actor, raw evidence is unavailable, or simulation is presented as real-world validation."
+      ],
+      "output_requirement": [
+        "Emit research_validity_record with research_question, decision_uncertainty, target_actor, method, sample, context, evidence_receipt_ids, behavior_signal_refs, subjective_signal_refs, limitation, counter_signal_refs, decision_impact_ref, and next_method."
+      ],
+      "source": [
+        "UX3 chapter 1-8: research reduces uncertainty; method choice spans qualitative, quantitative, attitude, behavior, laboratory, and field work.",
+        "UX3 chapter 2-9: task-based prototype testing and contextual observation.",
+        "UX3 chapter 3-7: subjective and objective evidence have different strengths and failure modes.",
+        "UX3 chapter 3-8: usability evaluation is distinct from exploratory user research."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.value_market_path",
+      "title": "Value-to-market path",
+      "flow": "business_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A review proposes a value proposition, product direction, market position, business model, go-to-market path, launch channel, buyer pathway, or pre-fit growth hypothesis."
+      ],
+      "must_inspect": [
+        "The target actor and job, unmet need, current alternative, differentiated value, user cost, business capture, willingness signal, buyer, channel, retention mechanism, operating model, and failure threshold."
+      ],
+      "must_do": [
+        "Connect target actor value to a credible exchange and market path: why the actor changes behavior, why the buyer supports it, how the channel reaches them, and what repeated use or retention would mean. This is a pre-fit path review, not a product-market fit verdict."
+      ],
+      "must_not_do": [
+        "Start from monetization mechanics, feature novelty, total market size, generated traffic, or a preferred channel without proving target value and behavior change. Do not use this rule to validate a product-market fit claim; activate ux3.rule.false_product_market_fit instead."
+      ],
+      "evidence_required": [
+        "A target-actor receipt showing current alternative, experienced cost, willingness or costly behavior, differentiated value, buyer or budget signal, reachable channel, and retention or repeat-use hypothesis."
+      ],
+      "counter_signal": [
+        "The current alternative is sufficient, the user and buyer value different outcomes, willingness disappears outside a subsidized channel, acquisition does not lead to retention, or the value can be copied without workflow depth."
+      ],
+      "human_boundary": [
+        "A named human owns positioning, pricing ethics, strategic market choice, acceptable subsidy, brand promise, and any decision to explore before market evidence is strong."
+      ],
+      "stop_condition": [
+        "Stop or reframe when no target actor changes meaningful behavior, no credible buyer or channel exists, the exchange hides unacceptable cost, or the proposed retention mechanism lacks a testable cause."
+      ],
+      "output_requirement": [
+        "Emit value_market_path_record with target_actor, job, current_alternative, unmet_need, differentiated_value, user_cost, business_capture, buyer, willingness_signal, channel, retention_hypothesis, counter_signal, owner, and next_market_test."
+      ],
+      "source": [
+        "UX3 chapter 1-5: positioning requires wanted, differentiated, and profitable value.",
+        "UX3 chapter 1-9: value proposition connects user need, product promise, and exchange.",
+        "UX3 chapter 2-2: product design decisions depend on the complete business model.",
+        "UX3 chapter 3-1: go-to-market is the activation plan for product-market fit.",
+        "UX3 chapter 3-2: acquisition, activation, retention, referral, revenue, and growth loops."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.human_agent_interaction",
+      "title": "Human-agent interaction",
+      "flow": "cross_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A machine actor interprets intent, proposes or changes a plan, calls a tool, transforms data, makes a recommendation, takes action, or hands work back to a person."
+      ],
+      "must_inspect": [
+        "User intent, plan visibility, system status, uncertainty, authority, data use, tool action, approval point, interrupt, correct, undo, log, handoff, failure state, recovery path, and accountable owner."
+      ],
+      "must_do": [
+        "Keep material intent, plan, action, state, and consequence inspectable; provide interrupt, correct, undo, or approve controls in proportion to risk; preserve a readable log and a visible recovery surface. When authority or high-risk rules also trigger, reference their canonical records instead of copying permission, approval, owner, trace, rollback, or operational recovery fields."
+      ],
+      "must_not_do": [
+        "Hide a material plan or tool action behind conversational fluency, treat generated text as informed consent, or make completion easier than correction, refusal, exit, or recovery. Do not duplicate authority_boundary, high_risk_action_bundle, or recovery_path records inside the interaction contract."
+      ],
+      "evidence_required": [
+        "A scenario-based interaction test showing that the target actor can predict the next action, inspect the plan, approve or refuse when required, interrupt, correct, undo where feasible, read the log, and recover from failure."
+      ],
+      "counter_signal": [
+        "The happy path succeeds but the actor cannot see what the agent did, detect a wrong assumption, stop execution, correct state, understand a handoff, or recover without expert support."
+      ],
+      "human_boundary": [
+        "A named human defines which actions require approval, which consequences are unacceptable, which records must remain legible, and who is responsible when the agent is wrong."
+      ],
+      "stop_condition": [
+        "Stop or reduce agent authority when material intent, plan, status, approval, interrupt, correction, log, accountability, or recovery is absent or untested."
+      ],
+      "output_requirement": [
+        "Emit interaction_contract with target_actor, intent, visible_plan, visible_status, approval_surface, interrupt_path, correct_path, undo_path, log_surface, failure_state, recovery_surface, handoff, test_evidence, authority_boundary_ref when minimum authority is triggered, and high_risk_action_bundle_ref when high risk is triggered."
+      ],
+      "source": [
+        "UX3 chapter 2-3: action, feedback, mapping, visibility, and system-state interaction principles.",
+        "UX3 chapter 2-4: information architecture connects user, content, context, and decision information.",
+        "UX3 chapter 2-6: interface principles reduce learning cost and make feedback understandable.",
+        "UX3 chapter 3-3: touchpoints form one connected journey across channels and devices.",
+        "UX3 chapter 3-4: each touchpoint must align actor, motivation, device, information, persuasion, guidance, and friendliness."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.motivation_ethics",
+      "title": "Motivation ethics",
+      "flow": "cross_flow",
+      "strength": "conditional",
+      "trigger": [
+        "A product uses retention, notification, personalization, recommendation, streaks, rewards, scarcity, social pressure, loss framing, gamification, or adaptive difficulty to change repeated behavior."
+      ],
+      "must_inspect": [
+        "The target behavior, intrinsic and extrinsic motivation, user benefit, business benefit, friction, frequency, vulnerable actors, personalization inputs, social pressure, loss mechanism, consent, exit, and long-term autonomy."
+      ],
+      "must_do": [
+        "Make the intended behavior and exchange legible, preserve meaningful choice and exit, limit pressure and personalization, and test whether repeated use still serves the target actor's stated goal."
+      ],
+      "must_not_do": [
+        "Treat engagement, time spent, return frequency, conversion, or reward response as sufficient when the mechanism exploits vulnerability, obscures cost, weakens autonomy, or makes exit harder."
+      ],
+      "evidence_required": [
+        "Behavioral and subjective evidence covering benefit, regret, trust, pressure, unintended use, vulnerable-group impact, opt-out or exit behavior, and whether intrinsic motivation survives removal of extrinsic rewards."
+      ],
+      "counter_signal": [
+        "Engagement rises while trust, goal completion, wellbeing, informed choice, intrinsic motivation, or willingness to continue without pressure declines."
+      ],
+      "human_boundary": [
+        "A named human owns the ethical limit on manipulation, vulnerable-group protection, acceptable pressure, pricing and reward fairness, personalization depth, and removal or exit rights."
+      ],
+      "stop_condition": [
+        "Stop or redesign when the mechanism depends on concealed cost, coercive loss, vulnerable-user exploitation, non-consensual personalization, blocked exit, or engagement that conflicts with the actor's goal."
+      ],
+      "output_requirement": [
+        "Emit motivation_ethics_review with target_behavior, intrinsic_motivation, extrinsic_motivation, user_benefit, business_benefit, vulnerable_groups, manipulation_risk, personalization_scope, pressure_limit, consent, exit_path, counter_signal, owner, and redesign_condition."
+      ],
+      "source": [
+        "UX3 chapter 3-5: retention depends on motivation, reinforcement, lifetime value, recommendation, and ethical restraint against addiction.",
+        "UX3 chapter 3-6: gamification aligns challenge, ability, trigger, intrinsic and extrinsic motivation, reward, and player type."
+      ]
+    },
+    {
+      "rule_id": "ux3.rule.human_judgment",
+      "title": "Human judgment",
+      "flow": "cross_flow",
+      "strength": "required",
+      "trigger": [
+        "A decision depends on taste, ethics, meaning, brand feel, strategic appetite, risk appetite, accountability, or final responsibility."
+      ],
+      "must_inspect": [
+        "Which part is evidence, which part is interpretation, which part is human taste or responsibility, and who owns the call."
+      ],
+      "must_do": [
+        "Record human taste and judgment as accountable input, never as an evidence score."
+      ],
+      "must_not_do": [
+        "Convert taste, ethics, meaning, or final responsibility into a mechanical confidence score or hidden agent decision."
+      ],
+      "evidence_required": [
+        "Named human owner, decision statement, evidence considered, accountable rationale, bounded action, and reversal condition."
+      ],
+      "counter_signal": [
+        "The review hides taste inside evidence language, lacks a named owner, or lets a machine decide an accountable human trade-off."
+      ],
+      "human_boundary": [
+        "Taste, ethics, meaning, strategic appetite, risk appetite, and final responsibility remain owned by a named person."
+      ],
+      "stop_condition": [
+        "Stop when a human-owned decision is required but no named accountable human decision record exists."
+      ],
+      "output_requirement": [
+        "Emit human_judgment_record with owner, judgment_type, decision, evidence_considered, bounded_action, reversal_condition, and accountability_note."
+      ],
+      "source": [
+        "UX3 canonical model: Human taste is accountable input, not an evidence score."
+      ]
+    }
+  ]
+}

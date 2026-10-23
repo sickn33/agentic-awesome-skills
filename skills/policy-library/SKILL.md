@@ -171,6 +171,7 @@ CREATE INDEX idx_policy_library_status ON policy_library (status);
       "Acknowledgements": { "type": "number" }
   },
   "required": [
+      "Acknowledgement Required",
       "Category",
       "Effective Date",
       "Next Review",
@@ -312,8 +313,8 @@ We have some HR policies in a folder and nothing else written down.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [People directory](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
 ## Reusable Prompt

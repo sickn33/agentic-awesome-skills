@@ -49,9 +49,9 @@ date_added: "2026-02-27"
 |------|---------|
 | List processes | `ps aux` |
 | Find by name | `ps aux \| grep node` |
-| Kill by PID | `kill -9 <PID>` |
+| Stop owned process | `kill -TERM <verified-task-PID>`; verify exit, escalate only if necessary |
 | Find port user | `lsof -i :3000` |
-| Kill port | `kill -9 $(lsof -t -i :3000)` |
+| Inspect port owner | `lsof -nP -iTCP:3000 -sTCP:LISTEN`; verify ownership before stopping |
 | Background | `npm run dev &` |
 | Jobs | `jobs -l` |
 | Bring to front | `fg %1` |
@@ -65,7 +65,7 @@ date_added: "2026-02-27"
 | Tool | Purpose | Example |
 |------|---------|---------|
 | `grep` | Search | `grep -rn "TODO" src/` |
-| `sed` | Replace | `sed -i 's/old/new/g' file.txt` |
+| `sed` | Preview replacement | `sed 's/old/new/g' file.txt` (in-place flags differ on macOS/GNU) |
 | `awk` | Extract columns | `awk '{print $1}' file.txt` |
 | `cut` | Cut fields | `cut -d',' -f1 data.csv` |
 | `sort` | Sort lines | `sort -u file.txt` |
@@ -183,7 +183,7 @@ done
 set -e          # Exit on error
 set -u          # Exit on undefined variable
 set -o pipefail # Exit on pipe failure
-set -x          # Debug: print commands
+set -x          # Debug only with non-secret inputs; prints expanded arguments
 ```
 
 ### Trap for cleanup
@@ -198,7 +198,7 @@ trap cleanup EXIT
 
 ---
 
-> **Remember:** Bash is text-based. Use `&&` for success chains, `set -e` for safety, and quote your variables!
+> **Remember:** Bash is text-based. Use `&&` for success chains and quote variables. `set -e` has conditional/pipeline exceptions; explicitly check consequential operations and never infer complete safety from shell flags.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

@@ -49,14 +49,14 @@ Message history contains the conversation between the user and agent, including 
 Message history serves as scratchpad memory where agents track progress, maintain task state, and preserve reasoning across turns. Effective management of message history is critical for long-horizon task completion.
 
 **Tool Outputs**
-Tool outputs are the results of agent actions: file contents, search results, command execution output, API responses, and similar data. Tool outputs comprise the majority of tokens in typical agent trajectories, with research showing observations (tool outputs) can reach 83.9% of total context usage.
+Tool outputs are the results of agent actions: file contents, search results, command execution output, API responses, and similar data. Tool outputs comprise the majority of tokens in typical agent trajectories, with research showing observations (tool outputs) can dominate some workloads; this tree does not provide a dataset supporting a universal percentage.
 
 Tool outputs consume context whether they are relevant to current decisions or not. This creates pressure for strategies like observation masking, compaction, and selective tool result retention.
 
 ### Context Windows and Attention Mechanics
 
 **The Attention Budget Constraint**
-Language models process tokens through attention mechanisms that create pairwise relationships between all tokens in context. For n tokens, this creates n² relationships that must be computed and stored. As context length increases, the model's ability to capture these relationships gets stretched thin.
+Language models process tokens through attention mechanisms that create pairwise relationships between all tokens in context. Dense self-attention has quadratic prefill interaction count in sequence length; optimized kernels, sparse architectures and cached decoding have different memory/runtime characteristics. As context length increases, the model's ability to capture these relationships gets stretched thin.
 
 Models develop attention patterns from training data distributions where shorter sequences predominate. This means models have less experience with and fewer specialized parameters for context-wide dependencies. The result is an "attention budget" that depletes as context grows.
 
@@ -72,7 +72,7 @@ This approach keeps agents fast while giving them access to more context on dema
 
 The assumption that larger context windows solve memory problems has been empirically debunked. Context engineering means finding the smallest possible set of high-signal tokens that maximize the likelihood of desired outcomes.
 
-Several factors create pressure for context efficiency. Processing cost grows disproportionately with context length—not just double the cost for double the tokens, but exponentially more in time and computing resources. Model performance degrades beyond certain context lengths even when the window technically supports more tokens. Long inputs remain expensive even with prefix caching.
+Several factors create pressure for context efficiency. Processing cost grows disproportionately with context length—not just double the cost for double the tokens, but potentially superlinear prefill work for dense attention, with actual cost depending on architecture, kernels, caching and provider pricing. Model performance degrades beyond certain context lengths even when the window technically supports more tokens. Long inputs remain expensive even with prefix caching.
 
 The guiding principle is informativity over exhaustiveness. Include what matters for the decision at hand, exclude what does not, and design systems that can access additional information on demand.
 
@@ -83,6 +83,8 @@ Context must be treated as a finite resource with diminishing marginal returns. 
 Every new token introduced depletes this budget by some amount. This creates the need for careful curation of available tokens. The engineering problem is optimizing utility against inherent constraints.
 
 Context engineering is iterative and the curation phase happens each time you decide what to pass to the model. It is not a one-time prompt writing exercise but an ongoing discipline of context management.
+
+Loading, serialization, prefix caching and instruction persistence are client/model-specific; verify actual behavior rather than assuming every tool definition or rules file is always present. “Attention budget” is an engineering metaphor, not a literal per-token consumable resource. Treat retrieved documents and tool outputs as untrusted evidence, keep instruction authority separate, and redact secrets before storing context or summaries. Thresholds such as 70–80% are tunable heuristics requiring task-specific measurement.
 
 ## Practical Guidance
 

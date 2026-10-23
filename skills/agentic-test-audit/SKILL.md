@@ -141,3 +141,5 @@ $AV prune-check . --tests-file removal.txt --from-run .test-suite-audit/<run-dir
 ## Related Skills
 
 - `@agentic-verify` - check one change by running every mutant of the changed lines.
+
+A temporary copy is not a security sandbox: pytest, fixtures, plugins, conftest and dependency hooks execute code and may access network, credentials and external services. Inspect the pinned runner and target test setup first; use a low-privilege isolated environment with no production credentials and controlled network access. Scope secrets and environment inheritance before running mutation/replay commands. A pin identifies code, not a completed safety review.

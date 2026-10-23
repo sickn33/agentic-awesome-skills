@@ -76,6 +76,10 @@ WebPubSubServiceAsyncClient asyncClient = new WebPubSubServiceClientBuilder()
 - **Connection**: Individual WebSocket client connection
 - **User**: Entity that can have multiple connections
 
+## Authorization and delivery boundaries
+
+Issue client tokens only from an authenticated server; derive user/group/tenant identity from trusted account state, not request parameters. Prefer group-scoped roles and short expirations; unrestricted join/send roles allow access to any group in the hub. Do not log bearer URLs or connection secrets. Broadcasts/group changes/disconnects require approved target scope; service acceptance does not establish every client received/processed a message. The snippets target the stated SDK version and omit complete auth/retry application logic.
+
 ## Core Patterns
 
 ### Send to All Connections
@@ -189,7 +193,7 @@ import com.azure.messaging.webpubsub.models.WebPubSubClientAccessToken;
 // Basic token
 WebPubSubClientAccessToken token = client.getClientAccessToken(
     new GetClientAccessTokenOptions());
-System.out.println("URL: " + token.getUrl());
+// Return token.getUrl() only to the authenticated authorized client over TLS; never log it.
 
 // With user ID
 WebPubSubClientAccessToken userToken = client.getClientAccessToken(
@@ -245,8 +249,9 @@ boolean hasPermission = client.checkPermission(
 ```java
 asyncClient.sendToAll("Async message!", WebPubSubContentType.TEXT_PLAIN)
     .subscribe(
-        unused -> System.out.println("Message sent"),
-        error -> System.err.println("Error: " + error.getMessage())
+        unused -> { },
+        error -> System.err.println("Error: " + error.getMessage()),
+        () -> System.out.println("Message accepted by service")
     );
 
 asyncClient.sendToGroup("developers", "Group message", WebPubSubContentType.TEXT_PLAIN)

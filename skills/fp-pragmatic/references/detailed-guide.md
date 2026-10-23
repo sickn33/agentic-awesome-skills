@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples target fp-ts 2.x with flatMap available; check the installed version. Before/after blocks are alternative snippets, not one file with duplicate declarations. Import the project’s User/Item types and validate external JSON at runtime; a type annotation does not make untrusted data conform. TaskEither is lazy: calling the returned thunk executes the effect each time, so do not repeat payment/network thunks as retries without idempotency.
+
 ## The Golden Rule
 
 > **If functional programming makes your code harder to read, don't use it.**
@@ -89,16 +91,18 @@ import { pipe } from 'fp-ts/function'
 
 // Before: Hidden failure mode
 function parseAge(input: string): number {
-  const age = parseInt(input, 10)
-  if (isNaN(age)) throw new Error('Invalid age')
+  if (!/^[0-9]+$/.test(input.trim())) throw new Error('Invalid age')
+  const age = Number(input)
+  if (!Number.isSafeInteger(age)) throw new Error('Invalid age')
   if (age < 0) throw new Error('Age cannot be negative')
   return age
 }
 
 // After: Errors are visible in the type
 function parseAge(input: string): E.Either<string, number> {
-  const age = parseInt(input, 10)
-  if (isNaN(age)) return E.left('Invalid age')
+  if (!/^[0-9]+$/.test(input.trim())) return E.left('Invalid age')
+  const age = Number(input)
+  if (!Number.isSafeInteger(age)) return E.left('Invalid age')
   if (age < 0) return E.left('Age cannot be negative')
   return E.right(age)
 }
@@ -143,7 +147,7 @@ const doubled: E.Either<Error, number> = pipe(
 
 // Transform arrays (same concept!)
 const numbers = [1, 2, 3]
-const doubled = pipe(
+const doubledNumbers = pipe(
   numbers,
   A.map(n => n * 2)
 )
@@ -161,8 +165,8 @@ const parseJSON = (s: string): E.Either<string, unknown> =>
   E.tryCatch(() => JSON.parse(s), () => 'Invalid JSON')
 
 const extractEmail = (data: unknown): E.Either<string, string> => {
-  if (typeof data === 'object' && data !== null && 'email' in data) {
-    return E.right((data as { email: string }).email)
+  if (typeof data === 'object' && data !== null && 'email' in data && typeof data.email === 'string') {
+    return E.right(data.email)
   }
   return E.left('No email field')
 }
@@ -293,12 +297,15 @@ const handleError = (error: AppError): string => {
 
 ### Callback Hell to Pipe
 
+The before fetch functions use callbacks; the after functions must be explicit TaskEither adapters, not the same callback APIs magically changing type. Define tryCatch adapters with validated response contracts before using this pattern.
+
 ```typescript
 // Before
 fetchUser(id, (user) => {
   if (!user) return handleNoUser()
   fetchPosts(user.id, (posts) => {
     if (!posts) return handleNoPosts()
+    if (posts.length === 0) return render(user, posts, [])
     fetchComments(posts[0].id, (comments) => {
       render(user, posts, comments)
     })
@@ -316,7 +323,7 @@ const loadData = (id: string) =>
       TE.map(posts => ({ user, posts }))
     )),
     TE.flatMap(({ user, posts }) => pipe(
-      fetchComments(posts[0].id),
+      posts.length === 0 ? TE.right([]) : fetchComments(posts[0].id),
       TE.map(comments => ({ user, posts, comments }))
     ))
   )
@@ -360,6 +367,8 @@ pipe(
 
 ### Validation with Multiple Checks
 
+User in this fragment means the locally defined { email: string; age: number } shape; richer project User types need all required fields validated. The includes(@) check is only a teaching simplification, not a production address validator.
+
 ```typescript
 // Before: Throws on first error
 function validateUser(data: unknown): User {
@@ -387,7 +396,7 @@ const validateUser = (data: unknown): E.Either<string, User> =>
         : E.left('Valid email required')
     ),
     E.bind('age', ({ obj }) =>
-      typeof obj.age === 'number' && obj.age >= 0
+      typeof obj.age === 'number' && Number.isSafeInteger(obj.age) && obj.age >= 0
         ? E.right(obj.age)
         : E.left('Valid age required')
     ),

@@ -2,7 +2,7 @@
 
 ## Filters that are exact and filters that are not
 
-LinkedIn moved its public job search to an AI search in 2026 and stopped applying some classic filters.
+The author reports these filter behaviors; verify the current Actor schema and returned rows. They are not platform guarantees.
 
 | Filter | How exact |
 |---|---|
@@ -22,7 +22,7 @@ When the user needs an exact match on job type or level, filter the rows on `emp
 - `applicants` is capped near 200.
 - `scrapeDetails: false` gives about 10 fields per job. Salary, description and recruiter need details on.
 
-## Cost examples (Free plan price, $1.00 per 1,000)
+## Historical cost examples (verify live pricing before use)
 
 | Run | Jobs | Cost |
 |---|---|---|
@@ -45,7 +45,7 @@ Set these only when the user asks to send jobs to an app:
 | `mcpMessage` | Template with `{{field}}` placeholders, for example `*{{title}}* — {{company}}\n{{url}}`. |
 | `mcpMaxItems` | Most jobs to send. Default 50. |
 
-A delivery problem never fails the scrape. The jobs stay in the dataset.
+Check scrape and delivery status separately; a successful dataset does not prove delivery succeeded.
 
 ## Errors
 

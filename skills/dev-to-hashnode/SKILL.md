@@ -35,7 +35,7 @@ Developer blogging platforms offer built-in audiences of hundreds of thousands o
 
 | Feature | Dev.to | Hashnode |
 |---------|--------|----------|
-| Monthly visitors | ~10M+ | ~3M+ |
+| Monthly visitors | Unverified; check current analytics | Unverified; check current analytics |
 | Custom domain | No (subdomain only) | Yes (free) |
 | Canonical URL support | Yes | Yes |
 | SEO benefits | High domain authority | Your domain gets SEO |
@@ -71,7 +71,7 @@ Developer blogging platforms offer built-in audiences of hundreds of thousands o
 ### Best Practice: Your Blog + Cross-Post
 
 1. **Publish on your blog first** — This is canonical
-2. **Wait 1-2 days** — Let Google index your original
+2. **Verify the original URL** — Indexing timing varies; waiting does not guarantee canonical selection
 3. **Cross-post to Dev.to** — Set canonical URL to your blog
 4. **Cross-post to Hashnode** — Set canonical URL to your blog
 
@@ -98,7 +98,7 @@ canonical_url: https://yourblog.com/your-post
 ```yaml
 ---
 title: "Specific, Keyword-Rich Title (Not Clickbait)"
-published: true
+published: false
 description: "One compelling sentence that shows up in previews and SEO"
 tags: javascript, webdev, tutorial, beginners
 cover_image: https://your-cdn.com/image.png
@@ -124,7 +124,7 @@ series: "Building a CLI from Scratch"
 
 **Rules**:
 - Maximum 4 tags per post
-- First tag is primary (appears in URL)
+- First tag is primary in presentation; article URLs need not contain a tag
 - Check tag follower count before using
 
 ### What Performs on Dev.to
@@ -206,7 +206,7 @@ Hashnode tags work differently:
 
 ### Structure That Works
 
-```markdown
+````markdown
 # Title
 
 [Compelling hook — why should they care?]
@@ -246,8 +246,8 @@ const example = "explained";
 
 ---
 
-*If you found this helpful, [follow me](https://github.com/jonathimer/devmarketing-skills/tree/main/skills/dev-to-hashnode/link) for more content about [topic].*
-```
+*If you found this helpful, [follow me](https://example.com/author) for more content about [topic].*
+````
 
 ### Formatting Best Practices
 
@@ -397,3 +397,5 @@ const example = "explained";
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Platform features, audience sizes, tag counts, performance rankings and cadence outcomes above are illustrative historical assumptions, not verified current measurements or growth guarantees. Verify current account features and UI before use. Canonical URLs are search-engine hints, not guarantees of indexing or ranking. Prepare drafts first; publish, create accounts, subscribe users or send newsletters only with explicit authorization. Respect consent, image licensing and content rights.

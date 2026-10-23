@@ -22,11 +22,11 @@ AWS Bedrock AgentCore provides a complete platform for deploying and scaling AI 
 
 ## AWS Documentation Requirement
 
-Always verify AWS facts using MCP tools before answering. Two documentation sources are available:
-- **AgentCore-specific docs** (`mcp__acdocs__*`) — bundled with this plugin, provides `search_agentcore_docs` and `fetch_agentcore_doc` for AgentCore documentation
-- **General AWS docs** (`mcp__aws-mcp__*` or `mcp__*awsdocs*__*`) — loaded via the `aws-mcp-setup` dependency for broader AWS documentation
+Verify current AWS facts through available primary documentation tools or official AWS documentation. The following are optional upstream integrations, not tools bundled by this single-file catalog skill:
+- **AgentCore-specific docs** (`mcp__acdocs__*`) — upstream integration that may provide `search_agentcore_docs` and `fetch_agentcore_doc` for AgentCore documentation
+- **General AWS docs** (`mcp__aws-mcp__*` or `mcp__*awsdocs*__*`) — may be configured separately for broader AWS documentation
 
-Prefer the AgentCore docs MCP for AgentCore-specific questions. If MCP tools are unavailable, guide the user through the `aws-mcp-setup` skill's setup flow.
+Prefer the AgentCore docs MCP for AgentCore-specific questions. If these tools are unavailable, use official documentation; do not install a new server unless requested.
 
 ## Available Services
 
@@ -41,6 +41,8 @@ Prefer the AgentCore docs MCP for AgentCore-specific questions. If MCP tools are
 | **Observability** | Tracing and monitoring | [`services/observability/README.md`](https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai/services/observability/README.md) |
 | **Agent Registry** | Catalog, discover, and govern agents/tools (Preview) | [`services/registry/README.md`](https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai/services/registry/README.md) |
 | **Evaluations** | Automated agent quality assessment (LLM-as-a-Judge) | [`services/evaluations/README.md`](https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai/services/evaluations/README.md) |
+
+This catalog contains no service README or executable templates locally. Read the selected upstream revision and inspect every dependency before implementation; do not claim those references were reviewed from their titles. Verify account/region/IAM, costs, data retention and publication scope before provisioning or sending conversation/trace data to cloud services.
 
 ## Common Workflows
 
@@ -73,7 +75,7 @@ Read [`services/registry/README.md`](https://github.com/zxkane/aws-skills/tree/m
 3. Submit records for approval (auto-approve for dev, manual for production)
 4. Search and discover approved resources via CLI or MCP endpoint
 
-> Agent Registry is in Preview. Available in us-east-1, us-west-2, eu-west-1, ap-northeast-1, ap-southeast-2.
+> Verify current Agent Registry release status and regional availability in official AWS documentation before planning a deployment.
 
 ### Evaluating Agent Quality
 
@@ -108,7 +110,7 @@ Deep-dive reference documentation for Runtime internals, deployment, OAuth integ
 
 ### Runnable Script Templates
 
-Production-ready templates in [`scripts/`](https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai/scripts/) for common deployment patterns:
+External upstream templates (not bundled or production-certified by this review) in [`scripts/`](https://github.com/zxkane/aws-skills/tree/main/plugins/aws-agentic-ai/skills/aws-agentic-ai/scripts/) for common deployment patterns:
 
 | Script | Protocol | Description |
 |--------|----------|-------------|

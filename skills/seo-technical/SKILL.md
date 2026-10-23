@@ -50,7 +50,7 @@ As of 2025-2026, AI companies actively crawl the web to train models and power A
 **Key distinctions:**
 - Blocking `Google-Extended` prevents Gemini training use but does NOT affect Google Search indexing or AI Overviews (those use `Googlebot`)
 - Blocking `GPTBot` prevents OpenAI training but does NOT prevent ChatGPT from citing your content via browsing (`ChatGPT-User`)
-- ~3-5% of websites now use AI-specific robots.txt rules
+- Verify crawler purpose and controls in each vendor’s current documentation; this table is not a complete or permanent registry.
 
 **Example, selective AI crawler blocking:**
 ```
@@ -74,7 +74,7 @@ Allow: /
 ### 2. Indexability
 - Canonical tags: self-referencing, no conflicts with noindex
 - Duplicate content: near-duplicates, parameter URLs, www vs non-www
-- Thin content: pages below minimum word counts per type
+- Thin content: insufficient useful information for the page purpose; do not impose arbitrary minimum word counts
 - Pagination: rel=next/prev or load-more pattern
 - Hreflang: correct for multi-language/multi-region sites
 - Index bloat: unnecessary pages consuming crawl budget
@@ -101,7 +101,7 @@ Allow: /
 - Touch targets: minimum 48x48px with 8px spacing
 - Font size: minimum 16px base
 - No horizontal scroll
-- Mobile-first indexing: Google indexes mobile version. **Mobile-first indexing is 100% complete as of July 5, 2024.** Google now crawls and indexes ALL websites exclusively with the mobile Googlebot user-agent.
+- Mobile-first indexing: verify mobile content parity and inspect actual Googlebot crawl evidence. Do not infer that all Google crawlers/fetchers use a mobile user-agent.
 
 ### 6. Core Web Vitals
 - **LCP** (Largest Contentful Paint): target <2.5s
@@ -128,7 +128,7 @@ Google updated its JavaScript SEO documentation in December 2025 with critical c
 
 1. **Canonical conflicts:** If a canonical tag in raw HTML differs from one injected by JavaScript, Google may use EITHER one. Ensure canonical tags are identical between server-rendered HTML and JS-rendered output.
 2. **noindex with JavaScript:** If raw HTML contains `<meta name="robots" content="noindex">` but JavaScript removes it, Google MAY still honor the noindex from raw HTML. Serve correct robots directives in the initial HTML response.
-3. **Non-200 status codes:** Google does NOT render JavaScript on pages returning non-200 HTTP status codes. Any content or meta tags injected via JS on error pages will be invisible to Googlebot.
+3. **Non-200 status codes:** Google may skip rendering non-200 responses; serve correct status/content/directives without relying on client-side repairs.
 4. **Structured data in JavaScript:** Product, Article, and other structured data injected via JS may face delayed processing. For time-sensitive structured data (especially e-commerce Product markup), include it in the initial server-rendered HTML.
 
 **Best practice:** Serve critical SEO elements (canonical, meta robots, structured data, title, meta description) in the initial server-rendered HTML rather than relying on JavaScript injection.
@@ -141,6 +141,8 @@ Google updated its JavaScript SEO documentation in December 2025 with critical c
 ## Output
 
 ### Technical Score: XX/100
+
+Optional qualitative score: disclose rubric, evidence sources and unavailable checks. Scope crawl requests and do not change robots, HSTS preload or production configuration as part of read-only analysis. Verify crawler and rendering claims against [Google crawlers](https://developers.google.com/crawling/docs/crawlers-fetchers/overview-google-crawlers) and [JavaScript SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics).
 
 ### Category Breakdown
 | Category | Status | Score |
@@ -171,7 +173,7 @@ If DataForSEO MCP tools are available, use `on_page_instant_pages` for real page
 | URL unreachable | Report connection error with status code. Suggest verifying URL, checking DNS resolution, and confirming the site is publicly accessible. |
 | robots.txt not found | Note that no robots.txt was detected at the root domain. Recommend creating one with appropriate directives. Continue audit on remaining categories. |
 | HTTPS not configured | Flag as a critical issue. Report whether HTTP is served without redirect, mixed content exists, or SSL certificate is missing/expired. |
-| Core Web Vitals data unavailable | Note that CrUX data is not available (common for low-traffic sites). Suggest using Lighthouse lab data as a proxy and recommend increasing traffic before re-testing. |
+| Core Web Vitals data unavailable | Note that CrUX data is not available (common for low-traffic sites). Use Lighthouse to diagnose lab performance, label it separately from field Core Web Vitals, and do not manufacture traffic to populate CrUX. |
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

@@ -62,7 +62,7 @@ function email(e) { }
 ### Immutability Pattern (CRITICAL)
 
 ```typescript
-// ✅ ALWAYS use spread operator
+// ✅ Use immutable updates for shared/React state
 const updatedUser = {
   ...user,
   name: 'New Name'
@@ -70,7 +70,7 @@ const updatedUser = {
 
 const updatedArray = [...items, newItem]
 
-// ❌ NEVER mutate directly
+// ❌ Do not mutate shared/React state directly
 user.name = 'New Name'  // BAD
 items.push(newItem)     // BAD
 ```
@@ -282,19 +282,23 @@ const CreateMarketSchema = z.object({
 })
 
 export async function POST(request: Request) {
-  const body = await request.json()
-
   try {
+    const body = await request.json()
     const validated = CreateMarketSchema.parse(body)
-    // Proceed with validated data
+    // Persist through an authorized service; this example only returns validated input.
+    return NextResponse.json({ success: true, data: validated })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         success: false,
         error: 'Validation failed',
-        details: error.errors
+        details: error.issues
       }, { status: 400 })
     }
+    if (error instanceof SyntaxError) {
+      return NextResponse.json({ error: "Invalid JSON" }, { status: 400 })
+    }
+    throw error
   }
 }
 ```
@@ -388,7 +392,7 @@ import { useMemo, useCallback } from 'react'
 
 // ✅ GOOD: Memoize expensive computations
 const sortedMarkets = useMemo(() => {
-  return markets.sort((a, b) => b.volume - a.volume)
+  return [...markets].sort((a, b) => b.volume - a.volume)
 }, [markets])
 
 // ✅ GOOD: Memoize callbacks

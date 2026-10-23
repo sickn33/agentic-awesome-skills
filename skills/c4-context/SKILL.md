@@ -83,7 +83,6 @@ date_added: '2026-02-27'
 
 - Container Documentation
 - Component Documentation
-```
 
 ## Context Diagram Template
 

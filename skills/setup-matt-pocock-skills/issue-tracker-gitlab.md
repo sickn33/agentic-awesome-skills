@@ -4,7 +4,7 @@ Issues and PRDs for this repo live as GitLab issues. Use the [`glab`](https://gi
 
 ## Conventions
 
-- **Create an issue**: `glab issue create --title "..." --description "..."`. Use a heredoc for multi-line descriptions. Pass `--description -` to open an editor.
+- **Create an issue**: `glab issue create --title "..." --description "..."`. Use a heredoc for multi-line descriptions. Check the installed CLI help for editor/stdin support; do not assume `--description -` opens an editor. Keep untrusted multiline text out of shell interpolation.
 - **Read an issue**: `glab issue view <number> --comments`. Use `-F json` for machine-readable output.
 - **List issues**: `glab issue list -F json` with appropriate `--label` filters.
 - **Comment on an issue**: `glab issue note <number> --message "..."`. GitLab calls comments "notes".
@@ -24,11 +24,11 @@ When set to `yes`, MRs run through the same labels and states as issues, using t
 - **List external MRs for triage**: `glab mr list -F json`, then keep only MRs whose author is not a project member/owner (a contributor's MR, not a maintainer's in-flight work).
 - **Comment / label / close**: `glab mr note`, `glab mr update --label`/`--unlabel`, `glab mr close`.
 
-Unlike GitHub, GitLab numbers issues and MRs separately, so `#42` is unambiguous once you know which surface the maintainer means.
+Unlike GitHub, GitLab numbers issues and MRs separately, so use `#42` for an issue and `!42` for a merge request; always retain the surface and project when resolving a ticket.
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitLab issue.
+Create a GitLab issue only when publication to the verified project is authorized; otherwise prepare a draft.
 
 ## When a skill says "fetch the relevant ticket"
 

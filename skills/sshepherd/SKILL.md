@@ -99,6 +99,8 @@ Returns a JSON envelope with disk, memory, CPU, listening ports, and OOM history
 
 ## Security & Safety Notes
 
+The guide does not establish that logs, errors or configuration responses cannot reveal sensitive endpoints. Inspect/redact returned data and verify the installed implementation; “zero-knowledge” is not a sandbox or permission grant.
+
 - **Zero-knowledge credential model:** the agent never sees a password, private key, hostname, username, or port. It only ever passes an ssh alias, a pg-target name, or a recipe name; the real connection tuple is resolved by OpenSSH outside the process, and every response echoes back only the alias.
 - **Never reads private key material.** Authentication happens entirely inside OpenSSH's own trusted code path.
 - **Confirmation gate on mutations:** destructive/mutating actions (service restart, config write, deploy) require an explicit `--yes` confirm flag.
@@ -110,7 +112,7 @@ Returns a JSON envelope with disk, memory, CPU, listening ports, and OOM history
 - **Problem:** Trying to pass a hostname or password directly to a command.
   **Solution:** Register the target first (`setup ssh-alias register` / `setup db-target`), then reference it only by name.
 - **Problem:** A mutating action returns without doing anything.
-  **Solution:** Add the `--yes` confirm flag — mutations are gated by design.
+  **Solution:** Inspect the exact target/effect and current user authorization first. Add `--yes` only when that specific mutation is authorized; a CLI flag is not human consent.
 
 ## Related Skills
 

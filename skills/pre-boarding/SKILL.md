@@ -171,6 +171,9 @@ CREATE INDEX idx_pre_boarding_status ON pre_boarding (status);
       "Pre-board ID": { "type": "integer" }
   },
   "required": [
+      "Documents Received",
+      "Laptop Ready",
+      "Email Created",
       "Category",
       "Joining Date",
       "Due Date",
@@ -311,8 +314,8 @@ A new joiner starts on Monday and the laptop was still not ordered on Friday.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [People directory](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
 ## Reusable Prompt

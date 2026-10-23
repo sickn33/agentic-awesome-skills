@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/council-input.schema.json",
+  "title": "Product Design Harness Council Input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "product_brief",
+    "claim_analysis",
+    "independent_reviews",
+    "challenge_reviews",
+    "uncertainty_review"
+  ],
+  "properties": {
+    "product_brief": { "$ref": "product-brief.schema.json" },
+    "claim_analysis": { "$ref": "claim-analysis.schema.json" },
+    "independent_reviews": {
+      "$ref": "#/$defs/flow_reviews",
+      "items": {
+        "$ref": "reviewer-verdict.schema.json",
+        "properties": { "review_round": { "const": "independent" } }
+      }
+    },
+    "challenge_reviews": {
+      "$ref": "#/$defs/flow_reviews",
+      "items": {
+        "$ref": "reviewer-verdict.schema.json",
+        "properties": { "review_round": { "const": "challenge" } }
+      }
+    },
+    "uncertainty_review": { "$ref": "uncertainty-review.schema.json" },
+    "red_team_review": { "$ref": "red-team-review.schema.json" }
+  },
+  "$defs": {
+    "flow_reviews": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "allOf": [
+        {
+          "contains": {
+            "required": ["reviewer"],
+            "properties": { "reviewer": { "const": "user_flow" } }
+          }
+        },
+        {
+          "contains": {
+            "required": ["reviewer"],
+            "properties": { "reviewer": { "const": "evidence_flow" } }
+          }
+        },
+        {
+          "contains": {
+            "required": ["reviewer"],
+            "properties": { "reviewer": { "const": "business_flow" } }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["independent_reviews"],
+        "properties": {
+          "independent_reviews": {
+            "contains": {
+              "type": "object",
+              "required": ["verdict"],
+              "properties": {
+                "verdict": { "const": "continue" }
+              }
+            },
+            "minContains": 3
+          }
+        }
+      },
+      "then": {
+        "required": ["red_team_review"]
+      }
+    }
+  ]
+}

@@ -6,7 +6,7 @@ source_repo: remotion-dev/skills
 source_type: official
 source: remotion-dev
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -33,15 +33,15 @@ type Caption = {
 
 ## Generating captions
 
-To transcribe video and audio files to generate captions, load the [transcribe-captions.md file for more instructions.
+To transcribe video and audio files to generate captions, load the [transcribe-captions.md](transcribe-captions.md) file for more instructions.
 
 ## Displaying captions
 
-To display captions in your video, load the [display-captions.md file for more instructions.
+To display captions in your video, load the [display-captions.md](display-captions.md) file for more instructions.
 
 ## Importing captions
 
-To import captions from a .srt file, load the [import-srt-captions.md file for more instructions.
+To import captions from a .srt file, load the [import-srt-captions.md](import-srt-captions.md) file for more instructions.
 
 
 ## Examples

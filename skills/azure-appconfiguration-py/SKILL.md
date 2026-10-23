@@ -18,7 +18,7 @@ pip install azure-appconfiguration
 
 ## Environment Variables
 
-```bash
+```dotenv
 AZURE_APPCONFIGURATION_CONNECTION_STRING=Endpoint=https://<name>.azconfig.io;Id=...;Secret=...
 # Or for Entra ID:
 AZURE_APPCONFIGURATION_ENDPOINT=https://<name>.azconfig.io
@@ -29,6 +29,7 @@ AZURE_APPCONFIGURATION_ENDPOINT=https://<name>.azconfig.io
 ### Connection String
 
 ```python
+import os
 from azure.appconfiguration import AzureAppConfigurationClient
 
 client = AzureAppConfigurationClient.from_connection_string(
@@ -48,13 +49,15 @@ client = AzureAppConfigurationClient(
 )
 ```
 
+Examples are independent fragments requiring azure-identity for Entra auth and project endpoint variables. Confirm store/label/key and read the current ETag before replacement/deletion; use appropriate match conditions for concurrent edits. Feature flag changes affect real users, and unlocking a setting is a separate privileged change. Use approved synthetic values, minimize listing scope, keep credentials/value payloads out of logs, and close both async credential/client on failure. Snapshots need actual creation status and tested restore procedure; schema-valid flags do not themselves implement gradual rollout or an A/B experiment.
+
 ## Configuration Settings
 
 ### Get Setting
 
 ```python
 setting = client.get_configuration_setting(key="app:settings:message")
-print(f"{setting.key} = {setting.value}")
+print(f"Read setting: {setting.key}")  # Do not log secret-bearing values
 ```
 
 ### Get with Label
@@ -99,7 +102,7 @@ client.delete_configuration_setting(
 ```python
 settings = client.list_configuration_settings()
 for setting in settings:
-    print(f"{setting.key} [{setting.label}] = {setting.value}")
+    print(f"{setting.key} [{setting.label}]")  # Values may be sensitive
 ```
 
 ### Filter by Key Prefix
@@ -183,18 +186,17 @@ client.set_read_only(
 ### Create Snapshot
 
 ```python
-from azure.appconfiguration import ConfigurationSnapshot, ConfigurationSettingFilter
+from azure.appconfiguration import ConfigurationSnapshot, ConfigurationSettingsFilter
 
 snapshot = ConfigurationSnapshot(
-    name="v1-snapshot",
     filters=[
-        ConfigurationSettingFilter(key="app:*", label="production")
+        ConfigurationSettingsFilter(key="app:*", label="production")
     ]
 )
 
 created = client.begin_create_snapshot(
     name="v1-snapshot",
-    snapshot=snapshot
+    filters=snapshot.filters
 ).result()
 ```
 
@@ -220,7 +222,7 @@ async def main():
     )
     
     setting = await client.get_configuration_setting(key="app:message")
-    print(setting.value)
+    # Consume the authorized value without logging it.
     
     await client.close()
     await credential.close()

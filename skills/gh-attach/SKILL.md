@@ -81,7 +81,7 @@ store, or pass a raw `user_session` cookie to the extension.
 
 ```bash
 # Use an absolute quoted path; -R is optional inside a repo working dir.
-URL=$(gh attach "/abs/path/screenshot.png" -R <owner>/<repo>)
+URL=$(gh attach "/abs/path/screenshot.png" -R "OWNER/REPO")
 ```
 
 `gh attach` prints the URL on one line to **stdout**. For GitHub Enterprise Server,
@@ -91,7 +91,7 @@ use `-R host/owner/repo`. Capture the output; it is the embeddable reference.
 
 ```bash
 printf '## Screenshots\n\n%s\n' "$URL" \
-  | gh pr comment <pr> -R <owner>/<repo> --body-file -
+  | gh pr comment 42 -R "OWNER/REPO" --body-file -
 ```
 
 Use `gh pr edit`, `gh issue comment`, or `gh issue edit` with `--body-file -` for

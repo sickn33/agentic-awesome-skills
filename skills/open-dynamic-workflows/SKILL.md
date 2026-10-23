@@ -45,7 +45,7 @@ Completed work is routed through an adversarial verification pass that challenge
 
 ### Example 1: Run a parallel workflow
 
-ODW is installed from source (clone the repo, then `npm install`). The CLI is
+ODW requires a separately installed upstream runtime; this single-file skill does not bundle its daemon, bridge, plugin or workflow scripts. Inspect the full upstream tree and pin a reviewed immutable revision before installation. Dependency installation can execute lifecycle scripts; inspect those scripts and the lockfile first, and use an isolated environment. The CLI is
 `odw-daemon` — run it as `npm run odw -- <args>` from inside the repo, or as
 `npx odw-daemon <args>` / a global `odw-daemon` if you link the bin.
 
@@ -86,7 +86,7 @@ npm run odw -- run --script examples/workflows/studio-prime.workflow.js --cwd .
 
 ## Security & Safety Notes
 
-- ODW executes agent-generated code and shell commands; run it only in an authorized, local, or sandboxed environment.
+- ODW executes agent-generated code and shell commands. A local directory alone is not isolation: use an authorized sandbox with minimal filesystem, credential and network access. Bound concurrency, model spending and permitted commands; adversarial review does not grant merge or production authority.
 - Model provider credentials (Anthropic / OpenAI-compatible / Ollama) must be supplied via environment variables, never committed to source.
 - Review adversarial-verification output before applying changes to a production branch.
 

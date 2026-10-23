@@ -99,10 +99,12 @@ const CustomWavyMaterial = new THREE.ShaderMaterial({
 });
 ```
 
+The material fragment requires a mesh, sufficiently subdivided geometry and an animation loop updating uniforms.uTime.value; it does not animate by itself. Respect reduced motion and provide keyboard/touch controls plus a usable non-WebGL/error fallback. Profile representative low-end devices, pause offscreen rendering, dispose owned GPU resources and cap assets/passes. DPR=2 and compression are starting choices, not guaranteed optimal settings; decoder/download cost may outweigh savings for small assets.
+
 ## Best Practices
 
 - ✅ Set `dpr={[1, 2]}` to restrict the device pixel ratio to a maximum of 2.
-- ✅ Disable antialiasing on the WebGLRenderer when post-processing is active to prevent double-aliasing performance penalties.
+- ✅ Choose renderer/composer antialiasing deliberately and measure output/performance; post-processing alone does not make renderer antialiasing incorrect.
 - ✅ Bake ambient occlusion, lighting, and shadows into textures using Blender or other 3D software instead of using dynamic lights and real-time shadows.
 - ✅ Use instance rendering (`THREE.InstancedMesh` or R3F `<Instances>`) for scenes containing multiple identical meshes.
 - ❌ Avoid using uncompressed GLTF/OBJ models. Always compress models using Draco or Meshopt.

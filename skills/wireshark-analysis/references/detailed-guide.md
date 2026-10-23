@@ -13,7 +13,7 @@ Execute comprehensive network traffic analysis using Wireshark to capture, filte
 - Wireshark installed (Windows, macOS, or Linux)
 - Network interface with capture permissions
 - PCAP/PCAPNG files for offline analysis
-- Administrator/root privileges for live capture
+- Least-privilege packet capture permissions through the platform's capture helper; avoid running the full GUI as root
 
 ### Technical Requirements
 - Understanding of network protocols (TCP, UDP, HTTP, DNS)
@@ -41,6 +41,8 @@ Execute comprehensive network traffic analysis using Wireshark to capture, filte
 ## Core Workflow
 
 ### Phase 1: Capturing Network Traffic
+
+Confirm interface, host/traffic scope, capture filter, bounded duration/size and private storage before starting. Treat captures and exported objects as untrusted sensitive data; never execute extracted downloads. Use offline captures where available and avoid transmitting them to external services without authorization.
 
 #### Start Live Capture
 Begin capturing packets on network interface:
@@ -104,7 +106,7 @@ Filter by specific protocols:
 ```
 # Common protocols
 http                                  # HTTP traffic
-https or ssl or tls                   # Encrypted web traffic
+tls || quic                          # Candidate encrypted transport; not necessarily web
 dns                                   # DNS queries and responses
 ftp                                   # FTP traffic
 ssh                                   # SSH traffic
@@ -280,7 +282,7 @@ tcp.dstport > 1024 && tcp.dstport < 49152
 # Unusual DNS queries
 dns.qry.name contains "suspicious-domain"
 
-# Large data transfers
+# Large individual frames, not evidence of a large aggregate transfer
 frame.len > 1400
 ```
 
@@ -305,7 +307,7 @@ Analyze file transfers:
 
 ```
 # HTTP file downloads
-http.request.method == "GET" && http contains "Content-Disposition"
+http.response && http.content_disposition
 
 # Follow HTTP Stream to view file content
 # Use File > Export Objects > HTTP to extract files
@@ -376,7 +378,7 @@ Categories:
 ### Common Filter Reference
 ```
 # Web traffic
-http || https
+http || tls || quic
 
 # Email
 smtp || pop || imap
@@ -391,7 +393,7 @@ ldap || kerberos
 snmp || icmp
 
 # Encrypted
-tls || ssl
+tls || quic
 ```
 
 ### Export Options
@@ -423,7 +425,7 @@ File > Export Packet Dissections   # Export as text/CSV
 - Close unnecessary protocol dissectors
 
 ### Cannot Decrypt TLS/SSL
-- Obtain server private key
+- Use only separately authorized decryption material; modern forward-secret TLS cannot normally be decrypted with the server private key alone
 - Configure at Edit > Preferences > Protocols > TLS
-- For ephemeral keys, capture pre-master secret from browser
+- For supported sessions, configure authorized client TLS session-key logging and protect the key log as a secret
 - Some modern ciphers cannot be decrypted passively

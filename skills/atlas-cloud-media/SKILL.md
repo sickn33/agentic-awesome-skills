@@ -87,7 +87,7 @@ before submission.
 Example discovery request:
 
 ```bash
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   "https://api.atlascloud.ai/api/v1/models" \
   --output "${atlas_tmp_dir:?run private workspace setup first}/models.json"
 
@@ -109,13 +109,15 @@ jq -n \
   '{model: $model, prompt: $prompt, size: "1024*1024", n: 1}' \
   > "${atlas_tmp_dir:?run private workspace setup first}/request.json"
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   --request POST \
   "https://api.atlascloud.ai/api/v1/model/generateImage" \
-  --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
+  --header @- \
   --header "Content-Type: application/json" \
   --data @"$atlas_tmp_dir/request.json" \
-  --output "$atlas_tmp_dir/submit.json"
+  --output "$atlas_tmp_dir/submit.json" <<EOF
+Authorization: Bearer ${ATLASCLOUD_API_KEY}
+EOF
 ```
 
 Video example using a catalog-confirmed model:
@@ -134,13 +136,15 @@ jq -n \
     watermark: false
   }' > "${atlas_tmp_dir:?run private workspace setup first}/request.json"
 
-curl --fail --silent --show-error \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
   --request POST \
   "https://api.atlascloud.ai/api/v1/model/generateVideo" \
-  --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
+  --header @- \
   --header "Content-Type: application/json" \
   --data @"$atlas_tmp_dir/request.json" \
-  --output "$atlas_tmp_dir/submit.json"
+  --output "$atlas_tmp_dir/submit.json" <<EOF
+Authorization: Bearer ${ATLASCLOUD_API_KEY}
+EOF
 ```
 
 Check that `.data.id` is a non-empty string before polling. Treat a non-2xx
@@ -150,7 +154,7 @@ automatically because the original task may still have been accepted.
 ### 3. Poll with a Deadline
 
 Poll every three seconds. Accept `completed` or `succeeded` as success, stop on
-`failed` or `timeout`, and stop after ten minutes. Preserve the prediction ID
+`failed` or `timeout`, and enforce a ten-minute wall-clock deadline in the host. The attempt cap below is not itself a ten-minute bound because HTTP request time also counts. Preserve the prediction ID
 for diagnostics, but never log request headers or the API key.
 
 ```bash
@@ -159,10 +163,12 @@ prediction_id=$(jq -er '.data.id | select(type == "string" and length > 0)' \
 
 for attempt in $(seq 1 200); do
   sleep 3
-  curl --fail --silent --show-error \
+  curl --fail --silent --show-error --connect-timeout 10 --max-time 60 \
     "https://api.atlascloud.ai/api/v1/model/prediction/$prediction_id" \
-    --header "Authorization: Bearer $ATLASCLOUD_API_KEY" \
-    --output "$atlas_tmp_dir/prediction.json"
+    --header @- \
+    --output "$atlas_tmp_dir/prediction.json" <<EOF
+Authorization: Bearer ${ATLASCLOUD_API_KEY}
+EOF
 
   status=$(jq -r '.data.status // "unknown"' "$atlas_tmp_dir/prediction.json")
   case "$status" in
@@ -181,7 +187,7 @@ test "$status" = "completed" || test "$status" = "succeeded"
 ### 4. Download and Verify the Output
 
 Read the first HTTPS URL from `.data.outputs`. Atlas output URLs are temporary,
-so download promptly. Do not send `Authorization` or any other Atlas request
+so download promptly. Validate each redirect host and resolved IP against approved public media destinations; HTTPS alone does not prevent access to local/private networks. Do not send `Authorization` or any other Atlas request
 headers to the output host. Reject non-HTTPS URLs and inspect the downloaded
 file's content type and size before treating it as a valid deliverable.
 
@@ -189,7 +195,7 @@ file's content type and size before treating it as a valid deliverable.
 output_url=$(jq -er '.data.outputs[0] | select(startswith("https://"))' \
   "${atlas_tmp_dir:?run private workspace setup first}/prediction.json")
 
-curl --fail --silent --show-error --location \
+curl --fail --silent --show-error --connect-timeout 10 --max-time 60 --location --max-redirs 3 --proto =https --proto-redir =https \
   "$output_url" \
   --output "$atlas_tmp_dir/output.bin"
 

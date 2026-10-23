@@ -40,6 +40,8 @@ Use this skill when:
 
 ## YAML Pipeline Structure
 
+These fragments require actual build outputs, deploy scripts, service connections and environment checks. Echoing “Deploying” is not a deployment. YAML PR triggers depend on repository provider; Azure Repos Git uses branch build-validation policy. Rolling deployment strategy applies to supported VM environment resources, not arbitrary web apps/Kubernetes. Pin supported runtime/agent versions and obtain the agent package from the current official download instructions with integrity verification; the archive URL below is historical. Keep untrusted PR code away from production credentials and persistent self-hosted agents.
+
 Create `azure-pipelines.yml` in repository root:
 
 ```yaml
@@ -57,7 +59,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  nodeVersion: '20.x'
+  nodeVersion: '22.x'
 
 stages:
   - stage: Build
@@ -71,7 +73,8 @@ stages:
               npm ci
               npm run build
             displayName: 'Build application'
-          - publish: $(Build.ArtifactStagingDirectory)
+          # Adapt dist to the actual build output directory.
+          - publish: $(Build.SourcesDirectory)/dist
             artifact: drop
 
   - stage: Deploy
@@ -395,7 +398,8 @@ curl -o vsts-agent.tar.gz https://vstsagentpackage.azureedge.net/agent/3.227.2/v
 tar zxvf vsts-agent.tar.gz
 
 # Configure
-./config.sh --url https://dev.azure.com/myorg --auth pat --token PAT_TOKEN --pool default
+./config.sh --url https://dev.azure.com/myorg --auth pat --pool default
+# Enter the PAT only in the interactive secret prompt; never in command arguments.
 
 # Run as service
 sudo ./svc.sh install

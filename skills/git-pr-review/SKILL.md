@@ -91,7 +91,7 @@ Example:
 
 ---
 
-### 5. Conditional diff inspection (ONLY if needed)
+### 5. Verify the net diff
 
 Use `git diff --stat <base>...HEAD` and `git diff <base>...HEAD` to verify final scope. Inspect individual `git show <hash>` output when:
 - commit message is vague ("update stuff")

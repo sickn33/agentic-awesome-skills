@@ -29,6 +29,8 @@ Deploy and manage production-grade Kubernetes clusters on Azure with AKS. Covers
 - You are running microservices that require service mesh, ingress, or network policies.
 - You need GPU or spot node pools for specialized or cost-optimized workloads.
 
+Confirm subscription, cluster/context, budget, quotas, region/zone/SKU support and rollback before mutations. Examples are partial and version-sensitive: inspect current AKS and AzureRM provider schemas, supported Kubernetes upgrade paths and pod-disruption budgets. `get-credentials` changes local kubeconfig/current context. Do not manually scale an autoscaler-controlled pool without coordinating the autoscaler. Use existing secret references for Grafana credentials, not command-line values.
+
 ## Prerequisites
 
 ```bash
@@ -51,7 +53,7 @@ kubectl version --client
 
 ## Cluster Creation
 
-### Basic Production Cluster
+### Illustrative Cluster Configuration
 
 ```bash
 # Create resource group
@@ -163,7 +165,7 @@ az aks nodepool upgrade \
   --resource-group myapp-rg \
   --cluster-name myapp-aks \
   --name apppool \
-  --kubernetes-version 1.28.3
+  --kubernetes-version "<supported-upgrade-target>"
 
 # List node pools
 az aks nodepool list \
@@ -173,6 +175,8 @@ az aks nodepool list \
 ```
 
 ## Ingress Controller Setup
+
+The community ingress-nginx project retired in March 2026. The legacy commands and nginx-specific annotations below are for recognizing/migrating existing installations, not a recommendation for a new deployment. Choose a maintained controller or Gateway API implementation and translate behavior explicitly. See https://kubernetes.io/blog/2025/11/11/ingress-nginx-retirement/ .
 
 ```bash
 # Install NGINX ingress controller via Helm
@@ -300,7 +304,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   dns_prefix          = "myapp"
-  kubernetes_version  = "1.28"
+  kubernetes_version  = var.supported_kubernetes_version
 
   default_node_pool {
     name                = "system"
@@ -380,7 +384,7 @@ az aks get-upgrades \
 az aks upgrade \
   --resource-group myapp-rg \
   --name myapp-aks \
-  --kubernetes-version 1.28.3 \
+  --kubernetes-version "<supported-upgrade-target>" \
   --control-plane-only
 
 # Then upgrade each node pool
@@ -388,7 +392,7 @@ az aks nodepool upgrade \
   --resource-group myapp-rg \
   --cluster-name myapp-aks \
   --name apppool \
-  --kubernetes-version 1.28.3
+  --kubernetes-version "<supported-upgrade-target>"
 
 # Check upgrade status
 az aks show \

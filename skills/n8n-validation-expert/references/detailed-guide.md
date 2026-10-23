@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Scope and evidence
+
+These tool names, profiles, autofix and sanitization rules describe an external n8n MCP implementation, not guaranteed core n8n behavior. Discover the installed server schema/node typeVersion and inspect before/after workflow bytes; this tree does not bundle that server or the named ERROR_CATALOG.md/FALSE_POSITIVES.md. Telemetry counts/timings below are upstream illustrations without bundled reproducible data, not expected latency or quality guarantees. Work on an inactive duplicate/export, preserve credentials and live connections, and validate side effects with synthetic inputs before activation.
+
 ## Validation Philosophy
 
 **Validate early, validate often**
@@ -373,7 +377,7 @@ References to non-existent nodes
 #### 3. Paradoxical Corrupt States
 API returns corrupt data but rejects updates
 
-**Solution**: May require manual database intervention
+**Solution**: Preserve an export/backup and inspect documented API recovery for the installed version; do not edit the live n8n database as a routine fix.
 
 ---
 
@@ -567,7 +571,7 @@ validate_workflow({
 }
 ```
 
-**Fix**: Remove extra triggers or split into separate workflows
+**Fix**: Multiple triggers can be intentional and each starts its own execution. Verify the intended entry path and installed node semantics; do not delete a valid trigger solely to silence this warning.
 
 #### 4. Disconnected Nodes
 ```json
@@ -596,7 +600,7 @@ validate_workflow({
 **When**: Workflow validates but executes incorrectly
 
 **Steps**:
-1. Remove half the nodes
+1. In an inactive disposable copy, disable/remove half the relevant nodes while preserving input/output contracts
 2. Validate and test
 3. If works: problem is in removed nodes
 4. If fails: problem is in remaining nodes
@@ -644,7 +648,7 @@ n8n_autofix_workflow({
 - Fix errors iteratively (one at a time)
 - Use `runtime` profile for pre-deployment
 - Check `valid` field before assuming success
-- Trust auto-sanitization for operator issues
+- Inspect and revalidate actual sanitization/autofix diffs; a valid structure does not prove execution or safety
 - Use `get_node` when unclear about requirements
 - Document false positives you accept
 
@@ -655,7 +659,7 @@ n8n_autofix_workflow({
 - Ignore error messages
 - Use `strict` profile during development (too noisy)
 - Assume validation passed (always check result)
-- Manually fix auto-sanitization issues
+- Assume every save operation or tool version applies the same auto-sanitization
 - Deploy with unresolved errors
 - Ignore all warnings (some are important!)
 

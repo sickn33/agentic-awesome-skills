@@ -33,7 +33,7 @@ Build serverless applications with AWS Lambda, covering function creation, event
 ## Prerequisites
 
 - AWS CLI v2 installed and configured
-- IAM permissions: `lambda:*`, `iam:PassRole`, `logs:*`, `apigateway:*`, `s3:*`
+- Least-privilege IAM actions for the chosen resources; restrict `iam:PassRole` to the execution role. Wildcard service grants are not a prerequisite.
 - Python 3.11+, Node.js 20+, or another supported runtime installed locally
 - (Optional) AWS SAM CLI for local development and deployment
 
@@ -92,7 +92,7 @@ aws lambda update-alias \
 ## Function Code Examples
 
 ```python
-# app.py - API Gateway handler with structured logging
+# app.py - API Gateway REST proxy (v1) sketch; not the function URL/v2 event shape
 import json
 import logging
 import os
@@ -105,7 +105,7 @@ def handler(event, context):
     logger.info("Request: %s %s", event["httpMethod"], event["path"])
 
     try:
-        body = json.loads(event.get("body", "{}"))
+        body = json.loads(event.get("body") or "{}")
         result = process_request(body)
 
         return {
@@ -246,7 +246,8 @@ aws events put-targets \
 ## Function URLs (No API Gateway Needed)
 
 ```bash
-# Create a function URL (public HTTPS endpoint)
+# Public access requires explicit authorization; CORS is not authentication.
+# Prefer AWS_IAM for private endpoints. Create public URL only when requested.
 aws lambda create-function-url-config \
   --function-name my-api-handler \
   --auth-type NONE \
@@ -264,12 +265,19 @@ aws lambda add-permission \
   --action lambda:InvokeFunctionUrl \
   --principal "*" \
   --function-url-auth-type NONE
+
+aws lambda add-permission \
+  --function-name my-api-handler \
+  --statement-id function-url-public-invoke \
+  --action lambda:InvokeFunction \
+  --principal "*" \
+  --invoked-via-function-url
 ```
 
 ## Cold Start Optimization
 
 ```bash
-# Enable provisioned concurrency to eliminate cold starts
+# Provision capacity to reduce cold starts within provisioned concurrency; spillover may initialize
 aws lambda put-provisioned-concurrency-config \
   --function-name my-api-handler \
   --qualifier live \
@@ -288,7 +296,7 @@ aws lambda publish-version --function-name my-java-handler
 ```
 
 Cold start reduction tips:
-- Use `arm64` architecture (Graviton) for faster init and lower cost
+- Benchmark supported architectures; verify native dependency compatibility and regional pricing
 - Minimize deployment package size; use layers for large dependencies
 - Initialize SDK clients outside the handler function
 - Avoid VPC unless required (VPC cold starts are longer)
@@ -407,11 +415,11 @@ sam logs --name ApiFunction --stack-name my-stack --tail
 | Out of memory | Memory limit too small | Increase `--memory-size`; profile with CloudWatch Insights |
 | Permission denied on AWS API | Execution role missing policy | Attach required policy to the execution role |
 | Cold starts > 5s | Large package or VPC overhead | Use layers, arm64, provisioned concurrency; remove VPC if not needed |
-| SQS messages reprocessed | Visibility timeout < function timeout | Set queue visibility timeout to 6x function timeout |
+| SQS messages reprocessed | Visibility timeout < function timeout | Use at least six times the function timeout plus batching window; also implement idempotency |
 | Event source mapping disabled | Too many consecutive errors | Fix the function error; re-enable the mapping |
 | Layer not found | Wrong region or deleted version | Verify layer ARN region matches function region |
 | Canary deployment not shifting | Alias routing config wrong | Verify version numbers in routing config |
-| Cannot invoke function URL | Missing resource-based policy | Add `lambda:InvokeFunctionUrl` permission |
+| Cannot invoke function URL | Missing resource-based policy | Check both URL and function invoke permissions |
 
 ## Related Skills
 
@@ -426,3 +434,5 @@ sam logs --name ApiFunction --stack-name my-stack --tail
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+
+Environment, layer and S3 notification configuration commands replace the corresponding full configuration; read and merge existing settings first. Build native dependencies for the selected Linux runtime and architecture. The SQS example assumes a standard queue; FIFO partial failures must stop at the first failure and include unprocessed records to preserve order. All retryable handlers need idempotent side effects. Provisioned concurrency and public invocation incur costs. [Function URL authorization](https://docs.aws.amazon.com/lambda/latest/dg/urls-auth.html) requires both invoke permissions for new URLs since October 2025.

@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Log the complaint first with a severity and an owner, then decide if a linked disciplinary case is needed.
 
-**Why this one:** Grievances are missed when they arrive verbally. Capturing them with a date and a triage owner is the whole control.
+**Why this one:** Grievances are missed when they arrive verbally. Capture a date and independent triage owner, then apply access restrictions, evidence handling, review and escalation controls.
 
 **Workflow:** Complaint raised → Triage → Investigation → Action taken → Closure
 
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Issue Title,Issue Type,Raised By,Anonymous,Against (Person or Team),Department,Date Raised,Related Policy,Severity,Description,Assigned To,Investigation Notes,Action Taken,Linked Disciplinary Case,Resolution Date,Days Open,Confidential,Status,Issue ID
-Client escalation after missed milestone,Conduct,Ananya Rao,FALSE,Vikram Singh,Delivery,2026-01-15,Code of Conduct,Medium,"Repeated late status updates to the client after a missed milestone, raised by the account team.",Aarav Sharma,Witness statements collected. Meeting held with both parties.,Written warning issued and a one-to-one scheduled for next week.,PIP-2026-004,2026-01-19,4,Internal,Resolved,
+Client escalation after missed milestone,Conduct,Example Reporter,FALSE,Example Subject,Delivery,2026-01-15,Code of Conduct,Medium,"Repeated late status updates to the client after a missed milestone, raised by the account team.",Example Case Owner,Witness statements collected. Meeting held with both parties.,Synthetic outcome recorded after authorized human review.,CASE-EXAMPLE-004,2026-01-19,4,Restricted,Resolved,
 ```
 
 ```sql
@@ -142,7 +142,7 @@ CREATE TABLE issue_grievance_tracker (
   action_taken VARCHAR(255),
   linked_disciplinary_case VARCHAR(255),  -- relation -> target record
   resolution_date DATE,
-  days_open NUMERIC NOT NULL,
+  days_open INTEGER CHECK (days_open >= 0),
   confidential VARCHAR(100) NOT NULL,
   status VARCHAR(100) NOT NULL,
   issue_id SERIAL PRIMARY KEY,
@@ -208,7 +208,8 @@ CREATE INDEX idx_issue_grievance_tracker_status ON issue_grievance_tracker (stat
       "format": "date"
     },
     "Days Open": {
-      "type": "number"
+      "type": "integer",
+      "minimum": 0
     },
     "Confidential": {
       "type": "string"
@@ -221,10 +222,10 @@ CREATE INDEX idx_issue_grievance_tracker_status ON issue_grievance_tracker (stat
     }
   },
   "required": [
+    "Anonymous",
     "Issue Type",
     "Date Raised",
     "Severity",
-    "Days Open",
     "Confidential",
     "Status"
   ]
@@ -250,7 +251,7 @@ CREATE INDEX idx_issue_grievance_tracker_status ON issue_grievance_tracker (stat
 | Linked Disciplinary Case | Relation (link to the target database) | Convert to Relation, link to the target database |
 | Resolution Date | Date | Convert to Date |
 | Days Open | Number | Convert to Number |
-| Confidential | Select (add options after import) | Convert to Select, add options: "Public", "Internal", "Restricted", "Highly Restricted" |
+| Confidential | Select (add options after import) | Convert to Select, add options: "Restricted", "Highly Restricted" |
 | Status | Select (add options after import) | Convert to Select, add options: "Logged", "Under Review", "Investigating", "Resolved", "Escalated", "Closed" |
 | Issue ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
@@ -266,23 +267,25 @@ and anything pointing at another table stays `relation`.
 |---:|---|---|---|---|---|---|
 | 1 | Issue Title | `text` | `VARCHAR(255)` | `string` | Text | `Client escalation after missed milestone` |
 | 2 | Issue Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Conduct` |
-| 3 | Raised By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
+| 3 | Raised By | `text` | `VARCHAR(255)` | `string` | Text | `Example Reporter` |
 | 4 | Anonymous | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 5 | Against (Person or Team) | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
+| 5 | Against (Person or Team) | `text` | `VARCHAR(255)` | `string` | Text | `Example Subject` |
 | 6 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 7 | Date Raised | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 8 | Related Policy | `text` | `VARCHAR(255)` | `string` | Text | `Code of Conduct` |
 | 9 | Severity | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Medium` |
 | 10 | Description | `long_text` | `TEXT` | `string` | Text | `Repeated late status updates to the client after a missed milestone, raised by the account team.` |
-| 11 | Assigned To | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 11 | Assigned To | `text` | `VARCHAR(255)` | `string` | Text | `Example Case Owner` |
 | 12 | Investigation Notes | `long_text` | `TEXT` | `string` | Text | `Witness statements collected. Meeting held with both parties.` |
-| 13 | Action Taken | `text` | `VARCHAR(255)` | `string` | Text | `Written warning issued and a one-to-one scheduled for next week.` |
-| 14 | Linked Disciplinary Case | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `PIP-2026-004` |
+| 13 | Action Taken | `text` | `VARCHAR(255)` | `string` | Text | `Synthetic outcome recorded after authorized human review.` |
+| 14 | Linked Disciplinary Case | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `CASE-EXAMPLE-004` |
 | 15 | Resolution Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-19` |
-| 16 | Days Open | `number` | `NUMERIC` | `number` | Number | `4` |
-| 17 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
+| 16 | Days Open | `integer` | `INTEGER` | `integer` | Number | `4` |
+| 17 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Restricted` |
 | 18 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Resolved` |
 | 19 | Issue ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+An Anonymous flag does not guarantee anonymity: omit Raised By and identifying details from shared views, restrict intake logs and attachments, and do not infer or expose the reporter. Default case visibility to Restricted; a confidentiality label is not an access-control mechanism. Store detailed evidence separately with role-based access, retention and an audit trail; a general team Notion database may be unsuitable. Record allegations as unverified until an independent human review resolves them. Do not automatically create a PIP or disciplinary action from a complaint. Days Open is the calendar-day difference between Date Raised and Resolution Date, or an explicitly recorded as-of date for open cases; leave unknown rather than inventing it. Do not promise absolute secrecy, guaranteed deletion or automatic emergency handling.
 
 ## Select Options
 
@@ -299,7 +302,7 @@ Low | Medium | High | Critical
 **Confidential**
 
 ```
-Public | Internal | Restricted | Highly Restricted
+Restricted | Highly Restricted
 ```
 **Status**
 
@@ -385,7 +388,7 @@ A complaint came in verbally and we handled it without a record.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

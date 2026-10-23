@@ -26,6 +26,10 @@ Automate YouTube operations through Composio's YouTube toolkit via Rube MCP.
 3. If connection is not ACTIVE, follow the returned auth link to complete Google OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## Publishing and account boundaries
+
+Verify the exact connected channel and target video/playlist IDs. Upload/public privacy changes, comments and subscriptions require explicit requested effects; use private staging when publication is not authorized. Confirm rights/consent for media and protect private/unlisted links. Read existing metadata before partial updates so omitted mutable fields are not accidentally cleared by an endpoint’s replacement semantics. Track the returned upload/video ID and inspect processing/status before retrying an uncertain upload. Verify current quota costs/limits in live schemas and official YouTube docs; values below are historical examples.
+
 ## Core Workflows
 
 ### 1. Upload and Manage Videos
@@ -69,7 +73,7 @@ Automate YouTube operations through Composio's YouTube toolkit via Rube MCP.
 
 **Pitfalls**:
 - Search endpoint only returns 'snippet' part; use VIDEO_DETAILS for statistics
-- Search results are capped at 500 total items
+- Search result constraints depend on parameters/account; pagination is not proof of complete channel inventory
 - Search has higher quota cost (100 units) vs list endpoints (1 unit)
 - BATCH video details practical limit is ~50 IDs per call; chunk larger sets
 
@@ -90,7 +94,7 @@ Automate YouTube operations through Composio's YouTube toolkit via Rube MCP.
 - `pageToken`: Pagination token from previous response
 
 **Pitfalls**:
-- Do NOT pass channel IDs ('UC...') as playlist IDs; convert 'UC' to 'UU' for uploads
+- Do NOT pass a channel ID as playlistId; read the uploads playlist ID from channel contentDetails
 - Large playlists require pagination via pageToken; follow nextPageToken until absent
 - items[].id is not the videoId; use items[].snippet.resourceId.videoId
 - Creating duplicate playlist names is allowed; check existing playlists first
@@ -154,7 +158,7 @@ Automate YouTube operations through Composio's YouTube toolkit via Rube MCP.
 **Uploads Playlist**:
 ```
 1. Get channel ID (starts with 'UC')
-2. Replace 'UC' prefix with 'UU' to get uploads playlist ID
+2. Read contentDetails.relatedPlaylists.uploads from the actual channel resource
 3. Use with LIST_PLAYLIST_ITEMS to enumerate all videos
 ```
 
@@ -176,7 +180,7 @@ Automate YouTube operations through Composio's YouTube toolkit via Rube MCP.
 
 **Quota Management**:
 - YouTube API has a daily quota limit (default 10,000 units)
-- Upload = 1600 units; search = 100 units; list = 1 unit
+- Verify per-method quota costs before planning bulk operations; do not assume historical upload/list costs remain current.
 - Prefer list endpoints over search when possible
 - Monitor quota usage to avoid hitting daily limits
 

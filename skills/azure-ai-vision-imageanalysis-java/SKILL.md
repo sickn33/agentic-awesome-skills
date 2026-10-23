@@ -136,7 +136,7 @@ ImageAnalysisResult result = client.analyzeFromUrl(
     Arrays.asList(VisualFeatures.OBJECTS),
     null);
 
-for (DetectedObject obj : result.getObjects()) {
+for (DetectedObject obj : result.getObjects().getValues()) {
     System.out.printf("Object: %s (confidence: %.4f)%n",
         obj.getTags().get(0).getName(),
         obj.getTags().get(0).getConfidence());
@@ -155,7 +155,7 @@ ImageAnalysisResult result = client.analyzeFromUrl(
     Arrays.asList(VisualFeatures.TAGS),
     null);
 
-for (DetectedTag tag : result.getTags()) {
+for (DetectedTag tag : result.getTags().getValues()) {
     System.out.printf("Tag: %s (confidence: %.4f)%n",
         tag.getName(),
         tag.getConfidence());
@@ -170,7 +170,7 @@ ImageAnalysisResult result = client.analyzeFromUrl(
     Arrays.asList(VisualFeatures.PEOPLE),
     null);
 
-for (DetectedPerson person : result.getPeople()) {
+for (DetectedPerson person : result.getPeople().getValues()) {
     ImageBoundingBox box = person.getBoundingBox();
     System.out.printf("Person at x=%d, y=%d (confidence: %.4f)%n",
         box.getX(), box.getY(), person.getConfidence());
@@ -185,7 +185,7 @@ ImageAnalysisResult result = client.analyzeFromUrl(
     Arrays.asList(VisualFeatures.SMART_CROPS),
     new ImageAnalysisOptions().setSmartCropsAspectRatios(Arrays.asList(1.0, 1.5)));
 
-for (CropRegion crop : result.getSmartCrops()) {
+for (CropRegion crop : result.getSmartCrops().getValues()) {
     System.out.printf("Crop region: aspect=%.2f, x=%d, y=%d, w=%d, h=%d%n",
         crop.getAspectRatio(),
         crop.getBoundingBox().getX(),
@@ -203,7 +203,7 @@ ImageAnalysisResult result = client.analyzeFromUrl(
     Arrays.asList(VisualFeatures.DENSE_CAPTIONS),
     new ImageAnalysisOptions().setGenderNeutralCaption(true));
 
-for (DenseCaption caption : result.getDenseCaptions()) {
+for (DenseCaption caption : result.getDenseCaptions().getValues()) {
     System.out.printf("Caption: \"%s\" (confidence: %.4f)%n",
         caption.getText(),
         caption.getConfidence());
@@ -231,8 +231,8 @@ ImageAnalysisResult result = client.analyzeFromUrl(
 
 // Access all results
 System.out.println("Caption: " + result.getCaption().getText());
-System.out.println("Tags: " + result.getTags().size());
-System.out.println("Objects: " + result.getObjects().size());
+System.out.println("Tags: " + result.getTags().getValues().size());
+System.out.println("Objects: " + result.getObjects().getValues().size());
 System.out.println("Text blocks: " + result.getRead().getBlocks().size());
 ```
 
@@ -297,3 +297,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Feature result wrappers may be absent when not requested; null-check each requested result and check a detected object has tags before indexing `get(0)`. Verify model/feature availability and signatures for the pinned SDK. Scores/captions/OCR are uncertain model outputs, not identity or factual proof. Authorize cloud transfer of private images and protect output text. See [ImageAnalysisResult API](https://learn.microsoft.com/en-us/java/api/com.azure.ai.vision.imageanalysis.models.imageanalysisresult?view=azure-java-stable).

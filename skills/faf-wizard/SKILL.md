@@ -20,7 +20,7 @@ Transform any project - new, legacy, famous OSS, or forgotten side projects - in
 
 ## The Problem It Solves
 
-**Even React.js scores 0% AI-readiness.** Famous repositories have no AI context.
+FAF scores completeness of its own context schema; it does not measure whether an AI can understand a repository or whether a project is production ready.
 
 | What Exists | What It Tells AI |
 |-------------|------------------|
@@ -41,7 +41,7 @@ Documentation tells humans how to use your code. AI context tells AI how to help
 | **Client handoffs** | Portable context for any AI tool |
 | **Team projects** | Shared context that everyone can use |
 
-## Real Success Stories
+## Illustrative before/after scenarios
 
 ### Before/After: Legacy E-commerce Platform
 ```
@@ -104,7 +104,7 @@ To reach Silver (95%):
   + Define deployment details (+3%)
 ```
 
-## Performance Data (Real Numbers)
+## Upstream performance claims (not independently verified here)
 
 **Analyzed 8,400+ Projects:**
 - ✅ **99.2% detection accuracy** across 153+ formats
@@ -125,7 +125,7 @@ Automatically detects and configures:
 ## Universal Compatibility
 
 ### Works With Every AI Tool
-- ✅ **Claude Code** - Reads .faf natively
+- **Claude Code** - Read or export the context through its supported project instructions; do not assume native `.faf` loading
 - ✅ **Cursor** - Auto-syncs to .cursorrules  
 - ✅ **Gemini CLI** - Converts to GEMINI.md
 - ✅ **Windsurf** - Syncs to .windsurfrules
@@ -211,7 +211,7 @@ Use `faf-expert` for:
 
 ## Validation & Security
 
-**Enterprise-Grade Standards:**
+**Upstream quality and packaging claims — verify against the selected version:**
 - ✅ **800+ comprehensive tests** across CLI and MCP
 - ✅ **No credentials ever stored** in .faf files
 - ✅ **YAML format validation** prevents malformed files
@@ -255,3 +255,5 @@ faf sync --target all --watch
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Before generating or syncing, inspect existing `project.faf`, `CLAUDE.md`, `AGENTS.md` and other target instruction files. Preserve their user-authored rules, preview the diff and apply only scoped changes; `sync --target all` is not authorization to overwrite unrelated instructions. Never place credentials or confidential source in context files. Timing, adoption and accuracy figures above are upstream claims, not evidence established by this catalog. [Upstream integration model](https://github.com/Wolfe-Jam/faf-skills#works-with-claudemd).

@@ -78,29 +78,7 @@ Design templates that produce unique, valuable pages:
 
 ### Quality Gates
 
-| Metric | Threshold | Action |
-|--------|-----------|--------|
-| Pages without content review | 100+ | ⚠️ WARNING: require content audit before publishing |
-| Pages without justification | 500+ | 🛑 HARD STOP: require explicit user approval and thin content audit |
-| Unique content per page | <40% | ❌ Flag as thin content (likely penalty risk) |
-| Word count per page | <300 | ⚠️ Flag for review (may lack sufficient value) |
-
-### Scaled Content Abuse: Enforcement Context (2025-2026)
-
-Google's Scaled Content Abuse policy (introduced March 2024) saw major enforcement escalation in 2025:
-
-- **June 2025:** Wave of manual actions targeting websites with AI-generated content at scale
-- **August 2025:** SpamBrain spam update enhanced pattern detection for AI-generated link schemes and content farms
-- **Result:** Google reported 45% reduction in low-quality, unoriginal content in search results post-March 2024 enforcement
-
-**Enhanced quality gates for programmatic pages:**
-- **Content differentiation:** ≥30-40% of content must be genuinely unique between any two programmatic pages (not just city/keyword string replacement)
-- **Human review:** Minimum 5-10% sample review of generated pages before publishing
-- **Progressive rollout:** Publish in batches of 50-100 pages. Monitor indexing and rankings for 2-4 weeks before expanding. Never publish 500+ programmatic pages simultaneously without explicit quality review.
-- **Standalone value test:** Each page should pass: "Would this page be worth publishing even if no other similar pages existed?"
-- **Site reputation abuse:** If publishing programmatic content under a high-authority domain (not your own), this may trigger site reputation abuse penalties. Google began enforcing this aggressively in November 2024.
-
-> **Recommendation:** The WARNING gate at `<40% unique content` remains appropriate. Consider a HARD STOP at `<30%` unique content to prevent scaled content abuse risk.
+Assess whether each page supplies useful, accurate information for a distinct user need. Word count and unique-word percentages do not establish quality or a Google penalty threshold. Document any editorial rollout limits as project policy, not search-engine rules. Review representative template/data edge cases and every high-risk page; disclose the reviewed scope and expand cautiously based on observed indexing and user outcomes. Scaled content abuse concerns producing many pages primarily to manipulate rankings without helping users, regardless of generation method.
 
 ### Safe Programmatic Pages (OK at scale)
 ✅ Integration pages (with real setup docs, API details, screenshots)
@@ -114,7 +92,7 @@ Google's Scaled Content Abuse policy (introduced March 2024) saw major enforceme
 ❌ "Best [tool] for [industry]" without industry-specific value
 ❌ "[Competitor] alternative" without real comparison data
 ❌ AI-generated pages without human review and unique value-add
-❌ Pages where >60% of content is shared template boilerplate
+❌ Pages whose shared boilerplate leaves no useful distinct information
 
 ### Uniqueness Calculation
 Unique content % = (words unique to this page) / (total words on page) × 100
@@ -124,8 +102,8 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 ## Canonical Strategy
 
 - Every programmatic page must have a self-referencing canonical tag
-- Parameter variations (sort, filter, pagination) canonical to the base URL
-- Paginated series: canonical to page 1 or use rel=next/prev
+- Canonicalize parameter variations only when they are genuinely duplicate; distinct pagination is not a duplicate of page 1
+- Paginated pages normally use their own canonical URLs; Google no longer uses rel=next/prev as an indexing signal
 - If programmatic pages overlap with manual pages, the manual page is canonical
 - No canonical to a different domain unless intentional cross-domain setup
 
@@ -142,13 +120,15 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 ## Index Bloat Prevention
 
 - **Noindex low-value pages**: Pages that don't meet quality gates
-- **Pagination**: Noindex paginated results beyond page 1 (or use rel=next/prev)
+- **Pagination**: Keep useful paginated results crawlable and self-canonical; blanket noindex can impair discovery
 - **Faceted navigation**: Noindex filtered views, canonical to base category
 - **Crawl budget**: For sites with >10k programmatic pages, monitor crawl stats in Search Console
 - **Thin page consolidation**: Merge records with insufficient data into aggregated pages
 - **Regular audits**: Monthly review of indexed page count vs intended count
 
 ## Output
+
+Scores are qualitative editorial aids, not validated ranking/penalty predictions. URL length and link-density figures above are house heuristics, not Google requirements.
 
 ### Programmatic SEO Score: XX/100
 
@@ -179,8 +159,8 @@ Measure against all other pages in the programmatic set. Shared headers, footers
 |----------|--------|
 | URL unreachable | Report connection error with status code. Suggest verifying URL accessibility and checking for authentication requirements. |
 | No programmatic pages detected | Inform user that no template-generated or data-driven page patterns were found. Suggest checking if pages use client-side rendering or if the URL points to the correct section. |
-| Thin content threshold exceeded | Trigger quality gate warning. Report the unique content percentage and flag pages below 40% uniqueness. Require user acknowledgment before proceeding. |
-| Quality gate violation | Halt analysis at the HARD STOP threshold (500+ pages without justification or <30% unique content). Present findings and require explicit user approval to continue. |
+| Suspected low-value content | Report concrete missing value and affected pages; propose consolidation or improvement. |
+| Unclear publication scope | Continue analysis; obtain authorization before publishing or bulk-changing live pages. |
 
 ## Example
 

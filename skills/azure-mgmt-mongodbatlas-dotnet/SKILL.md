@@ -66,6 +66,8 @@ var armClient = new ArmClient(credential);
 
 ## Workflows
 
+Confirm tenant, target subscription/resource group, Marketplace offer/plan/terms and cost before provisioning. The sample private-plan identifiers are illustrative and may not be available to the account; "Free" in a display name is not a billing guarantee. Default subscription selection must be checked explicitly. Deletion and admin changes require scoped authorization and a dependency/recovery review. Pin the SDK version and verify signatures before compiling; no deployment is claimed.
+
 ### Get Organization Collection
 
 ```csharp

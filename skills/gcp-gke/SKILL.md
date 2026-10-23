@@ -28,6 +28,10 @@ Deploy, operate, and scale managed Kubernetes clusters on Google Cloud Platform.
 - Teams already invested in Kubernetes tooling (Helm, Argo CD, Flux)
 - When Cloud Run's request-based model does not fit (long-running, stateful workloads)
 
+## Project, cost and identity boundaries
+
+Verify gcloud account/project, cluster context, region and quota/budget before writes. Regional Standard node counts and autoscaling flags may be per zone, so compute total nodes/cost explicitly; Autopilot billing/limits depend on compute class and current pricing. Use a dedicated least-privilege node service account and bucket/resource-scoped workload permissions rather than broad project grants when possible. Private nodes do not alone make the control-plane endpoint private. Terraform below is an excerpt requiring provider, variables and network definitions; enabling a policy feature does not install the deny/allow rules or prove enforcement.
+
 ## Prerequisites
 
 - Google Cloud SDK (`gcloud`) and `kubectl` installed

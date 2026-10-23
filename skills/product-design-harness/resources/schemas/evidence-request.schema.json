@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/evidence-request.schema.json",
+  "title": "Product Design Harness Evidence Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "decision_question",
+    "claim_ids",
+    "allowed_source_types",
+    "required_signal_types",
+    "freshness_limit_days",
+    "return_counter_signals"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "allowed_source_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "internal",
+          "external",
+          "workflow",
+          "risk",
+          "direct_learning"
+        ]
+      },
+      "minItems": 1
+    },
+    "required_signal_types": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "stated_opinion",
+          "quote",
+          "observed_behavior",
+          "workflow_trace",
+          "product_log",
+          "transaction",
+          "market_signal",
+          "policy",
+          "derived"
+        ]
+      }
+    },
+    "freshness_limit_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "return_counter_signals": {
+      "const": true
+    }
+  }
+}

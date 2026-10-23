@@ -16,7 +16,7 @@
 
 ## Scope
 
-- 0: Python-only (TypeScript in early stages)
+- 0: Examples here are Python; verify language/package version compatibility
 - 1: Learning curve for graph concepts
 - 2: State management complexity
 - 3: Debugging can be challenging
@@ -44,6 +44,8 @@
 - Cloud deployments
 
 
+Examples are fragments sharing imports and graph definitions; the search tool and `safe_math_evaluator` must be supplied and bounded by the application. Never use unrestricted eval. Checkpointer packages are separate installs; isolate authenticated tenant/thread access and redact retained state. A graph state flag is not independent user authorization.
+
 ## Patterns
 
 ### Basic Agent Graph
@@ -62,7 +64,7 @@ from langchain_core.tools import tool
 # 1. Define State
 class AgentState(TypedDict):
     messages: Annotated[list, add_messages]
-    # add_messages reducer appends, doesn't overwrite
+    # add_messages appends new IDs and replaces messages sharing an existing ID
 
 # 2. Define Tools
 @tool
@@ -116,7 +118,7 @@ app = graph.compile()
 # 7. Run
 result = app.invoke({
     "messages": [("user", "What is 25 * 4?")]
-})
+}, config={"recursion_limit": 20})
 
 ### State with Reducers
 
@@ -134,7 +136,7 @@ def merge_dicts(left: dict, right: dict) -> dict:
 
 # State with multiple reducers
 class ResearchState(TypedDict):
-    # Messages append (don't overwrite)
+    # New IDs append; matching IDs replace
     messages: Annotated[list, add_messages]
 
     # Research findings merge
@@ -251,12 +253,14 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.checkpoint.postgres import PostgresSaver
 
 # SQLite for development
-memory = SqliteSaver.from_conn_string(":memory:")
-# Or persistent file
-memory = SqliteSaver.from_conn_string("agent_state.db")
+from contextlib import ExitStack
+resources = ExitStack()
+# Keep resources open for every graph invocation; close it on application shutdown.
+memory = resources.enter_context(SqliteSaver.from_conn_string("agent_state.db"))
 
 # PostgreSQL for production
-# memory = PostgresSaver.from_conn_string(DATABASE_URL)
+# memory = resources.enter_context(PostgresSaver.from_conn_string(DATABASE_URL))
+# memory.setup()  # initialize schema before use
 
 # Compile with checkpointer
 app = graph.compile(checkpointer=memory)
@@ -303,22 +307,23 @@ def agent(state: ApprovalState) -> dict:
     action = {"type": "send_email", "to": "user@example.com"}
     return {
         "pending_action": action,
+        "approved": False,
         "messages": [("assistant", f"I want to: {action}")]
     }
 
 def execute_action(state: ApprovalState) -> dict:
     action = state["pending_action"]
-    # Execute the approved action
-    result = f"Executed: {action['type']}"
+    if state.get("approved") is not True:
+        raise PermissionError("Action has not been approved")
+    # Illustration only: replace with an idempotent authorized adapter.
+    result = f"Simulated: {action['type']}"
     return {
         "messages": [("assistant", result)],
         "pending_action": None
     }
 
 def should_execute(state: ApprovalState) -> str:
-    if state.get("approved"):
-        return "execute"
-    return END  # Wait for approval
+    return "execute"  # interrupt_before pauses before the action node
 
 # Build graph
 graph = StateGraph(ApprovalState)
@@ -354,8 +359,8 @@ Run multiple branches in parallel
 
 **When to use**: Parallel research, batch processing
 
-from langgraph.graph import StateGraph, START, END, Send
-from langgraph.constants import Send
+from langgraph.graph import StateGraph, START, END
+from langgraph.types import Send
 
 class ParallelState(TypedDict):
     topics: list[str]

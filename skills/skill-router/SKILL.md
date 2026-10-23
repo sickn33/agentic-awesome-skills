@@ -137,6 +137,10 @@ Agent: ✅ Primary Skill: @brainstorming
 
 ---
 
+## Verify the recommendation
+
+Treat the names below as candidates. Check the live installed catalog and read the chosen skill before recommending it; do not claim a skill/tool is installed from this static table. Use the host’s actual invocation syntax when it differs from `@name`. An autonomy preference does not authorize spending, external messaging, production changes or unrelated parallel agents.
+
 ## Skill Routing Reference
 
 ### Building a full product or app from scratch

@@ -16,6 +16,10 @@ license_source: https://github.com/hyhmrright/logic-lens/blob/main/LICENSE
 Use this skill when you need compare two code versions for semantic equivalence via semi-formal tracing of both versions side-by-side. Trigger when the user shares a refactor, rewrite, migration, or A/B implementation and wants to confirm behavior is unchanged — "did I break anything", "is this equivalent", "are...
 
 
+## Supporting prerequisites
+
+Both tracked files are bundled, but the referenced sibling `_shared/` library is not. Its L-codes, language rules and report template cannot be claimed as loaded here. Use the inline five-field finding structure and explicitly scoped traced scenarios unless a reviewed matching upstream installation supplies those shared files.
+
 ## Setup
 
 Use lazy loading per `../_shared/common.md` §13:

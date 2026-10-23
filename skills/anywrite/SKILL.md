@@ -58,6 +58,8 @@ anywrite <resource> <action> [positionals] [--flag value]
 
 Resources: `spaces`, `objects`, `properties`, `tags`, `types`, `templates`, `lists`, `files`, `members`, `search`, `chat`, `auth`. Output is JSON by default; add `--pretty` for a human view, `--json` as an escape hatch for anything the typed flags don't model yet. `space`/`type`/`property` positionals accept a name or an id — names are resolved to ids automatically.
 
+Resolve names to IDs and confirm the exact space/object before mutations; duplicate names must not select an arbitrary object. Whole-body replacements can erase content, so preserve a revision and review the complete replacement. Search requests do not authorize uploads/chat/deletes. Bound chat/search pages and payload sizes instead of using --all indiscriminately, and verify the resulting state after writes.
+
 ## Examples
 
 ### Example 1: Create and update an object
@@ -99,8 +101,8 @@ Resources: `spaces`, `objects`, `properties`, `tags`, `types`, `templates`, `lis
 
 - The API key is stored locally in `~/.anywrite/config.json` and is never printed by any command, including `auth --status`.
 - Config precedence at runtime: `ANYTYPE_API_KEY` env var, then `~/.anywrite/config.json`, then a read-only fallback to an existing `~/.anytype-cli/config.yaml`.
-- All operations target a locally-running Anytype desktop instance; no data is sent to third-party servers.
-- Delete is a soft archive everywhere and is idempotent — a repeated delete stays `200`, never `410`.
+- CLI calls target the configured local instance, but Anytype may sync content according to its network/space configuration. Verify actual sync/sharing before writing private data; localhost does not establish local-only storage.
+- Inspect the actual resource/version deletion semantics and recovery path; do not assume every delete is reversible or safe to retry from this index.
 
 ## Common Pitfalls
 

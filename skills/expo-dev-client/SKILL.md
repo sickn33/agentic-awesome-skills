@@ -39,7 +39,8 @@ Ensure `eas.json` has a development profile:
     },
     "development": {
       "autoIncrement": true,
-      "developmentClient": true
+      "developmentClient": true,
+      "distribution": "internal"
     }
   },
   "submit": {
@@ -55,25 +56,11 @@ Key settings:
 - `autoIncrement: true` - Automatically increments build numbers
 - `appVersionSource: "remote"` - Uses EAS as the source of truth for version numbers
 
-## Building for TestFlight
+## Distribution choices
 
-Build iOS dev client and submit to TestFlight in one command:
+Development builds are normally installed through internal/ad hoc distribution (physical iOS devices must be registered) or an explicit simulator profile. For TestFlight, use a separate store distribution build/profile and follow current Expo/App Store Connect documentation; do not submit a development client profile as a routine dev-build step. Submission publishes an artifact to an external account and requires the user’s corresponding authorization.
 
-```bash
-eas build -p ios --profile development --submit
-```
-
-This will:
-
-1. Build the development client in the cloud
-2. Automatically submit to App Store Connect
-3. Send you an email when the build is ready in TestFlight
-
-After receiving the TestFlight email:
-
-1. Download the build from TestFlight on your device
-2. Launch the app to see the expo-dev-client UI
-3. Connect to your local Metro bundler or scan a QR code
+For a simulator, add `ios: { "simulator": true }` to a separate selected development profile. A signed device `.ipa` is not a simulator `.app` archive. Verify the exact profile, target and output type before installation. Cloud builds may consume quota and signing credentials.
 
 ## Building Locally
 
@@ -81,10 +68,6 @@ Build a development client on your machine:
 
 ```bash
 # iOS (requires Xcode)
-## When to Use
-
-Use this skill when you need build Expo app for development.
-
 eas build -p ios --profile development --local
 
 # Android
@@ -177,7 +160,7 @@ eas build -p ios --profile development --clear-cache
 
 ```bash
 eas --version
-eas update
+# EAS Update publishes app updates; it is not a CLI version check.
 ```
 
 ## Limitations
@@ -185,3 +168,7 @@ eas update
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## When to Use
+
+Use when creating or troubleshooting an authorized Expo development build that needs native modules or development-client behavior.

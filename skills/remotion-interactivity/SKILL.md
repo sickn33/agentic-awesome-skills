@@ -21,6 +21,10 @@ By writing Remotion markup in a specific way, the Remotion Studio is able to rec
 
 If the markup is too complex for the Studio to make it interactive, then the values become grayed out.
 
+## Version and snippet scope
+
+Use the installed Remotion version matching these Studio features; examples omit imports and application helpers. `calculateMetadata` must be a function, not a Promise returned from an async `useMemo` factory. Supply static fallback width/height on Composition as required by its props, then return dynamic overrides. Inspect the actual Studio edit diff before saving over source. See [calculateMetadata](https://www.remotion.dev/docs/calculate-metadata).
+
 ## Make an HTML element interactive using `Interactive`
 
 Every HTML and SVG element (except `<Img>`, it already is interactive) such as `<div>` can be turned interactive using `Interactive`:
@@ -168,10 +172,10 @@ The Props editor can save visual edits back to your code when `defaultProps` is 
 
 ```tsx
 // 👍 Static values are in <Composition>, dynamic values are in calculateMetadata()
-const calculateMetadata = useMemo(async () => {
-  const dimensions = await getDimensions(); // just an example
+const calculateMetadata = async () => {
+  const dimensions = await getDimensions(); // application-supplied helper
   return {width: dimensions.width, height: dimensions.height};
-});
+};
 
 <Composition
   id="my-video"

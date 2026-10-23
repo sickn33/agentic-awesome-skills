@@ -34,6 +34,8 @@ vision model (image) or video-understanding model (motion/timing) can be the jud
 a tight optimize loop. Worked reference: the `screenstudio-alternative` skill (`iteration.py`)
 (tuned zoom-animation feel via `fal-ai/video-understanding`).
 
+Set a maximum rounds/variants/render time and provider cost cap before starting. Upload only authorized artifacts to an approved destination, retain the previous best and stop on invalid output or no meaningful improvement. The referenced iteration.py helper is not bundled. Two-round convergence and token savings are hypotheses, not measured guarantees.
+
 ## The loop
 
 1. **Render N labeled variants into ONE artifact.** Vary the parameter(s) across a
@@ -56,8 +58,7 @@ a tight optimize loop. Worked reference: the `screenstudio-alternative` skill (`
   round is 1 upload + 1 inference, not 6. Montage/grid beats a loop of single calls.
 - **Burn params onto the artifact.** The model sees label+result together → no separate
   "variant A used X" context to carry → fewer tokens, fewer mistakes.
-- **Structured JSON out + parse.** No re-asking, no free-text wrangling. Prompt "return
-  ONLY JSON"; regex the first `{...}`.
+- **Structured JSON out + parse.** No re-asking, no free-text wrangling. Use supported structured output when available, parse JSON with a real parser and validate a schema/allowed parameter ranges; never use a greedy brace regex or execute returned code.
 - **Short representative sample.** Tune on a 3-5s clip / one frame / one component, not
   the whole asset. Cheaper render, smaller upload, faster inference. Apply the found
   params to the full render once.

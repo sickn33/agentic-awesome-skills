@@ -18,7 +18,7 @@ Automate Postmark transactional email operations through Composio's Postmark too
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The MCP endpoint still requires the provider connection and authorization flow returned by the installed Rube service; adding a URL alone does not grant account access.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -194,3 +194,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Confirm server/message stream, recipients and exact content before sending, including every item in a batch. Inspect each message result; HTTP success does not mean every recipient was accepted or delivered. Preserve retry identities and reconcile unknown outcomes. Template/server tracking changes affect other sends and need explicit scope; redact tokens and private recipient data.
