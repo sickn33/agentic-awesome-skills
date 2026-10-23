@@ -1,0 +1,269 @@
+{
+  "product_brief": {
+    "schema_version": "2.1",
+    "session_config": {
+      "working_language": "en",
+      "canonical_identifiers": "en",
+      "fallback_language": "en"
+    },
+    "product_direction": "Let a workflow assistant complete recurring customer operations without manual approval.",
+    "accountable_owner": "Product owner",
+    "stage": "prototype",
+    "actor_boundary": {
+      "target_population": [
+        "Operations teams handling recurring customer workflows"
+      ],
+      "operator": "Operations team member",
+      "beneficiary": "Operations team and customers receiving correct service",
+      "machine_actor": "Workflow assistant",
+      "affected_people": [
+        "Customers affected by completed operations"
+      ],
+      "excluded_groups": [
+        "One-off workflows",
+        "Workflows without reversible approval paths"
+      ]
+    },
+    "business_boundary": {
+      "product_organization": "Example Product Co.",
+      "project_owner": "Workflow automation team",
+      "issuer": "Example Product Co.",
+      "customers": [
+        "Teams handling recurring customer operations"
+      ],
+      "buyers": [
+        "Operations leads"
+      ],
+      "operators": [
+        "Operations team members"
+      ],
+      "partners": [
+        "Not applicable"
+      ],
+      "funders": [
+        "Not applicable"
+      ],
+      "platforms": [
+        "Workflow assistant in the operations workspace"
+      ],
+      "regulators": [
+        "Not applicable"
+      ],
+      "externality_bearers": [
+        "Customers affected by completed operations"
+      ],
+      "decision_authority": "Product owner",
+      "value_exchange": "Operators may spend less time preparing recurring customer work while human approval limits customer-facing errors and recovery costs."
+    },
+    "human_judgment_boundary": {
+      "human_owned_decisions": [
+        "Acceptable customer-facing recovery risk"
+      ],
+      "machine_supported_inputs": [
+        "Support notes",
+        "Observed workflow traces",
+        "Approval behavior"
+      ],
+      "not_mechanized": [
+        "Risk tolerance for autonomous customer-facing action"
+      ],
+      "approval_gates": [
+        {
+          "gate_id": "accountable-owner-customer-action-approval",
+          "accountable_owner": "Named accountable owner",
+          "condition": "Before any customer-facing execution."
+        }
+      ]
+    },
+    "unresolved_assumptions": [
+      "Whether people want full autonomy or faster preparation with approval."
+    ],
+    "execution_boundary": {
+      "may_do": [
+        "implement the approved bounded change"
+      ],
+      "must_not_do": [
+        "expand scope or execute external irreversible actions"
+      ],
+      "must_ask": [
+        "new stakeholder, data, risk, or scope appears"
+      ]
+    },
+    "problem_hypothesis": "Operators lose repeated time on recurring customer operations and may want delegated execution.",
+    "current_evidence": [
+      {
+        "evidence_id": "support-notes-001",
+        "source_id": "support-notes-recurring-operations-2026-07",
+        "source_type": "internal",
+        "raw_artifact_uri": "example://support/recurring-customer-operations/2026-07",
+        "signal_type": "quote",
+        "signal": "Operators report repeated time loss in recurring customer operations.",
+        "interpretation": "Reported pain suggests a workflow problem but does not show demand for autonomous execution.",
+        "decision_impact": "Supports observing workflows and testing draft-only assistance with human approval before any autonomous execution.",
+        "evidence_tier": "t1",
+        "confidence_level": "low",
+        "counter_signal": "No operator has asked for autonomous customer-facing action; review and recovery cost may exceed time saved.",
+        "collected_at": "2026-07-09T12:00:00Z",
+        "source_last_verified_at": "2026-07-09T12:00:00Z",
+        "max_staleness_days": 30
+      }
+    ],
+    "business_goal": "Reduce preparation time for recurring customer operations while keeping approval and recovery costs bounded.",
+    "constraints": [
+      "Keep customer-facing execution under human approval.",
+      "Do not remove approval or automate irreversible customer-facing actions.",
+      "Stop the draft-only test if correction or recovery costs exceed time saved."
+    ],
+    "proposed_next_step": "Decide whether to build autonomous execution or draft-only assistance.",
+    "known_risks": [
+      "Reported operator pain may not imply willingness to delegate customer-facing actions.",
+      "Review and recovery costs may exceed preparation time saved."
+    ]
+  },
+  "claim_analysis": {
+    "claims": [
+      {
+        "id": "c1",
+        "type": "user",
+        "claim": "Operators want delegated execution of recurring operations.",
+        "status": "assumption",
+        "support": "Support notes describe recurring time loss.",
+        "counter_signal": "No operator has asked for autonomous action.",
+        "confidence_level": "low",
+        "depends_on": [],
+        "breaks_if_false": [
+          "c2"
+        ],
+        "proof_step": "Observe five recurring workflows and ask about delegation.",
+        "stop_condition": "No recurring workflow has a clear operator cost."
+      },
+      {
+        "id": "c2",
+        "type": "business",
+        "claim": "Cycle-time reduction deepens workflow dependency and retention.",
+        "status": "assumption",
+        "support": "Cycle time is a stated operator pain.",
+        "counter_signal": "Review and recovery cost may exceed time saved.",
+        "confidence_level": "low",
+        "depends_on": [
+          "c1"
+        ],
+        "breaks_if_false": [
+          "c1"
+        ],
+        "proof_step": "Measure cycle time with draft-only assistance.",
+        "stop_condition": "Exception handling grows without bound."
+      }
+    ],
+    "riskiest_claim_id": "c1",
+    "critical_path": [
+      "c1",
+      "c2"
+    ],
+    "highest_leverage_proof_step": "Test draft-only assistance with human approval on five recurring workflows.",
+    "human_owned_decision": "risk"
+  },
+  "independent_reviews": [
+    {
+      "reviewer": "user_flow",
+      "review_round": "independent",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "user lane signal from support notes.",
+      "weakest_assumption": "user lane assumption untested with operators.",
+      "missing_evidence": "Observed workflows and approval preferences.",
+      "disconfirming_evidence": "Operators reject autonomous customer-facing action.",
+      "stop_condition": "Customer-facing errors cannot be traced or reversed.",
+      "next_smallest_action": "Test draft-only assistance with human approval."
+    },
+    {
+      "reviewer": "evidence_flow",
+      "review_round": "independent",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "evidence lane signal from support notes.",
+      "weakest_assumption": "evidence lane assumption untested with operators.",
+      "missing_evidence": "Observed workflows and approval preferences.",
+      "disconfirming_evidence": "Operators reject autonomous customer-facing action.",
+      "stop_condition": "Customer-facing errors cannot be traced or reversed.",
+      "next_smallest_action": "Test draft-only assistance with human approval."
+    },
+    {
+      "reviewer": "business_flow",
+      "review_round": "independent",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "business lane signal from support notes.",
+      "weakest_assumption": "business lane assumption untested with operators.",
+      "missing_evidence": "Observed workflows and approval preferences.",
+      "disconfirming_evidence": "Operators reject autonomous customer-facing action.",
+      "stop_condition": "Customer-facing errors cannot be traced or reversed.",
+      "next_smallest_action": "Test draft-only assistance with human approval."
+    }
+  ],
+  "challenge_reviews": [
+    {
+      "reviewer": "user_flow",
+      "review_round": "challenge",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "Cross-lane check of the strongest claim.",
+      "weakest_assumption": "The challenged lane may overweight reported pain.",
+      "missing_evidence": "Any behavioral trace supporting the challenged claim.",
+      "disconfirming_evidence": "Draft assistance does not reduce cycle time.",
+      "stop_condition": "The challenged claim fails without a replacement.",
+      "next_smallest_action": "Add the counter-evidence to the proof step.",
+      "objection_to": "business_flow",
+      "counter_evidence": "Support notes show pain but no delegation request.",
+      "position_change": "weakened"
+    },
+    {
+      "reviewer": "evidence_flow",
+      "review_round": "challenge",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "Cross-lane check of the strongest claim.",
+      "weakest_assumption": "The challenged lane may overweight reported pain.",
+      "missing_evidence": "Any behavioral trace supporting the challenged claim.",
+      "disconfirming_evidence": "Draft assistance does not reduce cycle time.",
+      "stop_condition": "The challenged claim fails without a replacement.",
+      "next_smallest_action": "Add the counter-evidence to the proof step.",
+      "objection_to": "user_flow",
+      "counter_evidence": "Support notes show pain but no delegation request.",
+      "position_change": "weakened"
+    },
+    {
+      "reviewer": "business_flow",
+      "review_round": "challenge",
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "confidence_level": "low",
+      "strongest_signal": "Cross-lane check of the strongest claim.",
+      "weakest_assumption": "The challenged lane may overweight reported pain.",
+      "missing_evidence": "Any behavioral trace supporting the challenged claim.",
+      "disconfirming_evidence": "Draft assistance does not reduce cycle time.",
+      "stop_condition": "The challenged claim fails without a replacement.",
+      "next_smallest_action": "Add the counter-evidence to the proof step.",
+      "objection_to": "evidence_flow",
+      "counter_evidence": "Support notes show pain but no delegation request.",
+      "position_change": "weakened"
+    }
+  ],
+  "uncertainty_review": {
+    "evidence_tier": "t1",
+    "confidence_level": "low",
+    "risk_class": "r3",
+    "reversibility": "low",
+    "main_uncertainty": "Whether people want full autonomy or faster preparation with approval.",
+    "false_confidence_risk": "Reported pain reads as demand for autonomy.",
+    "stale_evidence_ids": [],
+    "proof_bar": "Observed approval behavior on five real workflows.",
+    "verdict_impact": "verify",
+    "human_owned_decision": "risk"
+  }
+}

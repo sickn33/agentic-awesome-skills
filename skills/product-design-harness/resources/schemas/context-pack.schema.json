@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/context-pack.schema.json",
+  "title": "Product Design Harness Context Pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_config",
+    "review_id",
+    "goal",
+    "stage",
+    "combined_verdict",
+    "actor_boundary",
+    "product_organization",
+    "stakeholder_effects",
+    "human_judgment_boundary",
+    "unresolved_assumptions",
+    "scope",
+    "non_goals",
+    "acceptance_criteria",
+    "measurement_hooks",
+    "evidence_snapshot_ids",
+    "rollback_plan",
+    "human_approval_gates",
+    "high_risk_actions",
+    "stop_conditions",
+    "execution_boundary"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.1"
+    },
+    "session_config": {
+      "$ref": "session-config.schema.json"
+    },
+    "review_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "prototype",
+        "launch",
+        "scale"
+      ]
+    },
+    "combined_verdict": {
+      "type": "string",
+      "const": "continue"
+    },
+    "actor_boundary": {
+      "$ref": "actor-boundary.schema.json"
+    },
+    "product_organization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "organization",
+        "project_owner",
+        "issuer"
+      ],
+      "properties": {
+        "organization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "stakeholder_effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stakeholder",
+          "effect"
+        ],
+        "properties": {
+          "stakeholder": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "unresolved_assumptions": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "human_judgment_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_owned_decisions",
+        "machine_supported_inputs",
+        "not_mechanized",
+        "approval_gates"
+      ],
+      "properties": {
+        "human_owned_decisions": {
+          "$ref": "#/$defs/string_list"
+        },
+        "machine_supported_inputs": {
+          "$ref": "#/$defs/string_list"
+        },
+        "not_mechanized": {
+          "$ref": "#/$defs/string_list"
+        },
+        "approval_gates": {
+          "$ref": "#/$defs/named_human_gates"
+        }
+      }
+    },
+    "scope": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "non_goals": {
+      "$ref": "#/$defs/string_list"
+    },
+    "acceptance_criteria": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "measurement_hooks": {
+      "$ref": "#/$defs/string_list"
+    },
+    "evidence_snapshot_ids": {
+      "$ref": "#/$defs/string_list"
+    },
+    "rollback_plan": {
+      "type": "string",
+      "minLength": 1
+    },
+    "human_approval_gates": {
+      "$ref": "#/$defs/named_human_gates"
+    },
+    "high_risk_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "approval_gate",
+          "rollback_plan"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "approval_gate": {
+            "$ref": "#/$defs/named_human_gate"
+          },
+          "rollback_plan": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "stop_conditions": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "execution_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_do",
+        "must_not_do",
+        "must_ask"
+      ],
+      "properties": {
+        "may_do": {
+          "$ref": "#/$defs/non_empty_string_list"
+        },
+        "must_not_do": {
+          "$ref": "#/$defs/non_empty_string_list"
+        },
+        "must_ask": {
+          "$ref": "#/$defs/non_empty_string_list"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "execution_boundary": {
+            "properties": {
+              "may_do": {
+                "contains": {
+                  "type": "string",
+                  "pattern": "([Cc]ustomer-facing|[Pp]ermissions|[Dd]ata handling|[Pp]roduction schema|[Ee]xternal action|[Rr]emove human approval|[Aa]utonomous)"
+                }
+              }
+            },
+            "required": [
+              "may_do"
+            ]
+          }
+        },
+        "required": [
+          "execution_boundary"
+        ]
+      },
+      "then": {
+        "properties": {
+          "high_risk_actions": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "high_risk_actions"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "non_empty_string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "named_human_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/named_human_gate"
+      }
+    },
+    "named_human_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "accountable_owner",
+        "condition"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accountable_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
