@@ -38,9 +38,9 @@ class Boundaries(unittest.TestCase):
 
     def test_query_groups_disjoint(self):
         class Data:
-            column_names=['query','label']
+            column_names=['score','query']
             def __len__(self):return 8
-            def __getitem__(self,key):return ['a','a','b','b','c','c','d','d']
+            def __getitem__(self,key):return {'query':['a','a','b','b','c','c','d','d'], 'score':[1.0]*8}[key]
             def select(self,idx):return {self['query'][i] for i in idx}
         split=safety.group_split(Data(),2)
         self.assertTrue(split['train']);self.assertTrue(split['test'])

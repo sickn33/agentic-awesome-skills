@@ -68,7 +68,10 @@ def load_dataset(name, *args, **kwargs):
 
 
 def group_split(dataset, test_rows, seed=12):
-    key = dataset.column_names[0]
+    keys = [name for name in ("query", "anchor", "question") if name in dataset.column_names]
+    if len(keys) != 1:
+        raise ValueError("Select exactly one explicit query/anchor/question column before splitting")
+    key = keys[0]
     groups = list(dict.fromkeys(dataset[key]))
     if len(groups) < 2:
         raise ValueError('At least two distinct queries required')
