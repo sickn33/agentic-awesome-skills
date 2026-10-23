@@ -1,0 +1,111 @@
+{
+  "date": "2026-10-23",
+  "baseCommit": "dee7acce0658c35cb276154892700811affcfdb2",
+  "skill": "telegram",
+  "method": "Complete tracked tree read as inert text; local mocked regression tests and TypeScript compilation; no live Telegram requests.",
+  "files": [
+    {
+      "path": "skills/telegram/SKILL.md",
+      "sha256": "1f66833c2a146ac3c720e0c9f0d832c7b9daab8948d71ae2d87ed5af89515f80"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/.env.example",
+      "sha256": "34b405f2f580cedcdf0046f8087490e4dc1eb3fbbe7201a36940f9ba4db31483"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "7218fb51bf57591b72f622e982abb6c44984e9f8aa116f74794146538d05c8c1"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/package.json",
+      "sha256": "a894d15524df95693ffa601e11e88952c98880ef137a61935d5ed429c5a3d559"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/src/bot-client.ts",
+      "sha256": "97464ced56eca8dc35fcd70b4e2e99a9f59dd142edb16a3674edc4d2858f7f19"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/src/handlers.ts",
+      "sha256": "6b4d17c5205de53ebd97a8b0edd61f580b140cb22089d75e5df72ecce420ec0e"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/src/index.ts",
+      "sha256": "c8c0b74997f57c8a6c0d8ff30e8f0eafa18cc49d73d7a79159d52ddd795f1b42"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/tsconfig.json",
+      "sha256": "a4164bfdde038f8c9197f73eb177f298041f44eeff001ba559733d90f246c794"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/python/.env.example",
+      "sha256": "9e1c766d54d7e936a4ae48a2ea45a2d735e9ae1ccecc00363957d2f0f0687dca"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/python/bot.py",
+      "sha256": "66ea2f4b68d5552e3a1aab4a5551d140f5aaed90cb4f61ef9d112f504c7fb2d7"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/python/requirements.txt",
+      "sha256": "38a3d4e0b272e6abe0fab230371424e1be968545694ac1800a32cfe6d70f6a79"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/python/webhook_server.py",
+      "sha256": "dcd58bf38cbbb7dc5f7a559d36b795cd6e49cb627b591188e90a06ffceeb382d"
+    },
+    {
+      "path": "skills/telegram/assets/examples/inline-keyboard.json",
+      "sha256": "d536fe473845cdf654efa7326a84c7faef7feaeef397c7953f266f6ed780a034"
+    },
+    {
+      "path": "skills/telegram/assets/examples/webhook-payloads.json",
+      "sha256": "2f4c795b5fab26fe277b3ed6572b892a683ceafbc2e92bac8b3b34d6dfedaa58"
+    },
+    {
+      "path": "skills/telegram/references/advanced-features.md",
+      "sha256": "b0f560569d461f87135ed9097b8d2542f54700b4759e636e2a90a7bac48d15d4"
+    },
+    {
+      "path": "skills/telegram/references/api-reference.md",
+      "sha256": "277d7ac2bb6b22b1e5a160e21eb7646d5088aab73ffd465e72091eea4fc326e6"
+    },
+    {
+      "path": "skills/telegram/references/chat-management.md",
+      "sha256": "dbf152fdd8954634bba9c450a3ff8f7388be0ba05fdbf5ae272a1dfccf0dbc72"
+    },
+    {
+      "path": "skills/telegram/references/detailed-guide.md",
+      "sha256": "78045ba1c16c9f581cc18ccc038ab93a621fe6b4a3a3470a5a877f20df3b3ea9"
+    },
+    {
+      "path": "skills/telegram/references/webhook-setup.md",
+      "sha256": "c6b1f2bd9129a06d17cd474abd93f2e1e6131535b60cc94934b944f37df638be"
+    },
+    {
+      "path": "skills/telegram/scripts/send_message.py",
+      "sha256": "c5a9db45017e5424ffefdf57a90469602d213ed8471883acc87f1fa430533d69"
+    },
+    {
+      "path": "skills/telegram/scripts/setup_project.py",
+      "sha256": "4456b012c957a91f49b7485c758c14853a97f5ca7babfdb6d1de6e8c6a4ad2fc"
+    },
+    {
+      "path": "skills/telegram/scripts/test_bot.py",
+      "sha256": "5cc1c18ada29fb19a292b52297f46a14493c3a8f8c8078a946c6b7d018b9f209"
+    }
+  ],
+  "findings": [
+    "Remove constructor webhook deletion and pending-update loss",
+    "Handle unknown webhook diagnostics without polling",
+    "Use library-managed Python webhook lifecycle",
+    "Match webhook URL to route without exposing bot token",
+    "Authenticate guide webhook and fail closed on missing Vercel secret",
+    "Use Telegraf methods consistently and forward Express asynchronous errors",
+    "Remove false bundled-AI and payment-activation claims",
+    "Do not retry sends with uncertain delivery automatically"
+  ],
+  "limits": [
+    "No live account, payments, deployment, native-client or external API runtime tests",
+    "Static review of package lock is not review of transitive dependency source",
+    "Other reference snippets remain integration fragments requiring project-specific validation"
+  ]
+}
