@@ -523,9 +523,11 @@ assert.doesNotMatch(
 );
 assert.match(
   eclEnvironmentGuide,
-  /redis-server --requirepass/,
-  'Harness Redis examples should require authentication when publishing a local port',
+  /redis-server \/run\/secrets\/redis\.conf/,
+  'Harness Redis examples should use a private mounted configuration rather than a password in process arguments',
 );
+assert.match(eclEnvironmentGuide, /configuration must contain `requirepass`/);
+assert.match(eclEnvironmentGuide, /mode-0600/);
 assert.doesNotMatch(
   lovableCleanupSkill,
   /grep -rin "lovable" \.env \.env\.local \.env\.example 2>\/dev\/null\s*$/,

@@ -581,3 +581,7 @@ Given a Go web API with PostgreSQL and Redis:
   }
 }
 ```
+
+## Redis authentication boundary
+
+When publishing a local Redis port, bind only `127.0.0.1` and require authentication. Store a generated password in an owned mode-0600 Redis configuration file outside tracked outputs, mount it read-only, and start `redis-server /run/secrets/redis.conf`. The configuration must contain `requirepass` with that private value (or a reviewed ACL equivalent). Never place the password in command arguments, logs or generated public JSON. A connection URL placeholder alone does not enable server authentication. Review an existing Compose service before starting it; do not assume its configuration satisfies these conditions.

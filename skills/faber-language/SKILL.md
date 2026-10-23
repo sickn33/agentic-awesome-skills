@@ -2,7 +2,7 @@
 name: faber-language
 description: "Write, check and run Faber programs, an experimental statically typed language for coding agents and human authors. Uses version-matched faberlang.dev language documentation."
 category: development
-risk: unknown
+risk: critical
 source: community
 source_repo: faberlang/faber
 source_type: official

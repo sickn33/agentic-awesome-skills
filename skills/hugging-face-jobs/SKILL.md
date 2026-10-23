@@ -4,8 +4,6 @@ date_added: "2026-01-30"
 name: hugging-face-jobs
 description: Run workloads on Hugging Face Jobs with managed CPUs, GPUs, TPUs, secrets, and Hub persistence.
 risk: critical
-source_repo: huggingface/skills
-source_type: official
 license: Apache-2.0
 license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---

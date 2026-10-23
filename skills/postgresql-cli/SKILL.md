@@ -19,25 +19,18 @@ psql is PostgreSQL's feature-rich interactive terminal. It lets you write and ex
 Confirm the authorized database, role and operation scope before writes, imports, grants or shell commands. Prefer a least-privileged account, `-X -v ON_ERROR_STOP=1` for reviewed scripts and verified TLS (`sslmode=verify-full` with trusted CA) for remote connections. ECHO is not a dry-run and rollback cannot undo every side effect. This reference includes psql 18 features; check client version separately from server version.
 
 ## Prerequisites
-
 Before using psql, verify it is installed and available:
-
 ```bash
 # Check if psql is installed
 psql --version
-
 # If not found, install PostgreSQL client tools:
-
 # macOS (Homebrew)
 brew install libpq
 # Add the installed libpq bin directory to PATH; avoid force-linking over other PostgreSQL tools.
-
 # Ubuntu / Debian
 sudo apt install postgresql-client
-
 # CentOS / RHEL
 sudo yum install postgresql
-
 # Alpine
 apk add postgresql-client
 

@@ -25,13 +25,9 @@ Frontend development patterns, performance optimization, and automation tools fo
 - [React Patterns](#react-patterns)
 - [Next.js Optimization](#nextjs-optimization)
 - [Accessibility and Testing](#accessibility-and-testing)
-
 ---
-
 ## Project Scaffolding
-
 Generate a new Next.js or React project with TypeScript, Tailwind CSS, and best practice configurations.
-
 ### Workflow: Create New Frontend Project
 
 1. Run the scaffolder with your project name and template:

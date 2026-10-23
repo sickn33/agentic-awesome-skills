@@ -2,9 +2,8 @@
 name: videodb
 description: Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add overlays/subtitles, generate media, and create real-time alerts.
 category: media
-risk: high
+risk: critical
 source: community
-source_repo: "https://github.com/video-db/skills"
 tags: "[video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture]"
 date_added: "2026-02-27"
 allowed-tools: Read Grep Glob Bash(python:*)

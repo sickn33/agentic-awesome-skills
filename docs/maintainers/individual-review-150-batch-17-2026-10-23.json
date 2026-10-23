@@ -4961,8 +4961,8 @@
           "afterSha256": "147b289425802aea47ef41f2cb5077383baf6aa840a0e1b1e0dacadb0bcf0314",
           "gitMode": "100755",
           "readInFull": true,
-          "beforeGitMode": "100755",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100755"
         },
         {
           "path": "skills/2slides-ppt-generator/scripts/download_slides_pages_voices.py",
@@ -4979,8 +4979,8 @@
           "afterSha256": "0420d958a49b3c8832c4bef2d016d3028cfa616aa3dcbdc75a90fb5172a86ef0",
           "gitMode": "100755",
           "readInFull": true,
-          "beforeGitMode": "100755",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100755"
         },
         {
           "path": "skills/2slides-ppt-generator/scripts/generate_slides.py",
@@ -4988,8 +4988,8 @@
           "afterSha256": "0fd7ad7c7d70fab6ad09d4bfc2dd78203963fc927f2427242db87b42ee87765f",
           "gitMode": "100755",
           "readInFull": true,
-          "beforeGitMode": "100755",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100755"
         },
         {
           "path": "skills/2slides-ppt-generator/scripts/get_job_status.py",
@@ -4997,8 +4997,8 @@
           "afterSha256": "85b342f69f6a0c6721456c1b5f336e7396b536c709d9ea8e571ad58d7f3a43b0",
           "gitMode": "100755",
           "readInFull": true,
-          "beforeGitMode": "100755",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100755"
         },
         {
           "path": "skills/2slides-ppt-generator/scripts/search_themes.py",
@@ -5006,11 +5006,12 @@
           "afterSha256": "35024c1a3f5756c596a43c702c23e30148364152cbaa8728962dd152573adf1e",
           "gitMode": "100755",
           "readInFull": true,
-          "beforeGitMode": "100755",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100755"
         }
       ],
       "disposition": "corrected",
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -5961,7 +5962,7 @@
           "beforeSha256": "3e5964aa54e1b72c29d077adc297455b6de1d0c03030f0c1741cb1b84f478158",
           "beforeGitMode": "100755",
           "afterSha256": "8bdbd9e9e07f87baefa1ae4636f6e01546266dc3f89d2a2be4dd0e36dc6298a6",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -13913,7 +13914,7 @@
           "beforeSha256": "16f15d42dfdfe5109b7590d611b973f837809f0c6adf82a94d8676e8e4771959",
           "beforeGitMode": "100755",
           "afterSha256": "eec3c749f72e8902253e339882390137ace85afc9ba2eaa0da924125b040cae9",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -13953,7 +13954,7 @@
           "beforeSha256": "82c399fb136777d552f11c678e466c194d56f2e79ec9b111a4d22bcd00424882",
           "beforeGitMode": "100755",
           "afterSha256": "909f6b6051f7df4ae7280f000f6053b04f487e6ae823928945b87a5d69074dff",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -13961,7 +13962,7 @@
           "beforeSha256": "bea10d8afcd2b102cc5e090fb725736a3361b934dadcb10b05c8630e1e8e91fb",
           "beforeGitMode": "100755",
           "afterSha256": "d100cae11d1c4bb4d25076f26c867f69f7cafe39c9b49af5dc6c6cc93272b516",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -13977,7 +13978,7 @@
           "beforeSha256": "b53fd0b3829215052415d4505b114584424b2b340aadeaf4723de1929854fa6c",
           "beforeGitMode": "100755",
           "afterSha256": "33aa6d4c484c652831e248225ce1b723412dc29377486d706cf707f3ab01bcb8",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -14577,7 +14578,7 @@
           "beforeSha256": "5a6c3c4254f773c3fb0214b910b4427afa7ada5c280a4ecac11d8be611289080",
           "beforeGitMode": "100755",
           "afterSha256": "d9aae57fe08a68e25c0f444172ed696537ecc9128049286d6d9b7df5cf191079",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -14631,6 +14632,7 @@
         "https://web.dev/articles/inp"
       ],
       "integrationReview": "Reviewed exact main-only ip-address lock update 10.7.2 -> 10.7.4 (resolved URL/integrity, license) after merge; preserved previously read full lock context.",
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -15481,11 +15483,11 @@
         {
           "path": "skills/pentest-tools/src-hunter/references/playbooks/intranet-postexp.md",
           "beforeSha256": "821d1063f9489d20aab5979d822d1ac3efd76f6100faf39b6197075bac74c69f",
-          "afterSha256": "435a34b45e060289f6bd6a54795a250a2fb89064cd09bcb432b8deeb8112be1c",
+          "afterSha256": "b785c369206b74f04f72e80a31c344b1b96845cc5d68448da37d79422c31978c",
           "gitMode": "100644",
           "readInFull": true,
-          "beforeGitMode": "100644",
-          "afterGitMode": "100644"
+          "afterGitMode": "100644",
+          "beforeGitMode": "100644"
         },
         {
           "path": "skills/pentest-tools/src-hunter/references/playbooks/llm-prompt-injection.md",
@@ -15608,6 +15610,7 @@
       "reviewReceipts": [
         "batch17-pentest-web-receipt.json"
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -17036,7 +17039,7 @@
         {
           "path": "skills/vercel-optimize/SKILL.md",
           "beforeSha256": "4576504b68ed3471af49d0a65ca35c11865c6c39687535403cc8aa63e8ae267e",
-          "afterSha256": "692daccd841ea1c2b062f715b332cec14b051dc75e87ab037c61585460385996",
+          "afterSha256": "55b50d22ed85b895416b14e2eb1e81e03d8c0c0e033b633013082181be16c9d6",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -18230,7 +18233,7 @@
           "beforeSha256": "4b5c847899604831aafd3fcdf860968792e99203670a3ba6f3947cb7ae708705",
           "afterSha256": "d989f42dda6295b44ec412c8f302242449c319b396fa4d195bd7e8896312c8de",
           "beforeGitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -18269,7 +18272,8 @@
       ],
       "pending": [],
       "reviewNote": "All153 tracked files read in full, including every bundled script/library/reference; semantic, safety, provenance attribution and limitations inspected. Source-only changes; no catalog indexes/plugin mirrors/version release surfaces.",
-      "id": "vercel-optimize"
+      "id": "vercel-optimize",
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added."
     },
     {
       "findings": [
@@ -20220,7 +20224,7 @@
         {
           "path": "skills/postgresql-cli/SKILL.md",
           "beforeSha256": "433d7da77cb36d0c8ef8602304f3e023fa34ca38231a6cae2fc6d74515e54d06",
-          "afterSha256": "850c5722ac85f56d1ac5b8318e0c40edc98b54d6d7382b8d90f572dbb44fb89a",
+          "afterSha256": "34ef5fb7ea037f412a2f1ff1e15a4157760b87af62e74f9361ee76667d90a238",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -20283,6 +20287,7 @@
         "scopedDiffCheck": "passed",
         "pythonAstImageScripts": "passed"
       },
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -21911,7 +21916,7 @@
           "beforeSha256": "0d60d900fae9487ed393f275609f4e897cf1831fdba45e0e8f61659fc8a8d7f1",
           "afterSha256": "2dc957185988da910aefe3f9f135cdfd2d7139895abf55e60e64e95bbc878a81",
           "beforeGitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -21932,6 +21937,7 @@
         "scopedSyntaxPureChecks": "passed per receipt",
         "diffCheck": "passed per receipt"
       },
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -21942,7 +21948,7 @@
         {
           "path": "skills/senior-frontend/SKILL.md",
           "beforeSha256": "dc3ac3f3d3ae7e7fcfaec3c10065fa87b22562200b6e145440b7554c487b3942",
-          "afterSha256": "b8d5c9874f147e54319eb7627fcd45917e2a05ade050396fedab160de3ae4f3c",
+          "afterSha256": "cce02569c767f6071fcde638a83974165e92910838c201c956a8e6e5121cf842",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -22005,6 +22011,7 @@
         "scopedSyntaxPureChecks": "passed per receipt",
         "diffCheck": "passed per receipt"
       },
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -25928,7 +25935,7 @@
         {
           "path": "skills/ecl-harness-engineer/references/environment-detection-guide.md",
           "beforeSha256": "872dc4ffd65acc3f9a1c8d7bbfc1957b4210898746da5aa9b74f9676cff25ea9",
-          "afterSha256": "cbe9e5ab684ef54c1a021c90590bc50cb9c5a9d341e464d137b64d8972208d48",
+          "afterSha256": "8b2d57dac0cae8d68ac450f6e668c684c2fd56a540e7d3cd5eecfa43ed3f4d39",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -26009,6 +26016,7 @@
         "No certification of remote linked resources/current runtime versions. Optional runtimes named in docs are explicitly absent; templates are not a complete executor.",
         "Repository-wide validation, reference/security checks, executable fixture gates and exact-head attestation remain final integration owner tasks."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -26032,7 +26040,7 @@
           "beforeSha256": "2b1dbabbe732d011203debf38ed4af41bfb518d30c43bece928dfd45daa6e350",
           "afterSha256": "80997cd503c4f43ab835059d0f2149e56b9f6c2b603cbc2978bf9ddcc7f5e3b6",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26109,7 +26117,7 @@
           "beforeSha256": "b32709f82c66564ed5c1948f37f80a7d7b3f49a250e10ffb37e579733a4a0b45",
           "afterSha256": "b98238d46965b7ce1547bfcf676ebe700c22fa4e67c208d570c2f014becaa5a7",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26131,7 +26139,7 @@
           "beforeSha256": "bf3751b25ad4a9f60bb211fbf595a1b0ac560aa52d0c40daae39398ef4e78035",
           "afterSha256": "ec85be4d9b8be0af88ed92e87a6c4ea252acaf6fdab8fc7c53e153cacc163dc1",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26142,7 +26150,7 @@
           "beforeSha256": "b8ccc9d7d23f336fb570f946bd015367a73cc27d5eef7f5fc2eb74f1503a9e46",
           "afterSha256": "97be166e9956ed8ea4770da99b50cd7bd9e3c94dc5a05c0ec133b95c54b034f2",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26197,7 +26205,7 @@
           "beforeSha256": "0a85a8d0164eb3ae7aa15356af814a28717cfc1000a43f0291a2a1946401d7e0",
           "afterSha256": "77f55f89579d49a9485936732a23b7c8566a14c70e4849e905e2def267e454fd",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26241,7 +26249,7 @@
           "beforeSha256": "351df107ef3b9b2eba7c743319cacddd1b34fbc48a06c486b71318a68d063851",
           "afterSha256": "484d448a846dd14c53c54c5b1b66c1bc77b40ba9c8db4a1decc383469c91154f",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26252,7 +26260,7 @@
           "beforeSha256": "895c9055577e8e0bad8801681ad9becd9ff6b6bb72107b6b359c1cf8512f0ac0",
           "afterSha256": "1f274a94fc80747bc87e88da81b10599a90a6a9e0ee3b5705e0f63e54eb45fc1",
           "gitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true,
           "reviewMethod": "full text",
           "disposition": "corrected",
@@ -26279,6 +26287,7 @@
         "Existing privacy path checks reduce link risks but do not claim race-proof protection against a concurrently hostile local user.",
         "Upstream screenshot is illustrative historical content; its vehicle specifications were not independently verified."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -29121,7 +29130,7 @@
         {
           "path": "skills/hugging-face-jobs/SKILL.md",
           "beforeSha256": "a27a855887d6341a3d057885d8dcb9e0f51e658d8ffc9a23516bbe39a6c4d2e7",
-          "afterSha256": "0d0e7e799744461823d5de7df133838f73d222c86485588bbbc7c1cdc3e42d5f",
+          "afterSha256": "096dbd3bb86384378601395157b41c8617c5df9afef8e2b56a6e32ae951a3f15",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -29226,6 +29235,7 @@
       "limitations": [
         "No cloud runtime/model compatibility or complete scientific quality certification. Privacy/license checks, target permissions, current costs and pinned revisions remain run-specific. Hub uploads and job output writes are not transactional."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -29665,7 +29675,7 @@
         {
           "path": "skills/videodb/SKILL.md",
           "beforeSha256": "a5280468473d1e176dd7e94d5dd07ddf7f7d9123a5860d5121b237b76575d998",
-          "afterSha256": "377e4fec76320a3c01db87b9e02e1f7f47565800bb2c5ada72b7a5824f4cd107",
+          "afterSha256": "110f99cd7e9dd80a519b4a94e71c94acc0dda178e40cebed3192d86cea20ac54",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -29773,6 +29783,7 @@
         "No live VideoDB or capture compatibility certification. References are explicitly legacy version-scoped sketches and need installed-version adaptation.",
         "Listener stop does not stop remote recording or AI pipelines; workflow must stop those independently. Private output assumes an owned directory and ordinary same-user filesystem trust."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -29783,7 +29794,7 @@
         {
           "path": "skills/azure-ai-projects-py/SKILL.md",
           "beforeSha256": "e9aff9fa97a6aabf22e8a86c23deb33e410419df5c4ceb6b8346a40022363b4d",
-          "afterSha256": "89502e610ecb97057f83c9b89dab73d74a378f4f56d4cc0b9707f841ecc9684d",
+          "afterSha256": "40ff201049e018f8e43b1d1f63a9f96f290c0ccea1c277b1272f5b2c0ad9e188",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -29909,6 +29920,7 @@
         "Polling timeout does not cancel remote execution or enforce a monetary cap. User authorization must cover the exact dataset, endpoint, evaluators and deployment.",
         "Wheel import inventory confirms declared names only, not every live feature or constructor."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -29919,7 +29931,7 @@
         {
           "path": "skills/skill-sentinel/SKILL.md",
           "beforeSha256": "e4fedd7a11f2a2c8cb780280b28c0c680451ef763dfe3e64e0f92d5f0a238873",
-          "afterSha256": "9956ef80ed4fdb9eebbe26c42cb7f2c4d8f43f7233ef4e72848686a076e1c450",
+          "afterSha256": "1bf1120130258336ef97d0ade5fad7978f3107bc9c43ae330e4863e7528e3126",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -30116,6 +30128,7 @@
         "Heuristics remain advisory with false positives/negatives; Python and metadata coverage is incomplete for an entire skill tree. No semantics/safety certification or monetary cost measurement.",
         "Filesystem permissions target POSIX and ordinary same-user trust; unsupported platforms should fail closed rather than bypass refusals. Existing historical trends need equivalent scope and heuristic version before comparison."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -30678,7 +30691,7 @@
         {
           "path": "skills/yao-meta-skill/SKILL.md",
           "beforeSha256": "5ea154621dc0c2bb47d00cc650810977d660f6787309f51cd3c21d31667662cd",
-          "afterSha256": "f14e3db1a8429ac15f14d7d5cb299741e84ccec8210a3be087c8c6c32065088a",
+          "afterSha256": "0a5e53dd48caaae1a9a24c24916194b63eec8b930a02545995fb7b988fc190be",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -30994,6 +31007,7 @@
         "No upstream toolchain, provider-backed benchmark, installer, browser integration, telemetry capture or client-native enforcement is bundled or was executed. Neutral interface metadata is descriptive only.",
         "This is a source-guidance review; it does not attest upstream executable security or compatibility and does not grant permission to install missing tooling."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -31359,7 +31373,7 @@
           "beforeSha256": "3e1a57c6fb5b6d863c7f668eda291a6b193cdae540a0838b68adb5329343d116",
           "afterSha256": "f360a1659370a6e1c77f20d05c7b661316250131c3fb6e3f023d2db188a30924",
           "beforeGitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -31407,7 +31421,7 @@
           "beforeSha256": "c0380fdd6cda1be91b70abb150c7f1e141aee9a870cfd7e6f5dc5d7b24cee248",
           "afterSha256": "585635f9bf367a7e5329f4ff5083c8b6b058ce2608545c6c4e0d00560f0b98f9",
           "beforeGitMode": "100755",
-          "afterGitMode": "100755",
+          "afterGitMode": "100644",
           "readInFull": true
         },
         {
@@ -31493,6 +31507,7 @@
         "Imports remain nontransactional; later file/remote failures can leave partial writes. No automatic rollback/idempotent retry guarantee. Nested object/UUID/blob semantic validation still needs compatible source/server validation.",
         "Source filenames and database properties may be sensitive; output remains operator-selected. Provider-side inferred integrations require explicit approval beyond ordinary database access."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -31503,7 +31518,7 @@
         {
           "path": "skills/junta-leiloeiros/SKILL.md",
           "beforeSha256": "0e6ba4a69a12c5b465c6342d9dd0749c23f0a0d6c3927037e4be2e4eca705662",
-          "afterSha256": "5d7dfa7065b0feb574a86f2af9cb7a372903170d2131b16eb0e36fc2eb963d4c",
+          "afterSha256": "46ca8f8eedd135e51adc8eabc37b17d78a3760768eaa4c86371db61ffc5a53a9",
           "beforeGitMode": "100644",
           "afterGitMode": "100644",
           "readInFull": true
@@ -31816,6 +31831,7 @@
         "POSIX file controls and private directories reduce ordinary local exposure; concurrent hostile filesystem races/DNS rebinding and production internet-server hardening were not certified.",
         "SQLite remains a latest snapshot; legacy missing-registration records can repeat. User-selected disclosure/retention and exact installed dependency versions remain operator responsibilities."
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "dee7acce0658c35cb276154892700811affcfdb2"
     },
     {
@@ -33814,11 +33830,12 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "91332b9bf1a0f467e227546c86afcd649507cf022d56f0d57de9f68225eb6237",
-          "afterSha256": "48ee35d91768a6224739bd0478dee5a78c7b990ff00360e7f7dbfd04a2325010",
+          "afterSha256": "e6e06fe22de110efcde35e005a85e0fc31d436953a906924dfee79208fc50686",
           "readInFull": true,
           "beforeGitMode": "100644"
         }
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "740db8bc2fa6fd62aac9303c8356d6a3b87151ac"
     },
     {
@@ -33835,11 +33852,12 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "352c18e1ce242bd259c95543635e6f3ae9bd5c65e0efee380953612b9e6067f7",
-          "afterSha256": "77da58a61cdff3ecaa067476b6f2537f28b91fbd0eaeb9c10d10bd456f056515",
+          "afterSha256": "39f38a95c0fda8b182b0a3bcc49e230ec85fc7674a24f45c264220e69e2ec341",
           "readInFull": true,
           "beforeGitMode": "100644"
         }
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "740db8bc2fa6fd62aac9303c8356d6a3b87151ac"
     },
     {
@@ -33856,11 +33874,12 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "1bdd8b6a7548491199c35fac45511fd4dfea0d743e3f3d40d860012eebb59b7d",
-          "afterSha256": "b3d20bc7085ffd0e8f43646b9e061da51616cd91e79e8148b4bc09b4e41ece58",
+          "afterSha256": "4b6d93a069f721a8189ce8882662efc786f43cc895deeef2899425df1a3ae177",
           "readInFull": true,
           "beforeGitMode": "100644"
         }
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "740db8bc2fa6fd62aac9303c8356d6a3b87151ac"
     },
     {
@@ -33999,7 +34018,7 @@
           "gitMode": "100644",
           "afterGitMode": "100644",
           "beforeSha256": "42725e7c7c9bb2ec2839189f9d538b6694895196397e9dfa6e3fe418421508cb",
-          "afterSha256": "bad2aba3563d80e23a6e0d1d3ca0ef79c949464a66cba515dfb627995ac9c79c",
+          "afterSha256": "254abdfbb35bed9e6b60bccc52a6c725a1a82348581e81219a114ce1ea7d8d5a",
           "readInFull": true,
           "beforeGitMode": "100644"
         },
@@ -34031,6 +34050,7 @@
           "beforeGitMode": "100644"
         }
       ],
+      "finalGateFollowup": "Reviewed final schema/security followups: concrete allowed risk, inherited provenance identity retained, local secret reading, private Redis auth configuration, concise root routing, and inert regular-file snapshots. Exact changed bytes and modes included in this dossier; no policy exemption added.",
       "inventoryBase": "740db8bc2fa6fd62aac9303c8356d6a3b87151ac"
     },
     {

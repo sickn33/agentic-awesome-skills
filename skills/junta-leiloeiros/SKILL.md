@@ -1,7 +1,7 @@
 ---
 name: junta-leiloeiros
 description: Consulta e coleta assistida de registros públicos de leiloeiros nas 27 rotas estaduais; cobertura e atualidade exigem validação. Scraper multi-UF, banco SQLite, API FastAPI e exportacao CSV/JSON.
-risk: high
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat

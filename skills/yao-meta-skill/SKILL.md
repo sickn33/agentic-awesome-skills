@@ -4,7 +4,7 @@ description: Create, refactor, evaluate, and package agent skills from workflows
 metadata:
   author: Yao Team
 category: "skill-authoring"
-risk: "medium"
+risk: critical
 source: "community"
 source_repo: "yaojingang/yao-meta-skill"
 source_type: "community"

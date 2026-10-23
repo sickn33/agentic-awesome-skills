@@ -63,7 +63,8 @@ The scaffolder is third-party executable code with package-install, cloud-provis
 There is no terminal to answer the wizard's questions in, so pass every answer as a flag:
 
 ```bash
-export SHOPIFY_API_SECRET="$(cat secret.txt)"  # Private file; disable shell tracing and unset after setup
+IFS= read -r SHOPIFY_API_SECRET < secret.txt  # Private file; disable tracing; no newline in the value
+export SHOPIFY_API_SECRET
 npx "@mksd0398/nitrogen@${NITROGEN_VERSION:?Set the approved reviewed version}" my-app \
   --api-key=CLIENT_ID \
   --project-id=PROJECT_ID \
@@ -128,7 +129,8 @@ Run `cd functions && npm test` after every change, and before every deploy.
 The user gave the client ID, a new project id, their store and the location `europe-west1`, and saved the secret to `secret.txt`. The feature reads orders.
 
 ```bash
-export SHOPIFY_API_SECRET="$(cat secret.txt)"  # Private file; disable shell tracing and unset after setup
+IFS= read -r SHOPIFY_API_SECRET < secret.txt  # Private file; disable tracing; no newline in the value
+export SHOPIFY_API_SECRET
 npx "@mksd0398/nitrogen@${NITROGEN_VERSION:?Set the approved reviewed version}" my-app \
   --api-key=CLIENT_ID \
   --project-id=PROJECT_ID \

@@ -2,7 +2,7 @@
 name: doomsday-escrow
 description: "Verify cryptographic Proof-of-Escrow collateral (L1 UTXO outpoint proofs and Base Mainnet wDOOM settlement receipts) on GitHub bounties before spending autonomous agent compute."
 category: security
-risk: unknown
+risk: critical
 source: "https://github.com/doomsday-network/doomsday/tree/2054312f94dd21ab3b25b30fd6f6cf2c08625a42/integrations/mcp"
 source_repo: doomsday-network/doomsday
 source_type: official
@@ -43,7 +43,7 @@ For a reviewed checkout, the documented commands are `python3 integrations/mcp/d
 }
 ```
 
-## Interpretation and limitations
+## Limitations
 
 - A script label such as `SAFE_WITH_ESCROW` is the verifier's classification, not a guarantee that a bounty is safe or payable. Report concrete evidence and unknowns, not a binary financial endorsement. Escrow presence alone does not establish spend conditions, claimant entitlement, asset value, issuer solvency or future payment.
 - Check chain/network, contract/outpoint, amount, asset identity, confirmations/finality, spent state, intended beneficiary and freshness against independent chain evidence. Settlement history cannot prove current collateral for another bounty. Never sign, approve tokens, connect a wallet or transfer funds as part of this read-only audit.

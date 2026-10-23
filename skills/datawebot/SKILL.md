@@ -2,7 +2,7 @@
 name: datawebot
 description: "Find products for sale across online shops, list returned sellers' prices with direct links, and run Amazon and Shopify extraction Jobs through the hosted datawebot MCP server."
 category: data
-risk: unknown
+risk: critical
 source: "https://github.com/datawebot/datawebot-mcp/tree/main/skills/datawebot"
 source_repo: datawebot/datawebot-mcp
 source_type: official
