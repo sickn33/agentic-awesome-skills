@@ -25,6 +25,8 @@ Systematically scan Apple's developer documentation via the Sosumi MCP, identify
 
 ## Workflow
 
+This catalog bundles the scan manifest, not `swiftui-expert-skill/references/latest-apis.md`. Locate the user-authorized target installation/repository before editing; never invent that file or modify an unrelated skill with a similar name. MCP tool names are examples: use available official Apple documentation tools or primary pages, and record the method actually used rather than claiming Sosumi attribution when unavailable. Distinguish deprecation OS version from replacement availability, check all target platforms/deployment minima and preserve compatible fallbacks. Commit/PR steps apply only when authorized and must follow the target repository's workflow.
+
 ### 1. Understand current coverage
 
 Read `swiftui-expert-skill/references/latest-apis.md` to understand:

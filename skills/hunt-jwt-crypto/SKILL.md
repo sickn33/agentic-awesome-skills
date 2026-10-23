@@ -126,8 +126,7 @@ Identify tenant-related claims in a decoded real token: "org_id", "tenant", "acc
 "workspace_id", "customer_id". Edit the target claim to another tenant's value.
 Example: {"sub":"victim@org.com","org_id":1234} → change org_id to an admin's org (e.g. 9999).
 ```
-This is systematic IDOR via claims — if authorization logic trusts the token claims
-without checking ownership server-side, you cross into another tenant's resources.
+Changing claims invalidates a properly verified signature. This is an authorization test only after establishing how the modified token can be accepted or obtaining an authorized test issuer; trusting authenticated issuer-bound tenant claims is not itself IDOR.
 Works especially well combined with alg:none or weak-secret attacks.
 
 Match the `payload` shape to a REAL token from the app (decode one first) — keep
@@ -161,42 +160,18 @@ nuclei -u <target_url> -t jwt/ -timeout 10s
 Run these early in JWT recon; they often find the vulnerability faster than
 manual chaining of individual techniques.
 
-## Drive to the ADMIN objective — do not stop at a working forge
+## Demonstrate impact with minimal authorized proof
 
-A forge that loads YOUR own `/my-account` is NOT the goal — it just proves the
-forge mechanism works. The objective is almost always **admin** (reach an
-admin-only page and perform an admin action, e.g. delete a user). Once any forge
-is accepted, IMMEDIATELY escalate — change identity to admin AND aim at the admin
-endpoint. Do not keep re-forging `/my-account` or re-logging-in; that is drift.
-
-Fixed escalation sequence (run it in order, do not loop on earlier steps):
-
-1. Forge admin identity and hit the admin page (try these claim names — match a
-   decoded real token: `sub`, `role`, `isAdmin`, `username`), e.g. an HS256 token
-   with `kid` pointed at `/dev/null` and an empty secret, payload `{"sub":"administrator"}`,
-   sent to `GET /admin`.
-2. When `/admin` returns 200 (you'll see admin controls / a delete link), perform
-   the admin action with the SAME forged token — a typical one is deleting a
-   target user account, e.g. `GET /admin/delete?username=<victimuser>` (some apps
-   use `POST /admin/delete` — read the admin page for the exact form/verb).
-
-A 401 on `/admin` means the forge/claim is wrong — change ONE thing (the kid
-depth, the claim name/value, or alg) and retry `/admin`. Never retreat to a bare
-unauthenticated `GET /admin` (no token) — that always 401s and wastes effort.
+Stop after the least invasive proof allowed by the written scope. Use two controlled test identities/tenants and a read-only canary resource; distinguish a successful signature forgery from actual authorization bypass. Do not delete users, change roles, enumerate unrelated accounts or expose real emails merely to increase severity. If destructive verification is explicitly required, use a disposable lab with approved test data and recovery.
 
 ## Proof of impact
 
-Point the forged token at a protected/admin endpoint and prove you read data you
-should not: an account/user listing (multiple users' emails), another user's
-object, or a completed admin action (the deleted-user confirmation). Reading the
-admin user list or performing the admin action with a forged token IS the exploit.
-A 200 that returns only your own data, or a 401, is not proof.
+Record the intended role/resource boundary, a redacted original and modified claim description, and the canary response showing the boundary violation. A generic HTTP 200 alone is insufficient. Redact bearer tokens, secrets and personal data from reports; never publish a reusable forged token. Stop on unexpected access to real users' data and report within the engagement channel.
 
 ## Validation discipline
 
 - Decode and confirm the token you sent actually carries the edited claims.
-- The win is **cross-identity data access**, not merely a 200. Show the foreign
-  user data (e.g. other users' emails) in the response.
+- The win is **cross-identity data access**, not merely a 200. Use a controlled canary identifier, not real foreign-user data, in the response evidence.
 - `alg:none` rejected (401) just means that flaw is patched — try key confusion
   before concluding the app is safe.
 

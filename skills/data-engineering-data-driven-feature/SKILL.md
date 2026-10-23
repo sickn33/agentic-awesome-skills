@@ -28,6 +28,8 @@ Build features guided by data insights, A/B testing, and continuous measurement 
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 
+The Task/agent names and configuration below are illustrative orchestration interfaces, not guaranteed installed tools. Scope analytics to necessary consented events and approved retention; do not record all user input or sensitive session content. Pre-register primary metrics, randomization unit, power/MDE, duration and stopping/multiple-testing rules. Continuous dashboard peeking at ordinary fixed-horizon significance is not a valid stopping rule; use a designed sequential method or the planned horizon. Bayesian analysis is not automatically faster and must specify priors/decision loss. Numerical sample sizes, times, rollout percentages and error targets below are examples, not universal guarantees.
+
 ## Phase 1: Data Analysis and Hypothesis Formation
 
 ### 1. Exploratory Data Analysis
@@ -164,7 +166,7 @@ monitoring:
 
 ## Success Criteria
 
-- **Data Coverage**: 100% of user interactions tracked with proper event schema
+- **Data Coverage**: Necessary, approved events tracked with validated schemas and privacy controls
 - **Experiment Validity**: Proper randomization, sufficient statistical power, no sample ratio mismatch
 - **Statistical Rigor**: Clear significance testing, proper confidence intervals, multiple testing corrections
 - **Business Impact**: Measurable improvement in target metrics without degrading guardrail metrics

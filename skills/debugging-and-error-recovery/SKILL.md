@@ -220,6 +220,8 @@ Runtime error:
 
 ## Safe Fallback Patterns
 
+Fallbacks apply only to optional presentation/configuration. Missing authentication, authorization, encryption, billing or integrity settings must fail closed, not silently return empty/default values. The Chart try/catch example cannot catch errors thrown later when React renders children; wrap the component in an actual Error Boundary. Test-runner flags above are examples from different runners; use the project's installed runner syntax.
+
 When under time pressure, use safe fallbacks:
 
 ```typescript

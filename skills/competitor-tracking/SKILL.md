@@ -58,6 +58,8 @@ Effective competitor tracking helps you:
 
 ### Competitive Landscape Mapping
 
+Record primary-source URLs and retrieval dates for claims/pricing. Stars, downloads and sentiment are separate proxy metrics, not customers, revenue or representative market share. Archive only permitted public material; do not disclose private support/customer information. Monitoring subscriptions, outreach and publication require the user's authorization; suggested response playbooks are drafts until then.
+
 Create a competitive landscape document with:
 
 1. **Competitor profiles** - Company, product, target market, positioning

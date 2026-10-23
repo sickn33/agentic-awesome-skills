@@ -63,6 +63,8 @@ workspace/
 
 ## Templates
 
+These examples mix legacy and modern Nx configuration. Pin the workspace Nx/plugin versions and validate against installed schemas; do not copy npmScope/tasksRunnerOptions or generator options across versions blindly. Use environment/secret storage for Nx Cloud tokens, never literal committed accessToken fields. Cache only deterministic tasks with complete input/output declarations; E2E against mutable services can require noncached execution. Affected selection depends on a complete dependency graph and correct base/head: full required suites still apply for policy/shared/unknown changes. Migration commands modify manifests/code and need a clean recoverable topic branch and review.
+
 ### Template 1: nx.json Configuration
 
 ```json

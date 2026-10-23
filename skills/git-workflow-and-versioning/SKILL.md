@@ -174,7 +174,7 @@ git worktree remove ../project-feature-a
 Benefits:
 - Multiple agents can work on different features simultaneously
 - No branch switching needed (each directory has its own branch)
-- If one experiment fails, delete the worktree — nothing is lost
+- Before removing an experimental worktree, preserve uncommitted/untracked files and verify commits are recoverable; deleting a checkout can lose work
 - Changes are isolated until explicitly merged
 
 ## The Save Point Pattern
@@ -193,7 +193,7 @@ Agent starts work
     └── Feature complete → All commits form a clean history
 ```
 
-This pattern means you never lose more than one increment of work. If an agent goes off the rails, `git reset --hard HEAD` takes you back to the last successful state.
+Before rollback, inspect status/diff and preserve unrelated or uncommitted work. Prefer reversing the specific change; `git reset --hard HEAD` discards tracked working changes and requires explicit scope authorization. A commit is not proof that untracked files are backed up.
 
 ## Change Summaries
 
@@ -224,7 +224,8 @@ Before every commit:
 git diff --staged
 
 # 2. Ensure no secrets
-git diff --staged | grep -i "password\|secret\|api_key\|token"
+# Use an approved secret scanner with redacted output; keyword matches alone
+# neither prove absence of secrets nor justify printing matching secret lines.
 
 # 3. Run tests
 npm test

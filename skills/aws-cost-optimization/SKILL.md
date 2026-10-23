@@ -41,6 +41,8 @@ Apply practical FinOps controls to reduce AWS spend without sacrificing reliabil
 
 ## Cost Review Workflow
 
+Start read-only with the confirmed account/profile/regions and least-privilege billing access; the permission list is illustrative, not a role to grant wholesale. Dates, dollar thresholds and identifiers below are examples. Review savings against availability, recovery objectives and retrieval/transition costs. No automatic purchases, resource shutdown, deletion or lifecycle expiry follows from identifying a recommendation. Export the current lifecycle configuration and review the full replacement before applying it; noncurrent-version expiration permanently removes recovery copies.
+
 1. Tag every resource by team, service, environment, and cost center.
 2. Enable Cost Explorer and activate Cost and Usage Reports (CUR) to S3.
 3. Identify top spend drivers by service, account, and tag.
@@ -160,7 +162,7 @@ aws ce create-anomaly-subscription \
 
 ```bash
 # Create alarm for estimated charges exceeding $4000
-aws cloudwatch put-metric-alarm \
+aws cloudwatch put-metric-alarm --region us-east-1 \
   --alarm-name "billing-alarm-4000" \
   --alarm-description "Alert when estimated charges exceed $4000" \
   --metric-name EstimatedCharges \
@@ -195,7 +197,7 @@ aws ec2 describe-addresses \
   --query "Addresses[?AssociationId==null].{IP:PublicIp,AllocId:AllocationId}" \
   --output table
 
-# Find idle load balancers (zero healthy targets)
+# Inspect target health (zero healthy targets is not proof a load balancer is unused)
 aws elbv2 describe-target-health \
   --target-group-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:targetgroup/my-tg/abc123
 

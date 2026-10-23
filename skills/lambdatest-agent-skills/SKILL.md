@@ -34,6 +34,8 @@ This skill adapts material from an external GitHub repository:
 - Use when running tests on cloud infrastructure such as LambdaTest / TestMu AI
 - Use when the user asks how to write, debug, or scale automated tests
 
+This tree contains only the index, not the 46 framework guides. Fetch/read the chosen upstream guide and current primary framework docs before using detailed patterns; availability in the table is not compatibility or execution evidence. Some entries are legacy frameworks: verify support before new adoption. Cloud tests incur plan/quota costs and can upload screenshots, recordings and customer data; confirm target, budget and permitted artifacts, use test accounts and redact credentials.
+
 ## How It Works
 
 ### Step 1: Identify the Framework and Language
