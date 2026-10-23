@@ -118,9 +118,7 @@
       "why": "Coauthor and edit content, produce editable office files and PDFs, and review both source content and rendered output.",
       "skills": [
         "office-productivity",
-        "docx-official",
         "xlsx-official",
-        "pptx-official",
         "pdf-official",
         "pdf-conversion-router",
         "google-docs-automation",

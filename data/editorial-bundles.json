@@ -507,16 +507,8 @@
           "summary": "Coordinate document, spreadsheet, and slide workflows."
         },
         {
-          "id": "docx-official",
-          "summary": "Create, edit, and inspect Word-compatible documents."
-        },
-        {
           "id": "xlsx-official",
           "summary": "Create and analyze formula-backed spreadsheets."
-        },
-        {
-          "id": "pptx-official",
-          "summary": "Create and edit PowerPoint-compatible presentations."
         },
         {
           "id": "pdf-official",
@@ -2566,8 +2558,6 @@
       "to": "aas-documents-presentations",
       "preservedSkills": [
         "office-productivity",
-        "docx-official",
-        "pptx-official",
         "xlsx-official",
         "pdf-official",
         "google-docs-automation",
