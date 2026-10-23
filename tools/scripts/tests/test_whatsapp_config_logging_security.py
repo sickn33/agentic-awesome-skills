@@ -69,11 +69,17 @@ class WhatsAppConfigLoggingSecurityTests(unittest.TestCase):
         with patch.dict(os.environ, self.REQUIRED_ENV, clear=False):
             with patch.object(module.httpx, "get", side_effect=responses):
                 with patch.object(module.os.path, "exists", return_value=False):
-                    with patch.object(sys, "argv", ["validate_config.py"]):
+                    with patch.object(sys, "argv", ["validate_config.py"] + (["--online"] if Path(module.__file__).relative_to(REPO_ROOT).parts[0] == "skills" else [])):
                         with contextlib.redirect_stdout(stdout):
                             with self.assertRaises(SystemExit) as exit_context:
                                 module.main()
         return exit_context.exception.code, stdout.getvalue()
+
+    def test_canonical_default_does_not_contact_provider(self):
+        module = load_module(self.MODULE_PATHS[0][0], "whatsapp_default_offline")
+        with patch.dict(os.environ, self.REQUIRED_ENV, clear=False), patch.object(module.httpx, "get", side_effect=AssertionError("unexpected provider call")) as request, patch.object(module.os.path, "exists", return_value=False), patch.object(sys, "argv", ["validate_config.py"]), contextlib.redirect_stdout(io.StringIO()):
+            module.main()
+        request.assert_not_called()
 
     def test_success_output_omits_sensitive_api_values(self):
         for relative_path, module_name in self.MODULE_PATHS:
