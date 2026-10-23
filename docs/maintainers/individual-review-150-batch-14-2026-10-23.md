@@ -22,6 +22,8 @@ Full tracked-tree semantic review of each assigned root, including bundled refer
 
 Final committed-head evidence and preflight are recorded externally and in the PR body; this source report does not invent their result or authorize merge. Bundled helpers remain explicitly invoked; distribution mirrors are release-owned.
 
+Modified executable-mode helpers in `bumblebee` and `webapp-testing` use mode100644; their docs already invoke Python explicitly.
+
 ## Individual dispositions
 
 ### wellally-tech — corrected

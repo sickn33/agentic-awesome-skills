@@ -17,7 +17,8 @@
       "Assigned source drift from frozen inventory base to integration base: none.",
       "Validation and reference checks passed; documentation security rerun passed.",
       "15 changed executable/JSON files passed Python AST, Node/Bash syntax or JSON parsing.",
-      "Seven offline Telegram regressions passed: config environment isolation, token-in-argv avoidance, invalid names/IDs/limit rejection, literal caption and symlink refusal, safe formatting retry, exact reply matching/private cursor, setup token validation."
+      "Seven offline Telegram regressions passed: config environment isolation, token-in-argv avoidance, invalid names/IDs/limit rejection, literal caption and symlink refusal, safe formatting retry, exact reply matching/private cursor, setup token validation.",
+      "Modified executable-mode helpers in bumblebee and webapp-testing reduced to mode100644; explicit Python invocation already documented."
     ],
     "limitations": [
       "Direct npm test stopped on intentionally stale distribution snapshot; complete preflight generates ephemeral state and its exact-head result is reported separately.",
@@ -1391,7 +1392,7 @@
           "beforeSha256": "fffe34782e6e07940b5fb227039f565b483c6bf2aa42d394e5827196f432d582",
           "beforeGitMode": "100755",
           "afterSha256": "dea1e4fa247942366c9d8c1873f9fe7c1c29a6fdd8d75f4f565e794ed8402394",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644"
         }
       ]
     },
@@ -2284,7 +2285,7 @@
           "beforeSha256": "fff0d4dc42227f409a9878bda7f6d8b11ad697b62d39ec1f8ff8b554c498d62c",
           "beforeGitMode": "100755",
           "afterSha256": "e628c100d5d257656b0226c2b9eae594769204ab4ce846384fbdebf34fa1c3d8",
-          "afterGitMode": "100755"
+          "afterGitMode": "100644"
         }
       ]
     },
