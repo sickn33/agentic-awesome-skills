@@ -40,6 +40,10 @@ The loop needs only a shell command and file access, so any comparable orchestra
   does not configure them. `--read-only` only disables edit tools (`--mode plan`); shell commands
   still run. If project files must not change at all, dispatch against a clean or isolated worktree.
 
+## Runtime availability
+
+This catalog distribution has no `scripts/relay.mjs`. Do not run the examples against this skill directory or invent the relay. If the user authorizes installing the upstream runtime, obtain a pinned version from the credited source, inspect it, and verify its actual help/CLI compatibility first. Artifact/result guarantees below describe upstream behavior and have not been tested in this package. Keep secrets out of briefs/events; review and redact logs before sharing.
+
 ## Prerequisites (check once)
 
 1. Install `copilot` (`npm install -g @github/copilot`; the CLI requires Node 22+, the relay
@@ -73,7 +77,7 @@ the relay's `--brief`. See [references/writing-the-brief.md](references/writing-
 
 ### 2. Dispatch
 
-Use the bundled relay. It runs `copilot -p` with `--output-format json --no-color --stream off`,
+Use a separately installed and reviewed upstream relay. It runs `copilot -p` with `--output-format json --no-color --stream off`,
 captures the JSONL event stream, and writes `result.json`.
 
 ```bash

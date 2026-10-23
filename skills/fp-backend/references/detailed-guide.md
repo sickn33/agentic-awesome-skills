@@ -54,6 +54,8 @@ const getUser = (id: string): RTE.ReaderTaskEither<Deps, AppError, User> =>
 
 ### Defining Service Modules
 
+The service interface below expects lazy TaskEither repository methods, not raw Prisma Promises. Adapt Prisma through tryCatch and map every DbError/hasher error into the declared UserError union. The later raw-Prisma infrastructure cannot be plugged in directly without this adapter. Enforce a database unique constraint on normalized email; pre-checking alone races. Do not return password hashes from API DTOs or spread unvalidated user input into database writes.
+
 Structure services as modules exporting RTE functions:
 
 ```typescript
@@ -63,7 +65,7 @@ import * as TE from 'fp-ts/TaskEither'
 import * as A from 'fp-ts/Array'
 import { pipe } from 'fp-ts/function'
 
-type UserDeps = {
+export type UserDeps = {
   db: DatabaseClient
   hasher: PasswordHasher
   mailer: EmailService
@@ -73,6 +75,7 @@ type UserError =
   | { _tag: 'UserNotFound'; id: string }
   | { _tag: 'EmailExists'; email: string }
   | { _tag: 'InvalidPassword' }
+  | { _tag: 'InfrastructureError'; cause: unknown }
 
 // Create user
 export const create = (
@@ -162,6 +165,8 @@ const checkEmailUnique = (
 
 ### Composing Services
 
+Order/payment is a composition sketch, not a safe transaction protocol: authorization, validated quantities/minor-unit money, inventory reservations, payment idempotency and reconciliation/outbox/saga compensation are required. A successful charge followed by failed order insertion is not rolled back by RTE. Bound parallel product fetches rather than unbounded traversal.
+
 ```typescript
 // src/services/order.service.ts
 import * as UserService from './user.service'
@@ -219,6 +224,8 @@ export const createOrder = (
 ## Functional Dependency Injection
 
 ### Building the Dependency Container
+
+The non-null assertions below do not validate environment variables; validate URLs, required secrets and bounded integer pool size before opening resources. Use bracket/finally cleanup on partial acquisition, errors and signals; tapError alone only cleans up on Left and a started server may outlive the Task. Cleanup should attempt both resources even if the first close fails. Never expose raw connection errors/secrets in logs.
 
 ```typescript
 // src/deps.ts
@@ -354,7 +361,7 @@ const main = async () => {
       pipe(
         program(deps),
         TE.tap(() => TE.fromIO(() => console.log('Server running'))),
-        // Cleanup on exit
+        // Error-only cleanup; add explicit lifetime/signal/finally cleanup as described above
         TE.tapError(() => destroyDeps(deps))
       )
     )
@@ -379,6 +386,7 @@ main()
 import * as TE from 'fp-ts/TaskEither'
 import * as O from 'fp-ts/Option'
 import { PrismaClient, Prisma } from '@prisma/client'
+import { pipe } from 'fp-ts/function'
 
 type DbError =
   | { _tag: 'RecordNotFound'; model: string; id: string }
@@ -465,6 +473,8 @@ const userRepo = createRepository(prisma, prisma.user)
 ```
 
 ### Transaction Handling
+
+Sketch: use the pinned Prisma TransactionClient type and an explicit private rollback-error wrapper rather than assuming any thrown _tag is a domain error. Every operation must use tx. This example does not implement authenticated account ownership, positive finite minor-unit amounts, distinct accounts, currency consistency, concurrency/conditional balance protection or idempotency; do not use it for real transfers without those controls and database tests.
 
 ```typescript
 // src/lib/transaction.ts
@@ -577,8 +587,14 @@ export const toHandler =
     onError: (error: E, res: Response) => void
   ): RequestHandler =>
   async (req, res, next) => {
-    const deps = getDeps(req)
-    const result = await handler(req)(deps)()
+    let result
+    try {
+      const deps = getDeps(req)
+      result = await handler(req)(deps)()
+    } catch (error) {
+      next(error)
+      return
+    }
 
     pipe(
       result,
@@ -618,9 +634,13 @@ app.get('/users/:id', getUserHandler)
 
 ### Hono Middleware
 
+Supply ContextVariableMap entries for validatedBody/user, runtime-validate JSON with a size limit and map malformed JSON to 400. Verification must enforce algorithm/issuer/audience/expiry; authentication alone does not authorize /users/:id. Scope repository access to the verified principal.
+
 ```typescript
 // src/middleware/fp-hono.ts
 import { Hono, Context, MiddlewareHandler } from 'hono'
+import * as TE from 'fp-ts/TaskEither'
+import { z } from 'zod'
 import * as RTE from 'fp-ts/ReaderTaskEither'
 import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
@@ -723,6 +743,8 @@ app.get(
 ```typescript
 // src/context.ts
 import * as RTE from 'fp-ts/ReaderTaskEither'
+import * as O from 'fp-ts/Option'
+import type { MiddlewareHandler } from 'hono'
 import { pipe } from 'fp-ts/function'
 
 // Request-scoped context
@@ -742,7 +764,9 @@ const logWithContext =
       RTE.ask<ContextDeps>(),
       RTE.flatMap(({ logger, ctx }) =>
         RTE.fromIO(() =>
-          loggerlevel,
+          logger[level](message, {
+            ...meta,
+            requestId: ctx.requestId,
             elapsed: Date.now() - ctx.startTime,
           })
         )
@@ -914,6 +938,8 @@ export const toResponseBody = (
 
 ### Error Recovery
 
+Retries require positive bounded integer attempts, finite bounded delays, jitter/cancellation and idempotent effects. Do not retry charges blindly. Cache keys must include tenant/user/authorization scope; never serve cached data on authorization failures. Cache write failures should follow an explicit policy, not erase a successful business operation. Circuit state below is per-process and not concurrency-safe: a real half-open gate admits one trial and resets consecutive failures on success.
+
 ```typescript
 // src/lib/recovery.ts
 import * as RTE from 'fp-ts/ReaderTaskEither'
@@ -977,7 +1003,7 @@ export const withFallback =
             pipe(
               RTE.fromTaskEither(cache.get<A>(cacheKey)),
               RTE.flatMap(cached =>
-                cached ? RTE.right(cached) : RTE.left(error)
+                cached !== null && cached !== undefined ? RTE.right(cached) : RTE.left(error)
               )
             )
           )
@@ -1057,9 +1083,9 @@ import * as UserService from '../user.service'
 const createMockDeps = (overrides: Partial<UserDeps> = {}): UserDeps => ({
   db: {
     users: {
-      findUnique: vi.fn(() => Promise.resolve(null)),
-      create: vi.fn(data => Promise.resolve({ id: '1', ...data })),
-      update: vi.fn((where, data) => Promise.resolve({ id: where.id, ...data })),
+      findUnique: vi.fn(() => TE.right(null)),
+      create: vi.fn(data => TE.right({ id: '1', ...data })),
+      update: vi.fn((where, data) => TE.right({ id: where.id, ...data })),
     },
   },
   hasher: {
@@ -1096,7 +1122,7 @@ describe('UserService', () => {
       const deps = createMockDeps({
         db: {
           users: {
-            findUnique: vi.fn(() => Promise.resolve(existingUser)),
+            findUnique: vi.fn(() => TE.right(existingUser)),
             create: vi.fn(),
           },
         },
@@ -1121,7 +1147,7 @@ describe('UserService', () => {
       const deps = createMockDeps({
         db: {
           users: {
-            findUnique: vi.fn(() => Promise.resolve(user)),
+            findUnique: vi.fn(() => TE.right(user)),
           },
         },
       })
@@ -1235,14 +1261,14 @@ describe('Validation Properties', () => {
   it('passwords meeting requirements should pass', () => {
     const validPassword = fc
       .tuple(
-        fc.stringOf(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'), {
+        fc.array(fc.constantFrom(...'abcdefghijklmnopqrstuvwxyz'), {
           minLength: 4,
         }),
-        fc.stringOf(fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), {
+        fc.array(fc.constantFrom(...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), {
           minLength: 1,
         }),
-        fc.stringOf(fc.constantFrom(...'0123456789'), { minLength: 1 }),
-        fc.stringOf(fc.constantFrom(...'!@#$%^&*'), { minLength: 1 })
+        fc.array(fc.constantFrom(...'0123456789'), { minLength: 1 }),
+        fc.array(fc.constantFrom(...'!@#$%^&*'), { minLength: 1 })
       )
       .map(parts => parts.join(''))
 

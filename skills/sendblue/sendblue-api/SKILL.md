@@ -28,6 +28,14 @@ Sendblue is a REST API that sends iMessage (blue bubbles), SMS, and RCS from a p
 - Use when you need features the CLI does not expose: send styles, reactions, group messages, typing indicators, status callbacks, media uploads, or the contacts API beyond basic CRUD.
 - Reach for [[sendblue-cli]] instead for shell-context outbound: one-shot scripts, cron jobs, agent hooks, "ping me when X" workflows.
 
+## Operational boundaries
+
+These are imported documentation examples; no CLI, daemon, server or hook runtime
+is bundled. Verify the pinned upstream version, account, billing, current limits and
+actual command/API schema before use. Never print credentials (`whoami`/`show-keys`
+may expose them) to agent output or logs. Authorization for drafting is not sending.
+Do not circumvent provider anti-abuse limits by distributing sends across lines.
+
 ## How It Works
 
 ### Step 1: Authenticate
@@ -156,7 +164,7 @@ Status callback payloads (`outbound`) mirror the send-message response and updat
 - ✅ **Use `status_callback` over polling.** It's lower-cost and more accurate than `GET /api/status`.
 - ✅ **Return 2xx fast from your webhook**, then process async. Non-2xx triggers duplicate deliveries.
 - ✅ **Check service with `/api/evaluate-service`** before relying on iMessage-only features for a recipient.
-- ✅ **Rehost inbound media on receipt** — media URLs expire in ~30 days.
+- ✅ **Retain media only when authorized**, with bounded downloads, content validation, malware precautions and a documented deletion policy; verify current URL expiry.
 - ❌ **Don't ship `sb-api-key-id` / `sb-api-secret-key` to a client.** They are server-side credentials.
 - ❌ **Don't treat a 200 on `/api/send-message` as delivery.** It only means "accepted".
 
@@ -165,14 +173,14 @@ Status callback payloads (`outbound`) mirror the send-message response and updat
 - Synchronous send responses only report acceptance, not delivery. Final state arrives via `status_callback` or `GET /api/status`.
 - `send_style` silently no-ops on SMS (green-bubble recipients).
 - Inbound media URLs expire in ~30 days.
-- Per-line rate limits apply; bursting many sends from one number can trip Apple's spam heuristics — pace them or split across lines.
+- Per-line rate limits apply; bursting many sends from one number can trip Apple's spam heuristics — respect provider limits and recipient consent; do not rotate lines to evade controls.
 - Reactions and effects are iMessage-only.
 
 ## Security & Safety Notes
 
 - Keep `sb-api-key-id` and `sb-api-secret-key` server-side. They are not safe in browser, mobile, or CI logs.
 - Treat every outbound send, contact/webhook mutation, read receipt, reaction, or typing indicator as state-changing. Preview the recipient, sender line, content, and callback/webhook changes, then wait for explicit user confirmation before sending.
-- Webhook endpoints should be on HTTPS and idempotent — same `message_handle` may arrive more than once.
+- Webhook endpoints require HTTPS, verified provider authentication/signatures where supported, replay protection, bounded bodies and event-level idempotency. A message can have multiple legitimate status updates: do not deduplicate every event solely by message_handle. Acknowledge after durable enqueue; reject unauthenticated input.
 - Sensitive data in message content is visible in lock-screen previews on the recipient's device. Don't embed secrets, tokens, or full PII — link to an authenticated dashboard or shortened payload instead.
 - Rotate API keys from the Sendblue dashboard if either value is exposed; the old pair is invalidated on rotation.
 
@@ -182,10 +190,10 @@ Status callback payloads (`outbound`) mirror the send-message response and updat
 - **`from_number` must be one of your lines.** A spoofed or unprovisioned number returns an error.
 - **`send_style` silently no-ops on SMS.** If the recipient is green-bubble, effects don't render — check service first with `/api/evaluate-service` if it matters.
 - **Store `message_handle`.** You need it for reactions, replies, and correlating status callbacks back to your records.
-- **Media URLs expire in ~30 days.** If you need durable media from inbound webhooks, download and re-host on receipt.
+- **Media URLs expire in ~30 days.** If you need durable media from inbound webhooks, retain only if authorized under a documented privacy/retention policy.
 - **Status is async.** A 200 on `/api/send-message` means accepted, not delivered. Use `status_callback` rather than blocking on the synchronous response.
 - **Webhook retries on non-2xx.** Return 200 even when you've decided to ignore the event; otherwise expect duplicate deliveries.
-- **Rate limits apply per line.** Bursting many sends from one number trips Apple's spam heuristics — pace them or split across lines.
+- **Rate limits apply per line.** Bursting many sends from one number trips Apple's spam heuristics — respect provider limits and recipient consent; do not rotate lines to evade controls.
 
 ## Related Skills
 

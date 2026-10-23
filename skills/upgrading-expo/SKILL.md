@@ -34,23 +34,28 @@ Check if latest is beta: https://exp.host/--/api/v2/versions (look for `-preview
 npx expo install expo@next --fix  # install beta
 ```
 
+## Upgrade boundaries
+
+Commit or back up the project and lockfile first. Upgrade one SDK at a time to an explicitly selected version; the SDK labels in these references are historical, so check target-version release notes and installed types before applying APIs. Restore from the checkpoint if native regeneration loses changes.
+
 ## Step-by-Step Upgrade Process
 
 1. Upgrade Expo and dependencies
 
 ```bash
-npx expo install expo@latest
+# Replace TARGET with the next intended SDK version, not a floating latest
+npx expo install expo@TARGET
 npx expo install --fix
 ```
 
 2. Run diagnostics: `npx expo-doctor`
 
-3. Clear caches and reinstall
+3. Only if diagnostics indicate stale caches; run from the verified project root, then reinstall with the project package manager
 
 ```bash
 npx expo export -p ios --clear
-rm -rf node_modules .expo
-watchman watch-del-all
+npx expo start --clear
+# Remove project-local caches only if needed; avoid global Watchman reset.
 ```
 
 ## Breaking Changes Checklist
@@ -63,7 +68,7 @@ watchman watch-del-all
 
 ## Prebuild for Native Changes
 
-**First check if `ios/` and `android/` directories exist in the project.** If neither directory exists, the project uses Continuous Native Generation (CNG) and native projects are regenerated at build time — skip this section and "Clear caches for bare workflow" entirely.
+**First determine whether native projects are generated or manually maintained; directory existence alone is insufficient.** If neither directory exists, the project uses Continuous Native Generation (CNG) and native projects are regenerated at build time — skip this section and "Clear caches for bare workflow" entirely.
 
 If upgrading requires native changes:
 
@@ -87,7 +92,7 @@ These steps only apply when `ios/` and/or `android/` directories exist in the pr
 - If using Expo SDK 54 or later, ensure react-native-worklets is installed — this is required for react-native-reanimated to work.
 - Enable React Compiler in SDK 54+ by adding `"experiments": { "reactCompiler": true }` to app.json — it's stable and recommended
 - Delete sdkVersion from `app.json` to let Expo manage it automatically
-- Remove implicit packages from `package.json`: `@babel/core`, `babel-preset-expo`, `expo-constants`.
+- Remove dependencies only after checking direct imports, config usage and target-SDK requirements; `expo-constants` may be directly used.
 - If the babel.config.js only contains 'babel-preset-expo', delete the file
 - If the metro.config.js only contains expo defaults, delete the file
 
@@ -97,10 +102,10 @@ These steps only apply when `ios/` and/or `android/` directories exist in the pr
 | -------------------- | ---------------------------------------------------- |
 | `expo-av`            | `expo-audio` and `expo-video`                        |
 | `expo-permissions`   | Individual package permission APIs                   |
-| `@expo/vector-icons` | `expo-symbols` (for SF Symbols)                      |
-| `AsyncStorage`       | `expo-sqlite/localStorage/install`                   |
+| `@expo/vector-icons` | Keep unless an intentional icon redesign fits supported platforms; SF Symbols are not a drop-in equivalent |
+| `AsyncStorage`       | Do not replace without an explicit persisted-data/API migration |
 | `expo-app-loading`   | `expo-splash-screen`                                 |
-| expo-linear-gradient | experimental_backgroundImage + CSS gradients in View |
+| expo-linear-gradient | Evaluate platform support before choosing a gradient alternative |
 
 When migrating deprecated packages, update all code usage before removing the old package. For expo-av, consult the migration references to convert Audio.Sound to useAudioPlayer, Audio.Recording to useAudioRecorder, and Video components to VideoView with useVideoPlayer.
 

@@ -13,7 +13,7 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # A/B Test Setup
 ## When to Use
 
-Use this skill when you need when the user wants to plan, design, or implement an A/B test or experiment, or build a growth experimentation program. Also use when the user mentions "A/B test," "split test," "experiment," "test this change," "variant copy," "multivariate test," "hypothesis," "should I test this,"...
+Use to plan, design or implement a controlled experiment or experimentation program.
 
 
 You are an expert in experimentation and A/B testing. Your goal is to help design tests that produce statistically valid, actionable results.
@@ -39,8 +39,7 @@ Before designing a test, understand:
 - Based on reasoning or data
 
 ### 2. Test One Thing
-- Single variable per test
-- Otherwise you don't know what worked
+- A/B tests may compare a bundle, but then estimate the bundle's overall effect; individual component effects require a suitable factorial design
 
 ### 3. Statistical Rigor
 - Pre-determine sample size
@@ -89,12 +88,7 @@ We'll know this is true when [metrics].
 
 ### Quick Reference
 
-| Baseline | 10% Lift | 20% Lift | 50% Lift |
-|----------|----------|----------|----------|
-| 1% | 150k/variant | 39k/variant | 6k/variant |
-| 3% | 47k/variant | 12k/variant | 2k/variant |
-| 5% | 27k/variant | 7k/variant | 1.2k/variant |
-| 10% | 12k/variant | 3k/variant | 550/variant |
+The root and reference tables previously gave inconsistent values. Calculate using a named method with recorded baseline, MDE units, alpha, power, sidedness, allocation and multiple-comparison adjustment; see the reference guide. Do not use unbound numeric shortcuts.
 
 **Calculators:**
 - [Evan Miller's](https://www.evanmiller.org/ab-testing/sample-size.html)
@@ -158,6 +152,10 @@ We'll know this is true when [metrics].
 
 ---
 
+## Assignment and safety checks
+
+Define stable randomization unit, eligibility/exposure, conversion window and intention-to-treat analysis before launch. Check sample-ratio mismatch, missing events, bot/internal traffic, contamination across devices and repeated-user dependence; broken instrumentation can invalidate significance. Predeclare segments/comparisons and separate exploratory findings. Monitor harmful technical/guardrail effects with a planned stop policy even during fixed-horizon tests. Sequential methods require their own valid stopping rules. Every variant must preserve accessibility, honest offers, consent/privacy and security. Testing does not authorize unrequested production rollout or data sharing.
+
 ## Implementation
 
 ### Client-Side
@@ -202,9 +200,8 @@ Looking at results before reaching sample size and stopping early leads to false
 ## Analyzing Results
 
 ### Statistical Significance
-- 95% confidence = p-value < 0.05
-- Means <5% chance result is random
-- Not a guarantee—just a threshold
+- Predefine the inference method and alpha; p < 0.05 is not a probability that the result is random or the hypothesis is true
+- Report effect size and a compatible interval; evaluate practical value and guardrails
 
 ### Analysis Checklist
 
@@ -221,7 +218,7 @@ Looking at results before reaching sample size and stopping early leads to false
 |--------|------------|
 | Significant winner | Implement variant |
 | Significant loser | Keep control, learn why |
-| No significant difference | Need more traffic or bolder test |
+| No significant difference | Inconclusive unless a planned equivalence/noninferiority analysis supports a bounded conclusion; do not extend opportunistically |
 | Mixed signals | Dig deeper, maybe segment |
 
 ---

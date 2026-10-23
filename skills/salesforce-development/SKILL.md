@@ -3,7 +3,7 @@ name: salesforce-development
 description: Expert patterns for Salesforce platform development including
   Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation
   packages (2GP).
-risk: safe
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -31,6 +31,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - User mentions or implies: connected app
 
 ## Limitations
+- Examples are incomplete fragments, not deployment-ready packages: custom fields/classes, CSV parsing, abort handling, imports, result typing and security tests are omitted. Confirm org/API version, CRUD/FLS/sharing, callout/job limits and user/system mode explicitly. Use test orgs and synthetic data; production deployment and package promotion require the approved target/change process. Do not send outbound Slack/CRM data merely because a trigger example includes it.
 - Salesforce platform behavior and API versions change frequently; verify current official documentation before implementing version-sensitive features.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

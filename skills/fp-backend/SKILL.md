@@ -21,6 +21,10 @@ tags:
 
 Functional programming patterns for building type-safe, testable backend services using fp-ts.
 
+## Version and execution scope
+
+Pin fp-ts, TypeScript, framework and Prisma versions; these excerpts omit application types/helpers and do not form a compiled package. fp-ts TaskEither represents only errors wrapped by its adapters; thrown exceptions/rejected promises still require handling. Deno needs explicit npm/runtime configuration and Node APIs are not automatically portable. Validate effects and error paths against real adapters before adopting the patterns.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.

@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # Agency/Consultancy SEO Strategy Template
 
 ## Industry Characteristics

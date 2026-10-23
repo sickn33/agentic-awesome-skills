@@ -38,7 +38,7 @@
 
 ## 4. 再做 CrossFrame 对照
 
-读取 `../crossframe/references/read-routing-map.md` 后，按文本主题选择必要的 CrossFrame 概念或协议。只在概念承担判断作用时追加读取对应概念卡。
+读取 `../../crossframe/references/read-routing-map.md` 后，按文本主题选择必要的 CrossFrame 概念或协议。只在概念承担判断作用时追加读取对应概念卡。
 
 对照至少回答：
 
@@ -49,7 +49,7 @@
 
 ## 5. 形成研究笔记
 
-默认使用 `../crossframe-notebook/templates/research-notebook.md`，并保留以下顺序：
+默认使用 `../templates/research-notebook.md`，并保留以下顺序：
 
 1. 阅读对象与来源边界。
 2. 原文本自己的问题意识。

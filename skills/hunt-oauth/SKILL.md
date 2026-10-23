@@ -30,6 +30,10 @@ report_count: 22
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
+## Test boundaries
+
+Use only authorized test accounts, exact scoped origins and reversible linking actions. Dynamic registration creates resources and needs explicit scope plus cleanup. Do not claim dangling cloud resources or access third-party identity-provider infrastructure without separate permission. Audience acceptance depends on the intended resource API; a token from another client is not necessarily intended for another audience. Never print live tokens, codes or secrets to terminal history or shared logs.
+
 ## Crown Jewel Targets
 
 OAuth vulnerabilities are among the highest-value bug classes in web security because they directly enable **account takeover, session theft, and authentication bypass** — the trifecta that programs pay most for.
@@ -47,7 +51,7 @@ OAuth vulnerabilities are among the highest-value bug classes in web security be
 - Mobile deep link handlers (`push_notification_webview`, custom scheme URIs)
 - Social login callback handlers (`/auth/callback`, `/oauth/callback`)
 
-**Typical payouts:** $500–$20,000+ depending on program; account takeover findings often hit max bounty.
+Bounty eligibility and severity depend on the program and demonstrated impact; no payout is established by this guide.
 
 ---
 
@@ -119,12 +123,12 @@ intent://
 4. **Test `state` parameter (CSRF)**
    - Remove `state` entirely — does the flow complete?
    - Reuse a fixed `state` value across sessions
-   - Check if `state` is validated server-side or only client-side
+   - Check whether the client binds the authorization response to the initiating session with an appropriate state/PKCE/OIDC mechanism. A browser-based client can validate state correctly; missing state alone is not proof of CSRF
 
 5. **Test `nonce` parameter (replay/bypass)**
    - Capture a nonce from one flow, attempt to replay it in another
    - Check if nonce is validated after token exchange
-   - Test if nonce can be extracted via referrer leak (step 9)
+   - Assess actual nonce/session binding and ID-token signature, issuer and audience checks; nonce is not itself an access credential
 
 6. **Test authentication step completeness**
    - For multi-step auth (e.g., email verification + OAuth): can you skip to `/oauth/token` directly?
@@ -184,17 +188,8 @@ curl -v "https://target.com/oauth/authorize?client_id=APP&redirect_uri=https://t
 https://target.com/oauth/callback?code=ATTACKER_CODE&state=FIXED_VALUE
 ```
 
-### Nonce Extraction via Referrer
-```bash
-# After OAuth callback landing page, check outbound requests
-# Look for Referer header containing access_token or code
-curl -v "https://target.com/auth/callback?code=ABC&state=XYZ" \
-  -H "Referer: https://evil.com" \
-  --max-redirs 0
-
-# Grep JS for outbound calls made on callback page
-grep -r "fetch\|XMLHttpRequest\|img.src\|script.src" callback_page.html
-```
+### Browser leakage verification
+Use only owned test accounts and an authorized callback receiver. Capture actual outbound browser requests after callback navigation under the site's real Referrer-Policy. A manually forged incoming Referer header does not test outbound leakage. Fragments are excluded from HTTP Referer; query strings may also be removed on cross-origin requests by the browser's policy. Separately inspect JavaScript forwarding through analytics or postMessage. Redact all codes/tokens from reports.
 
 ### Mobile Deep Link Exploit (Android)
 ```bash
@@ -261,7 +256,7 @@ curl https://api.app-b.com/admin -H "Authorization: Bearer $TOKEN"
 ### OIDC prompt=none Silent Re-Auth Test
 ```bash
 # Test whether adding prompt=none to authorize request yields a token without user interaction
-# Signals session fixation / silent auth abuse potential
+# Silent authentication can be expected with an existing session/consent; prompt=none success alone is not session fixation or a vulnerability.
 curl -v "https://idp/authorize?client_id=APP&redirect_uri=https://app/cb&response_type=code&state=XYZ&prompt=none"
 ```
 
@@ -271,7 +266,7 @@ curl -v "https://idp/authorize?client_id=APP&redirect_uri=https://app/cb&respons
 
 1. **Weak `redirect_uri` validation** — developers whitelist by prefix (`startsWith`) rather than exact match, or whitelist an entire domain instead of specific paths. A sub-path open redirect on the same domain then becomes a full token theft primitive.
 
-2. **Missing or unvalidated `state` parameter** — developers implement OAuth by following basic tutorials that omit CSRF protection, or validate state client-side only in JavaScript (easily bypassed).
+2. **Missing or unvalidated `state` parameter** — developers implement OAuth by following basic tutorials that omit CSRF protection, or validate state without secure binding to the initiating session; JavaScript validation alone is not inherently invalid.
 
 3. **Nonce not validated post-exchange** — nonce is generated and sent in the request but never verified against the ID token after the code exchange, making replay attacks possible.
 
@@ -283,7 +278,7 @@ curl -v "https://idp/authorize?client_id=APP&redirect_uri=https://app/cb&respons
 
 7. **Misconfigured OAuth application registration** — developers register wildcard redirect URIs (`https://*.example.com/*`) or don't restrict them at all during development and forget to lock down for production.
 
-8. **Client secrets embedded in mobile apps** — treating confidential client credentials as public, enabling an attacker with the secret to perform token requests with arbitrary redirect URIs.
+8. **Client secrets embedded in mobile apps** — treating confidential client credentials as public, but a public mobile client cannot keep a shared secret confidential. A discovered client ID or embedded secret alone does not bypass code, redirect-URI, PKCE or audience checks.
 
 9. **OIDC `sub` claim ambiguity across identity providers** — apps accepting login from multiple IdPs (Google, Microsoft, Apple) may key accounts on `sub` alone without IdP isolation. If two IdPs emit the same `sub` for different users, one IdP's attacker hijacks accounts linked to the other IdP.
 
@@ -292,7 +287,7 @@ curl -v "https://idp/authorize?client_id=APP&redirect_uri=https://app/cb&respons
 ## Bypass Techniques
 
 ### Defender: Exact-match `redirect_uri` whitelist
-**Bypass:** Find an open redirect on the whitelisted domain itself, then use that URL as the redirect_uri. The OAuth server validates the registered domain ✓, but the open redirect bounces the code/token to attacker.
+**Check:** True exact matching of a registered callback is not defeated merely by finding another redirect on the same domain. A chain requires that the registered callback itself leak/forward credentials, or a separate URI-validation weakness. Demonstrate each prerequisite.
 ```
 redirect_uri=https://legit.com/logout?next=https://evil.com
 ```
@@ -310,7 +305,7 @@ redirect_uri=https://legit.com/logout?next=https://evil.com
 **Bypass:** Referrer leakage and open redirects work even with short-lived codes if the attacker has a fast receiver. For CSRF, the victim completes the flow so timing is less critical.
 
 ### Defender: PKCE enforcement
-**Bypass:** Check if PKCE is required for *all* clients or only specific ones. Legacy clients or mobile apps may be exempt. Test with `code_challenge` omitted — if the server still issues tokens, PKCE isn't enforced.
+**Bypass:** Check if PKCE is required for *all* clients or only specific ones. Legacy clients or mobile apps may be misconfigured; verify the client-specific policy rather than assuming all client types are identical. Test with `code_challenge` omitted — issuance of a code alone does not establish bypass. Verify that token exchange succeeds without the required verifier, using owned accounts and the same registered client.
 
 ### Defender: Nonce validation
 **Bypass:** Check if nonce is validated client-side in JavaScript only. Intercept and modify the ID token's nonce claim if the signature isn't verified (rare but seen in misconfigured implementations). Also test if nonce is validated on *initial* request but not on token refresh.
@@ -328,7 +323,7 @@ Be specific: "I can send victim a crafted URL → victim clicks → their OAuth 
 Minimum bar: victim loses authenticated session (account access). Higher bars: victim loses linked accounts, payment methods, private data. If the attacker only learns the victim's identity without gaining access, severity drops significantly.
 
 **3. Can it be reproduced in 10 minutes from scratch?**
-Open a fresh browser/device with no prior state. If you can walk from "unauthenticated" to "authenticated as victim" in 10 minutes using only your written steps, the bug is real and reportable. If it requires lucky timing, specific victim behavior beyond "click a link," or network position, document those dependencies explicitly.
+Open a fresh browser/device with no prior state. A ten-minute replay is a documentation convenience, not a validity criterion. Use two owned accounts, not real victims, and demonstrate only the minimum authorized reversible impact. If it requires lucky timing, specific victim behavior beyond "click a link," or network position, document those dependencies explicitly.
 
 ---
 
@@ -347,7 +342,7 @@ The OAuth callback page for Facebook login lands users at a URL containing the `
 
 ## Disclosed Report Citations (Backfill +9 — 2020-2024)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill beyond the original 10 internal references. Each is a distinct OAuth subclass with a working PoC documented in the cited writeup.
+The following are imported historical disclosure summaries, not independently verified by this bundle. Check each original writeup before repeating payloads, dates, bounty figures, population exposure or remediation claims. They do not prove a current target is vulnerable.
 
 11. **Semrush — IDN-homograph redirect_uri bypass** ([H1 #861940](https://hackerone.com/reports/861940))
     - Subclass: `redirect_uri` bypass via Unicode-confusable host (homograph)
@@ -425,7 +420,7 @@ A server-side prefix-match flaw on `redirect_uri` is **necessary but not suffici
 
 **Operational rule:** the WHATWG URL parser (used by all modern browsers since 2018) does userinfo parsing ONLY in the authority section — i.e., **before the first `/` after `://`**. Once the path begins, `@` is just a character. Server-side string-startswith checks don't model this — they pass URLs the browser will then route to the legitimate host.
 
-**Always headless-test (Playwright / Puppeteer / a real browser) the final navigation BEFORE writing the OAuth finding as ATO-chain.** Server-side accept + browser-side stay-on-legitimate-host = **not** ATO. Verified live in `docs/verification/phase3-playwright-browser-execution.md` Test 29.
+**Always headless-test (Playwright / Puppeteer / a real browser) the final navigation BEFORE writing the OAuth finding as ATO-chain.** Server-side accept + browser-side stay-on-legitimate-host = **not** ATO. The cited verification document is not bundled here; this review does not establish that those runtime tests ran.
 
 ---
 
@@ -436,7 +431,7 @@ A server-side prefix-match flaw on `redirect_uri` is **necessary but not suffici
 - **`hunt-llm-ai`** — Modern OAuth flows for AI agents (ChatGPT plugins, Claude MCP servers, agentic copilots) reuse OAuth 2.1 + PKCE. Chain primitive: agentic AI accepts `redirect_uri` from indirect prompt-injection in a document → model crafts OAuth authorize URL with attacker callback → user clicks "approve" thinking it's the agent's own flow → tokens exfiltrated via tool-use to attacker domain.
 - **`hunt-saml`** — When OAuth is layered atop a SAML IdP, the IdP-level XSW becomes the OAuth ATO path. Chain primitive: SAML SP that issues OAuth tokens after assertion-validation + XSW attack on the assertion alters `NameID` to admin user → SP issues OAuth token bearing admin identity → OAuth-scoped APIs grant admin access.
 - **`security-arsenal`** — Pull the OAuth `redirect_uri` Bypass Table (host-confusion `legit.com@evil.com`, `legit.com.evil.com`, path-traversal, parameter pollution, encoded-slash `%2F`, fragment-injection `#legit.com`) and the open-redirect chain catalog when exact-match validation forces you to find an open-redirect on the whitelisted domain first.
-- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical on an OAuth "open redirect" that doesn't actually leak a token (only the `state` param, or the callback page doesn't include credentials in URL). State-only leakage is Low; token/code leakage with successful exchange demonstration is Critical. The exchange-the-code step is non-negotiable.
+- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical on an OAuth "open redirect" that doesn't actually leak a token (only the `state` param, or the callback page doesn't include credentials in URL). Severity depends on the actual trust boundary, privileges, exploit conditions and program rubric. Do not force token exchange beyond authorization merely to satisfy a rating; report the evidence and remaining constraints.
 
 ## When to Use
 

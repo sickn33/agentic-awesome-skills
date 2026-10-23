@@ -1,5 +1,7 @@
 # Server Management
 
+`approvedPrivateEndpointConnectionId` below must come from a reviewed expected endpoint request (tenant, subscription, network and requester), not simply the first pending request. Server deletion also deletes hosted databases; confirm target and recovery evidence before executing.
+
 Advanced server operations for Azure SQL.
 
 ## Create Server with Azure AD Authentication
@@ -12,7 +14,7 @@ var serverData = new SqlServerData(AzureLocation.EastUS)
 {
     // SQL authentication (optional, can be disabled)
     AdministratorLogin = "sqladmin",
-    AdministratorLoginPassword = "YourSecurePassword123!",
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required"),
 
     // Azure AD authentication
     Administrators = new ServerExternalAdministrator
@@ -48,7 +50,7 @@ var updateData = server.Value.Data;
 var newServerData = new SqlServerData(server.Value.Data.Location)
 {
     AdministratorLogin = server.Value.Data.AdministratorLogin,
-    AdministratorLoginPassword = "NewSecurePassword456!"
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required")
 };
 
 await serverCollection.CreateOrUpdateAsync(
@@ -63,7 +65,7 @@ await serverCollection.CreateOrUpdateAsync(
 var serverData = new SqlServerData(AzureLocation.EastUS)
 {
     AdministratorLogin = "sqladmin",
-    AdministratorLoginPassword = "YourSecurePassword123!",
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required"),
 
     // Disable public access (use private endpoints only)
     PublicNetworkAccess = ServerNetworkAccessFlag.Disabled,
@@ -144,7 +146,8 @@ var privateEndpointConnections = server.GetSqlServerPrivateEndpointConnections()
 
 await foreach (var connection in privateEndpointConnections)
 {
-    if (connection.Data.PrivateLinkServiceConnectionState.Status == "Pending")
+    if (connection.Id.ToString() == approvedPrivateEndpointConnectionId &&
+        connection.Data.PrivateLinkServiceConnectionState.Status == "Pending")
     {
         // Approve the connection
         var approvalData = connection.Data;

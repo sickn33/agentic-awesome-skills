@@ -68,6 +68,8 @@ Use `/feedback` to update it. Use `/show-memory` to review it.
 
 
 def ensure_memory_exists():
+    if os.path.islink(MEMORY_FILE):
+        raise ValueError("Refusing symlink memory file")
     if not os.path.exists(MEMORY_FILE):
         with open(MEMORY_FILE, "w", encoding="utf-8") as f:
             f.write(MEMORY_TEMPLATE)
@@ -100,6 +102,7 @@ def append_feedback(content_id: str, feedback_text: str, tags: str = ""):
 
 
 def clear_memory():
+    ensure_memory_exists()
     with open(MEMORY_FILE, "w", encoding="utf-8") as f:
         f.write(MEMORY_TEMPLATE)
     print(json.dumps({
@@ -118,7 +121,8 @@ def main():
     add_parser.add_argument("--tags", required=False, default="")
 
     subparsers.add_parser("read", help="Display current memory")
-    subparsers.add_parser("clear", help="Reset memory to defaults")
+    clear_parser = subparsers.add_parser("clear", help="Reset memory to defaults")
+    clear_parser.add_argument("--confirm", action="store_true", required=True)
 
     args = parser.parse_args()
 

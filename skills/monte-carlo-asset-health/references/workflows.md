@@ -1,3 +1,4 @@
+<!-- Locally modified 2026-10-23: missing-data and bounded-coverage semantics corrected. -->
 # Workflow Details
 
 Detailed step-by-step instructions for the Monte Carlo Asset Health skill.
@@ -80,14 +81,15 @@ All parents are checked in parallel with each other. Each parent's `get_table` a
 
 Assemble findings into the report format defined in SKILL.md:
 
-1. **Tags** — from `search` properties. Omit line if none.
+1. **Tags** — from `search` properties. Show None only after a successful result confirms no tags; otherwise Unknown.
 2. **Status** — determine from alerts and monitoring:
    - 🔴 if any alerts returned (the statuses filter already limits to active alerts)
    - 🟡 if no alerts but 0 active monitors on a high-importance asset
-   - 🟢 otherwise
-4. **Metrics table** — freshness, volume, alerts, monitoring, importance, upstream
+   - 🟢 only when required queries succeed, coverage is present and no observed issue exists
+   - Unknown/Unmonitored for other cases; do not turn missing data into green
+4. **Metrics table** — Last Activity (only if returned), alerts, monitoring, upstream; put importance and read/write averages in the header
 5. **Active Alerts** — list each with type and status
-6. **Upstream Issues** — list each parent with health status
+6. **Upstream Issues** — list each checked parent with observed alerts/metadata and identify unchecked parents; no-alert results do not prove health
    - If any parent is unhealthy, ask: "Want me to check further upstream for **\<parent\>**?"
 7. **Recommendations** — only facts derivable from data:
    - Upstream issues that may explain this asset's problems

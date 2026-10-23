@@ -57,9 +57,13 @@ client = CosmosClient(url=endpoint, credential=credential)
 
 ## Core Workflow
 
+Confirm account/database/container, partition-key definition and authorized budget before provisioning or changing throughput. `create_*_if_not_exists` does not reconcile an existing container configuration. Examples use different key paths; do not combine them against one container. Tenant partitioning is not authorization isolation. Use ETag conditions for read-modify-write operations and explicit logical-operation deduplication for retries. Change feed is not a globally ordered, exactly-once ledger; checkpoint only after successful idempotent processing and verify the pinned SDK checkpoint API.
+
 ### Setup Database and Container
 
 ```python
+from azure.cosmos import PartitionKey
+
 # Get or create database
 database = client.create_database_if_not_exists(id="mydb")
 
@@ -219,7 +223,7 @@ container = database.create_container_if_not_exists(
 )
 
 # Read current throughput
-offer = container.read_offer()
+offer = container.get_throughput()
 print(f"Throughput: {offer.offer_throughput} RU/s")
 
 # Update throughput
@@ -233,9 +237,7 @@ from azure.cosmos.aio import CosmosClient
 from azure.identity.aio import DefaultAzureCredential
 
 async def cosmos_operations():
-    credential = DefaultAzureCredential()
-    
-    async with CosmosClient(endpoint, credential=credential) as client:
+    async with DefaultAzureCredential() as credential, CosmosClient(endpoint, credential=credential) as client:
         database = client.get_database_client("mydb")
         container = database.get_container_client("mycontainer")
         
@@ -277,7 +279,7 @@ except CosmosHttpResponseError as e:
 1. **Always specify partition key** for point reads and queries
 2. **Use parameterized queries** to prevent injection and improve caching
 3. **Avoid cross-partition queries** when possible
-4. **Use `upsert_item`** for idempotent writes
+4. **Use stable IDs carefully**; upsert replaces existing contents and is not a concurrency or logical-operation deduplication guarantee
 5. **Use async client** for high-throughput scenarios
 6. **Design partition key** for even data distribution
 7. **Use `read_item`** instead of query for single document retrieval

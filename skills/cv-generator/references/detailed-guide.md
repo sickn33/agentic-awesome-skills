@@ -59,8 +59,7 @@ Ask after source selection:
 
 ### Seniority
 
-Detect from data. If undetectable, **default to mid-level and tell the user:**
-> "I've assumed mid-level (3–8 years). Let me know if this should be different."
+Use only supported role/scope evidence. If seniority is unclear, leave it unspecified or ask; do not invent years or level.
 
 | Level | Years | CV emphasis |
 |-------|-------|-------------|
@@ -91,7 +90,7 @@ Detect from data. If undetectable, **default to mid-level and tell the user:**
 
 If the page is blocked or returns no content, **stop immediately** and ask:
 > "LinkedIn blocked the fetch. Please export your LinkedIn profile as a PDF
-> (LinkedIn → Me → Settings → Data Privacy → Get a copy of your data) and upload it."
+> (use the current profile PDF export if available, or paste the relevant experience sections; a data archive is a different export) and upload it."
 
 If accessible, extract in order:
 1. Full name and headline
@@ -135,7 +134,7 @@ Extract:
 Do not display the full list unless the user explicitly asks for a form.
 
 ```
-Q1.  Full legal name (as it should appear on the CV)
+Q1.  Preferred professional name (as it should appear on the CV)
 Q2.  Target job title or role
 Q3.  Email address
 Q4.  Phone number including country code (optional but recommended)
@@ -172,7 +171,7 @@ Q16. Volunteer or open-source work (optional)
 Q17. Publications, speaking engagements, press mentions (optional)
 Q18. Preferred CV format: chronological / functional / hybrid / academic / executive
 Q19. Target country or job market
-Q20. Any employment gaps? Dates and brief reason — will be framed constructively.
+Q20. Any gaps the user wants to explain? Reasons are optional; do not request health/family details.
 ```
 
 ### Existing CV or draft
@@ -363,7 +362,7 @@ Growth:        Grew, Expanded, Scaled, Generated, Increased, Secured, Delivered
 Strategy:      Defined, Established, Prioritised, Planned, Coordinated, Oversaw, Aligned
 ```
 
-Rewrites:
+Rewrites below are fictional demonstrations: added scope/metrics are valid only if separately supplied and confirmed; never derive them from the vague original bullet.
 ```
 BEFORE: "Responsible for managing the team"
 AFTER:  "Managed a cross-functional team of 8 engineers, delivering the product roadmap
@@ -409,13 +408,13 @@ change agent
 
 If found: rewrite the sentence to show the specific evidence instead.
 
-### Tense enforcement
+### Tense guidance
 
 This is a hard gate — output is blocked until tense is correct:
 
 - **Completed role** → all bullets in past tense (Led, Built, Reduced...)
-- **Current role** → all bullets in present tense (Lead, Build, Reduce...)
-- **Mixed tense within one role** → always fail; fix before output
+- **Current role** → present for ongoing duties, past for completed achievements
+- Mixed tense can be correct when ongoing duties and completed achievements differ.
 
 ### Acronym and terminology
 
@@ -462,21 +461,11 @@ This is a hard gate — output is blocked until tense is correct:
 5. Include both spelled-out form and abbreviation for key terms.
 6. Mirror exact JD phrasing for shared responsibilities.
 
-### ATS platform quick notes
+### ATS verification limits
 
-| Platform | Key quirk |
-|----------|-----------|
-| Workday | DOCX preferred; complex PDF tables fail |
-| Taleo | Strictest; no special characters; plain text preferred |
-| Greenhouse | Lenient; weights keyword frequency |
-| Lever | Modern parser; handles most formats |
-| iCIMS | DOCX preferred; strips header/footer text |
-| SmartRecruiters | Handles DOCX and PDF; relatively lenient |
-
-Default when platform is unknown: apply Taleo-level strictness.
+Parser behavior varies by product, configuration, file export and employer. The structural recommendations above are conservative formatting heuristics, not verified statements about named ATS vendors. Follow the employer's requested format and inspect extracted text/reading order from the final DOCX/PDF. Keyword coverage is an editorial checklist, not a prediction of ranking or interview selection.
 
 ---
-
 
 ## Job description integration
 
@@ -666,7 +655,9 @@ MISSING INFORMATION
 [ ] [Any other flagged item]
 ```
 
-### CV flaw report (scored 0–100)
+### CV editorial review (optional heuristic score)
+
+A score summarizes this local checklist only; it is not an ATS test, hiring probability or verified factual audit. Show unknown/unverified facts explicitly rather than automatically marking PASS.
 
 Run all checks. Display a scored report:
 
@@ -737,34 +728,9 @@ Rules:
 
 ## Country and market conventions
 
-| Market | Length | Photo | DOB | Marital status | References |
-|--------|--------|-------|-----|----------------|------------|
-| USA | 1–2 pages | No | No | No | "Available on request" |
-| Canada | 1–2 pages | No | No | No | "Available on request" |
-| UK | 2 pages | No | No | No | "Available on request" |
-| Ireland | 2 pages | No | No | No | "Available on request" |
-| Australia / NZ | 2–3 pages | No | No | No | "Available on request" |
-| Germany / Austria / Switzerland | 2–3 pages | Yes (expected) | Yes | Sometimes | Listed or on request |
-| France | 1–2 pages | Optional | No (illegal to require) | No | On request |
-| Netherlands / Scandinavia | 1–2 pages | Optional | No | No | On request |
-| Japan | 1–2 pages (rirekisho) | Yes | Yes | Yes | Listed |
-| South Korea | 1–2 pages | Yes | Yes | Yes | Listed |
-| China | 1–2 pages | Yes | Yes | Yes | Listed |
-| India | 2–3 pages | Optional | Yes (common) | Sometimes | Listed |
-| Nepal | 2–3 pages | Yes (common) | Yes | Sometimes | Listed |
-| Bangladesh / Sri Lanka | 2–3 pages | Yes (common) | Yes | Sometimes | Listed |
-| UAE / Gulf (GCC) | 2–3 pages | Yes (common) | Yes | Yes (sometimes) | Listed |
-| Nigeria / East Africa | 2–3 pages | Yes (common) | Yes | Sometimes | Listed |
-| South Africa | 3–5 pages | Optional | Yes (common) | No | Listed |
-| Brazil | 1–2 pages | Optional | Yes (common) | No | On request |
-| Academic (global) | No limit | Varies | Varies | No | Full list required |
-| Executive / board (global) | 2–3 pages | No | No | No | On request |
-
-Default when market is unknown: UK / international conventions (no photo, no DOB, 2 pages,
-"Available on request").
+Ask the target market and employer instructions when material. Do not treat a country as requiring photos, birth dates, marital status, religion or national identifiers. Default to omitting unnecessary sensitive details; add only user-approved, genuinely necessary information after checking current official employer/jurisdiction requirements. Page length and section order are editorial choices, not legal rules. Academic applications may specify their own publication/reference format.
 
 ---
-
 
 ## Decision tree
 
@@ -781,7 +747,7 @@ LinkedIn URL blocked? --Yes--> Ask for PDF export immediately; do not proceed em
 Collect all sources --> merge and deduplicate (section 5)
         |
         v
-Ask: Purpose? --> Detect or assume seniority (default: mid-level; tell the user)
+Ask: Purpose? --> Use evidenced seniority or leave unspecified
         |
         v
 Select format (section 3c)

@@ -67,19 +67,9 @@ Verify with `get_node` for the merge node on the user's n8n version — the fiel
 
 **Symptom:** the Merge passes through the wrong source. Downstream gets real data with real field names — just from the wrong upstream branch. Looks identical to a working flow; the shape is right, the contents are wrong.
 
-**Cause:** `parameters.useDataOfInput` matches the UI labels (Input 1, Input 2, Input 3 — **1-indexed**), but the wiring position in `connections.<source>.main[idx]` is **0-indexed** like every other array. Off by one.
+**Cause:** the UI may number destination inputs from one, while saved connection edge objects store the destination input in their zero-based `index`. The outer `connections.<source>.main[outputIndex]` selects the **source output**, not the Merge input.
 
-**Fix — the translation rule:**
-
-> `useDataOfInput: "N"` is fed by the connection at `main[N-1]`.
-
-| `useDataOfInput` | Connection slot |
-|---|---|
-| `"1"` | `connections.<source>.main[0]` |
-| `"2"` | `connections.<source>.main[1]` |
-| `"3"` | `connections.<source>.main[2]` |
-
-When you add the connection via `n8n_update_partial_workflow`, the `addConnection` operation targets a specific input index. To pass through Input 2, the source whose data you want must land on the connection at `main[1]`. After wiring, **verify with `n8n_get_workflow`**: read the `connections` object and confirm the source you intend to pass through actually sits at `main[N-1]`. This is the only reliable check — it won't surface in validation.
+**Fix:** inspect the edge `{node: "Merge", type: "main", index: N-1}` for the intended source and confirm the selected branch against the installed Merge version's schema. Do not change `main[N-1]` to choose a destination input. Test distinct synthetic markers on every branch; a structurally valid connection can still route the wrong data.
 
 ---
 
@@ -107,7 +97,7 @@ Covers Postgres, MySQL, and Supabase (when used via the Postgres node against th
 }
 ```
 
-`queryReplacement` takes a comma-separated list — each piece becomes one parameter: `={{ $json.email }},={{ $json.id }}` → `$1, $2`. The `=` prefix is just n8n's expression-mode marker. Treat any DB node with a `{{ ... }}` expression inside `parameters.query` as a critical injection finding.
+`queryReplacement` takes a comma-separated list — each piece becomes one parameter: `={{ $json.email }},={{ $json.id }}` → `$1, $2`. The `=` prefix is just n8n's expression-mode marker. Inspect whether untrusted values become SQL syntax; static trusted expressions are not automatically critical injection. Prefer a single expression producing the parameter array supported by the installed node, so commas inside data are not split as extra parameters.
 
 ### Transactions are bounded to one node
 
@@ -130,7 +120,7 @@ Covers Postgres, MySQL, and Supabase (when used via the Postgres node against th
 }
 ```
 
-Supabase's REST layer has no transactions — drop to the Postgres node connected directly to the same database when you need atomicity.
+Separate Supabase REST calls are not one transaction; a database RPC function can encapsulate transactional logic — drop to the Postgres node connected directly to the same database when you need atomicity.
 
 ### "No rows" produces no items
 
@@ -220,7 +210,7 @@ Entry and exit of request/response API workflows. `get_node` is canonical for fi
 
 **Symptom:** a job that should fire at 9am local drifts after a DST change or an instance move.
 
-**Cause:** the Schedule Trigger uses the **workflow's** timezone (Workflow Settings → Timezone). There is no `timezone` field inside a rule. Without an explicit workflow timezone, it follows the host's clock.
+**Cause:** the Schedule Trigger uses the **workflow's** timezone (Workflow Settings → Timezone). There is no `timezone` field inside a rule. Without an explicit workflow timezone, it falls back to the configured instance timezone; do not assume the OS clock.
 
 **Fix:** set the workflow timezone explicitly for any schedule that must run at a specific local time. The per-rule config has no timezone to set — don't look for one.
 

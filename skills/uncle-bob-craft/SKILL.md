@@ -14,6 +14,10 @@ tools: [claude, cursor, gemini]
 
 Apply Robert C. Martin (Uncle Bob) criteria for **code review and production**: Clean Code, Clean Architecture, The Clean Coder, Clean Agile, and design-pattern discipline. This skill is **complementary** to the existing `@clean-code` skill (which focuses on the Clean Code book) and to your project's linter/formatter—it does not replace them.
 
+## Interpretation boundary
+
+These are contextual design heuristics, not universal requirements to introduce interfaces, layers or tests for every edit. Respect the project architecture and language error conventions; justify recommendations with a concrete change risk rather than a principle label alone. The example below preserves the original increase in amount: it is a rate multiplier, not a discount.
+
 ## Overview
 
 This skill aggregates principles from Uncle Bob's body of work for **reviewing** and **writing** code: naming and functions (via `@clean-code`), architecture and boundaries (Clean Architecture), professionalism and estimation (The Clean Coder), agile values and practices (Clean Agile), and design-pattern use vs misuse. Use it to evaluate structure, dependencies, SOLID in context, code smells, and professional practices. It provides craft and design criteria only—not syntax or style enforcement, which remain the responsibility of your linter and formatter.
@@ -57,7 +61,7 @@ This skill aggregates principles from Uncle Bob's body of work for **reviewing**
 | **Needless repetition** | DRY violated; same idea in multiple places. |
 | **Opacity** | Code is hard to understand. |
 
-Full lists (including heuristics C1–T9-style) are in [reference.md](./reference.md). Use these in review to name issues and suggest refactors (extract, move dependency, introduce boundary).
+A compact editorial grouping (its C/T identifiers are not canonical book heuristic identifiers) is in [reference.md](./reference.md). Use these in review to name issues and suggest refactors (extract, move dependency, introduce boundary).
 
 ## Review vs Production
 
@@ -75,7 +79,7 @@ Full lists (including heuristics C1–T9-style) are in [reference.md](./referenc
 2. **SOLID in context**: Check Single Responsibility, Open/Closed, Liskov, Interface Segregation, Dependency Inversion where they apply to the changed code.
 3. **Smells**: Scan for rigidity, fragility, immobility, viscosity, needless complexity/repetition, opacity; list them with file/area.
 4. **Concrete suggestions**: Propose one or two refactors (e.g., "Extract this into a function named X," "Introduce an interface so this layer does not depend on the concrete DB client").
-5. **Tests and craft**: Note if tests exist and if the change respects sustainable pace (no obvious "we'll fix it later" comments that violate professionalism).
+5. **Tests and craft**: Report observed test coverage and concrete deferred risks; do not infer an author's professionalism or work pace from TODO comments.
 
 ### When writing or refactoring code
 
@@ -115,15 +119,15 @@ def process(d):
 **After (clear intent, single level of abstraction):**
 
 ```python
-def apply_discount(amount: float, discount_type: int) -> float:
-    if discount_type == 1:
+def apply_rate_multiplier(amount: float, rate_type: int) -> float:
+    if rate_type == 1:
         return amount * 1.1
-    if discount_type == 2:
+    if rate_type == 2:
         return amount * 1.2
     return amount
 
 def process(order: dict) -> dict:
-    order["x"] = apply_discount(order["a"], order.get("t", 0))
+    order["x"] = apply_rate_multiplier(order["a"], order.get("t", 0))
     return order
 ```
 
@@ -131,7 +135,7 @@ def process(order: dict) -> dict:
 
 - ✅ Use `@clean-code` for naming, functions, comments, and formatting; use this skill for architecture, boundaries, SOLID, smells, and process.
 - ✅ In review, name the smell or principle (e.g., "Dependency Rule violation: use case imports from the web framework").
-- ✅ Suggest at least one concrete refactor per review (extract, rename, invert dependency).
+- ✅ Suggest a concrete refactor only when an observed issue warrants it; a clean review may need none (extract, rename, invert dependency).
 - ✅ Run the project linter and formatter separately; this skill does not replace them.
 - ❌ Do not use this skill to enforce syntax or style; that is the linter's job.
 - ❌ Do not add design patterns without a clear duplication or variation reason.

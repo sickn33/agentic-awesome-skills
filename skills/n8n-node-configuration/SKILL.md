@@ -21,6 +21,10 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ---
 
+## Configuration safety
+
+Read and preserve the existing workflow, credentials references and node versions before targeted updates. Configure in a draft/test workflow with synthetic inputs; publishing or activating may trigger scheduled runs and external messages/writes. Confirm intended recipients and approval before those effects. Do not paste credentials into JSON or execution logs. HTTP targets must be scoped and validated rather than taken directly from untrusted items.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

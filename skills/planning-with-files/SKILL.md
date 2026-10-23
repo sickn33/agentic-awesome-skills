@@ -26,7 +26,7 @@ This ensures your planning files live alongside your code, not buried in the ski
 
 ## Quick Start
 
-Before ANY complex task:
+For an authorized complex task, reuse its existing plan/state or create these files only if appropriate:
 
 1. **Create `task_plan.md`** in your project — Use [templates/task_plan.md](templates/task_plan.md) as reference
 2. **Create `findings.md`** in your project — Use [templates/findings.md](templates/findings.md) as reference
@@ -36,13 +36,17 @@ Before ANY complex task:
 
 > **Note:** All three planning files should be created in your current working directory (your project root), not in the skill's installation folder.
 
+## Storage boundaries
+
+Use the actual installed skill directory; CLAUDE_PLUGIN_ROOT is client-specific and may be unset. Keep private planning files in an authorized location, prevent symlink/path escapes, avoid overwriting existing files, and do not commit/publish them automatically. Scripts are optional reviewed helpers, not installed hooks; the completion checker supports the bundled phase-heading/status template, not arbitrary checklists, and cannot establish task success. Bounded retries can be valid for transient errors; escalate only real unresolved decisions, not mechanically after three attempts.
+
 ## The Core Pattern
 
 ```
 Context Window = RAM (volatile, limited)
-Filesystem = Disk (persistent, unlimited)
+Filesystem = Disk (persistent within its retention/capacity limits)
 
-→ Anything important gets written to disk.
+→ Persist only necessary authorized findings; exclude secrets, personal data and private source dumps.
 ```
 
 ## File Purposes
@@ -56,7 +60,7 @@ Filesystem = Disk (persistent, unlimited)
 ## Critical Rules
 
 ### 1. Create Plan First
-Never start a complex task without `task_plan.md`. Non-negotiable.
+Use existing project planning conventions and user-supplied plans. Do not create competing state files or edit an attached plan when the user requests otherwise.
 
 ### 2. The 2-Action Rule
 > "After every 2 view/browser/search operations, IMMEDIATELY save key findings to text files."
@@ -118,7 +122,7 @@ AFTER 3 FAILURES: Escalate to User
 
 | Situation | Action | Reason |
 |-----------|--------|--------|
-| Just wrote a file | DON'T read | Content still in context |
+| Just wrote a file | Verify when correctness requires it | Writes can fail or alter formatting |
 | Viewed image/PDF | Write findings NOW | Multimodal → text before lost |
 | Browser returned data | Write to file | Screenshots don't persist |
 | Starting new phase | Read plan/findings | Re-orient if context stale |

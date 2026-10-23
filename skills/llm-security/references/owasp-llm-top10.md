@@ -30,13 +30,9 @@
 | ASI09 | Human-Agent Trust Exploitation | 操纵人类操作员批准危险操作 | 权威偏差/紧迫感测试 |
 | ASI10 | Rogue Agents | Agent 自我复制/持续恶意行为 | 持久化后门检测 |
 
-## 实际数据分布
+## 数据与分类限制
 
-真实评估中发现问题占比：
-- LLM01 Prompt Injection: ~45%
-- LLM06 Sensitive Info Disclosure: ~20%
-- LLM08 Excessive Agency: ~15%
-- 其余 7 项: ~20%
+本包没有提供问题分布的数据集、样本或方法，因此不报告通用占比。风险编号必须对应所引用的具体 OWASP 版本；不要混用 LLM02/LLM06/LLM08。
 
 ## 关键防御原则
 

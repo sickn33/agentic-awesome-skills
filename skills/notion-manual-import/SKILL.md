@@ -203,6 +203,8 @@ the action and say the label may differ rather than claiming a button exists.
 Check [Notion’s import guidance](https://www.notion.com/help/import-data-into-notion)
 for the current UI and supported relation mapping.
 
+Person, Files, Relation, Formula and Rollup properties require platform-specific setup; CSV text is not evidence of live people/file/relation objects. Preserve unknown booleans separately because an unchecked checkbox cannot distinguish false from unknown. Avoid CSV formula execution when files are opened in spreadsheet tools; preserve leading-zero identifiers as text.
+
 #### Property configuration order
 
 After import, tell the user to convert properties in this order, and only the ones that
@@ -237,9 +239,9 @@ A CSV import does not create a working relation. If a field is a relation:
 
 1. import the base database first
 2. import the related database
-3. convert the field to Relation
-4. select the target database
-5. verify the linked records by hand
+3. preserve the imported text identifiers and add a separate Relation property if conversion is unavailable
+4. select the target database and manually link records using a verified unique identifier
+5. verify every link and unmatched/duplicate identifier before removing the text field
 
 Never pretend a text column became a working relation automatically.
 
@@ -319,8 +321,7 @@ I already imported my tax register but every column came in as Text.
 > Convert `Tax Period Start` and `Tax Period End` to Date, `Tax Collected on Sales`,
 > `Tax Paid on Purchases`, `Withholding Tax Deducted`, `Withholding Tax Paid to Us` and
 > `Net Tax Payable` to Number and set the currency format to the currency your business
-> uses, `Status` and `Tax Type` to Select, and `Tax ID` to Unique ID with the prefix from
-> the source schema. Leave `Tax Period`, `Tax Filing Reference` and `Notes` as Text.
+> uses, `Status` and `Tax Type` to Select, and preserve `Tax ID` as Text; add a separate generated Unique ID only if requested. Leave `Tax Period`, `Tax Filing Reference` and `Notes` as Text.
 
 **Documented shape** - a tax register field list, header-only CSV and mapping. The rows
 below are documentation examples only. Emit empty templates unless the user explicitly
@@ -352,7 +353,7 @@ Tax Record,Tax Type,Tax Period,Tax Period Start,Tax Period End,Tax Collected on 
 | Days to Due | Number | Convert to Number |
 | Status | Select | Add confirmed statuses |
 | Notes | Text | Leave as Text |
-| Tax ID | Unique ID | Prefer automatic ID |
+| Tax ID | Text | Preserve source identifiers; optional separate generated Unique ID |
 
 
 See the [Best Practices](references/best-practices.md) reference for the full guidance.

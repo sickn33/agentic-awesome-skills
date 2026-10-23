@@ -1,7 +1,7 @@
 ---
 name: sexual-health-analyzer
 description: Sexual Health Analyzer
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-06"
 ---
@@ -9,6 +9,8 @@ date_added: "2026-03-06"
 # 性健康分析技能
 
 ## Detailed Guide
+
+仅整理授权记录和筛查问题，不诊断、计算个人感染概率或自行调整治疗。紧急暴露/避孕失败应及时专业评估，不等待累计次数或检测窗口期。
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 

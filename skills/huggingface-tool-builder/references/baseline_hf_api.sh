@@ -37,4 +37,4 @@ if [[ -n "${HF_TOKEN:-}" ]]; then
     headers=(-H "Authorization: Bearer ${HF_TOKEN}")
 fi
 
-curl -s "${headers[@]}" "https://huggingface.co/api/models?limit=${LIMIT}"
+curl -fsS --connect-timeout 10 --max-time 30 "${headers[@]}" "https://huggingface.co/api/models?limit=${LIMIT}"

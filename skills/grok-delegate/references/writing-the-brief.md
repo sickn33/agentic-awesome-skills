@@ -30,7 +30,7 @@ Confirm the working tree shows only the intended changes afterward.
 
 <action_safety>
 Keep changes scoped to the task. No unrelated refactors, renames, or cleanup unless required for
-correctness. Do NOT run git add or git commit — the orchestrator commits after reviewing. Leave the
+correctness. Do NOT run git add, git commit, git push, publish, or external messaging — the orchestrator commits after reviewing. Leave the
 work uncommitted in the working tree.
 </action_safety>
 
@@ -92,7 +92,7 @@ re-dispatch.
 <task>
 In the payments service at services/billing/, the refund path double-charges when a refund is retried
 after a network timeout (the idempotency key isn't checked before re-submitting). Make the refund
-submission idempotent: check for an existing refund by idempotency key before creating a new one.
+submission idempotent: use an atomic, uniquely constrained idempotency record and the provider's idempotency key; a non-atomic check-then-create alone is insufficient.
 Touch only services/billing/refund.py and its tests. Leave the charge path, the API routes, and the
 data models untouched.
 </task>

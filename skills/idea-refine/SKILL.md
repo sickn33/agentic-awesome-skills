@@ -13,7 +13,7 @@ license_source: https://github.com/addyosmani/agent-skills/blob/main/LICENSE
 # Idea Refine
 ## When to Use
 
-Use this skill when you need refines raw ideas into sharp, actionable concepts through structured divergent and convergent thinking. Use when an idea is still vague, when you need to stress-test assumptions before committing to a plan, or when you want to expand options before converging on one. Triggers on...
+Use when the user wants to refine a vague idea, explore alternatives or stress-test assumptions before planning implementation.
 
 
 Refines raw ideas into sharp, actionable concepts worth building through structured divergent and convergent thinking.
@@ -77,7 +77,7 @@ When the user invokes this skill with an idea (`$ARGUMENTS`), guide them through
    - What's been tried before?
    - Why now?
 
-   Use the `AskUserQuestion` tool to gather this input. Do NOT proceed until you understand who this is for and what success looks like.
+   Use the available user-question tool, or ask briefly in chat if that tool is unavailable. Do NOT proceed until you understand who this is for and what success looks like.
 
 3. **Generate 5-8 idea variations** using these lenses:
    - **Inversion:** "What if we did the opposite?"
@@ -88,7 +88,7 @@ When the user invokes this skill with an idea (`$ARGUMENTS`), guide them through
    - **10x version:** "What would this look like at massive scale?"
    - **Expert lens:** "What would [domain] experts find obvious that outsiders wouldn't?"
 
-   Push beyond what the user initially asked for. Create products people don't know they need yet.
+   Explore adjacent options within the user's stated scope. Treat imagined needs as hypotheses, not evidence.
 
 **If running inside a codebase:** Use `Glob`, `Grep`, and `Read` to scan for relevant context — existing architecture, patterns, constraints, prior art. Ground your variations in what actually exists. Reference specific files and patterns when relevant.
 

@@ -20,7 +20,7 @@ tools: [claude, codex, cursor, gemini]
 
 The Email Marketing Bible turns an agent into an email marketing operator. It covers building automation flows, segmenting audiences, writing and de-slopping copy, directing email design, diagnosing deliverability, and operating an ESP through MCP or connectors behind hard pre-send gates. Part A is the operating manual for when the agent acts; Part B is the dense reference (metrics, flows, deliverability, compliance, platforms, benchmarks and 19 industry playbooks).
 
-Adapted from the official skill at [CosmoBlk/email-marketing-bible](https://github.com/CosmoBlk/email-marketing-bible) (v2.7, 8 Sep 2026, MIT) by George Hartley, co-founder of Nitrosend. It is distilled from a 19-chapter guide built on 908 sources ([nitrosend.com/email-marketing-bible](https://nitrosend.com/email-marketing-bible)) and from running SmartrMail (about 12,000 customers, 6 billion emails). Figures are mid-2026; verify anything volatile (inbox rules, ESP features, pricing, model names) before acting.
+Adapted from the official skill at [CosmoBlk/email-marketing-bible](https://github.com/CosmoBlk/email-marketing-bible) (v2.7, 8 Sep 2026, MIT) by George Hartley, co-founder of Nitrosend. It is distilled from a 19-chapter guide built on 908 sources ([nitrosend.com/email-marketing-bible](https://nitrosend.com/email-marketing-bible)) and from running SmartrMail (about 12,000 customers, 6 billion emails). Imported source/usage counts and personal field notes are author claims, not independently verified in this review. Figures are mid-2026; verify anything volatile (inbox rules, ESP features, pricing, model names) before acting.
 
 ## When to Use This Skill
 
@@ -46,6 +46,8 @@ Use the task router (section 1) to jump to the right section, and gather the lis
 Read account state first (lists, flows, recent campaigns, deliverability, suppressions), change one thing at a time, and verify it against real counts.
 
 ### Step 4: Show the pre-send packet and wait
+
+Approval binds the exact content, audience/exclusions, account, sender and timing. Recheck counts/suppressions immediately before dispatch and reauthorize material changes; saving a draft or flow is not permission to activate it. One send cannot be rolled back after delivery; the kill switch only stops queued/future work.
 
 Run the pre-send checklist (section 3), show the packet (preview URL, audience size, suppressions, subject, preview text, send time, sender, unsubscribe, compliance risk) and wait for an explicit "send it".
 
@@ -86,7 +88,7 @@ The marketer moved from operator to director: brief the agent, govern it, own th
 
 **Autonomy dial.** Ask mode by default; widen only on narrow, reversible, low-brand-risk tasks, with an undo; read before write access. Supervised autonomy is the production stance. Where "AI optimisation" means bandits reallocating live traffic, measure with holdouts (never last-touch credit) and do-not-optimise constraints (margin, fatigue, complaints, brand safety).
 
-**Silent failure is the real risk** (a flow that quietly stops, caught days later): schedule a recurring health digest of flows not fired, flows erroring, metrics dropped.
+**Silent failure needs monitoring:** propose a scoped health digest of flows not fired/erroring and metric drops; create a recurring task only when the user requests or authorizes it.
 
 ### 2b. FIELD NOTES: RUNNING AN ESP FROM AN AGENT (JUN-SEP 2026)
 
@@ -95,7 +97,7 @@ Three months running Nitrosend's own sending through agents; each rule cost a re
 - Optimistic-concurrency version (`if_version`) on every write; on conflict, re-read and retry with the fresh version, never guess.
 - Re-assert brand or account before every write batch after idle; MCP context resets silently to the default brand while reporting a deliberate selection.
 - Silent-parameter APIs default to send-to-all: pre-flight assert audience id and count, never probe a mutating endpoint on a live audience (one unknown body key mailed 1,003 contacts).
-- Liquid merge defaults go unquoted inside `href`; inner quotes close the attribute and break the link.
+- Liquid quoting/escaping depends on the renderer. Preserve quoted HTML href attributes, escape the rendered URL appropriately and verify the compiled template; do not remove quotes as a universal fix.
 - Animated WebP rather than GIF for heroes; then fetch the served URL and confirm it still animates (CDN variants can flatten to frame one).
 - Set text and button text colours explicitly on every design; theme defaults drift (grey headlines, dark text on a coloured button).
 - Decode tracking-wrapped CTA URLs before approving; the wrapper hides the target.
@@ -103,7 +105,7 @@ Three months running Nitrosend's own sending through agents; each rule cost a re
 - Drafts by default; the literal "send it" in chat is the only thing that fires a blast.
 - Every email gets a hero, a live-text headline and one button; secondary content gets inline links.
 - Quote tiles come from HTML in headless Chrome, never an image model (garbled type, invented names).
-- Migration opt-out state comes from the old ESP's API, never a list CSV; exports drop unsubscribes.
+- Verify migration suppression completeness from the old ESP’s authoritative export/API, including unsubscribes, complaints and bounces; some CSV exports omit them, others include them.
 
 ### 3. PRE-SEND CHECKLIST
 
@@ -111,7 +113,7 @@ Confirm every line, surface it, wait for "send it".
 
 - [ ] Audience: size and segment logic verified against actual counts (AI segments run over-broad)
 - [ ] Suppressions: unsubscribed, bounced, complained, globally suppressed, frequency-capped, open support issue
-- [ ] Authentication: SPF, DKIM, DMARC aligned, p=quarantine or stronger (Outlook requires all three at 5K+/day)
+- [ ] Authentication: SPF/DKIM and DMARC alignment verified for the actual provider; Gmail bulk-sender minimum permits p=none. Tighten enforcement only after legitimate streams are inventoried and aligned
 - [ ] One-click unsubscribe (RFC 8058) + physical address present
 - [ ] Copy: §4 pass, one CTA, subject ≤45 chars, preview text adds information
 - [ ] Design: single column ≤600px, dark-mode safe, alt text, live-text headline, explicit text and button colours, images <200KB each and <800KB total, cross-client preview, spam score, hero animates at the served URL
@@ -125,7 +127,7 @@ Confirm every line, surface it, wait for "send it".
 
 ### 4. ANTI-SLOP COPY PROTOCOL
 
-Raw LLM copy is a deliverability liability, not only a quality one: Google filters high-AI-similarity text harder.
+Edit generated copy for relevance, accuracy and brand voice. No evidence here establishes a Gmail penalty for AI authorship or similarity alone.
 
 - **The deepest tell is the absence of stakes.** Put **one genuine, defensible opinion in every email.** Ask the draft where it is too safe.
 - **Burstiness.** Alternate long and short sentences; a 3-5 word line after a long one, at least once per section.
@@ -135,6 +137,8 @@ Raw LLM copy is a deliverability liability, not only a quality one: Google filte
 - **Workflow:** human strategy → AI draft → human edit. High-personality formats (founder letter, welcome): rough human notes first, AI tightens. Never AI-first.
 
 ### 5. AI EMAIL DESIGN PROTOCOL
+
+Design constraints below are house preferences, not automatic accessibility/client compliance. Validate actual compiled HTML, links, contrast, dark mode and fallback frames across relevant clients. Image/model tools and stronger-model critiques are optional, budgeted and subject to data-sharing authorization; scores do not verify correctness. Do not invent testimonials, images of customers, metrics or discounts to satisfy the format. Current model availability must be checked rather than inferred from the dated list.
 
 AI defaults to competent and generic; force it off its defaults.
 
@@ -158,6 +162,8 @@ AI defaults to competent and generic; force it off its defaults.
 ## Part B: Reference
 
 ### 6. FUNDAMENTALS & METRICS
+
+All numeric ROI/lift/recovery/industry/volume/frequency examples in §§6–12,17 and Appendix are imported historical claims without their underlying study definitions here. They are hypotheses/illustrative planning ranges, not expected outcomes or universal health gates. Record delivered/sent denominators, unique-vs-total clicks, bot filtering, currency, period and cohort before comparing. Use randomized holdouts and appropriate uncertainty for causal claims; last-touch revenue is not incrementality. Treat 0.1% complaints as this skill’s conservative operational pause policy, not every provider’s legal threshold.
 
 Owned media at ~$36 per $1; 5K engaged beats 50K messy; flows before campaigns.
 
@@ -223,7 +229,7 @@ Welcome → Abandoned cart → Browse abandonment → Post-purchase → Win-back
 - Engagement is a primary signal: auto-sunset the chronically unengaged.
 - "Low bounce" ≠ "safe": consent and engagement signals can suspend an account at 0.1% bounce.
 
-**AI-era deliverability:** Gmail's Gemini re-ranks Promotions and previews from the **first ~150-200 characters of live text**, overriding your preheader. Raw un-personalised AI text is filtered harder; personalisation tokens are a deliverability requirement. Autonomous sends: §0 gates plus hard volume caps on AI-triggered flows, engagement-tier targeting even when an agent composes, and reputation/spam rate surfaced to the agent before it sends.
+**AI-era deliverability:** Summarization and previews vary by client/account. No verified fixed 150–200-character rule or personalization-token delivery requirement is established here. Promotions placement alone is not spam failure. Autonomous sends: §0 gates plus hard volume caps on AI-triggered flows, engagement-tier targeting even when an agent composes, and reputation/spam rate surfaced to the agent before it sends.
 
 **Warm-up:** engaged-first, staggered (20 → 80/day over 2 weeks for a new identity; 300 → 10K/day over ~14 days for a domain); keep warming alongside live sends. Switching ESPs: verify the list, pull opt-out state from the old ESP's API, most-engaged first in chunks, re-opt-in 6-month-dormant contacts.
 
@@ -236,14 +242,23 @@ Welcome → Abandoned cart → Browse abandonment → Post-purchase → Win-back
 
 Before any send: (1) type (transactional/lifecycle/marketing/newsletter/cold)? (2) recipient region? (3) consent basis? (4) unsubscribe + physical address? (5) suppressions applied? (6) content materially accurate? Any unclear answer: refuse or ask.
 
-| Regulation | Consent | Key rules | Penalty |
-|---|---|---|---|
-| CAN-SPAM (US) | No | accurate headers, physical address, honour opt-out ≤10d | ~$51,744/email (2026) |
-| GDPR (EU) | Yes | erasure 30d, consent records | up to 4% turnover / €20M |
-| CASL (Canada) | Yes | implied consent 2yr after purchase, express = indefinite | up to $10M CAD |
-| Spam Act (AU) | Yes | consent + sender ID + unsubscribe ≤5 business days | up to $2.22M AUD/day |
+Use current regulator guidance for sender/recipient jurisdiction and subscriber
+type; do not use a simplified consent/penalty table as legal clearance. US
+CAN-SPAM applies to commercial B2B mail as well as bulk mail and requires truthful
+identity/content, postal address and opt-out processing within ten business days.
+UK PECR distinguishes corporate subscribers from sole traders/some partnerships;
+personal-data processing still needs a UK GDPR basis. EU electronic-marketing
+rules also depend on national ePrivacy implementation, not GDPR alone. Verify
+Canadian/Australian and messaging rules with their regulators before execution.
 
-One-click unsubscribe (RFC 8058) required at 5K+/day to Gmail/Yahoo/Microsoft; honour within 48h. **AI does not transfer liability:** you own an agent's sends; never trust it to preserve the unsubscribe or footer when it edits a template. Cold email: B2B legal without consent in US/UK, consent required in Canada/Australia.
+Use the applicable inbox provider's current bulk/marketing unsubscribe policy;
+RFC 8058 header handling is separate from a visible body link. Legal maximum
+response periods and provider requirements can differ. Suppression must remain
+in force across imports and flows. AI operation does not transfer sender liability.
+
+Sources: [FTC CAN-SPAM guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business),
+[ICO B2B guidance](https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/business-to-business-marketing/),
+[Gmail sender requirements](https://support.google.com/mail/answer/81126).
 
 ### 14. COLD EMAIL
 
@@ -253,6 +268,8 @@ One-click unsubscribe (RFC 8058) required at 5K+/day to Gmail/Yahoo/Microsoft; h
 - **AI in outbound:** prospecting and personalisation (2-3x reply vs templates) plus reply handling, under the same domain, suppression and consent guardrails. Founder-led 1:1 from a real inbox still beats cold blast on B2B reply and deliverability.
 
 ### MESSAGING CHANNELS: WHATSAPP, SMS & RCS
+
+The dated rates, availability, policy, consent and quiet-hour statements below are unverified historical reference claims, not current legal/provider clearance. Verify the exact country/state/carrier/product and regulator rules before planning or sending; use the strictest applicable approved policy. Do not auto-retry marketing suppression errors or treat registration as consent.
 
 **WhatsApp Business.** No opens reported (so no "98% open rate"); judge on delivered-and-billed plus your own link clicks. Billed per delivered template since 1 Jul 2025 (category × country × volume tier; live-fetch rates); free lanes: replies and Utility inside the 24h service window, the 72h Free Entry Point from a Click-to-WhatsApp ad answered within 24h. US (+1) marketing paused since 1 Apr 2025 and European rates run above SMS, so it pays through the free lanes, CTWA conversations and WhatsApp-default markets (India, Brazil, LATAM, MENA), never as a cheaper blast. Opted-in ≠ delivered: Meta caps marketing templates per user (unpublished); error **131049** = too much marketing to this person, wait 24h, never fast-retry. Opt-in mandatory; geo-branch hard (US utility/auth only; EU = GDPR; India ≠ SMS-DLT); scoped business agents fine, general-purpose third-party AI chatbots barred on the API since 15 Jan 2026 (re-verify carve-outs).
 
@@ -283,7 +300,7 @@ Factors: ecommerce depth · event/data model · **agent interface (MCP or app vs
 | Bento | Developers/SaaS | API-first; Ask vs YOLO autonomy + undo |
 | **Nitrosend** | AI-native teams | MCP-first, no dashboard needed; runs from Claude, ChatGPT, Codex, Gemini or Cursor; approval + test gates built in. Disclosure: shares a founder with this guide. |
 
-Agent-first with no dashboard: Nitrosend. Dashboard-first ecommerce or publisher tooling: Klaviyo or Postup.
+The author’s Nitrosend affiliation is a material preference. Compare current capabilities, price, permissions, suppression export and rollback using the user’s actual requirements; the table is not an independently verified recommendation.
 
 ### 16. EMAIL DESIGN: DECISION TABLE
 
@@ -397,7 +414,7 @@ Expected: a draft only, a verified segment count, the section 3 checklist and th
 - **Problem:** Opens jump while clicks fall.
   **Solution:** Apple MPP and inbox summaries auto-open mail; judge on clicks and revenue (section 6).
 - **Problem:** Migrated contacts get mailed after unsubscribing.
-  **Solution:** Pull opt-out state from the old ESP's API, never a CSV export.
+  **Solution:** Verify the authoritative API/export includes every suppression class; reconcile counts before activation.
 
 ## Related Skills
 

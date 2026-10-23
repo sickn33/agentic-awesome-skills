@@ -287,9 +287,13 @@ Use **HTTP Request Tool** when:
 
 ---
 
+## Calculator assumptions
+
+The example computes nominal annuity/balloon payments, not statutory APR or a lending recommendation. Currency is illustrative, rounding shown is whole-unit display only, and real contracts require exact minor-unit rounding, fee timing and rate conventions. Type/schema hints do not enforce business constraints; validate finite values, positive integer months, fees and balloon/principal compatibility in code.
+
 ## Complete Working Example
 
-A production calculator tool (unstructured, JSON-in-string pattern):
+An illustrative calculator fragment requiring installed-version and numerical validation (unstructured, JSON-in-string pattern):
 
 ```json
 {
@@ -297,7 +301,7 @@ A production calculator tool (unstructured, JSON-in-string pattern):
     "name": "calculate_car_loan",
     "description": "Computes monthly car-loan payment using an annuity formula with residual/balloon. Call with a single JSON string. Example: {\"price\":439900,\"down_payment\":87980,\"interest_rate\":6.95,\"months\":36,\"residual_percent\":50,\"setup_fee\":695,\"monthly_admin_fee\":59}. Required: price, down_payment, interest_rate, months, residual_percent. Optional: setup_fee, monthly_admin_fee (default 0).",
     "language": "javaScript",
-    "jsCode": "let params;\ntry {\n  params = typeof query === 'string' ? JSON.parse(query) : query;\n} catch (e) {\n  throw new Error('Invalid JSON: ' + e.message);\n}\n\nconst price           = Number(params.price);\nconst down_payment    = Number(params.down_payment);\nconst interest_rate   = Number(params.interest_rate);\nconst months          = Number(params.months);\nconst residual_percent= Number(params.residual_percent);\nconst setup_fee       = Number(params.setup_fee ?? 0) || 0;\nconst monthly_admin_fee = Number(params.monthly_admin_fee ?? 0) || 0;\n\nif (!isFinite(price) || price <= 0) throw new Error('price must be > 0');\nif (down_payment < 0 || down_payment >= price) throw new Error('down_payment must be in [0, price)');\n\nconst principal = price - down_payment;\nconst residual  = price * (residual_percent / 100);\nconst r = interest_rate / 100 / 12;\nconst growth = Math.pow(1 + r, months);\nconst base = r === 0\n  ? (principal - residual) / months\n  : (principal - residual / growth) * r / (1 - 1 / growth);\nconst monthly_payment = base + monthly_admin_fee;\n\nreturn JSON.stringify({\n  monthly_payment_sek: Math.round(monthly_payment),\n  loan_amount: Math.round(principal),\n  residual_value_sek: Math.round(residual),\n  total_cost_of_credit: Math.round(monthly_payment * months + residual + setup_fee - principal)\n});"
+    "jsCode": "if (!query || (typeof query !== 'string' && (typeof query !== 'object' || Array.isArray(query)))) throw new Error('Expected object input');\nlet params;\ntry {\n  params = typeof query === 'string' ? JSON.parse(query) : query;\n} catch (e) {\n  throw new Error('Invalid JSON: ' + e.message);\n}\n\nif (!params || typeof params !== 'object' || Array.isArray(params)) throw new Error('Expected object');\nfor (const key of ['price','down_payment','interest_rate','months','residual_percent']) {\n  if (typeof params[key] !== 'number' || !Number.isFinite(params[key])) throw new Error(key + ' must be a finite number');\n}\nconst price           = Number(params.price);\nconst down_payment    = Number(params.down_payment);\nconst interest_rate   = Number(params.interest_rate);\nconst months          = Number(params.months);\nconst residual_percent= Number(params.residual_percent);\nconst setup_fee       = Number(params.setup_fee ?? 0);\nconst monthly_admin_fee = Number(params.monthly_admin_fee ?? 0);\n\nif (!isFinite(price) || price <= 0) throw new Error('price must be > 0');\nif (down_payment < 0 || down_payment >= price) throw new Error('down_payment must be in [0, price)');\n\nif (![price, down_payment, interest_rate, months, residual_percent, setup_fee, monthly_admin_fee].every(Number.isFinite) || price <= 0 || down_payment < 0 || down_payment >= price || interest_rate < 0 || !Number.isInteger(months) || months < 1 || months > 1200 || residual_percent < 0 || residual_percent > 99 || setup_fee < 0 || monthly_admin_fee < 0) throw new Error('Invalid loan inputs');\nconst principal = price - down_payment;\nconst residual  = price * (residual_percent / 100);\nconst r = interest_rate / 100 / 12;\nconst growth = Math.pow(1 + r, months);\nconst base = r === 0\n  ? (principal - residual) / months\n  : (principal - residual / growth) * r / (1 - 1 / growth);\nconst monthly_payment = base + monthly_admin_fee;\nif (!Number.isFinite(monthly_payment) || monthly_payment < 0) throw new Error('Invalid payment; review balloon/principal assumptions');\n\nreturn JSON.stringify({\n  monthly_payment_sek: Math.round(monthly_payment),\n  loan_amount: Math.round(principal),\n  residual_value_sek: Math.round(residual),\n  total_cost_of_credit: Math.round(monthly_payment * months + residual + setup_fee - principal)\n});"
   },
   "type": "@n8n/n8n-nodes-langchain.toolCode",
   "typeVersion": 1.3,
@@ -349,7 +353,7 @@ Before deploying a Code Tool:
 
 ---
 
-**Remember**: the Code Tool is a LangChain tool wearing a Code-node UI. Contract is: **string in, string out**. Everything else follows from that.
+**Remember**: distinguish unstructured string input from schema-defined object input; output must satisfy the installed Code Tool contract. Node typeVersion is not the same as the n8n application release.
 
 ## Limitations
 

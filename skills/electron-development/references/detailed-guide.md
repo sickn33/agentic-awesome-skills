@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Fragment boundaries
+
+Examples omit build details and must be typechecked against the installed Electron version. Main IPC must validate sender window/frame/URL and arguments, and use narrow operations. File dialogs grant user-selected paths; a renderer-supplied arbitrary path is not authorization. Install/update handlers need the same sender and explicit user-intent checks before being registered; the snippets alone do not wire those safely. Custom protocol examples need MIME types, bounded reads and error responses, plus packaged immutable assets to avoid path races.
+
 ## Instructions
 
 1. Analyze the project structure and identify process boundaries.
@@ -172,12 +176,19 @@ contextBridge.exposeInMainWorld('electronAPI', {
 **Main process IPC handlers:**
 ```typescript
 // src/main/ipc-handlers.ts
-import { ipcMain, dialog, BrowserWindow } from 'electron';
+import { app, ipcMain, dialog, BrowserWindow } from 'electron';
 import { readFile, writeFile } from 'node:fs/promises';
 
-export function registerIpcHandlers(): void {
+export function registerIpcHandlers(mainWindow: BrowserWindow): void {
+  const requireTrusted = (event: Electron.IpcMainInvokeEvent) => {
+    const frame = event.senderFrame;
+    if (!frame || event.sender !== mainWindow.webContents || frame !== mainWindow.webContents.mainFrame) throw new Error("Untrusted sender");
+    const url = new URL(frame.url);
+    if (url.protocol !== "app:" || url.hostname !== "local") throw new Error("Untrusted URL");
+  };
   // invoke() pattern: returns a value to the renderer
-  ipcMain.handle('file:open', async () => {
+  ipcMain.handle('file:open', async (event) => {
+    requireTrusted(event);
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: [{ name: 'Text Files', extensions: ['txt', 'md'] }],
@@ -189,17 +200,21 @@ export function registerIpcHandlers(): void {
     return { path: filePaths[0], content };
   });
 
-  ipcMain.handle('file:save', async (_event, filePath: string, content: string) => {
+  ipcMain.handle('file:save', async (event, _ignoredPath: unknown, content: string) => {
+    requireTrusted(event);
     // VALIDATE INPUTS — never trust renderer data blindly
-    if (typeof filePath !== 'string' || typeof content !== 'string') {
+    if (typeof content !== 'string' || Buffer.byteLength(content, 'utf8') > 1_000_000) {
       throw new Error('Invalid arguments');
     }
+    const { canceled, filePath } = await dialog.showSaveDialog(mainWindow, {});
+    if (canceled || !filePath) return { success: false };
     await writeFile(filePath, content, 'utf-8');
     return { success: true };
   });
 
-  ipcMain.handle('app:get-version', () => {
-    return process.versions.electron;
+  ipcMain.handle('app:get-version', (event) => {
+    requireTrusted(event);
+    return app.getVersion();
   });
 }
 ```
@@ -223,7 +238,7 @@ declare global {
 async function openFile() {
   const result = await window.electronAPI.invoke('file:open');
   if (result) {
-    console.log('File content:', result.content);
+    // Validate the returned shape before use; do not log arbitrary private file content.
   }
 }
 
@@ -269,16 +284,16 @@ const unsubscribe = window.electronAPI.on('update:available', (version) => {
 ── CONTENT ──
 [ ] Content Security Policy (CSP) headers set on all windows
 [ ] No use of eval(), new Function(), or innerHTML with untrusted data <!-- security-allowlist: defensive Electron checklist -->
-[ ] Remote content (if any) loaded in separate BrowserView with restricted permissions
+[ ] Remote content (if any) loaded in separate WebContentsView with restricted permissions
 [ ] protocol.registerSchemesAsPrivileged() uses minimal permissions
 
 ── NAVIGATION ──
 [ ] webContents 'will-navigate' event intercepted — block unexpected URLs
-[ ] webContents 'new-window' event intercepted — prevent pop-up exploitation
+[ ] setWindowOpenHandler() denies unexpected windows
 [ ] No shell.openExternal() with unsanitized URLs
 
 ── PACKAGING ──
-[ ] ASAR archive enabled (protects source from casual inspection)
+[ ] ASAR packaging configured (not encryption or a security boundary)
 [ ] No sensitive credentials or API keys bundled in the app
 [ ] Code signing configured for both Windows and macOS
 [ ] Auto-update uses HTTPS and verifies signatures
@@ -319,9 +334,9 @@ win.webContents.setWindowOpenHandler(({ url }) => {
 
 **Custom Protocol Registration (secure):**
 ```typescript
-import { protocol } from 'electron';
+import { app, protocol } from 'electron';
 import path from 'node:path';
-import { readFile } from 'node:fs/promises';
+import { readFile, realpath } from 'node:fs/promises';
 import { URL } from 'node:url';
 
 // Register a custom protocol for loading local assets securely
@@ -332,12 +347,13 @@ protocol.registerSchemesAsPrivileged([
 app.whenReady().then(() => {
   protocol.handle('app', async (request) => {
     const url = new URL(request.url);
-    const baseDir = path.resolve(__dirname, '../renderer');
+    if (url.hostname !== 'local' || url.username || url.password) return new Response('Forbidden', { status: 403 });
+    const baseDir = await realpath(path.resolve(__dirname, '../renderer'));
     // Strip the leading slash so path.resolve keeps baseDir as the root.
     const relativePath = path.normalize(decodeURIComponent(url.pathname).replace(/^[/\\]+/, ''));
-    const filePath = path.resolve(baseDir, relativePath);
+    const filePath = await realpath(path.resolve(baseDir, relativePath));
 
-    if (!filePath.startsWith(baseDir)) {
+    if (path.relative(baseDir, filePath).startsWith(".." + path.sep) || path.relative(baseDir, filePath) === ".." || path.isAbsolute(path.relative(baseDir, filePath))) {
       return new Response('Forbidden', { status: 403 });
     }
 
@@ -726,8 +742,8 @@ import { store } from './store';
 let mainWindow: BrowserWindow | null = null;
 
 app.whenReady().then(() => {
-  registerIpcHandlers();
   mainWindow = createMainWindow();
+  registerIpcHandlers(mainWindow);
 
   // Restore window bounds
   const bounds = store.get('windowBounds');

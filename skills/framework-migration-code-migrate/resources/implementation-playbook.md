@@ -1,6 +1,6 @@
 # Code Migration Assistant Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+This file contains design sketches, not a runnable migration toolkit. Many helper methods, imports, adapters and schemas are undefined. Do not execute generated migrations until implemented, reviewed on an isolated copy and verified against a known baseline. Timelines/scores/thresholds are illustrative, not estimates derived from this repository.
 
 # Code Migration Assistant
 
@@ -269,6 +269,8 @@ class MigrationPlanner:
 Handle specific framework migrations:
 
 **React to Vue Migration**
+
+Regex replacements below are illustrative and can produce invalid markup (for example, unbalanced onClick attributes) or alter strings/comments. Use a real parser/CST, reject unsupported nodes and test lifecycle/state semantics; do not apply this converter to source files.
 ```javascript
 class ReactToVueMigrator {
     migrateComponent(reactComponent) {
@@ -342,8 +344,7 @@ export default {
         const vueLifecycle = {
             'componentDidMount': 'mounted',
             'componentDidUpdate': 'updated',
-            'componentWillUnmount': 'beforeDestroy',
-            'getDerivedStateFromProps': 'computed'
+            'componentWillUnmount': 'beforeUnmount'  # Vue 3; derived state needs explicit redesign
         };
         
         let result = '';
@@ -388,7 +389,8 @@ class Python2to3Migrator:
             content = self._basic_syntax_conversion(content)
             tree = ast.parse(content)
         
-        # Apply transformations
+        # Python 3 AST cannot represent Python 2 print/raise syntax.
+        # Use a reviewed, version-pinned CST migration tool for syntax conversion.
         transformer = Python3Transformer()
         new_tree = transformer.visit(tree)
         
@@ -433,7 +435,6 @@ class Python2to3Migrator:
             '.iterkeys()': '.keys()',
             '.itervalues()': '.values()',
             'xrange': 'range',
-            '.has_key(': ' in '
         }
         
         for old, new in replacements.items():
@@ -445,19 +446,9 @@ class Python3Transformer(ast.NodeTransformer):
     """AST transformer for Python 3 migration"""
     
     def visit_Raise(self, node):
-        """Transform raise statements"""
-        if node.exc and node.cause:
-            # raise Exception, args -> raise Exception(args)
-            if isinstance(node.cause, ast.Str):
-                node.exc = ast.Call(
-                    func=node.exc,
-                    args=[node.cause],
-                    keywords=[]
-                )
-                node.cause = None
-        
-        return node
-    
+        # Python 3 node.cause is `raise ... from ...`; never rewrite it as an argument.
+        return self.generic_visit(node)
+
     def visit_ExceptHandler(self, node):
         """Transform except clauses"""
         if node.type and node.name:
@@ -597,6 +588,8 @@ class RESTToGraphQLMigrator {
 Migrate between database systems:
 
 **SQL to NoSQL Migration**
+
+Before any insert, implement a stable source snapshot/CDC cutoff, deterministic destination IDs and resumable idempotent upserts, fidelity rules for decimals/timezones/nulls, row counts/checksums and relation checks. This bulk-insert sketch duplicates data on retry and supplies none of those guarantees. Restore rehearsal and forward/backward compatibility are required before cutover; switching traffic back does not undo new data writes.
 ```python
 class SQLToNoSQLMigrator:
     def __init__(self, source_db, target_db):
@@ -721,7 +714,7 @@ class DatabaseMigrator:
             if value is not None:
                 doc[field] = self.convert_value(value, config['type'])
             elif config['required']:
-                doc[field] = self.get_default_value(config['type'])
+                raise ValueError(f"Missing required source field: {field}")
         
         # Add metadata
         doc['_migrated_at'] = datetime.now()
@@ -792,6 +785,8 @@ class MigrationTester:
             original_perf = self.measure_performance(self.original, metric)
             migrated_perf = self.measure_performance(self.migrated, metric)
             
+            if original_perf <= 0:
+                raise ValueError("Positive baseline required for relative comparison")
             regression = ((migrated_perf - original_perf) / original_perf) * 100
             
             results.append({
@@ -799,7 +794,7 @@ class MigrationTester:
                 'original': original_perf,
                 'migrated': migrated_perf,
                 'regression': regression,
-                'acceptable': abs(regression) <= 10  # 10% threshold
+                'acceptable': (regression >= -10 if metric == 'throughput' else regression <= 10)  # illustrative budget
             })
         
         return results

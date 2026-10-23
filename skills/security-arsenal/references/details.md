@@ -111,7 +111,7 @@ Transfer-Encoding
 ```
 # In Burp Repeater, switch to HTTP/2
 # Add Content-Length header manually (not auto-set by HTTP/2)
-# Front-end ignores CL (HTTP/2 uses :content-length pseudo-header)
+# Front-end ignores CL (HTTP/2 frames delimit message data; content-length is an ordinary header, not a pseudo-header)
 # Back-end uses CL → desync
 ```
 
@@ -120,7 +120,7 @@ Transfer-Encoding
 1. Install HTTP Request Smuggler extension
 2. Right-click request → Extensions → HTTP Request Smuggler → Smuggle probe
 3. All four probe types automatically sent
-4. ~10-second timeout on CL.TE probe = back-end waiting = CONFIRMED
+4. A timeout is only a candidate differential: repeat bounded controls and establish parser disagreement; never capture real user requests
 ```
 
 ### Impact Chain
@@ -181,21 +181,8 @@ wscat -c "wss://target.com/ws" -H "Origin: https://target.com.evil.com"
 
 ## MFA / 2FA BYPASS PAYLOADS
 
-### Pattern 1: OTP Brute Force (no rate limit)
-```bash
-# Try all 6-digit OTPs
-ffuf -u "https://target.com/api/verify-otp" \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -H "Cookie: session=YOUR_SESSION" \
-  -d '{"otp":"FUZZ"}' \
-  -w <(seq -w 000000 999999) \
-  -fc 400,429 \
-  -t 5
-
-# Rate limit bypass: rotate session tokens between requests
-# Or use GraphQL batching to send 100 attempts per request
-```
+### Pattern 1: bounded OTP rate-limit assessment
+Use an owned account and the explicitly agreed small attempt budget. Record response/backoff/lockout behavior and stop at a rate limit or lockout. Do not enumerate the million-code space, rotate identities/sessions or batch requests to evade a protection. Demonstrating missing throttling does not require successfully guessing a real user's code.
 
 ### Pattern 2: OTP Reuse (token not invalidated)
 ```
@@ -230,7 +217,7 @@ for t_offset in range(-30, 31):  # Test ±30 seconds
 
 ### Pattern 5: Backup Codes Not Rate Limited
 ```bash
-# Backup codes are typically 8-character alphanumeric = smaller space than 6-digit TOTP
+# Eight alphanumeric characters can have a much larger space than six digits; entropy depends on generator/alphabet/length
 # Try brute force on /api/verify-backup-code if no rate limit
 ```
 
@@ -249,7 +236,7 @@ for t_offset in range(-30, 31):  # Test ±30 seconds
 import asyncio, aiohttp
 
 # Race 2 MFA verifications simultaneously
-# If both succeed = parallel session ATO
+# Two successes alone do not prove ATO; verify a prohibited trust-boundary change with owned accounts
 async def verify(session, otp):
     async with session.post("https://target.com/api/mfa/verify",
                             json={"otp": otp}) as r:
@@ -356,9 +343,9 @@ gf cors         # CORS-related parameters
 ---
 
 
-## ALWAYS REJECTED — NEVER SUBMIT
+## PROGRAM-DEPENDENT REPORTING CANDIDATES
 
-Submitting these destroys your validity ratio. N/A hurts. Don't.
+Check the actual program policy; no vulnerability class is universally rejected. Describe observable impact and constraints rather than forcing a chain.
 
 ```
 Missing CSP / HSTS / X-Frame-Options / other security headers
@@ -390,7 +377,7 @@ Autocomplete on password fields
 ---
 
 
-## CONDITIONALLY VALID — REQUIRES CHAIN
+## POTENTIAL CHAINS — VERIFY PREREQUISITES
 
 These are valid ONLY when combined with a chain that proves real impact:
 
@@ -398,7 +385,7 @@ These are valid ONLY when combined with a chain that proves real impact:
 |---|---|---|
 | Open redirect | + OAuth code theft via redirect_uri abuse | ATO (Critical) |
 | Clickjacking | + sensitive action + working PoC (not just login) | Medium |
-| CORS wildcard | + credentialed request exfils user data | High |
+| CORS attacker-origin reflection | + browser accepts credentialed response exposing protected data | High |
 | CSRF | + sensitive action (transfer funds, change email) | High |
 | Rate limit bypass | + OTP/token brute force succeeding | Medium/High |
 | SSRF DNS-only | + internal service access + data retrieval | Medium |
@@ -409,12 +396,12 @@ These are valid ONLY when combined with a chain that proves real impact:
 | Subdomain takeover | + OAuth redirect_uri registered at that subdomain | Critical |
 | GraphQL introspection | + auth bypass mutation or IDOR on node() | High |
 
-**Rule:** Build the chain first, confirm it works end-to-end, THEN report. Never report A and say "could chain with B" — prove it.
+**Rule:** Separate observed impact from hypothetical chains. Do not exceed scope to complete a chain; report evidence and limitations under the program rubric. Severity cells above are illustrative, not mandatory ratings.
 
 ---
 
 
-## WORDLISTS (Installed in ~/wordlists/)
+## WORDLISTS (not bundled; verify installation and provenance)
 
 ```
 common.txt         # Common directories and files
@@ -484,13 +471,9 @@ sensitive.txt      # Sensitive paths (.env, config.json, backup, etc.)
 > this repo's 31+ skill-area live tests. The upstream payload library
 > covers the WHAT; this layer covers the WHEN-IT-WORKS-vs-WHEN-IT-DOESN'T.
 
-### Payload freshness — what's gone stale by 2026
+### Version and environment boundary
 
-The classic CL.TE / TE.CL HTTP smuggling payloads no longer work against Nginx ≥ 1.21, Caddy 2.x, Envoy ≥ 1.20 (verified in Phase 2H). They DO still work against HAProxy ≤ 2.4, older F5 BIG-IP, Citrix ADC, AWS ALB-specific configs, and Apache Traffic Server. Fingerprint the front-end first — `curl -sI` → `Server:` header + `Via:` chain + TLS JA3 — before burning hours on payloads that the parser already rejects at the front door.
-
-Same story for XXE classic — Python lxml ≥ 5.x silently drops SYSTEM entities by default (Phase 2G finding). The payloads remain valid against: Java SAX, PHP DOMDocument with LIBXML_NOENT, .NET XmlDocument with XmlResolver still wired, older lxml (< 5.0), Ruby Nokogiri with DTDLOAD, and a long tail of embedded XML processors (SOAP libraries, SAML implementations, Office document parsers). The payload library still ships these — the operator decision is whether the target's parser is in the still-vulnerable set.
-
-Other stale-by-default-but-not-everywhere payloads as of 2026: `javascript:` URLs in `<a href>` (Chrome blocks unless explicit user gesture; works in embedded WebViews, Electron, older Edge); `data:text/html` for top-level navigation (modern browsers strip in nav contexts); CRLF injection in `Location:` (most reverse proxies normalize). Always test in the actual target environment, not in a generic browser.
+Imported product/version and browser claims are not a compatibility matrix. Behavior depends on exact parser version, configuration, proxy chain and protocol translation. Identify those with reliable evidence and reproduce a bounded canary in the authorized environment; a Server header or version string alone proves neither immunity nor vulnerability. No historical live-test claim in this bundle establishes current coverage.
 
 ### WAF evaluation order matters
 
@@ -505,9 +488,7 @@ Most engagements end at step 2 — modern WAFs trip on the parser-quirk class be
 
 ### OOB-Or-It-Didn't-Happen Gate applies everywhere
 
-Every blind primitive (blind SQLi, blind XSS, blind SSRF, blind RCE, blind XXE) needs OOB confirmation. Without it, you can't tell the bug from a parser-error log. Phase 2D's hardened lab proved the gate kills FPs that look identical to real bugs at the surface — error messages with `you have an error in your SQL syntax` text in a 500 page can be parser logs from a different request entirely, hit a Burp Collaborator domain (or interactsh) and confirm callback before filing.
-
-OOB callback infrastructure ranking by 2026: (1) Burp Collaborator (Pro license; cleanest), (2) interactsh-client (open source; comparable), (3) DNSLog.cn (free but logged by third party — never use for paid engagements), (4) self-hosted catch-all DNS + HTTP listener (most reliable for long-running engagements).
+OOB is one possible validation method, not mandatory for every blind issue. Timing/boolean oracles can also provide evidence with controls. DNS callbacks prove resolution only; HTTP callbacks prove a request, not arbitrary file read or command execution. Use a callback service authorized to receive the engagement metadata, avoid secrets in labels/URLs, and document correlation plus remaining uncertainty.
 
 ### Marker discipline
 
@@ -532,7 +513,8 @@ import statistics
 def welch_t(a, b):
     ma, mb = statistics.mean(a), statistics.mean(b)
     va, vb = statistics.variance(a), statistics.variance(b)
-    return (ma - mb) / ((va/len(a) + vb/len(b)) ** 0.5)
+    denominator = (va/len(a) + vb/len(b)) ** 0.5
+    return (ma - mb) / denominator if denominator else None  # degenerate sample, not proof
 # interleave control + test trials, n=10 each, t > 3 = signal
 ```
 

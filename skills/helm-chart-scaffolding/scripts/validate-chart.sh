@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 CHART_DIR="${1:-.}"
 RELEASE_NAME="test-release"
@@ -98,14 +98,14 @@ if helm template "$RELEASE_NAME" "$CHART_DIR" > /dev/null 2>&1; then
     success "Templates rendered successfully"
 else
     error "Template rendering failed"
-    helm template "$RELEASE_NAME" "$CHART_DIR"
+    error "Inspect rendering diagnostics locally; rendered manifests may contain secrets."
     exit 1
 fi
 echo ""
 
 # 5. Dry-run installation
 echo "5️⃣  Testing dry-run installation..."
-if helm install "$RELEASE_NAME" "$CHART_DIR" --dry-run --debug > /dev/null 2>&1; then
+if helm install "$RELEASE_NAME" "$CHART_DIR" --dry-run=client > /dev/null 2>&1; then
     success "Dry-run installation successful"
 else
     error "Dry-run installation failed"
@@ -137,7 +137,7 @@ fi
 echo ""
 
 # 7. Check for security best practices
-echo "7️⃣  Checking security best practices..."
+echo "7️⃣  Advisory text scan only: one matching field does not establish every container/resource is secure."
 if echo "$MANIFESTS" | grep -q "runAsNonRoot: true"; then
     success "Running as non-root user"
 else
@@ -194,7 +194,7 @@ echo ""
 if [ -f "$CHART_DIR/Chart.yaml" ] && grep -q "^dependencies:" "$CHART_DIR/Chart.yaml"; then
     echo "🔟 Checking dependencies..."
     if helm dependency list "$CHART_DIR" > /dev/null 2>&1; then
-        success "Dependencies valid"
+        success "Dependency listing succeeded; inspect reported missing/status entries and lock consistency"
 
         if [ -f "$CHART_DIR/Chart.lock" ]; then
             success "Chart.lock file present"
@@ -203,6 +203,7 @@ if [ -f "$CHART_DIR/Chart.yaml" ] && grep -q "^dependencies:" "$CHART_DIR/Chart.
         fi
     else
         error "Dependencies check failed"
+        exit 1
     fi
     echo ""
 fi
@@ -235,7 +236,7 @@ if [ -n "$APP_VERSION" ]; then
     echo "App Version: $APP_VERSION"
 fi
 echo ""
-success "All validations passed!"
+success "Local lint/render checks completed; warnings are unresolved and no cluster/runtime/security certification is implied."
 echo ""
 echo "Next steps:"
 echo "  • helm package $CHART_DIR"

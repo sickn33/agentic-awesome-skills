@@ -26,36 +26,17 @@ API_BASE_URL = "https://agskills.moontai.top"
 CHANNEL = "allinone"
 
 
-def _load_install_id() -> str:
-    """首次运行生成uuid并持久化到 scripts/.install_id，用于渠道归因。"""
-    id_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.install_id')
-    try:
-        with open(id_file, 'r', encoding='utf-8') as f:
-            install_id = f.read().strip()
-            if install_id:
-                return install_id
-    except OSError:
-        pass
-    install_id = uuid.uuid4().hex
-    try:
-        with open(id_file, 'w', encoding='utf-8') as f:
-            f.write(install_id)
-    except OSError:
-        pass
-    return install_id
-
-
-
 class AllInOneCouponFetcher:
     """全平台优惠券获取器"""
 
-    def __init__(self, base_url: str = API_BASE_URL):
-        self.base_url = base_url.rstrip('/')
+    def __init__(self, base_url: str = API_BASE_URL, attribution_id: Optional[str] = None):
+        if base_url.rstrip('/') != API_BASE_URL:
+            raise ValueError('Only the documented HTTPS coupon origin is permitted')
+        self.base_url = API_BASE_URL
         self.session = requests.Session()
-        self.session.params.update({
-            'ch': CHANNEL,
-            'u': _load_install_id(),
-        })
+        # Optional explicit attribution only; no persistent installation identifier.
+        if attribution_id:
+            self.session.params.update({'ch': CHANNEL, 'u': attribution_id})
         self.session.headers.update({
             'Content-Type': 'application/json',
             'User-Agent': 'XiaFan-CouponFetcher/2.0'
@@ -73,17 +54,32 @@ class AllInOneCouponFetcher:
         """
         url = f"{self.base_url}/{endpoint}"
         try:
-            response = self.session.get(url, timeout=10)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
+            with self.session.get(url, timeout=(5, 10), allow_redirects=False, stream=True) as response:
+                if response.status_code != 200:
+                    raise requests.RequestException('Unexpected HTTP status')
+                body = bytearray()
+                for chunk in response.iter_content(65536):
+                    body.extend(chunk)
+                    if len(body) > 2_000_000:
+                        raise ValueError('Coupon response exceeds limit')
+                data = json.loads(body)
+                if endpoint == 'coupon/takeout':
+                    if not isinstance(data, dict):
+                        raise ValueError('Expected takeout object')
+                    for key, value in data.items():
+                        if isinstance(value, list) and not all(isinstance(c, dict) for c in value):
+                            raise ValueError('Invalid coupon entries')
+                elif not isinstance(data, list) or not all(isinstance(c, dict) for c in data):
+                    raise ValueError('Expected coupon array')
+                return data
+        except (requests.RequestException, ValueError) as e:
             # 根据endpoint确定备用技能
             backup_skill = self._get_backup_skill(endpoint)
             return {
                 "error": True,
-                "message": f"API请求失败: {str(e)}",
+                "message": f"API请求失败: {type(e).__name__}",
                 "backup_skill": backup_skill,
-                "backup_message": "API接口暂时不可用，建议安装对应的独立技能获取优惠券信息："
+                "backup_message": "API接口暂时不可用。以下是外部项目参考，不会自动安装："
             }
     
     def _get_backup_skill(self, endpoint: str) -> dict:
@@ -205,7 +201,7 @@ def format_coupon_display(coupon: Dict[str, Any], platform: str) -> str:
     """
     title = coupon.get("title", "优惠券")
     coupon_url = coupon.get("coupon_url", "")
-    coupon_qrcode_img_url = coupon.get("coupon_qrcode_img_url", "")
+    coupon_qrcode_img_url = coupon.get("coupon_qrcode_img_url") or coupon.get("coupon_h5_qrcode_img_url", "")
     coupon_code = coupon.get("coupon_code", "")
     guideline = coupon.get("guideline", "")
 
@@ -239,7 +235,7 @@ def format_takeout_coupons(data: Dict[str, Any]) -> str:
             result.append(f"\n{data.get('backup_message', '备用方案:')}")
             result.append(f"📱 {backup.get('display_name', '备用技能')}: {backup.get('description', '')}")
             result.append(f"🔗 技能地址: {backup.get('skill_url', '')}")
-            result.append(f"💡 安装建议: 使用 find-skills 技能查找并安装 '{backup.get('name', '')}'")
+            result.append('外部技能需单独审查与授权，不能假定可以修复同一API故障。')
         return "\n".join(result)
 
     result = ["【外卖优惠券】"]
@@ -272,7 +268,7 @@ def format_takeout_coupons(data: Dict[str, Any]) -> str:
         result.append("")
 
     # 聚合H5页面
-    h5_page = data.get("聚合H5页面")
+    h5_page = data.get("查找更多优惠券") or data.get("聚合H5页面")
     if h5_page:
         result.append("")
         result.append("【聚合领券页面】")
@@ -282,8 +278,10 @@ def format_takeout_coupons(data: Dict[str, Any]) -> str:
     return "\n".join(result)
 
 
-def format_parcel_coupons(data: Dict[str, Any]) -> str:
+def format_parcel_coupons(data: Any) -> str:
     """格式化快递优惠券"""
+    if isinstance(data, list):
+        return "\n\n".join(format_coupon_display(c, "快递优惠券") for c in data) if data else "暂无快递优惠券"
     if "error" in data:
         result = [f"获取失败: {data.get('message', '未知错误')}"]
         if "backup_skill" in data and data["backup_skill"].get("skill_url"):
@@ -291,7 +289,7 @@ def format_parcel_coupons(data: Dict[str, Any]) -> str:
             result.append(f"\n{data.get('backup_message', '备用方案:')}")
             result.append(f"📱 {backup.get('display_name', '备用技能')}: {backup.get('description', '')}")
             result.append(f"🔗 技能地址: {backup.get('skill_url', '')}")
-            result.append(f"💡 安装建议: 使用 find-skills 技能查找并安装 '{backup.get('name', '')}'")
+            result.append('外部技能需单独审查与授权，不能假定可以修复同一API故障。')
         return "\n".join(result)
 
     return format_coupon_display(data, "快递优惠券")
@@ -310,7 +308,7 @@ def format_trip_coupons(coupons: List[Dict[str, Any]]) -> str:
             result.append(f"\n{error_data.get('backup_message', '备用方案:')}")
             result.append(f"📱 {backup.get('display_name', '备用技能')}: {backup.get('description', '')}")
             result.append(f"🔗 技能地址: {backup.get('skill_url', '')}")
-            result.append(f"💡 安装建议: 使用 find-skills 技能查找并安装 '{backup.get('name', '')}'")
+            result.append('外部技能需单独审查与授权，不能假定可以修复同一API故障。')
         return "\n".join(result)
 
     result = ["【出行优惠券】"]
@@ -330,8 +328,10 @@ def format_trip_coupons(coupons: List[Dict[str, Any]]) -> str:
     return "\n".join(result)
 
 
-def format_movie_coupons(data: Dict[str, Any]) -> str:
+def format_movie_coupons(data: Any) -> str:
     """格式化电影票优惠券"""
+    if isinstance(data, list):
+        return "\n\n".join(format_coupon_display(c, "电影票优惠券") for c in data) if data else "暂无电影票优惠券"
     if "error" in data:
         result = [f"获取失败: {data.get('message', '未知错误')}"]
         if "backup_skill" in data and data["backup_skill"].get("skill_url"):
@@ -339,7 +339,7 @@ def format_movie_coupons(data: Dict[str, Any]) -> str:
             result.append(f"\n{data.get('backup_message', '备用方案:')}")
             result.append(f"📱 {backup.get('display_name', '备用技能')}: {backup.get('description', '')}")
             result.append(f"🔗 技能地址: {backup.get('skill_url', '')}")
-            result.append(f"💡 安装建议: 使用 find-skills 技能查找并安装 '{backup.get('name', '')}'")
+            result.append('外部技能需单独审查与授权，不能假定可以修复同一API故障。')
         return "\n".join(result)
 
     return format_coupon_display(data, "电影票优惠券")
@@ -351,7 +351,7 @@ def format_all_coupons(all_data: Dict[str, Any]) -> str:
 
     # 外卖优惠券
     takeout = all_data.get("外卖优惠券", {})
-    if not isinstance(takeout, dict) or "error" not in takeout:
+    if isinstance(takeout, dict):
         result.append(format_takeout_coupons(takeout))
         result.append("")
         result.append("=" * 60)
@@ -359,7 +359,7 @@ def format_all_coupons(all_data: Dict[str, Any]) -> str:
 
     # 快递优惠券
     parcel = all_data.get("快递优惠券", {})
-    if not isinstance(parcel, dict) or "error" not in parcel:
+    if isinstance(parcel, (dict, list)):
         result.append(format_parcel_coupons(parcel))
         result.append("")
         result.append("=" * 60)
@@ -375,7 +375,7 @@ def format_all_coupons(all_data: Dict[str, Any]) -> str:
 
     # 电影票优惠券
     movie = all_data.get("电影票优惠券", {})
-    if not isinstance(movie, dict) or "error" not in movie:
+    if isinstance(movie, (dict, list)):
         result.append(format_movie_coupons(movie))
 
     return "\n".join(result)
@@ -402,9 +402,10 @@ if __name__ == "__main__":
     parser.add_argument("--json", "-j", action="store_true",
                         help="输出原始JSON数据")
 
+    parser.add_argument("--attribution-id", help="Optional explicit affiliate attribution identifier; sent to the coupon provider, never stored")
     args = parser.parse_args()
 
-    fetcher = AllInOneCouponFetcher()
+    fetcher = AllInOneCouponFetcher(attribution_id=args.attribution_id)
 
     if args.json:
         # 输出原始JSON

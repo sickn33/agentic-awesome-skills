@@ -1,6 +1,6 @@
 # API Design Principles Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+These are partial design sketches with missing application helpers/types. Never expose real user data without authentication, tenant/object authorization and privacy-aware responses. Field aliases, scalar validation, per-request loaders, query cost limits and atomic idempotency require implementation and tests.
 
 ## Core Concepts
 
@@ -210,7 +210,7 @@ class UserResponse(BaseModel):
     id: str
     name: str
     email: str
-    _links: dict
+    links: dict = Field(alias="_links")
 
     @classmethod
     def from_user(cls, user: User, base_url: str):
@@ -358,7 +358,9 @@ async def resolve_users(
 ) -> dict:
     """Resolve paginated user list."""
     # Decode cursor
-    offset = decode_cursor(after) if after else 0
+    offset = decode_cursor(after) + 1 if after else 0
+    if not 1 <= first <= 100:
+        raise ValueError("first must be between 1 and 100")
 
     # Fetch users
     users = await fetch_users(
@@ -499,15 +501,12 @@ def create_context():
 - **Inconsistent Error Formats**: Standardize error responses
 - **Missing Rate Limits**: APIs without limits are vulnerable to abuse
 - **Poor Documentation**: Undocumented APIs frustrate developers
-- **Ignoring HTTP Semantics**: POST for idempotent operations breaks expectations
+- **Ignoring HTTP Semantics**: POST is not inherently idempotent; application idempotency can be implemented explicitly
 - **Tight Coupling**: API structure shouldn't mirror database schema
 
 ## Resources
 
 - **references/rest-best-practices.md**: Comprehensive REST API design guide
 - **references/graphql-schema-design.md**: GraphQL schema patterns and anti-patterns
-- **references/api-versioning-strategies.md**: Versioning approaches and migration paths
 - **assets/rest-api-template.py**: FastAPI REST API template
-- **assets/graphql-schema-template.graphql**: Complete GraphQL schema example
 - **assets/api-design-checklist.md**: Pre-implementation review checklist
-- **scripts/openapi-generator.py**: Generate OpenAPI specs from code

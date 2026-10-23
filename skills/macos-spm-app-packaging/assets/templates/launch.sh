@@ -4,10 +4,13 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME=${APP_NAME:-MyApp}
+# AAS review: constrain names before constructing removal paths, process patterns or XML.
+[[ "$APP_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] || { echo "Invalid APP_NAME" >&2; exit 1; }
+
 APP_PATH="$PROJECT_ROOT/${APP_NAME}.app"
 
 echo "==> Killing existing ${APP_NAME} instances"
-pkill -x "$APP_NAME" || pkill -f "${APP_NAME}.app" || true
+# Do not terminate other same-named applications. Stop the exact running bundle manually if needed.
 sleep 0.5
 
 if [[ ! -d "$APP_PATH" ]]; then

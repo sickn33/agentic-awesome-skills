@@ -3,6 +3,9 @@
 set -euo pipefail
 
 APP_NAME=${APP_NAME:-MyApp}
+# AAS review: constrain names before constructing removal paths, process patterns or XML.
+[[ "$APP_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] || { echo "Invalid APP_NAME" >&2; exit 1; }
+
 CERT_NAME="${APP_NAME} Development"
 
 if security find-certificate -c "$CERT_NAME" >/dev/null 2>&1; then

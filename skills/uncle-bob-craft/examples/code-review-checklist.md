@@ -37,7 +37,7 @@ Copy-paste this checklist when performing a principle-based code review with the
 ## 5. Tests and professionalism
 
 - [ ] Touched code has or is covered by tests where appropriate.
-- [ ] No "we'll fix it later" or "TODO: refactor" that clearly violates sustainable pace or quality.
+- [ ] Deferred work has a clear risk, owner and follow-up where needed; a TODO alone does not establish poor professionalism.
 - [ ] Commit/PR is coherent and does not leave the codebase worse.
 
 ---

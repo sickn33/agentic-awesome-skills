@@ -18,6 +18,10 @@ SAM/CDK deployment, and cold start optimization.
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
+## Scope and validation
+
+Before deployment confirm account/region, IAM scope, resource changes, data retention and budget. Review the synthesized template/change set and verify in a scoped development environment. Bundled material is documentation only; helper handlers and deployment files shown in snippets are not present or runtime-tested here. Secrets need approved managed storage and least-privilege roles; do not paste credentials into logs.
+
 ## Monitor memory usage
 
 ```javascript

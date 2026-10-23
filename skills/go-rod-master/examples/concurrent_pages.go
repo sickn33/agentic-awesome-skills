@@ -39,6 +39,7 @@ func main() {
 	var mu sync.Mutex
 	results := make(map[string]string)
 
+	// Pool entries reuse their incognito context across tasks; do not mix users/tenants.
 	// Scrape all URLs concurrently
 	var wg sync.WaitGroup
 	for _, url := range urls {

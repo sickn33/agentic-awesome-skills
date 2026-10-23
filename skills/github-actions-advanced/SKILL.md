@@ -5,7 +5,7 @@ description: >
   workflows, matrix builds, self-hosted runners, OIDC authentication, caching,
   environments, secrets, and release automation.
 category: devops
-risk: safe
+risk: critical
 source: community
 date_added: "2026-05-30"
 ---
@@ -63,7 +63,7 @@ jobs:
 # ❌ UNSAFE — tag can be mutated or hijacked
 - uses: actions/checkout@v4
 
-# ✅ SAFE — commit SHA is immutable
+# Full SHA prevents tag movement; verify its origin and content (not a safety certification)
 - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
 
 # Tool to automate SHA pinning:
@@ -95,7 +95,8 @@ reference the shell variable with quotes.
 ### 4. Restrict `pull_request_target` Usage
 
 ```yaml
-# Only run when a maintainer adds a specific label — prevents untrusted execution
+# A label/association gate alone does NOT prevent untrusted execution.
+# Use this event only for trusted base-code metadata tasks with narrow permissions.
 on:
   pull_request_target:
     types: [labeled]
@@ -110,10 +111,12 @@ jobs:
        github.event.pull_request.author_association == 'OWNER')
 ```
 
+Privileged jobs must not execute PR-controlled code or artifacts regardless of label. Check actor authorization and exact reviewed head for any separately approved action; a push after labeling changes the code. Restrict OIDC audience/subject to the exact repository and branch/environment, with minimal cloud roles. Never promote untrusted caches/artifacts into deployment code.
+
 ### 5. Harden with StepSecurity
 
 ```yaml
-# Add to every workflow — hardens runner, monitors outbound traffic
+# Optional third-party control: review version, permissions, supported runner and telemetry handling before adoption.
 - uses: step-security/harden-runner@4d991eb9995541a0b71d1b66f1f98a5f1bef422c  # v2.11.0
   with:
     egress-policy: audit          # Start with 'audit', move to 'block' after confirming allowlist

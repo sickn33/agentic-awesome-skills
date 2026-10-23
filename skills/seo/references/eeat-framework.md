@@ -9,28 +9,13 @@ E-E-A-T = **E**xperience, **E**xpertise, **A**uthoritativeness, **T**rustworthin
 Trustworthiness is the most important factor. It is assessed based on the
 other three signals plus direct trust indicators.
 
-## CRITICAL: December 2025 Core Update
+## Evidence boundary
 
-> **E-E-A-T now applies to ALL competitive queries, not just YMYL.**
-
-The December 2025 core update was described as a "watershed moment" that:
-- Extended E-E-A-T evaluation to virtually all competitive queries
-- Made author attribution standards tighter across all categories
-- Penalized anonymous or generic authorship even for non-YMYL content
-- Significantly improved AI content quality detection
-
-**Impact by industry:**
-| Industry | Traffic Drops |
-|----------|--------------|
-| Affiliate sites | 71% average decline |
-| Health/YMYL | 67% average decline |
-| E-commerce | 52% average decline |
-
-**Key takeaway:** Even entertainment and lifestyle content now requires demonstrated expertise. Generic content no longer ranks.
+E-E-A-T is a self-assessment framework, not a specific ranking factor or a numerical Google score. Raters do not directly change rankings. The weights below are this skill's editorial rubric. No verified evidence is provided here for December 2025 update-specific penalties or industry traffic percentages; do not repeat those claims. Never invent credentials, experience, testimonials or author identities to satisfy a checklist.
 
 ## YMYL (Your Money or Your Life)
 
-Topics requiring **highest** E-E-A-T standards (but E-E-A-T now matters everywhere):
+Topics requiring **highest** E-E-A-T standards (with especially high trust needs):
 - Health and safety
 - Financial advice and transactions
 - Legal information
@@ -57,7 +42,7 @@ First-hand knowledge and personal involvement with the topic.
 - **Strong**: Multiple first-hand experience signals, original content
 - **Moderate**: Some personal experience evident
 - **Weak**: Generic information, no personal touch
-- **None**: Clearly AI-generated or scraped content
+- **None**: No relevant first-hand evidence; AI authorship alone does not establish quality
 
 ---
 
@@ -130,7 +115,7 @@ The most important factor, overall reliability and transparency.
 ### AI Content Assessment
 Raters now formally evaluate whether content appears AI-generated:
 - AI content is **acceptable** if it demonstrates genuine E-E-A-T
-- Low-quality AI content (generic, no unique value) is penalized
+- Low-value scaled content may violate spam policies regardless of production method
 - The presence of AI-generated content is not inherently penalizing
 - What matters: does the content provide unique value regardless of creation method?
 
@@ -160,13 +145,7 @@ New machine-readable content licensing standard (December 2025) for AI training:
 
 ## Experience Signals Are Critical Differentiators
 
-The December 2025 update elevated the "Experience" dimension as a key differentiator:
-- First-person narrative ("I tested this...", "In my experience...")
-- Original photos and screenshots (not stock images)
-- Specific examples with verifiable details
-- Process documentation showing actual work done
-
-**Why:** AI can generate expertise-sounding content but cannot fabricate genuine experience.
+Useful evidence can include verifiable tests, original photos, specific examples and process documentation. First-person wording alone proves no experience, and fabricated evidence must never be added.
 
 ---
 

@@ -1,6 +1,6 @@
 # Account Management
 
-Detailed patterns for managing Cosmos DB accounts via Azure Resource Manager.
+Detailed patterns for managing Cosmos DB accounts via Azure Resource Manager. Modified: secret redaction, SDK property names and closed-public-network example. Private endpoint/DNS connectivity must be provisioned and verified separately. Delete, key rotation and failover examples require exact-resource authorization and a recovery plan. Documentation IPs below are placeholders, not service allowlists.
 
 ## Create Account with Full Configuration
 
@@ -47,12 +47,12 @@ var accountData = new CosmosDBAccountCreateOrUpdateContent(
     },
 
     // Networking
-    PublicNetworkAccess = CosmosDBPublicNetworkAccess.Enabled,
+    PublicNetworkAccess = CosmosDBPublicNetworkAccess.Disabled,
     IsVirtualNetworkFilterEnabled = false,
 
     // Features
-    EnableFreeTier = false,
-    EnableAnalyticalStorage = true,
+    IsFreeTierEnabled = false,
+    IsAnalyticalStorageEnabled = true,
     AnalyticalStorageSchemaType = AnalyticalStorageSchemaType.WellDefined,
 
     // Tags
@@ -130,17 +130,17 @@ await foreach (var account in subscription.GetCosmosDBAccountsAsync())
 ```csharp
 // Get keys
 var keys = await account.GetKeysAsync();
-Console.WriteLine($"Primary Key: {keys.Value.PrimaryMasterKey}");
-Console.WriteLine($"Secondary Key: {keys.Value.SecondaryMasterKey}");
-Console.WriteLine($"Primary Read-Only: {keys.Value.PrimaryReadonlyMasterKey}");
-Console.WriteLine($"Secondary Read-Only: {keys.Value.SecondaryReadonlyMasterKey}");
+// Pass the key directly to an approved secret store; never print it.
+// Do not log secondary keys.
+// Read-only keys are still secrets.
+// Do not log read-only keys.
 
 // Get connection strings
 var connectionStrings = await account.GetConnectionStringsAsync();
 foreach (var cs in connectionStrings.Value.ConnectionStrings)
 {
     Console.WriteLine($"{cs.Description}:");
-    Console.WriteLine($"  {cs.ConnectionString}");
+    // Connection-string value omitted.
 }
 
 // Regenerate key
@@ -192,9 +192,9 @@ var accountData = new CosmosDBAccountCreateOrUpdateContent(location, locations)
 {
     IPRules =
     {
-        new CosmosDBIPAddressOrRange { IPAddressOrRange = "104.42.195.92" },
-        new CosmosDBIPAddressOrRange { IPAddressOrRange = "40.76.54.131" },
-        new CosmosDBIPAddressOrRange { IPAddressOrRange = "52.176.6.30/32" }
+        new CosmosDBIPAddressOrRange { IPAddressOrRange = "192.0.2.10" },
+        new CosmosDBIPAddressOrRange { IPAddressOrRange = "198.51.100.20" },
+        new CosmosDBIPAddressOrRange { IPAddressOrRange = "203.0.113.30/32" }
     }
 };
 ```

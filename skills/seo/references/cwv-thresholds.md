@@ -13,10 +13,10 @@
 - INP replaced FID (First Input Delay) on **March 12, 2024**. FID was fully removed from all Chrome tools (CrUX API, PageSpeed Insights, Lighthouse) on **September 9, 2024**. INP is the sole interactivity metric.
 - Evaluation uses the **75th percentile** of real user data (field data from CrUX).
 - Google assesses at the **page level** and the **origin level**.
-- Core Web Vitals are a **tiebreaker** ranking signal: they matter most when content quality is similar between competitors.
+- Core Web Vitals are used by ranking systems, but good scores do not guarantee rankings and no fixed tiebreaker weight is established.
 - **Thresholds unchanged since original definitions**: ignore claims of "tightened thresholds" from SEO blogs.
-- December 2025 core update appeared to weight **mobile CWV more heavily**.
-- As of October 2025: **57.1%** desktop sites and **49.7%** mobile sites pass all three CWV.
+- Do not infer update-specific CWV ranking weights from correlations.
+- Report pass rates only with a dated CrUX dataset, population and query; this bundle does not substantiate a global percentage.
 
 ## LCP Subparts (February 2025 CrUX Addition)
 
@@ -105,4 +105,4 @@ npx lighthouse URL --output json --output-path report.json
 - **LCP subparts** added to CrUX (February 2025): Time to First Byte (TTFB), resource load delay, resource load time, and element render delay are now available as sub-components of LCP in CrUX data.
 - **Google Search Console 2025 features** (December 2025): AI-powered configuration for automated analysis. Branded vs. non-branded queries filter. Hourly data available in API. Custom chart annotations. Social channels tracking.
 
-> **Mobile-first indexing** is 100% complete as of July 5, 2024. Google now crawls and indexes ALL websites exclusively with the mobile Googlebot user-agent. Ensure your mobile version contains all critical content, structured data, and meta tags.
+> **Mobile-first indexing** is 100% complete as of July 5, 2024. Mobile-first indexing is the default for Search; do not generalize this to every Google crawler or product. Ensure your mobile version contains all critical content, structured data, and meta tags.

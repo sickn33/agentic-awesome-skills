@@ -4,6 +4,9 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_NAME=${APP_NAME:-MyApp}
+# AAS review: constrain names before constructing removal paths, process patterns or XML.
+[[ "$APP_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] || { echo "Invalid APP_NAME" >&2; exit 1; }
+
 APP_BUNDLE="${ROOT_DIR}/${APP_NAME}.app"
 APP_PROCESS_PATTERN="${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
 DEBUG_PROCESS_PATTERN="${ROOT_DIR}/.build/debug/${APP_NAME}"
@@ -30,7 +33,7 @@ log "==> Killing existing ${APP_NAME} instances"
 pkill -f "${APP_PROCESS_PATTERN}" 2>/dev/null || true
 pkill -f "${DEBUG_PROCESS_PATTERN}" 2>/dev/null || true
 pkill -f "${RELEASE_PROCESS_PATTERN}" 2>/dev/null || true
-pkill -x "${APP_NAME}" 2>/dev/null || true
+# Avoid broad name-only killing: it can terminate a different project’s app.
 
 if [[ "${RUN_TESTS}" == "1" ]]; then
   log "==> swift test"
