@@ -916,7 +916,7 @@
       ],
       "baseTree": "79779b1ed85f6f5878299af68efc9f1f37fd4008",
       "beforeSha256": "4acb86d443147de0c243c3107c2c5cb25fd46eb97821f732ec161e8fed4a9ce5",
-      "afterSha256": "e318394a51cb4fbb63d1bc0b9ffd1bb0923af3ac58d9132fac163d2c00f631b2",
+      "afterSha256": "2177e172887aef11b88177a35fa237d39250d6e1a2b09763ac96eaee276f75ac",
       "disposition": "corrected",
       "reviewNote": "Claimed built-in templates were absent; clarify external collection and explicit metric definitions."
     },
@@ -1444,7 +1444,7 @@
       ],
       "baseTree": "4c20a030743e71cede89cec8f232f56561f9a344",
       "beforeSha256": "3be08d2b435f06c86819efbf2da1898689cdba0978e06019c2dcb7a364cade55",
-      "afterSha256": "4a894c7a54c6538b2c63aa738d4b29e955b9e1a5972d24d5d4a05788daa7cf24",
+      "afterSha256": "15d301c28334c9f9a7b37ba28889e40b7cd2336b54d6748b6596cd73fbece74f",
       "disposition": "corrected",
       "reviewNote": "Mainnet relayer recipe assumed package identity and settlement; mark historical/unverified and require testnet and explicit transaction authority."
     },
