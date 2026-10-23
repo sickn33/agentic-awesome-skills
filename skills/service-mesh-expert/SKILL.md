@@ -1,6 +1,6 @@
 ---
 name: service-mesh-expert
-description: "Expert service mesh architect specializing in Istio, Linkerd, and cloud-native networking patterns. Masters traffic management, security policies, observability integration, and multi-cluster mesh con"
+description: "Review Istio or Linkerd topology, traffic policies, mTLS, observability and multi-cluster operations within an authorized environment."
 risk: safe
 source: community
 date_added: "2026-02-27"
@@ -52,7 +52,7 @@ Expert service mesh architect specializing in Istio, Linkerd, and cloud-native n
 
 ## Best Practices
 
-- Start with permissive mode, gradually enforce strict mTLS
+- Preserve existing strict mTLS. Use a scoped permissive migration only when explicitly justified and authorized, with a rollback plan and tests for rejected plaintext traffic
 - Use namespaces for policy isolation
 - Implement circuit breakers before they're needed
 - Monitor mesh overhead (latency, resource usage)

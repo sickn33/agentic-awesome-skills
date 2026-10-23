@@ -12,7 +12,7 @@ date_added: "2026-06-02"
 
 This skill redirects to `tdd-workflows-tdd-cycle`. Load it from the vault:
 
-`skill-libraries/testing/tdd-workflows-tdd-cycle/SKILL.md`
+`../tdd-workflows-tdd-cycle/SKILL.md` relative to this skill directory. Confirm that the target is installed and read its complete instructions; if absent, report the missing dependency instead of claiming execution.
 
 ## When to Use
 - Use this skill when working with tdd workflows tdd cycle (Alias for tdd-workflows-tdd-cycle)

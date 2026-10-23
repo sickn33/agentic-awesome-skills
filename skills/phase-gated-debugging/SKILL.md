@@ -26,7 +26,7 @@ Use this skill when:
 
 ### Phase 1: REPRODUCE
 Run the failing command/test. Capture the exact error. Run 2-3 times for consistency.
-- Do NOT read source code
+- Inspect the command and its side effects before reproduction; do not execute unknown code blindly
 - Do NOT hypothesize
 - Do NOT edit any files
 
@@ -43,7 +43,7 @@ State: "This is my root cause analysis: [explanation]. Do you agree, or should I
 **WAIT for user confirmation. Do NOT proceed without it.**
 
 ### Phase 4: FIX
-Remove all `// DEBUG` lines. Apply minimal change addressing confirmed root cause.
+Remove only the diagnostic lines added for this investigation; preserve pre-existing logging and user edits. Apply minimal change addressing confirmed root cause.
 - Only edit files related to root cause
 - Do NOT refactor unrelated code
 
@@ -78,3 +78,7 @@ If verification fails: root cause was wrong, go back to Phase 2.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+This Markdown guide does not bundle the upstream enforcement hook. Reproduction must use authorized fixtures and bounded runs; never repeat destructive or externally visible actions solely to meet a repetition count. User instructions about autonomy or stopping take precedence over the interview cadence. Failed verification calls for reassessing evidence, not assuming every failure proves the same root cause false.

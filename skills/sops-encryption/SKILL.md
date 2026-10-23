@@ -41,9 +41,9 @@ Use this skill when:
 brew install sops
 
 # Linux
-wget https://github.com/getsops/sops/releases/download/v3.8.0/sops-v3.8.0.linux.amd64
-chmod +x sops-v3.8.0.linux.amd64
-mv sops-v3.8.0.linux.amd64 /usr/local/bin/sops
+# Choose a supported release for the actual OS/architecture.
+# Verify publisher signatures/checksums through an independent trusted channel
+# before execution; use an authorized install destination.
 ```
 
 ## Basic Usage
@@ -52,8 +52,8 @@ mv sops-v3.8.0.linux.amd64 /usr/local/bin/sops
 # Encrypt with AWS KMS
 sops --encrypt --kms arn:aws:kms:region:account:key/key-id secrets.yaml > secrets.enc.yaml
 
-# Decrypt
-sops --decrypt secrets.enc.yaml
+# Decrypt only into a private authorized destination; never print plaintext in captured logs
+# Review the installed SOPS output options before decrypting
 
 # Edit encrypted file
 sops secrets.enc.yaml
@@ -122,3 +122,7 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+## Execution boundaries
+
+Review encryption output before replacing originals. Decrypting to stdout can expose secrets in agent/tool logs. Use synthetic data for validation, restrict output permissions and never commit plaintext. The abbreviated encrypted Kubernetes example is illustrative, not a valid ciphertext to deploy.
