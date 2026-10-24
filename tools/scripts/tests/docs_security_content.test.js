@@ -606,10 +606,14 @@ assert.match(securityAntivirusGuide, /does not itself run/i);
 assert.match(securityAntivirusGuide, /does not prove safety/i);
 assert.match(securityAntivirusGuide, /evidence of execution/i);
 
+const slidesBytecodeDirectory = path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', '__pycache__');
+const slidesBytecodeBefore = fs.existsSync(slidesBytecodeDirectory)
+  ? fs.readdirSync(slidesBytecodeDirectory).sort()
+  : [];
 for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
   const helpRun = spawnSync(
     process.env.PYTHON || 'python3',
-    [path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', scriptName), '--help'],
+    ['-B', path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', scriptName), '--help'],
     { encoding: 'utf8' },
   );
   assert.strictEqual(
@@ -621,7 +625,7 @@ for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
 
 const voiceListRun = spawnSync(
   process.env.PYTHON || 'python3',
-  [path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', 'generate_narration.py'), '--list-voices'],
+  ['-B', path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', 'generate_narration.py'), '--list-voices'],
   { encoding: 'utf8' },
 );
 assert.strictEqual(
@@ -630,6 +634,11 @@ assert.strictEqual(
   `generate_narration.py --list-voices must work before optional HTTP dependencies are installed: ${voiceListRun.stderr}`,
 );
 assert.match(voiceListRun.stdout, /Puck/, '2slides voice listing should include documented default voice');
+assert.deepStrictEqual(
+  fs.existsSync(slidesBytecodeDirectory) ? fs.readdirSync(slidesBytecodeDirectory).sort() : [],
+  slidesBytecodeBefore,
+  'read-only 2slides smoke checks must not create bytecode files in canonical skill resources',
+);
 
 function violationCount(list) {
   return list.length;
