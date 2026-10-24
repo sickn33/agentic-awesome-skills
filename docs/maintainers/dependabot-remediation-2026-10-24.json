@@ -1,0 +1,335 @@
+{
+  "base": "dda521de21f2cbcba0d8b8476e13f106fd7c3bdd",
+  "initialOpenAlerts": [
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "number": 191,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "number": 190,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "number": 189,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "plugins/agentic-awesome-skills/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "number": 188,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "plugins/agentic-awesome-skills/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "number": 187,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "plugins/agentic-awesome-skills-claude/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "number": 186,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "plugins/agentic-awesome-skills-claude/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "number": 185,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "1.20.9",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "plugins/agentic-awesome-skills-claude/skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "number": 184,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-w74x-v6f9-j3xg",
+      "manifest": "package-lock.json",
+      "number": 183,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-xhq7-xmqj-769h",
+      "manifest": "package-lock.json",
+      "number": 182,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-wjr9-j795-jxcr",
+      "manifest": "package-lock.json",
+      "number": 181,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-333x-w4r6-6crp",
+      "manifest": "package-lock.json",
+      "number": 180,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "8.12.2",
+      "ghsa": "GHSA-xjj6-f33q-929c",
+      "manifest": "apps/web-app/package-lock.json",
+      "number": 179,
+      "package": "undici",
+      "severity": "high"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-w74x-v6f9-j3xg",
+      "manifest": "apps/web-app/package-lock.json",
+      "number": 176,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-xhq7-xmqj-769h",
+      "manifest": "apps/web-app/package-lock.json",
+      "number": 175,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-wjr9-j795-jxcr",
+      "manifest": "apps/web-app/package-lock.json",
+      "number": 174,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-333x-w4r6-6crp",
+      "manifest": "apps/web-app/package-lock.json",
+      "number": 173,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-w74x-v6f9-j3xg",
+      "manifest": "apps/aas-plugin/package-lock.json",
+      "number": 171,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-xhq7-xmqj-769h",
+      "manifest": "apps/aas-plugin/package-lock.json",
+      "number": 170,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-wjr9-j795-jxcr",
+      "manifest": "apps/aas-plugin/package-lock.json",
+      "number": 169,
+      "package": "fast-uri",
+      "severity": "medium"
+    },
+    {
+      "fix": "3.1.9",
+      "ghsa": "GHSA-333x-w4r6-6crp",
+      "manifest": "apps/aas-plugin/package-lock.json",
+      "number": 168,
+      "package": "fast-uri",
+      "severity": "low"
+    },
+    {
+      "fix": "2.4.0",
+      "ghsa": "GHSA-27r3-jxmh-p828",
+      "manifest": "apps/aas-plugin/package-lock.json",
+      "number": 167,
+      "package": "body-parser",
+      "severity": "high"
+    },
+    {
+      "fix": "10.7.4",
+      "ghsa": "GHSA-rxp7-6hxx-x8q5",
+      "manifest": "plugins/agentic-awesome-skills-claude/skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "number": 165,
+      "package": "ip-address",
+      "severity": "medium"
+    }
+  ],
+  "canonicalAudits": [
+    {
+      "lockfile": "package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "apps/web-app/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "apps/aas-plugin/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "skills/loki-mode/examples/todo-app-generated/frontend/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    {
+      "lockfile": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    }
+  ],
+  "status": "All 23 alert paths patched; seven canonical audits zero. Protected exact-head checks and actual post-merge GitHub resolution pending.",
+  "noRelease": true,
+  "canonicalLocks": [
+    {
+      "path": "apps/aas-plugin/package-lock.json",
+      "beforeSha256": "926b7e11a3c24e0adf2154e058e4ade3b4043f6ee136e8361e2f1e00482bb2e4",
+      "afterSha256": "a4840bc873e95282a2fce70434b0867412916db4e64bcb575682bd94856323a3"
+    },
+    {
+      "path": "apps/web-app/package-lock.json",
+      "beforeSha256": "94b5a11c91c72a488dc18ef6bb5acb441449f2fcb921b0ce95d7bc40929b5ce9",
+      "afterSha256": "951ac9a07d77708bc8818b0951762e6c8104a949a49cc8e633409faf8fefc4c4"
+    },
+    {
+      "path": "package-lock.json",
+      "beforeSha256": "e2b961023be52deef055efb55860f0caf22ee9c656b729be96fbd5f2d4ba1988",
+      "afterSha256": "4ce97d8e71089c7341814d8241411d337d7d18831e1d50cbc1605d8f7d629e9e"
+    },
+    {
+      "path": "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "beforeSha256": "4e1d583b334a0c6686dc5c0c57c8d229f07b3b6cbd8c657e874176a7a355fed3",
+      "afterSha256": "dfa758f1b49ae255fcddf5a1ecbae95b6b1651d8f5ef4cd6545ecbc631ab725e"
+    },
+    {
+      "path": "skills/loki-mode/examples/todo-app-generated/frontend/package-lock.json",
+      "beforeSha256": "79e1805a95623331a20fbc50f70f8715ff355f9f42c1985b3c7959bd07351d48",
+      "afterSha256": "79e1805a95623331a20fbc50f70f8715ff355f9f42c1985b3c7959bd07351d48"
+    },
+    {
+      "path": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "beforeSha256": "7218fb51bf57591b72f622e982abb6c44984e9f8aa116f74794146538d05c8c1",
+      "afterSha256": "00db84d5625acbc70bd379a108c05499db4a16fd151428d905c43c59128bf890"
+    },
+    {
+      "path": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "beforeSha256": "b1d0a678fea0f4e2573bd185c3a4ef792ad109c16ec60b474bd10a0ce3cc16c2",
+      "afterSha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
+    }
+  ],
+  "replicas": [
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "canonical": "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "sha256": "dfa758f1b49ae255fcddf5a1ecbae95b6b1651d8f5ef4cd6545ecbc631ab725e"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "00db84d5625acbc70bd379a108c05499db4a16fd151428d905c43c59128bf890"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "00db84d5625acbc70bd379a108c05499db4a16fd151428d905c43c59128bf890"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
+    }
+  ],
+  "replicaPolicyBase": "11681e64343ef4771e9678ea204dd70a8c049ea2"
+}
