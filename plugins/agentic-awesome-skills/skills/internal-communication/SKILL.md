@@ -135,7 +135,7 @@ CREATE TABLE internal_communication (
   attendees VARCHAR(255),
   agenda VARCHAR(255),
   action_items VARCHAR(255),
-  follow_up_date DATE NOT NULL,
+  follow_up_date DATE,
   meeting_link TEXT,
   status VARCHAR(100) NOT NULL,
   communication_id SERIAL PRIMARY KEY,
@@ -161,7 +161,7 @@ CREATE INDEX idx_internal_communication_status ON internal_communication (status
       "Attendees": { "type": "string" },
       "Agenda": { "type": "string" },
       "Action Items": { "type": "string" },
-      "Follow-up Date": { "type": "string", "format": "date" },
+      "Follow-up Date": { "type": ["string", "null"], "format": "date" },
       "Meeting Link": { "type": "string", "format": "uri" },
       "Status": { "type": "string" },
       "Communication ID": { "type": "integer" }
@@ -169,7 +169,6 @@ CREATE INDEX idx_internal_communication_status ON internal_communication (status
   "required": [
       "Type",
       "Date",
-      "Follow-up Date",
       "Status"
   ]
 }
@@ -303,7 +302,7 @@ News is scattered across five chats and nobody knows what is official.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
@@ -316,3 +315,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Follow-up Date may be blank/null when none is agreed. Sent/Acknowledged are recorded facts requiring actual delivery/acknowledgment evidence; a completed template does not send a message or prove readership.

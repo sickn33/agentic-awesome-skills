@@ -26,7 +26,7 @@ Secure Windows servers following Microsoft security baselines and CIS benchmarks
 ## Prerequisites
 
 - Windows Server 2019 or later (2022 recommended)
-- Local Administrator or Domain Admin access
+- Only the least privilege required for the approved host/policy; Domain Admin is not a default prerequisite.
 - PowerShell 5.1+ (built into Windows Server)
 - Group Policy Management Console for domain environments
 - Microsoft Security Compliance Toolkit (recommended)
@@ -37,14 +37,14 @@ Secure Windows servers following Microsoft security baselines and CIS benchmarks
 # Download and apply Microsoft Security Baseline
 # Download from: https://www.microsoft.com/en-us/download/details.aspx?id=55319
 
-# Install Security Compliance Toolkit modules
+# These optional community DSC modules are not the Security Compliance Toolkit; review publisher/version before separate installation.
 Install-Module -Name SecurityPolicyDsc -Force
 Install-Module -Name AuditPolicyDsc -Force
 Install-Module -Name PSDesiredStateConfiguration -Force
 
 # Import and apply a security baseline GPO (from Security Compliance Toolkit)
 # Extract the toolkit, then:
-Import-Module "$env:USERPROFILE\Downloads\SCT\LGPO.exe"
+# LGPO.exe is an executable, not a PowerShell module. Verify the downloaded Microsoft binary signature and version.
 
 # Apply local group policy from baseline
 .\LGPO.exe /g ".\GPO\{baseline-gpo-guid}"
@@ -61,7 +61,8 @@ secedit /export /cfg C:\SecurityAudit\current-policy.inf
 # ============================================
 
 # Set password policy via net accounts
-net accounts /minpwlen:14 /maxpwage:90 /minpwage:1 /uniquepw:24
+# Example local-account settings only; align password expiry with current approved policy rather than blanket 90-day rotation.
+net accounts /minpwlen:14 /minpwage:1 /uniquepw:24
 
 # Or configure via PowerShell DSC
 Configuration PasswordPolicy {
@@ -71,7 +72,7 @@ Configuration PasswordPolicy {
         AccountPolicy PasswordPolicy {
             Name                                = "PasswordPolicy"
             Minimum_Password_Length              = 14
-            Maximum_Password_Age                = 90
+            Maximum_Password_Age                = 0  # illustrative no periodic expiry; current baseline/incident policy governs
             Minimum_Password_Age                = 1
             Enforce_password_history             = 24
             Password_must_meet_complexity_requirements = "Enabled"
@@ -104,9 +105,9 @@ foreach ($account in $unnecessaryAccounts) {
 }
 
 # Configure Local Administrator Password Solution (LAPS)
-# Install LAPS module
-Install-WindowsFeature -Name RSAT-AD-PowerShell
-Import-Module AdmPwd.PS
+# Legacy Microsoft LAPS example only: RSAT-AD-PowerShell does not install AdmPwd.PS.
+# Prefer built-in Windows LAPS with its current schema/permissions/backup policy; do not mix legacy and modern commands.
+Import-Module AdmPwd.PS  # only when legacy LAPS was intentionally installed and remains supported
 
 # Configure LAPS for the OU
 Set-AdmPwdComputerSelfPermission -OrgUnit "OU=Servers,DC=example,DC=com"
@@ -254,9 +255,15 @@ Get-NetFirewallRule -Enabled True | Format-Table DisplayName, Direction, Action,
 netsh advfirewall export "C:\SecurityAudit\firewall-rules.wfw"
 
 # Find overly permissive rules
-Get-NetFirewallRule -Enabled True -Direction Inbound |
-    Where-Object { $_.RemoteAddress -eq "Any" -and $_.Action -eq "Allow" } |
-    Format-Table DisplayName, LocalPort, RemoteAddress, Profile
+Get-NetFirewallRule -Enabled True -Direction Inbound -Action Allow |
+    ForEach-Object {
+        $rule = $_
+        $address = $rule | Get-NetFirewallAddressFilter
+        $port = $rule | Get-NetFirewallPortFilter
+        if ($address.RemoteAddress -contains 'Any') {
+            [pscustomobject]@{ DisplayName=$rule.DisplayName; LocalPort=$port.LocalPort; RemoteAddress=$address.RemoteAddress; Profile=$rule.Profile }
+        }
+    }
 ```
 
 ## Audit Policy Configuration
@@ -351,7 +358,7 @@ Set-MpPreference -DisableScriptScanning $false
 # Cloud Protection
 # ============================================
 Set-MpPreference -MAPSReporting Advanced
-Set-MpPreference -SubmitSamplesConsent SendAllSamples
+Set-MpPreference -SubmitSamplesConsent SendSafeSamples  # confirm privacy/data-transfer policy
 Set-MpPreference -CloudBlockLevel High
 Set-MpPreference -CloudExtendedTimeout 50
 
@@ -362,7 +369,7 @@ Set-MpPreference -ScanScheduleDay Everyday
 Set-MpPreference -ScanScheduleTime 02:00:00
 Set-MpPreference -ScanParameters FullScan
 
-# Quick scan daily, full scan weekly
+# The configuration above schedules a daily full scan, not a weekly one. Choose a validated host-specific schedule.
 Set-MpPreference -ScanScheduleQuickScanTime 12:00:00
 
 # Scan removable drives
@@ -377,27 +384,27 @@ Set-MpPreference -DisableScanningNetworkFiles $false
 
 # Block executable content from email and webmail
 Add-MpPreference -AttackSurfaceReductionRules_Ids BE9BA2D9-53EA-4CDC-84E5-9B1EEEE46550 `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # Block Office applications from creating child processes
 Add-MpPreference -AttackSurfaceReductionRules_Ids D4F940AB-401B-4EFC-AADC-AD5F3C50688A `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # Block credential stealing from LSASS
 Add-MpPreference -AttackSurfaceReductionRules_Ids 9E6C4E1F-7D60-472F-BA1A-A39EF669E4B2 `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # Block process creations from PSExec and WMI commands
 Add-MpPreference -AttackSurfaceReductionRules_Ids D1E49AAC-8F56-4280-B9BA-993A6D77406C `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # Block JavaScript and VBScript from launching downloaded content
 Add-MpPreference -AttackSurfaceReductionRules_Ids D3E037E1-3EB8-44C8-A917-57927947596D `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # Block Office macros from calling Win32 API
 Add-MpPreference -AttackSurfaceReductionRules_Ids 92E97FA1-2EDF-4476-BDD6-9DD0B4DDDC7B `
-    -AttackSurfaceReductionRules_Actions Enabled
+    -AttackSurfaceReductionRules_Actions AuditMode
 
 # View ASR rule status
 Get-MpPreference | Select-Object -ExpandProperty AttackSurfaceReductionRules_Ids
@@ -407,7 +414,7 @@ Get-MpPreference | Select-Object -ExpandProperty AttackSurfaceReductionRules_Act
 # Exclusions (minimize these)
 # ============================================
 # Only add exclusions when absolutely necessary and document the reason
-Add-MpPreference -ExclusionPath "C:\AppData\SpecificApp" # Reason: false positive on app binary
+# No default exclusion: investigate/submit false positives and require a narrowly approved exception.
 
 # Review current exclusions
 Get-MpPreference | Select-Object -ExpandProperty ExclusionPath
@@ -452,3 +459,9 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+### Deployment boundaries
+
+These are separate version/role-specific fragments, not a safe-to-run baseline script or compliance certification. Inventory OS/build, server role, domain policy precedence and break-glass access; export protected backups before mutation and stage rollout with remote-console recovery. English account names/audit subcategories vary by locale: resolve built-in identities by SID and policy IDs. Do not rename/disable an active management identity before validating an alternate.
+
+Creating narrow firewall allows does not override existing broad allow rules; review the effective policy before claiming network restriction. The outbound examples do not restrict egress while DefaultOutboundAction remains Allow. Audit categories need relevant SACLs and retention/forwarding capacity; logs/transcripts can capture secrets and require protected ACLs/redaction. Configure a collector/subscription for WEF; wecutil qc on its own does not create forwarding. ASR starts in audit and only enforces after compatibility review. Reboot requirements and UEFI-locked controls require explicit recovery planning. No Windows policy or script was executed.

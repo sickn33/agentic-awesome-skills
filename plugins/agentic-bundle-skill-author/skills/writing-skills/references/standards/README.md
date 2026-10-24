@@ -21,7 +21,7 @@ Comprehensive reference for creating effective agent skills.
 
 **Project-local alternative:**
 ```
-.agent/skills/{skill-name}/SKILL.md
+<host-documented-skills-directory>/{skill-name}/SKILL.md
 ```
 
 ## Naming Rules
@@ -81,8 +81,8 @@ metadata:
 ```
 
 **Rules:**
-- Start with "Use when..."
-- Put triggers under `metadata.triggers`
+- Describe the capability and when it applies
+- Use `metadata.triggers` only if supported by the host
 - Keep under 500 characters
 - Use third person (not "I" or "You")
 
@@ -109,7 +109,7 @@ my-skill/
   troubleshooting.md    # Common issues
 ```
 
-**Supporting file frontmatter is required** (for any `.md` besides `SKILL.md`):
+**Supporting file frontmatter is optional unless the target repository requires it** (for any `.md` besides `SKILL.md`):
 
 ```markdown
 ---
@@ -121,7 +121,7 @@ metadata:
 ---
 ```
 
-This frontmatter helps the LLM locate the right file when referenced from `SKILL.md`.
+Use descriptive links from SKILL.md; optional reference metadata is not a portable discovery mechanism.
 
 Reference from SKILL.md:
 ```markdown

@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # Publisher/Media SEO Strategy Template
 
 ## Industry Characteristics
@@ -123,7 +125,7 @@ Publishers face highest E-E-A-T scrutiny.
 
 - **Google News automatic inclusion:** Google News no longer accepts manual applications (since March 2025). Inclusion is fully automatic based on Google's content quality criteria. Focus on Google News sitemap markup and consistent, high-quality publishing cadence.
 - **KPI shift:** Traffic-based KPIs (sessions, pageviews) are declining in relevance as AI Overviews reduce click-through rates. Leading publishers are shifting to: subscriber conversions, time on page, scroll depth, newsletter signups, AI citation frequency, and revenue per visitor.
-- **Site reputation abuse risk:** Publishers hosting third-party content (coupons, product reviews, affiliate content) under their domain are at high risk. Google penalized Forbes, WSJ, Time, and CNN for this in late 2024. If hosting third-party content, ensure strong editorial oversight and clear first-party involvement.
+- **Site reputation abuse risk:** Publishers hosting third-party content (coupons, product reviews, affiliate content) under their domain are at high risk. Google penalized Forbes, WSJ, Time, and CNN for this in late 2024. Evaluate current policy, purpose, integration and applicable region; editorial oversight alone is not a blanket exemption from site reputation policy.
 
 ## Technical Considerations
 
@@ -141,7 +143,7 @@ Publishers face highest E-E-A-T scrutiny.
 ### Pagination
 - Proper pagination for multi-page articles
 - Or infinite scroll with proper indexing
-- Canonical to page 1 or full article
+- Give distinct paginated content its own canonical; use a full-article canonical only if it truly represents the complete equivalent content
 
 ## Key Metrics to Track
 

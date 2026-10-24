@@ -33,7 +33,7 @@ Omentir is an open-source AI sales workspace for LinkedIn. This skill tells the 
 
 ## Prerequisites
 
-- An Omentir account with a LinkedIn account connected inside Omentir. The hosted service is Pro at $49/month; self-hosting is free under MIT.
+- An Omentir account with a LinkedIn account connected inside Omentir. Verify current hosted pricing and self-hosting prerequisites; the MIT source license does not guarantee zero hosting or provider costs.
 - The Omentir MCP server connected in the host: `https://omentir.com/api/agent/v1/mcp` (streamable HTTP). Sign-in is OAuth 2.1. An API key from https://omentir.com/api-keys also works as `Authorization: Bearer <key>`.
 - Installing this skill alone does not connect the server.
 
@@ -66,6 +66,8 @@ Replies go through `omentir_reply_to_lead` on a captured thread, or `omentir_rep
 ## Grok Bot
 
 Installed plugins are account-wide. Attach this plugin with `@omentir`. Keep this stop rule in the Bot description: research and draft only. Never send. Never enroll. Never sign into LinkedIn.
+
+Review current tool schemas and confirm that creating a discovery agent cannot enroll leads or schedule sends in the chosen mode. A draft/research request does not authorize outreach, even if the service planner can send later. Score only relevant business evidence, keep source uncertainty and avoid sensitive personal attributes; minimize CSV/transcript disclosure. The catalog is not proof that the remote service enforces send limits.
 
 ## Examples
 

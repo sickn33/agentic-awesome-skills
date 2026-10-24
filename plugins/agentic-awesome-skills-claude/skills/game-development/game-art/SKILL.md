@@ -96,7 +96,7 @@ What feeling should the game evoke?
 
 ## 4. Animation Principles
 
-### The 12 Principles (Applied to Games)
+### Selected Animation Principles (Applied to Games)
 
 | Principle | Game Application |
 |-----------|------------------|
@@ -137,8 +137,8 @@ What feeling should the game evoke?
 
 Choose a base unit and stick to it:
 - Pixel art: Work at 1x, scale up (never down)
-- HD art: Define DPI, maintain ratio
-- 3D: 1 unit = 1 meter (industry standard)
+- HD screen art: define pixel dimensions, intended display scale and aspect ratio; DPI metadata alone does not determine on-screen size
+- 3D: record and convert the tool/engine unit convention (some use centimeters); validate imported scale against a known physical dimension
 
 ---
 

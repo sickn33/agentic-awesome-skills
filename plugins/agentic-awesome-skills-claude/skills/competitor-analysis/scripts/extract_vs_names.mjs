@@ -9,30 +9,13 @@
 // Output: newline-delimited JSON to stdout, one object per candidate:
 //   { "name": "serper", "hits": 3, "domain": "serper.dev", "example": "Tavily vs Serper..." }
 
-import sanitizeFilename from 'sanitize-filename';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
 import { readdirSync, readFileSync } from 'fs';
 import { isAbsolute, join, relative, resolve } from 'path';
 
 const args = process.argv.slice(2);
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeCliPath(value, base = process.cwd()) { return checkedPath(value, base); }
 
-function safeCliPath(pathValue, baseDir = process.cwd()) {
-  const root = resolve(baseDir);
-  const target = resolve(root, ...sanitizePathSegments(pathValue));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || isAbsolute(rel)) {
-    throw new Error(`Path escapes allowed directory: ${pathValue}`);
-  }
-  return target;
-}
 
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
@@ -79,7 +62,7 @@ if (files.length === 0) {
 const allResults = [];
 for (const f of files) {
   try {
-    const d = JSON.parse(readFileSync(join(dir, f), 'utf-8'));
+    const d = JSON.parse(readFileSync(insidePath(dir, f), 'utf-8'));
     const rs = Array.isArray(d) ? d : d.results || [];
     allResults.push(...rs);
   } catch {}
@@ -94,7 +77,7 @@ for (const r of allResults) {
   if (!r.url) continue;
   try {
     const h = new URL(r.url).hostname.replace(/^www\./, '');
-    const root = h.split('.').slice(-2).join('.');
+    const root = h; // Preserve the full hostname; last-two-label guessing breaks public suffixes such as co.uk.
     const rootBase = root.split('.')[0];
     if (seedSet.has(rootBase)) continue;
     if (!hostMap.has(root)) hostMap.set(root, h);

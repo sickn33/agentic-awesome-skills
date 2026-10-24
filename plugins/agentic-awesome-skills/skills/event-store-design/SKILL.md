@@ -126,10 +126,11 @@ CREATE TABLE subscription_checkpoints (
 
 ```python
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Optional, List
 from uuid import UUID, uuid4
 import json
+import asyncio
 import asyncpg
 
 @dataclass
@@ -141,7 +142,7 @@ class Event:
     event_id: UUID = field(default_factory=uuid4)
     version: Optional[int] = None
     global_position: Optional[int] = None
-    created_at: datetime = field(default_factory=datetime.utcnow)
+    created_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class EventStore:
@@ -158,6 +159,9 @@ class EventStore:
         """Append events to a stream with optimistic concurrency."""
         async with self.pool.acquire() as conn:
             async with conn.transaction():
+                # Serialize ALL appenders before allocating positions. This simple global
+                # lock trades throughput for commit-consistent polling; every writer must use it.
+                await conn.execute("SELECT pg_advisory_xact_lock(784291)")
                 # Check expected version
                 if expected_version is not None:
                     current = await conn.fetchval(
@@ -259,7 +263,7 @@ class EventStore:
                 """,
                 subscription_id
             )
-            position = checkpoint or from_position
+            position = from_position if checkpoint is None else checkpoint
 
         while True:
             events = await self.read_all(position, batch_size)
@@ -352,10 +356,10 @@ def read_stream(stream_name: str, from_revision: int = 0):
     ]
 
 # Subscribe to all
-async def subscribe_to_all(handler, from_position: int = 0):
+def subscribe_to_all(handler, from_position: int = 0):
     subscription = client.subscribe_to_all(commit_position=from_position)
-    async for event in subscription:
-        await handler({
+    for event in subscription:
+        handler({
             'type': event.type,
             'data': json.loads(event.data),
             'stream_id': event.stream_name,
@@ -373,7 +377,7 @@ def read_category(category: str):
 ```python
 import boto3
 from boto3.dynamodb.conditions import Key
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import uuid
 
@@ -384,27 +388,26 @@ class DynamoEventStore:
 
     def append_events(self, stream_id: str, events: list, expected_version: int = None):
         """Append events with conditional write for concurrency."""
-        with self.table.batch_writer() as batch:
-            for i, event in enumerate(events):
-                version = (expected_version or 0) + i + 1
-                item = {
-                    'PK': f"STREAM#{stream_id}",
-                    'SK': f"VERSION#{version:020d}",
-                    'GSI1PK': 'EVENTS',
-                    'GSI1SK': datetime.utcnow().isoformat(),
-                    'event_id': str(uuid.uuid4()),
-                    'stream_id': stream_id,
-                    'event_type': event['type'],
-                    'event_data': json.dumps(event['data']),
-                    'version': version,
-                    'created_at': datetime.utcnow().isoformat()
-                }
-                batch.put_item(Item=item)
+        # Single-event teaching example; no batch atomicity or automatic retry.
+        if len(events) != 1 or expected_version is None or expected_version < 0:
+            raise ValueError("Supply exactly one event and a nonnegative expected version")
+        event = events[0]
+        version = expected_version + 1
+        item = {
+            'PK': f"STREAM#{stream_id}",
+            'SK': f"VERSION#{version:020d}",
+            'event_id': str(uuid.uuid4()),
+            'event_type': event['type'],
+            'event_data': json.dumps(event['data']),
+            'version': version,
+        }
+        self.table.put_item(Item=item, ConditionExpression='attribute_not_exists(PK)')
         return events
 
     def read_stream(self, stream_id: str, from_version: int = 0):
         """Read events from a stream."""
         response = self.table.query(
+            ConsistentRead=True,
             KeyConditionExpression=Key('PK').eq(f"STREAM#{stream_id}") &
                                   Key('SK').gte(f"VERSION#{from_version:020d}")
         )
@@ -422,7 +425,7 @@ class DynamoEventStore:
 DynamoDB Table:
   - PK (Partition Key): String
   - SK (Sort Key): String
-  - GSI1PK, GSI1SK for global ordering
+  - No global subscription ordering implemented here
 
 Capacity: On-demand or provisioned based on throughput needs
 """
@@ -455,3 +458,34 @@ Capacity: On-demand or provisioned based on throughput needs
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Implementation limits and verification
+
+The PostgreSQL sequence alone is not commit order: concurrent transactions can
+allocate positions then commit out of order, causing a polling checkpoint to skip
+late commits. The teaching implementation serializes all appenders with one
+transaction advisory lock; bypassing it invalidates that guarantee and its
+throughput must be measured. The unique stream/version constraint already supplies
+the stream index. Append-only permissions, stable request/event IDs and duplicate
+request reconciliation still need implementation: a UUID primary key prevents a
+duplicate insert but does not turn retries into successful idempotent responses.
+Never reuse mutated in-memory event versions as proof a transaction committed.
+
+The DynamoDB example is one conditional event write, not a complete event store:
+it prevents overwrite at that key but does not atomically check a stream-head
+version, fill gaps, deduplicate requests, implement global ordering or multi-event
+batches. Use a transaction with a conditional head record for those guarantees;
+read_stream returns only one query page and must follow LastEvaluatedKey to finish.
+Do not checkpoint an eventually consistent timestamp GSI as a total order.
+
+The esdbclient example uses the synchronous client/iterator with a synchronous
+handler; use its version-matched async client for an async service. Its plaintext
+localhost URI is for an isolated development server only; use authenticated TLS
+for remote connections. Category streams need enabled/configured system
+projections. Bound reads, implement shutdown/backpressure and one checkpoint owner
+per subscription. Handlers can repeat after failure: make their external effects
+idempotent or transactional. Snapshots are an optimization, not the source of truth.
+Rehearse concurrent appends, interrupted commits, duplicate IDs, projection replay
+and restore before deployment. Avoid raw personal data in immutable events; define
+retention and lawful redaction/crypto-erasure policies rather than absolute claims
+that historical data can never be removed.

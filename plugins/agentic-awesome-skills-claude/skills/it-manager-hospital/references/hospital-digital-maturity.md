@@ -11,8 +11,8 @@ A comprehensive guide for the evolution of technological and clinical processes 
 
 ### HIMSS (Healthcare Information and Management Systems Society)
 - **EMRAM (Electronic Medical Record Adoption Model):** Stages 0 to 7.
-- **Stage 6:** Full Clinical Decision Support (CDSS), closed-loop medication, and paperless nursing.
-- **Stage 7:** Full Interoperability, Advanced Data Analytics (AI), and zero dependency on paper documents.
+- **Stage 6:** Advanced maturity; criteria depend on the current model/version and require formal assessment.
+- **Stage 7:** Highest EMRAM stage; use the current official model and assessor criteria rather than treating AI deployment or a paperless claim as sufficient.
 
 ### JCI (Joint Commission International)
 - Rigorous global standards for patient safety, facility management, and high-quality clinical care.
@@ -22,7 +22,7 @@ A comprehensive guide for the evolution of technological and clinical processes 
 | Credential | Level | Focus | Provider |
 |---|---|---|---|
 | **CAHIMS** | Associate | Entry-level health IT knowledge. | HIMSS |
-| **CPHIMS** | Professional | 5+ years experience IT + 3 years health. | HIMSS |
+| **CPHIMS** | Professional | Eligibility depends on education/experience route; verify the current HIMSS candidate handbook. | HIMSS |
 | **CHCIO** | Executive | CIO level leadership and strategic vision. | CHIME |
 | **cpTICS** | Specialist | Brazilian standards, LGPD, and PEP. | SBIS |
 

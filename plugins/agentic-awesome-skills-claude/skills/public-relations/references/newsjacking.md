@@ -39,15 +39,15 @@ A repeatable workflow Claude can run on demand or daily.
 3. **Angle** — generate 2–3 angles per story using the [angle library](#story-angle-library)
 4. **Validate** — sanity-check: do you actually have the expertise/data to back this angle?
 5. **Pitch** — draft a tight pitch to 3–5 journalists who cover this beat (see [journalist-pitching.md](journalist-pitching.md))
-6. **Post** — also publish on your blog, LinkedIn, X — it builds the trail journalists check before quoting you
+6. **Draft a post** — with explicit publication authorization, publish on your blog, LinkedIn, X — it builds the trail journalists check before quoting you
 
 Output format Claude should produce:
 
 ```
 NEWSJACK CANDIDATE — 2026-06-10
 
-Story: "EU passes AI Act amendment requiring agent registration"
-Source: TechCrunch, 3h ago
+Story: "[Fictional policy-news example; verify actual legislation before use]"
+Source: [verified primary source and publication/event times]
 Score: 8/10 (high relevance, fresh, you have proprietary data)
 
 Angles:

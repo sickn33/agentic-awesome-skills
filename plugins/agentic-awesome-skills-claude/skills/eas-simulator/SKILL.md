@@ -9,7 +9,7 @@ source_repo: expo/skills
 source_type: official
 source: expo
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -19,7 +19,7 @@ risk: unknown
 
 > **EAS service - costs apply.** EAS Simulator is a hosted EAS service. Session usage is subject to your account's pricing and limits. See https://expo.dev/pricing for current terms.
 
-EAS Simulator runs a remote iOS simulator or Android emulator on EAS infrastructure that you drive from your machine — from the CLI, from an AI agent (via `agent-device`), and from a browser preview. It's the unlock for **environments that can't run a simulator locally** (Linux boxes, cloud/background agents like Cursor Cloud), and for letting an agent *verify* a change on a real device instead of only reasoning about code.
+EAS Simulator runs a remote iOS simulator or Android emulator on EAS infrastructure that you drive from your machine — from the CLI, from an AI agent (via `agent-device`), and from a browser preview. It's the unlock for **environments that can't run a simulator locally** (Linux boxes, cloud/background agents like Cursor Cloud), and for letting an agent *verify* a change on a remote simulator/emulator rather than only reasoning about code.
 
 The `simulator:*` commands are **experimental and hidden**, and need a recent eas-cli (≥ 20.3.0 as of writing) — which is why this skill runs everything via `npx --yes eas-cli@latest`. Flags and verbs may change; **the relevant subcommand's `--help` output is authoritative.**
 
@@ -38,10 +38,10 @@ the session. Ask before exceeding a stated budget or expanding beyond the reques
 
 ## Prerequisites
 
-- **Run every `eas` command via `npx --yes eas-cli@latest …`** — guarantees a CLI new enough to have `simulator:*` (a global `eas` is often too old), and `--yes` skips npx's prompt. (Bare `eas` is fine if `eas --version` is current.)
+- **Run every `eas` command via `npx --yes eas-cli@latest …`** — resolves a recent CLI, but does not guarantee feature availability or account access (a global `eas` is often too old), and `--yes` skips npx's prompt. (Bare `eas` is fine if `eas --version` is current.)
 - **Authenticated.** Interactive machine → `npx --yes eas-cli@latest login`. **Cloud sandbox / CI / headless agent has no browser login — set `EXPO_TOKEN`** (expo.dev → Account → Access Tokens) in the env instead. Verify either way with `npx --yes eas-cli@latest whoami`.
 - Run from an Expo **project directory.** A fresh app needs one-time setup: `npx --yes eas-cli@latest init` to create/link the project (when there's no `projectId`), and **set `ios.bundleIdentifier`** in app config if it's missing — a fresh `create-expo-app` often has none, and `prebuild`/`eas build` need it (they prompt or fail without it; e.g. `dev.<owner>.<slug>`). Read current config with `npx expo config --json` (it may live in `app.config.js`). The first Mode-C run is slow (native build); later runs reuse it.
-- A controller to drive the device. This skill uses **agent-device** (open source, MIT), run on demand via `npx agent-device@latest` — nothing globally installed. **Appium** and **argent** are alternative automation interfaces; `web-preview-only` has no automation interface. See [references/controllers.md].
+- A controller to drive the device. This skill uses **agent-device** (open source, MIT), run on demand via `npx agent-device@latest` — nothing globally installed. **Appium** and **argent** are alternative automation interfaces; `web-preview-only` has no automation interface. See [references/controllers.md](references/controllers.md).
 - **`.env.eas-simulator`** is written/managed by eas-cli (not this skill): it holds the session id (`EAS_SIMULATOR_SESSION_ID`) + the daemon URL/**token**, so `get`/`stop`/`exec` default to that session (usually **omit `--id`**; pass `--id <id>` to target another). It carries a **token → keep it gitignored** (eas-cli marks it "do not commit" but may not add the ignore rule, and a fresh app's `.gitignore` won't cover it — add `.env.eas-simulator` if missing).
 - **The command blocks assume a POSIX shell** (bash/zsh) — `printf`, `lsof`, `$(seq …)` loops won't run in cmd/PowerShell. On Windows, run them in WSL or Git Bash, or translate as you go (the `eas-cli`/`agent-device` invocations themselves are cross-platform).
 
@@ -94,8 +94,8 @@ npx --yes eas-cli@latest simulator:stop
 printf '# managed by eas-cli\n' > .env.eas-simulator
 ```
 
-To **watch** it live, hand the user the `webPreviewUrl` that `start` prints. All current session types include a browser preview; `agent-device`, `appium`, and `argent` also provide automation, while `web-preview-only` provides no automation interface. **This URL is for the *user's* browser — you cannot open it for them, and it must never touch the sim:**
-- **"Open it here" (Cursor/VS Code)** → print the URL on its own line and tell the user to open Simple Browser (`Cmd/Ctrl+Shift+P` → "Simple Browser: Show") and paste it. Then **stop**: do not shell out to a system browser or a Cursor/VS Code URL handler, and do not ask "did a tab appear?" — you can't confirm it, the handoff is done.
+To **watch** it live, hand the user the `webPreviewUrl` that `start` prints. All current session types include a browser preview; `agent-device`, `appium`, and `argent` also provide automation, while `web-preview-only` provides no automation interface. **This URL belongs in a local browser preview, never on the simulated device. Treat it as potentially sensitive. If the host provides an authorized browser-opening tool, use it when requested; otherwise hand off the link:**
+- **"Open it here" (Cursor/VS Code)** → print the URL on its own line and tell the user to open Simple Browser (`Cmd/Ctrl+Shift+P` → "Simple Browser: Show") and paste it. Use the host-supported browser-opening surface when available, or provide a manual handoff; do not claim a tab opened without tool evidence.
 - **Never `open` the `webPreviewUrl` on the sim.** It's a browser preview, not a deep link and not an `agent-device open` argument; routing it to the device renders a browser-in-a-browser (a real past failure).
 - **Headless agent** (no display) → just return the URL as the deliverable.
 - **Keeping it alive for the user to drive** → use `--max-duration-minutes N` when supported, otherwise use the service's default limit. Browser-preview activity does not reset `--max-idle-time-minutes`, so idle timeout is not a reliable lifetime bound for this case. Tell the user when the session expires, using the CLI's reported duration or expiry. Keep it running for the requested preview; stop sessions created for one-shot tasks when the task finishes.
@@ -123,7 +123,7 @@ Rules:
 - If the user names it, use their name as-is.
 - Sessions are per-run, so name each new one for that run. Don't reuse an old name for different work.
 
-`--name` is newer than `simulator:start` itself, so an older installed `eas-cli` can reject it. If that happens, run via `npx --yes eas-cli@latest` or upgrade; as a last resort, retry once without `--name` (the session starts unnamed). See [references/troubleshooting.md].
+`--name` is newer than `simulator:start` itself, so an older installed `eas-cli` can reject it. If that happens, run via `npx --yes eas-cli@latest` or upgrade; as a last resort, retry once without `--name` (the session starts unnamed). See [references/troubleshooting.md](references/troubleshooting.md).
 
 ## Commands at a glance
 
@@ -151,7 +151,7 @@ copy of the CLI surface. Keep non-obvious behavioral guidance from this skill—
 
 ## Running the user's app — pick a mode
 
-The remote sim boots **blank — no Expo Go, no apps.** Install a build, then drive it — but **match the build *type* to the goal first** (the box below); that's where live-session runs derail. Full sequences: [references/run-your-app.md] — read before running a mode.
+The remote sim boots **blank — no Expo Go, no apps.** Install a build, then drive it — but **match the build *type* to the goal first** (the box below); that's where live-session runs derail. Full sequences: [references/run-your-app.md](references/run-your-app.md) — read before running a mode.
 
 > **Match the build to the goal before installing anything — this is where live-session runs derail.** Two traps, same root (grabbing a build that doesn't fit the request):
 > 1. **Wrong type.** Live edits (Mode C) **require a dev build.** A *static* build — a local Release (A), the default EAS sim build (B), or **any build left on the sim from an earlier screenshot run** — freezes its JS at build time and **can never hot-reload.** For a live request, **ignore existing builds entirely** and install a **dev** build (local Debug, or an EAS build with `developmentClient: true`). Never reconnect Metro to a static build hoping it'll reload — it won't.
@@ -170,11 +170,11 @@ Quick decision — **default to C; A and B are explicit-only:**
 - **A:** only an explicit one-shot **static** screenshot on a Mac.
 - **B:** only when the user names an existing/EAS build or wants a static EAS artifact (CI/sharing) — see the box above for why a static build is the wrong tool for "iterate."
 
-Before starting a Mode C tunnel, read [Tunnel scope and approvals] for its data flow, authorization context, and handling approval rejections.
+Before starting a Mode C tunnel, read [Tunnel scope and approvals](references/run-your-app.md#tunnel-scope-and-approvals) for its data flow, authorization context, and handling approval rejections.
 
 ## Driving the device (agent-device)
 
-If a controller fails to download a recording, retrieve it from [EAS session artifacts].
+If a controller fails to download a recording, retrieve it from [EAS session artifacts](references/controllers.md#recording-download-recovery).
 
 `agent-device` is the controller. Common verbs (run each as `npx --yes eas-cli@latest simulator:exec npx agent-device@latest <verb>`):
 
@@ -191,13 +191,13 @@ If a controller fails to download a recording, retrieve it from [EAS session art
 | `record start` / `record stop <path>` | Record the screen to a video — use this for **motion** (animations, gestures, transitions, timing), which a single screenshot can't capture |
 | `metro prepare` / `metro reload` | Point a dev client at Metro / reload (Mode C) |
 
-**Screenshots vs. video.** Default to `screenshot` for static state, but for anything that *moves* — an animation, a transition, a gesture, a timing/jank question — **record a video and inspect the frames** instead; a still can't prove motion. Both controllers record (agent-device `record start`/`stop`, argent `screen-recording-start`/`stop`). Recordings sample at ~30fps — enough to see visible jank, not to prove sub-frame 60/120Hz hitches. For **timing** specifically, argent drops static frames by default (turn `trimStatic` off) — that plus other per-controller gotchas are in [references/controllers.md].
+**Screenshots vs. video.** Default to `screenshot` for static state, but for anything that *moves* — an animation, a transition, a gesture, a timing/jank question — **record a video and inspect the frames** instead; a still can't prove motion. Both controllers record (agent-device `record start`/`stop`, argent `screen-recording-start`/`stop`). Recordings sample at ~30fps — enough to see visible jank, not to prove sub-frame 60/120Hz hitches. For **timing** specifically, argent drops static frames by default (turn `trimStatic` off) — that plus other per-controller gotchas are in [references/controllers.md](references/controllers.md).
 
-For the full verb set and the `argent` controller alternative, see [references/controllers.md].
+For the full verb set and the `argent` controller alternative, see [references/controllers.md](references/controllers.md).
 
 ## Operating principles
 
-The non-obvious mental model worth internalizing. Specific error→fix lookups (hung verbs, `tap`→`press`, `--platform`, `--json`, `pod install` locale, orphaned sessions, boot variability) live in [references/troubleshooting.md].
+The non-obvious mental model worth internalizing. Specific error→fix lookups (hung verbs, `tap`→`press`, `--platform`, `--json`, `pod install` locale, orphaned sessions, boot variability) live in [references/troubleshooting.md](references/troubleshooting.md).
 
 1. **Establish ground truth, then reset — don't patch-loop.** Never assume an existing session or Metro is yours or healthy. Before driving, confirm:
    - **cwd** — you're in the intended Expo project dir (a misdirected `start`/`exec` sessions the *wrong app* + drops a stray `.env.eas-simulator`; `pwd` / check `app.json`).
@@ -223,13 +223,14 @@ printf '# managed by eas-cli\n' > .env.eas-simulator   # clear the stale session
 
 ## References
 
-- [references/run-your-app.md] — full command sequences for modes A, B, and C (read before running a mode).
-- [references/controllers.md] — agent-device verb reference and the `argent` alternative.
-- [references/troubleshooting.md] — concrete errors and fixes.
+- [references/run-your-app.md](references/run-your-app.md) — full command sequences for modes A, B, and C (read before running a mode).
+- [references/controllers.md](references/controllers.md) — agent-device verb reference and the `argent` alternative.
+- [references/troubleshooting.md](references/troubleshooting.md) — concrete errors and fixes.
 
 Source of truth: Expo docs and the `eas` / `agent-device` CLIs (`npx --yes eas-cli@latest simulator:* --help`, `agent-device --help`). This skill teaches how to apply them; it doesn't replace them.
 
 ## Submitting Feedback
+Send feedback only when the user explicitly authorizes the external submission and its content. A failed task or this skill alone does not authorize sending logs or messages. Redact tokens, private source and session URLs.
 If you encounter errors, misleading or outdated information in this skill, report it so Expo can improve:
 ```bash
 npx --yes submit-expo-feedback@latest --category skills --subject "eas-simulator" "<actionable feedback>"
@@ -247,5 +248,7 @@ Assistant: Follow the workflow in this skill, cite limitations, and ask before r
 
 ## Limitations
 
+- Package resolution via npx executes downloaded code. Inspect the project scripts/config and use reviewed/pinned versions where reproducibility is needed. `expo prebuild` can change native source; preserve existing native customizations.
+- Hosted builds upload source and artifacts; tunnels expose development assets. Keep requests within the user-approved remote scope and budget.
 - Imported upstream skill; verify credentials, permissions, and safety boundaries before execution.
 - Does not replace environment-specific validation, testing, or maintainer review.

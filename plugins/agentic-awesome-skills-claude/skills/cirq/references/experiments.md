@@ -215,7 +215,7 @@ def vqe_experiment(hamiltonian, ansatz_func, initial_params):
         result = simulator.simulate(circuit)
         energy = hamiltonian.expectation_from_state_vector(
             result.final_state_vector,
-            qubit_map={q: i for i, q in enumerate(circuit.all_qubits())}
+            qubit_map={q: i for i, q in enumerate(sorted(circuit.all_qubits()))}
         )
         return energy.real
 
@@ -228,9 +228,9 @@ def vqe_experiment(hamiltonian, ansatz_func, initial_params):
 
     return result
 
-# Example: H2 molecule
+# Example: toy two-qubit model, not an H2 molecular Hamiltonian
 def h2_ansatz(params, qubits):
-    """UCC ansatz for H2."""
+    """Toy two-qubit ansatz; not a chemistry-derived UCC ansatz."""
     theta = params[0]
     return cirq.Circuit(
         cirq.X(qubits[1]),
@@ -263,6 +263,8 @@ print(f"Optimal parameters: {result.x}")
 def qaoa_circuit(graph, params, p_layers):
     """QAOA circuit for MaxCut problem."""
 
+    if list(graph.nodes()) != list(range(graph.number_of_nodes())):
+        raise ValueError('This example requires nodes 0..n-1 in order')
     qubits = cirq.LineQubit.range(graph.number_of_nodes())
     circuit = cirq.Circuit()
 
@@ -303,7 +305,8 @@ def qaoa_cost(params):
 
     for bitstring, count in counts.items():
         cost = 0
-        bits = [(bitstring >> i) & 1 for i in range(graph.number_of_nodes())]
+        bits = [(bitstring >> (graph.number_of_nodes() - 1 - i)) & 1
+                for i in range(graph.number_of_nodes())]
         for edge in graph.edges():
             i, j = edge
             if bits[i] != bits[j]:
@@ -403,9 +406,9 @@ def calculate_expectation_value(circuit, observable, simulator):
     """Calculate expectation value of observable."""
 
     # Remove measurements
-    circuit_no_measure = cirq.Circuit(
-        m for m in circuit if not isinstance(m, cirq.MeasurementGate)
-    )
+    if not circuit.are_all_measurements_terminal():
+        raise ValueError("Cannot remove intermediate measurements")
+    circuit_no_measure = cirq.drop_terminal_measurements(circuit)
 
     result = simulator.simulate(circuit_no_measure)
     state_vector = result.final_state_vector
@@ -413,7 +416,7 @@ def calculate_expectation_value(circuit, observable, simulator):
     # Calculate ⟨ψ|O|ψ⟩
     expectation = observable.expectation_from_state_vector(
         state_vector,
-        qubit_map={q: i for i, q in enumerate(circuit.all_qubits())}
+        qubit_map={q: i for i, q in enumerate(sorted(circuit.all_qubits()))}
     )
 
     return expectation.real
@@ -426,8 +429,8 @@ def state_fidelity(state1, state2):
     """Calculate fidelity between two states."""
     return np.abs(np.vdot(state1, state2)) ** 2
 
-def process_fidelity(result1, result2):
-    """Calculate process fidelity from measurement results."""
+def classical_distribution_fidelity(result1, result2):
+    """Classical outcome-distribution overlap; not quantum process fidelity."""
 
     counts1 = result1.histogram(key='result')
     counts2 = result2.histogram(key='result')
@@ -548,6 +551,7 @@ class VQEExperiment(QuantumExperiment):
             method='COBYLA',
             options={'maxiter': 100}
         )
+        self.optimization_result = result
         return result
 
     def analyze(self):
@@ -560,8 +564,8 @@ class VQEExperiment(QuantumExperiment):
         plt.show()
 
         return {
-            'final_energy': self.history[-1]['energy'],
-            'optimal_params': self.history[-1]['params'],
+            'final_energy': self.optimization_result.fun,
+            'optimal_params': self.optimization_result.x,
             'num_iterations': len(self.history)
         }
 

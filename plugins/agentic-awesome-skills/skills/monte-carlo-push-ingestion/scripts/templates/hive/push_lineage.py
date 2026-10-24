@@ -4,7 +4,7 @@ Push a collected Hive lineage manifest to Monte Carlo — push only.
 
 Reads a JSON manifest produced by ``collect_lineage.py``, builds LineageEvent
 objects (table-level or column-level), and calls ``send_lineage`` in batches.
-The manifest is updated in-place with ``resource_uuid`` and ``invocation_id``
+A separate result manifest records ``resource_uuid`` and ``invocation_id``
 after a successful push.
 
 Can be run standalone via CLI or imported (use the ``push()`` function).
@@ -17,12 +17,11 @@ Substitution points
 
 Prerequisites
 -------------
-    pip install pycarlo python-dotenv
+    python -m pip install pycarlo==0.15.491 python-dotenv
 
 Usage (table-level):
     python push_lineage.py \\
         --key-id  <MCD_INGEST_ID> \\
-        --key-token <MCD_INGEST_TOKEN> \\
         --resource-uuid <MCD_RESOURCE_UUID> \\
         --input-file lineage_output.json
 
@@ -33,7 +32,6 @@ Usage (column-level):
 import argparse
 import json
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from pycarlo.core import Client, Session
 from pycarlo.features.ingestion import IngestionService
@@ -43,7 +41,7 @@ from pycarlo.features.ingestion.models import (
     LineageAssetRef,
     LineageEvent,
 )
-from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
+from _safe_paths import validate_push, checked_send, safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 # ← SUBSTITUTE: set RESOURCE_TYPE to match your Monte Carlo connection type
 RESOURCE_TYPE = "data-lake"
@@ -51,8 +49,6 @@ RESOURCE_TYPE = "data-lake"
 # ← SUBSTITUTE: default batch size for lineage push (events per request)
 DEFAULT_BATCH_SIZE = 500
 
-# ← SUBSTITUTE: HTTP timeout for MC ingestion requests (seconds)
-DEFAULT_TIMEOUT_SECONDS = 120
 
 
 def _build_table_lineage(edges_data: list[dict]) -> list[LineageEvent]:
@@ -105,11 +101,10 @@ def _build_column_lineage(edges_data: list[dict]) -> list[LineageEvent]:
             dest_col = mapping["dest_col"]
             src_table = mapping["src_table"]
             src_col = mapping["src_col"]
-            # Find the matching source db for this src_table
-            src_db = next(
-                (src["database"] for src in sources if src["table"] == src_table),
-                dest["database"],
-            )
+            matches = [src for src in sources if src["table"] == src_table]
+            if len(matches) != 1:
+                raise ValueError("Column source must resolve to exactly one qualified asset")
+            src_db = matches[0]["database"]
             src_aid = source_asset_ids.get((src_db, src_table), f"{src_db}__{src_table}")
             if dest_col not in col_fields:
                 col_fields[dest_col] = ColumnLineageField(name=dest_col, source_fields=[])
@@ -149,7 +144,6 @@ def push(
     key_token: str,
     column_lineage: bool = False,
     batch_size: int = DEFAULT_BATCH_SIZE,
-    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
 ) -> str | None:
     """
     Push collected lineage to Monte Carlo and update the manifest in-place.
@@ -164,11 +158,11 @@ def push(
         key_token: MC ingestion key token.
         column_lineage: When True, push column-level lineage; otherwise table-level.
         batch_size: Events per POST request (default 500).
-        timeout_seconds: HTTP timeout per request (default 120).
 
     Returns:
         The last invocation ID string if returned by MC, otherwise None.
     """
+    validate_push(manifest, resource_uuid, batch_size)
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
     edges_data = manifest.get("edges", [])
 
@@ -198,7 +192,7 @@ def push(
         print(f"  Pushing batch {batch_num}/{total_batches} ({len(batch)} events) ...")
         client = Client(session=Session(mcd_id=key_id, mcd_token=key_token, scope="Ingestion"))
         service = IngestionService(mc_client=client)
-        result = service.send_lineage(
+        result = checked_send(service, "send_lineage",
             resource_uuid=resource_uuid,
             resource_type=resource_type,
             events=batch,
@@ -208,22 +202,13 @@ def push(
             print(f"    Batch {batch_num}: invocation_id={invocation_id}")
         return invocation_id
 
-    # Push batches in parallel (each thread gets its own pycarlo Session)
-    max_workers = min(4, total_batches)
+    # Deliver sequentially; preserve each accepted result before the next request.
+    max_workers = 1
     invocation_ids: list[str | None] = [None] * total_batches
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {
-            pool.submit(_push_batch, batch, i + 1): i
-            for i, batch in enumerate(batch_list)
-        }
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                invocation_ids[idx] = future.result()
-            except Exception as exc:
-                print(f"    ERROR pushing batch {idx + 1}: {exc}")
-                raise
+    # Sequential delivery stops immediately after an ambiguous/failed batch.
+    for idx, batch in enumerate(batch_list):
+        invocation_ids[idx] = _push_batch(batch, idx + 1)
 
     print(f"  All {total_batches} batches pushed ({max_workers} workers)")
 
@@ -247,7 +232,7 @@ def main() -> None:
         help="Monte Carlo ingestion key ID (env: MCD_INGEST_ID)",
     )
     parser.add_argument(
-        "--key-token",
+        "--key-token", choices=[],
         default=os.environ.get("MCD_INGEST_TOKEN"),
         help="Monte Carlo ingestion key token (env: MCD_INGEST_TOKEN)",
     )
@@ -273,13 +258,6 @@ def main() -> None:
         metavar="N",
         help=f"Max events per POST (default: {DEFAULT_BATCH_SIZE})",
     )
-    parser.add_argument(
-        "--timeout",
-        type=int,
-        default=DEFAULT_TIMEOUT_SECONDS,
-        metavar="SEC",
-        help=f"HTTP timeout per request in seconds (default: {DEFAULT_TIMEOUT_SECONDS})",
-    )
     args = parser.parse_args()
 
     if not args.key_id or not args.key_token:
@@ -296,11 +274,10 @@ def main() -> None:
         key_token=args.key_token,
         column_lineage=args.column_lineage,
         batch_size=args.batch_size,
-        timeout_seconds=args.timeout,
     )
 
-    write_json_file(args.input_file, manifest)
-    print(f"Manifest updated in-place: {args.input_file}")
+    write_json_file(args.input_file[:-5] + "_push_result.json", manifest)
+    print(f"Push receipt saved separately for: {args.input_file}")
     print("Done.")
 
 

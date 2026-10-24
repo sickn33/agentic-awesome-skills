@@ -258,7 +258,7 @@ XXL-JOB：
 DolphinScheduler：
   /dolphinscheduler/ui/     /dolphinscheduler/login
 
-RuoYi（必爆破，几乎裸奔）：
+RuoYi（历史路径线索，不能推断当前部署缺少防护）：
   /admin/                   /system/user
   /monitor/                 /tool/swagger
 
@@ -335,7 +335,7 @@ categoryid (1 例) puid (1 例)       c (1 例)          k (1 例)
 o (1 例)          cmd (1 例)        trueName (1 例)
 ```
 
-> 用法：把以上参数名灌入 sqlmap `--param-filter` 或自写 fuzzer 优先扫。命中率比通用 `id/name/q` 高一档。
+> 这些是候选参数名，不是经过当前目标验证的命中率。sqlmap 的参数名选择用 `-p`；`--param-filter` 按参数位置（如 GET/POST）筛选，不能直接填本列表。仅测试确认在范围内且实际存在的参数。
 
 ### 3.2 业务逻辑高频参数
 

@@ -39,7 +39,8 @@ pause() {
 }
 
 # Demo introduction
-banner "LOKI MODE DEMO"
+banner "LOKI MODE SIMULATED WALKTHROUGH"
+# Sample metrics below are illustrative; no model or quality gate is executed.
 
 echo "Loki Mode - Multi-Agent Autonomous Startup System"
 echo ""
@@ -74,7 +75,7 @@ pause
 # Create demo workspace
 banner "STEP 1: Setting Up Demo Workspace"
 
-DEMO_WORKSPACE="/tmp/loki-demo-$(date +%s)"
+DEMO_WORKSPACE=$(mktemp -d "${TMPDIR:-/tmp}/loki-demo.XXXXXX")
 step "Creating workspace: $DEMO_WORKSPACE"
 mkdir -p "$DEMO_WORKSPACE"
 cd "$DEMO_WORKSPACE"
@@ -111,7 +112,7 @@ echo -e "${CYAN}  claude${NC}"
 echo ""
 echo "Then type:"
 echo ""
-echo -e "${CYAN}  Loki Mode with PRD at $PRD_FILE${NC}"
+echo -e "${CYAN}  Loki Mode with PRD at $PROJECT_DIR/$PRD_FILE${NC}"
 echo ""
 
 info "Loki Mode will then:"
@@ -230,10 +231,9 @@ banner "STEP 6: Vibe Kanban Integration"
 
 step "Exporting tasks to Vibe Kanban format..."
 
-mkdir -p ~/.vibe-kanban/loki-demo
-"$PROJECT_DIR/scripts/export-to-vibe-kanban.sh" ~/.vibe-kanban/loki-demo 2>/dev/null || true
+"$PROJECT_DIR/scripts/export-to-vibe-kanban.sh" "$DEMO_WORKSPACE/kanban"
 
-info "Tasks exported to kanban board"
+info "Sample tasks exported under $DEMO_WORKSPACE/kanban"
 info "Run 'npx vibe-kanban' to view visual board"
 pause
 
@@ -313,7 +313,7 @@ echo ""
 echo "To run Loki Mode for real:"
 echo ""
 echo -e "  ${CYAN}claude${NC}"
-echo -e "  ${CYAN}> Loki Mode with PRD at $PRD_FILE${NC}"
+echo -e "  ${CYAN}> Loki Mode with PRD at $PROJECT_DIR/$PRD_FILE${NC}"
 echo ""
 echo "Documentation: https://github.com/asklokesh/loki-mode"
 echo ""

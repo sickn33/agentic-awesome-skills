@@ -1,8 +1,12 @@
 ---
 title: "iMessage apps and stickers | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/imessage-apps-and-stickers
+---
 
 # iMessage apps and stickers
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 An iMessage app can help people share content, collaborate, and even play games with others in a conversation; stickers are images that people can use to decorate a conversation.
 

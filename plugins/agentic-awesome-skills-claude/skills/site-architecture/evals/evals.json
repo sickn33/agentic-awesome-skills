@@ -4,10 +4,10 @@
     {
       "id": 1,
       "prompt": "Help me plan the site architecture for our new SaaS marketing website. We have a homepage, product page, pricing page, about page, blog, and want to add competitor comparison pages and integration pages.",
-      "expected_output": "Should check for product-marketing-context.md first. Should apply the page hierarchy design principles (3-click rule, flat vs deep). Should create an ASCII tree showing the full site structure. Should organize pages logically: main nav (Home, Product, Pricing, About, Blog), comparison pages section, integrations hub. Should recommend URL structure patterns for each section. Should provide navigation design recommendations (4-7 header items). Should include internal linking strategy (hub-and-spoke for comparisons and integrations). Should provide the full deliverable set: hierarchy, URL map, nav spec.",
+      "expected_output": "Should check for product-marketing-context.md first. Should apply the page hierarchy design principles (task-based findability heuristic, flat vs deep). Should create an ASCII tree showing the full site structure. Should organize pages logically: main nav (Home, Product, Pricing, About, Blog), comparison pages section, integrations hub. Should recommend URL structure patterns for each section. Should provide navigation design recommendations (4-7 header items). Should include internal linking strategy (hub-and-spoke for comparisons and integrations). Should provide the full deliverable set: hierarchy, URL map, nav spec.",
       "assertions": [
         "Checks for product-marketing-context.md",
-        "Applies 3-click rule and flat vs deep principles",
+        "Evaluates task findability and flat vs deep principles",
         "Creates ASCII tree for site structure",
         "Organizes pages logically",
         "Recommends URL structure for each section",
@@ -20,11 +20,11 @@
     {
       "id": 2,
       "prompt": "Our website has grown organically and the navigation is a mess. We have 50+ pages and users can't find anything. Help us reorganize.",
-      "expected_output": "Should treat this as a site architecture audit and redesign. Should recommend starting with a content inventory of all 50+ pages. Should apply the page hierarchy design to reorganize: group related pages, establish clear parent-child relationships, apply the 3-click rule. Should redesign the navigation (reduce header items, use mega-menu or dropdowns for deeper pages). Should provide before/after ASCII tree structure. Should address URL redirects for any pages that move. Should include a visual sitemap (Mermaid).",
+      "expected_output": "Should treat this as a site architecture audit and redesign. Should recommend starting with a content inventory of all 50+ pages. Should apply the page hierarchy design to reorganize: group related pages, establish clear parent-child relationships, evaluate representative task findability. Should redesign the navigation (reduce header items, use mega-menu or dropdowns for deeper pages). Should provide before/after ASCII tree structure. Should address URL redirects for any pages that move. Should include a visual sitemap (Mermaid).",
       "assertions": [
         "Recommends content inventory first",
         "Groups related pages logically",
-        "Applies 3-click rule",
+        "Evaluates task findability",
         "Redesigns navigation structure",
         "Provides ASCII tree or visual sitemap",
         "Addresses URL redirects for moved pages",
@@ -48,14 +48,14 @@
     },
     {
       "id": 4,
-      "prompt": "We're adding programmatic SEO pages — 200 integration pages and 50 comparison pages. How should these fit into our site architecture?",
+      "prompt": "We're adding programmatic SEO pages \u2014 200 integration pages and 50 comparison pages. How should these fit into our site architecture?",
       "expected_output": "Should address how to integrate scaled content into the site architecture. Should recommend hub pages for both sections (/integrations and /compare or /vs). Should apply the hub-and-spoke internal linking model. Should address navigation: these shouldn't clutter the main nav, but should be accessible via hub pages. Should provide URL structure for both sections. Should address crawl budget considerations for 250 new pages. Should cross-reference programmatic-seo for the content strategy.",
       "assertions": [
         "Recommends hub pages for each section",
         "Applies hub-and-spoke internal linking",
         "Keeps programmatic pages out of main nav",
         "Provides URL structure for both sections",
-        "Addresses crawl budget for 250 pages",
+        "Addresses crawl/indexing implications without assuming a 250-page crawl-budget problem",
         "Cross-references programmatic-seo skill"
       ],
       "files": []
@@ -76,7 +76,7 @@
     {
       "id": 6,
       "prompt": "Our XML sitemap hasn't been updated in 6 months and we have crawl errors in Search Console. Can you fix our technical SEO?",
-      "expected_output": "Should recognize this is a technical SEO audit task, not a site architecture design task. Should defer to or cross-reference the seo-audit skill, which handles XML sitemaps, crawl errors, and technical SEO issues. Site-architecture focuses on page hierarchy, navigation, and URL structure design — not technical SEO troubleshooting.",
+      "expected_output": "Should recognize this is a technical SEO audit task, not a site architecture design task. Should defer to or cross-reference the seo-audit skill, which handles XML sitemaps, crawl errors, and technical SEO issues. Site-architecture focuses on page hierarchy, navigation, and URL structure design \u2014 not technical SEO troubleshooting.",
       "assertions": [
         "Recognizes this as technical SEO, not site architecture",
         "References or defers to seo-audit skill",

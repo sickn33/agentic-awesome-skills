@@ -1,5 +1,8 @@
 # Sentry Integration and Monitoring
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to error tracking and performance monitoring with Sentry v8.
 
 ## Table of Contents
@@ -16,9 +19,9 @@ Complete guide to error tracking and performance monitoring with Sentry v8.
 
 ## Core Principles
 
-**MANDATORY**: All errors MUST be captured to Sentry. No exceptions.
+Capture unexpected failures once at the approved boundary. Expected validation/authentication failures need bounded metrics rather than raw payload capture.
 
-**ALL ERRORS MUST BE CAPTURED** - Use Sentry v8 with comprehensive error tracking across all services.
+Select a supported SDK version and approved destination; document data minimization, access and retention.
 
 ---
 
@@ -32,80 +35,29 @@ Complete guide to error tracking and performance monitoring with Sentry v8.
 
 ```typescript
 import * as Sentry from '@sentry/node';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as ini from 'ini';
-
-const sentryConfigPath = path.join(__dirname, '../sentry.ini');
-const sentryConfig = ini.parse(fs.readFileSync(sentryConfigPath, 'utf-8'));
 
 Sentry.init({
-    dsn: sentryConfig.sentry?.dsn,
+    dsn: process.env.SENTRY_DSN, // validated configuration bootstrap
     environment: process.env.NODE_ENV || 'development',
-    tracesSampleRate: parseFloat(sentryConfig.sentry?.tracesSampleRate || '0.1'),
-    profilesSampleRate: parseFloat(sentryConfig.sentry?.profilesSampleRate || '0.1'),
-
-    integrations: [
-        ...Sentry.getDefaultIntegrations({}),
-        Sentry.extraErrorDataIntegration({ depth: 5 }),
-        Sentry.localVariablesIntegration(),
-        Sentry.requestDataIntegration({
-            include: {
-                cookies: false,
-                data: true,
-                headers: true,
-                ip: true,
-                query_string: true,
-                url: true,
-                user: { id: true, email: true, username: true },
-            },
-        }),
-        Sentry.consoleIntegration(),
-        Sentry.contextLinesIntegration(),
-        Sentry.prismaIntegration(),
-    ],
-
-    beforeSend(event, hint) {
-        // Filter health checks
-        if (event.request?.url?.includes('/healthcheck')) {
-            return null;
-        }
-
-        // Scrub sensitive headers
-        if (event.request?.headers) {
-            delete event.request.headers['authorization'];
-            delete event.request.headers['cookie'];
-        }
-
-        // Mask emails for PII
-        if (event.user?.email) {
-            event.user.email = event.user.email.replace(/^(.{2}).*(@.*)$/, '$1***$2');
-        }
-
+    sendDefaultPii: false,
+    tracesSampleRate: 0, // enable a bounded rate only after trace-data review
+    beforeSend(event) {
+        // Conservative example: discard request/user/extra/breadcrumb snapshots.
+        // Also review error messages, stack frames, attachments, traces and logs.
+        delete event.request;
+        delete event.user;
+        delete event.extra;
+        delete event.contexts;
+        delete event.breadcrumbs;
         return event;
     },
-
-    ignoreErrors: [
-        /^Invalid JWT/,
-        /^JWT expired/,
-        'NetworkError',
-    ],
-});
-
-// Set service context
-Sentry.setTags({
-    service: 'form',
-    version: '1.0.1',
-});
-
-Sentry.setContext('runtime', {
-    node_version: process.version,
-    platform: process.platform,
 });
 ```
 
+Initialize before instrumented imports according to the installed SDK/module mode. This filter is not anonymization: exception text, integrations, traces and logs require separate controls. Disable unreviewed local-variable, body, header, query and user capture. Use the installed SDK's Express error handler before a response-consuming custom boundary, or explicitly capture there once. Do not register both capture paths.
+
 **Critical Points:**
-- PII protection built-in (beforeSend)
+- beforeSend requires data review; redaction does not certify privacy
 - Filter non-critical errors
 - Comprehensive integrations
 - Prisma instrumentation
@@ -129,7 +81,7 @@ protected handleError(error: unknown, res: Response, context: string, statusCode
 
     res.status(statusCode).json({
         success: false,
-        error: { message: error instanceof Error ? error.message : 'Error occurred' }
+        error: { message: statusCode >= 500 ? 'Internal server error' : 'Request could not be completed' }
     });
 }
 ```
@@ -238,17 +190,18 @@ async function main() {
                 }
             });
             console.error('[Cron] Error:', error);
-            process.exit(1);
+            await Sentry.flush(2000);
+            process.exitCode = 1;
+            throw error;
         }
     });
 }
 
-main().then(() => {
-    console.log('[Cron] Completed successfully');
-    process.exit(0);
-}).catch((error) => {
-    console.error('[Cron] Fatal error:', error);
-    process.exit(1);
+main().then(async () => {
+    await Sentry.flush(2000);
+}).catch(async () => {
+    await Sentry.flush(2000);
+    process.exitCode = 1;
 });
 ```
 
@@ -263,8 +216,7 @@ Sentry.withScope((scope) => {
     // User context
     scope.setUser({
         id: user.id,
-        email: user.email,
-        username: user.username
+        // Use an approved pseudonymous ID only; omit email/username.
     });
 
     // Tags for filtering

@@ -2,219 +2,59 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
-## IMPORTANT: Setup Required
+## Setup and bounded editing example
 
-Before using this skill, the user must set the `GEMINI_API_KEY` environment variable:
+Use an approved supported `google-genai`/Pillow version and currently available image model. An API key does not imply free image generation or approved uploads. Read an existing secret environment variable or obtain a non-echoed session input; do not store real keys in tracked `.env` files, shell profiles or logs. Restarting a shell does not preserve a one-session prompt. Prefer the host’s secure secret facility.
 
-1. Get a free API key from [Google AI Studio](https://aistudio.google.com/)
-2. Export the key in your shell profile (`~/.zshrc`, `~/.bashrc`, etc.):
-   ```bash
-   read -rsp "Gemini API key: " GEMINI_API_KEY
-   echo
-   export GEMINI_API_KEY
-   ```
-3. Restart your terminal or run `source ~/.zshrc` (or `~/.bashrc`)
+The SDK serializes prompts (including quotes/newlines) without unsafe heredoc interpolation. This example sends one approved input; add multiple images to `contents` only when each is authorized. The inputs are not bundled.
 
-**The skill will not work without this configuration.**
+```python
+import os
+import getpass
+from pathlib import Path
+from PIL import Image
+from google import genai
+from google.genai import types
 
-
-## Pre-flight Check
-
-Before making any API call, verify the key is set:
-
-```bash
-if [ -z "$GEMINI_API_KEY" ]; then
-  echo "ERROR: GEMINI_API_KEY is not set. Please export it in your shell profile."
-  exit 1
-fi
+api_key = os.environ.get("GEMINI_API_KEY") or getpass.getpass("Gemini API key: ")
+if not api_key:
+    raise ValueError("Missing credential")
+input_path = Path("input.png")  # authorized input path
+if input_path.stat().st_size > 20 * 1024 * 1024:
+    raise ValueError("Input exceeds this example’s20MiB budget")
+with Image.open(input_path) as image:
+    if image.width * image.height > 25_000_000:
+        raise ValueError("Input exceeds pixel budget")
+    image.load()
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model="gemini-3-pro-image-preview",  # verify current availability
+        contents=["Add a wizard hat to this cat; preserve its pose.", image],
+        config=types.GenerateContentConfig(response_modalities=["TEXT", "IMAGE"]),
+    )
+parts = response.parts or []
+images = [p for p in parts if p.inline_data is not None]
+if not images:
+    raise RuntimeError("No image returned; inspect refusal/error without exposing secrets")
+for index, part in enumerate(images):
+    mime = part.inline_data.mime_type
+    suffix = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp"}.get(mime)
+    if suffix is None:
+        raise ValueError(f"Unexpected output MIME: {mime}")
+    destination = Path(f"edited_image_{index}{suffix}")
+    with destination.open("xb") as output:  # never overwrite an existing artifact
+        output.write(part.inline_data.data)
+    print(f"Saved: {destination}")
 ```
 
-If the key is missing, stop and tell the user to set it using the instructions above.
-
-
-## Configuration
-
-**Model**: `gemini-3-pro-image-preview`
-
-**API Key**: Read from the `GEMINI_API_KEY` environment variable
-
-
-## Iterating on User-Provided Images
-
-When the user provides a path to an image they want to edit or iterate on, use this workflow:
-
-### Step 1: Read and encode the image to base64
-
-```bash
-# Get the image path from user
-IMG_PATH="/path/to/user/image.png"
-
-# Detect mime type
-if [[ "$IMG_PATH" == *.png ]]; then
-    MIME_TYPE="image/png"
-elif [[ "$IMG_PATH" == *.jpg ]] || [[ "$IMG_PATH" == *.jpeg ]]; then
-    MIME_TYPE="image/jpeg"
-elif [[ "$IMG_PATH" == *.webp ]]; then
-    MIME_TYPE="image/webp"
-else
-    MIME_TYPE="image/png"
-fi
-
-# Encode to base64 (works on both macOS and Linux)
-if [[ "$(uname)" == "Darwin" ]]; then
-    IMG_BASE64=$(base64 -i "$IMG_PATH")
-else
-    IMG_BASE64=$(base64 -w0 "$IMG_PATH")
-fi
-```
-
-### Step 2: Send image with edit prompt (File-Based Approach)
-
-**IMPORTANT:** Always use a file-based approach for the request body. Base64-encoded images are too large for command-line arguments and will cause "argument list too long" errors.
-
-```bash
-# User's edit request
-EDIT_PROMPT="Add a santa hat to the person in this image"
-
-# Write request to a JSON file (avoids command line length limits)
-cat > /tmp/gemini_request.json << JSONEOF
-{
-  "contents": [{
-    "parts": [
-      {"text": "$EDIT_PROMPT"},
-      {
-        "inline_data": {
-          "mime_type": "$MIME_TYPE",
-          "data": "$IMG_BASE64"
-        }
-      }
-    ]
-  }],
-  "generationConfig": {
-    "responseModalities": ["TEXT", "IMAGE"]
-  }
-}
-JSONEOF
-
-# Call the API using the file
-curl -s -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d @/tmp/gemini_request.json > /tmp/gemini_response.json
-```
-
-### Step 3: Extract and save the edited image
-
-```bash
-# Extract image from response and save
-python3 -c "
-import json
-import base64
-
-with open('/tmp/gemini_response.json') as f:
-    data = json.load(f)
-
-for part in data['candidates'][0]['content']['parts']:
-    if 'inlineData' in part:
-        img_data = part['inlineData']['data']
-        mime = part['inlineData']['mimeType']
-        ext = 'png' if 'png' in mime else 'jpg'
-        with open('edited_image.' + ext, 'wb') as out:
-            out.write(base64.b64decode(img_data))
-        print(f'Saved: edited_image.{ext}')
-    elif 'text' in part:
-        print(part['text'])
-"
-```
-
-### Complete Example (File-Based)
-
-For iterating on images, always use file-based requests:
-
-```bash
-# Variables
-IMG_PATH="/path/to/image.png"
-EDIT_PROMPT="Make the background a sunset beach"
-OUTPUT_PATH="edited_output.png"
-# Detect mime type and encode
-MIME_TYPE=$([[ "$IMG_PATH" == *.png ]] && echo "image/png" || echo "image/jpeg")
-IMG_BASE64=$(base64 -i "$IMG_PATH" 2>/dev/null || base64 -w0 "$IMG_PATH")
-
-# Write request to file (required - base64 images are too large for command line)
-cat > /tmp/gemini_request.json << JSONEOF
-{
-  "contents": [{
-    "parts": [
-      {"text": "$EDIT_PROMPT"},
-      {"inline_data": {"mime_type": "$MIME_TYPE", "data": "$IMG_BASE64"}}
-    ]
-  }],
-  "generationConfig": {
-    "responseModalities": ["TEXT", "IMAGE"]
-  }
-}
-JSONEOF
-
-# Call API and extract image
-curl -s -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d @/tmp/gemini_request.json > /tmp/gemini_response.json
-
-# Save the output image
-python3 -c "
-import json, base64
-with open('/tmp/gemini_response.json') as f:
-    data = json.load(f)
-for part in data.get('candidates', [{}])[0].get('content', {}).get('parts', []):
-    if 'inlineData' in part:
-        with open('$OUTPUT_PATH', 'wb') as f:
-            f.write(base64.b64decode(part['inlineData']['data']))
-        print('Saved: $OUTPUT_PATH')
-"
-```
-
-### Multi-Image Input (Combine/Compose)
-
-To combine elements from multiple images (also uses file-based approach):
-
-```bash
-IMG1_PATH="/path/to/image1.png"
-IMG2_PATH="/path/to/image2.png"
-PROMPT="Put the dress from the first image on the person in the second image"
-IMG1_BASE64=$(base64 -i "$IMG1_PATH" 2>/dev/null || base64 -w0 "$IMG1_PATH")
-IMG2_BASE64=$(base64 -i "$IMG2_PATH" 2>/dev/null || base64 -w0 "$IMG2_PATH")
-
-# Write request to file
-cat > /tmp/gemini_request.json << JSONEOF
-{
-  "contents": [{
-    "parts": [
-      {"text": "$PROMPT"},
-      {"inline_data": {"mime_type": "image/png", "data": "$IMG1_BASE64"}},
-      {"inline_data": {"mime_type": "image/png", "data": "$IMG2_BASE64"}}
-    ]
-  }],
-  "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}
-}
-JSONEOF
-
-curl -s -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d @/tmp/gemini_request.json > /tmp/gemini_response.json
-```
-
+No fixed `/tmp/gemini_request.json`/response files are used; those can collide, leak images or follow preexisting symlinks. If a REST implementation needs temporary files, create a private unique directory, serialize JSON with a library, validate HTTP status and clean up in a finally block. Do not interpolate an output path into Python source.
 
 ## Capabilities
 
 ### Text-to-Image Generation
 - Generate high-quality images from text descriptions
 - Support for photorealistic, stylized, and artistic outputs
-- Accurate text rendering in images (logos, infographics, diagrams)
+- Text rendering is probabilistic; proofread every character and factual diagram before use
 
 ### Image Editing
 - Add or remove elements from images
@@ -329,4 +169,4 @@ npm install @google/genai
 - All generated images include a SynthID watermark
 - The model uses a "thinking" process for complex prompts
 - For best text rendering, generate text first, then request image with that text
-- Images are not stored by the API - save outputs locally
+- Save authorized outputs locally; storage, logging and retention depend on provider/account terms and must be verified, not assumed absent.

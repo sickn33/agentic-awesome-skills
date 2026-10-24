@@ -64,13 +64,16 @@ spec:
   mtls:
     mode: STRICT
 ---
-# Namespace-level override if needed for gradual rollout
+# Workload-level override; portLevelMtls requires a workload selector.
 apiVersion: security.istio.io/v1beta1
 kind: PeerAuthentication
 metadata:
   name: ai-inference-mtls
   namespace: ai-inference
 spec:
+  selector:
+    matchLabels:
+      app: model-server
   mtls:
     mode: STRICT
   portLevelMtls:
@@ -369,9 +372,8 @@ spec:
         metric: REQUEST_DURATION
         mode: CLIENT_AND_SERVER
       tagOverrides:
-        model_name:
-          operation: UPSERT
-          value: "request.headers['x-model-name']"
+        # Any model_name label must use a bounded, gateway-validated allowlist.
+        # Raw client header values can create unbounded time series.
         # Do not expose raw tenant IDs as unbounded metric labels.
   tracing:
   - providers:

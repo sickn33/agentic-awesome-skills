@@ -1,5 +1,6 @@
 # Sparse-Encoder Losses (SPLADE)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All losses live in `sentence_transformers.sparse_encoder.losses`.
 
 This reference targets the **SPLADE** architecture (Transformer + SpladePooling). The sparse-encoder package also exports `CSRLoss` and `CSRReconstructionLoss` for the CSR architecture (Transformer + Pooling + SparseAutoEncoder); those are out of scope here — see the sbert.net docs if you're training a CSR model.

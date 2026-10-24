@@ -1,5 +1,8 @@
 # Platform mirrors reference
 
+> Catalog correction: all writes stay within the user-authorized project and targets. Config is not independent permission. Validate every target before touching any target; reject symlinked files/parents and non-regular or multiply-linked write targets. Prepare changes in memory, compare current content with the reviewed original, preserve all user notes and unowned drafts, and use atomic per-file replacement. No multi-file transaction or concurrent-write safety is promised. If schemas/markers are ambiguous, keep the file intact and resolve that specific ambiguity.
+
+
 How `.lore/*` content gets mirrored to platform-specific config files. The main `SKILL.md` covers the high-level rules; this file holds the per-platform mapping, the two-section file structure, and the algorithm that resolves which files to generate (auto-detect by default, explicit override available).
 
 ## Platform → file mapping
@@ -26,7 +29,7 @@ When the skill needs to know which platform files to generate (during `init`, `m
 ```
 resolve_mirror_targets(config, repo_root):
 
-    # 1. If config has mirror_targets set, auto-detect is skipped, but validation is not
+    # 1. If config has mirror_targets set, auto-detect is skipped, but validation and existing user restrictions still apply
     if "mirror_targets" in config:
         return validate_mirror_targets(config["mirror_targets"], repo_root)
 
@@ -151,7 +154,7 @@ When syncing a mirror file:
 
 1. If the file contains `---` on its own line, that line is the boundary. Everything above is the Lore section, everything below is My notes.
 2. If the file contains a `## My notes` header, the My notes section starts at that header and goes to EOF.
-3. If neither marker is present, the entire file is treated as the Lore section (i.e. no My notes section). Subsequent sync appends a separator + empty My notes section.
+3. If neither marker is present, classify the whole file as unowned user content. Do not rewrite or append automatically; require the existing takeover authorization or ask how to integrate it.
 4. If the file is missing the `## Lore` header but has `## My notes`, the entire file is treated as user notes. Skill does not write to it. User is asked to confirm before sync restructures the file.
 5. **Section boundary markers (canonical form is HTML comments)**:
 
@@ -257,7 +260,7 @@ For each generated mirror file, the section template is:
 
 ## What gets mirrored
 
-The mirror's Lore section is an **index** into `.lore/` — not a copy of its content. This keeps per-session token cost flat (~600 B worst case, regardless of project size) and aligns with how platform instruction files (`CLAUDE.md`, `.cursorrules`, etc.) are designed to be used: as small pointers that tell the agent where to find detail on demand.
+The mirror's Lore section is an **index** into `.lore/` — not a copy of its content. This keeps per-session token cost flat (size proportional to the number and length of scope descriptions, rather than copying all entry text) and aligns with how platform instruction files (`CLAUDE.md`, `.cursorrules`, etc.) are designed to be used: as small pointers that tell the agent where to find detail on demand.
 
 The agent generating the mirror walks `.lore/` and emits the structure below. Sections appear only when their content exists (adaptive rendering).
 

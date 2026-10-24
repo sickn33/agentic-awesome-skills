@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Soroban Oracle
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Audit procedure
+
+Bind evidence to network, contract/WASM revision and observed ledger time. Record price units/decimals, base/quote orientation, source timestamp, update method and trust assumptions. Test zero/negative prices, future timestamps, stale boundary equality, missing sources and large deviations; choose protocol-specific bounds rather than copying 300s/100bps. For a median/TWAP, verify sample spacing, minimum independent sources and behavior under source loss or correlated manipulation. Prove the actual contract rejects or safely pauses invalid input; a Yes field is not enforcement. Encode exact scaled amounts as decimal strings or bounded integers, not floating JSON values.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Oracle Feed ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `ORC-001` |
+| 1 | Oracle Feed ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `ORC-001` |
 | 2 | Asset Pair Identifier | `text` | `VARCHAR(32)` | `string` | Text | `XLM/USD` |
 | 3 | Oracle Contract Address | `text` | `VARCHAR(56)` | `string` | Text | `CORC...` |
 | 4 | Max Stale Period Seconds | `number` | `INTEGER` | `number` | Number | `300` |

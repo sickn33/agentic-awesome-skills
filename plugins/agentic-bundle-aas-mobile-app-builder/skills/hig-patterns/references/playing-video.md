@@ -1,8 +1,11 @@
 ---
 title: "Playing video | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/playing-video
+---
 
 # Playing video
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 People expect to enjoy rich video experiences on their devices, regardless of the app or game they’re using.
 
@@ -60,7 +63,7 @@ Here are some examples that show how padding can affect video display on iPhone 
 
 **If people need to access playback options or content-specific information in your tvOS app, consider adding a transport control or a custom content tab.** People typically open a transport control or content tab while they’re watching a video, so it’s essential to provide only the most useful actions and information. Help people return quickly to the viewing experience by making sure your actions don’t take more than a step or two and your content is succinct. Use a transport control to support a playback-related action like favoriting a video; use custom content tabs to display supplementary information or recommendations.
 
-**Avoid allowing audio from different sources to mix as viewers switch between modes.** Mixed audio is an unpleasant and frustrating user experience. In general, audio mixes when at least one of the audio sources fails to handle secondary audio correctly. Here is a typical scenario: While watching a full-screen video, the viewer moves it into the PiP window, where the system automatically mutes the video. In the full-screen window, the viewer starts a game that plays background music, then switches to the PiP window and unmutes the video. If the game doesn’t handle secondary audio appropriately, its audio mixes with the audio from the unmuted video. For developer guidance, see [`silenceSecondaryAudioHintNotification`](https://developer.apple.com/documentation/AVFAudio/AVAudioSession/silenceSecondaryAudioHintNotification).
+**Avoid allowing audio from different sources to mix as viewers switch between modes.** Mixed audio is an unpleasant and frustrating user experience. In general, audio mixes when at least one of the audio sources fails to handle secondary audio correctly. Here is a typical scenario: While watching a full-screen video, the viewer moves it into the PiP window, whose audio behavior depends on the player, platform and audio-session configuration; do not assume PiP automatically mutes it. In the full-screen window, the viewer starts a game that plays background music, then switches to the PiP window and unmutes the video. If the game doesn’t handle secondary audio appropriately, its audio mixes with the audio from the unmuted video. For developer guidance, see [`silenceSecondaryAudioHintNotification`](https://developer.apple.com/documentation/AVFAudio/AVAudioSession/silenceSecondaryAudioHintNotification).
 
 ## [Integrating with the TV app](https://developer.apple.com/design/human-interface-guidelines/playing-video#Integrating-with-the-TV-app)
 
@@ -178,3 +181,7 @@ Date| Changes
 September 12, 2023| Corrected the recommended width for a thumbnail in visionOS.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Preserve aspect ratio and let the person choose fit/fill; the snapshot’s aspect-ratio defaults are not a universal AVPlayer contract. Picture in Picture, AirPlay, TV app integration, DRM and background playback each have eligibility/configuration requirements. Show meaningful buffering/failure states and preserve captions/audio descriptions. Watch encoding figures above are historical guidance, not current device maxima or a quality guarantee.

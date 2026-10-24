@@ -27,7 +27,7 @@ with confirmed problems or plausible risks that need confirmation.
 
 ## Security and sensitive material
 
-- Private keys, tokens, passwords, certificates, cookies, `.pem`, `.key`, `.p12`, `.env`, service
+- Private keys, tokens, passwords, cookies, secret-bearing certificates/bundles, `.pem`, `.key`, `.p12`, `.env`, service
   account JSON, or cloud credentials added to the diff.
 - Logs, errors, analytics, webhooks, or traces that may expose PII, tokens, session IDs, or payment
   data.
@@ -37,6 +37,8 @@ with confirmed problems or plausible risks that need confirmation.
   changes without release coordination.
 - Dependency or container changes with known security-sensitive behavior, native binaries, or
   postinstall scripts.
+
+File extensions alone do not prove a secret; public certificates and synthetic fixtures may be safe. Report the actual sensitive content category without reproducing its value.
 
 ## Cache, CDN, and derived state
 

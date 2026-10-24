@@ -1,7 +1,6 @@
 # Makepad 2.0 Layout Patterns Reference
 
-Complete, working layout examples using Makepad 2.0 Splash syntax. Every example
-starts with `use mod.prelude.widgets.*` and uses correct syntax (no commas, no semicolons,
+Illustrative layout sketches using the imported Makepad 2.0 Splash syntax; no compilation is claimed by this review. Most examples start with `use mod.prelude.widgets.*` and uses correct syntax (no commas, no semicolons,
 colon for property assignment).
 
 ---
@@ -680,9 +679,9 @@ Quick reference for all sizing values.
 
 ### UI is completely invisible (0px height)
 
-**Cause:** Container is missing `height: Fit`.
+**Possible cause:** An unresolved Fill/Fit parent constraint. Also inspect visibility, clipping, draw order and actual allocated bounds.
 
-**Fix:** Add `height: Fit` to every View, SolidView, RoundedView.
+**Check:** Use `height: Fit` for content-sized containers and a known Fill/fixed-height chain for viewports; do not change every container indiscriminately.
 
 ```
 // BEFORE (invisible)
@@ -751,7 +750,7 @@ View{
 **Cause:** ScrollYView has `height: Fit` instead of `height: Fill`. It expands to fit
 all content, so there is nothing to scroll.
 
-**Fix:** Use `height: Fill` on ScrollYView so it has a fixed viewport.
+**Fix:** Give ScrollYView a bounded viewport through a known-height Fill parent or explicit height.
 
 ```
 // BEFORE (no scrolling, expands to full content height)

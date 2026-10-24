@@ -147,12 +147,17 @@ Building name generators that people love
 ### The Deterministic Trick
 Same input = same output = shareable!
 ```javascript
+function simpleHash(text) {
+  let value = 0;
+  for (const ch of text) value = (Math.imul(value, 31) + ch.codePointAt(0)) >>> 0;
+  return value;
+}
 function generateName(input) {
-  const hash = simpleHash(input.toLowerCase());
+  const hash = simpleHash(input.toLowerCase()) >>> 0;
   const firstNames = ["Shadow", "Storm", "Crystal"];
   const lastNames = ["Walker", "Blade", "Heart"];
 
-  return `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 8) % lastNames.length]}`;
+  return `${firstNames[hash % firstNames.length]} ${lastNames[(hash >>> 8) % lastNames.length]}`;
 }
 ```
 
@@ -301,3 +306,5 @@ Works well with: `viral-hooks`, `landing-page-design`, `seo`, `frontend`
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Generated personality ranks, percentiles, predictions and savings figures are illustrative entertainment unless backed by a disclosed validated calculation/data set. Do not invent financial outcomes to increase sharing. Minimize birthday/name/photo collection, disclose any external AI processing and make public sharing opt-in; do not put sensitive inputs into share URLs.

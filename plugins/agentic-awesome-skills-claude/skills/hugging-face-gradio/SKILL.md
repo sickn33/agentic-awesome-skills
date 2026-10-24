@@ -35,6 +35,10 @@ Detailed guides on specific topics (read these when relevant):
 - [Getting Started with the Python Client](https://www.gradio.app/guides/getting-started-with-the-python-client)
 - [Getting Started with the JS Client](https://www.gradio.app/guides/getting-started-with-the-js-client)
 
+## Version and security boundaries
+
+Signatures below are an imported API snapshot, not valid Python stubs or a universal version contract. Inspect the installed Gradio version and its official docs before using newer parameters/CLI commands. Keep demos on loopback by default; public sharing/listening, remote predictions and uploads require explicit authorization. Validate upload size/type/content and output paths, keep HTML sanitization enabled, and use authentication/rate limits for exposed endpoints. Do not expose arbitrary local directories, secrets or server-side execution tools through a demo.
+
 ## Core Patterns
 
 **Interface** (high-level): wraps a function with input/output components.
@@ -302,7 +306,7 @@ gradio predict gradio/image_mod /predict '{"image": {"path": "/path/to/image.png
 # {"output": "/tmp/gradio/.../output.png"}
 ```
 
-Both commands accept `--token` for accessing private Spaces.
+Verify authentication options for the installed CLI; avoid passing tokens in argv or logs and prefer supported protected environment/credential storage. Remote prediction uploads data and may incur compute costs.
 
 ## Additional Reference
 

@@ -337,9 +337,9 @@
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/directives/use-cache",
-      "topic": "'use cache' directive — opt-in persistent cache (15+)",
+      "topic": "'use cache' directive — stable Cache Components caching (16+; 15 was experimental)",
       "appliesTo": ["uncached_route", "function-duration"],
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=16.0.0"]
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/directives/use-cache-remote",
@@ -351,13 +351,13 @@
       "url": "https://nextjs.org/docs/app/api-reference/functions/cacheLife",
       "topic": "cacheLife() — TTL annotation for 'use cache' segments",
       "appliesTo": ["uncached_route", "isr_overrevalidation"],
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=16.0.0"]
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/functions/cacheTag",
       "topic": "cacheTag() — tag-based invalidation for 'use cache'",
       "appliesTo": ["uncached_route", "isr_overrevalidation"],
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=16.0.0"]
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/functions/revalidateTag",
@@ -373,9 +373,9 @@
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/functions/after",
-      "topic": "after() — non-blocking work post-response (15+)",
+      "topic": "after() — non-blocking work post-response (stable 15.1+)",
       "appliesTo": ["function-duration", "slow_route"],
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=15.1.0"]
     },
     {
       "url": "https://react.dev/reference/react/cache",
@@ -391,7 +391,7 @@
     },
     {
       "url": "https://nextjs.org/docs/app/api-reference/components/font",
-      "topic": "next/font — self-hosted fonts, no CLS, build-time optimization",
+      "topic": "next/font — self-hosted fonts, fallback metrics and layout-shift mitigation",
       "appliesTo": ["bundle_candidate", "cwv_poor"],
       "applicableFrameworks": ["next@>=13.2.0"]
     },
@@ -439,9 +439,9 @@
     },
     {
       "url": "https://nextjs.org/docs/app/building-your-application/rendering/partial-prerendering",
-      "topic": "Partial Prerendering (PPR) — combine static shell + dynamic streaming (15+ experimental, stable later)",
+      "topic": "Partial Prerendering (PPR) — combine static shell + dynamic streaming (stable via Cache Components in 16+)",
       "appliesTo": ["rendering_candidate", "slow_route"],
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=16.0.0"]
     },
     {
       "url": "https://nextjs.org/docs/app/building-your-application/optimizing/bundle-analyzer",
@@ -647,7 +647,7 @@
       "skill": "vercel-react-best-practices",
       "rule": "server-after-nonblocking",
       "topic": "after() for non-blocking work post-response",
-      "applicableFrameworks": ["next@>=15.0.0"]
+      "applicableFrameworks": ["next@>=15.1.0"]
     },
     {
       "skill": "vercel-react-best-practices",

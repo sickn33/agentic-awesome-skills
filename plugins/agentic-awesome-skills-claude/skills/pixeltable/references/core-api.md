@@ -343,12 +343,12 @@ Call `pxt.get_table()` inside custom FastAPI handlers. Do not `python app.py` if
 
 ## Tools
 
-An agent is a table. Insert a message and the chain runs: the model picks tools, `invoke_tools` runs them, and a second call answers. Each step is a column you can inspect.
+This example executes one tool round, not an arbitrary multi-step agent. Use only reviewed tools whose side effects and arguments fit the user-authorized scope. Insert a message and the chain runs: the model picks tools, `invoke_tools` runs them, and a second call answers. Each step is a column you can inspect.
 
 ```python
 @pxt.udf
 def get_weather(city: str) -> str:
-    """Current weather for a city."""  # the docstring is the tool description the model reads
+    """Synthetic weather fixture for a city; not a live forecast."""  # the docstring is the tool description the model reads
     return f'{city}: 22C, sunny'
 
 

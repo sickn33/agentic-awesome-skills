@@ -21,7 +21,7 @@ export const metadata = {
   billingDimension: 'function-duration',
   trafficIndependent: false,
   description:
-    "Default `'use cache'` does not dedupe identical calls across separate `<Suspense>` boundaries on the same render. Each boundary re-invokes the cached function, multiplying function-duration cost and inflating ISR write churn when the output is large.",
+    "Default `'use cache'` does not dedupe identical calls across separate `<Suspense>` boundaries on the same render. Repeated source calls are an investigation prompt; trace actual origin execution and ISR writes before attributing cost.",
   fix:
     "Hoist the promise to the page level (`const dataPromise = fetchData()` at the top, passed down to each Suspense child) OR move the shared fetch into a `'use cache: remote'` data-access layer so cross-request and cross-boundary dedupe applies.",
   citations: [
@@ -62,8 +62,8 @@ export function scan({ files }) {
       file: path,
       line: lineOf(content, first.firstIdx),
       evidence: first.kind === 'fetch'
-        ? `fetch("${truncate(first.token, 60)}") called ${first.count}× across Suspense boundaries`
-        : `${first.token}() called ${first.count}× across Suspense boundaries`,
+        ? `fetch("${truncate(first.token, 60)}") appears ${first.count}× in a file with multiple Suspense boundaries`
+        : `${first.token}() appears ${first.count}× in a file with multiple Suspense boundaries`,
       trafficIndependent: metadata.trafficIndependent,
       subtype: first.kind === 'fetch' ? 'fetch-literal' : 'helper-call',
     });

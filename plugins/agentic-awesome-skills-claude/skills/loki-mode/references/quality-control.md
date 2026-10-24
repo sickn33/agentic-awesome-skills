@@ -1,5 +1,8 @@
 # Quality Control Reference
 
+> SDK compatibility: Python blocks below are conceptual pseudocode, including `GuardrailResult`, `blocking`, handoff metadata and exception fields; they are not a runnable SDK integration. For the current OpenAI Agents SDK use `GuardrailFunctionOutput(output_info=..., tripwire_triggered=...)`, the `(ctx, agent, input)` input-guardrail signature and `@input_guardrail(run_in_parallel=False)` when input checks must complete first. Handoffs use `handoff(agent=..., on_handoff=...)`; callback return values do not replace input. Output guardrails run after final output and cannot undo external writes. Validate authorization before side effects. See [guardrails](https://openai.github.io/openai-agents-python/guardrails/) and [handoffs](https://openai.github.io/openai-agents-python/handoffs/).
+
+
 Quality gates, code review process, and severity blocking rules.
 Enhanced with 2025 research on anti-sycophancy, heterogeneous teams, and OpenAI Agents SDK patterns.
 
@@ -9,7 +12,7 @@ Enhanced with 2025 research on anti-sycophancy, heterogeneous teams, and OpenAI 
 
 **CRITICAL:** Speed without quality controls creates "AI slop" - semi-functional code that accumulates technical debt. Loki Mode enforces strict quality guardrails.
 
-**Research Insight:** Heterogeneous review teams outperform homogeneous ones by 4-6% (A-HMAD, 2025).
+**Design hypothesis:** Diverse reviewer perspectives may reveal different errors; measure this on representative tasks rather than assuming a numerical gain.
 **OpenAI Insight:** "Think of guardrails as a layered defense mechanism. Multiple specialized guardrails create resilient agents."
 
 ---
@@ -383,18 +386,19 @@ NOT: "Refactor the auth file"
 ```bash
 #!/bin/bash
 # .loki/hooks/pre-write.sh
-# Blocks writes that violate rules
+# Illustrative file scan, not a complete proposed-edit/secret validator.
+# Integrate with the actual hook input schema; inspect proposed content before writing.
 
 # Check for secrets
 if grep -rE "(password|secret|key).*=.*['\"][^'\"]{8,}" "$1"; then
   echo "BLOCKED: Potential secret detected"
-  exit 1
+  exit 2
 fi
 
 # Check for console.log in production
 if grep -n "console.log" "$1" | grep -v "test"; then
   echo "BLOCKED: Remove console.log statements"
-  exit 1
+  exit 2
 fi
 ```
 

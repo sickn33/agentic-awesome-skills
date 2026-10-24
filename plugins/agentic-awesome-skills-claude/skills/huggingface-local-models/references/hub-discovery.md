@@ -65,7 +65,7 @@ Extract, in order:
    - bit-depth grouping
 3. Any extra launch flags shown in the snippet, such as `--jinja`
 
-Treat the HF local-app snippet as the source of truth when it is visible.
+Treat it as a repository-specific candidate; review flags and compare with the installed llama.cpp version, license and hardware budget before use.
 
 Do this by reading the URL itself, not by assuming the UI rendered in a browser. If the fetched page source does not expose `Hardware compatibility`, say that the section was not text-visible and fall back to the tree API plus generic guidance from `quantization.md`.
 
@@ -77,7 +77,7 @@ Open:
 https://huggingface.co/api/models/<repo>/tree/main?recursive=true
 ```
 
-Treat the JSON response as the source of truth for repo inventory.
+Follow API pagination links for the complete inventory and resolve an immutable full commit; a single recursive main response may be incomplete or change.
 
 Keep entries where:
 
@@ -129,7 +129,7 @@ llama-cli -hf <repo>:<QUANT>
 
 Use the exact-file form when the repo uses custom labels or nonstandard naming that could make `:<QUANT>` ambiguous.
 
-## 5. Example: `unsloth/Qwen3.6-35B-A3B-GGUF`
+## 5. Historical Illustrative Example: `unsloth/Qwen3.6-35B-A3B-GGUF`
 
 Use these URLs:
 
@@ -139,7 +139,7 @@ https://huggingface.co/api/models/unsloth/Qwen3.6-35B-A3B-GGUF/tree/main?recursi
 https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/tree/main
 ```
 
-On the local-app page, the hardware compatibility section can expose entries such as:
+The following sizes/filenames are historical examples, not verified current inventory or fit guarantees. Retrieve the exact pinned revision before recommending them:
 
 - `UD-IQ4_XS` - 17.7 GB
 - `UD-Q4_K_S` - 20.9 GB
@@ -156,7 +156,7 @@ On the tree API, you can confirm exact filenames such as:
 - `Qwen3.6-35B-A3B-Q8_0.gguf`
 - `mmproj-F16.gguf`
 
-Good final output for this repo:
+Illustrative output shape; replace values with verified current evidence:
 
 ```text
 Repo: unsloth/Qwen3.6-35B-A3B-GGUF

@@ -1,5 +1,7 @@
 # Claude API — PHP
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 > **Note:** The PHP SDK is the official Anthropic SDK for PHP. Tool runner and Agent SDK are not available. Bedrock, Vertex AI, and Foundry clients are supported.
 
 ## Installation
@@ -54,7 +56,7 @@ $client = new FoundryClient(
 
 ```php
 $message = $client->messages->create(
-    model: 'claude-opus-5',
+    model: 'claude-opus-5-5',
     maxTokens: 1024,
     messages: [
         ['role' => 'user', 'content' => 'What is the capital of France?'],
@@ -69,7 +71,7 @@ echo $message->content[0]->text;
 
 ```php
 $stream = $client->messages->createStream(
-    model: 'claude-opus-5',
+    model: 'claude-opus-5-5',
     maxTokens: 1024,
     messages: [
         ['role' => 'user', 'content' => 'Write a haiku'],

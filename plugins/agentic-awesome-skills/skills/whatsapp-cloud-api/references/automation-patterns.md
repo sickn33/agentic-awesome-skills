@@ -1,5 +1,7 @@
 # Padroes de Automacao de Atendimento - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 Guia completo para implementar automacao de atendimento profissional via WhatsApp, incluindo chatbots, filas de atendimento, state machines e integracao com IA.
 
 ---
@@ -149,7 +151,7 @@ interface Session {
 }
 
 async function routeMessage(session: Session, message: IncomingMessage): Promise<void> {
-  const handlers: Record<ConversationState, MessageHandler> = {
+  const handlers: Partial<Record<ConversationState, MessageHandler>> = {
     [ConversationState.INICIO]: handleInicio,
     [ConversationState.MENU_PRINCIPAL]: handleMenuPrincipal,
     [ConversationState.SUPORTE_TECNICO]: handleSuporteTecnico,
@@ -604,7 +606,7 @@ function handleFlowResponse(message: IncomingMessage): void {
   if (message.type === 'interactive' && message.interactive?.type === 'nfm_reply') {
     const flowResponse = JSON.parse(message.interactive.nfm_reply.response_json);
     // flowResponse contem os dados preenchidos pelo usuario
-    console.log('Dados do flow:', flowResponse);
+    // Validate the expected schema; do not log personal form values.
     // Ex: { date: '2026-03-01', time: '14:00', name: 'João Silva' }
   }
 }
@@ -688,3 +690,5 @@ Este fluxo garante:
 5. Deteccao de escalacao
 6. Roteamento por estado da conversa
 7. Marcacao automatica como lida
+
+Production gaps in snippets: refreshing session TTL on outbound activity does not extend the service window, which derives from the latest customer message. Redis JSON Dates require rehydration; namespace by WABA/phone/customer and serialize concurrent turns. AttendanceQueue is process-local and its getQueue helper is not bundled. Business-hour conversion by reparsing localized strings is illustrative; use Intl formatToParts or a timezone library, including overnight schedules/holidays. AI history must be bounded, privacy-scoped and not authorize financial operations. Existing full-flow snippets ack before durable storage and omit helpers; do not deploy unchanged.

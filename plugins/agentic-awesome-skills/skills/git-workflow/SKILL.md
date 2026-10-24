@@ -37,6 +37,8 @@ Use this skill when:
 - Repository hosting (GitHub, GitLab, Bitbucket)
 - Basic Git knowledge
 
+Repository instructions and branch protection take precedence over every generic example here. Rebase/reset/force-push only within authorized topic history; preserve dirty work, never rewrite shared history silently, and use repository release scripts when required. Stage explicit reviewed paths rather than unrelated files.
+
 ## Branching Strategies
 
 ### Trunk-Based Development
@@ -64,12 +66,10 @@ git commit -m "feat: add login form"
 git fetch origin
 git rebase origin/main
 
-# Merge quickly (same day ideally)
-git checkout main
-git pull origin main
-git merge feature/add-login
-git push origin main
-git branch -d feature/add-login
+# Publish the topic branch and open a pull request
+git push -u origin feature/add-login
+# Merge only through the repository-required protected review/check workflow.
+# Delete the topic branch after the remote merge is confirmed.
 ```
 
 ### GitHub Flow

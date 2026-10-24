@@ -445,6 +445,7 @@ def audit(snapshot):
         require(lid in ids, "Prospect page belongs to an unselected list.")
         pages[lid].append(call)
     coverage, records_by_list, total_records = [], {}, 0
+    captured_memberships = 0
     for lid in ids:
         detail = details[lid]
         metadata = detail.get("custom_field_metadata")
@@ -503,6 +504,9 @@ def audit(snapshot):
                 "Items and normalized pagination are required.",
             )
             require(len(items) <= size, "Page contains more records than requested.")
+            captured_memberships += len(items)
+            require(captured_memberships <= MAX_RECORDS,
+                    "Snapshot exceeds 1000 captured selected-list memberships, including duplicates.")
             if page != next_expected or final_seen:
                 issues.append("noncontiguous_or_extra_pages")
             if (

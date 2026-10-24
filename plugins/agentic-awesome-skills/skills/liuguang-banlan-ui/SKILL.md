@@ -68,8 +68,8 @@ Maintain a serializable manifest with these top-level fields:
 ```
 
 - Keep every intensity in `[0, 1]`; make `overallColorIntensity` the global budget and `colors[].intensity` the per-color budget. The renderer multiplies `intensity` by `peakOpacity`, so treat `peakOpacity` as the calibrated strength at full intensity.
-- Order `colors` by hue. The renderer draws six hue stops around a loop and mixes each color with its array neighbors; near-complementary neighbors mix toward gray.
-- `luminanceCap` applies only in `obsidian`. `ditherStrength` is the dither amplitude in output codes; `1` removes quantization bias.
+- Order `colors` by hue. The renderer draws one stop per configured hue around a loop and mixes each color with its array neighbors; near-complementary neighbors mix toward gray.
+- `luminanceCap` applies only in `obsidian`. `ditherStrength` is the dither amplitude in output codes; `1` enables full-amplitude dither; verify actual bias on the target renderer.
 - Use OKLCH as the authoring space and provide an sRGB fallback for non-OKLCH contexts.
 - Keep the seed, static frame, phases, and field scales deterministic; do not use random per render.
 - Expose sliders for the global intensity and every configured color. Make reset, JSON export, and copy actions available.
@@ -80,7 +80,7 @@ Maintain a serializable manifest with these top-level fields:
 - Use broad flowing hue regions or ribbons, not obvious radial blobs, spotlight circles, or hard rainbow bands.
 - Upload the complete palette and per-color field scales to the renderer. Apply the dark-mode luminance cap after palette mixing.
 - Encode output with the sRGB transfer function, dither in output codes, and quantize in the shader. A power-curve encode or a weak linear-light dither biases the output, most visibly in low-intensity fields and near black.
-- Provide a CSS fallback with comparable visual intent when WebGL is unavailable, such as one soft hue-ordered sweep calibrated against the WebGL field; do not use fixed radial spots.
+- Provide a CSS fallback with comparable visual intent when WebGL is unavailable; the starter uses multiple soft linear-gradient layers and requires separate calibration; do not use fixed radial spots.
 - Pause or freeze motion when the document is hidden or `prefers-reduced-motion` is active, and keep field time continuous so pausing and resuming do not jump.
 - Repaint after every resize. Resizing clears the canvas, and a paused field has no next frame to redraw it.
 - Keep the renderer local and dependency-light; do not require remote fonts, images, or APIs for the starter.
@@ -139,3 +139,13 @@ Run `python -m unittest discover -s tests` after changing a script.
 ### assets/
 
 `starter/` contains a neutral static workbench, shared renderer, and both theme variants. Treat it as output material, not as documentation to paste into context wholesale.
+
+## Review boundaries
+
+The starter contains synthetic demonstration records and status text, not a real
+synchronized or verified data system. Pixel statistics do not certify WCAG contrast
+or aesthetics. Current source review ran offline helper fixtures; browser/visual
+and GPU checks must be reported separately if not performed. Preview only a copied
+starter, never a directory with secrets. The preview is loopback-only, denies hidden
+paths, symlink resources and directory listings, and is not a hardened shared server.
+Scaffolding requires an existing regular parent and a new output directory.

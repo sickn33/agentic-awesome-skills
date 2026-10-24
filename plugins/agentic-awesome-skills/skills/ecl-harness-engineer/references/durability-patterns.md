@@ -1,5 +1,7 @@
 # Durability Patterns for Agent Harness
 
+> Review boundary: Tool-call bands and percentages below are illustrative, not measured failure thresholds. Checkpoints are progress records, not backups: inspect current hashes/diffs on resume and preserve later user edits; never restore over them solely because a checkpoint differs. Memory and traces need authorized retention, redaction, access controls and deletion. Persist cross-session memory only when the user authorizes it. Delegation follows current platform and user instructions.
+
 > "The 100th tool call is where agents fail. Non-trivial agent tasks involve dozens to hundreds of tool calls. Context windows fill up, summarization kicks in, and the agent quietly forgets something essential."
 
 This reference documents patterns for building durable agent infrastructure — harnesses that survive failures, manage context across long sessions, and maintain agent effectiveness over extended workstreams.

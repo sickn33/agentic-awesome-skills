@@ -4,6 +4,9 @@
  * This template provides a starting point for creating
  * custom components with Radix UI primitives.
  * 
+ * Non-compilable pseudotemplate: this shape is Dialog-specific; other primitives
+ * do not all expose Portal, Overlay, Title, Description or Close. Select supported
+ * parts and derive props from the element that actually accepts className.
  * Replace [PRIMITIVE] with actual primitive name:
  * Dialog, DropdownMenu, Select, Tabs, Tooltip, etc.
  */

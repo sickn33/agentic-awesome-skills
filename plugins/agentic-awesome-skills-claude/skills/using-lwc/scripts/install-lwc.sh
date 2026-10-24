@@ -1,4 +1,5 @@
 #!/bin/sh
+# Modified for AAS review: boundary/JSON, install opt-in and safe staging hardening.
 set -eu
 
 repository="JanYork/llm-wiki-cli"
@@ -13,6 +14,9 @@ die() {
 need() {
   command -v "$1" >/dev/null 2>&1 || die "Required command not found: $1"
 }
+
+[ "${LWC_ALLOW_INSTALL:-0}" = 1 ] || die "installation requires task authorization and LWC_ALLOW_INSTALL=1"
+: "${HOME:?lwc installer: HOME is not set}"
 
 need curl
 need uname
@@ -97,6 +101,8 @@ else
 fi
 
 destination="${install_dir}/${binary_name}"
+[ ! -L "$install_dir" ] || die "symlink install directory is not supported"
+[ ! -L "$destination" ] || die "symlink binary destination is not supported"
 if [ -x "$destination" ]; then
   current_version="$("$destination" --version 2>/dev/null || true)"
   if [ "$current_version" = "lwc ${version}" ]; then
@@ -123,7 +129,7 @@ cleanup() {
 trap cleanup 0
 trap 'exit 1' HUP INT TERM
 
-curl -fsSL "$release_url/$archive" -o "$work_dir/$archive" ||
+curl --proto '=https' --proto-redir '=https' --tlsv1.2 --connect-timeout 10 --max-time 120 -fsSL "$release_url/$archive" -o "$work_dir/$archive" ||
   die "Could not download $archive"
 
 if command -v sha256sum >/dev/null 2>&1; then
@@ -151,7 +157,7 @@ case "$archive_extension" in
 esac
 
 downloaded_binary="$work_dir/lwc-${version}-${target}/${binary_name}"
-[ -f "$downloaded_binary" ] || die "Release archive does not contain $binary_name"
+[ -f "$downloaded_binary" ] && [ ! -L "$downloaded_binary" ] || die "Release archive does not contain a regular $binary_name"
 chmod +x "$downloaded_binary"
 [ "$("$downloaded_binary" --version 2>/dev/null || true)" = "lwc ${version}" ] ||
   die "Downloaded binary failed its version check"
@@ -159,7 +165,7 @@ chmod +x "$downloaded_binary"
 mkdir -p "$install_dir"
 [ -w "$install_dir" ] || die "Install directory is not writable: $install_dir"
 
-staged_binary="$install_dir/.lwc.install.$$"
+staged_binary="$(mktemp "$install_dir/.lwc.install.XXXXXX")" || die "cannot create private staging file"
 cp "$downloaded_binary" "$staged_binary"
 chmod +x "$staged_binary"
 mv -f "$staged_binary" "$destination"

@@ -2,7 +2,7 @@
 # Per-dir resumable download loop — robust to mid-transfer connection drops.
 #
 # Each dir is pulled in its own session, so one network blip never loses the rest,
-# and re-running skips already-complete dirs. A single `scp -r` of a huge tree dies
+# and rsync reconciles existing local directories on every run. A single `scp -r` of a huge tree dies
 # on any blip and does NOT resume — see references/gotchas_universal.md (transfer
 # resets). This uses rsync --partial, which resumes a half-pulled dir in place.
 #
@@ -12,14 +12,23 @@
 #   REMOTE_PATH=/durable/final_ckpts \
 #     bash download_loop.sh
 #
-# NOTE: `du -sb` is GNU coreutils. On a non-GNU local shell (macOS/Windows) the
-# size-skip heuristic may need adjusting; the download itself is unaffected.
+# Always run rsync: directory size alone cannot prove transfer completeness.
+# Requires Bash 4+ and rsync with --protect-args on both ends.
 set -u
+if [ "${BASH_VERSINFO[0]}" -lt 4 ]; then
+    echo "Requires Bash 4+ (mapfile); select a supported interpreter." >&2
+    exit 1
+fi
 
 LOCAL_TARGET="${LOCAL_TARGET:-/path/to/local/final_ckpts}"
 REMOTE_ALIAS="${REMOTE_ALIAS:-my-gpu-1}"
 REMOTE_PATH="${REMOTE_PATH:-/root/autodl-fs/final_ckpts}"   # override from your profile (durable mount)
-MIN_DIR_SIZE_BYTES="${MIN_DIR_SIZE_BYTES:-2000000000}"      # 2 GB = "looks complete"
+case "$REMOTE_ALIAS" in
+    ""|-*|*[!a-zA-Z0-9_.@-]*) echo "ERROR: use a configured SSH alias or user@host" >&2; exit 1 ;;
+esac
+# Quote for the remote POSIX shell; SSH does not preserve local argv boundaries.
+shell_quote(){ printf "'%s'" "$(printf '%s' "$1" | sed "s/'/'\\\\''/g")"; }
+remote_path_quoted=$(shell_quote "$REMOTE_PATH")
 
 mkdir -p "$LOCAL_TARGET"
 cd "$LOCAL_TARGET" || exit 1
@@ -29,7 +38,7 @@ echo "Listing remote dirs in $REMOTE_ALIAS:$REMOTE_PATH ..."
 # discards ssh's exit code, so an unreachable host or a wrong path yields an empty
 # array that then reads as "nothing to download" -- a silent success right before a
 # pre-teardown pull (principle #3). Fail loud on a listing error instead.
-remote_listing=$(ssh -o ConnectTimeout=15 "$REMOTE_ALIAS" "ls -1 '$REMOTE_PATH'")
+remote_listing=$(ssh -o ConnectTimeout=15 "$REMOTE_ALIAS" "ls -1 -- $remote_path_quoted")
 ssh_rc=$?
 if [ "$ssh_rc" -ne 0 ]; then
     echo "ERROR: could not list $REMOTE_ALIAS:$REMOTE_PATH (ssh/ls exit $ssh_rc) -- refusing to treat an unreachable host as an empty download." >&2
@@ -44,16 +53,10 @@ if [ "$n_total" -eq 0 ]; then echo "Remote dir is reachable but empty -- nothing
 ok=0; skip=0; fail=0
 for d in "${remote_dirs[@]}"; do
     [ -n "$d" ] || continue
-    if [ -d "$d" ]; then
-        size=$(du -sb "$d" 2>/dev/null | cut -f1)
-        if [ "${size:-0}" -ge "$MIN_DIR_SIZE_BYTES" ]; then
-            echo "SKIP $d (already complete)"
-            skip=$((skip+1)); continue
-        fi
-        echo "RETRY $d (partial — rsync will resume in place)"
-    fi
+    # The listing is line-delimited: reject path components that could escape the target.
+    case "$d" in ""|.|..|*/*) echo "FAIL: invalid remote entry" >&2; fail=$((fail+1)); continue ;; esac
     echo "DOWNLOADING $d ..."
-    if rsync -az --partial -e 'ssh -o ConnectTimeout=15 -o ServerAliveInterval=60 -o ServerAliveCountMax=120' \
+    if rsync -az --partial --protect-args -e 'ssh -o ConnectTimeout=15 -o ServerAliveInterval=60 -o ServerAliveCountMax=120' \
         "$REMOTE_ALIAS:$REMOTE_PATH/$d" ./ ; then
         echo "OK $d"; ok=$((ok+1))
     else

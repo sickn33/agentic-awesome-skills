@@ -1,5 +1,7 @@
 # Playwright Java – Project Configuration
 
+These pinned dependencies/image tags are historical examples, not an up-to-date tested scaffold. Supply missing User/Page/domain classes and imports, review supported dependency versions, and match the Playwright artifact to its browser installation/container. Keep JVM properties fixed per process for parallel tests.
+
 ## Maven POM (`pom.xml`)
 
 ```xml
@@ -15,6 +17,9 @@
   <version>1.0-SNAPSHOT</version>
 
   <properties>
+    <browser>chromium</browser>
+    <headless>true</headless>
+    <baseUrl>http://localhost:3000</baseUrl>
     <java.version>17</java.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>

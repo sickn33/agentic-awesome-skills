@@ -56,12 +56,14 @@ async function myWorkflowFn() {
 
 Retry parameters:
 - `retriesAllowed`: Enable automatic retries (default: `false`)
-- `maxAttempts`: Maximum retry attempts (default: `3`)
+- `maxAttempts`: Maximum total attempts, including the first (default: `3`)
 - `intervalSeconds`: Initial delay between retries in seconds (default: `1`)
 - `backoffRate`: Multiplier for exponential backoff (default: `2`)
 
-With defaults, retry delays are: 1s, 2s, 4s, 8s, 16s...
+With retries enabled and default `maxAttempts: 3`, there are at most three total attempts and two delays: 1s and 2s. Larger configured limits continue the exponential sequence.
 
 If all retries are exhausted, a `DBOSMaxStepRetriesError` is thrown to the calling workflow.
 
 Reference: [Configurable Retries](https://docs.dbos.dev/typescript/tutorials/step-tutorial#configurable-retries)
+
+Retry only safe/idempotent operations and transient failures. `fetch` does not reject HTTP 4xx/5xx automatically: check `response.ok`, bound network timeouts, and distinguish permanent errors before enabling retries.

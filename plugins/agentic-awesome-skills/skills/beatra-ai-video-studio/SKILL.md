@@ -139,7 +139,7 @@ python3 "$HOME/.claude/skills/beatra-ai-video-studio/scripts/mcp_client.py" veri
 
 ### One approved text-to-video call
 
-After the user approved the cost card for this exact payload:
+After the user approved the cost card for this exact payload, replace the illustrative request ID once with a fresh unique ID and persist it for identical retries. Never reuse the sample ID for separate jobs:
 
 ```bash
 printf '%s' '{"prompt":"A close product reveal with one slow push-in.","model":"auto","duration":5,"client_request_id":"req-7f3c2a"}' \
@@ -195,6 +195,8 @@ Beatra Console under Agents.
 - ❌ Do not replace the installed copy with an unreviewed version silently.
 - ❌ Do not print, paste, or move the token out of `~/.beatra/credentials.json`.
 - ❌ Do not retry a paid call with a new request ID after an uncertain response.
+
+Before publication, inspect the complete clip for continuity, temporal artifacts, source likeness/brand drift, unsafe or deceptive details and rights/consent. A completed task is not evidence of those editorial checks.
 
 ## Limitations
 

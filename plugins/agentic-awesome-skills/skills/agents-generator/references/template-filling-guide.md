@@ -26,7 +26,7 @@ Full detection logic is in `decision-matrix.md`. This is the quick-reference tab
 
 ### `{{STACK_TABLE}}`
 
-Each row must have **exact version numbers** from `package.json`. Never write "latest" or "X.Y.Z". Format: `| Capa | Tecnología | Versión |`. Include framework, UI, runtime, ORM, validation, testing, linting, analytics, fonts.
+Report declared ranges from `package.json` as ranges; resolve exact installed versions from the lockfile when available. Do not relabel a semver range as an exact version. Never write "latest" or "X.Y.Z". Format: `| Capa | Tecnología | Versión |`. Include framework, UI, runtime, ORM, validation, testing, linting, analytics, fonts.
 
 ### `{{ARCHITECTURE_DIAGRAM}}`
 
@@ -46,7 +46,7 @@ Only commands whose **script key exists** in `package.json`. Use `{pm} run <key>
 
 ### `{{TEST_COUNT}}`
 
-Count actual `test()` / `it()` calls across all test files. Report `"N tests"` with the real number. If you cannot count accurately, report the number of test files: `"N test files"`.
+Static `test()` / `it()` call counts miss parameterized/generated cases and are not executed-test totals. Label them static declarations, or report test-file counts. If you cannot count accurately, report the number of test files: `"N test files"`.
 Also report: test runner + version, environment (node/jsdom), coverage provider and target, strict TDD mode (yes/no).
 
 ### `{{COMMIT_EXAMPLES}}`

@@ -17,10 +17,9 @@ dotnet add package Azure.ResourceManager.PostgreSql
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v1.2.0 (GA)  
-**API Version**: 2023-12-01-preview
+**Example baseline**: SDK v1.2.0 / API 2023-12-01-preview. This is not a current-version assertion; select and pin a supported SDK/API for the target subscription and compile these snippets against it.
 
-> **Note**: This skill focuses on PostgreSQL Flexible Server. Single Server is deprecated and scheduled for retirement.
+> **Note**: This skill focuses on PostgreSQL Flexible Server. Single Server is retired; use Flexible Server and check current regional/version support.
 
 ## Environment Variables
 
@@ -57,6 +56,8 @@ Subscription
 
 ## Core Workflows
 
+These are separate illustrative snippets, not one compilable program. Add imports (`Azure`, `Azure.Core`, resource-group types) as required by the installed SDK. Confirm subscription/resource IDs, cost, availability and rollback before provisioning or resizing; confirm a recoverable backup and exact target before deletion. ARM credentials manage infrastructure; database connections separately need authorized database roles. Refresh Entra tokens for newly opened pooled connections using Npgsql’s password-provider API rather than retaining one token indefinitely.
+
 ### 1. Create PostgreSQL Flexible Server
 
 ```csharp
@@ -64,10 +65,8 @@ using System;
 using Azure.ResourceManager.PostgreSql.FlexibleServers;
 using Azure.ResourceManager.PostgreSql.FlexibleServers.Models;
 
-ResourceGroupResource resourceGroup = await client
-    .GetDefaultSubscriptionAsync()
-    .Result
-    .GetResourceGroupAsync("my-resource-group");
+var subscription = await client.GetDefaultSubscriptionAsync();
+ResourceGroupResource resourceGroup = (await subscription.GetResourceGroupAsync("my-resource-group")).Value;
 
 PostgreSqlFlexibleServerCollection servers = resourceGroup.GetPostgreSqlFlexibleServers();
 
@@ -134,17 +133,19 @@ Console.WriteLine($"Database created: {database.Data.Name}");
 ```csharp
 PostgreSqlFlexibleServerFirewallRuleCollection firewallRules = server.GetPostgreSqlFlexibleServerFirewallRules();
 
-// Allow specific IP range
+// Public-access firewall rules require the client’s public egress IP, not its private VNet address.
+// Example documentation range only; replace with the approved public egress range.
 PostgreSqlFlexibleServerFirewallRuleData ruleData = new PostgreSqlFlexibleServerFirewallRuleData
 {
-    StartIPAddress = System.Net.IPAddress.Parse("10.0.0.1"),
-    EndIPAddress = System.Net.IPAddress.Parse("10.0.0.255")
+    StartIPAddress = System.Net.IPAddress.Parse("203.0.113.10"),
+    EndIPAddress = System.Net.IPAddress.Parse("203.0.113.10")
 };
 
 ArmOperation<PostgreSqlFlexibleServerFirewallRuleResource> operation = await firewallRules
     .CreateOrUpdateAsync(WaitUntil.Completed, "allow-internal", ruleData);
 
-// Allow Azure services
+// OPTIONAL broad exception: 0.0.0.0 allows Azure services from OTHER customers’ subscriptions too.
+// Do not apply without explicit approval; prefer specific egress IPs or private networking.
 PostgreSqlFlexibleServerFirewallRuleData azureServicesRule = new PostgreSqlFlexibleServerFirewallRuleData
 {
     StartIPAddress = System.Net.IPAddress.Parse("0.0.0.0"),
@@ -266,7 +267,7 @@ ArmOperation<PostgreSqlFlexibleServerResource> operation = await servers
 PostgreSqlFlexibleServerResource server = await resourceGroup
     .GetPostgreSqlFlexibleServerAsync("my-postgresql-server");
 
-// Stop server (saves costs when not in use)
+// Stop server (compute billing stops; storage/backup costs and automatic restart limits still apply)
 await server.StopAsync(WaitUntil.Completed);
 
 // Start server
@@ -360,7 +361,7 @@ await server.DeleteAsync(WaitUntil.Completed);
 2. **Enable zone-redundant HA** — For production workloads
 3. **Use DefaultAzureCredential** — Prefer over connection strings
 4. **Configure Entra ID authentication** — More secure than SQL auth alone
-5. **Enable both auth methods** — Entra ID + password for flexibility
+5. **Choose auth methods deliberately** — Prefer Entra-only where supported; enable password auth only for a documented requirement
 6. **Set appropriate backup retention** — 7-35 days based on compliance
 7. **Use private endpoints** — For secure network access
 8. **Tune server parameters** — Based on workload characteristics
@@ -396,12 +397,13 @@ catch (RequestFailedException ex)
 After creating the server, connect using:
 
 ```csharp
+// Supply password from a secret provider; never log the resulting connection string.
 // Npgsql connection string
 string connectionString = $"Host={server.Data.FullyQualifiedDomainName};" +
     "Database=myappdb;" +
     "Username=pgadmin;" +
-    "Password=YourSecurePassword123!;" +
-    "SSL Mode=Require;Trust Server Certificate=true;";
+     $"Password={Environment.GetEnvironmentVariable("POSTGRES_ADMIN_PASSWORD") ?? throw new InvalidOperationException("Password required")};" +
+    "SSL Mode=VerifyFull;";
 
 // With Entra ID token (recommended)
 var credential = new DefaultAzureCredential();
@@ -412,7 +414,7 @@ string connectionString = $"Host={server.Data.FullyQualifiedDomainName};" +
     "Database=myappdb;" +
     $"Username=aad-admin@contoso.com;" +
     $"Password={token.Token};" +
-    "SSL Mode=Require;";
+    "SSL Mode=VerifyFull;";
 ```
 
 ## Related SDKs

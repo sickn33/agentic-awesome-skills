@@ -24,6 +24,8 @@ Monitor AI agent behavior with logs, traces, metrics, and cost telemetry. This s
 
 ---
 
+Examples use custom llm.* attributes, not a claim of current OpenTelemetry semantic-convention compliance. Import shared metric definitions once and use bounded configured label values. Telemetry export is data disclosure: approve destination/retention and omit prompts, credentials, direct user IDs and raw exception bodies. TLS is required for non-loopback collectors.
+
 ## Core Metrics
 
 Define these metrics at the application layer. All examples use the Prometheus client library naming conventions.
@@ -160,7 +162,7 @@ def init_tracing(service_name: str, otlp_endpoint: str = "http://localhost:4317"
         "deployment.environment": "production",
     })
     provider = TracerProvider(resource=resource)
-    exporter = OTLPSpanExporter(endpoint=otlp_endpoint, insecure=True)
+    exporter = OTLPSpanExporter(endpoint=otlp_endpoint, insecure=otlp_endpoint.startswith("http://localhost:"))
     provider.add_span_processor(BatchSpanProcessor(exporter))
     trace.set_tracer_provider(provider)
     return trace.get_tracer(service_name)
@@ -178,7 +180,9 @@ tracer = trace.get_tracer("agent.llm")
 
 def traced_llm_call(client, messages, model="gpt-4o", **kwargs):
     """Wrap an LLM completion call with a full OpenTelemetry span."""
-    with tracer.start_as_current_span("llm.chat_completion") as span:
+    if kwargs.get("stream"):
+        raise ValueError("This synchronous wrapper does not consume streams; use a stream-aware adapter")
+    with tracer.start_as_current_span("llm.chat_completion", record_exception=False, set_status_on_exception=False) as span:
         span.set_attribute("llm.model", model)
         span.set_attribute("llm.provider", "openai")
         span.set_attribute("llm.message_count", len(messages))
@@ -193,6 +197,8 @@ def traced_llm_call(client, messages, model="gpt-4o", **kwargs):
             elapsed = time.perf_counter() - start
 
             usage = response.usage
+            if usage is None or not response.choices:
+                raise ValueError("Usage/choices unavailable; record unknown rather than inventing zero")
             span.set_attribute("llm.prompt_tokens", usage.prompt_tokens)
             span.set_attribute("llm.completion_tokens", usage.completion_tokens)
             span.set_attribute("llm.total_tokens", usage.total_tokens)
@@ -209,9 +215,10 @@ def traced_llm_call(client, messages, model="gpt-4o", **kwargs):
 
         except Exception as exc:
             elapsed = time.perf_counter() - start
-            span.set_status(StatusCode.ERROR, str(exc))
-            span.record_exception(exc)
-            LLM_ERRORS.labels(model=model, provider="openai", error_type=type(exc).__name__).inc()
+            span.set_status(StatusCode.ERROR, type(exc).__name__)
+            # Raw exception text may contain prompts, URLs or credentials.
+            LLM_ERRORS.labels(model=model, provider="openai", error_type="request_error").inc()
+            LLM_CALL_LATENCY.labels(model=model, provider="openai", stream="false").observe(elapsed)
             raise
 ```
 
@@ -228,9 +235,12 @@ tracer = trace.get_tracer("agent.tools")
 def traced_tool(tool_name: str):
     """Decorator that wraps a tool function with an OTel span and Prometheus metrics."""
     def decorator(func):
+        import inspect
+        if inspect.iscoroutinefunction(func) or inspect.isgeneratorfunction(func):
+            raise TypeError("Use an async/generator-aware adapter that observes actual completion")
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            with tracer.start_as_current_span(f"tool.{tool_name}") as span:
+            with tracer.start_as_current_span(f"tool.{tool_name}", record_exception=False, set_status_on_exception=False) as span:
                 span.set_attribute("tool.name", tool_name)
                 span.set_attribute("tool.args_count", len(args) + len(kwargs))
 
@@ -250,8 +260,8 @@ def traced_tool(tool_name: str):
                     return result
                 except Exception as exc:
                     elapsed = time.perf_counter() - start
-                    span.set_status(StatusCode.ERROR, str(exc))
-                    span.record_exception(exc)
+                    span.set_status(StatusCode.ERROR, type(exc).__name__)
+                    # Raw exception text may contain prompts, URLs or credentials.
                     TOOL_CALLS_TOTAL.labels(
                         tool_name=tool_name, agent_name="default", status="error"
                     ).inc()
@@ -286,7 +296,9 @@ def call_downstream_service(url: str, payload: dict) -> dict:
     """Propagate the current trace context to a downstream HTTP service."""
     headers = {}
     inject(headers)  # injects traceparent + tracestate headers
-    response = httpx.post(url, json=payload, headers=headers)
+    # url must come from trusted service configuration, not model/user input.
+    # Enforce an approved HTTPS origin/egress policy before propagating context.
+    response = httpx.post(url, json=payload, headers=headers, timeout=10.0, follow_redirects=False)
     response.raise_for_status()
     return response.json()
 
@@ -332,6 +344,8 @@ Key signals that you need this skill:
 ---
 
 ## Limitations
+
+- The snippets require actual integration imports and instrumentation; dashboards alone do not populate metrics. Usage, cached-token categories and prices must match the provider response. Budget alerts do not enforce a spending cap.
 
 - Guidance executes against real environments: confirm target, blast radius, and rollback plan before applying anything.
 - Never deploy to production without explicit approval. Docs-only import: upstream scripts and templates not bundled.

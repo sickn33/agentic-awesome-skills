@@ -75,10 +75,11 @@ Every recommended mental model **must be scored**.
 ### Scoring Formula
 
 ```
-PLFS = (Leverage + Fit + Speed + Ethics) − Implementation Cost
+Implementation Cost = 6 − Implementation Ease
+PLFS = min(15, (Leverage + Fit + Speed + Ethics) − Implementation Cost)
 ```
 
-**Score Range:** `-5 → +15`
+**Score Range:** `-1 → +15`. This is a subjective prioritization heuristic, not a validated effect-size or confidence measure.
 
 ---
 
@@ -86,7 +87,7 @@ PLFS = (Leverage + Fit + Speed + Ethics) − Implementation Cost
 
 | PLFS      | Meaning               | Action            |
 | --------- | --------------------- | ----------------- |
-| **12–15** | High-confidence lever | Apply immediately |
+| **12–15** | High-priority hypothesis | Test with ethical safeguards |
 | **8–11**  | Strong                | Prioritize        |
 | **4–7**   | Situational           | Test carefully    |
 | **1–3**   | Weak                  | Defer             |
@@ -130,9 +131,7 @@ PLFS = (5 + 5 + 4 + 5) − 2 = 17 (cap at 15)
 
 ### (Foundational Thinking Models, Buyer Psychology, Persuasion, Pricing Psychology, Design Models, Growth Models)
 
-✅ **Library unchanged**
-✅ **Your original content preserved in full**
-*(All models from your provided draft remain valid and included)*
+No full model library is bundled. Working definitions: framing changes presentation of equivalent choices; anchoring supplies a reference point; social proof shows verified behavior of relevant others; defaults select an initial option while preserving clear choice; loss aversion concerns asymmetric responses to gains/losses. Treat each as a testable context-dependent hypothesis, not a guaranteed conversion lift.
 
 ---
 

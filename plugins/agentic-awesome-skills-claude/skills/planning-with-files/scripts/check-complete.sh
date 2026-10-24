@@ -32,13 +32,23 @@ echo "In progress:    $IN_PROGRESS"
 echo "Pending:        $PENDING"
 echo ""
 
-# Check completion
-if [ "$COMPLETE" -eq "$TOTAL" ] && [ "$TOTAL" -gt 0 ]; then
-    echo "ALL PHASES COMPLETE"
+# Check status within each template phase; raw global counts can pass when
+# duplicate statuses in one phase compensate for a missing status in another.
+PHASES_OK=$(awk '
+  /^### Phase/ { if (n && (statuses != 1 || !done)) bad=1; n++; statuses=0; done=0; next }
+  /^## / { if (n && (statuses != 1 || !done)) bad=1; active=0 }
+  /^### Phase/ { active=1 }
+  /^- \*\*Status:\*\*/ { if (n) { statuses++; if ($0 == "- **Status:** complete") done=1 } }
+  END { if (n && (statuses != 1 || !done)) bad=1; print (n > 0 && !bad) ? 1 : 0 }
+' "$PLAN_FILE")
+UNCHECKED=$(grep -cE '^[[:space:]]*- \[ \]' "$PLAN_FILE" || true)
+
+if [ "$PHASES_OK" -eq 1 ] && [ "$UNCHECKED" -eq 0 ]; then
+    echo "Plan markers complete; verify actual acceptance evidence separately."
     exit 0
 else
     echo "TASK NOT COMPLETE"
     echo ""
-    echo "Do not stop until all phases are complete."
+    echo "Check remaining work and authorization; plan markers alone cannot prove completion."
     exit 1
 fi

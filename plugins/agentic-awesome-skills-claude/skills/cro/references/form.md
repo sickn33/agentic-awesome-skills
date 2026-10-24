@@ -34,10 +34,7 @@ Before providing recommendations, identify:
 ## Core Principles
 
 ### 1. Every Field Has a Cost
-Each field reduces completion rate. Rule of thumb:
-- 3 fields: Baseline
-- 4-6 fields: 10-25% reduction
-- 7+ fields: 25-50%+ reduction
+Additional fields can increase effort, but their effect depends on audience, purpose and perceived value. No universal percentage reduction by field count is established here. Measure qualified conversion and downstream quality, not submissions alone.
 
 For each field, ask:
 - Is this absolutely necessary before we can help them?
@@ -184,7 +181,7 @@ Email
 ### On Submit
 - Focus on first error field
 - Summarize errors if multiple
-- Preserve all entered data
+- Preserve needed non-sensitive inputs; never persist payment secrets, passwords or unnecessary sensitive fields in analytics/local storage
 - Don't clear form on error
 
 ---
@@ -218,13 +215,13 @@ Examples:
 ## Trust and Friction Reduction
 
 ### Near the Form
-- Privacy statement: "We'll never share your info"
+- Privacy statement matching actual data sharing/retention; never promise no sharing if processors or partners receive data
 - Security badges if collecting sensitive data
 - Testimonial or social proof
 - Expected response time
 
 ### Reducing Perceived Effort
-- "Takes 30 seconds"
+- A completion-time estimate only if measured
 - Field count indicator
 - Remove visual clutter
 - Generous white space
@@ -294,7 +291,7 @@ Examples:
 ### What to Track
 - Form views
 - First field focus
-- Each field completion
+- Field-completion events containing field identifiers/state only, never typed values
 - Errors by field
 - Submit attempts
 - Successful submissions
@@ -398,7 +395,7 @@ Ideas to A/B test with expected outcomes
 - Larger touch targets for mobile
 - Test appropriate keyboard types by field
 - Sticky submit button on mobile
-- Auto-focus first field on page load
+- Test focus only when expected; avoid stealing keyboard/screen-reader focus or opening a mobile keyboard unexpectedly
 - Test form container styling (card vs. minimal)
 
 ---

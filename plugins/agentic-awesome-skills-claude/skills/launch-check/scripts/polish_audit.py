@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# Vendored from agent-forge skills/site-polish-audit/scripts/polish_audit.py v1.0 for launch-check. Only change: the 4
-# in-page JavaScript regex calls of the form "re dot exec of s" are written String(s).match(re): same result, no marketplace scanner hit.
+# Adapted from agent-forge site-polish-audit v1.0 for launch-check.
+# AAS: active rendering opt-in, scoped browser/static reads, output sanitation and bounded screenshots.
 """polish_audit.py: render a web page, measure what makes it look unprofessional, rank the fixes.
 
 Renders the page in headless Chromium (Playwright) at 375, 768 and 1440 px and measures, per viewport:
@@ -44,6 +44,7 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
+from launch_check import Fetcher, guard_browser_context, sanitize_report, origin
 from pathlib import Path
 
 VERSION = "1.0"
@@ -528,10 +529,24 @@ def measure_browser(target, viewports, timeout, offline, shots_dir, max_elements
         for width in viewports:
             mobile = width < 1024
             ctx = browser.new_context(viewport={"width": width, "height": 900 if width >= 1024 else 800},
-                                      is_mobile=mobile, has_touch=mobile, device_scale_factor=1)
-            if offline:
-                ctx.route("**/*", lambda route: route.continue_() if route.request.url.startswith(("file:", "data:", "blob:"))
-                          else route.abort())
+                                      is_mobile=mobile, has_touch=mobile, device_scale_factor=1, service_workers="block")
+            if _kind == "file":
+                base = Path(urllib.request.url2pathname(urllib.parse.urlsplit(url).path)).resolve().parent
+                if not hasattr(ctx, "route_web_socket"):
+                    raise RuntimeError("Browser audit requires WebSocket routing support")
+                ctx.route_web_socket("**/*", lambda socket: socket.close())
+                def local_request(route):
+                    parts = urllib.parse.urlsplit(route.request.url)
+                    allowed = parts.scheme in ("data", "blob")
+                    if parts.scheme == "file":
+                        candidate = Path(urllib.request.url2pathname(parts.path)).resolve()
+                        allowed = candidate == base or base in candidate.parents
+                    route.continue_() if allowed else route.abort()
+                ctx.route("**/*", local_request)
+            elif offline:
+                raise RuntimeError("--offline requires a local HTML file")
+            else:
+                guard_browser_context(ctx, url)
             ctx.add_init_script(INIT_JS)
             page = ctx.new_page()
             page.goto(url, wait_until="load", timeout=int(timeout * 1000))
@@ -564,7 +579,7 @@ def annotate(pages, findings, shots_dir, slug):
         dims = page.evaluate("() => [document.documentElement.scrollWidth, document.documentElement.scrollHeight]")
         path = shots_dir / ("%s-%d.png" % (slug, width))
         clip = {"x": 0, "y": 0, "width": max(width, dims[0]), "height": min(dims[1], 5000)}
-        page.screenshot(path=str(path), full_page=True, clip=clip)
+        page.screenshot(path=str(path), clip=clip)
         out[width] = str(path)
     return out
 
@@ -696,8 +711,10 @@ def measure_static(target, timeout, offline):
         if offline:
             raise RuntimeError("--offline: refusing to fetch " + url)
         req = urllib.request.Request(url, headers={"User-Agent": "site-polish-audit/" + VERSION})
-        with urllib.request.urlopen(req, timeout=timeout) as resp:  # nosec B310 - the URL the user asked to audit
-            source = resp.read(5_000_000).decode("utf-8", errors="replace")
+        resp, _ = Fetcher(timeout).get(url, 3_000_000)
+        if resp.status != 200 or resp.error: raise RuntimeError("Cannot fetch scoped HTML")
+        url = resp.url
+        source = resp.body.decode("utf-8", errors="replace")
         base_dir = None
     parser = _Parser()
     parser.feed(source)
@@ -706,12 +723,17 @@ def measure_static(target, timeout, offline):
         try:
             if base_dir is not None and not re.match(r"^[a-z]+:", href, re.I):
                 p = (base_dir / href.split("?")[0]).resolve()
-                if p.is_file():
+                if base_dir not in p.parents:
+                    continue
+                if p.is_file() and p.stat().st_size <= 2_000_000:
                     css += "\n" + p.read_text(encoding="utf-8", errors="replace")
             elif base_dir is None and not offline:
                 full = urllib.parse.urljoin(url, href)
-                with urllib.request.urlopen(full, timeout=timeout) as resp:  # nosec B310 - stylesheet of the audited page
-                    css += "\n" + resp.read(2_000_000).decode("utf-8", errors="replace")
+                if origin(full) != origin(url):
+                    continue
+                resp, _ = Fetcher(timeout).get(full, 2_000_000, start=url)
+                if resp.status == 200 and not resp.error:
+                    css += "\n" + resp.body.decode("utf-8", errors="replace")
         except Exception:  # unreachable stylesheet: audit what we have
             continue
     rules = list(css_rules(css)) + [("[style] " + tag, dict(
@@ -1067,7 +1089,7 @@ def run(args):
     engine = "static"
     shots = {}
     note = ""
-    if not args.static and load_playwright() is not None:
+    if args.browser_check and not args.static and load_playwright() is not None:
         try:
             measures, pages, (pw, browser) = measure_browser(args.target, viewports, args.timeout, args.offline, None)
             engine = "playwright"
@@ -1081,7 +1103,7 @@ def run(args):
     else:
         measures = None
         if not args.static:
-            note = "Playwright not installed: layout checks skipped. Install: " + INSTALL_HINT
+            note = "Active browser rendering not enabled or unavailable: layout checks skipped."
     if engine == "playwright":
         try:
             findings = build_findings(measures)
@@ -1097,7 +1119,7 @@ def run(args):
         findings = build_findings(measures)
     value, breakdown = score(findings, engine == "static")
     highs = sum(1 for f in findings if f["severity"] == "HIGH")
-    passed = value >= args.fail_under and highs == 0
+    passed = engine == "playwright" and value >= args.fail_under and highs == 0
     m0 = measures[max(measures)]
     report = {
         "tool": "site-polish-audit", "version": VERSION, "target": args.target, "engine": engine,
@@ -1109,7 +1131,7 @@ def run(args):
         "screenshots": {str(k): v for k, v in shots.items()}, "note": note,
         "skipped": sorted(LAYOUT_ONLY) if engine == "static" else [],
     }
-    return report
+    return sanitize_report(report)
 
 
 def human(report, top):
@@ -1152,6 +1174,7 @@ def main(argv=None):
     ap.add_argument("--top", type=int, default=12, help="fixes to print (default 12)")
     ap.add_argument("--shots", help="folder for annotated screenshots (default: %%TEMP%%/polish-audit)")
     ap.add_argument("--no-shots", action="store_true", help="do not write screenshots")
+    ap.add_argument("--browser-check", action="store_true", help="opt into executing page JavaScript with scoped read-only network routing")
     ap.add_argument("--static", action="store_true", help="skip the browser: HTML/CSS parse only")
     ap.add_argument("--fail-under", type=int, default=90, help="gate score (default 90)")
     ap.add_argument("--offline", action="store_true", help="block every network request (local files only)")

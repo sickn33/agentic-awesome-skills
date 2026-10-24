@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/actor-boundary.schema.json",
+  "title": "Product Design Harness Actor Boundary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target_population",
+    "operator",
+    "beneficiary",
+    "machine_actor",
+    "affected_people",
+    "excluded_groups"
+  ],
+  "properties": {
+    "target_population": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "operator": {
+      "type": "string",
+      "minLength": 1
+    },
+    "beneficiary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "machine_actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "affected_people": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "excluded_groups": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

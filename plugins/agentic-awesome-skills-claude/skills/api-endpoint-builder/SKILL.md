@@ -1,15 +1,15 @@
 ---
 name: api-endpoint-builder
-description: "Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalability."
+description: "Builds reviewable REST API endpoint scaffolds with validation, error handling, authentication, and documentation. Follows best practices for security and scalability."
 category: development
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-05"
 ---
 
 # API Endpoint Builder
 
-Build complete, production-ready REST API endpoints with proper validation, error handling, authentication, and documentation.
+Build complete, reviewable REST API endpoint scaffolds with proper validation, error handling, authentication, and documentation.
 
 ## When to Use This Skill
 
@@ -52,17 +52,17 @@ Always validate before processing:
 
 ```javascript
 const validateUser = (req, res, next) => {
-  const { email, name, password } = req.body;
+  const { email, name, password } = req.body ?? {};
   
-  if (!email || !email.includes('@')) {
+  if (typeof email !== 'string' || !email.includes('@')) {
     return res.status(400).json({ error: 'Valid email required' });
   }
   
-  if (!name || name.length < 2) {
+  if (typeof name !== 'string' || name.trim().length < 2) {
     return res.status(400).json({ error: 'Name must be at least 2 characters' });
   }
   
-  if (!password || password.length < 8) {
+  if (typeof password !== 'string' || password.length < 8) {
     return res.status(400).json({ error: 'Password must be at least 8 characters' });
   }
   
@@ -75,7 +75,7 @@ const validateUser = (req, res, next) => {
 ```javascript
 const createUser = async (req, res) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, name, password } = req.body ?? {};
     
     // Check if user exists
     const existing = await db.users.findOne({ email });
@@ -95,7 +95,7 @@ const createUser = async (req, res) => {
     });
     
     // Don't return password
-    const { password: _, ...userWithoutPassword } = user;
+    const userWithoutPassword = { id: user.id, email: user.email, name: user.name };
     
     res.status(201).json({
       success: true,
@@ -205,8 +205,11 @@ DELETE /api/resources/:id
 
 ```javascript
 const getResources = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 20;
+  const page = Number(req.query.page ?? 1);
+  const limit = Number(req.query.limit ?? 20);
+  if (!Number.isSafeInteger(page) || page < 1 || !Number.isSafeInteger(limit) || limit < 1 || limit > 100 || (page - 1) * limit > 100000) {
+    return res.status(400).json({ error: "Invalid pagination" });
+  }
   const skip = (page - 1) * limit;
   
   const [resources, total] = await Promise.all([
@@ -234,6 +237,8 @@ const getResources = async (req, res) => {
   const { status, sort = '-createdAt' } = req.query;
   
   const filter = {};
+  if (status && !["active", "inactive"].includes(status)) return res.status(400).json({ error: "Invalid status" });
+  if (!["createdAt", "-createdAt", "name", "-name"].includes(sort)) return res.status(400).json({ error: "Invalid sort" });
   if (status) filter.status = status;
   
   const resources = await db.resources
@@ -327,3 +332,5 @@ describe('POST /api/users', () => {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These fragments require the actual database/models, auth middleware and application setup. Use schema validation for email/password length and byte limits rather than the illustrative `@` check alone. Enforce normalized-email uniqueness in the database and map duplicate-key races to 409; prechecking is insufficient. Apply authenticated tenant/resource filters to both rows and count queries, allowlist response fields and sort/filter inputs, and sanitize error logging. Test non-string bodies, authorization and concurrent duplicates before production.

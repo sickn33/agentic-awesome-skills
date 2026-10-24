@@ -61,14 +61,21 @@ import { DBOS, DBOSConfig } from "@dbos-inc/dbos-sdk";
 import { Client } from "pg";
 
 async function resetDatabase(databaseUrl: string) {
-  const dbName = new URL(databaseUrl).pathname.slice(1);
+  const target = new URL(databaseUrl);
+  const dbName = decodeURIComponent(target.pathname.slice(1));
+  if (!["localhost", "127.0.0.1", "[::1]"].includes(target.hostname) ||
+      !/^dbos_test_[a-z0-9_]+$/.test(dbName)) {
+    throw new Error("Reset restricted to a dedicated local dbos_test_* database");
+  }
+  // Only use a disposable test server whose credentials cannot access production.
+  const quotedName = `"${dbName}"`;
   const postgresDatabaseUrl = new URL(databaseUrl);
   postgresDatabaseUrl.pathname = "/postgres";
   const client = new Client({ connectionString: postgresDatabaseUrl.toString() });
   await client.connect();
   try {
-    await client.query(`DROP DATABASE IF EXISTS ${dbName} WITH (FORCE)`);
-    await client.query(`CREATE DATABASE ${dbName}`);
+    await client.query(`DROP DATABASE IF EXISTS ${quotedName} WITH (FORCE)`);
+    await client.query(`CREATE DATABASE ${quotedName}`);
   } finally {
     await client.end();
   }

@@ -27,7 +27,8 @@ gh issue view $ISSUE_NUMBER --comments
 gh issue view $ISSUE_NUMBER --json title,body,labels,assignees,milestone,state
 
 # Review linked PRs and related issues
-gh issue view $ISSUE_NUMBER --json linkedBranches,closedByPullRequests
+gh issue view "$ISSUE_NUMBER" --json closedByPullRequests
+# Inspect branch links in the issue timeline or supported API; linkedBranches is not a gh issue view JSON field.
 ```
 
 **Triage Assessment Framework**
@@ -60,6 +61,9 @@ git bisect good <last_known_good_commit>
 
 # Automated bisect with test script
 git bisect run ./test_issue.sh
+# After recording the result, restore the checkout:
+git bisect reset
+# Use an isolated worktree; review the test and historical code before execution.
 
 # Blame analysis for specific file
 git blame -L <start>,<end> path/to/file.js
@@ -81,12 +85,15 @@ grep -r "methodName(" . --include="*.py" | head -20
 ```javascript
 // Check for version conflicts
 const checkDependencies = () => {
-  const package = require('./package.json');
+  const { satisfies } = require('semver'); // explicit installed dependency
+  const manifest = require('./package.json');
   const lockfile = require('./package-lock.json');
 
-  Object.keys(package.dependencies).forEach(dep => {
-    const specVersion = package.dependencies[dep];
-    const lockVersion = lockfile.dependencies[dep]?.version;
+  Object.keys(manifest.dependencies ?? {}).forEach(dep => {
+    const specVersion = manifest.dependencies[dep];
+    const lockVersion = lockfile.packages?.[`node_modules/${dep}`]?.version
+      ?? lockfile.dependencies?.[dep]?.version;
+    // Sketch: local/git/alias/peer/optional specs need their own resolver logic.
 
     if (lockVersion && !satisfies(lockVersion, specVersion)) {
       console.warn(`Version mismatch: ${dep} - spec: ${specVersion}, lock: ${lockVersion}`);
@@ -117,7 +124,7 @@ git checkout -b spike/issue-${ISSUE_NUMBER}-investigation
 # Set upstream tracking
 git push -u origin feature/issue-${ISSUE_NUMBER}-feature-name
 
-# Configure branch protection locally
+# Store a local branch description (does not configure remote protection)
 git config branch.feature/issue-123.description "Implementing user authentication #123"
 
 # Link branch to issue (for GitHub integration)
@@ -265,6 +272,8 @@ test.describe('Issue #123: Authentication Flow', () => {
 });
 ```
 
+Examples are incomplete sketches, not a bundled application: models, token fixtures, logger, metrics, rate limiter, CSRF handling and adapters must be supplied. The Flask database test must use a dedicated test database and refuse production connection strings before create_all/drop_all. Validate theme/language/timezone against a documented schema and server-derived identity.
+
 ### 6. Code Implementation Patterns
 
 **Bug Fix Pattern**
@@ -277,11 +286,11 @@ function calculateDiscount(price, discountPercent) {
 // After (fixed code with validation)
 function calculateDiscount(price, discountPercent) {
   // Validate inputs
-  if (typeof price !== 'number' || price < 0) {
+  if (typeof price !== 'number' || !Number.isFinite(price) || price < 0) {
     throw new Error('Invalid price');
   }
 
-  if (typeof discountPercent !== 'number' ||
+  if (typeof discountPercent !== 'number' || !Number.isFinite(discountPercent) ||
       discountPercent < 0 ||
       discountPercent > 100) {
     throw new Error('Invalid discount percentage');
@@ -290,7 +299,8 @@ function calculateDiscount(price, discountPercent) {
   // Fix: Properly calculate discount
   const discount = price * (discountPercent / 100);
 
-  // Return with proper rounding
+  // Illustrative floating-point rounding; use integer minor units or decimal
+  // arithmetic and a defined rounding policy for real money.
   return Math.round(discount * 100) / 100;
 }
 ```
@@ -345,7 +355,7 @@ class IssueFeatureService:
         except Exception as e:
             # Error handling
             self._metrics.increment('feature_123_errors')
-            logger.error(f"Error in Issue #123 processing: {str(e)}")
+            logger.error("Issue #123 processing failed", extra={"error_type": type(e).__name__})
             raise
 ```
 
@@ -353,7 +363,8 @@ class IssueFeatureService:
 
 **PR Preparation Checklist**
 ```bash
-# Run all tests locally
+# Illustrative script names; first inspect package.json and use the repository-required checks.
+# Run tests locally in an isolated environment after reviewing executable inputs.
 npm test -- --coverage
 npm run lint
 npm run type-check
@@ -361,6 +372,7 @@ npm run type-check
 # Check for console logs and debug code
 git diff --staged | grep -E "console\.(log|debug)"
 
+# Heuristic candidate search only; absence of a match does not establish no secrets.
 # Verify no sensitive data
 git diff --staged | grep -E "(password|secret|token|key)" -i
 
@@ -369,46 +381,12 @@ npm run docs:generate
 ```
 
 **PR Creation with GitHub CLI**
+
+Use the repository's actual template. Write a local body file with unchecked boxes until each claim is verified; include exact commands/results and avoid fabricated coverage, latency, manual-test or deployment claims. An issue fix does not itself authorize publishing a PR or sending a comment. Once authorized:
+
 ```bash
-# Create PR with comprehensive description
-gh pr create \
-  --title "Fix #${ISSUE_NUMBER}: Clear description of the fix" \
-  --body "$(cat <<EOF
-## Summary
-Fixes #${ISSUE_NUMBER} by implementing proper error handling in the authentication flow.
-
-## Changes Made
-- Added validation for expired tokens
-- Implemented automatic token refresh
-- Added comprehensive error messages
-- Updated unit and integration tests
-
-## Testing
-- [x] All existing tests pass
-- [x] Added new unit tests (coverage: 95%)
-- [x] Manual testing completed
-- [x] E2E tests updated and passing
-
-## Performance Impact
-- No significant performance changes
-- Memory usage remains constant
-- API response time: ~50ms (unchanged)
-
-## Screenshots/Demo
-[Include if UI changes]
-
-## Checklist
-- [x] Code follows project style guidelines
-- [x] Self-review completed
-- [x] Documentation updated
-- [x] No new warnings introduced
-- [x] Breaking changes documented (if any)
-EOF
-)" \
-  --base main \
-  --head feature/issue-${ISSUE_NUMBER} \
-  --assignee @me \
-  --label "bug,needs-review"
+gh pr create --title "Fix #${ISSUE_NUMBER}: concise description" \
+  --body-file /absolute/path/pr-body.md --base main --head "$BRANCH"
 ```
 
 **Link PR to Issue Automatically**
@@ -456,7 +434,7 @@ curl -s https://api.example.com/health | jq .
 
 # Check error rates
 gh api /repos/org/repo/issues/${ISSUE_NUMBER}/comments \
-  -f body="Fix deployed to production. Monitoring error rates..."
+  -f body="[Only after verified deployment] Fix deployed at [EXACT COMMIT/RUN]; observed metrics [EVIDENCE]."
 ```
 
 **Issue Closure Protocol**
@@ -491,21 +469,11 @@ git bisect bad HEAD
 git bisect good v2.1.0
 # Found: Commit abc123 introduced the regression
 
-# 4. Implement fix with test
-echo 'test("validates token expiry correctly", () => {
-  const token = { exp: Date.now() / 1000 - 100 };
-  expect(isTokenValid(token)).toBe(false);
-});' >> auth.test.js
-
-# 5. Fix the code
-echo 'function isTokenValid(token) {
-  return token && token.exp > Date.now() / 1000;
-}' >> auth.js
-
-# 6. Create and merge PR
-gh pr create --title "Hotfix #456: Fix token validation logic" \
-  --body "Critical fix for authentication failure" \
-  --label "hotfix,priority:critical"
+# 4. Review the relevant token verifier and create an isolated regression.
+# Verify signature, permitted algorithm, issuer, audience and time claims
+# through the existing authentication library; exp alone does not authenticate.
+# 5. Implement and test the smallest fix, then reset bisect if active.
+# 6. Prepare the repository PR template with actual evidence; publish only when authorized.
 ```
 
 ### Example 2: Feature Implementation with Sub-tasks
@@ -554,7 +522,7 @@ def user_profile():
         db.session.commit()
         return jsonify(profile.to_dict())
 
-# Phase 3: Comprehensive testing
+# Phase 3: Illustrative happy-path test; add invalid input, ownership and tenant isolation regressions.
 def test_profile_update():
     response = client.put('/api/profile',
                           json={'theme': 'dark'},
@@ -577,7 +545,7 @@ LEFT JOIN orders o ON u.id = o.user_id
 WHERE u.created_at > '2024-01-01'
 GROUP BY u.id;
 
--- Execution Time: 3500ms
+-- Hypothetical baseline: 3500ms; replace with an actual recorded plan.
 
 -- 2. Create optimized index
 CREATE INDEX idx_users_created_orders
@@ -588,7 +556,7 @@ CREATE INDEX idx_orders_user_lookup
 ON orders(user_id);
 
 -- 3. Verify improvement
--- Execution Time: 45ms (98% improvement)
+-- Hypothetical result: 45ms; this is not measured evidence.
 ```
 
 ```javascript
@@ -636,5 +604,5 @@ Success Criteria:
 - Fix implemented with comprehensive test coverage
 - Pull request created following team standards
 - All CI/CD checks passing
-- Issue properly closed with reference to PR
+- Issue closure status reported; close only with explicit authority and actual resolution evidence
 - Knowledge captured for future reference

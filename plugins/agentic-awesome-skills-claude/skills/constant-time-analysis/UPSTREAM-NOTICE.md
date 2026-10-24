@@ -18,3 +18,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/ruby.md` | `plugins/constant-time-analysis/skills/constant-time-analysis/references/ruby.md` | `6e462470f4ed02882b77a5aaacf733154a4a8de0` | text-only trailing whitespace and EOF blank lines normalized |
 
 Maintainer safety changes for 19.13.0: the PHP guide requires an existing reviewed VLD toolchain and removes the executing OPcache fallback and mutable installer commands. The JavaScript guide rejects automatic `npx` fallback. Original blob identities above describe upstream provenance, not current local byte equality.
+
+2026-10-23 review adaptations (CC-BY-SA-4.0): corrected unsafe reciprocal/managed-runtime timing claims, comparison preconditions, Python opcode mapping, Swift API/overflow examples and result interpretation; retained upstream attribution and license. No analyzer runtime is bundled or tested.

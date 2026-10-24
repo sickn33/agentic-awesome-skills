@@ -4,7 +4,7 @@
 
 > "Describe the scene, don't just list keywords."
 
-Paragrafos narrativos e descritivos sempre superam listas de palavras-chave
+Paragrafos narrativos e descritivos podem superar listas de palavras-chave
 porque aproveitam a compreensao profunda de linguagem do modelo.
 
 ## Templates Oficiais
@@ -49,7 +49,7 @@ Design should be [estilo], with [esquema de cores].
 
 O segredo para imagens humanizadas esta na simulacao da camera de celular:
 
-- **Profundidade de campo rasa**: Lentes pequenas criam bokeh natural
+- **Profundidade de campo rasa**: Sensores pequenos normalmente produzem maior profundidade de campo; modo retrato pode simular bokeh
 - **Ruido de sensor**: Especialmente em ambientes com pouca luz
 - **Distorcao de lente**: Bordas levemente distorcidas em lente wide
 - **Auto-exposicao imperfeita**: Areas levemente sobre/sub-expostas
@@ -158,3 +158,9 @@ para refinar o resultado final. Ideal para cenas complexas.
 
 ### Search Grounding (Gemini Pro)
 Gera imagens baseadas em informacoes em tempo real da web.
+
+## Limites do snapshot e autorizacao
+
+Modelos, precos e recursos citados sao historicos e nao foram verificados no servico. Consulte https://ai.google.dev/gemini-api/docs/image-generation e a tabela de precos antes de usar. Toda chamada exige --force-paid como confirmacao de custo; nenhum modelo e garantido gratuito. O contador diario e local, aproximado, sem atomicidade, e nao limita a conta nem custos de falhas/retries ou diretorios alternativos.
+
+Nao envie imagens pessoais, prompts confidenciais ou referencias sem autorizacao para processamento externo. Prompts e metadados sao gravados localmente: proteja a pasta de saida. Resultados sao sinteticos; realismo nao garante fidelidade, texto correto ou proveniencia fotografica. Multi-turn, thinking e grounding descritos nao sao implementados pela CLI. Nao publique automaticamente. Use um ambiente virtual e caminhos reais no lugar de <skill-root>; proteja e exclua .env do Git. Evite humanizar o prompt duas vezes: generate.py ja aplica o motor.

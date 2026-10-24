@@ -147,7 +147,7 @@ export const MyAnimation = () => {
 				fontFamily,
 			}}
 		>
-			<Title>Gold Price 2024</Title>
+			<Title>Synthetic Price Example — Truncated Axis</Title>
 
 			<div style={{display: 'flex', flex: 1}}>
 				<YAxis steps={yAxisSteps} height={chartHeight} />

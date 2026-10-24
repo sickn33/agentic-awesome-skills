@@ -68,7 +68,7 @@ spline.load(sceneUrl).then(() => {
 });
 ```
 
-**Long-term fix:** Download the `.splinecode` file and self-host it on your own CDN. This eliminates the third-party dependency entirely and also fixes CORS issues.
+**Long-term fix:** Download the `.splinecode` file and self-host it on your own CDN. Verify all referenced textures/runtime assets and configure appropriate CORS; self-hosting one scene does not guarantee independence.
 
 ---
 
@@ -182,20 +182,7 @@ Note: When both have `pointer-events: all`, the topmost element (by z-index) win
 
 **Option A — Upgrade to a Spline paid plan.** Then in Export → Play Settings → toggle "Hide Spline Logo" ON.
 
-**Option B — CSS overlay (free plan workaround):**
-```css
-/* Hides the watermark via CSS — targets the shadow DOM */
-spline-viewer::part(logo) {
-  display: none;
-}
-
-/* Fallback if the above doesn't work */
-spline-viewer {
-  --spline-viewer-logo-display: none;
-}
-```
-
-Note: CSS-based hiding may break with Spline updates. The paid plan is the reliable solution.
+Use the product's documented plan/export controls and applicable license terms; do not hide required branding with CSS workarounds.
 
 ---
 
@@ -256,7 +243,7 @@ const Spline = dynamic(() => import('@splinetool/react-spline/next'), {
 | Page jumps on load | No reserved space (CLS) | Set explicit height on canvas/viewer element |
 | Rotations look wrong | Degrees vs radians | Use `Math.PI / 180 * degrees` |
 | Buttons not clickable | Canvas capturing pointer events | Add `pointer-events: none` to Spline wrapper |
-| Watermark visible | Free plan | Upgrade or use CSS override |
+| Watermark visible | Free plan | Check documented plan/export permissions |
 | CORS error | Cross-origin loading | Self-host the `.splinecode` file |
 | Hydration error (Next.js) | SSR conflict | Use `dynamic(() => import(...), { ssr: false })` |
 | Old scene still showing | Didn't promote to production | Click "Promote to Production" in Spline editor |

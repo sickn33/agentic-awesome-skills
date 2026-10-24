@@ -39,11 +39,11 @@ set search_path = ''
 as $$
   select exists (
     select 1 from public.team_members
-    where team_id = $1 and user_id = (select auth.uid())
+    where team_members.team_id = $1 and team_members.user_id = (select auth.uid())
   );
 $$;
 
--- Use in policy (indexed lookup, not per-row check)
+-- This correlated team_id check remains row-dependent; index and benchmark it.
 create policy team_orders_policy on orders
   using ((select is_team_member(team_id)));
 ```
@@ -55,3 +55,5 @@ create index orders_user_id_idx on orders (user_id);
 ```
 
 Reference: [RLS Performance](https://supabase.com/docs/guides/database/postgres/row-level-security#rls-performance-recommendations)
+
+Security-definer helpers require a controlled owner, schema-qualified objects and restricted EXECUTE privileges. Revoke PUBLIC execution and grant only the intended caller role; verify that each helper returns only authorized information.

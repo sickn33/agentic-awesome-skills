@@ -2,7 +2,9 @@
 
 > Before suggesting any architecture, gather context.
 
-## Question Hierarchy (Ask User FIRST)
+## Context Hierarchy
+
+Read available project facts first; ask only unresolved decisions that affect the design. The numeric matrix below is illustrative, not a classification rule or proof that enterprise workloads require distribution.
 
 1. **Scale**
    - How many users? (10, 1K, 100K, 1M+)

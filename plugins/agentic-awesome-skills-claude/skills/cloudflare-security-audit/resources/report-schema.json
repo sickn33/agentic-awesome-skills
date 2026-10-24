@@ -1,10 +1,12 @@
 {
-  "$comment": "Single source of truth for findings.json structure (see SKILL.md Phase 5). Validate findings directly against this schema so there is no second copy of these rules to keep in sync.",
-  "output_schema": {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$comment": "Validates the complete findings.json array; an empty array records no confirmed or rejected findings. Semantic trace ordering and evidence require separate review.",
+  "type": "array",
+  "items": {
     "oneOf": [
       {
         "type": "object",
-        "description": "Confirmed vulnerability — provide the complete, independently verified report.",
+        "description": "Confirmed vulnerability \u2014 provide the complete, independently verified report.",
         "properties": {
           "verdict": {
             "type": "string",
@@ -12,19 +14,23 @@
           },
           "title": {
             "type": "string",
-            "description": "A concise, standard title for the vulnerability."
+            "description": "A concise, standard title for the vulnerability.",
+            "minLength": 1
           },
           "description": {
             "type": "string",
-            "description": "Comprehensive explanation of the vulnerability. Include any reproduction details (proof-of-concept input, configuration, observed output or crash) here."
+            "description": "Comprehensive explanation of the vulnerability. Include any reproduction details (proof-of-concept input, configuration, observed output or crash) here.",
+            "minLength": 1
           },
           "root_cause": {
             "type": "string",
-            "description": "One sentence using the template: '[function_or_component] in [file] does not [missing action], allowing [consequence]'. MUST include the function/component name and file name where the defect exists."
+            "description": "One sentence using the template: '[function_or_component] in [file] does not [missing action], allowing [consequence]'. MUST include the function/component name and file name where the defect exists.",
+            "minLength": 1
           },
           "intended_behavior": {
             "type": "string",
-            "description": "What was the developer trying to build? Explain the intended, non-vulnerable business logic."
+            "description": "What was the developer trying to build? Explain the intended, non-vulnerable business logic.",
+            "minLength": 1
           },
           "trace": {
             "type": "array",
@@ -34,14 +40,19 @@
               "properties": {
                 "kind": {
                   "type": "string",
-                  "enum": ["entrypoint", "propagation", "sink"]
+                  "enum": [
+                    "entrypoint",
+                    "propagation",
+                    "sink"
+                  ]
                 },
                 "file": {
                   "type": "string",
                   "description": "Exact file path relative to repository root."
                 },
                 "line": {
-                  "type": "integer"
+                  "type": "integer",
+                  "minimum": 1
                 },
                 "scope": {
                   "type": "string",
@@ -52,10 +63,16 @@
                   "description": "Factual description of the state change or data movement."
                 }
               },
-              "required": ["kind", "file", "line", "scope", "description"],
+              "required": [
+                "kind",
+                "file",
+                "line",
+                "scope",
+                "description"
+              ],
               "additionalProperties": false
             },
-            "description": "Sequential code trace from entrypoint to sink, verified against actual source code. The first step must be kind 'entrypoint', the last must be kind 'sink', and any intermediate steps must be kind 'propagation' (enforced by the validator)."
+            "description": "Sequential verified code trace. Semantic review must confirm first entrypoint, final sink, and propagation-only intermediate steps; the schema checks fields and minimum length, not this ordering."
           },
           "conditions": {
             "type": "array",
@@ -64,13 +81,26 @@
               "properties": {
                 "kind": {
                   "type": "string",
-                  "enum": ["authentication_level", "authorization_role", "user_interaction", "system_configuration", "network_routing", "environmental_dependency", "data_state", "timing_dependency", "third_party_dependency"]
+                  "enum": [
+                    "authentication_level",
+                    "authorization_role",
+                    "user_interaction",
+                    "system_configuration",
+                    "network_routing",
+                    "environmental_dependency",
+                    "data_state",
+                    "timing_dependency",
+                    "third_party_dependency"
+                  ]
                 },
                 "description": {
                   "type": "string"
                 }
               },
-              "required": ["kind", "description"],
+              "required": [
+                "kind",
+                "description"
+              ],
               "additionalProperties": false
             },
             "description": "Factual prerequisites for exploitation. Empty array if exploitable by default."
@@ -101,7 +131,12 @@
                 "description": "Observable outcome confirming successful exploitation."
               }
             },
-            "required": ["attacker_perspective", "payloads", "instructions", "expected_result"],
+            "required": [
+              "attacker_perspective",
+              "payloads",
+              "instructions",
+              "expected_result"
+            ],
             "additionalProperties": false
           },
           "remediation": {
@@ -123,12 +158,17 @@
                       "type": "string"
                     }
                   },
-                  "required": ["file_name", "fixed_code"],
+                  "required": [
+                    "file_name",
+                    "fixed_code"
+                  ],
                   "additionalProperties": false
                 }
               }
             },
-            "required": ["strategy"],
+            "required": [
+              "strategy"
+            ],
             "additionalProperties": false
           },
           "severity": {
@@ -139,13 +179,22 @@
                 "properties": {
                   "score": {
                     "type": "string",
-                    "enum": ["informational", "low", "medium", "high", "critical"]
+                    "enum": [
+                      "informational",
+                      "low",
+                      "medium",
+                      "high",
+                      "critical"
+                    ]
                   },
                   "reason": {
                     "type": "string"
                   }
                 },
-                "required": ["score", "reason"],
+                "required": [
+                  "score",
+                  "reason"
+                ],
                 "additionalProperties": false
               },
               "impact": {
@@ -153,21 +202,40 @@
                 "properties": {
                   "score": {
                     "type": "string",
-                    "enum": ["informational", "low", "medium", "high", "critical"]
+                    "enum": [
+                      "informational",
+                      "low",
+                      "medium",
+                      "high",
+                      "critical"
+                    ]
                   },
                   "reason": {
                     "type": "string"
                   }
                 },
-                "required": ["score", "reason"],
+                "required": [
+                  "score",
+                  "reason"
+                ],
                 "additionalProperties": false
               },
               "overall_severity": {
                 "type": "string",
-                "enum": ["informational", "low", "medium", "high", "critical"]
+                "enum": [
+                  "informational",
+                  "low",
+                  "medium",
+                  "high",
+                  "critical"
+                ]
               }
             },
-            "required": ["likelihood", "impact", "overall_severity"],
+            "required": [
+              "likelihood",
+              "impact",
+              "overall_severity"
+            ],
             "additionalProperties": false
           },
           "confidence": {
@@ -175,23 +243,42 @@
             "properties": {
               "score": {
                 "type": "string",
-                "enum": ["low", "medium", "high"]
+                "enum": [
+                  "low",
+                  "medium",
+                  "high"
+                ]
               },
               "reason": {
                 "type": "string",
                 "description": "Why you scored the confidence this way. Mention any missing files, complex routing, or ambiguous data flows."
               }
             },
-            "required": ["score", "reason"],
+            "required": [
+              "score",
+              "reason"
+            ],
             "additionalProperties": false
           }
         },
-        "required": ["verdict", "title", "description", "root_cause", "intended_behavior", "trace", "conditions", "execution", "remediation", "severity", "confidence"],
+        "required": [
+          "verdict",
+          "title",
+          "description",
+          "root_cause",
+          "intended_behavior",
+          "trace",
+          "conditions",
+          "execution",
+          "remediation",
+          "severity",
+          "confidence"
+        ],
         "additionalProperties": false
       },
       {
         "type": "object",
-        "description": "Rejected finding — the described behavior is factually incorrect or the code path does not exist.",
+        "description": "Rejected finding \u2014 the described behavior is factually incorrect or the code path does not exist.",
         "properties": {
           "verdict": {
             "type": "string",
@@ -199,10 +286,14 @@
           },
           "reason": {
             "type": "string",
-            "description": "Explain which specific claims in the finding are factually wrong (e.g., code path doesn't exist, mitigation prevents the described flow, trace is incorrect)."
+            "description": "Explain which specific claims in the finding are factually wrong (e.g., code path doesn't exist, mitigation prevents the described flow, trace is incorrect).",
+            "minLength": 1
           }
         },
-        "required": ["verdict", "reason"],
+        "required": [
+          "verdict",
+          "reason"
+        ],
         "additionalProperties": false
       }
     ]

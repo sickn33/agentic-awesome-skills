@@ -1,5 +1,7 @@
 # Skill authoring best practices
 
+Historical upstream documentation snapshot, preserved as reference. Host schemas, package/network availability, model names and metadata loading may have changed; current host/repository instructions take precedence. Links beginning /en/ refer to the upstream Claude documentation site, not this repository. Code snippets and named helper scripts are illustrative and are not bundled or certified here. Inspect scripts before execution, preserve originals, and handle missing/denied inputs explicitly rather than silently replacing them with empty data.
+
 > Learn how to write effective Skills that Claude can discover and use successfully.
 
 Good Skills are concise, well-structured, and tested with real usage. This guide provides practical authoring decisions to help you write Skills that Claude can discover and use effectively.
@@ -270,7 +272,7 @@ pdf/
 
 ````markdown  theme={null}
 ---
-name: PDF Processing
+name: pdf-processing
 description: Extracts text and tables from PDF files, fills forms, and merges documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ---
 

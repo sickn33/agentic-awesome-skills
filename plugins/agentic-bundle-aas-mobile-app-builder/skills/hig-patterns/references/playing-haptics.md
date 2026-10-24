@@ -1,8 +1,11 @@
 ---
 title: "Playing haptics | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/playing-haptics
+---
 
 # Playing haptics
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Playing haptics can engage people’s sense of touch and bring their familiarity with the physical world into your app or game.
 
@@ -278,3 +281,7 @@ Date| Changes
 May 7, 2024| Added guidance for playing haptics on Apple Pencil Pro.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Check the actual device/controller haptic capabilities and handle engine startup failures, interruptions and reset events. A simulator or API call returning does not prove a physical haptic occurred. Respect haptic preferences, avoid duplicate feedback when a system control already supplies it, and keep essential meaning accessible without touch or sound.

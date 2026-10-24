@@ -149,8 +149,8 @@ You can set the `root_folder_slug` for rclone.  This is the folder
 of your Uloz.to drive.
 
 Normally you will leave this blank and rclone will determine the
-correct root to use itself. However you can set this to restrict rclone
-to a specific folder hierarchy.
+correct root to use itself. You can set this as the starting folder
+hierarchy, but it does not restrict the account credentials' authorization.
 
 In order to do this you will have to find the `Folder slug` of the
 folder you wish to use as root.  This will be the last segment

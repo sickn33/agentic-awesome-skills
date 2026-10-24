@@ -4,7 +4,7 @@ Testing workflows and activities in Go requires a deep understanding of the `tes
 
 ## The Test Suite Setup
 
-Always use the `WorkflowTestSuite` to maintain state across multiple tests in a file.
+Create a fresh test environment for each test to prevent state leakage; the embedded suite is an optional convenience.
 
 ```go
 // Requires: "github.com/stretchr/testify/suite", "go.temporal.io/sdk/testsuite"
@@ -42,17 +42,17 @@ func (s *MyTestSuite) Test_SuccessfulWorkflow() {
     s.NoError(s.env.GetWorkflowError())
 
     var result string
-    s.env.GetWorkflowResult(&result)
+    s.Require().NoError(s.env.GetWorkflowResult(&result))
     s.Equal("Completed", result)
 }
 ```
 
 ### Mocking Child Workflows
 
-Similar to activities, use `OnChildWorkflow`.
+Similar to activities, use `OnWorkflow`.
 
 ```go
-s.env.OnChildWorkflow(MyChildWorkflow, mock.Anything, "args").Return("result", nil)
+s.env.OnWorkflow(MyChildWorkflow, mock.Anything, "args").Return("result", nil)
 ```
 
 ## 2. Unit Testing Activities
@@ -71,7 +71,7 @@ func Test_Activity(t *testing.T) {
     assert.NoError(t, err)
 
     var result string
-    val.Get(&result)
+    assert.NoError(t, val.Get(&result))
     assert.Equal(t, "expected", result)
 }
 ```
@@ -90,7 +90,7 @@ func Test_ReplayStaticHistory(t *testing.T) {
     // Web UI: Workflow Detail -> Download History (JSON)
     // CLI:    temporal workflow show --workflow-id <id> --namespace <ns> --output json > history.json
     err := replayer.ReplayWorkflowHistoryFromJSONFile(
-        worker.ReplayWorkflowHistoryFromJSONFileOptions{},
+        nil, // optional logger; verify the signature in the pinned SDK
         "history.json",
     )
     assert.NoError(t, err)
@@ -114,7 +114,7 @@ func (s *MyTestSuite) Test_WorkflowWithSignal() {
     res, err := s.env.QueryWorkflow("get-state")
     s.NoError(err)
     var state string
-    res.Get(&state)
+    s.Require().NoError(res.Get(&state))
     s.Equal("SignalReceived", state)
 }
 ```

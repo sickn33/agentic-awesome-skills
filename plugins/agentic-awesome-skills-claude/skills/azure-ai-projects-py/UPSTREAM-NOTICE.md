@@ -21,3 +21,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/run_batch_evaluation.py` | `.github/plugins/azure-sdk-python/skills/azure-ai-projects-py/scripts/run_batch_evaluation.py` | `98bc430b7f6ad125c1d072d91e9d18c5b278fb76` | content unchanged |
 
 `scripts/run_batch_evaluation.py` uploads the selected JSONL dataset to the configured Azure AI project, creates a remote evaluation and run, polls for results, and may incur model or cloud charges. Before invoking it, review the data classification and confirm the exact file, endpoint, deployment, evaluators, and expected cost with the user. No live account or dataset was used during restoration.
+
+## Catalog review changes
+
+Local changes are not byte-identical upstream: clarified classic/v2 boundaries, credential/privacy/cost/tool restrictions, corrected async iteration and bounded polling/concurrency, and replaced the inaccurate exhaustive API guide with an actual 2.0.0b4 wheel export snapshot. The helper now requires explicit cloud opt-in, validates bounded JSONL and evaluator mappings without input mutation, preserves schema types, bounds polling, and writes a new private result file. Original blob IDs above identify imported inputs, not current corrected content. No live Azure operation was performed.

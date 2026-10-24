@@ -22,4 +22,4 @@
   renamed column, and the two files stop being the same field list.
 
 
-See the [Related Skills](references/related-skills.md) reference for the full guidance.
+See the [Related Skills](related-skills.md) reference for the full guidance.

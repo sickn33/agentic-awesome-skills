@@ -86,7 +86,7 @@ Text(item.title)
     .accessibilityAddTraits(item.isSelected ? [.isSelected, .isButton] : .isButton)
 ```
 
-Use `.disabled(true)` to make VoiceOver announce "Dimmed" for non-interactive elements.
+Use `.disabled(true)` on an unavailable control, not arbitrary static text solely to force an announcement. An isButton trait alone does not supply activation behavior; prefer a real Button or add a matching accessibility action.
 
 ## Decorative Images
 
@@ -125,7 +125,7 @@ HStack {
 .accessibilityElement(children: .combine)
 ```
 
-VoiceOver reads all child labels as one element, separated by commas.
+Combining merges child accessibility semantics; the spoken order and punctuation depend on platform/content. Do not merge independently actionable controls without testing their actions.
 
 ### .ignore -- Manual label for container
 

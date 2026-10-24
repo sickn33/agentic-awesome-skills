@@ -65,6 +65,10 @@ Root CA (Self-signed, long-lived)
             └── Cross-cluster certs
 ```
 
+## Configuration boundaries
+
+These fragments are version-specific, not a complete mesh/PKI deployment. Validate installed CRDs and proxy/ambient mode first. cert-manager Certificate/Issuer resources alone do not wire Istio’s signer; use a supported reviewed integration. A Linkerd Server governs inbound policy, not outbound external TLS; put supported outbound skip annotations on workload pod templates, not a Service. Excluding metrics/ports weakens protection and needs a reviewed network/auth policy. mTLS authenticates peers but authorization still requires allowed identities. Protect CA keys outside version control, plan overlapping trust rotation/rollback and verify both accepted and rejected identities before enforcing strict mode.
+
 ## Templates
 
 ### Template 1: Istio mTLS (Strict Mode)
@@ -259,6 +263,9 @@ spec:
     matchLabels:
       app: spire-agent
   template:
+    metadata:
+      labels:
+        app: spire-agent
     spec:
       containers:
         - name: spire-agent
@@ -310,7 +317,8 @@ istioctl proxy-config secret deploy/my-app -o json | \
   jq '.dynamicActiveSecrets[0].secret.tlsCertificate.certificateChain.inlineBytes' | \
   tr -d '"' | base64 -d | openssl x509 -text -noout # security-allowlist: local certificate inspection
 
-# Force certificate rotation
+# An authorized restart may obtain a new workload certificate, but is not
+# a general CA/certificate rotation procedure and disrupts workloads.
 kubectl rollout restart deployment/my-app
 
 # Check Linkerd identity
@@ -350,7 +358,7 @@ linkerd viz tap deploy/my-app --to deploy/my-backend
 ### Don'ts
 - **Don't disable mTLS** - For convenience in production
 - **Don't ignore cert expiry** - Automate rotation
-- **Don't use self-signed certs** - Use proper CA hierarchy
+- **Don't trust arbitrary self-signed leaf certs** - A managed root CA may be self-signed; validate the intended trust chain and workload identity
 - **Don't skip verification** - Verify the full chain
 
 ## Resources

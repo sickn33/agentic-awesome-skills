@@ -151,6 +151,8 @@ Before shipping:
 
 ## Script
 
+The bundled checker is a heuristic, capped at 50 sorted source files. It uses English-biased regexes and directory-based JSON locale grouping; gettext catalogs and `messages/en.json` layouts are not fully checked for key parity. Report actual sampled/discovered counts and parse failures; a clean sample does not certify completeness, translation quality or accessibility. Mirror only directional icons for RTL (for example navigation arrows), not every logo, image or media control.
+
 | Script | Purpose | Command |
 |--------|---------|---------|
 | `scripts/i18n_checker.py` | Detect hardcoded strings & missing translations | `python scripts/i18n_checker.py <project_path>` |

@@ -43,28 +43,19 @@ LCD (Liquid Crystal Display):
 
 OLED (Organic LED):
 ├── Each pixel emits own light
-├── Black = pixel OFF (zero power)
+├── Black reduces emissive pixel power; total display/system power remains nonzero
 ├── Energy use = brighter pixels use more
 └── Dark mode = significant battery savings
 ```
 
-### Battery Savings with OLED
+### OLED power claims
 
-```
-Color energy consumption (relative):
-
-#000000 (True Black)  ████░░░░░░  0%
-#1A1A1A (Near Black)  █████░░░░░  ~15%
-#333333 (Dark Gray)   ██████░░░░  ~30%
-#666666 (Medium Gray) ███████░░░  ~50%
-#FFFFFF (White)       ██████████  100%
-
-Saturated colors also use significant power:
-├── Blue pixels: Most efficient
-├── Green pixels: Medium
-├── Red pixels: Least efficient
-└── Desaturated colors save more
-```
+Darker content can reduce emissive power on OLED, but total energy depends on
+panel generation, brightness, area, refresh rate and workload. There is no general
+0/15/30/50% mapping from hex gray values to battery usage and no universal RGB
+subpixel efficiency ranking. LCD backlight power also varies with brightness and
+local dimming. Profile the actual device; do not choose inaccessible colors for
+an unmeasured saving. Black is not zero total system/display power.
 
 ### True Black vs Near Black
 
@@ -81,7 +72,7 @@ Saturated colors also use significant power:
 ├── Slightly softer on eyes
 └── Material Design recommendation
 
-RECOMMENDATION: #000000 for backgrounds, #0D0D0D-#1A1A1A for surfaces
+Use semantic platform surfaces or a tested palette; neither pure nor near black is universally required.
 ```
 
 ---
@@ -257,14 +248,15 @@ Your app automatically gets:
 ### Supporting Dynamic Color
 
 ```kotlin
-// Jetpack Compose
-MaterialTheme(
-    colorScheme = dynamicColorScheme()
-        ?: staticColorScheme() // Fallback for older Android
-)
-
-// React Native
-// Limited support - consider react-native-material-you
+// Inside a composable theme; import Android Build, LocalContext and Material3 APIs.
+val context = LocalContext.current
+val dark = isSystemInDarkTheme()
+val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    if (dark) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+} else {
+    if (dark) darkColorScheme() else lightColorScheme()
+}
+MaterialTheme(colorScheme = colors) { /* content */ }
 ```
 
 ### Fallback Colors
@@ -354,7 +346,7 @@ AI tends to:
 ├── Use same colors for light/dark
 ├── Ignore OLED battery implications
 ├── Skip contrast calculations
-├── Default to purple/violet (BANNED)
+├── Choose palette from brand/content with measured accessible contrast
 ├── Use low contrast "aesthetic" grays
 ├── Not test in outdoor conditions
 └── Forget colorblind users

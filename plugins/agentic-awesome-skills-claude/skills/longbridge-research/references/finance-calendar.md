@@ -1,5 +1,9 @@
 # Financial Calendar Tracking & Insights
 
+Bundle limitation: references/data-fetching.md and references/output-template.md are not included. Use the self-contained timeline fields below (event, timestamp/timezone, source, confirmed/estimated status) rather than inventing missing commands/templates. Default to public events; only retrieve holdings/watchlists when explicitly in user scope. If access is absent, continue a public calendar and label missing personalization. Cross-market spreads are research observations, not executable arbitrage; include costs, FX, settlement and market-access limits.
+
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ## Overview
 
 This Skill targets general retail investors, proactively providing financial calendar summaries, impact analysis for holdings and watchlist, cross-market linkage conclusions — **and helping users discover market opportunities beyond their portfolio**. Users do not need professional financial knowledge; the system handles all reasoning from events to impacts. Conclusions cover all relevant securities — tagged if they belong to the user's holdings or watchlist — while also extending to noteworthy market highlights.
@@ -33,7 +37,7 @@ This Skill does not maintain separate user preference settings. All required inf
 Time ranges are calculated in calendar days but must ensure coverage through the next trading day. Specific rules:
 
 1. **Auto-Extension**: When the end of the time range falls on a weekend or holiday, automatically extend to that market's next trading day. For example, saying "next 3 days" on Friday (T+0 ~ T+3 = Friday to Monday) — if Monday is a trading day, cover through Monday's after-hours; if Monday is also a holiday, extend to Tuesday.
-2. **Per-Market Judgment**: When a user's holdings span multiple markets (e.g., US + HK + A-shares), each market has a different trading calendar and must be evaluated separately. For example, US markets are closed on Christmas but HK markets are not — the effective time windows differ.
+2. **Per-Market Judgment**: When a user's holdings span multiple markets (e.g., US + HK + A-shares), each market has a different trading calendar and must be evaluated separately. For example, market holidays and half-day sessions can differ; verify each exchange calendar — the effective time windows differ.
 3. **Use Market Closure Calendar Data**: The data collection phase already fetches market closure calendars — use them to determine actual trading day boundaries for each market.
 4. **Indicate in Output**: When the time window extends due to weekends/holidays, reflect the actual coverage range in the title (e.g., "May 8 to May 11" rather than "next 3 days"), and note weekend/holiday arrangements where appropriate.
 
@@ -146,7 +150,7 @@ This section goes beyond the user's existing holdings and watchlist to proactive
 
 ### Prohibitions
 
-- Never respond with "nothing important today" or empty results
+- If no events are verified, say so honestly with the checked sources, range and data limitations
 - No specific price predictions
 - No direct buy or sell recommendations
 - Events must always display tags; securities with no events are simply omitted from the output

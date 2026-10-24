@@ -1,6 +1,7 @@
 ---
 title: "Outline views | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/outline-views
+---
 
 # Outline views
 
@@ -40,7 +41,7 @@ Outline views work well to display text-based content and often appear in the le
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/outline-views#Platform-considerations)
 
- _Not supported in iOS, iPadOS, tvOS, visionOS, or watchOS._
+ _The AppKit multicolumn NSOutlineView described here is macOS-specific. SwiftUI OutlineGroup can present hierarchical content on other supported platforms; verify its target SDK availability rather than applying this AppKit restriction to every outline UI._
 
 ## [Resources](https://developer.apple.com/design/human-interface-guidelines/outline-views#Resources)
 

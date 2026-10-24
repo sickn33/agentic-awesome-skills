@@ -1,5 +1,7 @@
 # System prompts
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 The system prompt is the load-bearing config of an agent. Most "the agent isn't doing what I want" problems trace back to a system prompt that's too long, too vague, or mixing concerns.
 
 This file is opinionated: keep system prompts on **persona and global behavior**, push tool-specific instructions into tool descriptions, and iterate. The system prompt goes in `options.systemMessage` on the agent node.
@@ -30,7 +32,7 @@ Current date: {{ $now }}
 or formatted:
 
 ```
-The current time is {{ $now.format('DDDD TTTT') }}
+The current time is {{ $now.toFormat('yyyy-MM-dd HH:mm ZZZZ') }}
 ```
 
 ---
@@ -46,7 +48,7 @@ $fromAI desc.    → What value to put in this specific parameter
 Why this split:
 
 - **Reuse.** A well-described tool works in any agent; the system prompt doesn't re-teach it.
-- **Token efficiency.** Tool details only "load" when the model considers that tool. Per-tool text in the system prompt burns tokens every turn.
+- **Token efficiency.** Tool schemas/descriptions can consume tokens every turn too; the split improves ownership, not guaranteed lazy loading.
 - **Maintainability.** Update one tool description, not a paragraph buried in a 5000-token prompt.
 
 ### What to move where
@@ -110,7 +112,7 @@ Mix sources: a **Data Table** (default for shared chunks, editable in UI), **n8n
 ### Exclude
 
 - **Per-tool usage docs** — move to tool descriptions.
-- **Generic safety language** — built in; reinforcing adds tokens without changing behavior. Reserve for specific risks.
+- **Generic boilerplate** — replace with explicit threat boundaries and deterministic enforcement. Never assume model defaults supply application access control.
 - **"You are a helpful assistant" preamble** — replace with a specific role.
 - **Lengthy examples that aren't earning their tokens** — one sharp example beats five mediocre ones.
 

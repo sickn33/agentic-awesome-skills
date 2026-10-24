@@ -24,6 +24,12 @@ marts/            Final analytics tables
 | Intermediate | `int_` | `int_payments_pivoted` |
 | Marts | `dim_`, `fct_` | `dim_customers`, `fct_orders` |
 
+## Prerequisites and scope
+
+These are SQL/YAML fragments for a project with matching source schemas, dbt adapter and a pinned dbt_utils package; install reviewed dependencies separately. Examples mix adapter-specific syntax: dateadd is not portable and partition overwrite configuration is adapter-specific. Test in an isolated target before warehouse writes or full refresh. Natural customer IDs across Stripe and Shopify require an identity mapping; do not assume numeric/string IDs identify the same person. Restrict customer emails and generated artifacts.
+
+The inclusive watermarks below handle an empty target and equal timestamps, but require a merge-capable strategy and unique non-null keys with deterministic source deduplication. Late rows older than the watermark, deletions and changed customer dimensions require a lookback/reconciliation policy; a merge alone does not discover excluded data. Schema append does not backfill old rows.
+
 ## Quick Start
 
 ```yaml
@@ -167,7 +173,7 @@ with source as (
     select * from {{ source('stripe', 'payments') }}
 
     {% if is_incremental() %}
-    where _fivetran_synced > (select max(_loaded_at) from {{ this }})
+    where _fivetran_synced >= coalesce((select max(_loaded_at) from {{ this }}), '1900-01-01')
     {% endif %}
 ),
 
@@ -178,7 +184,7 @@ renamed as (
         customer_id,
         invoice_id,
 
-        -- amounts (convert cents to dollars)
+        -- Example assumes USD minor units (2 decimals); preserve currency and handle other exponents separately
         amount / 100.0 as amount,
         amount_refunded / 100.0 as amount_refunded,
 
@@ -321,7 +327,7 @@ with orders as (
     select * from {{ ref('stg_shopify__orders') }}
 
     {% if is_incremental() %}
-    where updated_at > (select max(updated_at) from {{ this }})
+    where updated_at >= coalesce((select max(updated_at) from {{ this }}), '1900-01-01')
     {% endif %}
 ),
 
@@ -456,7 +462,7 @@ select * from {{ ref('stg_orders') }}
 ### Pattern 7: Incremental Strategies
 
 ```sql
--- Delete+Insert (default for most warehouses)
+-- Delete+Insert (support and defaults depend on adapter)
 {{
     config(
         materialized='incremental',
@@ -494,7 +500,7 @@ select
 from {{ ref('stg_events') }}
 
 {% if is_incremental() %}
-where created_date >= dateadd(day, -3, current_date)
+where date(created_at) >= dateadd(day, -3, current_date)
 {% endif %}
 ```
 
@@ -529,7 +535,7 @@ dbt ls --select tag:critical     # List models by tag
 - **Use staging layer** - Clean data once, use everywhere
 - **Test aggressively** - Not null, unique, relationships
 - **Document everything** - Column descriptions, model descriptions
-- **Use incremental** - For tables > 1M rows
+- **Use incremental** - When measured workload and update semantics justify it
 - **Version control** - dbt project in Git
 
 ### Don'ts

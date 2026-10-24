@@ -1,5 +1,8 @@
 # Database Access with Bio.Entrez
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.Entrez provides programmatic access to NCBI's Entrez databases, including PubMed, GenBank, Gene, Protein, Nucleotide, and many others. It handles all the complexity of API calls, rate limiting, and data parsing.
@@ -35,7 +38,7 @@ Biopython automatically respects NCBI rate limits:
 - **Without API key**: 3 requests per second
 - **With API key**: 10 requests per second
 
-The module handles this automatically, so you don't need to add delays between requests.
+These defaults apply within the library process; coordinate all processes and shared keys/IPs, honor server errors and current NCBI policy, and use bounded retries/backoff. Entrez limits do not govern BLAST polling.
 
 ## Core Entrez Functions
 
@@ -182,9 +185,9 @@ handle = Entrez.efetch(
 )
 ```
 
-### EGQuery - Global Query
+### EGQuery - Legacy global query (availability must be checked)
 
-Search across all Entrez databases at once:
+This historical service may be retired/unavailable. Prefer targeted esearch calls using the current supported E-utilities; do not claim a successful search from this sketch:
 
 ```python
 handle = Entrez.egquery(term="biopython")
@@ -332,6 +335,8 @@ handle.close()
 total_count = int(result["Count"])
 batch_size = 500
 
+if total_count > 10000:
+    raise ValueError("PubMed ESearch cannot enumerate beyond10000; partition the query or use supported bulk/E-utilities methods")
 for start in range(0, total_count, batch_size):
     # Fetch batch
     handle = Entrez.esearch(

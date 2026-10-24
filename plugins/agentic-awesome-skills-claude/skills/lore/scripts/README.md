@@ -8,7 +8,7 @@ The script list and quick-reference command examples live in the project root `R
 
 **Cross-platform first.** Python standard library only. No `bash`, no `jq`, no platform-specific tools. The same invocation works on Windows, Linux, macOS.
 
-**JSON-friendly output.** Every script supports `--json` for machine consumption. Agent callers parse the output; humans pipe to `less` or `jq` (if available).
+**JSON-friendly output.** Enumeration, stale, duplicate and history scripts support `--json`; id_hash.py prints only a hash. These scripts support `--json` for machine consumption. Agent callers parse the output; humans pipe to `less` or `jq` (if available).
 
 **Composition.** `find_duplicates.py`, `find_stale.py`, and `history.py` shell out to `list_entries.py --json` rather than re-implementing the parser. One source of truth for entry format — if the format ever changes, only `list_entries.py` needs updating.
 
@@ -37,19 +37,15 @@ The script list and quick-reference command examples live in the project root `R
 
 All warnings are informational; `list_entries.py` always produces the same stdout regardless of config state. See `references/compatibility.md` for the full schema versioning policy.
 
-## Testing
+## Catalog validation
 
-Regression tests live in `tests/` (stdlib-only `unittest`, black-box subprocess runs of the real scripts). Run from the repo root:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-The suite builds isolated `.lore/` fixtures in temp directories; the `history.py` cases create throwaway git repos and skip automatically when git is not on PATH.
+Upstream tests/ and the upstream root README are not bundled here. Run the catalog’s relevant tests from its tools/scripts/tests directory; do not mistake this skill directory for the upstream project root. Helpers are read-only. The Git helper additionally requires a local Git executable.
 
 ## Limitations
 
 - **Token-overlap dedup, not semantic.** Jaccard similarity catches rewrites with similar words but misses semantic equivalence (e.g. "use TypeScript" vs "TypeScript-only codebase"). Deeper checks still need an LLM pass.
 - **Naive date math.** `find_stale.py` uses wall-clock dates from `#verified` / `#added` tags. If the system's clock is wrong, results will be off.
 - **No automatic archival.** The script reports superseded entries (tagged `#stale`, or carrying `#superseded-by`) and broken chains but does not move or delete anything. Outdated entries stay in their scope file with their tags; git history preserves the rest.
-- **Hash collisions on identical text are theoretically possible** (4 hex chars = 16 bits = 1 in 65536). In practice a lore project will not hit this. If it does, slightly edit the entry text to bump the hash.
+- **Short-hash collisions:** a 16-bit prefix is not unique. At 300 uniformly hashed bodies, any-prefix collision probability is roughly one half; full IDs also contain date/layer. Always compare actual text and reject ambiguous full IDs.
+
+Reads are bounded regular files (2 MiB each), 10,000 entries per inventory, and 1000 entries per duplicate comparison. Unsafe or incomplete input fails instead of certifying no results. History shows at most 200 commits per query. No bound is a coverage or freshness guarantee.

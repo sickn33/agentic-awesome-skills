@@ -20,6 +20,10 @@ Use this skill when you need to:
 - Audit engagements requiring spec-to-code alignment analysis
 - Protocol implementations being verified against whitepapers
 
+## Evidence boundaries
+
+The referenced IR_EXAMPLES.md, OUTPUT_REQUIREMENTS.md, COMPLETENESS_CHECKLIST.md and named agent are not bundled. Inline phases can guide analysis, but do not claim their absent standards were followed. Freeze the exact code commit, specification versions and review inventory. Preserve originals/page locators when normalizing; do not discard legal/attribution watermarks. Record excluded or unread files, dependencies, assembly/generated code and unresolved semantics. Confidence numbers are subjective evidence labels, not calibrated probabilities. A spec mismatch is not automatically critical or exploitable; establish reachable impact and prerequisites. Undocumented behavior can still be tested, and passing alignment does not prove security, legal compliance or full correctness. Conflicting spec sources need explicit precedence rather than silent inference.
+
 ## When NOT to Use
 
 Do NOT use this skill for:
@@ -146,7 +150,7 @@ Extract:
 - variable definitions & expected relationships
 - all preconditions / postconditions
 - explicit invariants
-- implicit invariants deduced from context
+- candidate implicit invariants, explicitly labeled as hypotheses rather than spec requirements
 - math formulas (in canonical symbolic form)
 - expected flows & state-machine transitions
 - economic assumptions

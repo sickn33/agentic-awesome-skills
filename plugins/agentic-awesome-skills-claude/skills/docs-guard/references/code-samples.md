@@ -19,7 +19,7 @@ Every sample must pass all of these:
 2. **APIs are real** — every call verified per [verification.md](verification.md): name, argument order, defaults, return shape.
 3. **Self-contained or explicit** — runs on a clean machine, or states its prerequisites immediately above the block ("requires the client from the previous step").
 4. **No local residue** — no `/Users/yourname/`, no `C:\Dev\`, no machine-specific ports or hostnames; use placeholder conventions the project already uses.
-5. **Syntactically valid** — parse it mentally line by line; when the runtime allows, actually run or lint it.
+5. **Syntactically valid** — parse it mentally line by line; after reviewing the code and establishing safe isolation/authorization, run or lint it if appropriate. Static reading is not execution evidence.
 6. **Output shown is output produced** — if the sample shows a result, that result must be what the code yields, not an idealized version.
 
 ## Realistic data

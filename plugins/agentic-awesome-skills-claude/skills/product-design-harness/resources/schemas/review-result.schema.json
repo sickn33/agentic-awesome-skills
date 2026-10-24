@@ -1,0 +1,1080 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/review-result.schema.json",
+  "title": "Product Design Harness Canonical Review Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_config",
+    "review_id",
+    "product_direction",
+    "mode",
+    "stage",
+    "actor_boundary",
+    "product_organization",
+    "stakeholder_effects",
+    "human_judgment_boundary",
+    "unresolved_assumptions",
+    "combined_verdict",
+    "weakest_flow",
+    "strongest_signal",
+    "riskiest_claim",
+    "main_uncertainty",
+    "confidence_level",
+    "evidence_tier",
+    "main_trade_off",
+    "human_owned_decision",
+    "human_decision_record_id",
+    "evidence_receipt_ids",
+    "reviews",
+    "next_smallest_action",
+    "execution_boundary",
+    "human_approval_gates",
+    "high_risk_actions",
+    "stop_conditions",
+    "context_pack_required"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.1"
+    },
+    "session_config": {
+      "$ref": "session-config.schema.json"
+    },
+    "review_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "product_direction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "quick_gate",
+        "standard_gate",
+        "ux3_council"
+      ]
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "prototype",
+        "launch",
+        "scale"
+      ]
+    },
+    "actor_boundary": {
+      "$ref": "actor-boundary.schema.json"
+    },
+    "product_organization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "organization",
+        "project_owner",
+        "issuer"
+      ],
+      "properties": {
+        "organization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "stakeholder_effects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stakeholder",
+          "effect"
+        ],
+        "properties": {
+          "stakeholder": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "human_judgment_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "human_owned_decisions",
+        "machine_supported_inputs",
+        "not_mechanized",
+        "approval_gates"
+      ],
+      "properties": {
+        "human_owned_decisions": {
+          "$ref": "#/$defs/string_list"
+        },
+        "machine_supported_inputs": {
+          "$ref": "#/$defs/string_list"
+        },
+        "not_mechanized": {
+          "$ref": "#/$defs/string_list"
+        },
+        "approval_gates": {
+          "$ref": "#/$defs/named_human_gates"
+        }
+      }
+    },
+    "unresolved_assumptions": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "combined_verdict": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "verify",
+        "stop_reframe"
+      ]
+    },
+    "weakest_flow": {
+      "type": "string",
+      "enum": [
+        "user",
+        "evidence",
+        "business"
+      ]
+    },
+    "strongest_signal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "riskiest_claim": {
+      "type": "string",
+      "minLength": 1
+    },
+    "main_uncertainty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "very_low",
+        "low",
+        "medium",
+        "high",
+        "very_high"
+      ]
+    },
+    "evidence_tier": {
+      "type": "string",
+      "enum": [
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    "main_trade_off": {
+      "type": "string",
+      "minLength": 1
+    },
+    "human_owned_decision": {
+      "type": "string",
+      "enum": [
+        "taste",
+        "risk",
+        "strategy",
+        "ethics",
+        "meaning",
+        "none"
+      ]
+    },
+    "human_decision_record_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidence_receipt_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "user",
+        "evidence",
+        "business"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/$defs/lane_review"
+        },
+        "evidence": {
+          "$ref": "#/$defs/lane_review"
+        },
+        "business": {
+          "$ref": "#/$defs/lane_review"
+        }
+      }
+    },
+    "next_smallest_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_do",
+        "must_not_do",
+        "must_ask"
+      ],
+      "properties": {
+        "may_do": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "must_not_do": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "must_ask": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "human_approval_gates": {
+      "$ref": "#/$defs/named_human_gates"
+    },
+    "high_risk_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action",
+          "approval_gate",
+          "rollback_plan"
+        ],
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "approval_gate": {
+            "$ref": "#/$defs/named_human_gate"
+          },
+          "rollback_plan": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "stop_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "context_pack_required": {
+      "type": "boolean"
+    },
+    "council_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent_review_ids",
+        "challenges",
+        "unresolved_conflicts"
+      ],
+      "properties": {
+        "independent_review_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "challenges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/challenge"
+          },
+          "minItems": 3
+        },
+        "unresolved_conflicts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "proof_step": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reframed_question": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "const": "ux3_council"
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "council_record"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "human_owned_decision": {
+            "const": "none"
+          }
+        },
+        "required": [
+          "human_owned_decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "human_decision_record_id": {
+            "const": null
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "human_decision_record_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "continue"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "context_pack_required": {
+            "const": true
+          }
+        },
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "proof_step"
+              ]
+            },
+            {
+              "required": [
+                "reframed_question"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "verify"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "required": [
+          "proof_step"
+        ],
+        "properties": {
+          "context_pack_required": {
+            "const": false
+          }
+        },
+        "not": {
+          "required": [
+            "reframed_question"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "stop_reframe"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "required": [
+          "reframed_question"
+        ],
+        "properties": {
+          "context_pack_required": {
+            "const": false
+          }
+        },
+        "not": {
+          "required": [
+            "proof_step"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reviews": {
+            "properties": {
+              "user": {
+                "properties": {
+                  "verdict": {
+                    "const": "stop_reframe"
+                  }
+                },
+                "required": [
+                  "verdict"
+                ]
+              }
+            },
+            "required": [
+              "user"
+            ]
+          }
+        },
+        "required": [
+          "reviews"
+        ]
+      },
+      "then": {
+        "properties": {
+          "combined_verdict": {
+            "const": "stop_reframe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reviews": {
+            "properties": {
+              "evidence": {
+                "properties": {
+                  "verdict": {
+                    "const": "stop_reframe"
+                  }
+                },
+                "required": [
+                  "verdict"
+                ]
+              }
+            },
+            "required": [
+              "evidence"
+            ]
+          }
+        },
+        "required": [
+          "reviews"
+        ]
+      },
+      "then": {
+        "properties": {
+          "combined_verdict": {
+            "const": "stop_reframe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "reviews": {
+            "properties": {
+              "business": {
+                "properties": {
+                  "verdict": {
+                    "const": "stop_reframe"
+                  }
+                },
+                "required": [
+                  "verdict"
+                ]
+              }
+            },
+            "required": [
+              "business"
+            ]
+          }
+        },
+        "required": [
+          "reviews"
+        ]
+      },
+      "then": {
+        "properties": {
+          "combined_verdict": {
+            "const": "stop_reframe"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "continue"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reviews": {
+            "properties": {
+              "user": {
+                "properties": {
+                  "verdict": {
+                    "const": "continue"
+                  }
+                }
+              },
+              "evidence": {
+                "properties": {
+                  "verdict": {
+                    "const": "continue"
+                  }
+                }
+              },
+              "business": {
+                "properties": {
+                  "verdict": {
+                    "const": "continue"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "verify"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reviews": {
+            "anyOf": [
+              {
+                "properties": {
+                  "user": {
+                    "properties": {
+                      "verdict": {
+                        "const": "verify"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "user"
+                ]
+              },
+              {
+                "properties": {
+                  "evidence": {
+                    "properties": {
+                      "verdict": {
+                        "const": "verify"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "evidence"
+                ]
+              },
+              {
+                "properties": {
+                  "business": {
+                    "properties": {
+                      "verdict": {
+                        "const": "verify"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "business"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "mode": {
+            "enum": [
+              "quick_gate",
+              "standard_gate"
+            ]
+          }
+        },
+        "required": [
+          "mode"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "council_record"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "combined_verdict": {
+            "const": "stop_reframe"
+          }
+        },
+        "required": [
+          "combined_verdict"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reviews": {
+            "anyOf": [
+              {
+                "properties": {
+                  "user": {
+                    "properties": {
+                      "verdict": {
+                        "const": "stop_reframe"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "user"
+                ]
+              },
+              {
+                "properties": {
+                  "evidence": {
+                    "properties": {
+                      "verdict": {
+                        "const": "stop_reframe"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "evidence"
+                ]
+              },
+              {
+                "properties": {
+                  "business": {
+                    "properties": {
+                      "verdict": {
+                        "const": "stop_reframe"
+                      }
+                    },
+                    "required": [
+                      "verdict"
+                    ]
+                  }
+                },
+                "required": [
+                  "business"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution_boundary": {
+            "properties": {
+              "may_do": {
+                "contains": {
+                  "type": "string",
+                  "pattern": "([Cc]ustomer-facing|[Pp]ermissions|[Dd]ata handling|[Pp]roduction schema|[Ee]xternal action|[Rr]emove human approval|[Aa]utonomous)"
+                }
+              }
+            },
+            "required": [
+              "may_do"
+            ]
+          }
+        },
+        "required": [
+          "execution_boundary"
+        ]
+      },
+      "then": {
+        "properties": {
+          "high_risk_actions": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "high_risk_actions"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "non_empty_string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "named_human_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/named_human_gate"
+      }
+    },
+    "named_human_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "accountable_owner",
+        "condition"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accountable_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "challenge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer",
+        "objection_to",
+        "counter_evidence",
+        "position_change"
+      ],
+      "properties": {
+        "reviewer": {
+          "type": "string",
+          "enum": [
+            "user_flow",
+            "evidence_flow",
+            "business_flow"
+          ]
+        },
+        "objection_to": {
+          "type": "string",
+          "enum": [
+            "user_flow",
+            "evidence_flow",
+            "business_flow",
+            "none"
+          ]
+        },
+        "counter_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "position_change": {
+          "type": "string",
+          "enum": [
+            "unchanged",
+            "strengthened",
+            "weakened",
+            "reversed"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "not": {
+            "properties": {
+              "reviewer": {
+                "const": "user_flow"
+              },
+              "objection_to": {
+                "const": "user_flow"
+              }
+            },
+            "required": [
+              "reviewer",
+              "objection_to"
+            ]
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "reviewer": {
+                "const": "evidence_flow"
+              },
+              "objection_to": {
+                "const": "evidence_flow"
+              }
+            },
+            "required": [
+              "reviewer",
+              "objection_to"
+            ]
+          }
+        },
+        {
+          "not": {
+            "properties": {
+              "reviewer": {
+                "const": "business_flow"
+              },
+              "objection_to": {
+                "const": "business_flow"
+              }
+            },
+            "required": [
+              "reviewer",
+              "objection_to"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "objection_to": {
+                "const": "none"
+              }
+            },
+            "required": [
+              "objection_to"
+            ]
+          },
+          "then": {
+            "properties": {
+              "position_change": {
+                "const": "unchanged"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "lane_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict",
+        "evidence_tier",
+        "strongest_signal",
+        "weakest_assumption",
+        "missing_evidence",
+        "disconfirming_evidence",
+        "stop_condition"
+      ],
+      "properties": {
+        "verdict": {
+          "type": "string",
+          "enum": [
+            "continue",
+            "verify",
+            "stop_reframe"
+          ]
+        },
+        "stop_reason_class": {
+          "type": "string",
+          "enum": [
+            "actor",
+            "safety",
+            "core_evidence",
+            "irreversible_risk",
+            "business_viability",
+            "other"
+          ]
+        },
+        "evidence_tier": {
+          "type": "string",
+          "enum": [
+            "t0",
+            "t1",
+            "t2",
+            "t3",
+            "t4"
+          ]
+        },
+        "strongest_signal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "weakest_assumption": {
+          "type": "string",
+          "minLength": 1
+        },
+        "missing_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "disconfirming_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stop_condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "verdict": {
+                "const": "stop_reframe"
+              }
+            },
+            "required": [
+              "verdict"
+            ]
+          },
+          "then": {
+            "required": [
+              "stop_reason_class"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "stop_reason_class"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

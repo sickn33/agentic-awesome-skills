@@ -107,7 +107,9 @@ Internet Archive auto-created files.
 ## Configuration
 
 Here is an example of making an internetarchive configuration.
-Most applies to the other providers as well, any differences are described [below](#providers).
+This backend targets Internet Archive items, not an interchangeable private
+object-storage service. Confirm the item's public visibility and upload rights
+before transferring files; do not use it for confidential backups.
 
 First run
 
@@ -289,8 +291,9 @@ Properties:
 #### --internetarchive-wait-archive
 
 Timeout for waiting the server's processing tasks (specifically archive and book_op) to finish.
-Only enable if you need to be guaranteed to be reflected after write operations.
-0 to disable waiting. No errors to be thrown in case of timeout.
+Enable to wait for processing after writes; this is not a visibility guarantee
+because timeout does not produce an error. Verify completion separately.
+0 disables waiting.
 
 Properties:
 

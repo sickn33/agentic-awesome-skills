@@ -36,7 +36,7 @@ Write comprehensive failing tests following TDD red phase principles.
 
 ## Role
 
-Generate failing tests using Task tool with subagent_type="unit-testing::test-automator".
+Use the current project’s test framework and available tools. The upstream Task/subagent type is host-specific and not bundled; it does not authorize delegation. Produce the tests directly when no authorized matching agent exists.
 
 ## Prompt Template
 

@@ -155,7 +155,7 @@ metadata:
     prometheus.io/scrape: "true"
 spec:
   # Service type
-  type: ClusterIP
+  type: LoadBalancer  # example includes fields valid only for an external LB
 
   # Pod selector
   selector:
@@ -199,7 +199,7 @@ spec:
 
   # External IPs
   externalIPs:
-  - 80.11.12.10
+  - 203.0.113.10  # documentation placeholder; requires explicit network routing
 
   # Publishing strategy
   publishNotReadyAddresses: false
@@ -260,7 +260,7 @@ spec:
 
 ### None (Default)
 
-Distributes requests randomly across pods.
+Does not request client-IP stickiness; distribution is generally per connection and implementation dependent.
 
 ```yaml
 spec:
@@ -387,7 +387,7 @@ BACKEND_SERVICE_SERVICE_PORT_HTTP=80
 
 ### Algorithms
 
-Kubernetes uses random selection by default. For advanced load balancing:
+Endpoint selection depends on kube-proxy mode, CNI and service implementation. For advanced load balancing:
 
 **Service Mesh (Istio example):**
 ```yaml
@@ -405,9 +405,9 @@ spec:
         maxConnections: 100
 ```
 
-### Connection Limits
+### Voluntary disruption availability
 
-Use pod disruption budgets and resource limits:
+PodDisruptionBudget limits voluntary evictions, not connections, involuntary failures, or Deployment rollout disruption:
 
 ```yaml
 apiVersion: policy/v1
@@ -502,7 +502,7 @@ spec:
     targetPort: 8443
     protocol: TCP
   loadBalancerSourceRanges:
-  - 0.0.0.0/0
+  - 203.0.113.0/24  # replace with explicitly approved client ranges
 ```
 
 ### Pattern 3: StatefulSet with Headless Service
@@ -599,7 +599,7 @@ spec:
 
 ## Network Policies
 
-Control traffic to services:
+Control traffic to selected Pods with a supporting network plugin; this example permits frontend Pods in the same namespace:
 
 ```yaml
 apiVersion: networking.k8s.io/v1

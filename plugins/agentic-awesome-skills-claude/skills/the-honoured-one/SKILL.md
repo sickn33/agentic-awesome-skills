@@ -12,7 +12,7 @@ date_added: "2026-06-25"
 
 > Gojo at full power means all six eyes open — everything visible, nothing assumed, no blind spots. The Honoured One doesn't act on guesses. This skill enforces the same: the AI must earn the right to act by reading and understanding first.
 
-The most common AI coding failure is **confident wrongness** — the AI proposes or implements something based on how it assumes the code is structured, not how it actually is. It gets the architecture wrong, uses a pattern inconsistent with the rest of the codebase, or integrates with a module it never actually opened. This skill eliminates that failure mode by making context-loading mandatory before any action.
+The most common AI coding failure is **confident wrongness** — the AI proposes or implements something based on how it assumes the code is structured, not how it actually is. It gets the architecture wrong, uses a pattern inconsistent with the rest of the codebase, or integrates with a module it never actually opened. This skill reduces that failure mode by making relevant context-loading explicit; reading alone cannot guarantee correctness.
 
 ---
 
@@ -114,12 +114,12 @@ After the orientation statement, the AI applies a confidence gate before acting:
 → Proceed. The AI is fully loaded and may propose a solution or begin work.
 
 **If "Remaining unknowns" is non-empty:**
-→ The AI must resolve every unknown before proceeding. Options:
+→ Resolve unknowns that affect correctness, safety or authorization before dependent work. Independent reversible work can continue with documented non-blocking assumptions. Options:
 - Ask the user the specific question
 - Read another file that would answer it
 - Acknowledge the unknown, state the assumption being made, and get user confirmation before continuing
 
-> **The AI cannot proceed with known blind spots.** Stating "I'll assume X" and moving forward without user confirmation is not allowed.
+> **Do not conceal material blind spots.** Identify what remains unread or unverified, explain its impact, and avoid dependent claims until resolved.
 
 ---
 
@@ -143,7 +143,7 @@ Before writing any code or making any proposal, the AI must answer:
 - **No skipping files because their names look obvious.** A file called `utils.ts` can contain anything.
 - **No importing or calling code from files that haven't been read.** You cannot use what you haven't seen.
 - **No "familiar pattern" shortcuts.** The pattern may be implemented differently here.
-- **No acting with known unknowns.** Resolve them or get user confirmation before proceeding.
+- **No acting on unresolved blocking unknowns.** Resolve them before dependent work; do not equate exhaustive repository reading with complete knowledge.
 
 ---
 

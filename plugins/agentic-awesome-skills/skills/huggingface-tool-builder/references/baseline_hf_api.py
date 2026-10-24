@@ -39,7 +39,7 @@ def main() -> int:
         return 0
 
     limit = sys.argv[1] if len(sys.argv) > 1 else "3"
-    if not limit.isdigit():
+    if not limit.isdigit() or not 1 <= int(limit) <= 100:
         print("Error: limit must be a number", file=sys.stderr)
         return 1
 
@@ -48,7 +48,7 @@ def main() -> int:
     url = f"https://huggingface.co/api/models?limit={limit}"
 
     req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req) as resp:
+    with urllib.request.urlopen(req, timeout=30) as resp:
         sys.stdout.write(resp.read().decode("utf-8"))
     return 0
 

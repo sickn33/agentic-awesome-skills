@@ -1,6 +1,8 @@
 # Entropy Box API reference
 
-Base URL: `https://xiangshang.ngrok.app`
+Historical base URL: `https://xiangshang.ngrok.app`
+
+Confirm this endpoint still belongs to the project through its current official repository/integration page before sending a query. Do not follow cross-origin redirects or silently switch hosts. Limit response size/content type, validate JSON and IDs, handle HTTP/schema errors as unknown, and do not install/run assets returned by the service. Timeout is an upper bound, not a requirement to block the agent/UI for the entire interval.
 
 The public API requires no key. It accepts Chinese and English queries. These examples
 target API version 2.0.0 as reviewed on 2026-09-02. Inspect the live OpenAPI document
@@ -37,7 +39,7 @@ Request fields:
 The response contains `query` and a service-defined `results` object. Inspect result
 groups before selecting candidates.
 
-Quick response anatomy (verified against /api/search; the live schema wins):
+Historical response anatomy (original review claim, not re-tested in this content review; the approved current schema wins):
 
 - `results` is grouped into three scopes — `assets` (implementation assets), `caps`
   (capabilities), `topics` (topics) — each hit carries `record`, `matched`
@@ -126,7 +128,7 @@ By default, Consult runs hybrid retrieval (vector + BM25 + one-hop graph expansi
 rerank) and returns the **structured knowledge graph** for the question — `results`
 (topics/caps/assets with full records and `graph_via` attribution edges), `task_steps`
 (LLM intent decomposition), and `chains` (capability subgraphs discovered during
-retrieval). This is fast and fully grounded; no LLM assembly is performed.
+retrieval). The graph records are retrieved candidates; task_steps can be LLM-decomposed even with integrate=false, so neither factual accuracy nor complete grounding is guaranteed. No final LLM chain assembly is requested in that mode.
 
 Set `integrate: true` to additionally ask the backend to assemble the candidates into a
 visualization-ready technical chain via `integrate_planner` (the LLM "post-assembly"
@@ -168,7 +170,7 @@ Request fields:
 | `brief` | no | Return only a short chain skeleton; default `false` |
 | `integrate` | no | Enable LLM technical-chain assembly; default `false` (graph only). When `true`, `synthesis` is populated; the graph (`results`/`task_steps`/`chains`) is still returned |
 
-The response always contains `question`, `pool`, `results`, `task_steps`, `chains`, and
+The documented version describes `question`, `pool`, `results`, `task_steps`, `chains`, and
 `latency_ms`. When `integrate` is `false` (default), `synthesis` is `null` and the graph
 is the full answer. When `integrate` is `true`, `synthesis` is added (a normal run can
 take 30-180 seconds). The generated workflow is a candidate and must be validated against

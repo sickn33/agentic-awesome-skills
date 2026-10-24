@@ -36,13 +36,14 @@ Everything Jev should not decide comes back under a typed escalation contract, s
 
 ## How It Works
 
-### Step 1: Install and wire the server
+### Step 1: Verify an already approved installation
 
 ```bash
-jev-use install
+# Inspect the already installed version and configuration; do not bootstrap from this skill.
+jev-use --version
 ```
 
-`install` wires the stdio MCP server into Claude Code, Codex and pi through each harness's own CLI - whichever it finds - and `jev-use doctor` verifies backend resolution with one live round trip. Set a provider credential in the environment the agent runs in (`TYPESAFE_API_KEY`, `OPENROUTER_API_KEY` or `AI_GATEWAY_API_KEY`, auto-detected in that order), or set `JEV_BACKEND=mock` to run keyless with no network calls.
+For a separate explicitly authorized installation task, `install` wires the stdio MCP server into Claude Code, Codex and pi through each harness's own CLI - whichever it finds - and `jev-use doctor` verifies backend resolution with one live round trip. Set a provider credential in the environment the agent runs in (`TYPESAFE_API_KEY`, `OPENROUTER_API_KEY` or `AI_GATEWAY_API_KEY`, auto-detected in that order), or set `JEV_BACKEND=mock` to run keyless with no network calls.
 
 ### Step 2: Route each step before working on it
 
@@ -127,6 +128,8 @@ A `score` answer is the expected position on your own levels: `0.8` means "betwe
 ```
 
 `jev_gate` returns `allow`, `deny` or `escalate` for one proposed action. `allow` is silence: it falls through to the harness's normal permission flow, so the gate can never grant anything - it can only deny or ask. If Jev is unreachable the gate steps aside rather than granting.
+
+Provider verdicts remain advisory, including high-confidence results and non-escalated merge suggestions. Verify actual build/check output and apply repository gates; neither mock results nor provider answers prove execution or satisfy an exact-head maintainer review. Budget calls and redact state before provider egress. The performance figures below are historical project claims, not a guarantee for the configured backend.
 
 ## Best Practices
 

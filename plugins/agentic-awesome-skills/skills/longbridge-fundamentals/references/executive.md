@@ -32,7 +32,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge executive --format json
+longbridge executive AAPL.US --format json
 
 # See all options
 longbridge executive --help

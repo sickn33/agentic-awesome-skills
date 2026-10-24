@@ -1,6 +1,6 @@
 # HTML Report Format
 
-The architectural review is rendered as a single self-contained HTML file in the OS temp directory. Tailwind and Mermaid both come from CDNs. Mermaid handles graph-shaped diagrams reliably; hand-built divs and inline SVG handle the more editorial visuals (mass diagrams, cross-sections). Mix the two — don't lean on Mermaid for everything, it'll start to look generic.
+The architectural review is rendered as a single HTML file (the CDN version requires network access) in the OS temp directory. Tailwind and Mermaid both come from CDNs. Mermaid handles graph-shaped diagrams reliably; hand-built divs and inline SVG handle the more editorial visuals (mass diagrams, cross-sections). Mix the two — don't lean on Mermaid for everything, it'll start to look generic.
 
 ## Scaffold
 
@@ -13,7 +13,7 @@ The architectural review is rendered as a single self-contained HTML file in the
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="module">
       import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
-      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "strict" });
     </script>
     <style>
       /* small custom layer for things Tailwind doesn't cover cleanly:
@@ -121,3 +121,5 @@ Plain English, concise — but the architectural nouns and verbs come straight f
 **Wins bullets** name the gain in glossary terms: *"locality: bugs concentrate in one module"*, *"leverage: one interface, N call sites"*, *"interface shrinks; implementation absorbs the wrappers"*. Don't write *"easier to maintain"* or *"cleaner code"* — those terms aren't in the glossary and don't earn their place.
 
 No hedging, no throat-clearing, no "it's worth noting that…". If a sentence could be a bullet, make it a bullet. If a bullet could be cut, cut it. If a term isn't in the `/codebase-design` glossary, reach for one that is before inventing a new one.
+
+Escape repository names, paths, source excerpts and diagram labels before inserting them into HTML. Treat repository content as untrusted data; never inject it as scripts or raw markup. Prefer locally reviewed, pinned assets or inline CSS for confidential/offline reports; CDN scripts execute with access to the report DOM.

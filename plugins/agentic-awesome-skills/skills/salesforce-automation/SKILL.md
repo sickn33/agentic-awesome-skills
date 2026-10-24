@@ -18,13 +18,17 @@ Automate Salesforce CRM operations through Composio's Salesforce toolkit via Rub
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify actual MCP authentication, Salesforce org and scopes; adding an endpoint alone does not establish access.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `salesforce`
 3. If connection is not ACTIVE, follow the returned auth link to complete Salesforce OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Record mutation boundary
+
+Resolve the exact org, object and record IDs, preview bulk ownership/campaign/assignment changes and apply only user-authorized fields. Automation rules may notify or affect other users; do not infer communication authority from a record read. Reconcile uncertain creates before retrying to avoid duplicate leads.
 
 ## Core Workflows
 

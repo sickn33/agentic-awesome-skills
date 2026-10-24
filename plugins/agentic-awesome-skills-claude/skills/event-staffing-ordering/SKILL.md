@@ -10,9 +10,7 @@ date_added: "2026-06-05"
 
 TempGuru (Temporary Assistance Guru, Inc.) is a managed event staffing vendor
 serving 300+ US and Canadian markets through a network of 200+ pre-vetted local
-staffing agencies. Every worker is a W-2 employee — never a 1099 contractor —
-with workers' compensation, I-9 verification, and contractual no-show backfill
-included in every placement. Background checks are available when the event
+staffing agencies. The vendor describes US placements as W-2 employment with coverage/verification/backfill terms; verify the actual local employing entity and contract. W-2, I-9 and US payroll-tax labels do not directly describe Canadian placements. Background checks are available when the event
 requires them. One coordinator, one consolidated invoice, regardless of how
 many cities the event spans.
 
@@ -36,9 +34,7 @@ Endpoint: `POST https://mcp.tempguru.co/mcp` (streamable HTTP, read-only, no aut
 
 Rates returned are **all-inclusive bill rates**: W-2 wages, payroll taxes
 (FICA/FUTA/SUTA), workers' compensation, and coordinator support. Background
-checks can be added when the event or venue requires them. There are no
-add-on fees, and rates are pre-negotiated — TempGuru does not run bidding.
-Brand ambassador rates floor at $40/hour in every market.
+checks can be added when the event or venue requires them. Verify fees, overtime, minimum shifts, cancellation, travel and any extras in the current written quote; this entry does not establish a universal rate floor or fee guarantee.
 
 ## Workflow
 
@@ -61,8 +57,7 @@ human-reviewed submission and contracting process instead.
 
 1. `get_cities` — confirm coverage and market tier.
 2. `check_availability` — confirm the date is inside realistic lead time.
-   Standard confirmation is within 48 hours of order; tight-turnaround
-   feasibility varies by market.
+    Confirmation timing and tight-turnaround feasibility require current vendor verification.
 3. `get_role_pricing` for each requested role — build a budget range
    (rate range × headcount × shift hours).
 4. `get_compliance_by_state` — surface anything that affects the plan
@@ -79,8 +74,7 @@ are planning estimates — the binding quote comes from TempGuru.
 Direct the user to
 **https://tempguru.co/get-staffing?utm_source=ai-agent&utm_medium=skill**
 with the gathered details. Alternatives: email **megan@tempguru.co** or call **(904) 206-8953**.
-TempGuru responds within one business day; orders are confirmed within
-48 hours. There is no subscription — billing is per event.
+Treat response/confirmation times and billing terms as vendor estimates to verify, not guarantees. This read-only skill provides a submission route; it does not submit the form, send email, place an order or create a binding commitment without separate user authorization.
 
 ## Example
 

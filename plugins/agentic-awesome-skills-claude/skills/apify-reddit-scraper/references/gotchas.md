@@ -1,5 +1,7 @@
 # Gotchas — apify-reddit-scraper
 
+Prices and measured-run observations below are historical examples, not guarantees for a future Actor build or account. Confirm the live pricing/schema and run metadata.
+
 Cost guardrails, error recovery and the quirks that cost real runs. Read on demand.
 
 ## Cost guardrails
@@ -23,11 +25,7 @@ cost  ≈ $0.02 + items × $0.002
 
 Worked example: 5 terms, `maxPostsCount: 24`, `crawlCommentsPerPost: true`, `maxCommentsPerPost: 5` → 120 posts + 600 comments = 720 items ≈ $1.46 worst case. Estimated as a total (144 items ≈ $0.31), a $0.50 charge limit stopped the run at 241 items and two threads lost their comments. Write the per-term numbers and the USD figure into the run section of your answer (SKILL.md Step 3) and compare them with the settled cost afterwards.
 
-| Estimate | Action |
-|---|---|
-| < $5 (≈ 2,500 items) | Run. |
-| $5 – $20 | Say the estimate, run unless the user objects. |
-| > $20 | Ask for explicit confirmation and offer a smaller first pass (`maxPostsCount: 100`, comments off). |
+Run only within an explicitly authorized account, purpose and spending cap. Small estimates do not create spending permission. Check current Actor pricing and use the platform's supported charge limit; include starts, enrichment and connector costs. A retry is another billable run.
 
 Free Apify plans: results beyond the plan's monthly credit stop the crawl (the Actor halts when the platform's charge limit is hit), and only the first 40 `searchTerms` per run are searched.
 

@@ -231,7 +231,7 @@ Before writing screens, define:
 | Type | Strategy |
 |------|----------|
 | Network errors | Retry with exponential backoff; show retry UI |
-| Auth errors (401/403) | Refresh token → re-request → logout if fails |
+| Auth errors (401/403) | Refresh at most once for an expired-token 401; treat 403 as authorization failure, not a refresh loop |
 | Validation errors | Show inline field errors immediately |
 | Data parsing errors | Log + fallback to cached/default state |
 | Unexpected crashes | Catch at top-level; show error screen + report |
@@ -265,7 +265,7 @@ Use `AppResult<T>` as return type for all repository + use case functions. ViewM
 - Cache-first strategy: show stale data, fetch fresh in background
 - `Room` / `Drift` / `MMKV` as single source of truth
 - Expose network state via `ConnectivityManager` and reflect in UI
-- All network calls wrapped with timeout + retry policy
+- Network calls need bounded timeouts; retry only transient failures and safe/idempotent operations (or use an idempotency key)
 
 ---
 
@@ -364,7 +364,7 @@ Release tag
 
 ### Startup Performance
 - App startup time target: **cold start < 1s**, warm start < 500ms
-- Use **App Startup library** for initializing libraries lazily
+- Use **App Startup library** to organize initialization; explicitly disable automatic initialization and invoke it on demand when lazy behavior is needed
 - Baseline profiles generated + committed to repo
 - Heavy initialization moved off main thread
 
@@ -487,7 +487,7 @@ Follow this phase structure for any new Android project:
 
 ### Phase 5 — Post-Launch (Ongoing)
 - Crash-free rate monitored daily
-- ANR rate < 0.47% (Play Store threshold)
+- ANR rate measured against current Play Console thresholds for the relevant metric; verify the current policy
 - App rating monitored; negative reviews triaged weekly
 - Dependency updates reviewed monthly
 - OS beta testing with each new Android release

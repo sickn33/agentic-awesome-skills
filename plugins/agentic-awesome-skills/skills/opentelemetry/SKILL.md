@@ -38,7 +38,9 @@ Adopt vendor-neutral telemetry with consistent instrumentation across services.
 4. Validate cardinality and sampling to control cost.
 5. Create golden signals dashboards and alerting from collected data.
 
-## Collector Production Configuration
+## Collector Configuration Example
+
+This legacy 0.98-style configuration is an adaptation starting point, not a current production deployment. Pin a supported Collector distribution and matching SDK/operator versions, list available components, and validate the final config with that binary before rollout. New versions change internal metrics schemas and exporter names. Restrict receiver/health/metrics network access; cross-host production traffic needs authenticated TLS, not the plaintext examples. Scraping Kubernetes needs a scoped service account/RBAC and correct namespace; hostmetrics inside a container measures its available view unless host mounts/permissions are deliberately configured. Redact sensitive attributes, baggage, URLs and bodies before export; sampling is not a privacy control.
 
 ```yaml
 # otel-collector-config.yaml
@@ -61,11 +63,11 @@ receivers:
             - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
               action: keep
               regex: "true"
-            - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+            - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
               action: replace
               target_label: __address__
-              regex: (.+)
-              replacement: $$1
+              regex: (.+);([0-9]+)
+              replacement: $$1:$$2  # IPv4 example; adapt/test IPv6 bracket formatting
 
   # Host metrics for infrastructure monitoring
   hostmetrics:
@@ -84,8 +86,8 @@ processors:
 
   memory_limiter:
     check_interval: 1s
-    limit_mib: 512
-    spike_limit_mib: 128
+    limit_mib: 384
+    spike_limit_mib: 96  # Leave process/runtime headroom below the 512Mi container limit
 
   attributes:
     actions:
@@ -135,7 +137,12 @@ exporters:
   debug:
     verbosity: basic
 
+extensions:
+  health_check:
+    endpoint: 0.0.0.0:13133
+
 service:
+  extensions: [health_check]
   telemetry:
     logs:
       level: info
@@ -145,7 +152,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [memory_limiter, resourcedetection, transform/normalize-routes, batch, attributes]
+      processors: [memory_limiter, resourcedetection, filter/drop-debug, transform/normalize-routes, attributes, batch]
       exporters: [otlp/traces]
     metrics:
       receivers: [otlp, prometheus, hostmetrics]
@@ -300,9 +307,9 @@ request_counter.add(1, {"route": "/api/orders", "method": "POST"})
 ## Node.js SDK Instrumentation
 
 ```javascript
-// tracing.js
+// tracing.cjs
 // Initialize OpenTelemetry for a Node.js service.
-// Load this file BEFORE any other imports: node -r ./tracing.js app.js
+// Load this file BEFORE any other imports: node -r ./tracing.cjs app.js
 const { NodeSDK } = require("@opentelemetry/sdk-node");
 const { OTLPTraceExporter } = require("@opentelemetry/exporter-trace-otlp-grpc");
 const { OTLPMetricExporter } = require("@opentelemetry/exporter-metrics-otlp-grpc");
@@ -331,7 +338,7 @@ const sdk = new NodeSDK({
   instrumentations: [
     getNodeAutoInstrumentations({
       "@opentelemetry/instrumentation-http": {
-        ignoreIncomingPaths: ["/health", "/ready"],
+        ignoreIncomingRequestHook: (request) => ["/health", "/ready"].includes((request.url || "").split("?")[0]),
       },
       "@opentelemetry/instrumentation-express": { enabled: true },
       "@opentelemetry/instrumentation-pg": { enabled: true },
@@ -341,7 +348,9 @@ const sdk = new NodeSDK({
 });
 
 sdk.start();
-process.on("SIGTERM", () => sdk.shutdown());
+process.on("SIGTERM", async () => {
+  try { await sdk.shutdown(); } catch { process.exitCode = 1; }
+});
 ```
 
 ## Auto-Instrumentation with Kubernetes Operator

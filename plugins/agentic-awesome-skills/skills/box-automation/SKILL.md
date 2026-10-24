@@ -18,12 +18,14 @@ Automate Box operations including file upload/download, content search, folder m
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection. Endpoint setup alone does not authenticate Box; use the supported host authentication flow within requested scope.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `box`
 3. If connection is not ACTIVE, follow the returned auth link to complete Box OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Treat these slugs/defaults as historical examples; discovered schemas govern operations. Verify exact enterprise/account, file/folder/version, destination and sharing visibility before requested writes. Collaboration changes and sign requests can notify others or change obligations; require that action scope. Avoid public links by default, protect download URLs, and reconcile uncertain mutations before retrying.
 
 ## Core Workflows
 
@@ -129,7 +131,7 @@ Automate Box operations including file upload/download, content search, folder m
 - `status`: `"accepted"`, `"pending"`, or `"rejected"` for collaboration invites
 - `file_id`: File to share or manage
 - `lock__access`: Set to `"lock"` to lock a file
-- `permissions__can__download`: `"company"` or `"open"` for download permissions
+- Inspect the current schema for download permissions; access levels such as `"company"`/`"open"` are not interchangeable with a boolean can_download permission
 
 **Pitfalls**:
 - Only certain roles can invite collaborators; insufficient permissions cause authorization errors
@@ -161,7 +163,7 @@ Automate Box operations including file upload/download, content search, folder m
 ## Common Patterns
 
 ### ID Resolution
-Box uses numeric string IDs for all entities:
+Box file/folder IDs are numeric strings; other entities, including Sign requests, may use UUIDs. Preserve each returned identifier:
 - **Root folder**: Always ID `"0"`
 - **File ID from URL**: `https://*.app.box.com/files/123` gives file_id `"123"`
 - **Folder ID from URL**: `https://*.app.box.com/folder/123` gives folder_id `"123"`
@@ -183,7 +185,7 @@ Box tools use double underscore notation for nested objects:
 ## Known Pitfalls
 
 ### ID Formats
-- All IDs are numeric strings (e.g., `"123456"`, not integers)
+- File/folder IDs are numeric strings; do not coerce other entity IDs to numbers
 - Root folder is always `"0"`
 - File and folder IDs can be extracted from Box web app URLs
 

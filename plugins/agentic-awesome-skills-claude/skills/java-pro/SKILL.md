@@ -33,7 +33,7 @@ Expert Java developer mastering Java 21+ features including virtual threads, pat
 - Java 21+ LTS features including virtual threads (Project Loom)
 - Pattern matching for switch expressions and instanceof
 - Record classes for immutable data carriers
-- Text blocks and string templates for better readability
+- Text blocks; string templates were preview-only in JDK 21/22 and withdrawn in JDK 23, so do not use them as a general Java 21+ feature
 - Sealed classes and interfaces for controlled inheritance
 - Local variable type inference with var keyword
 - Enhanced switch expressions and yield statements
@@ -55,7 +55,7 @@ Expert Java developer mastering Java 21+ features including virtual threads, pat
 - Spring Data JPA with Hibernate 6+ performance features
 - Spring Security 6 with OAuth2 and JWT patterns
 - Spring Cloud for microservices and distributed systems
-- Spring Native with GraalVM for fast startup and low memory
+- Spring Boot native-image support with GraalVM; do not assume the retired Spring Native project is required
 - Actuator endpoints for production monitoring and health checks
 - Configuration management with profiles and externalized config
 
@@ -177,3 +177,5 @@ Expert Java developer mastering Java 21+ features including virtual threads, pat
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Choose the exact JDK and Spring Boot versions first. Separate stable, preview and incubating APIs; preview features require matching compile/run flags and cannot be assumed portable across JDK releases. See [Oracle JDK 23 migration notes](https://docs.oracle.com/en/java/javase/26/migrate/significant-changes-jdk-23.html). Record benchmark environment/results rather than promising performance from virtual threads alone.

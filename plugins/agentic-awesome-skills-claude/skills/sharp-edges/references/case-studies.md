@@ -1,10 +1,13 @@
 # Real-World Case Studies
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 Analysis of sharp edges in widely-used libraries. These aren't implementation bugs—they're design decisions that make secure usage difficult.
 
 ## GNU Multiple Precision Arithmetic Library (GMP)
 
-GMP is used extensively for cryptographic implementations (RSA, Paillier, ElGamal, etc.) despite being fundamentally unsuitable for cryptography.
+GMP is used extensively for cryptographic implementations (RSA, Paillier, ElGamal, etc.) whose general-purpose operations require careful side-channel review for secret-dependent arithmetic.
 
 ### Sharp Edge: Variable-Time Operations
 
@@ -24,12 +27,12 @@ mpz_powm(result, base, secret_exponent, modulus);
 - Even "blinded" implementations often have residual timing leaks
 
 **Detection Pattern**: Any use of GMP (`mpz_*` functions) with secret values:
-- `mpz_powm`, `mpz_powm_sec` (the "sec" version is still not fully constant-time)
+- `mpz_powm` for secret exponents; evaluate mpz_powm_sec under its documented input/size and platform assumptions rather than declaring every secure variant broken
 - `mpz_mul`, `mpz_mod` with secret operands
 - `mpz_cmp` for secret comparison
 
 **Real Vulnerabilities**:
-- CVE-2018-16152: Timing attack on strongSwan IKEv2
+- Historical CVE associations require confirmation from primary advisories; the arithmetic pattern alone is not evidence for a specific product CVE.
 - Numerous academic papers demonstrating key recovery from GMP-based crypto
 
 ### Sharp Edge: Memory Not Securely Cleared
@@ -129,9 +132,9 @@ if (EVP_EncryptFinal_ex(ctx, outbuf, &outlen) != 1) {
 RAND_bytes(buf, len);        // Cryptographically secure
 RAND_pseudo_bytes(buf, len); // NOT guaranteed secure!
 
-// Worse: RAND_pseudo_bytes returns 1 even when insecure
+// Legacy RAND_pseudo_bytes is deprecated; its return value distinguished strength
 int rc = RAND_pseudo_bytes(buf, len);
-// rc == 1 means "success", not "cryptographically random"
+// rc == 1 means cryptographically strong; prefer RAND_bytes and require its return value == 1
 // rc == 0 means "success but not crypto-strength" (!!)
 // rc == -1 means "not supported"
 ```
@@ -143,7 +146,7 @@ int rc = RAND_pseudo_bytes(buf, len);
 ```c
 // Who frees this?
 X509 *cert = SSL_get_peer_certificate(ssl);
-// Answer: YOU do (it's a copy)
+// Answer: release the owned reference with X509_free; it is a reference-count increment, not necessarily a deep copy
 
 // Who frees this?
 X509 *cert = SSL_get0_peer_certificate(ssl);  // OpenSSL 3.0+
@@ -183,7 +186,7 @@ import pickle
 data = pickle.loads(untrusted_input)
 
 # Attacker sends:
-# b"cos\nsystem\n(S'rm -rf /'\ntR."
+# <inert illustrative pickle payload; never generate or execute an OS command during review>
 # Result: Executes shell command
 ```
 
@@ -207,7 +210,7 @@ import yaml
 data = yaml.load(untrusted_input)
 
 # Attacker sends:
-# !!python/object/apply:os.system ['rm -rf /']
+# <inert illustrative unsafe YAML object tag; do not execute it>
 ```
 
 **The Problem**: YAML's tag system allows arbitrary object instantiation. The "safe" loader is:
@@ -231,7 +234,7 @@ if (strcmp($_POST['password'], $stored_password) == 0) {
 }
 
 // Attacker sends: password[]=anything
-// strcmp(array, string) returns NULL
+// Historical PHP could warn/return NULL; PHP 8 rejects an array with TypeError
 // NULL == 0 is TRUE in PHP!
 ```
 
@@ -243,9 +246,9 @@ if (strcmp($_POST['password'], $stored_password) == 0) {
 
 **Fix**:
 ```php
-if (hash_equals($stored_hash, hash('sha256', $_POST['password']))) {
-    // Use hash_equals for timing-safe comparison
-    // AND proper password hashing (not shown)
+if (isset($_POST['password']) && is_string($_POST['password']) &&
+    password_verify($_POST['password'], $stored_password_hash)) {
+    // stored_password_hash was created with a reviewed password_hash configuration.
 }
 ```
 

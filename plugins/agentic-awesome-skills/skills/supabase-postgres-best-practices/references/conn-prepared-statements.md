@@ -26,7 +26,7 @@ execute get_user(123);
 -- Option 1: Use unnamed prepared statements (most ORMs do this automatically)
 -- The query is prepared and executed in a single protocol message
 
--- Option 2: Deallocate after use in transaction mode
+-- Option 2: SQL PREPARE/EXECUTE/DEALLOCATE must stay on one pinned backend/transaction
 prepare get_user as select * from users where id = $1;
 execute get_user(123);
 deallocate get_user;
@@ -35,11 +35,13 @@ deallocate get_user;
 -- Connection is held for entire session, prepared statements persist
 ```
 
+Pooler support for protocol-level prepared statements varies by product/version/configuration. SQL PREPARE is distinct. Verify the exact deployment before disabling or relying on preparation.
+
 Check your driver settings:
 
 ```sql
 -- Many drivers use prepared statements by default
--- Node.js pg: { prepare: false } to disable
+-- Node.js pg: omit query config name to avoid named prepared statements; no generic prepare:false option
 -- JDBC: prepareThreshold=0 to disable
 ```
 

@@ -1,8 +1,11 @@
 ---
 title: "Widgets | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/widgets
+---
 
 # Widgets
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 A widget provides quick access to essential information and focused interactions from your app or game in additional contexts.
 
@@ -274,7 +277,7 @@ In iOS, iPadOS, and visionOS, widgets support Dynamic Type sizes from Large to A
 
 ### [Accented](https://developer.apple.com/design/human-interface-guidelines/widgets#Accented)
 
-**Group widget components into an accented and a primary group.** The accented rendering mode divides the widget’s view hierarchy into an accent group and a primary group. On iPhone, iPad, and Mac, the system tints primary and accented content white. On Apple Watch, the system tints primary content white and accented content in the color of the watch face.
+**Group widget components into an accented and a primary group.** The accented rendering mode divides the widget’s view hierarchy into an accent group and a primary group. The colors applied to primary and accent groups depend on platform, rendering mode and user appearance choices; do not hard-code an assumption that both groups are always white. On Apple Watch, the system tints primary content white and accented content in the color of the watch face.
 
 For developer guidance, see [`widgetAccentable(_:)`](https://developer.apple.com/documentation/SwiftUI/View/widgetAccentable\(_:\)) and [Optimizing your widget for accented rendering mode and Liquid Glass](https://developer.apple.com/documentation/WidgetKit/optimizing-your-widget-for-accented-rendering-mode-and-liquid-glass).
 
@@ -515,3 +518,7 @@ June 10, 2024| Updated to include guidance for accented widgets in iOS 18 and iP
 June 5, 2023| Updated guidance to include widgets in watchOS, widgets on the iPad Lock Screen, and updates for iOS 17, iPadOS 17, and macOS 14.  
 November 3, 2022| Added guidance for widgets on the iPhone Lock Screen and updated design comprehensives for iPhone 14, iPhone 14 Pro, and iPhone 14 Pro Max.  
   
+
+## Runtime and privacy checks
+
+Use the actual widget rendering mode and family from the environment, and test full-color, accented, vibrant and clear treatments where available. The historical occurrence table above is not an SDK availability guarantee. Timeline reload requests are budgeted; timestamps and system-rendered dates can update without a fresh network timeline. Do not implement a critical real-time monitor as a widget. Preview snapshots should use synthetic/redacted content and avoid revealing a signed-in person’s private data in galleries or shared contexts. Interactive buttons/toggles require supported App Intents; validate authorization and keep mutations idempotent.

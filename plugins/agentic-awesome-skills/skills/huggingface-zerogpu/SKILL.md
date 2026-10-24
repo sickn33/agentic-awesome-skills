@@ -44,6 +44,12 @@ Default `large` gives half a physical GPU, so memory bandwidth and compute are s
 
 > **Backing GPU changes without notice.** ZeroGPU has already migrated across GPU generations several times; older write-ups may name A100 or H200, but those are outdated. For the current backing GPU and exact per-size VRAM, always check the [ZeroGPU docs](https://huggingface.co/docs/hub/spaces-zerogpu) before sizing workloads.
 
+<!-- Modified 2026-10-23: portability, concurrency and implementation limits. Apache-2.0 retained. -->
+
+## Deployment and data boundaries
+
+Select an authorized Space, supported runtime and bounded compute/credit budget before deployment. Pin reviewed model/kernel revisions and dependency artifacts; remote model code and binary wheels execute code and need separate review. Validate and cap prompt/steps/upload sizes, estimate duration with positive bounded values, and keep private prompts/tokens/uploads out of public logs/caches. Decorator/process separation is not a sandbox for untrusted pickle or code. Internal process/packing/quota descriptions below are release-specific; inspect the actual installed version and errors, not assumed internals.
+
 ## Basic Pattern
 
 ```python
@@ -104,7 +110,7 @@ model = AutoModel.from_pretrained("...").to(device)
 - **Dedicated GPU Spaces / local GPU** — `is_available()` is genuinely `True`.
 - **CPU Spaces / local CPU** — resolves to `"cpu"`.
 
-Do not hardcode `device="cuda"` — it breaks on CPU-only environments.
+For code intended to run on CPU-only hosts, use the device-selection idiom. ZeroGPU-only examples above deliberately request cuda at module scope; portability requires selecting an available device.
 
 ### Eager loading is the right default
 
@@ -211,7 +217,7 @@ Three rules. Full treatment with examples in `references/concurrency.md`.
 
 1. **No mutable global state.** Concurrent requests overwrite each other.
 2. **No fixed file paths for outputs.** Concurrent requests clobber the same file. Use `tempfile` for unique paths.
-3. **Read-only globals are safe.** Model objects, tokenizers, configs loaded once at startup and only read during requests are safe and encouraged.
+3. **Verify model/library concurrency safety.** Startup-loaded models are encouraged, but generation may mutate caches/RNG/adapters internally; isolate request/session state or serialize incompatible operations.
 
 ## Call Granularity
 
@@ -270,7 +276,7 @@ GRADIO_CACHE_EXAMPLES=true GRADIO_CACHE_MODE=lazy python app.py
 
 ### `python_version` pin in README frontmatter
 
-Pinning `python_version` is **effectively required** for ZeroGPU. The runtime default is currently Python 3.10, so a local environment using 3.11+ will fail to install on the Space without an explicit pin. Pin to a ZeroGPU-supported version (3.12 is a reasonable default); the authoritative supported list lives in the [ZeroGPU docs](https://huggingface.co/docs/hub/spaces-zerogpu) — do not hardcode the full list, refer to the docs.
+Pinning `python_version` is **effectively required** for ZeroGPU. The default runtime can differ from local Python; mismatches can break dependencies, but a newer local Python does not by itself imply installation failure. Pin to a ZeroGPU-supported version (3.12 is a reasonable default); the authoritative supported list lives in the [ZeroGPU docs](https://huggingface.co/docs/hub/spaces-zerogpu) — do not hardcode the full list, refer to the docs.
 
 ```yaml
 # README.md frontmatter

@@ -43,3 +43,5 @@ const regex = /foo/g
 regex.test('foo')  // true, lastIndex = 3
 regex.test('foo')  // false, lastIndex = 0
 ```
+
+Escape user search text and cap input lengths; an empty query needs explicit behavior. Global/sticky regex test/exec mutates lastIndex. Hoisting is valid only when pattern, flags and state semantics are preserved.

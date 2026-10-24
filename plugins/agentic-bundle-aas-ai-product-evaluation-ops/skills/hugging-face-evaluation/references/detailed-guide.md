@@ -1,5 +1,9 @@
 # Overview - Detailed Guide
 
+## Runtime availability first
+
+No scripts/ directory or evaluator implementation is bundled in this tree. Every command below naming evaluation_manager.py, train_sft_example.py, inspect_eval_uv.py, run_eval_job.py, lighteval_vllm_uv.py, inspect_vllm_uv.py or run_vllm_eval_job.py requires a separately verified upstream installation. Do not run --help through uv before inspecting the script and dependency header: dependency installation can execute build code. Manual source/table review can proceed; script, validator and merge guarantees remain unverified.
+
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Integration with HF Ecosystem
@@ -130,11 +134,11 @@ Key workflow (matches CLI help):
 ### Running the script
 
 ```bash
-uv run scripts/train_sft_example.py
+# Do not use a training example as an evaluation command; locate and review the actual evaluator first.
 ```
 ### Features
 
-- **vLLM Backend**: High-performance GPU inference (5-10x faster than standard HF methods)
+- **vLLM Backend**: GPU inference whose throughput depends on model, hardware and workload; no speedup is established here
 - **lighteval Framework**: HuggingFace's evaluation library with Open LLM Leaderboard tasks
 - **inspect-ai Framework**: UK AI Safety Institute's evaluation library
 - **Standalone or Jobs**: Run locally or submit to HF Jobs infrastructure
@@ -146,7 +150,7 @@ The skill includes Python scripts in `scripts/` to perform operations.
 ### Prerequisites
 - Preferred: use `uv run` (PEP 723 header auto-installs deps)
 - Or install manually: `pip install huggingface-hub markdown-it-py python-dotenv pyyaml requests`
-- Set `HF_TOKEN` environment variable with Write-access token
+- Use least-privilege read access for inspection; grant target-scoped write access only for an authorized publication
 - For Artificial Analysis: Set `AA_API_KEY` environment variable
 - `.env` is loaded automatically if `python-dotenv` is installed
 
@@ -196,8 +200,7 @@ env "AA_API_KEY=${AA_API_KEY:?set AA_API_KEY first}" uv run scripts/evaluation_m
 **With Environment File:**
 ```bash
 # Create .env file
-echo "AA_API_KEY=your-api-key" >> .env
-echo "HF_TOKEN=your-hf-token" >> .env
+# Configure secrets locally with an approved secret provider; never echo tokens into shell history or a tracked file.
 
 # Run import
 uv run scripts/evaluation_manager.py import-aa \
@@ -224,7 +227,7 @@ Submit an evaluation job on Hugging Face infrastructure using the `hf jobs uv ru
 HF_TOKEN=$HF_TOKEN \
 hf jobs uv run hf-evaluation/scripts/inspect_eval_uv.py \
   --flavor cpu-basic \
-  --secret HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model "meta-llama/Llama-2-7b-hf" \
      --task "mmlu"
 ```
@@ -234,7 +237,7 @@ hf jobs uv run hf-evaluation/scripts/inspect_eval_uv.py \
 HF_TOKEN=$HF_TOKEN \
 hf jobs uv run hf-evaluation/scripts/inspect_eval_uv.py \
   --flavor a10g-small \
-  --secret HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model "meta-llama/Llama-2-7b-hf" \
      --task "gsm8k"
 ```
@@ -294,7 +297,7 @@ uv run scripts/lighteval_vllm_uv.py \
 ```bash
 hf jobs uv run scripts/lighteval_vllm_uv.py \
   --flavor a10g-small \
-  --secrets HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model meta-llama/Llama-3.2-1B \
      --tasks "leaderboard|mmlu|5"
 ```
@@ -351,7 +354,7 @@ uv run scripts/inspect_vllm_uv.py \
 ```bash
 hf jobs uv run scripts/inspect_vllm_uv.py \
   --flavor a10g-small \
-  --secrets HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model meta-llama/Llama-3.2-1B \
      --task mmlu
 ```
@@ -450,7 +453,7 @@ Lists all open pull requests for the model repository. Shows PR number, title, a
 ```bash
 hf jobs uv run scripts/inspect_eval_uv.py \
   --flavor "cpu-basic|t4-small|..." \
-  --secret HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model "model-id" \
      --task "task-name"
 ```
@@ -469,14 +472,14 @@ uv run scripts/run_eval_job.py \
 # lighteval with vLLM
 hf jobs uv run scripts/lighteval_vllm_uv.py \
   --flavor "a10g-small" \
-  --secrets HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model "model-id" \
      --tasks "leaderboard|mmlu|5"
 
 # inspect-ai with vLLM
 hf jobs uv run scripts/inspect_vllm_uv.py \
   --flavor "a10g-small" \
-  --secrets HF_TOKEN=$HF_TOKEN \
+  --secrets HF_TOKEN \
   -- --model "model-id" \
      --task "mmlu"
 
@@ -553,7 +556,7 @@ When extracting evaluation tables with multiple models (either as columns or row
 - Finds the row in the first column matching the model name
 - Extracts all benchmark scores from that row only
 
-This ensures only the correct model's scores are extracted, never unrelated models or training checkpoints.
+Token-set matching loses order and can conflate identifiers; manually verify repository, exact checkpoint/revision and evaluation setup. No extractor implementation is bundled to substantiate these claims.
 
 ### Common Patterns
 
@@ -615,7 +618,7 @@ AA_API_KEY=... uv run scripts/evaluation_manager.py import-aa \
 - **Solution**: Verify creator-slug and model-name match API values
 
 **Issue**: "Payment required for hardware"
-- **Solution**: Add a payment method to your Hugging Face account to use non-CPU hardware
+- **Solution**: Check the current plan, hardware availability and approved budget; do not add payment methods or start billable compute without authorization.
 
 **Issue**: "vLLM out of memory" or CUDA OOM
 - **Solution**: Use a larger hardware flavor, reduce `--gpu-memory-utilization`, or use `--tensor-parallel-size` for multi-GPU
@@ -624,7 +627,7 @@ AA_API_KEY=... uv run scripts/evaluation_manager.py import-aa \
 - **Solution**: Use `--backend hf` (inspect-ai) or `--backend accelerate` (lighteval) for HuggingFace Transformers
 
 **Issue**: "Trust remote code required"
-- **Solution**: Add `--trust-remote-code` flag for models with custom code (e.g., Phi-2, Qwen)
+- **Solution**: Do not enable trust-remote-code automatically. Inspect pinned model code and dependencies in an isolated environment, verify license and obtain authorization before running custom code.
 
 **Issue**: "Chat template not found"
 - **Solution**: Only use `--use-chat-template` for instruction-tuned models that include a chat template
@@ -646,7 +649,7 @@ def update_model_evaluations(repo_id, readme_content):
     ], capture_output=True, text=True)
 
     if result.returncode == 0:
-        print(f"Successfully updated {repo_id}")
+        print(f"Command completed for {repo_id}; verify the returned PR and remote diff before claiming an update")
     else:
         print(f"Error: {result.stderr}")
 ```

@@ -41,7 +41,7 @@ This is not framework fill-in-the-blank — it is assumption prosecution.
 
 1. **Problem Reframing / 问题澄清** — Confirms the question itself is correctly defined before touching assumptions
 2. **Assumption Mining / 假设挖掘** — Systematically surfaces 8-12 hidden assumptions across three depth layers
-3. **Assumption Classification / 假设分类** — Force-labels every assumption into one of four types with different challenge strategies
+3. **Assumption Classification / 假设分类** — Tentatively classifies each material assumption into one of four types with different challenge strategies
 4. **Risk Ranking / 优先级排序** — Scores each assumption on Fragility × Impact and outputs a "Most Dangerous Top 3"
 5. **Reconstruction / 重建** — Rebuilds conclusions from verified premises only, explicitly comparing "before vs after" cognitive shift
 
@@ -83,7 +83,7 @@ Systematically mine hidden assumptions in three layers:
 | **Middle** | Industry conventions, common wisdom | "A degree is required for good jobs" |
 | **Deep** | Never questioned, feels like gravity | "Success means financial independence" |
 
-**Goal:** Find 8-12 assumptions. The more concrete, the better. Reject vague statements like "I think this is right" — force specificity.
+**Goal:** Surface the material assumptions; 8-12 is an optional working range, not a quota. Do not attribute assumptions to the user without evidence. The more concrete, the better. Reject vague statements like "I think this is right" — force specificity.
 
 **When detecting the user's scenario type**, reference the appropriate scenario checklist from `references/scenarios.md` to ensure thorough mining.
 
@@ -93,7 +93,7 @@ Systematically mine hidden assumptions in three layers:
 > - **深层假设**（你从未质疑过、觉得"天经地义"的信念）
 >
 > 深层假设才是最有价值的。
-> **目标：找到 8-12 个假设，越具体越好，不接受模糊的"我以为这样更好"。**
+> **目标：找出重要且具体的假设；8-12 只是可选范围，不要为凑数而替用户虚构信念。**
 
 ---
 
@@ -101,7 +101,7 @@ Systematically mine hidden assumptions in three layers:
 
 **阶段3：假设分类 — 这个信念的本质是什么？**
 
-Label every assumption with one of four types. Each type has a fundamentally different challenge strategy:
+Use the four labels as overlapping lenses. Mark empirical hypotheses, definitions, value judgments and unresolved claims explicitly when none fits; incentives do not establish falsity. Each type has a fundamentally different challenge strategy:
 
 | Type | Label | Definition | Challenge Strategy |
 |------|-------|------------|--------------------|
@@ -125,7 +125,7 @@ For detailed identification methods, examples, and edge cases, reference `refere
 
 Score every assumption on two dimensions:
 
-**Fragility / 脆弱性 (1-5):** How easily can this assumption be disproven?
+**Fragility / 脆弱性 (1-5):** How weak is the available support for this assumption in the relevant context? Ease of testing is separate from likelihood of error.
 - 1 = Nearly impossible to overturn (e.g., physical laws)
 - 5 = Extremely easy to disprove (e.g., untested market intuition, personal feeling)
 
@@ -145,7 +145,7 @@ Each Top 3 entry MUST include a specific, actionable verification question.
 > - **影响力**（1-5，如果它是错的，你的结论会垮多少）
 >
 > 两者相乘得到"危险值"，输出危险值最高的 **Top 3** 假设作为优先调查对象。
-> **这是现有竞品全部缺失的功能。**
+> 分数是主观排序工具，不是经过校准的失败概率；说明评分依据与不确定性。
 
 ---
 
@@ -153,7 +153,7 @@ Each Top 3 entry MUST include a specific, actionable verification question.
 
 **阶段5：重建 — 从真相出发，你会怎么做？**
 
-Keep ONLY the assumptions that survived scrutiny. Rebuild the conclusion from scratch using only verified premises.
+Separate supported facts, unresolved hypotheses and the user’s values. Passing scrutiny does not prove a premise; rebuild conditional options and identify which new evidence could change the conclusion. Scores are ordinal prioritization aids, not probabilities or precise expected losses.
 
 **Critical requirements:**
 - Explicitly compare "Original Thinking" vs "Rebuilt Thinking" side by side
@@ -164,7 +164,7 @@ Keep ONLY the assumptions that survived scrutiny. Rebuild the conclusion from sc
 Output the single most important thing to verify: "你最该验证的一件事" / "The one thing you should verify first."
 
 > 只保留被验证的真实前提，从零重建结论。
-> **重要的是：新结论必须和原来的直觉有所不同** — 如果完全一样，说明拆解不够深。
+> **结论可以保持不变**；说明证据、未决假设与适用条件，不要为了制造认知位移而反对用户。
 > Axiom 会主动对比"原来的想法"和"重建后的想法"，让用户看到认知位移。
 >
 > 如果用户没有时间做完整重建，至少输出"你最该验证的一件事"。
@@ -173,22 +173,17 @@ Output the single most important thing to verify: "你最该验证的一件事" 
 
 ## Anti-Sycophancy Rules / 反谄媚核心规则
 
-These rules are **hard constraints** — they override all other behavioral tendencies. This is what makes Axiom genuinely useful rather than a flattering echo chamber.
+Use evidence-based challenge without forced disagreement. The user owns their values and decision; accept corrections, uncertainty and a request to stop.
 
 | Rule | Description |
 |------|-------------|
-| 🚫 **No agreement** | Do NOT agree with the user's original conclusion during the decomposition phases, even if they insist repeatedly. |
+| 🚫 **No agreement** | Neither agree nor disagree reflexively; acknowledge supported claims and test uncertain ones. |
 | 🚫 **No flattery openers** | Do NOT start with "That's a great question" or any similar validating phrase. Get straight to work. |
 | 🚫 **No identical reconstruction** | The Phase 5 reconstruction MUST NOT produce an identical conclusion to the original without explicitly explaining why no shift occurred, with specific evidence. |
-| ✅ **At least one uncomfortable truth** | Phase 4 MUST output at least one assumption the user probably doesn't want to hear challenged. |
-| ✅ **Devil's advocate persistence** | If the user rejects a classification or pushback, hold firm like a devil's advocate. Only yield when the user provides verifiable evidence (not feelings, not appeals to authority). |
+| ✅ **At least one uncomfortable truth** | Report material uncertainty when supported; do not manufacture an uncomfortable claim or diagnose motives. |
+| ✅ **Devil's advocate persistence** | Treat classifications as revisable. Distinguish factual evidence from the user’s reported experiences, feelings and preferences, which are valid decision inputs; do not demand proof of values. |
 
-> 这是让 axiom 真正有用的关键。Claude 天生倾向于认同用户，必须写入明确规则对抗这个倾向：
-> - 🚫 禁止在拆解阶段认同用户的原始结论
-> - 🚫 禁止用"这是个好问题"或类似话语开头
-> - 🚫 禁止重建阶段给出和原始想法完全一致的结论
-> - ✅ 必须在阶段4输出至少一个用户可能不喜欢听的"危险假设"
-> - ✅ 必须像 devil's advocate 一样坚持，直到用户提供真实证据
+> 以证据检验事实，不强迫反对、不制造“不舒服的真相”。允许结论不变；尊重用户的感受、价值选择、纠正与停止请求。
 
 ---
 
@@ -229,10 +224,10 @@ See `examples/walkthrough-en.md` for a complete 5-phase walkthrough using: "I'm 
 ## Tips / 使用建议
 
 - The deeper the assumption layer you can reach, the more valuable the analysis
-- Don't accept "I just feel it" as evidence — push for specifics
+- Feelings can establish personal preferences or experiences, while claims about external outcomes need separate evidence.
 - The most powerful insight often comes from reclassifying what you thought was a "fact" as a "convention"
 - Use the Risk Matrix to focus your limited verification energy on what matters most
-- If reconstruction matches the original conclusion exactly, the decomposition wasn't deep enough
+- A well-supported original conclusion may remain unchanged; report what was checked and what remains unknown.
 
 ---
 
@@ -255,6 +250,8 @@ See `examples/walkthrough-en.md` for a complete 5-phase walkthrough using: "I'm 
 - `examples/walkthrough-en.md` — Complete English example (dropping out for startup)
 
 ## Limitations
+- This is a qualitative reasoning aid, not a validated diagnostic, calibrated risk model or authority to make the user’s life decisions. Use current primary evidence for consequential financial/legal/medical claims and leave gaps unresolved.
+- Do not infer nationality, labor market or motives from language. Ask which jurisdiction/culture matters; checklist items are candidate prompts, not claims about the user.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,7 +1,7 @@
 ---
 name: llm-application-dev-ai-assistant
 description: "Design and implement conversational AI assistants with context management, integration boundaries, and validation."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -32,6 +32,10 @@ $ARGUMENTS
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
+
+## Implementation and authority boundaries
+
+The playbook is conceptual scaffolding with many undefined providers, models, methods and configuration fields; embedded Python strings are not a complete runnable project. Replace $ARGUMENTS with scoped acceptance examples and choose a minimal vertical slice before building the capability list. Intent/model confidence is not user authorization. Every tool call needs server-side identity, tenant/object permission, runtime argument validation, explicit effect approval where required, bounded retries and idempotency. Treat conversation/retrieved content as untrusted data. Obtain permission for provider fallback, analytics and training egress; isolate caches/memory by tenant/user, access scope, model/version and context, with retention/deletion controls. Do not silently substitute a cached/default answer for a failed safety-critical operation. Use a fixed evaluation set, subgroup/error analysis and rollout/rollback gates before promotion; the shown score/p-value threshold does not establish readiness or causal improvement.
 
 ## Resources
 

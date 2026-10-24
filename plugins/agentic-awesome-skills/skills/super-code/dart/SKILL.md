@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Dart: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for dart.
 
@@ -221,7 +223,7 @@ final b = await fetchB();
 // ✅
 final results = await Future.wait([fetchA(), fetchB()]);
 // or with typed destructuring:
-final (a, b) = await (fetchA(), fetchB()).wait; // Dart 3.0+ record
+final (a, b) = await (fetchA(), fetchB()).wait; // Dart 3.3+ record Future.wait extension
 ```
 
 ```dart
@@ -302,7 +304,7 @@ const ColoredBox(color: Colors.blue)
 Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage()));
 
 // ✅ — named routes or GoRouter
-context.go('/detail');
+context.push('/detail'); // GoRouter; preserves push/back-stack intent
 ```
 
 ---

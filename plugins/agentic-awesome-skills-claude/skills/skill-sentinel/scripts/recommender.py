@@ -26,6 +26,13 @@ def _map_capabilities(skills: List[Dict[str, Any]]) -> Dict[str, Set[str]]:
         "security-audit":     ["security", "audit", "governance", "compliance"],
     }
 
+    capability_keywords.update({
+        "testing": ["test", "qa", "pytest"], "ci-cd": ["ci-cd", "github-actions", "deployment"],
+        "documentation-gen": ["documentation", "doc-generator"], "data-pipeline": ["pipeline", "etl"],
+        "scheduling": ["schedul", "cron"], "notification": ["notif", "alert"],
+        "email-integration": ["email", "outlook", "gmail"], "database-management": ["database", "sqlite", "postgres"],
+        "file-management": ["file", "storage"], "cost-optimization": ["cost", "token", "budget"],
+    })
     skill_caps: Dict[str, Set[str]] = {}
     for skill in skills:
         caps: Set[str] = set()
@@ -190,7 +197,7 @@ def recommend(all_skills: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     if len(db_skills) > 1:
         recommendations.append({
             "suggested_name": "shared-core",
-            "rationale": f"Os modulos db.py, config.py e export.py sao compartilhados entre "
+            "rationale": f"Nomes de modulos de persistencia aparecem em "
                          f"{len(db_skills)} skills ({', '.join(s['name'] for s in db_skills)}). "
                          f"Extrair para modulo compartilhado reduziria duplicacao.",
             "capabilities": ["database", "export", "configuration"],
@@ -221,6 +228,8 @@ def recommend(all_skills: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 ),
             })
 
+    for recommendation in recommendations:
+        recommendation["rationale"] = "Hipotese por palavras/nomes; verificar manualmente antes de criar: " + recommendation["rationale"]
     # Ordenar por prioridade
     priority_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
     recommendations.sort(key=lambda r: priority_order.get(r.get("priority", "low"), 3))

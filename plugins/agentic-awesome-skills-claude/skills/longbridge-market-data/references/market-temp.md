@@ -29,9 +29,9 @@ LLM maps colloquial names to the positional `<MARKET>`:
 
 1. Pick the subcommand (table above).
 2. Resolve the positional `<MARKET>` if needed.
-3. For "is the market open?" — call `trading session`, then reason against the current local time (US = UTC-5/-4 DST, HK / CN / SG = UTC+8) and the user's target market.
+3. For "is the market open?" — prefer the returned `market-status`, and reconcile its timestamp with `trading days` (holidays/half-days), sessions and the exchange time zone. A wall-clock weekday comparison alone is insufficient.
 4. Call the Longbridge CLI directly (preferred) or fall back to MCP.
-5. Translate the `market-temp` value into wording: 0–30 _偏空_, 30–50 _中性偏空_, 50–70 _中性偏多_, 70–100 _偏多_ (translate into the user's language).
+5. Treat the following temperature bands as illustrative labels, not calibrated forecasts or trade signals: 0–30 _偏空_, 30–50 _中性偏空_, 50–70 _中性偏多_, 70–100 _偏多_ (translate into the user's language).
 
 ## CLI
 

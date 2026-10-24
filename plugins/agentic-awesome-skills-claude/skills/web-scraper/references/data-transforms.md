@@ -8,7 +8,7 @@ between extraction and validation.
 
 ## Automatic Transforms
 
-Always apply these to every extraction result.
+Preserve raw values and apply only transformations justified by the field schema. Identifiers, code, names and meaningful whitespace must not be silently rewritten.
 
 ### Whitespace Cleanup
 
@@ -25,7 +25,7 @@ Patterns to handle:
 - `\n`, `\r`, `\t` inside cell values -> single space
 - Multiple consecutive spaces -> single space
 - Non-breaking spaces (`&nbsp;`, `\u00a0`) -> regular space
-- Zero-width characters -> remove
+- Zero-width joiners can be meaningful in scripts and emoji; preserve unless a specific field rule permits removal.
 
 ### HTML Entity Decode
 
@@ -50,7 +50,7 @@ value = unicodedata.normalize('NFKC', value)
 ```
 
 This handles:
-- Fancy quotes -> standard quotes
+- NFKC does not generally convert curly quotes to ASCII quotes
 - Ligatures -> separate characters (e.g. `ﬁ` -> `fi`)
 - Full-width characters -> standard (e.g. `Ａ` -> `A`)
 - Superscript/subscript numbers -> regular numbers
@@ -76,31 +76,39 @@ Apply when extracting product, pricing, or financial data.
 ```python
 import re
 
-def normalize_price(raw):
-    if not raw:
+from decimal import Decimal, InvalidOperation
+
+def normalize_price(raw, decimal_separator=None, thousands_separator=None):
+    # Explicit locale separators; never guess ambiguous prices or ranges.
+    if not isinstance(raw, str) or decimal_separator not in {".", ","}:
         return None
-    # Remove currency words
-    cleaned = re.sub(r'(?i)(USD|EUR|GBP|BRL|R\$|US\$)', '', raw)
-    # Extract numeric value (handles 1,234.56 and 1.234,56 formats)
-    match = re.search(r'[\d.,]+', cleaned)
-    if not match:
+    cleaned = re.sub(r'(?i)(USD|EUR|GBP|BRL|R\$|US\$|[$€£])', '', raw).strip()
+    if thousands_separator:
+        if thousands_separator == decimal_separator:
+            raise ValueError("Separators must differ")
+        # Validate grouping before removing separators.
+        escaped = re.escape(thousands_separator)
+        dec = re.escape(decimal_separator)
+        if not re.fullmatch(rf'-?(?:\d{{1,3}}(?:{escaped}\d{{3}})+|\d+)(?:{dec}\d+)?', cleaned):
+            return None
+        cleaned = cleaned.replace(thousands_separator, '')
+    cleaned = cleaned.replace(decimal_separator, '.')
+    if not re.fullmatch(r'-?\d+(?:\.\d+)?', cleaned):
         return None
-    num_str = match.group()
-    # Detect format: if last separator is comma with 2 digits after, it's decimal
-    if re.search(r',\d{2}$', num_str):
-        num_str = num_str.replace('.', '').replace(',', '.')
-    else:
-        num_str = num_str.replace(',', '')
-    return float(num_str)
+    try:
+        value = Decimal(cleaned)
+        return str(value) if value.is_finite() else None  # exact decimal serialization
+    except InvalidOperation:
+        return None
 ```
 
 ### Currency Detection
 
 | Symbol/Code | Currency | Symbol/Code | Currency |
 |:------------|:---------|:------------|:---------|
-| `$`, `US$`, `USD` | US Dollar | `R$`, `BRL` | Brazilian Real |
+| `US$`, `USD` | US Dollar (`$` alone is ambiguous) | `R$`, `BRL` | Brazilian Real |
 | `€`, `EUR` | Euro     | `£`, `GBP`  | British Pound |
-| `¥`, `JPY` | Yen      | `₹`, `INR`  | Indian Rupee  |
+| `JPY` | Yen (`¥` alone can also indicate yuan)      | `₹`, `INR`  | Indian Rupee  |
 | `C$`, `CAD` | Canadian Dollar | `A$`, `AUD` | Australian Dollar |
 
 ### Output Format
@@ -138,7 +146,7 @@ Normalize all dates to ISO-8601 format.
 ### Ambiguous Dates
 
 When format is ambiguous (e.g. `03/04/2026`):
-- Default to US format (MM/DD/YYYY) unless site is clearly non-US
+- Preserve the raw date and leave the normalized field unknown until a reliable site locale/date convention is established
 - Check page `lang` attribute or URL TLD for locale hints
 - Note ambiguity in delivery notes
 
@@ -148,20 +156,19 @@ When format is ambiguous (e.g. `03/04/2026`):
 from datetime import datetime, timedelta
 import re
 
-def resolve_relative_date(text):
+def resolve_relative_date(text, captured_at):
+    # captured_at must be timezone-aware in the source's relevant timezone.
+    if captured_at.tzinfo is None:
+        raise ValueError("Timezone-aware capture timestamp required")
     text = text.lower().strip()
-    today = datetime.now()
-
-    if 'today' in text: return today.strftime('%Y-%m-%d')
-    if 'yesterday' in text: return (today - timedelta(days=1)).strftime('%Y-%m-%d')
-
-    match = re.search(r'(\d+)\s*(hour|day|week|month|year)s?\s*ago', text)
-    if match:
-        n, unit = int(match.group(1)), match.group(2)
-        deltas = {'hour': 0, 'day': n, 'week': n*7, 'month': n*30, 'year': n*365}
-        return (today - timedelta(days=deltas.get(unit, 0))).strftime('%Y-%m-%d')
-
-    return text  # Return as-is if can't parse
+    if text == 'today': return captured_at.date().isoformat()
+    if text == 'yesterday': return (captured_at - timedelta(days=1)).date().isoformat()
+    match = re.fullmatch(r'(\d+)\s*(hour|day|week)s?\s*ago', text)
+    if not match: return None  # Months/years require calendar semantics, not 30/365-day guesses.
+    n, unit = int(match.group(1)), match.group(2)
+    if n > 100000: return None
+    delta = timedelta(**{dict(hour="hours", day="days", week="weeks")[unit]: n})
+    return (captured_at - delta).date().isoformat()
 ```
 
 ---
@@ -207,8 +214,8 @@ def normalize_phone(raw):
     if not digits or len(digits) < 7:
         return None
     # Add + prefix if looks international
-    if len(digits) >= 11 and not digits.startswith('+'):
-        digits = '+' + digits
+    if not re.fullmatch(r"\+[1-9][0-9]{6,14}", digits):
+        return None  # Need a known country/region; do not invent a country code.
     return digits
 ```
 
@@ -235,9 +242,9 @@ def deduplicate(records, key_fields=None):
     unique = []
     for record in records:
         if key_fields:
-            key = tuple(record.get(f) for f in key_fields)
+            key = __import__('json').dumps([record.get(f) for f in key_fields], sort_keys=True, ensure_ascii=False)
         else:
-            key = tuple(sorted(record.items()))
+            key = __import__('json').dumps(record, sort_keys=True, ensure_ascii=False)
         if key not in seen:
             seen.add(key)
             unique.append(record)
@@ -248,9 +255,9 @@ def deduplicate(records, key_fields=None):
 
 When records share key fields but differ in details:
 1. Group by key fields (e.g. product name + source)
-2. For each group, keep the record with fewest null values
-3. If tie, keep the first occurrence
-4. Report in notes: "Merged N near-duplicate records"
+2. Preserve differing records and flag conflicts; similar names do not prove identity.
+3. Merge only with a verified stable identity and explicit field precedence rule.
+4. Report actual removals/merges and preserve source provenance.
 
 ### Dedup Key Selection by Mode
 
@@ -273,9 +280,9 @@ Common noise patterns to strip from extracted text:
 
 | Pattern                            | Action                    |
 |:-----------------------------------|:--------------------------|
-| `\[edit\]`, `\[citation needed\]`  | Remove (Wikipedia)        |
-| `Read more...`, `See more`         | Remove (truncation markers)|
-| `Sponsored`, `Ad`, `Promoted`      | Remove or flag            |
+| `\[edit\]`, `\[citation needed\]`  | Preserve as evidence of source uncertainty        |
+| `Read more...`, `See more`         | Flag incomplete source text; do not disguise truncation|
+| `Sponsored`, `Ad`, `Promoted`      | Preserve sponsorship/ad classification            |
 | Cookie consent text                | Remove                    |
 | Navigation breadcrumbs             | Remove                    |
 | Footer boilerplate                 | Remove                    |
@@ -322,7 +329,9 @@ def normalize_rating(raw):
     match = re.search(r'([\d.]+)\s*(?:/\s*([\d.]+))?', str(raw))
     if match:
         score = float(match.group(1))
-        max_score = float(match.group(2)) if match.group(2) else 5.0
+        max_score = float(match.group(2)) if match.group(2) else None
+        if max_score is None or not 0 < max_score or not 0 <= score <= max_score:
+            return None  # Unknown scale is not automatically five stars.
         return round(score / max_score * 5, 1)  # Normalize to /5 scale
     return None
 ```
@@ -340,7 +349,8 @@ from urllib.parse import urlparse
 def extract_domain(url):
     try:
         parsed = urlparse(url)
-        domain = parsed.netloc.replace('www.', '')
+        domain = parsed.hostname
+        if domain and domain.startswith('www.'): domain = domain[4:]
         return domain
     except:
         return None
@@ -361,8 +371,10 @@ Add human-readable time since date:
 def time_since(date_str):
     from datetime import datetime
     try:
-        dt = datetime.fromisoformat(date_str)
-        delta = datetime.now() - dt
+        dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+        if dt.tzinfo is None: return None
+        delta = datetime.now(dt.tzinfo) - dt
+        if delta.total_seconds() < 0: return "Future date"
         if delta.days == 0: return "Today"
         if delta.days == 1: return "Yesterday"
         if delta.days < 7: return f"{delta.days} days ago"

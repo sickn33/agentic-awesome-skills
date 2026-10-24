@@ -1,5 +1,5 @@
 {
-  "description": "Exemplo de WhatsApp Flow - Formulario de agendamento com 3 telas",
+  "description": "Illustrative Flow draft: validate against current Meta Flow schema, define screen data and available dates, authorize handling of personal data before publication.",
   "version": "3.0",
   "screens": [
     {
@@ -43,7 +43,10 @@
             "label": "Próximo",
             "on-click-action": {
               "name": "navigate",
-              "next": { "type": "screen", "name": "APPOINTMENT_DETAILS" },
+              "next": {
+                "type": "screen",
+                "name": "APPOINTMENT_DETAILS"
+              },
               "payload": {
                 "customer_name": "${form.customer_name}",
                 "customer_email": "${form.customer_email}",
@@ -71,10 +74,22 @@
             "label": "Tipo de serviço",
             "required": true,
             "data-source": [
-              { "id": "consulta_inicial", "title": "Consulta Inicial" },
-              { "id": "retorno", "title": "Retorno" },
-              { "id": "exame_rotina", "title": "Exame de Rotina" },
-              { "id": "procedimento", "title": "Procedimento" }
+              {
+                "id": "consulta_inicial",
+                "title": "Consulta Inicial"
+              },
+              {
+                "id": "retorno",
+                "title": "Retorno"
+              },
+              {
+                "id": "exame_rotina",
+                "title": "Exame de Rotina"
+              },
+              {
+                "id": "procedimento",
+                "title": "Procedimento"
+              }
             ]
           },
           {
@@ -89,13 +104,34 @@
             "label": "Horário preferido",
             "required": true,
             "data-source": [
-              { "id": "08:00", "title": "08:00" },
-              { "id": "09:00", "title": "09:00" },
-              { "id": "10:00", "title": "10:00" },
-              { "id": "11:00", "title": "11:00" },
-              { "id": "14:00", "title": "14:00" },
-              { "id": "15:00", "title": "15:00" },
-              { "id": "16:00", "title": "16:00" }
+              {
+                "id": "08:00",
+                "title": "08:00"
+              },
+              {
+                "id": "09:00",
+                "title": "09:00"
+              },
+              {
+                "id": "10:00",
+                "title": "10:00"
+              },
+              {
+                "id": "11:00",
+                "title": "11:00"
+              },
+              {
+                "id": "14:00",
+                "title": "14:00"
+              },
+              {
+                "id": "15:00",
+                "title": "15:00"
+              },
+              {
+                "id": "16:00",
+                "title": "16:00"
+              }
             ]
           },
           {
@@ -109,7 +145,10 @@
             "label": "Revisar",
             "on-click-action": {
               "name": "navigate",
-              "next": { "type": "screen", "name": "CONFIRMATION" },
+              "next": {
+                "type": "screen",
+                "name": "CONFIRMATION"
+              },
               "payload": {
                 "customer_name": "${data.customer_name}",
                 "customer_email": "${data.customer_email}",

@@ -2,14 +2,14 @@
 name: postgres-best-practices
 description: Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.
 metadata:
-  aas-risk: safe
+  aas-risk: critical
   aas-source: community
   aas-date-added: '2026-02-27'
 ---
 
 # Supabase Postgres Best Practices
 
-Comprehensive performance optimization guide for Postgres, maintained by Supabase. Contains rules across 8 categories, prioritized by impact to guide automated query optimization and schema design.
+Community-bundled Postgres guide attributed to Supabase; upstream maintenance and example performance numbers are not independently certified. Contains rules across 8 categories, prioritized by impact to guide automated query optimization and schema design.
 
 ## When to Use
 Reference these guidelines when:
@@ -39,7 +39,7 @@ Read individual rule files for detailed explanations and SQL examples:
 
 ```
 rules/query-missing-indexes.md
-rules/schema-partial-indexes.md
+rules/query-partial-indexes.md
 rules/_sections.md
 ```
 

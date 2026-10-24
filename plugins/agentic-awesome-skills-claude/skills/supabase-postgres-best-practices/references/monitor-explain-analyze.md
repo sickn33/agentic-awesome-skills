@@ -35,7 +35,7 @@ select * from orders where customer_id = 123 and status = 'pending';
 Key things to look for:
 
 ```sql
--- Seq Scan on large tables = missing index
+-- Seq Scan can be optimal; assess selectivity, estimates, cache and total work before adding indexes
 -- Rows Removed by Filter = poor selectivity or missing index
 -- Buffers: read >> hit = data not cached, needs more memory
 -- Nested Loop with high loops = consider different join strategy

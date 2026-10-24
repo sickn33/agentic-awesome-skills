@@ -134,3 +134,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+A 200 response, missing token or absent challenge is not proof of bypass: adaptive risk policies can legitimately skip challenges, and the protected business action may still fail. Compare authorized controls and verify the actual state-changing postcondition on synthetic accounts. Concurrent attempts can exhaust quotas/send messages; use a separately approved bounded rate and stop condition. Severity depends on the demonstrated downstream abuse, not token acceptance alone.

@@ -1,6 +1,7 @@
 ---
 title: "Designing for games | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/designing-for-games
+---
 
 # Designing for games
 
@@ -30,24 +31,24 @@ As you create or adapt a game for Apple platforms, learn how to integrate the fu
 
 **Make sure text is always legible.** When game text is hard to read, people can struggle to follow the narrative, understand important instructions and information, and stay engaged in the experience. To keep text comfortably legible on each device, ensure that it contrasts well with the background and uses at least the recommended minimum text size in each platform. For guidance, see [Typography](https://developer.apple.com/design/human-interface-guidelines/typography); for developer guidance, see [Adapting your game interface for smaller screens](https://developer.apple.com/documentation/Metal/adapting-your-game-interface-for-smaller-screens).
 
-Platform| Default text size| Minimum text size  
----|---|---  
-iOS, iPadOS| 17 pt| 11 pt  
-macOS| 13 pt| 10 pt  
-tvOS| 29 pt| 23 pt  
-visionOS| 17 pt| 12 pt  
-watchOS| 16 pt| 12 pt  
-  
-**Make sure buttons are always easy to use.** Buttons that are too small or too close together can frustrate players and make gameplay less fun. Each platform defines a recommended minimum button size based on its default interaction method. For example, buttons in iOS must be at least 44x44 pt to accommodate touch interaction. For guidance, see [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons).
+Platform| Default text size| Minimum text size
+---|---|---
+iOS, iPadOS| 17 pt| 11 pt
+macOS| 13 pt| 10 pt
+tvOS| 29 pt| 23 pt
+visionOS| 17 pt| 12 pt
+watchOS| 16 pt| 12 pt
 
-Platform| Default button size| Minimum button size  
----|---|---  
-iOS, iPadOS| 44x44 pt| 28x28 pt  
-macOS| 28x28 pt| 20x20 pt  
-tvOS| 66x66 pt| 56x56 pt  
-visionOS| 60x60 pt| 28x28 pt  
-watchOS| 44x44 pt| 28x28 pt  
-  
+**Make sure buttons are always easy to use.** Buttons that are too small or too close together can frustrate players and make gameplay less fun. Each platform defines a recommended minimum button size based on its default interaction method. For example, prefer a comfortable 44x44 pt touch target on iOS; the smaller visual-control minimums in the snapshot table do not imply that dense 28x28 pt touch targets work for everyone. For guidance, see [Buttons](https://developer.apple.com/design/human-interface-guidelines/buttons).
+
+Platform| Default button size| Minimum button size
+---|---|---
+iOS, iPadOS| 44x44 pt| 28x28 pt
+macOS| 28x28 pt| 20x20 pt
+tvOS| 66x66 pt| 56x56 pt
+visionOS| 60x60 pt| 28x28 pt
+watchOS| 44x44 pt| 28x28 pt
+
 **Prefer resolution-independent textures and graphics.** If creating resolution-independent assets isn’t possible, match the resolution of your game to the resolution of the device. In visionOS, prefer vector-based art that can continue to look good when the system dynamically scales it as people view it from different distances and angles. For guidance, see [Images](https://developer.apple.com/design/human-interface-guidelines/images).
 
 **Integrate device features into your layout.** For example, a device may have rounded corners or a camera housing that can affect parts of your interface. To help your game look at home on each device, accommodate such features during layout, relying on platform-provided safe areas when possible (for developer guidance, see [Positioning content relative to the safe area](https://developer.apple.com/documentation/UIKit/positioning-content-relative-to-the-safe-area)). For guidance, see [Layout](https://developer.apple.com/design/human-interface-guidelines/layout); for templates that include safe-area guides, see [Apple Design Resources](https://developer.apple.com/design/resources/).
@@ -66,15 +67,15 @@ watchOS| 44x44 pt| 28x28 pt
 
 **Support each platform’s default interaction method.** For example, people generally use touch to play games on iPhone; on a Mac, players tend to expect keyboard and mouse or trackpad support; and in a visionOS game, people expect to use their eyes and hands while making indirect and direct gestures. As you work to ensure that your game supports each platform’s default interaction method, pay special attention to control sizing and menu behavior, especially when bringing your game from a pointer-based context to a touch-based one.
 
-Platform| Default interaction methods| Additional interaction methods  
----|---|---  
-iOS| Touch| Game controller  
-iPadOS| Touch| Game controller, keyboard, mouse, trackpad, Apple Pencil  
-macOS| Keyboard, mouse, trackpad| Game controller  
-tvOS| Remote| Game controller, keyboard, mouse, trackpad  
-visionOS| Touch| Game controller, keyboard, mouse, trackpad, spatial game controller  
-watchOS| Touch| –  
-  
+Platform| Default interaction methods| Additional interaction methods
+---|---|---
+iOS| Touch| Game controller
+iPadOS| Touch| Game controller, keyboard, mouse, trackpad, Apple Pencil
+macOS| Keyboard, mouse, trackpad| Game controller
+tvOS| Remote| Game controller, keyboard, mouse, trackpad
+visionOS| Eyes and indirect hand gestures; direct touch where appropriate| Game controller, keyboard, mouse, trackpad, spatial game controller
+watchOS| Touch| –
+
 **Support physical game controllers, while also giving people alternatives.** Every platform except watchOS supports physical game controllers. Although the presence of a game controller makes it straightforward to port controls from an existing game and handle complex control mappings, recognize that not every player can use a physical game controller. To make your game available to as many players as possible, also offer alternative ways to interact with your game. For guidance, see [Physical controllers](https://developer.apple.com/design/human-interface-guidelines/game-controls#Physical-controllers).
 
 **Offer touch-based game controls that embrace the touchscreen experience on iPhone and iPad.** In iOS and iPadOS, your game can allow players to interact directly with game elements, and to control the game using virtual controls that appear on top of your game content. For design guidance, see [Touch controls](https://developer.apple.com/design/human-interface-guidelines/game-controls#Touch-controls).
@@ -152,8 +153,8 @@ watchOS| Touch| –
 
 ## [Change log](https://developer.apple.com/design/human-interface-guidelines/designing-for-games#Change-log)
 
-Date| Changes  
----|---  
-June 9, 2025| Updated guidance for touch-based controls and Game Center.  
-June 10, 2024| New page.  
-  
+Date| Changes
+---|---
+June 9, 2025| Updated guidance for touch-based controls and Game Center.
+June 10, 2024| New page.
+

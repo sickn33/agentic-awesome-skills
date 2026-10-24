@@ -231,8 +231,8 @@ jq '[.[] | .name] | unique | sort'
 jq 'walk(if type == "string" then ascii_downcase else . end)'
 
 # env: read environment variables inside jq
-export API_KEY=secret
-jq -n 'env.API_KEY'
+export DISPLAY_REGION=eu-west
+jq -n 'env.DISPLAY_REGION'  # use a non-sensitive example; do not print secrets
 ```
 
 ## Best Practices
@@ -246,7 +246,7 @@ jq -n 'env.API_KEY'
 
 ## Security & Safety Notes
 
-- `jq` is read-only by design — it cannot write files or execute commands
+- `jq` filters do not normally execute shell commands, but invocation flags can read files and shell redirection writes output. Never use `jq ... input.json > input.json`: the shell truncates the input first. Write to a separate file, verify it and replace only the intended target
 - Avoid embedding untrusted JSON field values directly into shell commands; always quote or use `--arg`
 
 ## Common Pitfalls

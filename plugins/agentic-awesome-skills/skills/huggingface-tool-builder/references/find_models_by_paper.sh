@@ -79,21 +79,15 @@ fi
 
 SEARCH_TERM="$1"
 
-# Set up authentication header if HF_TOKEN is available
-if [[ -n "$HF_TOKEN" ]] && [[ "$USE_TOKEN" == true || -n "$HF_TOKEN" ]]; then
-    AUTH_HEADER="-H \"Authorization: Bearer $HF_TOKEN\""
-    echo -e "${BLUE}Using HF_TOKEN for authentication${NC}"
-else
-    AUTH_HEADER=""
-    if [[ -n "$HF_TOKEN" ]]; then
-        echo -e "${YELLOW}HF_TOKEN found but not using it (add --token flag to use)${NC}"
-    fi
+# Authentication is automatic when HF_TOKEN is supplied; never build shell commands as strings.
+headers=()
+if [[ -n "${HF_TOKEN:-}" ]]; then
+    headers=(-H "Authorization: Bearer $HF_TOKEN")
 fi
-
 # Check if the input looks like an arXiv ID (format: YYYY.NNNNN or YYYY.NNNNNNN)
 if [[ "$SEARCH_TERM" =~ ^[0-9]{4}\.[0-9]{4,7}$ ]]; then
     echo -e "${BLUE}Searching for models associated with arXiv paper: $SEARCH_TERM${NC}"
-    SEARCH_QUERY="arxiv%3A$SEARCH_TERM"
+    SEARCH_QUERY="arxiv:$SEARCH_TERM"
     IS_ARXIV_SEARCH=true
 else
     echo -e "${BLUE}Searching for models related to: $SEARCH_TERM${NC}"
@@ -119,16 +113,9 @@ get_paper_title() {
 API_URL="https://huggingface.co/api/models"
 echo -e "${YELLOW}Searching Hugging Face API...${NC}"
 
-# Build curl command with authentication if available
-CURL_CMD="curl -s $AUTH_HEADER \"$API_URL?search=$SEARCH_QUERY&limit=50\""
-echo -e "${BLUE}API Query: $API_URL?search=$SEARCH_QUERY&limit=50${NC}"
-
-# Execute the API call
-if [[ -n "$HF_TOKEN" ]]; then
-    RESPONSE=$(curl -s -H "Authorization: Bearer $HF_TOKEN" "$API_URL?search=$SEARCH_QUERY&limit=50" || true)
-else
-    RESPONSE=$(curl -s "$API_URL?search=$SEARCH_QUERY&limit=50" || true)
-fi
+# URL-encode user input and propagate transport/HTTP errors.
+RESPONSE=$(curl -fsS --connect-timeout 10 --max-time 30 "${headers[@]}" --get "$API_URL" --data-urlencode "search=$SEARCH_QUERY" --data-urlencode "limit=50")
+jq -e 'type == "array"' >/dev/null <<< "$RESPONSE" || exit 1
 
 # Check if we got a valid response
 if [[ -z "$RESPONSE" ]] || [[ "$RESPONSE" == "[]" ]]; then
@@ -140,11 +127,8 @@ if [[ -z "$RESPONSE" ]] || [[ "$RESPONSE" == "[]" ]]; then
         SEARCH_QUERY="$SEARCH_TERM"
         IS_ARXIV_SEARCH=false
 
-        if [[ -n "$HF_TOKEN" ]]; then
-            RESPONSE=$(curl -s -H "Authorization: Bearer $HF_TOKEN" "$API_URL?search=$SEARCH_QUERY&limit=50" || true)
-        else
-            RESPONSE=$(curl -s "$API_URL?search=$SEARCH_QUERY&limit=50" || true)
-        fi
+        RESPONSE=$(curl -fsS --connect-timeout 10 --max-time 30 "${headers[@]}" --get "$API_URL" --data-urlencode "search=$SEARCH_QUERY" --data-urlencode "limit=50")
+        jq -e 'type == "array"' >/dev/null <<< "$RESPONSE" || exit 1
 
         if [[ -z "$RESPONSE" ]] || [[ "$RESPONSE" == "[]" ]]; then
             echo -e "${RED}Still no results found. Try a different search term.${NC}"
@@ -164,7 +148,7 @@ MODELS_WITH_PAPERS=$(echo "$RESPONSE" | jq -r '
   select(.id != null) |
   {
     id: .id,
-    arxiv_tags: [.tags[] | select(. | startswith("arxiv:"))] | join("; "),
+    arxiv_tags: [(.tags // [])[] | select(. | startswith("arxiv:"))] | join("; "),
     downloads: (.downloads // 0),
     likes: (.likes // 0),
     task: (.pipeline_tag // "unknown"),
@@ -174,7 +158,7 @@ MODELS_WITH_PAPERS=$(echo "$RESPONSE" | jq -r '
 
 # Count total results
 TOTAL_MODELS=$(echo "$RESPONSE" | jq 'length' 2>/dev/null || echo "0")
-MODELS_WITH_PAPERS_COUNT=$(echo "$MODELS_WITH_PAPERS" | wc -l)
+MODELS_WITH_PAPERS_COUNT=$(printf '%s\n' "$MODELS_WITH_PAPERS" | grep -c . || true)
 
 echo -e "${BLUE}Results Summary:${NC}"
 echo -e "  Total models found: $TOTAL_MODELS"

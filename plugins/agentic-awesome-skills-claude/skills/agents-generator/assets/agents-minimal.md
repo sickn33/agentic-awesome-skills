@@ -48,7 +48,7 @@ Fill `{{PLACEHOLDER}}` markers from project detection. Only include sections who
 - Commit format: conventional commits or project-specific
 - What to run before pushing: lint + test + typecheck
 - Branch naming if applicable
-- Attribution rules: "- No AI attribution in commits"
+- Attribution rules: copy only the actual project/user attribution policy.
 
 ## Omission rules
 

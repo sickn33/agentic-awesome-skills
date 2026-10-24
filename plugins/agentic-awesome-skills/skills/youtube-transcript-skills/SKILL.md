@@ -1,6 +1,6 @@
 ---
 name: youtube-transcript-skills
-description: "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API - free tier, no card required."
+description: "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API; verify current account terms."
 category: api-integration
 risk: safe
 source: community
@@ -41,7 +41,7 @@ no Google API key required.
 
 Every call needs an API key: the `YOUTUBE_TRANSCRIPT_API_KEY` environment
 variable, or one the user has already provided. If neither exists, the skill
-can sign the user up for a free account (100 credits, no card required) via a
+can offer signup after verifying current allowance, cost and terms, via a
 two-step email + verification-code flow against the API - only after the
 user has explicitly given consent and an email address to use.
 

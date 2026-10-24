@@ -1,12 +1,13 @@
+<!-- Modified 2026-10-23: framework/version, webhook, billing, privacy and API-limit corrections; Apache-2.0 provenance retained. -->
 # Shopify Apps - Detailed Guide
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Patterns
 
-### React Router App Setup
+### Legacy Remix Setup (do not mix with React Router template)
 
-Modern Shopify app template with React Router
+Historical Remix excerpts. For a new React Router app, use its generated package imports/types/auth boundary handlers consistently; these snippets are not a drop-in current template.
 
 **When to use**: Starting a new Shopify app
 
@@ -38,9 +39,9 @@ application_url = "https://your-app.example.com"
 scopes = "read_products,write_products,read_orders"
 
 [webhooks]
-api_version = "2024-10"
+api_version = "<REVIEWED_SUPPORTED_API_VERSION>"
 
-[webhooks.subscriptions]
+[[webhooks.subscriptions]]
 topics = ["orders/create", "products/update"]
 uri = "/webhooks"
 
@@ -53,6 +54,7 @@ import {
   LATEST_API_VERSION,
   shopifyApp,
   DeliveryMethod,
+  AppDistribution,
 } from "@shopify/shopify-app-remix/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import prisma from "./db.server";
@@ -80,7 +82,7 @@ export const sessionStorage = shopify.sessionStorage;
 
 ### Notes
 
-- React Router replaced Remix as recommended template (late 2024)
+- Check the current official template; do not mix @remix-run and React Router SDK imports
 - unstable_newEmbeddedAuthStrategy enabled by default for new apps
 - Webhooks configured in shopify.app.toml, not code
 - Run 'shopify app deploy' to apply configuration changes
@@ -199,6 +201,8 @@ export default function Index() {
 
 ### Webhook Handling
 
+Authenticate the raw request before parsing/mutating; use the SDK version’s actual topic representation. Durably enqueue shop/topic/event identifier plus a minimized payload before acknowledging, deduplicate webhook IDs, tolerate retries/out-of-order events and scope every DB lookup by shop. The compound shop_shopifyId examples require a matching database unique key. Blank GDPR handlers are unimplemented: do not acknowledge and silently drop a request. Complete required privacy actions under current platform/legal rules and record retention exceptions.
+
 Secure webhook processing with HMAC verification
 
 **When to use**: Receiving Shopify webhooks
@@ -220,7 +224,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   switch (topic) {
     case "ORDERS_CREATE":
       // Queue for async processing
-      await queueOrderProcessing(payload);
+      await queueOrderProcessing(shop, payload);
       break;
 
     case "PRODUCTS_UPDATE":
@@ -244,15 +248,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       console.log(`Unhandled webhook topic: ${topic}`);
   }
 
-  // CRITICAL: Return 200 immediately
+  // Return 2xx only after authenticated, durable enqueue or successful processing
   // Shopify expects response within 5 seconds
   return new Response(null, { status: 200 });
 };
 
 // Process asynchronously after responding
-async function queueOrderProcessing(payload: any) {
+async function queueOrderProcessing(shop: string, payload: any) {
   // Use a job queue (BullMQ, etc.)
   await jobQueue.add("process-order", {
+    shop,
     orderId: payload.id,
     orderData: payload,
   });
@@ -261,7 +266,7 @@ async function queueOrderProcessing(payload: any) {
 async function handleProductUpdate(shop: string, payload: any) {
   // Quick sync operation only
   await db.product.upsert({
-    where: { shopifyId: payload.id },
+    where: { shop_shopifyId: { shop, shopifyId: payload.id } },
     update: {
       title: payload.title,
       updatedAt: new Date(),
@@ -297,6 +302,8 @@ async function handleGDPRWebhook(topic: string, payload: any) {
 - HMAC verification handled by authenticate.webhook()
 
 ### GraphQL Admin API
+
+Examples target historical schemas: pin and validate a supported Admin API version, current ProductUpdateInput/argument names and fields before use. Check HTTP status, top-level GraphQL errors and mutation userErrors; HTTP 200 alone is not success. Bound pagination and store/app request cost; HTTP-only retry does not handle GraphQL THROTTLED errors. Retry only safe/idempotent effects with finite deadlines/jitter and a typed final error. Bulk mutation string examples below require proper GraphQL escaping/variables and an actual reviewed staged upload; they are pseudocode, not valid ready queries.
 
 Query and mutate shop data with GraphQL
 
@@ -421,7 +428,7 @@ async function bulkUpdateProducts(admin: AdminApiContext) {
 ### Notes
 
 - GraphQL required for new public apps (April 2025)
-- Rate limit: 1000 points per 60 seconds
+- Rate limit: calculated query cost with per-app/store bucket and plan-specific restore rate
 - Use bulk operations for >250 items
 - Direct API access available from App Bridge
 
@@ -492,7 +499,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const { admin, session } = await authenticate.admin(request);
   const formData = await request.formData();
   const planKey = formData.get("plan") as keyof typeof PLANS;
-  const plan = PLANS[planKey];
+  const plan = Object.prototype.hasOwnProperty.call(PLANS, planKey) ? PLANS[planKey] : undefined;
+  if (!plan) return json({ error: "Invalid plan" }, { status: 400 });
 
   // Create subscription charge
   const response = await admin.graphql(`
@@ -585,10 +593,12 @@ export default function Billing() {
 
 - Use test: true for development stores
 - Merchant must approve subscription
-- One recurring + one usage charge per app max
-- 30-day billing cycle for recurring charges
+- Verify current supported billing plans, intervals and limits; the example uses a 30-day plan only
+- Merchant confirmation is not proof of an active paid entitlement; requery billing state and handle cancellations/replacements
 
 ### App Extension Development
+
+Use the current generated extension target/runtime; UI extension sandbox and component APIs differ by surface/version and are not all iframes. Relative fetch does not necessarily target the app backend: use a reviewed HTTPS backend, session token/CORS handling and authorized server validation. Never claim free shipping from total >100 alone; check actual currency, shipping eligibility and configured offer.
 
 Extend Shopify checkout, admin, or storefront
 
@@ -597,7 +607,7 @@ Extend Shopify checkout, admin, or storefront
 ### Template
 
 # shopify.extension.toml (in extensions/my-extension/)
-api_version = "2024-10"
+api_version = "<REVIEWED_SUPPORTED_API_VERSION>"
 
 [[extensions]]
 type = "ui_extension"
@@ -723,8 +733,7 @@ Why this breaks:
 Shopify expects a 2xx response within 5 seconds. If your app processes
 the webhook data before responding, you'll timeout.
 
-Shopify retries failed webhooks up to 19 times over 48 hours.
-After continued failures, webhooks may be cancelled entirely.
+Shopify retries failed HTTPS deliveries up to eight times over four hours. Shop-specific subscriptions can be removed after repeated failures; app-specific subscriptions have different management behavior. Check current delivery/subscription docs.
 
 Heavy processing (API calls, database operations) must happen
 after the response is sent.
@@ -746,7 +755,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     payload,
   });
 
-  // CRITICAL: Return 200 immediately
+  // Return 2xx only after authenticated, durable enqueue or successful processing
   return new Response(null, { status: 200 });
 };
 
@@ -772,11 +781,11 @@ const worker = new Worker("process-webhook", async (job) => {
 ```typescript
 // Simple database update is OK if fast
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const { topic, payload } = await authenticate.webhook(request);
+  const { topic, payload, shop } = await authenticate.webhook(request);
 
   // Quick database update (< 1 second)
   await db.product.update({
-    where: { shopifyId: payload.id },
+    where: { shop_shopifyId: { shop, shopifyId: payload.id } },
     data: { title: payload.title },
   });
 
@@ -817,7 +826,7 @@ Operations fail silently or partially.
 Why this breaks:
 Shopify enforces strict rate limits:
 - REST: 2 requests per second per store
-- GraphQL: 1000 points per 60 seconds
+- GraphQL: calculated query cost with per-app/store bucket and plan-specific restore rate
 
 Exceeding limits causes immediate 429 errors.
 Continuous violations can result in temporary bans.
@@ -857,13 +866,14 @@ async function shopifyRequest(
   fn: () => Promise<Response>,
   maxRetries = 3
 ): Promise<Response> {
-  let lastError: Error;
+  let lastError: Error = new Error("Shopify request attempts exhausted");
 
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       const response = await fn();
 
       if (response.status === 429) {
+        lastError = new Error("Shopify HTTP throttled");
         // Get retry-after header or default
         const retryAfter = parseInt(
           response.headers.get("Retry-After") || "2"
@@ -1028,9 +1038,9 @@ Recommended fix:
 ```toml
 # shopify.app.toml
 [webhooks]
-api_version = "2024-10"
+api_version = "<REVIEWED_SUPPORTED_API_VERSION>"
 
-[webhooks.subscriptions]
+[[webhooks.subscriptions]]
 topics = [
   "orders/create",
   "orders/updated",
@@ -1101,7 +1111,7 @@ Works in local dev but fails in production.
 Logs show request to /webhooks/ not /webhooks.
 
 Why this breaks:
-Shopify automatically adds a trailing slash to webhook URLs.
+Do not assume Shopify appends a trailing slash. Verify the configured URL and actual delivery logs; a redirect is a non-2xx delivery failure.
 If your server doesn't handle both /webhooks and /webhooks/,
 the webhook will 404.
 
@@ -1116,35 +1126,9 @@ Recommended fix:
 // Remix/React Router - both work by default
 // app/routes/webhooks.tsx handles /webhooks
 
-// Express - add middleware
-app.use((req, res, next) => {
-  if (req.path.endsWith('/') && req.path.length > 1) {
-    const query = req.url.slice(req.path.length);
-    const safePath = req.path.slice(0, -1);
-    res.redirect(301, safePath + query);
-  }
-  next();
-});
-```
-
-
-## Configure web server
-
-```nginx
-# Nginx - strip trailing slashes
-location ~ ^(.+)/$ {
-  return 301 $1;
-}
-
-# Or rewrite to handler
-location /webhooks {
-  try_files $uri $uri/ @webhooks;
-}
-location @webhooks {
-  proxy_pass http://app:3000/webhooks;
-}
-```
-
+// Express: register both intended paths to the same authenticated POST handler.
+// Do not use 301 redirects for webhook POSTs or call next() after redirecting.
+app.post(["/webhooks", "/webhooks/"], verifiedWebhookHandler);
 
 ## Test both formats
 
@@ -1241,7 +1225,7 @@ const response = await admin.graphql(`
 ```toml
 # shopify.app.toml
 [webhooks]
-api_version = "2024-10"  # Use latest GraphQL version
+api_version = "<REVIEWED_SUPPORTED_API_VERSION>"  # Use latest GraphQL version
 ```
 
 ### App Bridge Required for Built for Shopify (July 2025)
@@ -1317,7 +1301,9 @@ function MyComponent() {
 }
 ```
 
-### Missing GDPR Webhooks Block App Store Approval
+### Missing Privacy Webhooks Block App Store Approval
+
+The handler sketches below omit complete access/deletion verification. Do not claim compliance from an empty switch or deleting only a few known tables; inventory all relevant stores, queues, logs and backups under approved retention policy. HMAC invalid requests must fail authentication.
 
 Severity: HIGH
 
@@ -1335,7 +1321,7 @@ Shopify requires all apps to handle three GDPR webhooks:
 2. customers/redact - Delete customer data
 3. shop/redact - Delete all shop data
 
-These are automatically subscribed when you create an app.
+Subscribe and verify the compliance topics explicitly in app configuration before submission; do not assume automatic subscription.
 You MUST implement handlers even if you don't store data.
 
 Recommended fix:
@@ -1375,8 +1361,8 @@ async function handleDataRequest(shop: string, payload: any) {
   });
 
   if (customerData) {
-    // Send to provided URL or email
-    await sendDataToMerchant(payload.data_request, customerData);
+    // Do not send PII to a URL/email taken from untrusted payload fields.
+    throw new Error("Implement reviewed secure merchant data delivery before enabling");
   }
 }
 

@@ -1,7 +1,7 @@
 ---
 name: security-scanning-security-dependencies
 description: "You are a security expert specializing in dependency vulnerability analysis, SBOM generation, and supply chain security. Scan project dependencies across multiple ecosystems to identify vulnerabilities, assess risks, and provide automated remediation strategies."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -24,7 +24,7 @@ You are a security expert specializing in dependency vulnerability analysis, SBO
 - The environment blocks running security scanners
 
 ## Context
-The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using modern 2024/2025 tools.
+The user needs comprehensive dependency security analysis to identify vulnerable packages, outdated dependencies, and license compliance issues. Focus on multi-ecosystem support, vulnerability database integration, SBOM generation, and automated remediation using the installed tool versions and current advisory database snapshot.
 
 ## Requirements
 $ARGUMENTS
@@ -49,3 +49,10 @@ $ARGUMENTS
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+For a locked npm project, capture the exact package-lock hash, npm version and
+advisory timestamp, distinguish scanner errors from findings, and propose one
+compatible fixed version in a topic branch. Re-run relevant tests and the scanner
+without auto-upgrading unrelated packages or claiming exploitability from a CVE match.

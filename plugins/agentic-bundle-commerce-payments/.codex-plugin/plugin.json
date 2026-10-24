@@ -1,6 +1,6 @@
 {
   "name": "aasb-commerce-payments",
-  "version": "19.15.0",
+  "version": "20.0.0",
   "description": "Install the \"Payments & Service Integrations\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",

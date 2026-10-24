@@ -18,7 +18,7 @@ Automate OneDrive operations including file upload/download, search, folder mana
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Authenticate the MCP client/server and authorize the Microsoft connection; an endpoint alone does not grant access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `one_drive`
@@ -77,8 +77,8 @@ Automate OneDrive operations including file upload/download, search, folder mana
 - `user_id`: `"me"` (default) or specific user identifier
 
 **Pitfalls**:
-- Upload automatically renames on conflict (no overwrite option by default)
-- Large files are automatically handled via chunking
+- Inspect the live upload schema and conflict behavior; do not assume uploads cannot overwrite
+- Verify upload size limits and resumable-session support before large uploads
 - `drive_id` overrides `user_id` when both are provided
 - Item IDs vary by platform: OneDrive for Business uses `01...` prefix, OneDrive Personal uses `HASH!NUMBER` format
 - Item IDs are case-sensitive; use exactly as returned from API
@@ -158,7 +158,7 @@ Automate OneDrive operations including file upload/download, search, folder mana
 - `item_id`: File ID for version history
 
 **Pitfalls**:
-- Delta queries are only available for SharePoint site drives via `ONE_DRIVE_LIST_SITE_DRIVE_ITEMS_DELTA`
+- This historical connector exposes site-drive delta via `ONE_DRIVE_LIST_SITE_DRIVE_ITEMS_DELTA`
 - Token `"latest"` returns current delta token without items (useful as starting point)
 - Deep or large drives can take several minutes to crawl; use batching and resume logic
 
@@ -250,3 +250,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Tool names, defaults and restrictions above are a historical connector snapshot; discover current schemas. Expanded children are not automatically a complete recursive listing: follow each child collection's pagination. Delta availability on this connector is not a statement about all Microsoft Graph endpoints. Scope sharing by exact recipients, role, link audience and notifications; existing authentication alone does not authorize new sharing. Treat download/monitoring/share URLs as sensitive, use verified returned hosts, and never replay an unknown-result copy/upload blindly. A recycle bin is not a guaranteed restoration policy.

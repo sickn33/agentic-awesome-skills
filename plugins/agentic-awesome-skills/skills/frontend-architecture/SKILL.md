@@ -13,7 +13,7 @@ license_source: https://github.com/stareezy-1/frontend-architecture-skill/blob/m
 # Frontend Architecture (portable, module-based)
 ## When to Use
 
-Use this skill when you need a portable, framework-agnostic architecture style for any React or React Native frontend. Organizes apps into feature modules with page/screen directories, a strict server-state vs UI-state split, barrel-only cross-module imports, co-located styles, and clear component-promotion rules....
+Use this skill when you need a portable, framework-agnostic architecture style for any React or React Native frontend. Organizes apps into feature modules with page/screen directories, a strict server-state vs UI-state split, barrel-only cross-module imports, co-located styles, and clear component-promotion rules.
 
 
 > Portable skill — readable by Claude Code, OpenCode, Codex, Cursor, Windsurf, and others.
@@ -32,7 +32,7 @@ without asking anyone. The structure makes the answers obvious.
 
 1. **Feature modules own their world.** Each feature is a self-contained `modules/{feature}/` folder with its own pages, components, hooks, state, types, and a single public barrel.
 2. **Pages/screens are directories, not files.** A route is a folder that co-locates its component, its styles, and the components/hooks used only by it.
-3. **State is split by origin.** Server data lives in a query/cache layer. UI/client state lives in a store. They never overlap — regardless of which libraries you pick.
+3. **State is split by origin.** Server data lives in a query/cache layer. UI/client state lives in a store. Keep authoritative remote state distinct from local drafts/optimistic projections, with explicit reconciliation.
 4. **Imports cross boundaries only through barrels.** Reaching into another module's internals is forbidden; you import from `@/modules/{feature}` and nothing deeper.
 5. **Code is promoted, not pre-placed.** It starts as local as possible and moves outward only when a second consumer appears.
 
@@ -70,7 +70,7 @@ src/
 └── shared/                          ← cross-module building blocks
     ├── components/                  ← components used by 2+ MODULES
     ├── hooks/                       ← cross-cutting hooks
-    ├── api-client/                  ← one typed client; the only place that talks to the network
+    ├── api-client/                  ← one typed client; a shared transport contract; server-only and client-safe implementations must remain separate
     ├── store/                       ← root store wiring (if your state lib needs one — see §4)
     ├── utils/                       ← formatters, cn()/clsx, helpers
     ├── constants/
@@ -104,7 +104,7 @@ import { InvoiceListPage } from "@/modules/invoice/pages/invoice-list/invoice-li
 
 Keep the barrel curated. If something isn't exported, it's private by design. Group exports with short comments (pages, hooks, store, types) — future readers use the barrel as the module's API docs.
 
-### 2.2 One module = one bounded context
+### 2.2 One module = one deliberately defined feature context
 
 Don't create `utils` modules or `components` modules. Modules map to product capabilities, not to technical layers. Technical building blocks live in `shared/`.
 
@@ -147,7 +147,7 @@ Two kinds of state, two homes. Mixing them is the most common architectural fail
 ### 4.1 Hard rules (independent of library)
 
 - **Never mirror server responses into the client store.** No copying fetched entities into Zustand/Redux/MobX. The query/cache layer is the single source of truth for server data.
-- **Never fetch inside components.** Components read server data from a data hook and UI state from a store selector. They don't call the network client directly.
+- **For client components, prefer data hooks; server components and framework loaders may fetch through server-only services.** Components read server data from a data hook and UI state from a store selector. They don't call the network client directly.
 - **Never drive continuous values through re-render state.** Scroll progress, pointer position, drag offset — use refs / animation values, not render state (it re-renders the tree every frame).
 - **One store boundary per module.** Whatever library you use, give each module one cohesive store unit (a Zustand hook, a Redux slice, a MobX class, a Jotai atom group) accessed via the module barrel. Components subscribe to the smallest slice they need to avoid needless re-renders.
 
@@ -344,7 +344,7 @@ export default function Page() {
 
 - Routing is **Expo Router** (file-based, in `app/`) or React Navigation (`navigation/`). Route/screen files are thin and import screen components from module barrels.
 - "Pages" are "screens" — same directory pattern: `pages/{screen}/{screen}.tsx` + `{screen}.styles.ts`.
-- Query layer + client store run unchanged (TanStack Query, Zustand, Redux, MobX, Jotai all work in RN). The typed `api-client` is shared logic and works as-is.
+- Query layer + client store run unchanged (TanStack Query, Zustand, Redux, MobX, Jotai all work in RN). A typed client contract can be shared, but browser/RN transport, storage, cookies and authentication require platform-specific adapters.
 - Styling uses **Tamagui** (recommended for shared web+native), `StyleSheet`, or Nativewind. Keep module logic DOM-free.
 
 ```tsx
@@ -417,3 +417,7 @@ This skill follows the Anthropic `SKILL.md` format and is portable across agents
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Runtime and isolation exceptions
+
+These are chosen conventions, not guarantees that every React framework behaves identically. Preserve existing routing/build conventions rather than forcing a wholesale restructure for a small task. Separate server-only exports from client hooks/components: one mixed barrel can pull credentials or server dependencies into a client boundary or break RSC rules. Use type-only exports where appropriate and verify import cycles/tree shaking. Create SSR query/store instances per request and authenticated identity, never a process-global user cache/store; include tenant/user/permission and relevant filters in cache keys, and clear/revalidate on logout or identity changes. URL filters and isolated component state need not become a global store; editable drafts/optimistic changes need explicit conflict/reconciliation policies rather than duplicate authoritative server state. Shared network contracts do not replace server-side authorization or platform-specific secure credential storage. Browser/RN APIs, accessibility, styling and navigation need separate validation; an I-prefix or barrel is not a security boundary. Publishing/installing an external skill is a separate authorized action, not a prerequisite to applying these layout ideas.

@@ -10,7 +10,7 @@ Comprehensive guide for validating workflow determinism and ensuring safe code c
 
 1. Temporal records every workflow decision as Event History
 2. Replay testing re-executes workflow code against recorded history
-3. If new code makes same decisions → deterministic (safe to deploy)
+3. If recorded commands match → compatible for these histories (not proof of complete deployment safety)
 4. If decisions differ → non-deterministic (breaking change)
 
 **Critical Use Cases**:
@@ -55,7 +55,7 @@ import pytest
 from temporalio.worker import Replayer
 
 @pytest.mark.asyncio
-async def test_replay_multiple_workflows():
+async def test_replay_multiple_workflows(client): # configured authorized client fixture
     """Replay against multiple production histories"""
 
     replayer = Replayer(workflows=[OrderWorkflow])
@@ -182,6 +182,8 @@ async def test_workflow_determinism():
 
 ## Production History Replay
 
+Histories can contain confidential inputs/results. Export only authorized namespaces/runs via the configured TLS/auth client, use private storage and limited retention, and never fetch production secrets in untrusted pull-request CI. Prefer approved sanitized fixtures prepared separately; redaction must preserve converter/event semantics for meaningful replay. The hardcoded hostname below is a placeholder, not a public production service. Single-history JSON and bulk envelope formats below differ: the suite expects the bulk envelope. Add imports `json`, `tempfile` and `Path` where used. Replayer must use compatible data/payload converters and all referenced workflow types.
+
 ### Exporting Workflow History
 
 ```python
@@ -197,8 +199,8 @@ async def export_workflow_history(workflow_id: str, output_file: str):
     history = await handle.fetch_history()
 
     # Save to file for replay testing
-    with open(output_file, "wb") as f:
-        f.write(history.SerializeToString())
+    with open(output_file, "x", encoding="utf-8") as f:
+        f.write(history.to_json())
 
     print(f"Exported history to {output_file}")
 ```
@@ -207,19 +209,19 @@ async def export_workflow_history(workflow_id: str, output_file: str):
 
 ```python
 from temporalio.worker import Replayer
-from temporalio.api.history.v1 import History
+from temporalio.client import WorkflowHistory
 
 async def test_replay_from_file():
     """Replay workflow from exported history file"""
 
     # Load history from file
-    with open("workflow_histories/order-123.pb", "rb") as f:
-        history = History.FromString(f.read())
+    with open("workflow_histories/order-123.json", encoding="utf-8") as f:
+        history = WorkflowHistory.from_json("order-123", f.read())
 
     # Replay with current workflow code
     replayer = Replayer(workflows=[OrderWorkflow])
     await replayer.replay_workflow(history)
-    # Success = safe to deploy
+    # Success = these histories replay; other behavior remains untested
 ```
 
 ## CI/CD Integration Patterns
@@ -239,10 +241,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -253,8 +255,8 @@ jobs:
 
       - name: Download production histories
         run: |
-          # Fetch recent workflow histories from production
-          python scripts/export_histories.py
+          # Use approved histories prepared outside untrusted PR execution.
+          test -d workflow_histories
 
       - name: Run replay tests
         run: |
@@ -262,7 +264,7 @@ jobs:
 
       - name: Upload results
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: replay-failures
           path: replay-failures/
@@ -274,27 +276,28 @@ jobs:
 # scripts/export_histories.py
 import asyncio
 from temporalio.client import Client
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 async def export_recent_histories():
     """Export recent production workflow histories"""
 
     client = await Client.connect("production.temporal.io:7233")
 
-    # Query recent completed workflows
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat()
     workflows = client.list_workflows(
-        query="WorkflowType='OrderWorkflow' AND CloseTime > '7 days ago'"
+        query=f"WorkflowType='OrderWorkflow' AND CloseTime > '{cutoff}'"
     )
 
+    output = Path(tempfile.mkdtemp(prefix="temporal-history-")) # private fresh directory
     count = 0
-    async for workflow in workflows:
+    async for execution in workflows:
         # Export history
-        history = await workflow.fetch_history()
+        history = await client.get_workflow_handle(execution.id, run_id=execution.run_id).fetch_history()
 
         # Save to file
-        filename = f"workflow_histories/{workflow.id}.pb"
-        with open(filename, "wb") as f:
-            f.write(history.SerializeToString())
+        filename = output / f"history-{count}.json"
+        with filename.open("x", encoding="utf-8") as f:
+            json.dump({"workflow_id": execution.id, "history": history.to_json_dict()}, f)
 
         count += 1
         if count >= 100:  # Limit to 100 most recent
@@ -313,7 +316,7 @@ if __name__ == "__main__":
 import pytest
 import glob
 from temporalio.worker import Replayer
-from temporalio.api.history.v1 import History
+from temporalio.client import WorkflowHistory
 from workflows import OrderWorkflow, PaymentWorkflow
 
 @pytest.mark.asyncio
@@ -325,13 +328,15 @@ async def test_replay_all_histories():
     )
 
     # Load all history files
-    history_files = glob.glob("workflow_histories/*.pb")
+    history_files = glob.glob("workflow_histories/*.json")
+    assert history_files, "No histories supplied; replay coverage is empty"
 
     failures = []
     for history_file in history_files:
         try:
-            with open(history_file, "rb") as f:
-                history = History.FromString(f.read())
+            with open(history_file, encoding="utf-8") as f:
+                envelope = json.load(f)
+                history = WorkflowHistory.from_json(envelope["workflow_id"], envelope["history"])
 
             await replayer.replay_workflow(history)
             print(f"✓ {history_file}")
@@ -350,86 +355,28 @@ async def test_replay_all_histories():
 
 ## Version Compatibility Testing
 
-### Testing Code Evolution
+### Python patching protocol
+
+Python uses `workflow.patched("new-logic")`, not the `get_version` API shown in other SDKs:
 
 ```python
-@pytest.mark.asyncio
-async def test_workflow_version_compatibility():
-    """Test workflow with version changes"""
-
-    @workflow.defn
-    class EvolvingWorkflow:
-        @workflow.run
-        async def run(self) -> str:
-            # Use versioning for safe code evolution
-            version = workflow.get_version("feature-flag", 1, 2)
-
-            if version == 1:
-                # Old behavior
-                return "version-1"
-            else:
-                # New behavior
-                return "version-2"
-
-    env = await WorkflowEnvironment.start_time_skipping()
-
-    # Test version 1 behavior
-    async with Worker(
-        env.client,
-        task_queue="test",
-        workflows=[EvolvingWorkflow],
-    ):
-        result_v1 = await env.client.execute_workflow(
-            EvolvingWorkflow.run,
-            id="evolving-v1",
-            task_queue="test",
-        )
-        assert result_v1 == "version-1"
-
-        # Simulate workflow executing again with version 2
-        result_v2 = await env.client.execute_workflow(
-            EvolvingWorkflow.run,
-            id="evolving-v2",
-            task_queue="test",
-        )
-        # New workflows use version 2
-        assert result_v2 == "version-2"
-
-    await env.shutdown()
-```
-
-### Migration Strategy
-
-```python
-# Phase 1: Add version check
 @workflow.defn
 class MigratingWorkflow:
     @workflow.run
     async def run(self) -> dict:
-        version = workflow.get_version("new-logic", 1, 2)
-
-        if version == 1:
-            # Old logic (existing workflows)
-            return await self._old_implementation()
-        else:
-            # New logic (new workflows)
+        if workflow.patched("new-logic"):
             return await self._new_implementation()
-
-# Phase 2: After all old workflows complete, remove old code
-@workflow.defn
-class MigratedWorkflow:
-    @workflow.run
-    async def run(self) -> dict:
-        # Only new logic remains
-        return await self._new_implementation()
+        return await self._old_implementation()
 ```
+
+Both implementations are application prerequisites. Preserve the workflow type name across versions. New executions use the patched branch; replay histories from the pre-patch version test the old branch. Two new executions with different IDs do not simulate old/new histories. After the appropriate old workers/executions are drained, follow `workflow.deprecate_patch` and marker-removal stages in the [official Python sample](https://github.com/temporalio/samples-python/tree/main/patching), retaining representative old, patched and deprecated histories for each deployment stage. Do not simply delete the old branch after an arbitrary delay.
 
 ## Best Practices
 
 1. **Replay Before Deploy**: Always run replay tests before deploying workflow changes
 2. **Export Regularly**: Continuously export production histories for testing
 3. **CI/CD Integration**: Automated replay testing in pull request checks
-4. **Version Tracking**: Use workflow.get_version() for safe code evolution
+4. **Version Tracking**: Use the Python patched/deprecate_patch protocol and representative histories
 5. **History Retention**: Keep representative workflow histories for regression testing
 6. **Determinism**: Never use random(), datetime.now(), or direct external calls
 7. **Comprehensive Testing**: Test against various workflow execution paths
@@ -446,13 +393,7 @@ Got: ScheduleActivityTask(activity_id='activity-2')
 
 **Solution**: Code change altered workflow decision sequence
 
-**Version Mismatch Error**:
-
-```
-WorkflowVersionError: Workflow version changed from 1 to 2 without using get_version()
-```
-
-**Solution**: Use workflow.get_version() for backward-compatible changes
+Error names/messages depend on SDK version; inspect actual replay exceptions rather than expecting a fabricated `WorkflowVersionError`. A replay exception may also reflect missing workflow registration, imports or payload converter configuration, not only nondeterminism.
 
 ## Additional Resources
 

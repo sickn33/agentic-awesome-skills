@@ -25,7 +25,7 @@ import * as Sentry from "@sentry/node";
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   enabled: Boolean(process.env.SENTRY_DSN),
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.1, // tune deliberately for data volume and cost
   // NEON_BRANCH (the branch name) is injected on EVERY branch, including the default — so it
   // can't be used as a truthy "is this a branch?" flag. Treat the project's default branch as
   // "production" (its name passed in via neon.ts env) and tag every other branch by its name.
@@ -46,7 +46,7 @@ import { Hono } from "hono";
 // ... rest of the function
 ```
 
-- **Gate `enabled` on the DSN.** Local dev (`neon dev`) and any branch where you haven't configured the secret then become a no-op — no init, no noise — without changing code.
+- **Gate `enabled` on the DSN.** Local dev (`neon dev`) and any branch where you haven't configured the secret then become a no-op — collection disabled — without changing code.
 - **Tag the environment off the injected branch name.** Each Neon branch runs its own copy of the function and the runtime injects `NEON_BRANCH` (the branch **name**, e.g. `main` or `preview/add-auth`) into every one of them — including the default branch. The same value is written into local dev by `neon env pull` / `neon-env run` / `neon dev`, so local and deployed runs agree. Because it's always present, don't use it as a boolean flag (that tags every branch the same). Instead compare it against your default branch name (pass it in as e.g. `PRODUCTION_BRANCH` via `neon.ts` `env`) so the default branch reads as `production` and feature/preview branches are tagged by name — keeping them separable in the Sentry dashboard.
 
 ### 2. Provide the DSN as a deploy-time secret
@@ -54,7 +54,7 @@ import { Hono } from "hono";
 The DSN is your own secret, so set it per-deployment (see "Environment variables" in `SKILL.md`). Either pass it on deploy:
 
 ```bash
-neon functions deploy <slug> --src src/index.ts \
+neon functions deploy <slug> --path . --entry src/index.ts \
   --env "SENTRY_DSN=https://…@…ingest.us.sentry.io/…"
 ```
 
@@ -77,7 +77,7 @@ Wire a top-level error handler in your HTTP framework so any error thrown in a r
 ```typescript
 app.onError((err, c) => {
   Sentry.captureException(err);
-  c.header("access-control-allow-origin", "*"); // cors() doesn't run on error responses
+  // Apply the same explicit allowed-origin policy used on successful responses.
   return c.json({ error: "internal_error" }, 500);
 });
 ```
@@ -93,21 +93,21 @@ A representative agent that parses a page across several models reports three di
 Sentry.captureException(err, {
   level: "warning",
   tags: { component: "agent", phase: "parse-attempt", model },
-  extra: { url, source },
+  extra: { source }, // omit raw URLs/content; redact secrets and personal data
 });
 
 // Terminal: every model failed.
 Sentry.captureException(err, {
   level: "error",
   tags: { component: "agent", phase: "parse-all-failed" },
-  extra: { url, source },
+  extra: { source }, // omit raw URLs/content; redact secrets and personal data
 });
 
 // Non-exception failure: the agent couldn't fetch the input page at all.
 Sentry.captureMessage("agent could not fetch page", {
   level: "warning",
   tags: { component: "agent", phase: "fetch" },
-  extra: { url, source },
+  extra: { source }, // omit raw URLs/content; redact secrets and personal data
 });
 ```
 
@@ -128,4 +128,4 @@ The same pattern generalizes to any Node integration (OpenTelemetry, structured 
 2. Gate it on an env var so local dev and unconfigured branches are a no-op.
 3. Pass secrets via `--env KEY=VALUE` on deploy or the function's `env` in `neon.ts`.
 
-Standard Node SDKs bundle through `neon deploy`'s esbuild without changes.
+Verify each integration against the deployed bundler/runtime; native modules and auto-instrumentation may need extra configuration.

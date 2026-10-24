@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-no-institution-middle-path-pack`，亲密场景追加 `intimate-love-care-pack`。
+`v5-action-healing-transfer-pack`，亲密场景追加 `v5-low-power-protection-pack`。
 
 ## 证据要求
 

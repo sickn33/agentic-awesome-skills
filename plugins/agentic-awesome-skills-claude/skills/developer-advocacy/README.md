@@ -35,7 +35,7 @@ The skill will:
 ### CFP Formula
 
 ```
-Specific Problem + Unique Angle + Clear Takeaways = Accepted Talk
+Specific Problem + Unique Angle + Clear Takeaways = Stronger Proposal (acceptance is not guaranteed)
 ```
 
 ### Talk Title Patterns

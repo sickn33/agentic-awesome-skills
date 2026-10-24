@@ -40,8 +40,9 @@ restarted to reconnect to `/run/docker/plugins/rclone.sock`
 or parse new `/etc/docker/plugins/rclone.spec`. Until you restart, any
 volume related docker commands will timeout trying to access the old socket.
 Running directly is supported on **Linux only**, not on Windows or MacOS.
-This is not a problem with managed plugin mode described in details
-in the [full documentation](https://rclone.org/docker).
+Managed plugins also require a compatible Linux Docker Engine. Docker Desktop
+on macOS or Windows is not made compatible merely by choosing managed mode;
+check the [platform prerequisites](https://rclone.org/docker).
 
 The command will create volume mounts under the path given by `--base-dir`
 (by default `/var/lib/docker-volumes/rclone` available only to root)
@@ -156,8 +157,8 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and metadata remain intact.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -267,7 +268,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not

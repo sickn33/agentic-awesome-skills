@@ -118,8 +118,10 @@ log("Decomposed into " + scope.angles.length + " angles: " + scope.angles.map(a 
 const normURL = u => {
   try {
     const p = new URL(u)
-    return (p.hostname.replace(/^www\./, "") + p.pathname.replace(/\/$/, "")).toLowerCase()
-  } catch { return u.toLowerCase() }
+    if (p.protocol !== 'https:' || p.username || p.password) return null
+    p.hash = '' // fragment does not select HTTP content; preserve query/path case
+    return p.href
+  } catch { return null }
 }
 const seen = new Map()
 const dupes = []
@@ -146,7 +148,7 @@ const FETCH_PROMPT = (source, angle) =>
   "2. Assess source quality: primary research/institution? secondary reporting? blog/opinion? forum? unreliable?\n" +
   "3. Extract 2-5 FALSIFIABLE claims that bear on the research question. Each claim must:\n" +
   "   - be a concrete, checkable statement (not vague generalities)\n" +
-  "   - include a direct quote from the source as support\n" +
+  "   - include a brief verified excerpt within the source quotation budget and exact locator; never invent text\n" +
   "   - be rated central/supporting/tangential to the research question\n" +
   "4. Note publish date if available.\n\n" +
   "If the fetch fails or the page is irrelevant/paywalled, return claims: [] and sourceQuality: \"unreliable\".\n\nStructured output only."
@@ -181,9 +183,11 @@ const searchResults = await pipeline(
   }),
 
   searchResult => {
+    if (!searchResult) return []
     const sorted = [...searchResult.results].sort((a, b) => relRank[a.relevance] - relRank[b.relevance])
     const novel = sorted.filter(r => {
       const key = normURL(r.url)
+      if (!key) return false
       if (seen.has(key)) {
         dupes.push({ ...r, angle: searchResult.angle, dupOf: seen.get(key) })
         return false
@@ -217,7 +221,7 @@ const searchResults = await pipeline(
             claims: ext.claims.map(c => ({ ...c, sourceUrl: source.url, sourceQuality: ext.sourceQuality })),
           }
         }).catch(e => {
-          log("fetch failed: " + source.url + " — " + (e.message || e))
+          log("source fetch failed (private diagnostic retained by host)")
           return { url: source.url, title: source.title, angle: searchResult.angle, sourceQuality: "unreliable", claims: [] }
         })
       })
@@ -267,7 +271,8 @@ const voted = (await parallel(
       // abstentions = unverified, which must NOT pass into the report
       // (otherwise all-abstain → refuted=0 → false survive).
       const abstained = VOTES_PER_CLAIM - valid.length
-      const survives = valid.length >= REFUTATIONS_REQUIRED && refuted < REFUTATIONS_REQUIRED
+      const supports = valid.filter(v => v.refuted === false && v.evidence.trim()).length
+      const survives = supports >= REFUTATIONS_REQUIRED && refuted === 0
       log("\"" + claim.claim.slice(0, 50) + "…\": " + (valid.length - refuted) + "-" + refuted + (abstained > 0 ? " (" + abstained + " abstain)" : "") + " " + (survives ? "✓" : "✗"))
       return { ...claim, verdicts: valid, refutedVotes: refuted, survives }
     })
@@ -276,12 +281,12 @@ const voted = (await parallel(
 
 const confirmed = voted.filter(c => c.survives)
 const killed = voted.filter(c => !c.survives)
-log("Verify done: " + voted.length + " claims → " + confirmed.length + " confirmed, " + killed.length + " killed")
+log("Verify done: " + voted.length + " claims → " + confirmed.length + " screening candidates, " + killed.length + " excluded")
 
 if (confirmed.length === 0) {
   return {
     question: QUESTION,
-    summary: "All " + voted.length + " claims refuted by adversarial verification. Research inconclusive — sources may be low-quality or claims overstated.",
+    summary: "No claims met the screening threshold across " + voted.length + " candidates. Rejected, disputed and abstained outcomes remain distinct; none is independently verified. Research inconclusive — sources may be low-quality or claims overstated.",
     findings: [],
     refuted: killed.map(c => ({ claim: c.claim, vote: (c.verdicts.length - c.refutedVotes) + "-" + c.refutedVotes, source: c.sourceUrl })),
     sources: allSources.map(s => ({ url: s.url, quality: s.sourceQuality, claimCount: s.claims.length })),
@@ -308,11 +313,11 @@ const report = await agent(
   "## Synthesis: research report\n\n" +
   "**Question:** " + QUESTION + "\n\n" +
   confirmed.length + " claims survived " + VOTES_PER_CLAIM + "-vote adversarial verification. Merge semantic duplicates and synthesize.\n\n" +
-  "## Confirmed claims\n" + block + "\n" + killedBlock + "\n\n" +
+  "## Screened candidate claims\n" + block + "\n" + killedBlock + "\n\n" +
   "## Instructions\n" +
   "1. Identify claims that say the same thing — merge them, combine their sources.\n" +
   "2. Group related claims into coherent findings. Each finding should directly address the research question.\n" +
-  "3. Assign confidence per finding: high (multiple primary sources, unanimous votes), medium (secondary sources or split votes), low (single source or blog-quality).\n" +
+  "3. Model votes are correlated screening opinions, not independent truth evidence. Confidence requires inspected primary sources, exact support, dates and scope; preserve disputes/abstentions and never infer truth from a quorum alone.\n" +
   "4. Write a 3-5 sentence executive summary answering the research question.\n" +
   "5. Note caveats: what's uncertain, what sources were weak, what time-sensitivity applies.\n" +
   "6. List 2-4 open questions that emerged but weren't answered.\n\nStructured output only.",
@@ -320,11 +325,11 @@ const report = await agent(
 )
 
 if (!report) {
-  // Synthesis skipped/errored — salvage the verified claims raw rather
+  // Synthesis skipped/errored — salvage the screened candidates raw rather
   // than throwing on report.findings and discarding the whole run.
   return {
     question: QUESTION,
-    summary: "Synthesis step was skipped or failed — returning " + confirmed.length + " verified claims unmerged.",
+    summary: "Synthesis step was skipped or failed — returning " + confirmed.length + " screened candidates unmerged.",
     findings: [],
     confirmed: confirmed.map(c => ({ claim: c.claim, source: c.sourceUrl, quote: c.quote, vote: (c.verdicts.length - c.refutedVotes) + "-" + c.refutedVotes })),
     refuted: killed.map(c => ({ claim: c.claim, vote: (c.verdicts.length - c.refutedVotes) + "-" + c.refutedVotes, source: c.sourceUrl })),

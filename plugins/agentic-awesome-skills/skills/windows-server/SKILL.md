@@ -30,6 +30,8 @@ Windows Server management and PowerShell automation for production workloads inc
 - Reviewing Windows Event Logs for troubleshooting
 - Applying and managing Windows Updates on servers
 
+Confirm the exact server, domain, roles, maintenance window, backups and rollback before changes. Forest promotion, DNS changes, updates/reboots, group membership and SYSTEM tasks are separate privileged operations. Protect exported logs; do not clear incident evidence. ServerManager, IIS and AD module availability differs between Windows PowerShell and PowerShell 7; use a supported host for each module.
+
 ## Prerequisites
 
 - Administrator account on the target server
@@ -84,7 +86,7 @@ Invoke-Command -ComputerName server01,server02,server03 -ScriptBlock { Get-Servi
 Get-WindowsFeature
 
 # Install IIS with management tools
-Install-WindowsFeature -Name Web-Server -IncludeManagementTools -IncludeAllSubFeature
+Install-WindowsFeature -Name Web-Server -IncludeManagementTools
 
 # Install Active Directory Domain Services
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
@@ -113,23 +115,24 @@ Import-Module WebAdministration
 
 # Create a new application pool
 New-WebAppPool -Name "ProductionPool"
-Set-ItemProperty IIS:\AppPools\ProductionPool -Name processModel.identityType -Value 3  # NetworkService
+Set-ItemProperty IIS:\AppPools\ProductionPool -Name processModel.identityType -Value 4  # ApplicationPoolIdentity
 Set-ItemProperty IIS:\AppPools\ProductionPool -Name managedRuntimeVersion -Value ""     # No managed code (reverse proxy)
 
 # Create a new website
 New-Website -Name "MyApp" `
   -Port 443 `
-  -Protocol https `
+  -Ssl `
+  -HostHeader "www.example.com" `
   -PhysicalPath "C:\inetpub\myapp" `
   -ApplicationPool "ProductionPool" `
   -SslFlags 1
 
-# Add an HTTP binding that redirects to HTTPS
+# Add an HTTP binding (does not redirect until a redirect rule is installed)
 New-WebBinding -Name "MyApp" -Protocol http -Port 80
 
 # Bind an SSL certificate to the HTTPS site
-$cert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object { $_.Subject -like "*example.com*" }
-New-Item IIS:\SslBindings\0.0.0.0!443 -Value $cert
+$cert = Get-Item "Cert:\LocalMachine\My\<verified-certificate-thumbprint>"
+New-Item IIS:\SslBindings\0.0.0.0!443!www.example.com -Value $cert -SSLFlags 1
 
 # Create a virtual directory
 New-WebVirtualDirectory -Site "MyApp" -Name "static" -PhysicalPath "C:\inetpub\static"
@@ -168,7 +171,7 @@ Install-ADDSForest `
   -DomainName "corp.example.com" `
   -DomainNetBIOSName "CORP" `
   -InstallDns:$true `
-  -SafeModeAdministratorPassword (ConvertTo-SecureString "P@ssw0rd!" -AsPlainText -Force) `
+  -SafeModeAdministratorPassword (Read-Host "DSRM recovery password" -AsSecureString) `
   -Force:$true
 
 # Create an Organizational Unit
@@ -179,12 +182,12 @@ New-ADUser -Name "Jane Smith" `
   -SamAccountName "jsmith" `
   -UserPrincipalName "jsmith@corp.example.com" `
   -Path "OU=Engineering,DC=corp,DC=example,DC=com" `
-  -AccountPassword (ConvertTo-SecureString "TempP@ss1" -AsPlainText -Force) `
+  -AccountPassword (Read-Host "Initial user password" -AsSecureString) `
   -Enabled $true `
   -ChangePasswordAtLogon $true
 
-# Add user to a group
-Add-ADGroupMember -Identity "Domain Admins" -Members "jsmith"
+# Add user to an existing, approved ordinary group
+Add-ADGroupMember -Identity "Engineering" -Members "jsmith"
 
 # Search for users in an OU
 Get-ADUser -Filter * -SearchBase "OU=Engineering,DC=corp,DC=example,DC=com" | Select-Object Name, SamAccountName, Enabled
@@ -196,7 +199,7 @@ Disable-ADAccount -Identity "jsmith"
 Unlock-ADAccount -Identity "jsmith"
 
 # Reset a user password
-Set-ADAccountPassword -Identity "jsmith" -Reset -NewPassword (ConvertTo-SecureString "NewP@ss1" -AsPlainText -Force)
+Set-ADAccountPassword -Identity "jsmith" -Reset -NewPassword (Read-Host "New user password" -AsSecureString)
 
 # List all domain controllers
 Get-ADDomainController -Filter * | Select-Object Name, IPv4Address, Site
@@ -224,11 +227,11 @@ Install-WindowsUpdate -Category "Security Updates","Critical Updates" -AcceptAll
 # View update history
 Get-WUHistory | Select-Object -First 20 Title, Date, Result
 
-# Schedule monthly patching via Task Scheduler
+# Schedule weekly patching in an approved maintenance window
 $action  = New-ScheduledTaskAction -Execute "powershell.exe" `
   -Argument "-NoProfile -Command Install-WindowsUpdate -AcceptAll -AutoReboot"
 $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Sunday -At 2am
-Register-ScheduledTask -TaskName "MonthlyPatching" -Action $action -Trigger $trigger -User "SYSTEM" -RunLevel Highest
+Register-ScheduledTask -TaskName "WeeklyPatching" -Action $action -Trigger $trigger -User "SYSTEM" -RunLevel Highest
 
 # WSUS configuration via Group Policy (registry keys)
 # HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
@@ -262,8 +265,8 @@ Get-WinEvent -FilterHashtable @{
 Get-WinEvent -FilterHashtable @{ LogName='System'; Level=1,2 } |
   Export-Csv -Path C:\Logs\system-errors.csv -NoTypeInformation
 
-# Clear old event log entries (use cautiously)
-Clear-EventLog -LogName Application
+# Clearing logs destroys evidence; export and verify retention approval first.
+# Clear-EventLog -LogName Application
 
 # Set maximum log size
 Limit-EventLog -LogName Application -MaximumSize 512MB -OverflowAction OverwriteAsNeeded

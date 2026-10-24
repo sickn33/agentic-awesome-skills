@@ -21,7 +21,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 3. **Adaptive Components**: Cards and blocks size themselves dynamically based on the generated content length.
 
 ## Visual DNA
-- **Colors**: **Minimalist Slate** combined with **Electric Indigo** or **Neon Pulse** gradients for the AI elements. The background is clean (white or dark grey), while the AI "presence" is represented by a shifting, iridescent gradient.
+- **Colors**: **Minimalist Slate** combined with a custom indigo or neon accent gradient (these are descriptions, not additional bundled palettes) for the AI elements. The background is clean (white or dark grey), while the AI "presence" is represented by a shifting, iridescent gradient.
 - **Typography**: Highly readable system fonts (`Inter`, `SF Pro`).
 - **Styling**: Subtle glowing borders to indicate AI generation in progress.
 
@@ -77,6 +77,7 @@ body {
 struct AINativeInput: View {
     @State private var isGenerating = true
     @State private var gradientOffset = 0.0
+    @State private var prompt = ""
     
     var body: some View {
         VStack {
@@ -100,7 +101,7 @@ struct AINativeInput: View {
             
             // AI Input Box
             HStack {
-                TextField("Ask anything...", text: .constant(""))
+                TextField("Ask anything...", text: $prompt)
                 Image(systemName: "sparkles")
                     .foregroundColor(.purple)
             }
@@ -240,6 +241,7 @@ const AINativeInput = () => {
 ```kotlin
 @Composable
 fun AINativeInput() {
+    var prompt by remember { mutableStateOf("") }
     val infiniteTransition = rememberInfiniteTransition()
     val gradientOffset by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -273,10 +275,15 @@ fun AINativeInput() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             BasicTextField(
-                value = "",
-                onValueChange = {},
+                value = prompt,
+                onValueChange = { prompt = it },
                 modifier = Modifier.weight(1f),
-                decorationBox = { innerTextField -> Text("Ask anything...", color = Color.Gray) }
+                decorationBox = { innerTextField ->
+                    Box {
+                        if (prompt.isEmpty()) Text("Ask anything...", color = Color.Gray)
+                        innerTextField()
+                    }
+                }
             )
             Icon(Icons.Default.Star, contentDescription = null, tint = Color(0xFF8A2387))
         }
@@ -288,7 +295,7 @@ fun AINativeInput() {
 
 ## Do's and Don'ts
 - **DO**: Use a distinct, vibrant gradient to represent the AI "agent", contrasting with a very plain, clean background.
-- **DON'T**: Use complex navigation headers. The user should navigate by asking the AI, not by clicking deep menus.
+- **DON'T**: Make chat the only route to navigation or destructive actions. Keep discoverable, keyboard-accessible controls and explicit confirmation where the task requires it.
 
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.

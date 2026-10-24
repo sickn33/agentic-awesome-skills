@@ -20,7 +20,7 @@ dotnet add package Azure.Search.Documents
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**: Stable v11.7.0, Preview v11.8.0-beta.1
+These fragments require a compatible pinned SDK version; check its API reference before use. They are not a complete compiled application.
 
 ## Environment Variables
 
@@ -136,7 +136,7 @@ var index = new SearchIndex("hotels")
 ```csharp
 var searchClient = new SearchClient(endpoint, indexName, credential);
 
-// Upload (add new)
+// Upload inserts or replaces the entire existing document with the same key.
 var hotels = new[] { new Hotel { HotelId = "1", HotelName = "Hotel A" } };
 await searchClient.UploadDocumentsAsync(hotels);
 
@@ -147,7 +147,7 @@ await searchClient.MergeDocumentsAsync(hotels);
 await searchClient.MergeOrUploadDocumentsAsync(hotels);
 
 // Delete
-await searchClient.DeleteDocumentsAsync("hotelId", new[] { "1", "2" });
+await searchClient.DeleteDocumentsAsync("HotelId", new[] { "1", "2" });
 
 // Batch operations
 var batch = IndexDocumentsBatch.Create(
@@ -164,9 +164,9 @@ await searchClient.IndexDocumentsAsync(batch);
 ```csharp
 var options = new SearchOptions
 {
-    Filter = "rating ge 4",
-    OrderBy = { "rating desc" },
-    Select = { "hotelId", "hotelName", "rating" },
+    Filter = "Rating ge 4",
+    OrderBy = { "Rating desc" },
+    Select = { "HotelId", "HotelName", "Rating" },
     Size = 10,
     Skip = 0,
     IncludeTotalCount = true
@@ -186,12 +186,12 @@ await foreach (SearchResult<Hotel> result in results.GetResultsAsync())
 ```csharp
 var options = new SearchOptions
 {
-    Facets = { "rating,count:5", "category" }
+    Facets = { "Rating,count:5" }
 };
 
 var results = await searchClient.SearchAsync<Hotel>("*", options);
 
-foreach (var facet in results.Value.Facets["rating"])
+foreach (var facet in results.Value.Facets["Rating"])
 {
     Console.WriteLine($"Rating {facet.Value}: {facet.Count}");
 }
@@ -220,7 +220,7 @@ using Azure.Search.Documents.Models;
 var vectorQuery = new VectorizedQuery(embedding)
 {
     KNearestNeighborsCount = 5,
-    Fields = { "descriptionVector" }
+    Fields = { "DescriptionVector" }
 };
 
 var options = new SearchOptions
@@ -253,7 +253,7 @@ var options = new SearchOptions
 var results = await searchClient.SearchAsync<Hotel>("best hotel for families", options);
 
 // Access semantic answers
-foreach (var answer in results.Value.SemanticSearch.Answers)
+foreach (var answer in results.Value.SemanticSearch?.Answers ?? [])
 {
     Console.WriteLine($"Answer: {answer.Text} (Score: {answer.Score})");
 }
@@ -271,8 +271,8 @@ await foreach (var result in results.Value.GetResultsAsync())
 ```csharp
 var vectorQuery = new VectorizedQuery(embedding)
 {
-    KNearestNeighborsCount = 5,
-    Fields = { "descriptionVector" }
+    KNearestNeighborsCount = 50,
+    Fields = { "DescriptionVector" }
 };
 
 var options = new SearchOptions
@@ -333,7 +333,7 @@ catch (RequestFailedException ex)
 4. **Batch document operations** for better throughput
 5. **Use `Select`** to return only needed fields
 6. **Configure semantic search** for natural language queries
-7. **Combine vector + keyword + semantic** for best relevance
+7. **Combine vector + keyword + semantic** and evaluate relevance on representative queries
 
 ## Reference Files
 
@@ -349,3 +349,9 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+### Operational boundaries
+
+FieldBuilder uses the configured serializer; the attribute model uses PascalCase here, while the alternative manual schema uses lowercase names. Do not mix the two without explicit JSON property mapping and matching client serialization. Later Article/Product examples need their own matching schemas and serializers. Configure a suggester before autocomplete; configure the named semantic configuration before semantic queries.
+
+Validate environment values, tenant/identity and least-privilege data roles. Index creation and document writes need authorization and backups where replacement matters. Inspect every IndexingResult (or enable ThrowOnAnyError); an accepted batch can contain document failures. Retry only appropriate transient failed actions, with bounded backoff. Do not concatenate untrusted OData filters; use SearchFilter.Create for values. Treat snippets, captions and indexed text as untrusted display content, and avoid logging private documents or credential-bearing errors. No cloud or .NET runtime validation is included.

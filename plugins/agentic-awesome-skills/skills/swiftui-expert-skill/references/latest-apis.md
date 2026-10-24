@@ -1,8 +1,8 @@
 # Latest SwiftUI APIs Reference
 
-> Based on a comparison of Apple's documentation using the Sosumi MCP, we found the latest recommended APIs to use.
+> Historical SDK guidance. Verify availability and deprecation in the installed SDK; a replacement preference is not proof that the older API is deprecated.
 
-> This file lists *what* the modern replacements are. For *how to behave* when you find a soft-deprecated API — when to migrate, when to leave it alone, and the scoping rule for unrelated edits — see `references/soft-deprecation.md`. To refresh this list after a new SDK release, run the maintenance skill at `.agents/skills/update-swiftui-apis/SKILL.md`.
+> This file lists *what* the modern replacements are. For *how to behave* when you find a soft-deprecated API — when to migrate, when to leave it alone, and the scoping rule for unrelated edits — see `soft-deprecation.md`. The upstream updater is not bundled here; refresh against Apple documentation rather than assuming a local maintenance skill exists.
 
 ## Table of Contents
 - [Always Use (iOS 15+)](#always-use-ios-15)
@@ -15,7 +15,7 @@
 
 ## Always Use (iOS 15+)
 
-These APIs have been deprecated long enough that there is no reason to use the old variants.
+Use replacements only when the deployment target and installed toolchain support them. This section groups migration preferences, not APIs with one shared introduction or deprecation date.
 
 ### Compact Replacements
 
@@ -23,12 +23,12 @@ These replacements have minimal API shape changes. Most are near-direct swaps; a
 
 - **`navigationTitle(_:)`** instead of `navigationBarTitle(_:)`
 - **`toolbar { ToolbarItem(...) }`** instead of `navigationBarItems(...)` (structural change)
-- **`toolbarVisibility(.hidden, for: .navigationBar)`** instead of `navigationBarHidden(_:)`
+- **`toolbarVisibility(.hidden, for: .navigationBar)`** on iOS 18+; use `.toolbar(.hidden, for: .navigationBar)` on iOS 16–17 when migrating `navigationBarHidden(_:)`
 - **`statusBarHidden(_:)`** instead of `statusBar(hidden:)`
 - **`ignoresSafeArea(_:edges:)`** instead of `edgesIgnoringSafeArea(_:)`
 - **`preferredColorScheme(_:)`** instead of `colorScheme(_:)`
 - **`foregroundStyle(_:)`** instead of `foregroundColor(_:)` (e.g., `.foregroundStyle(.primary)`)
-- **`clipShape(.rect(cornerRadius:))`** instead of `cornerRadius()`
+- **`clipShape(RoundedRectangle(cornerRadius:))`** for older supported targets; `.rect(cornerRadius:)` shorthand requires its own SDK availability
 - **`textInputAutocapitalization(_:)`** instead of `autocapitalization(_:)` (note: `.never` replaces `.none`)
 - **`animation(_:value:)`** instead of `animation(_:)` (adds required `value:` parameter; back-deploys to iOS 13+)
 
@@ -128,7 +128,7 @@ Image("photo")
 
 ### Navigation
 
-**Use `NavigationStack` (or `NavigationSplitView`) instead of `NavigationView`.** Value-based `NavigationLink(value:)` with `.navigationDestination(for:)` replaces destination-based links.
+**Use `NavigationStack` (or `NavigationSplitView`) instead of `NavigationView`.** Value-based links support data-driven routing; destination-based links remain useful and are not universally deprecated.
 
 ```swift
 NavigationStack {
@@ -160,7 +160,7 @@ PasteButton(payloadType: String.self) { strings in
 
 ### State Management
 
-- **Prefer `@Observable` over `ObservableObject` for new code.** Use `@State` instead of `@StateObject`; use `@Bindable` instead of `@ObservedObject`. See `state-management.md` for full `@Observable` migration patterns.
+- **Prefer `@Observable` over `ObservableObject` for new code.** For an owned Observation model use `@State`; an injected model can be `let`, with `@Bindable` only when bindings are needed. ObservableObject wrappers remain valid for ObservableObject types. See `state-management.md` for full `@Observable` migration patterns.
 
 ### Events
 
@@ -384,18 +384,18 @@ struct Wedge: Shape {
 
 ### Presentations
 
-**Use `navigationZoomTransition` to morph sheets out of their source view.** Toolbar items and buttons can serve as the transition source.
+**Use the supported zoom navigation transition to morph a presentation from its source (check platform availability, iOS 18+).** Toolbar items and buttons can serve as the transition source.
 
 ```swift
 .toolbar {
     ToolbarItem {
         Button("Add", systemImage: "plus") { showSheet = true }
-            .navigationTransitionSource(id: "addSheet", namespace: namespace)
+            .matchedTransitionSource(id: "addSheet", in: namespace)
     }
 }
 .sheet(isPresented: $showSheet) {
     AddItemView()
-        .navigationTransitionDestination(id: "addSheet", namespace: namespace)
+        .navigationTransition(.zoom(sourceID: "addSheet", in: namespace))
 }
 ```
 
@@ -415,7 +415,7 @@ Button("Get Started") { }
 
 ```swift
 Button("Confirm") { }
-    .clipShape(.rect(cornerRadius: 12, style: .concentric))
+    .clipShape(ConcentricRectangle(corners: .concentric(minimum: 12), isUniform: true))
 ```
 
 **Sliders now support tick marks and a neutral value.**
@@ -451,6 +451,8 @@ var body: some View {
 **Use `WebView` to display web content.** For richer interaction, create a `WebPage` observable model.
 
 ```swift
+import WebKit
+
 // Simple URL display
 WebView(url: URL(string: "https://example.com")!)
 
@@ -492,11 +494,11 @@ PhotoGrid(photos: photos)
 
 ## Quick Lookup Table
 
-| Deprecated | Recommended | Since |
+| Older API / pattern (not all deprecated) | Alternative | Availability notes |
 |-----------|-------------|-------|
 | `navigationBarTitle(_:)` | `navigationTitle(_:)` | iOS 15+ |
 | `navigationBarItems(...)` | `toolbar { ToolbarItem(...) }` | iOS 15+ |
-| `navigationBarHidden(_:)` | `toolbarVisibility(.hidden, for: .navigationBar)` | iOS 15+ |
+| `navigationBarHidden(_:)` | `toolbarVisibility(.hidden, for: .navigationBar)` | iOS 18+ (`toolbar(.hidden, for:)` on iOS 16–17) |
 | `statusBar(hidden:)` | `statusBarHidden(_:)` | iOS 15+ |
 | `edgesIgnoringSafeArea(_:)` | `ignoresSafeArea(_:edges:)` | iOS 15+ |
 | `colorScheme(_:)` | `preferredColorScheme(_:)` | iOS 15+ |

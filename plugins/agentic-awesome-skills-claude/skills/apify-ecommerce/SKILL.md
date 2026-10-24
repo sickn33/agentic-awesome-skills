@@ -156,7 +156,7 @@ Add these fields to get AI-generated insights:
 > **Note:** The `sortReview: "Lowest rated"` option may not work consistently across all marketplaces. For quality analysis, collect a large sample and filter by rating in post-processing.
 
 ### Quality Analysis Tips
-- Set high `maxReviewResults` for statistical significance
+- Choose a bounded sampling plan; more reviews alone do not establish statistical significance or representative sentiment
 - Look for recurring keywords: "broke", "defect", "quality", "returned"
 - Filter results by rating if sorting doesn't work as expected
 - Cross-reference with competitor products for benchmarking
@@ -224,14 +224,14 @@ SKILL_PATH=~/.claude/skills/apify-ecommerce
 
 **Quick answer (display in chat):**
 ```bash
-node --env-file=~/.claude/.env $SKILL_PATH/reference/scripts/run_actor.js \
+node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
   --input 'JSON_INPUT'
 ```
 
 **CSV export:**
 ```bash
-node --env-file=~/.claude/.env $SKILL_PATH/reference/scripts/run_actor.js \
+node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_filename.csv \
@@ -240,7 +240,7 @@ node --env-file=~/.claude/.env $SKILL_PATH/reference/scripts/run_actor.js \
 
 **JSON export:**
 ```bash
-node --env-file=~/.claude/.env $SKILL_PATH/reference/scripts/run_actor.js \
+node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
   --input 'JSON_INPUT' \
   --output YYYY-MM-DD_filename.json \
@@ -255,7 +255,7 @@ Report:
 - Key insights based on workflow:
   - **Products:** Price range, outliers, MAP violations
   - **Reviews:** Average rating, sentiment trends, quality issues
-  - **Sellers:** Seller count, unauthorized sellers found
+  - **Sellers:** Seller count, seller candidates found; authorization requires separate brand/contract evidence
 
 ---
 
@@ -274,3 +274,5 @@ Report:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Running an Actor uploads inputs and incurs provider charges: confirm the exact reviewed Actor/build, allowed sites/data, result/charge budget and retention first. Inspect current input/output schema instead of assuming every listed marketplace is supported. This runner fetches at most 10,000 records in one response; it does not implement complete paginated export, and its five displayed records are only a preview. Exports preserve fetched field values and refuse overwrite; choose a new private path. Do not put sensitive Actor inputs in command arguments or public logs. A local wait timeout does not cancel or prove failure of the remote run; keep its run ID, inspect/reconcile status and do not start a duplicate. Unexpected HTTP failures after POST may also leave an existing billable run. See [Apify authentication](https://docs.apify.com/api/v2).

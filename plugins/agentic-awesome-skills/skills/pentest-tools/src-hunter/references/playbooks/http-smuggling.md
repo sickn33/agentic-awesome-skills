@@ -18,9 +18,11 @@ SRC 价值：成功的 desync = P1/P0（$2k–$10k+）。
 | **TE.CL** | Transfer-Encoding | Content-Length |
 | **TE.TE** | 都看，但前后处理混淆 | 同 |
 | **HTTP/2 → HTTP/1 desync** | h2 | h1 后端 |
-| **CL.0** | CL=0 后端忽略 | 后端读 body |
+| **CL.0** | 按 Content-Length 读取 body | 忽略 body（等效长度 0） |
 
 ---
+
+> 以下原始包与 Python 片段是协议示意，部分换行/长度尚未按字节构造，不能直接当可运行 PoC。必须保留 CRLF、按编码后字节数计算长度并验证连接复用；使用有界超时与完整收发处理。生产共享连接上的低速单请求也可能影响第三方，优先隔离实验室和项目明确批准的测试连接。
 
 ## 3. 探测手法
 
@@ -850,7 +852,7 @@ def cache_poison_via_smuggling(host, port):
     s.connect((host, port))
     s.send(payload.encode())
     resp = s.recv(4096)
-    print("[*] Cache poisoned")
+    print("[*] Probe sent; cache poisoning is not yet verified")
     print(resp.decode(errors="ignore")[:300])
     s.close()
 

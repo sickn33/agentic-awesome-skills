@@ -1,0 +1,130 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "product_direction": "Add a visible save-state label to the note editor header.",
+  "accountable_owner": "Product owner",
+  "stage": "prototype",
+  "actor_boundary": {
+    "target_population": [
+      "Workspace editors drafting internal notes"
+    ],
+    "operator": "Workspace editor",
+    "beneficiary": "Workspace editor",
+    "machine_actor": "Repository-aware coding agent",
+    "affected_people": [
+      "Workspace editors",
+      "Support team"
+    ],
+    "excluded_groups": [
+      "External collaborators",
+      "Public note viewers"
+    ]
+  },
+  "business_boundary": {
+    "product_organization": "Example Notes Co.",
+    "project_owner": "Editor experience team",
+    "issuer": "Example Notes Co.",
+    "customers": [
+      "Team workspace customers"
+    ],
+    "buyers": [
+      "Workspace admins"
+    ],
+    "operators": [
+      "Workspace editors"
+    ],
+    "partners": [
+      "Not applicable"
+    ],
+    "funders": [
+      "Not applicable"
+    ],
+    "platforms": [
+      "Web app"
+    ],
+    "regulators": [
+      "Not applicable"
+    ],
+    "externality_bearers": [
+      "Support team"
+    ],
+    "decision_authority": "Product owner",
+    "value_exchange": "Editors get clearer save-state feedback while the product may reduce avoidable support questions."
+  },
+  "human_judgment_boundary": {
+    "human_owned_decisions": [],
+    "machine_supported_inputs": [
+      "Support ticket pattern",
+      "Session replay observation"
+    ],
+    "not_mechanized": [],
+    "approval_gates": []
+  },
+  "unresolved_assumptions": [
+    "The confusion comes from unclear save-state feedback rather than a real save failure.",
+    "A header label is noticeable enough without changing the editor workflow."
+  ],
+  "execution_boundary": {
+    "may_do": [
+      "Add one visible save-state label to the existing note editor header.",
+      "Use the current save state already available to the editor UI.",
+      "Add or preserve a measurement hook that can compare exit hesitation and save-state support-tag volume."
+    ],
+    "must_not_do": [
+      "expand scope or execute external irreversible actions"
+    ],
+    "must_ask": [
+      "new stakeholder, data, risk, or scope appears"
+    ]
+  },
+  "problem_hypothesis": "Workspace editors hesitate before leaving the note editor because they cannot tell whether the current draft has been saved.",
+  "current_evidence": [
+    {
+      "evidence_id": "lc-support-save-state-001",
+      "source_id": "support-tag-editor-save-state-2026-07",
+      "source_type": "internal",
+      "raw_artifact_uri": "internal://support/tags/editor-save-state/2026-07",
+      "signal_type": "quote",
+      "signal": "Six support conversations in two weeks ask whether note edits were saved before closing the editor.",
+      "interpretation": "The uncertainty is visible enough to generate support contact.",
+      "decision_impact": "Supports a small reversible clarity change before deeper editor work.",
+      "evidence_tier": "t2",
+      "confidence_level": "medium",
+      "counter_signal": "The tickets do not prove data loss or quantify all editor sessions.",
+      "collected_at": "2026-07-09T12:00:00Z",
+      "source_last_verified_at": "2026-07-09T12:00:00Z",
+      "max_staleness_days": 30
+    },
+    {
+      "evidence_id": "lc-replay-exit-hesitation-001",
+      "source_id": "session-replay-note-editor-exit-2026-07",
+      "source_type": "workflow",
+      "raw_artifact_uri": "internal://replay/note-editor-exit-hesitation/2026-07",
+      "signal_type": "observed_behavior",
+      "signal": "Four of eight sampled editors pause near the close control after typing and before leaving the editor.",
+      "interpretation": "The hesitation aligns with the support pattern but is not yet a measured completion metric.",
+      "decision_impact": "Supports adding one visible save-state label and measuring whether exit hesitation falls.",
+      "evidence_tier": "t2",
+      "confidence_level": "medium",
+      "counter_signal": "The sample is small and may overrepresent uncertain sessions.",
+      "collected_at": "2026-07-09T13:00:00Z",
+      "source_last_verified_at": "2026-07-09T13:00:00Z",
+      "max_staleness_days": 30
+    }
+  ],
+  "business_goal": "Reduce avoidable save-state confusion without changing the editor workflow.",
+  "constraints": [
+    "Keep the change to the existing editor header.",
+    "Do not change persistence, permissions, notifications, or external delivery.",
+    "Preserve existing save behavior and rollback by removing the label."
+  ],
+  "proposed_next_step": "Run review live-coding-review-001 and, only on continue, hand off a context pack for the bounded label change.",
+  "known_risks": [
+    "The label could be missed if it is too subtle.",
+    "The label could imply stronger save guarantees than the product currently provides."
+  ]
+}

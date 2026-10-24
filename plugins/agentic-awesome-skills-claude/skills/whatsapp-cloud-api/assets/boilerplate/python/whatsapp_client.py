@@ -174,8 +174,8 @@ class WhatsAppClient:
 
     async def mark_as_read(self, message_id: str) -> None:
         """Mark a message as read (blue checkmarks)."""
-        async with httpx.AsyncClient() as client:
-            await client.post(
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=False) as client:
+            response = await client.post(
                 f"{GRAPH_API}/{self.phone_number_id}/messages",
                 json={
                     "messaging_product": "whatsapp",
@@ -185,35 +185,17 @@ class WhatsAppClient:
                 headers=self.headers,
             )
 
+            response.raise_for_status()
+
     async def _send_with_retry(self, payload: dict, max_retries: int = 3) -> dict:
         """Send message with exponential backoff retry."""
-        non_retryable_codes = {100, 131026, 131051, 132000, 132001, 132005, 133010}
-
-        for attempt in range(1, max_retries + 1):
-            try:
-                async with httpx.AsyncClient() as client:
-                    response = await client.post(
-                        f"{GRAPH_API}/{self.phone_number_id}/messages",
-                        json=payload,
-                        headers=self.headers,
-                    )
-                    response.raise_for_status()
-                    return response.json()
-            except httpx.HTTPStatusError as e:
-                error_data = e.response.json().get("error", {})
-                error_code = error_data.get("code", 0)
-                error_message = error_data.get("message", str(e))
-
-                if error_code in non_retryable_codes:
-                    raise RuntimeError(f"WhatsApp API Error {error_code}: {error_message}")
-
-                if attempt < max_retries:
-                    delay = 2**attempt
-                    await asyncio.sleep(delay)
-                    continue
-
-                raise RuntimeError(
-                    f"WhatsApp API Error after {max_retries} retries: {error_message}"
+        # A failed response can follow acceptance; retry only after reconciliation.
+        try:
+            async with httpx.AsyncClient(timeout=30.0, follow_redirects=False) as client:
+                response = await client.post(
+                    f"{GRAPH_API}/{self.phone_number_id}/messages", json=payload, headers=self.headers,
                 )
-
-        raise RuntimeError("Unexpected: retry loop exited without return or raise")
+                response.raise_for_status()
+                return response.json()
+        except (httpx.HTTPError, ValueError):
+            raise RuntimeError("WhatsApp send failed or outcome unknown; reconcile before retrying") from None

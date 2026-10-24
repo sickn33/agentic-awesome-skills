@@ -17,10 +17,10 @@ dotnet add package Azure.ResourceManager.MySql
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v1.2.0 (GA)  
+**Historical example baseline**: v1.2.0; verify current compatible packages/types
 **API Version**: 2023-12-30
 
-> **Note**: This skill focuses on MySQL Flexible Server. Single Server is deprecated and scheduled for retirement.
+> **Note**: This skill focuses on MySQL Flexible Server. Single Server is retired; use current Flexible Server migration guidance.
 
 ## Environment Variables
 
@@ -64,10 +64,14 @@ using System;
 using Azure.ResourceManager.MySql.FlexibleServers;
 using Azure.ResourceManager.MySql.FlexibleServers.Models;
 
-ResourceGroupResource resourceGroup = await client
-    .GetDefaultSubscriptionAsync()
-    .Result
-    .GetResourceGroupAsync("my-resource-group");
+using Azure.ResourceManager.Resources;
+using Azure.Core;
+using Azure;
+
+var subscriptionId = Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID")
+    ?? throw new InvalidOperationException("AZURE_SUBSCRIPTION_ID is required");
+var subscription = client.GetSubscriptionResource(new ResourceIdentifier($"/subscriptions/{subscriptionId}"));
+ResourceGroupResource resourceGroup = (await subscription.GetResourceGroupAsync("my-resource-group")).Value;
 
 MySqlFlexibleServerCollection servers = resourceGroup.GetMySqlFlexibleServers();
 
@@ -194,7 +198,7 @@ ArmOperation<MySqlFlexibleServerAadAdministratorResource> operation = await admi
 
 ```csharp
 // List servers in resource group
-await foreach (MySqlFlexibleServerResource server in resourceGroup.GetMySqlFlexibleServers())
+await foreach (MySqlFlexibleServerResource server in resourceGroup.GetMySqlFlexibleServers().GetAllAsync())
 {
     Console.WriteLine($"Server: {server.Data.Name}");
     Console.WriteLine($"  FQDN: {server.Data.FullyQualifiedDomainName}");
@@ -204,7 +208,7 @@ await foreach (MySqlFlexibleServerResource server in resourceGroup.GetMySqlFlexi
 }
 
 // List databases in server
-await foreach (MySqlFlexibleServerDatabaseResource db in server.GetMySqlFlexibleServerDatabases())
+await foreach (MySqlFlexibleServerDatabaseResource db in server.GetMySqlFlexibleServerDatabases().GetAllAsync())
 {
     Console.WriteLine($"Database: {db.Data.Name}");
 }
@@ -214,7 +218,7 @@ await foreach (MySqlFlexibleServerDatabaseResource db in server.GetMySqlFlexible
 
 ```csharp
 // List available backups
-await foreach (MySqlFlexibleServerBackupResource backup in server.GetMySqlFlexibleServerBackups())
+await foreach (MySqlFlexibleServerBackupResource backup in server.GetMySqlFlexibleServerBackups().GetAllAsync())
 {
     Console.WriteLine($"Backup: {backup.Data.Name}");
     Console.WriteLine($"  Type: {backup.Data.BackupType}");
@@ -340,7 +344,7 @@ try
 }
 catch (RequestFailedException ex) when (ex.Status == 409)
 {
-    Console.WriteLine("Server already exists");
+    Console.WriteLine("Conflict; inspect provider code and current operation state");
 }
 catch (RequestFailedException ex) when (ex.Status == 400)
 {
@@ -361,8 +365,8 @@ After creating the server, connect using:
 string connectionString = $"Server={server.Data.FullyQualifiedDomainName};" +
     "Database=myappdb;" +
     "User Id=mysqladmin;" +
-    "Password=YourSecurePassword123!;" +
-    "SslMode=Required;";
+     $"Password={Environment.GetEnvironmentVariable("MYSQL_ADMIN_PASSWORD")};" +
+    "SslMode=VerifyFull;";
 
 // With Entra ID token (recommended)
 var credential = new DefaultAzureCredential();
@@ -373,7 +377,7 @@ string connectionString = $"Server={server.Data.FullyQualifiedDomainName};" +
     "Database=myappdb;" +
     $"User Id=aad-admin@contoso.com;" +
     $"Password={token.Token};" +
-    "SslMode=Required;";
+    "SslMode=VerifyFull;";
 ```
 
 ## Related SDKs
@@ -400,3 +404,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These are independent historical snippets, not compiled deployment templates. Verify generated types/SKUs/zones/API versions, add omitted imports and use a connector connection-string builder to escape passwords/tokens correctly. Refresh Entra tokens on new pooled connections rather than reusing an expired token. Management credentials do not automatically grant database login. Public firewall rules must use actual public egress addresses;10.x ranges do not establish private networking. The0.0.0.0 Azure-services rule is broad across Azure tenants and requires explicit scope. Stopping may retain storage charges and auto-restart under service limits. Restore creates a new endpoint, scale/restart may interrupt service and auto-grow is not a capacity guarantee. Deletion requires explicit target/backup recovery scope.

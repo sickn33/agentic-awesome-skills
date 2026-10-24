@@ -64,7 +64,10 @@ function pkgRoot(specifier) {
   if (!specifier) return null;
   if (specifier.startsWith('.')) return specifier;
   const m = specifier.match(PKG_ROOT_RE);
-  return m ? m[1] : null;
+  const root = m?.[1];
+  // Never render an import string containing shell metacharacters as an install command.
+  return root && /^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/i.test(root)
+    ? root : null;
 }
 
 function extractCodeBlocks(text) {

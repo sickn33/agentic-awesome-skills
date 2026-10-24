@@ -35,8 +35,8 @@ _data_directory = os.environ.get("AGENT_ORCHESTRATOR_DATA_DIR")
 if not _data_directory or not Path(_data_directory).is_absolute():
     raise ValueError("Set AGENT_ORCHESTRATOR_DATA_DIR to an authorized absolute storage directory")
 DATA_DIR = Path(_data_directory)
-if DATA_DIR.is_symlink():
-    raise ValueError("Storage directory must not be a symlink")
+if any(path.is_symlink() for path in [DATA_DIR, *DATA_DIR.parents]):
+    raise ValueError("Storage directory and ancestors must not be symlinks")
 REGISTRY_PATH = DATA_DIR / "registry.json"
 PROJECTS_PATH = DATA_DIR / "projects.json"
 SCAN_SCRIPT = _SCRIPT_DIR / "scan_registry.py"
@@ -142,6 +142,8 @@ def ensure_registry():
 
 def load_registry() -> list[dict]:
     ensure_registry()
+    if REGISTRY_PATH.stat().st_size > 16 * 1024 * 1024:
+        raise ValueError("Registry exceeds 16 MiB")
     data = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or not isinstance(data.get("skills"), list):
         raise ValueError("Malformed registry")

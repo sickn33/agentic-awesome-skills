@@ -90,7 +90,8 @@ export async function middleware(request: NextRequest) {
   // Conservative shared bucket until an authenticated principal or a platform-verified
   // client address adapter is integrated. Never trust a caller-supplied forwarding header.
   const identifier = "anonymous-global";
-  const { success, limit, remaining, reset } = await ratelimit.limit(identifier);
+  const { success, limit, remaining, reset, pending } = await ratelimit.limit(identifier);
+  await pending; // Or pass to the deployment platform’s verified waitUntil API.
 
   if (!success) {
     return new NextResponse("Too Many Requests", {
@@ -99,7 +100,7 @@ export async function middleware(request: NextRequest) {
         "X-RateLimit-Limit": String(limit),
         "X-RateLimit-Remaining": String(remaining),
         "X-RateLimit-Reset": String(reset),
-        "Retry-After": String(Math.ceil((reset - Date.now()) / 1000)),
+        "Retry-After": String(Math.max(0, Math.ceil((reset - Date.now()) / 1000))),
       },
     });
   }
@@ -159,6 +160,8 @@ const { success } = await limiters[plan].limit(apiKey);
   expert review.
 
 ## Security & Safety Notes
+
+Use a server-verified plan and identifier; do not send raw API keys as Redis identifiers. Hash a stable key identifier where appropriate, review analytics disclosure/retention and choose an explicit timeout/error policy for security-sensitive endpoints rather than assuming fail-open is acceptable.
 
 - Rate limiting is one layer of abuse protection, not authentication. Pair it
   with auth and input validation.

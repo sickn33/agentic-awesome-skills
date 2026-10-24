@@ -24,7 +24,7 @@ To support the rendering modes, SF Symbols organizes a symbol’s paths into dis
 
 ![An image of the cloud sun rain fill symbol. The sun is black and the raindrops and cloud are gray to indicate that the sun is in the secondary layer.](https://docs-assets.developer.apple.com/published/9acc461ef73c512ab21e4713fcdc75a3/sf-three-layers-secondary%402x.png)Secondary
 
-![An image of the cloud sun rain fill symbol. The raindrops are black and the sun and cloud are gray to indicate that the raindrops are in the primary layer.](https://docs-assets.developer.apple.com/published/f2ec783b9aedc7f59c3485efb83fbb94/sf-three-layers-tertiary%402x.png)Tertiary
+![An image of the cloud sun rain fill symbol. The raindrops are black and the sun and cloud are gray to indicate that the raindrops are in the tertiary layer.](https://docs-assets.developer.apple.com/published/f2ec783b9aedc7f59c3485efb83fbb94/sf-three-layers-tertiary%402x.png)Tertiary
 
 Depending on the rendering mode you choose, a symbol can produce various appearances. For example, Hierarchical rendering mode assigns a different opacity of a single color to each layer, creating a visual hierarchy that gives depth to the symbol.
 
@@ -308,3 +308,5 @@ June 10, 2024| Updated with guidance for new animations and features of SF Symbo
 June 5, 2023| Added a new section on animations. Included animation guidance for custom symbols.  
 September 14, 2022| Added a new section on variable color. Removed instructions on creating custom symbol paths, exporting templates, and layering paths, deferring to developer articles that cover these topics.  
   
+
+Review clarification: Image.renderingMode controls template/original rendering, while symbolRenderingMode selects monochrome/hierarchical/palette/multicolor symbol rendering. Check per-symbol and per-effect OS availability rather than assuming every effect behaves identically on all symbols. Use meaningful accessible names without announcing decorative duplicates.

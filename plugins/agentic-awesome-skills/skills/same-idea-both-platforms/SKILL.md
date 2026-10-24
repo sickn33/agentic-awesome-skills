@@ -23,6 +23,8 @@ reads as a fragment.
 
 The idea travels. The writing does not.
 
+Preserve evidence, attribution and meaningful uncertainty in both drafts. Compression must not turn an estimate into a fact or invent personal experience, metrics or outcomes. Platform style descriptions are creative defaults, not universal audience behavior.
+
 ## When to Use
 
 - Use when someone wants to post the same thing on both Twitter/X and LinkedIn.

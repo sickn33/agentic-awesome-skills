@@ -37,15 +37,15 @@ uv run {baseDir}/ct_analyzer/analyzer.py --json crypto.py
 | INPLACE_FLOOR_DIVIDE | Variable-time execution |
 | INPLACE_MODULO | Variable-time execution |
 
-**Python 3.11+:**
+**CPython 3.11 baseline (check `dis` for the exact target release; opcode arguments are implementation details):**
 
 | BINARY_OP Oparg | Operation | Issue |
 |-----------------|-----------|-------|
 | 11 | `/` | Variable-time execution |
-| 12 | `//` | Variable-time execution |
+| 2 | `//` | Variable-time execution |
 | 6 | `%` | Variable-time execution |
 | 24 | `/=` | Variable-time execution |
-| 25 | `//=` | Variable-time execution |
+| 15 | `//=` | Variable-time execution |
 | 19 | `%=` | Variable-time execution |
 
 ### Functions (Errors)
@@ -114,19 +114,7 @@ random_index = secrets.randbelow(len(items))
 
 ### Division Operations
 
-```python
-# VULNERABLE: Division has variable timing
-quotient = secret // divisor
-
-# SAFE: Barrett reduction for constant divisors
-# Precompute: mu = (1 << (2 * BITS)) // divisor
-def barrett_reduce(value: int, divisor: int, mu: int, bits: int) -> int:
-    q = (value * mu) >> (2 * bits)
-    r = value - q * divisor
-    # Constant-time correction
-    mask = -(r >= divisor)
-    return r - (divisor & mask)
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ## Python Version Notes
 
@@ -136,7 +124,7 @@ Python 3.11 introduced the `BINARY_OP` bytecode that replaces individual binary 
 
 ```
 BINARY_OP               11 (/)    # True division
-BINARY_OP               12 (//)   # Floor division
+BINARY_OP                2 (//)   # Floor division
 BINARY_OP                6 (%)    # Modulo
 ```
 
@@ -154,10 +142,10 @@ BINARY_MODULO
 When using the `cryptography` library:
 
 ```python
-# The cryptography library handles constant-time internally
+# Use the library primitive within its documented contract; this is not whole-program timing proof
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
-# SAFE: Library handles timing protection
+# Never reuse a nonce with the same AES-GCM key
 aesgcm = AESGCM(key)
 ciphertext = aesgcm.encrypt(nonce, plaintext, associated_data)
 ```

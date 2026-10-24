@@ -42,3 +42,5 @@ function Profile({ user, loading }: Props) {
 ```
 
 **Note:** If your project has [React Compiler](https://react.dev/learn/react-compiler) enabled, manual memoization with `memo()` and `useMemo()` is not necessary. The compiler automatically optimizes re-renders.
+
+React Compiler can reduce manual memoization when enabled and applicable; profile the compiled application rather than assuming every component is optimized.

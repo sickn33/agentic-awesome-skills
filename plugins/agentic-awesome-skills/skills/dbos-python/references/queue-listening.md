@@ -48,6 +48,9 @@ if __name__ == "__main__":
     elif worker_type == "cpu":
         DBOS.listen_queues([cpu_queue])
 
+    else:
+        raise ValueError("WORKER_TYPE must be cpu or gpu")
+
     DBOS.launch()
 ```
 

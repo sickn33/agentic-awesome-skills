@@ -50,11 +50,10 @@ gcloud secrets create db-password \
   --labels="env=production,team=platform"
 
 # Add the secret value (first version)
-echo -n "S3cur3P@ssw0rd!" | gcloud secrets versions add db-password --data-file=-
+gcloud secrets versions add db-password --data-file="/private/approved-secret-input"
 
 # Create secret with value in one command
-echo -n '{"username":"dbadmin","password":"S3cur3P@ss!","host":"10.0.1.5","port":5432}' | \
-  gcloud secrets create db-credentials --data-file=- \
+gcloud secrets create db-credentials --data-file="/private/approved-credentials-input" \
   --replication-policy="automatic" \
   --labels="env=production,team=platform"
 
@@ -70,13 +69,13 @@ gcloud secrets create sensitive-secret \
   --kms-key-name="projects/my-project/locations/us-central1/keyRings/my-ring/cryptoKeys/my-key"
 
 # Access the latest version
-gcloud secrets versions access latest --secret=db-password
+gcloud secrets versions access latest --secret=db-password --out-file="/private/new-secret-output"
 
 # Access a specific version
-gcloud secrets versions access 3 --secret=db-password
+gcloud secrets versions access 3 --secret=db-password --out-file="/private/new-version-output"
 
 # Add a new version (rotation)
-echo -n "N3wS3cur3P@ss!" | gcloud secrets versions add db-password --data-file=-
+gcloud secrets versions add db-password --data-file="/private/approved-new-secret-input"
 
 # List all secrets
 gcloud secrets list --format="table(name, createTime, labels)"
@@ -109,7 +108,7 @@ gcloud secrets update db-password \
   --update-labels="rotation=enabled,last-rotated=2025-01-15"
 
 # Add version aliases
-gcloud secrets versions update 5 --secret=db-password --set-aliases="production"
+gcloud secrets update db-password --update-version-aliases="production=5"
 ```
 
 ## IAM Bindings
@@ -120,11 +119,8 @@ gcloud secrets add-iam-policy-binding db-password \
   --member="serviceAccount:myapp-sa@my-project.iam.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 
-# Grant access to a specific secret version
-gcloud secrets add-iam-policy-binding db-password \
-  --member="serviceAccount:myapp-sa@my-project.iam.gserviceaccount.com" \
-  --role="roles/secretmanager.secretVersionAccessor" \
-  --condition='expression=resource.name.endsWith("versions/latest"),title=latest-only'
+# IAM secretAccessor is granted at the secret level, not a fictitious secretVersionAccessor role.
+# Separate secrets if different values need different reader permissions.
 
 # Grant admin to security team
 gcloud secrets add-iam-policy-binding db-password \
@@ -261,7 +257,7 @@ def get_secret(project_id: str, secret_id: str, version: str = "latest") -> str:
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version}"
 
     try:
-        response = client.access_secret_version(request={"name": name})
+        response = client.access_secret_version(request={"name": name}, timeout=10)
         return response.payload.data.decode("UTF-8")
     except exceptions.NotFound:
         raise ValueError(f"Secret {secret_id} version {version} not found")
@@ -317,12 +313,9 @@ def list_secrets(project_id: str, filter_str: str = "") -> list:
         })
     return secrets
 
-# Usage
+# Usage: pass validated fields directly to the database driver's keyword arguments,
+# with TLS hostname verification. Do not concatenate credentials into a logged URI.
 creds = get_json_secret("my-project", "db-credentials")
-connection_string = (
-    f"postgresql://{creds['username']}:{creds['password']}"
-    f"@{creds['host']}:{creds['port']}/mydb"
-)
 ```
 
 ### Go
@@ -334,13 +327,15 @@ import (
     "context"
     "fmt"
     "log"
+    "time"
 
     secretmanager "cloud.google.com/go/secretmanager/apiv1"
     secretmanagerpb "cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 )
 
 func getSecret(projectID, secretID, version string) (string, error) {
-    ctx := context.Background()
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
     client, err := secretmanager.NewClient(ctx)
     if err != nil {
         return "", fmt.Errorf("failed to create client: %w", err)
@@ -363,7 +358,8 @@ func main() {
     if err != nil {
         log.Fatalf("Error: %v", err)
     }
-    fmt.Printf("Secret: %s\n", secret)
+    _ = secret // Pass directly to the authorized consumer; never print the payload.
+    fmt.Println("Secret retrieved")
 }
 ```
 
@@ -382,10 +378,10 @@ async function getSecret(projectId, secretId, version = 'latest') {
 
 async function main() {
   const password = await getSecret('my-project', 'db-password');
-  console.log(`Secret retrieved, length: ${password.length}`);
+  console.log("Secret retrieved"); // Do not disclose payload or length
 }
 
-main().catch(console.error);
+main().catch(() => { console.error("Secret access failed"); process.exitCode = 1; });
 ```
 
 
@@ -419,3 +415,9 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+## Operational boundaries
+
+Use explicit project/region and verify active identity before mutation. Admin is not a reader prerequisite; choose the minimum task-specific permissions. Private input/output paths are placeholders, not bundled files: create new protected files under restrictive umask, never log content and clean up after use. Pin production numeric versions and roll out gradually; latest can change immediately. User-managed replication locations describe a globally named replicated secret, distinct from the regional-secret API. CSI manifest is the open-source driver/provider path and needs compatible installed CRDs, provider and sync support; do not mix it with the managed GKE add-on schema. Syncing to Kubernetes Secrets creates another sensitive copy; env vars do not automatically refresh on rotation. Node pools may need Workload Identity metadata configuration as well as cluster configuration.
+
+Destroy/delete/expiration can break consumers or remove recovery options; confirm exact versions and retention policy. Adding a version does not update a database password or revoke an old credential. SDK samples omit CRC32C verification and complete retry/transaction/recovery handling; implement integrity verification using the official sample and avoid logging errors that reveal values. Terraform secret_data can persist in state despite sensitive variables, so protect state and access.

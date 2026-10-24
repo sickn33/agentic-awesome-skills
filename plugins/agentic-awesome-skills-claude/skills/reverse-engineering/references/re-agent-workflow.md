@@ -1,7 +1,7 @@
 # RE Agent 工作流门闩（静态↔动态）
 
-> 来源启发：binary-re 阶段划分、社区 RE skill（Frida/r2/Ghidra/IDA 循环）、Cerberus 三头环（静/动/插桩）  
-> Issue #65 增量：IAT 修复铁律、六阶段映射、.NET/DLL·SYS 等价路径；用户指令可行性门闩；旁路补丁 6–10；反调试/混淆菜谱 A–T；非 PE 多格式菜谱 U–AV（2026-08-12）  
+> 来源启发：binary-re 阶段划分、社区 RE skill（Frida/r2/Ghidra/IDA 循环）、Cerberus 三头环（静/动/插桩）
+> Issue #65 增量：IAT 修复铁律、六阶段映射、.NET/DLL·SYS 等价路径；用户指令可行性门闩；旁路补丁 6–10；反调试/混淆菜谱 A–T；非 PE 多格式菜谱 U–AV（2026-08-12）
 > 适用：`reverse-engineering/`、`ida-reverse/`、`radare2/`、`malware-analysis/`、与 cre 角色交接
 
 ## 0. 启动
@@ -111,7 +111,7 @@
 □ 硬编码域名/IP/URL 字符串；资源节是否藏 Payload
 □ 定位关键函数（加密/校验/网络/授权）→ 地址/符号写入 Evidence
 □ 一条路不通 → 换工具（IDA↔r2↔Ghidra）
-□ 时间盒（补丁 9 · SHOULD 默认）：静态深挖约 15 分钟仍无关键路径 → 强制转入 §3 Dynamic（用户/任务可覆盖时长）
+□ 时间盒（补丁 9 · SHOULD 默认）：静态深挖约 15 分钟仍无关键路径 → 重新评估是否需要且获准进入 §3 Dynamic；否则记录静态限制（用户/任务可覆盖时长）
 ```
 
 **无 MCP 时**：可用导出反编译文本再分析（对照 P4nda0s reverse-skills / IDA-NO-MCP 思路），仍写 Evidence 路径。
@@ -145,7 +145,7 @@
 ```text
 无行为或立刻退出 / 无限休眠
   → 检查反调试 / 反虚拟机例程（CPUID、高精度计时、沙箱特征等）
-  → 尝试硬件断点绕过、修补检测点、或换物理机/更高保真环境
+  → 尝试硬件断点绕过、修补检测点、或换专用可还原隔离实验环境；不得转移到日常物理主机
   → 将「无行为 + 疑似 anti-VM」写入 Evidence，禁止写成「样本无害」而不加条件
 ```
 
@@ -160,7 +160,7 @@
 
 ### 3.3 反调试 / 混淆旁路速查（Issue #65 补丁 A–T · 高频）
 
-完整索引与动作细节见 `reverse-engineering/anti-analysis.md`「Agent 响应菜谱 A–T」。此处只列 **P0 必查 + 常见转场**。默认 **授权隔离 lab**；patch/改标志位不是未授权生产动作。
+完整索引与动作细节见 `reverse-engineering/anti-analysis.md`「Agent 响应菜谱 A–T」。此处只列 **P0 必查 + 常见转场**。需要确认 **授权隔离 lab**；patch/改标志位不是未授权生产动作。
 
 | 触发特征 | 首选动作（摘要） | Evidence |
 |----------|------------------|----------|
@@ -206,9 +206,9 @@
 
 ### Decision quality overlay (Issue #77)
 
-Before closing Synthesis, apply [analysis-decision-framework.md](../../ops/analysis-decision-framework.md) **P0 checklist**: R41 grounded claims, R4* validated sufficiency, R1 confidence->dynamic, R2 hypothesis exit, R43 deadlock replan (under feasibility gate), R8/R23 no default malice/IOC. Multi-module -> R50; anti-analysis effort -> R51 + A-T cookbook.
+The upstream analysis-decision-framework.md is not bundled; use the following explicit local reporting principles: R41 grounded claims, R4* validated sufficiency, R1 confidence->dynamic, R2 hypothesis exit, R43 deadlock replan (under feasibility gate), R8/R23 no default malice/IOC. Multi-module -> R50; anti-analysis effort -> R51 + A-T cookbook.
 
-Blindspots (Rust/Go/VMP/injection/OLE/PDF/agent-meta): [analysis-blindspot-cookbook.md](../../ops/analysis-blindspot-cookbook.md) R52-R81 — detection-oriented; not a parallel master flow.
+Blindspots (Rust/Go/VMP/injection/OLE/PDF/agent-meta): upstream analysis-blindspot-cookbook.md (not bundled) R52-R81 — detection-oriented; not a parallel master flow.
 
 
 
@@ -234,7 +234,10 @@ Blindspots (Rust/Go/VMP/injection/OLE/PDF/agent-meta): [analysis-blindspot-cookb
 
 ## 6. 与「堆 RE skill 插件」的差异
 
-- 本包用 **阶段门闩 + tool-index**，不默认启用 Hex-Rays「unsafe 全自动执行」类插件  
-- 动态插桩默认 **offline/lab** network_profile  
-- IAT/导入表：**尝试 + 记录** 优先于「无限静态死磕」或「静默跳过」  
+- 本包用 **阶段门闩 + tool-index**，不默认启用 Hex-Rays「unsafe 全自动执行」类插件
+- 动态插桩实际确认 **offline/lab** network profile
+- IAT/导入表：**尝试 + 记录** 优先于「无限静态死磕」或「静默跳过」
 - 用户指令：**目标优先 + 前提协商**，禁止用无关步骤冒充被点名步骤
+## Local contract and stopping conditions
+
+Upstream role-map, ops checklists, tool-index, field-journal and other skill modules may not exist in this installation. Discover available paths; do not claim nonexistent dependencies were read. Timers, IAT failures and absent behavior do not authorize dynamic execution or network access. Preserve the user’s requested scope and report inconclusive static results truthfully; ask only when missing authorization or a consequential prerequisite changes the permitted action. API combinations are capability hypotheses, not a malice verdict. Kernel, browser, emulator and unknown sample work remains subject to the root SKILL gate.

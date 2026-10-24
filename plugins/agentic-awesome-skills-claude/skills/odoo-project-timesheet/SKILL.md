@@ -29,24 +29,9 @@ This skill helps you configure Odoo Project and Timesheets for service businesse
 
 ### Example 1: Create a Billable Project
 
-```text
-Menu: Project → New Project (or the "+" button in Project view)
+Confirm Odoo version, edition, installed Sales/Project/Timesheets apps and billing permissions first. For Odoo 19, configure a service product with **Invoicing Policy: Based on Timesheets** and **Create on Order: Project & Task** (or a task in an existing project). Add it to a quotation for Acme, check the hourly unit and agreed $150 rate, then confirm the order only within authorized scope. Check that its task is linked to the intended sales order item.
 
-Name:     Website Redesign — Acme Corp
-Customer: Acme Corporation
-Billable: YES  (toggle ON)
-
-Settings tab:
-  Billing Type: Based on Timesheets (Time & Materials)
-  Service Product: Consulting Hours ($150/hr)
-  ☑ Timesheets
-  ☑ Task Dependencies
-  ☑ Subtasks
-
-Budget:
-  Planned Hours: 120 hours
-  Budget Alert: at 80% (96 hrs) → notify project manager
-```
+Treat 120 planned hours and a notification at 96 hours as business requirements. Verify whether the installed version supports the desired alert; do not assume an automatic 80% budget-alert field exists.
 
 ### Example 2: Log Time on a Task
 
@@ -55,7 +40,7 @@ Method A — Directly inside the Task (recommended for accuracy):
   Open Task → Timesheets tab → Add a Line
   Employee:    John Doe
   Date:        Today
-  Description: "Initial wireframes and site map" (required for clear invoices)
+  Description: "Initial wireframes and site map" (recommended for clear invoices; not necessarily a required field)
   Duration:    3:30  (3 hours 30 minutes)
 
 Method B — Timesheets app (for end-of-day bulk entry):
@@ -67,43 +52,18 @@ Method B — Timesheets app (for end-of-day bulk entry):
 
 ### Example 3: Enable Timesheet Approval Before Invoicing
 
-```text
-Menu: Timesheets → Configuration → Settings
-  ☑ Timesheet Approval  (employees submit; managers approve)
-
-Approval flow:
-  1. Employee submits timesheet at week/month end
-  2. Manager reviews: Timesheets → Managers → Timesheets to Approve
-  3. Manager clicks "Approve" → entries are locked and billable
-  4. Only approved entries flow into the invoice
-
-If Approval is disabled, all logged hours are immediately billable.
-```
+Validation and invoice eligibility are separate settings. Where supported, configure the invoicing policy to include **only validated timesheets**; enabling a review workflow alone does not prove this. In a test database, record two entries, validate one, and check that the draft invoice excludes the other. Review the installed version's fixes and access rights before relying on locking behavior.
 
 ### Example 4: Invoice from Timesheets
 
-```text
-Step 1: Verify approved hours
-  Menu: Timesheets → Managers → All Timesheets
-  Filter: Billable = YES, Timesheet Invoice State = "To Invoice"
+Return to the linked sales order and reconcile its Delivered hours with eligible entries. Choose **Create Invoice → Regular invoice → Create Draft Invoice**. Check quantity, hourly rate, taxes, customer and included entries. Posting or sending requires billing authorization.
 
-Step 2: Generate Invoice
-  Menu: Sales → Orders → To Invoice → Timesheets  (v15/v16)
-  or:   Accounting → Customers → Invoiceable Time  (v17)
-  Filter by Customer: Acme Corporation
-  Select entries → Create Invoices
-
-Step 3: Invoice pre-populates with:
-  Product: Consulting Hours
-  Quantity: Sum of approved hours
-  Unit Price: $150.00
-  Total: Calculated automatically
-```
+See the [Odoo 19 time-and-materials guide](https://www.odoo.com/documentation/19.0/applications/sales/sales/invoicing/time_materials.html) and [Odoo's validated-timesheet correction](https://mergebot.odoo.com/odoo/odoo/pull/261524).
 
 ## Best Practices
 
-- ✅ **Do:** Enable **Timesheet Approval** so only manager-approved hours appear on customer invoices.
-- ✅ **Do:** Set a **budget alert** at 80% of planned hours so PMs can intervene before overruns.
+- ✅ **Do:** Verify the **only validated timesheets** invoicing setting and test exclusion of unvalidated hours before billing.
+- ✅ **Do:** Agree an overrun threshold and verify a supported notification mechanism in the installed version.
 - ✅ **Do:** Require **timesheet descriptions** — vague entries like "Work done" on invoices destroy client trust.
 - ✅ **Do:** Use **Subtasks** to break work into granular pieces while keeping the parent task on the Kanban board.
 - ❌ **Don't:** Mix billable and internal projects without tagging — it corrupts profitability and utilization reports.

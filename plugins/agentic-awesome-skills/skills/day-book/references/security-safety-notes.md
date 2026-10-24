@@ -16,4 +16,4 @@
   on.
 
 
-See the [Common Pitfalls](references/common-pitfalls.md) reference for the full guidance.
+See the [Common Pitfalls](common-pitfalls.md) reference for the full guidance.

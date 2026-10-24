@@ -1,7 +1,7 @@
 ---
 name: macos-spm-app-packaging
 description: Scaffold, build, sign, and package SwiftPM macOS apps without Xcode projects.
-risk: safe
+risk: critical
 source: "Dimillian/Skills (MIT)"
 date_added: "2026-03-25"
 ---
@@ -16,6 +16,10 @@ Bootstrap a complete SwiftPM macOS app folder, then build, package, and run it w
 - When you need packaging, signing, notarization, or appcast guidance for a SwiftPM app.
 
 ## Two-Step Workflow
+
+The templates mutate build folders, launch/terminate apps, access the keychain and may upload signed archives to Apple; release/tag publication is separate authorization. Scripts are tracked as regular non-executable templates: inspect/copy only to an approved new project and set executable bits there. Pin the required Swift/Xcode tools; “without Xcode projects” does not mean every optional tool works without Xcode. Universal main binaries do not prove embedded frameworks contain both architectures; verify all code/resources and entitlements. A process being alive is not a functional app test. Never use broad process-name matching against unrelated applications.
+
+AAS review 2026-10-23: script and example corrections are local adaptations; original source attribution is retained.
 1) Bootstrap the project folder
    - Copy `assets/templates/bootstrap/` into a new repo.
    - Rename `MyApp` in `Package.swift`, `Sources/MyApp/`, and `version.env`.
@@ -33,13 +37,16 @@ Bootstrap a complete SwiftPM macOS app folder, then build, package, and run it w
 Shortest path from bootstrap to a running app:
 ```bash
 # 1. Copy and rename the skeleton
-cp -R assets/templates/bootstrap/ ~/Projects/MyApp
+SKILL_ROOT=/absolute/path/to/this/skill
+cp -R "$SKILL_ROOT/assets/templates/bootstrap/" ~/Projects/MyApp
 cd ~/Projects/MyApp
-sed -i '' 's/MyApp/HelloApp/g' Package.swift version.env
+sed -i '' 's/MyApp/HelloApp/g' Package.swift
+mv Sources/MyApp Sources/HelloApp
+export APP_NAME=HelloApp BUNDLE_ID=com.example.helloapp
 
 # 2. Copy scripts
-cp assets/templates/package_app.sh Scripts/
-cp assets/templates/compile_and_run.sh Scripts/
+mkdir -p Scripts
+cp "$SKILL_ROOT/assets/templates/"*.sh Scripts/
 chmod +x Scripts/*.sh
 
 # 3. Build and launch
@@ -53,28 +60,28 @@ Run these after key steps to catch failures early before proceeding to the next 
 **After packaging (`Scripts/package_app.sh`):**
 ```bash
 # Confirm .app bundle structure is intact
-ls -R build/HelloApp.app/Contents
+ls -R HelloApp.app/Contents
 
 # Check that the binary is present and executable
-file build/HelloApp.app/Contents/MacOS/HelloApp
+file HelloApp.app/Contents/MacOS/HelloApp
 ```
 
 **After signing (`Scripts/sign-and-notarize.sh` or ad-hoc dev signing):**
 ```bash
 # Inspect signature and entitlements
-codesign -dv --verbose=4 build/HelloApp.app
+codesign -dv --verbose=4 HelloApp.app
 
 # Verify the bundle passes Gatekeeper checks locally
-spctl --assess --type execute --verbose build/HelloApp.app
+spctl --assess --type execute --verbose HelloApp.app
 ```
 
 **After notarization and stapling:**
 ```bash
 # Confirm the staple ticket is attached
-stapler validate build/HelloApp.app
+stapler validate HelloApp.app
 
 # Re-run Gatekeeper to confirm notarization is recognised
-spctl --assess --type execute --verbose build/HelloApp.app
+spctl --assess --type execute --verbose HelloApp.app
 ```
 
 ## Common Notarization Failures

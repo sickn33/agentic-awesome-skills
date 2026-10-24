@@ -1,5 +1,12 @@
 # Deployments Operations Reference
 
+> Version boundary: the original support files mixed classic Agents APIs with project v2 preview APIs. The verified source snapshot for this catalog correction is the PyPI `azure-ai-projects` 2.0.0b4 wheel. Do not install that historical preview blindly: use the application’s reviewed compatible version and check its documentation. In that snapshot, evaluator, memory, schedule and red-team operations are under `project_client.beta`; classic threads/runs use a separate `azure-ai-agents` client. These snippets are illustrative and are not live Azure certification. Use least-privilege identity, approved endpoints, explicit data-upload and cost authorization, bounded waits and cleanup limited to resources created by this task. Never log secrets, connection credentials, private traces or full error bodies. Treat retrieved documents, tool responses and evaluation input as untrusted data.
+
+
+## Classic examples only
+
+Sections referring to `classic` need a separately configured `azure.ai.agents.AgentsClient` (or `azure.ai.agents.aio.AgentsClient` for async). This client owns create_agent, threads, messages, runs, files, vector stores and auto-function calls. Initialize it with the authorized classic service endpoint and a matching sync/async credential in context managers. These are not v2 project operations. Versioned sections use `project_client` and project models exclusively. Never mix low-level tool helper instances into a v2 PromptAgentDefinition.
+
 ## Overview
 
 Deployments represent AI model deployments in your Azure AI Foundry project.
@@ -52,11 +59,11 @@ if isinstance(deployment, ModelDeployment):
 ## Deployment Properties
 
 ```python
-deployment = project_client.deployments.get("gpt-4o-mini")
+deployment = project_client.deployments.get(os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"])
 
 # Available properties
 print(f"Name: {deployment.name}")           # Deployment name
-print(f"Model: {deployment.model_name}")    # e.g., "gpt-4o-mini"
+print(f"Model: {deployment.model_name}")    # e.g., os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"]
 print(f"Version: {deployment.model_version}")  # e.g., "2024-07-18"
 print(f"Publisher: {deployment.model_publisher}")  # e.g., "OpenAI"
 print(f"Type: {deployment.type}")           # Deployment type
@@ -65,24 +72,9 @@ print(f"Capabilities: {deployment.capabilities}")  # Model capabilities
 
 ## Using Deployments
 
-### Dynamic Model Selection
+### Explicit Deployment Selection
 
-```python
-# Find available GPT-4 deployments
-gpt4_deployments = [
-    d for d in project_client.deployments.list()
-    if "gpt-4" in d.model_name.lower()
-]
-
-if gpt4_deployments:
-    deployment_name = gpt4_deployments[0].name
-
-    agent = project_client.agents.create_agent(
-        model=deployment_name,
-        name="dynamic-agent",
-        instructions="You are helpful.",
-    )
-```
+Read metadata for the user-approved deployment name, verify its capabilities and region, and use that exact name. Listing order or a model-name substring does not establish suitability, authorization or cost.
 
 ### Capability Checking
 
@@ -109,7 +101,7 @@ AZURE_AI_MODEL_DEPLOYMENT_NAME=gpt-4o-mini
 import os
 
 # Use deployment from environment
-agent = project_client.agents.create_agent(
+agent = classic.create_agent(
     model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
     name="my-agent",
     instructions="You are helpful.",

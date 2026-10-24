@@ -35,6 +35,10 @@ Don't communicate by sharing memory;
 share memory by communicating.
 ```
 
+## Scope and lifecycle
+
+Each fenced example is a separate program or fragment; do not concatenate duplicate main/type declarations. Pin the reviewed golang.org/x/sync dependency. Context cancellation is cooperative and select does not strictly prioritize it. Callers stopping consumption must cancel; real I/O/task adapters need deadlines. HTTP examples require an allowlisted URL policy, bounded client timeout/redirects and successful-status checks before treating a request as successful; fetchURL is an application adapter. Shared maps protect entries, not mutable values stored behind pointers.
+
 ## Quick Start
 
 ```go
@@ -108,20 +112,26 @@ type Result struct {
 }
 
 func WorkerPool(ctx context.Context, numWorkers int, jobs <-chan Job) <-chan Result {
-    results := make(chan Result, len(jobs))
+    if numWorkers <= 0 { panic("numWorkers must be positive") }
+    results := make(chan Result, numWorkers)
 
     var wg sync.WaitGroup
     for i := 0; i < numWorkers; i++ {
         wg.Add(1)
         go func(workerID int) {
             defer wg.Done()
-            for job := range jobs {
+            for {
+                var job Job
+                var ok bool
                 select {
-                case <-ctx.Done():
-                    return
-                default:
-                    result := processJob(job)
-                    results <- result
+                case <-ctx.Done(): return
+                case job, ok = <-jobs:
+                    if !ok { return }
+                }
+                result := processJob(job) // Real work must accept ctx and bound blocking operations.
+                select {
+                case <-ctx.Done(): return
+                case results <- result:
                 }
             }
         }(i)
@@ -174,6 +184,7 @@ package main
 
 import (
     "context"
+    "fmt"
     "sync"
 )
 
@@ -198,7 +209,13 @@ func square(ctx context.Context, in <-chan int) <-chan int {
     out := make(chan int)
     go func() {
         defer close(out)
-        for n := range in {
+        for {
+            var n int
+            var ok bool
+            select {
+            case <-ctx.Done(): return
+            case n, ok = <-in: if !ok { return }
+            }
             select {
             case <-ctx.Done():
                 return
@@ -217,7 +234,13 @@ func merge(ctx context.Context, cs ...<-chan int) <-chan int {
     // Start output goroutine for each input channel
     output := func(c <-chan int) {
         defer wg.Done()
-        for n := range c {
+        for {
+            var n int
+            var ok bool
+            select {
+            case <-ctx.Done(): return
+            case n, ok = <-c: if !ok { return }
+            }
             select {
             case <-ctx.Done():
                 return
@@ -276,6 +299,7 @@ type RateLimitedWorker struct {
 }
 
 func NewRateLimitedWorker(maxConcurrent int64) *RateLimitedWorker {
+    if maxConcurrent <= 0 { panic("maxConcurrent must be positive") }
     return &RateLimitedWorker{
         sem: semaphore.NewWeighted(maxConcurrent),
     }
@@ -291,7 +315,8 @@ func (w *RateLimitedWorker) Do(ctx context.Context, tasks []func() error) []erro
     for _, task := range tasks {
         // Acquire semaphore (blocks if at limit)
         if err := w.sem.Acquire(ctx, 1); err != nil {
-            return []error{err}
+            wg.Wait() // Join already-started work; task functions must cooperate with cancellation.
+            return append(errors, err)
         }
 
         wg.Add(1)
@@ -315,6 +340,7 @@ func (w *RateLimitedWorker) Do(ctx context.Context, tasks []func() error) []erro
 type Semaphore chan struct{}
 
 func NewSemaphore(n int) Semaphore {
+    if n <= 0 { panic("semaphore size must be positive") }
     return make(chan struct{}, n)
 }
 
@@ -345,6 +371,7 @@ import (
 type Server struct {
     shutdown chan struct{}
     wg       sync.WaitGroup
+    stopOnce sync.Once
 }
 
 func NewServer() *Server {
@@ -370,6 +397,8 @@ func (s *Server) worker(ctx context.Context, id int) {
 
     for {
         select {
+        case <-s.shutdown:
+            return
         case <-ctx.Done():
             // Cleanup
             fmt.Printf("Worker %d cleaning up...\n", id)
@@ -383,7 +412,7 @@ func (s *Server) worker(ctx context.Context, id int) {
 
 func (s *Server) Shutdown(timeout time.Duration) {
     // Signal shutdown
-    close(s.shutdown)
+    s.stopOnce.Do(func() { close(s.shutdown) })
 
     // Wait with timeout
     done := make(chan struct{})
@@ -396,7 +425,7 @@ func (s *Server) Shutdown(timeout time.Duration) {
     case <-done:
         fmt.Println("Clean shutdown completed")
     case <-time.After(timeout):
-        fmt.Println("Shutdown timed out, forcing exit")
+        fmt.Println("Shutdown timed out; workers may still be running")
     }
 }
 
@@ -470,10 +499,10 @@ func fetchAllURLs(ctx context.Context, urls []string) ([]string, error) {
 // With concurrency limit
 func fetchWithLimit(ctx context.Context, urls []string, limit int) ([]string, error) {
     g, ctx := errgroup.WithContext(ctx)
+    if limit <= 0 { return nil, fmt.Errorf("limit must be positive") }
     g.SetLimit(limit) // Max concurrent goroutines
 
     results := make([]string, len(urls))
-    var mu sync.Mutex
 
     for i, url := range urls {
         i, url := i, url
@@ -484,9 +513,7 @@ func fetchWithLimit(ctx context.Context, urls []string, limit int) ([]string, er
                 return err
             }
 
-            mu.Lock()
-            results[i] = result
-            mu.Unlock()
+            results[i] = result // Each goroutine owns a distinct index.
             return nil
         })
     }
@@ -541,6 +568,7 @@ type shard struct {
 }
 
 func NewShardedMap(numShards int) *ShardedMap {
+    if numShards <= 0 { panic("numShards must be positive") }
     m := &ShardedMap{
         shards:    make([]*shard, numShards),
         numShards: numShards,
@@ -553,11 +581,11 @@ func NewShardedMap(numShards int) *ShardedMap {
 
 func (m *ShardedMap) getShard(key string) *shard {
     // Simple hash
-    h := 0
+    var h uint64
     for _, c := range key {
-        h = 31*h + int(c)
+        h = 31*h + uint64(c)
     }
-    return m.shards[h%m.numShards]
+    return m.shards[h%uint64(m.numShards)]
 }
 
 func (m *ShardedMap) Get(key string) (interface{}, bool) {

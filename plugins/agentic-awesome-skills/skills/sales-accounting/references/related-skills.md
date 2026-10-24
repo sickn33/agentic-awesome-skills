@@ -1,7 +1,7 @@
 # Related Skills
 
 - @accounting-audit-system-builder - routes to this skill and the other accounting modules.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/source-document-filing/SKILL.md) - files the invoice with its supporting documents.
+- [source-document-filing](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/source-document-filing/SKILL.md) - files the invoice with its supporting documents.
 - @receipt-accounting - clears the receivable carried in `Net Receivable` and `Balance`.
 - @payment-accounting - records the receipt against `Payment Status` and reduces `Balance`.
 - @credit-cycle-analysis - ages the outstanding balances this module produces.

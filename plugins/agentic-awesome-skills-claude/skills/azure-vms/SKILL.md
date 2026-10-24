@@ -23,6 +23,8 @@ Deploy and manage Azure VMs, availability sets, scale sets, custom images, and m
 
 ## Prerequisites
 
+Examples are independent fragments. Confirm subscription, cost/quota, region/image availability, approved NSG/subnet and private access before provisioning. Cloud-init must be a real file with #cloud-config, not the commented shell excerpt. The backup vault/policy, load balancer and probe are prerequisites, not created here; default public endpoints in other examples must be explicitly replaced with the approved private network design. Docker group membership grants host-level control.
+
 ```bash
 # Install Azure CLI
 # Prerequisite: organization-approved Azure CLI installed from a verified signed package.
@@ -57,7 +59,7 @@ az vm create \
   --generate-ssh-keys \
   --vnet-name myapp-vnet \
   --subnet app-subnet \
-  --nsg "" \
+  --nsg myapp-nsg \
   --public-ip-address "" \
   --os-disk-size-gb 64 \
   --os-disk-caching ReadWrite \
@@ -67,10 +69,12 @@ az vm create \
   --tags environment=prod team=platform app=myapp
 
 # SSH into the VM (if public IP assigned)
-ssh azureuser@$(az vm show -g compute-rg -n myapp-vm -d --query publicIps -o tsv)
+# This example has no public IP; connect through approved Bastion/VPN/private SSH.
 ```
 
 ### Windows VM
+
+Run interactively: omit --admin-password and enter a unique generated password at the CLI’s hidden prompt, or use approved secret-backed infrastructure provisioning. Never put it in argv/history.
 
 ```bash
 az vm create \
@@ -79,7 +83,6 @@ az vm create \
   --image Win2022Datacenter \
   --size Standard_D4s_v5 \
   --admin-username azureadmin \
-  --admin-password 'S3cur3P@ssw0rd!' \
   --vnet-name myapp-vnet \
   --subnet app-subnet \
   --public-ip-address "" \
@@ -158,7 +161,8 @@ az disk create \
   --sku Premium_LRS \
   --zone 1
 
-# Resize a disk (VM must be deallocated)
+# Example offline resize; supported online expansion depends on disk/VM configuration.
+# Back up and schedule downtime; after Azure expansion grow the guest partition/filesystem safely.
 az vm deallocate --resource-group compute-rg --name myapp-vm
 az disk update \
   --resource-group compute-rg \
@@ -188,6 +192,8 @@ az vm show \
 ```
 
 ## Custom Images
+
+Generalization/deprovisioning changes identity and can make a VM unusable. Use a disposable image-builder clone after an application-consistent backup; never generalize the running source production VM. Remove secrets from images. The commands below assume that clone is named myapp-vm.
 
 ```bash
 # Generalize the VM (run inside the VM first)
@@ -275,7 +281,8 @@ done
 ## Virtual Machine Scale Sets
 
 ```bash
-# Create VMSS with autoscaling
+# Create VMSS with autoscaling; HEALTH_PROBE_ID must identify an existing LB probe, not an HTTP path.
+: "${HEALTH_PROBE_ID:?Set the reviewed existing load-balancer probe ID}"
 az vmss create \
   --resource-group compute-rg \
   --name myapp-vmss \
@@ -287,7 +294,7 @@ az vmss create \
   --vnet-name myapp-vnet \
   --subnet app-subnet \
   --upgrade-policy-mode Rolling \
-  --health-probe "/" \
+  --health-probe "$HEALTH_PROBE_ID" \
   --load-balancer myapp-lb \
   --zones 1 2 3 \
   --custom-data cloud-init.yaml \

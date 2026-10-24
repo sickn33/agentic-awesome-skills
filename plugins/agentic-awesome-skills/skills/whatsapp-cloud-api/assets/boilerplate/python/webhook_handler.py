@@ -22,12 +22,14 @@ def validate_hmac_signature(app_secret: str | None = None):
     Usa hmac.compare_digest para comparacao constant-time (previne timing attacks).
     """
     secret = app_secret or os.environ["APP_SECRET"]
+    if not secret or secret.startswith("your_"):
+        raise ValueError("Missing or placeholder APP_SECRET")
 
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             signature = request.headers.get("X-Hub-Signature-256", "")
-            if not signature:
+            if not re.fullmatch(r"sha256=[a-f0-9]{64}", signature):
                 abort(401, "Missing signature header")
 
             raw_body = request.get_data()

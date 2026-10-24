@@ -274,9 +274,10 @@ def main(argv: list[str]) -> int:
         for i, l in enumerate(lines, 1):
             if src.start < i - 1 < src.end:
                 continue
-            for s_id in VERIFIED_SOURCE_RE.findall(l):
-                if s_id not in defined_sources:
-                    f_.err(i, f"[VERIFIED …] cites S-{s_id}, which is not in the Sources section")
+            for tag in re.findall(r"\[VERIFIED[^\]]*\]", l):
+                for s_id in SOURCE_ID_RE.findall(tag):
+                    if s_id not in defined_sources:
+                        f_.err(i, f"[VERIFIED …] cites S-{s_id}, which is not in the Sources section")
 
     # 7. Personas used
     per = find_section(sections, "Personas")

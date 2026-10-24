@@ -19,7 +19,7 @@ Automate Calendly operations including event listing, invitee management, schedu
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Account linking/OAuth and permitted scopes are still required; adding an endpoint alone does not grant Calendly access. Add or change host configuration only with authorization.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `calendly`
@@ -27,6 +27,8 @@ Automate Calendly operations including event listing, invitee management, schedu
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Resolve the actual user/organization and timezone before writes. Listing does not authorize invitations, member removal, scheduling links or cancellation; bind each requested mutation to its target and notification effects. Read current schemas and returned pagination fields; this static tool-name list may drift. Do not retry uncertain writes without checking existing state.
 
 ### 1. List and View Scheduled Events
 

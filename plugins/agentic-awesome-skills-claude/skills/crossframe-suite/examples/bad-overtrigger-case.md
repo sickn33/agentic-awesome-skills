@@ -22,3 +22,5 @@ crossframe -> crossframe-public -> crossframe-essay -> crossframe-review
 ```
 
 不读取 `crossframe-org`、`crossframe-casebook`、`crossframe-teach`，因为这次不是组织修复、案例沉淀或概念教学。
+
+> 本地修订：先应用入口 SKILL.md 的「用户目标与执行边界」。以下长文/菜单/底稿示例不覆盖用户既有要求；底稿表示简明证据与假设摘要，不是内部思维链。缺失 sibling 文件不得虚构已读。

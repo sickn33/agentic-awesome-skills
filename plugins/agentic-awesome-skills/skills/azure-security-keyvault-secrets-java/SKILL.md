@@ -10,6 +10,8 @@ date_added: "2026-02-27"
 
 Securely store and manage secrets like passwords, API keys, and connection strings.
 
+Confirm vault, tenant, RBAC and intended secret/version before mutations. Examples use synthetic values: obtain real values from approved secret input, never source code or chat. Backups contain sensitive encrypted material and have service restore restrictions; protect files and retention. Expiration metadata is not credential rotation at the issuing service. Required secrets must fail closed if unavailable; do not silently start with a partial configuration. Async snippets need error handling and an application lifecycle that awaits completion.
+
 ## Installation
 
 ```xml
@@ -72,7 +74,7 @@ KeyVaultSecret secretWithOptions = secretClient.setSecret(
 // Get latest version
 KeyVaultSecret secret = secretClient.getSecret("database-password");
 String value = secret.getValue();
-System.out.println("Secret value: " + value);
+// Consume value in memory; never print secret material.
 
 // Get specific version
 KeyVaultSecret specificVersion = secretClient.getSecret("database-password", "<version-id>");
@@ -115,7 +117,7 @@ for (SecretProperties secretProps : secretClient.listPropertiesOfSecrets()) {
     // Get value if needed
     if (secretProps.isEnabled()) {
         KeyVaultSecret fullSecret = secretClient.getSecret(secretProps.getName());
-        System.out.println("  Value: " + fullSecret.getValue().substring(0, 5) + "...");
+        // Do not print even a prefix of the secret.
     }
 }
 
@@ -157,16 +159,14 @@ for (DeletedSecret deleted : secretClient.listDeletedSecrets()) {
 SyncPoller<KeyVaultSecret, Void> recoverPoller = secretClient.beginRecoverDeletedSecret("old-secret");
 recoverPoller.waitForCompletion();
 
-KeyVaultSecret recovered = recoverPoller.getFinalResult();
+KeyVaultSecret recovered = secretClient.getSecret("old-secret");
 System.out.println("Recovered: " + recovered.getName());
 ```
 
 ## Purge Deleted Secret
 
 ```java
-// Permanently delete (cannot be recovered)
-secretClient.purgeDeletedSecret("old-secret");
-
+// This is a separate irreversible operation, not the next step after recovery.
 // Get deleted secret info first
 DeletedSecret deleted = secretClient.getDeletedSecret("old-secret");
 System.out.println("Will purge: " + deleted.getName());
@@ -205,7 +205,7 @@ asyncClient.setSecret("async-secret", "async-value")
 
 // Get secret async
 asyncClient.getSecret("async-secret")
-    .subscribe(secret -> System.out.println("Value: " + secret.getValue()));
+    .subscribe(secret -> { /* consume secret.getValue() without logging it */ });
 
 // List secrets async
 asyncClient.listPropertiesOfSecrets()
@@ -256,11 +256,8 @@ public void rotateSecret(String secretName, String newValue) {
     // Get current secret
     KeyVaultSecret current = secretClient.getSecret(secretName);
     
-    // Disable old version
-    current.getProperties().setEnabled(false);
-    secretClient.updateSecretProperties(current.getProperties());
-    
-    // Create new version with new value
+    // Create and verify the new credential at its issuing service first.
+    // Create a new version; migrate and verify consumers before retiring the old one.
     KeyVaultSecret newSecret = secretClient.setSecret(secretName, newValue);
     System.out.println("Rotated to version: " + newSecret.getProperties().getVersion());
 }
@@ -274,7 +271,7 @@ import com.azure.core.exception.ResourceNotFoundException;
 
 try {
     KeyVaultSecret secret = secretClient.getSecret("my-secret");
-    System.out.println("Value: " + secret.getValue());
+    // Consume secret.getValue() without logging it.
 } catch (ResourceNotFoundException e) {
     System.out.println("Secret not found");
 } catch (HttpResponseException e) {

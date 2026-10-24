@@ -1,5 +1,7 @@
 # MCP Integration Guide
 
+Review update 2026-10-23: API/pricing examples below are a historical snapshot; verify the current [API](https://2slides.com/api.md) and [pricing](https://2slides.com/pricing) before billable calls. Subscription credits and purchased-package credits have different expiry rules. No live generation was tested.
+
 2slides provides an MCP (Model Context Protocol) server for seamless integration with Claude Desktop and other MCP-compatible AI agents.
 
 ## What is the MCP Server?
@@ -21,7 +23,9 @@ The 2slides MCP server exposes the same API functionality as direct API calls, b
 
 2slides MCP server supports two integration modes:
 
-### Mode 1: Streamable HTTP Protocol (Recommended)
+### Mode 1: Streamable HTTP Protocol
+
+Query-string API keys can leak through logs/history. Use the client-supported secret/header mechanism if the service supports it; if only query authentication is available, treat the entire URL as a credential and keep it out of shared configs, screenshots and logs. The native client configuration syntax varies; the JSON below is an upstream sketch, not verified for every Claude Desktop version.
 
 Simplest setup using HTTP endpoint. No local installation required.
 
@@ -66,7 +70,7 @@ Edit: `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
   "mcpServers": {
     "2slides": {
       "command": "npx",
-      "args": ["2slides-mcp"],
+      "args": ["2slides-mcp@<reviewed-exact-version>"],
       "env": {
         "API_KEY": "YOUR_2SLIDES_API_KEY"
       }
@@ -179,7 +183,7 @@ Generate custom-designed slides from text without a reference image.
 - `resolution` (string, optional, default: "2K"): "1K", "2K", or "4K"
 - `page` (number, optional, default: 1): Number of slides (0 for auto-detection, max 100)
 - `contentDetail` (string, optional, default: "concise"): "concise" or "standard"
-- `designSpec` (string, optional): Design specifications
+- `designStyle` (string, optional): Design specifications
 
 **Example:**
 ```
@@ -201,7 +205,7 @@ Add AI voice narration to completed slides.
 - `multiSpeaker` (boolean, optional, default: false): Enable multi-speaker mode
 
 **Available Voices:**
-Puck, Aoede, Charon, Kore, Fenrir, Phoebe, Asteria, Luna, Stella, Theia, Helios, Atlas, Clio, Melpomene, Calliope, Erato, Euterpe, Polyhymnia, Terpsichore, Thalia, Urania, Zeus, Hera, Poseidon, Athena, Apollo, Artemis, Ares, Aphrodite, Hephaestus
+Puck, Aoede, Charon, Kore, Fenrir, Zephyr, Leda, Orus, Callirrhoe, Autonoe, Enceladus, Iapetus, Umbriel, Algieba, Despina, Erinome, Algenib, Rasalgethi, Laomedeia, Achernar, Alnilam, Schedar, Gacrux, Pulcherrima, Achird, Zubenelgenubi, Vindemiatrix, Sadachbia, Sadaltager, Sulafat
 
 **Example:**
 ```

@@ -134,3 +134,7 @@ Naming rules, matching the app-side event conventions in [`./setup.md`](./setup.
 - Keep names stable. The dashboard groups by exact name.
 - No PII in names, attribute keys, or attribute values.
 - Use `severity` to separate warnings from errors, and `body` for the remediation hint. The attributes carry the measurements.
+
+## Scaffold completion
+
+The example omits `enabled` state and `enableObserveIntegration`: implement both before using `logExpensiveOperation`. Optional peer metadata and a try/catch do not guarantee Metro can bundle an absent static require; verify optional-dependency resolution on each supported platform. Catch only intended absence, report other integration failures without secrets, and never enable telemetry merely because the dependency exists.

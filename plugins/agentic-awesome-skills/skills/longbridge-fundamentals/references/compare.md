@@ -42,7 +42,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge compare --format json
+longbridge compare AAPL.US --format json
 
 # See all options
 longbridge compare --help

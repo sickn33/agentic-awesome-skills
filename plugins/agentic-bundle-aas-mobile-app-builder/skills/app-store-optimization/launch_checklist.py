@@ -77,9 +77,12 @@ class LaunchChecklistGenerator:
         Returns:
             Compliance validation report
         """
+        if platform not in ('apple', 'google'):
+            raise ValueError('Platform must be apple or google')
         validation_results = {
             'platform': platform,
-            'is_compliant': True,
+            'is_compliant': None,
+            'validation_scope': 'Partial presence and length checks only; store/legal compliance is unverified',
             'errors': [],
             'warnings': [],
             'recommendations': []
@@ -91,7 +94,7 @@ class LaunchChecklistGenerator:
             self._validate_google_compliance(app_data, validation_results)
 
         # Determine overall compliance
-        validation_results['is_compliant'] = len(validation_results['errors']) == 0
+        validation_results['checks_passed'] = len(validation_results['errors']) == 0
 
         return validation_results
 
@@ -249,9 +252,9 @@ class LaunchChecklistGenerator:
                 'category': 'Visual Assets (Apple)',
                 'items': [
                     {'task': 'App icon (1024x1024px)', 'status': 'pending'},
-                    {'task': 'Screenshots (iPhone 6.7" required)', 'status': 'pending'},
-                    {'task': 'Screenshots (iPhone 5.5" required)', 'status': 'pending'},
-                    {'task': 'Screenshots (iPad Pro 12.9" if iPad app)', 'status': 'pending'},
+                    {'task': 'Screenshots for current required iPhone display class (verify App Store Connect)', 'status': 'pending'},
+                    {'task': 'Additional iPhone screenshots where required by current supported-device rules', 'status': 'pending'},
+                    {'task': 'Screenshots for current iPad display requirements when supporting iPad', 'status': 'pending'},
                     {'task': 'App preview video (optional but recommended)', 'status': 'pending'}
                 ]
             },
@@ -291,7 +294,7 @@ class LaunchChecklistGenerator:
             {
                 'category': 'Metadata (Google)',
                 'items': [
-                    {'task': 'App title (50 chars max)', 'status': 'pending'},
+                    {'task': 'App title (30 chars max)', 'status': 'pending'},
                     {'task': 'Short description (80 chars max)', 'status': 'pending'},
                     {'task': 'Full description (4000 chars max)', 'status': 'pending'},
                     {'task': 'Category selection', 'status': 'pending'},
@@ -391,7 +394,7 @@ class LaunchChecklistGenerator:
             },
             {
                 'date': (launch_dt - timedelta(days=30)).strftime('%Y-%m-%d'),
-                'milestone': '30 days before: Submit app for review (Apple typically takes 1-2 days, Google instant)'
+                'milestone': '30 days before: Plan submission with current review/testing requirements; approval times vary'
             },
             {
                 'date': (launch_dt - timedelta(days=14)).strftime('%Y-%m-%d'),
@@ -483,8 +486,8 @@ class LaunchChecklistGenerator:
 
         # Check metadata character limits
         title = app_data.get('title', '')
-        if len(title) > 50:
-            validation_results['errors'].append(f"Title exceeds 50 characters ({len(title)})")
+        if len(title) > 30:
+            validation_results['errors'].append(f"Title exceeds 30 characters ({len(title)})")
 
         short_desc = app_data.get('short_description', '')
         if len(short_desc) > 80:
@@ -528,6 +531,8 @@ class LaunchChecklistGenerator:
         versions: List[str]
     ) -> List[Dict[str, Any]]:
         """Distribute features across versions."""
+        if not versions:
+            return []
         features_per_version = max(1, len(features) // len(versions))
 
         schedule = []

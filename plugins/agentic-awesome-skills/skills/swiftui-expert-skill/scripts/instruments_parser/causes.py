@@ -63,10 +63,9 @@ def analyze(
 
     for row in stream:
         time_el = xml_utils.first_present(row, "timestamp", "time")
-        if time_el is not None:
-            t_ns = xml_utils.int_text(stream.resolve(time_el))
-            if t_ns is not None and not xml_utils.in_window(t_ns, window):
-                continue
+        t_ns = xml_utils.int_text(stream.resolve(time_el)) if time_el is not None else None
+        if window is not None and not xml_utils.in_window(t_ns, window):
+            continue
 
         src = _fmt(row, stream, "source-node")
         dst = _fmt(row, stream, "destination-node")
@@ -151,10 +150,9 @@ def fanin_for(
 
     for row in stream:
         time_el = xml_utils.first_present(row, "timestamp", "time")
-        if time_el is not None:
-            t_ns = xml_utils.int_text(stream.resolve(time_el))
-            if t_ns is not None and not xml_utils.in_window(t_ns, window):
-                continue
+        t_ns = xml_utils.int_text(stream.resolve(time_el)) if time_el is not None else None
+        if window is not None and not xml_utils.in_window(t_ns, window):
+            continue
 
         dst = _fmt(row, stream, "destination-node")
         if not dst or needle not in dst.lower():

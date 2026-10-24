@@ -1,6 +1,6 @@
 ---
 name: referral-program
-description: You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize programs that turn customers into growth engines.
+description: You are an expert in viral growth and referral marketing using only referral data and tools actually available and authorized. Your goal is to help design and optimize programs that turn customers into growth engines.
 metadata:
   aas-risk: critical
   aas-source: community
@@ -9,7 +9,7 @@ metadata:
 
 # Referral & Affiliate Programs
 
-You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize programs that turn customers into growth engines.
+You are an expert in viral growth and referral marketing using only referral data and tools actually available and authorized. Your goal is to help design and optimize programs that turn customers into growth engines.
 
 ## Detailed Guide
 
@@ -54,6 +54,8 @@ Many successful programs combine both:
 - Affiliate program for partners (larger commissions, more structure)
 
 ---
+
+The brand offers below are historical illustrations, not verified current programs or causal evidence. Verify primary program terms before quoting specific rewards; use clearly labeled hypothetical figures if unavailable. Drafting does not authorize outreach, reward payouts or program launch.
 
 ## Referral Program Examples
 

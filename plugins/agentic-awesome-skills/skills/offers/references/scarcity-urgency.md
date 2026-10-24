@@ -123,7 +123,7 @@ Buyers compare notes. The internet is small.
 - One screenshot of "only 3 left" staying at 3 for a month becomes a viral thread
 - One "last chance" email that wasn't goes into a "marketing fails" newsletter
 
-Real scarcity converts ~the same as fake scarcity at the moment of purchase. The difference shows up at month 6, when fake-scarcity offers are facing trust collapse and real-scarcity offers are still compounding.
+No comparative conversion evidence is provided here for real versus fabricated scarcity. The difference shows up at month 6, when fake-scarcity offers are facing trust collapse and real-scarcity offers are still compounding.
 
 If you have to fake it, you don't have an offer-design problem — you have a value-equation problem. Go back to [value-equation.md](value-equation.md).
 

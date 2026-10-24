@@ -48,7 +48,7 @@ GitHub is where developers evaluate your project before trying it. This skill co
 
 ### README Template
 
-```markdown
+````markdown
 <div align="center">
   <img src="logo.svg" alt="Project Name" width="200">
   <h1>Project Name</h1>
@@ -130,12 +130,12 @@ Full documentation available at [docs.example.com](https://docs.example.com)
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](https://github.com/jonathimer/devmarketing-skills/tree/main/skills/github-presence/CONTRIBUTING.md) for details.
+We welcome contributions! Link the project’s actual contribution guide here after confirming its path; this skill does not bundle one.
 
 ## License
 
 MIT © [Your Name](https://yoursite.com)
-```
+````
 
 ---
 
@@ -145,11 +145,11 @@ MIT © [Your Name](https://yoursite.com)
 
 | Badge | What it shows | When to use |
 |-------|--------------|-------------|
-| CI/Build status | Code quality | Always |
+| CI/Build status | Result of the linked workflow, not overall quality | When meaningful |
 | Version | Latest release | Always for packages |
 | License | Legal clarity | Always |
 | Downloads/installs | Adoption | When impressive |
-| Coverage | Test quality | If > 70% |
+| Coverage | Executed lines/branches for the measured suite; not test quality | When current and accurately scoped |
 | Security | Audit status | If you have it |
 
 ### Community Badges
@@ -198,8 +198,8 @@ MIT © [Your Name](https://yoursite.com)
 ### Setting Up Profile README
 
 1. Create a repository with your username (e.g., `github.com/yourname/yourname`)
-2. Add a `README.md` file
-3. This displays on your profile page
+2. Make that repository public and add nonempty `README.md` at its root.
+3. GitHub displays it on eligible personal profiles; managed user accounts do not support profile READMEs.
 
 ### Profile README Structure
 
@@ -299,6 +299,10 @@ Getting on awesome lists drives traffic and credibility.
 
 ## GitHub Actions for Marketing
 
+Automation examples need adaptation, not direct installation: review each third-party action and pin its full verified commit SHA (floating `master`/`latest` tags below are placeholders). Grant minimum token permissions and avoid passing secrets to untrusted actions. Use a topic-branch PR for README changes where branch protection requires it; never bypass protections or publish posts, sponsorship terms or external PRs without authorization. A stats embed is an external service, not proof of usage. Use actual project license/links rather than copying MIT or upstream template URLs.
+
+Repository traffic covers a rolling 14-day window in UTC; export dated aggregates when longer comparisons are needed. Full clones are not fetches and are not unique installs.
+
 ### Automated README Updates
 
 ```yaml
@@ -325,9 +329,10 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -A
+          git add -- README.md
           git diff --quiet && git diff --staged --quiet || git commit -m "Update README"
-          git push
+          # Open a reviewed topic-branch PR through the repository’s approved process.
+          # Do not push this scheduled job directly to a protected default branch.
 ```
 
 ### Metrics and Stats
@@ -423,8 +428,8 @@ custom: ["https://buymeacoffee.com/you"]
 | Metric | What it tells you | Goal |
 |--------|-------------------|------|
 | Stars | Interest/bookmarks | Growth over time |
-| Forks | Active usage | Quality > quantity |
-| Clones | People trying it | Pre-install interest |
+| Forks | Repository copies; usage unknown | Inspect contribution context |
+| Clones | Full clone operations, including automation | Track trend without equating to installs or people |
 | Traffic | Profile/repo views | Awareness |
 | Referrers | Where traffic comes from | Channel effectiveness |
 | Contributors | Community health | Sustainable project |

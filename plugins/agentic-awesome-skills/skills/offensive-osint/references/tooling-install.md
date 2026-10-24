@@ -170,7 +170,7 @@ go install github.com/trufflesecurity/trufflehog@<reviewed-version>
 go install github.com/zricethezav/gitleaks/v8@<reviewed-version>
 
 # jq (JSON parsing)
-sudo apt install jq    # or brew install jq
+# Install an exact approved jq package through the host package manager only after authorization.
 ```
 
 ### 46.12 Frameworks / orchestration

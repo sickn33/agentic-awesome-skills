@@ -42,9 +42,8 @@ function getExtraHeadersFromEnv() {
  */
 async function launchBrowser(browserType = 'chromium', options = {}) {
   const defaultOptions = {
-    headless: process.env.HEADLESS !== 'false',
+    headless: process.env.HEADLESS === 'true',
     slowMo: process.env.SLOW_MO ? parseInt(process.env.SLOW_MO) : 0,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
   };
   
   const browsers = { chromium, firefox, webkit };
@@ -76,7 +75,7 @@ async function createPage(context, options = {}) {
   }
   
   // Set default timeout
-  page.setDefaultTimeout(options.timeout || 30000);
+  page.setDefaultTimeout(options.timeout ?? 30000);
   
   return page;
 }
@@ -88,8 +87,8 @@ async function createPage(context, options = {}) {
  */
 async function waitForPageReady(page, options = {}) {
   const waitOptions = {
-    waitUntil: options.waitUntil || 'networkidle',
-    timeout: options.timeout || 30000
+    waitUntil: options.waitUntil || 'domcontentloaded',
+    timeout: options.timeout ?? 30000
   };
   
   try {
@@ -97,7 +96,7 @@ async function waitForPageReady(page, options = {}) {
       timeout: waitOptions.timeout 
     });
   } catch (e) {
-    console.warn('Page load timeout, continuing...');
+    throw e;
   }
   
   // Additional wait for dynamic content if selector provided
@@ -115,29 +114,13 @@ async function waitForPageReady(page, options = {}) {
  * @param {Object} options - Click options
  */
 async function safeClick(page, selector, options = {}) {
-  const maxRetries = options.retries || 3;
-  const retryDelay = options.retryDelay || 1000;
-  
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      await page.waitForSelector(selector, { 
-        state: 'visible',
-        timeout: options.timeout || 5000 
-      });
-      await page.click(selector, {
-        force: options.force || false,
-        timeout: options.timeout || 5000
-      });
-      return true;
-    } catch (e) {
-      if (i === maxRetries - 1) {
-        console.error(`Failed to click ${selector} after ${maxRetries} attempts`);
-        throw e;
-      }
-      console.log(`Retry ${i + 1}/${maxRetries} for clicking ${selector}`);
-      await page.waitForTimeout(retryDelay);
-    }
-  }
+  // Playwright retries actionability checks. Reissuing a click after an
+  // ambiguous timeout can duplicate a submitted operation.
+  await page.locator(selector).click({
+    force: options.force ?? false,
+    timeout: options.timeout ?? 5000
+  });
+  return true;
 }
 
 /**
@@ -216,13 +199,9 @@ async function authenticate(page, credentials, selectors = {}) {
   await safeType(page, finalSelectors.password, credentials.password);
   await safeClick(page, finalSelectors.submit);
   
-  // Wait for navigation or success indicator
-  await Promise.race([
-    page.waitForNavigation({ waitUntil: 'networkidle' }),
-    page.waitForSelector(selectors.successIndicator || '.dashboard, .user-menu, .logout', { timeout: 10000 })
-  ]).catch(() => {
-    console.log('Login might have completed without navigation');
-  });
+  // A visible authenticated marker is required; no swallowed failure.
+  await page.locator(selectors.successIndicator || '.dashboard, .user-menu, .logout')
+    .first().waitFor({ state: 'visible', timeout: 10000 });
 }
 
 /**
@@ -286,35 +265,12 @@ async function extractTableData(page, tableSelector) {
  * @param {Object} page - Playwright page
  * @param {number} timeout - Max time to wait
  */
-async function handleCookieBanner(page, timeout = 3000) {
-  const commonSelectors = [
-    'button:has-text("Accept")',
-    'button:has-text("Accept all")',
-    'button:has-text("OK")',
-    'button:has-text("Got it")',
-    'button:has-text("I agree")',
-    '.cookie-accept',
-    '#cookie-accept',
-    '[data-testid="cookie-accept"]'
-  ];
-  
-  for (const selector of commonSelectors) {
-    try {
-      const element = await page.waitForSelector(selector, { 
-        timeout: timeout / commonSelectors.length,
-        state: 'visible'
-      });
-      if (element) {
-        await element.click();
-        console.log('Cookie banner dismissed');
-        return true;
-      }
-    } catch (e) {
-      // Continue to next selector
-    }
+async function handleCookieBanner(page, selector, timeout = 3000) {
+  if (typeof selector !== 'string' || !selector.trim()) {
+    throw new Error('Provide the exact consent control matching the user’s requested preference');
   }
-  
-  return false;
+  await page.locator(selector).click({ timeout });
+  return true;
 }
 
 /**
@@ -367,7 +323,7 @@ async function createContext(browser, options = {}) {
     ...(Object.keys(mergedHeaders).length > 0 && { extraHTTPHeaders: mergedHeaders })
   };
 
-  return await browser.newContext({ ...defaultOptions, ...options });
+  return await browser.newContext({ ...defaultOptions, ...options, ...(Object.keys(mergedHeaders).length ? { extraHTTPHeaders: mergedHeaders } : {}) });
 }
 
 /**

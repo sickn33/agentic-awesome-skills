@@ -48,10 +48,10 @@ This sends all three INSERTs in one network round trip instead of three.
 
 ```bash
 # Run in a single transaction (faster, and all-or-nothing)
-psql -1 -f migration.sql mydb
+psql -X -v ON_ERROR_STOP=1 -1 -f migration.sql mydb
 
 # Multiple files sequentially
-psql -1 -f 001.sql -f 002.sql -f 003.sql mydb
+psql -X -v ON_ERROR_STOP=1 -1 -f 001.sql -f 002.sql -f 003.sql mydb
 ```
 
 ---
@@ -123,14 +123,15 @@ Without `ON_ERROR_STOP`, a script continues even after errors, potentially leavi
 ```bash
 # -1 wraps everything in BEGIN...COMMIT
 # On error, the entire migration rolls back
-psql -1 -f migration.sql mydb
+psql -X -v ON_ERROR_STOP=1 -1 -f migration.sql mydb
 ```
 
 ### Never Use PGPASSWORD in Scripts
 
 ```bash
 # BAD: Password visible in process list, env vars
-PGPASSWORD=secret psql -c "SELECT 1" mydb# GOOD: Use ~/.pgpass (manually edit to avoid shell history)
+PGPASSWORD=secret psql -c "SELECT 1" mydb
+# GOOD: Use ~/.pgpass (manually edit to avoid shell history)
 touch ~/.pgpass && chmod 600 ~/.pgpass
 # Then edit ~/.pgpass and your add:
 # hostname:port:database:username:password
@@ -141,7 +142,8 @@ psql -c "SELECT 1" mydb
 ### Preview Before Executing
 
 ```sql
--- Dry-run a script to see what commands will execute (shows SQL, does NOT execute)
+-- This executes SQL. ECHO only prints input; ROLLBACK is not a safe dry-run.
+-- Review statically first; use a disposable database for untrusted migrations.
 \set ECHO all
 BEGIN;
 -- Paste or review migration SQL here, then ROLLBACK instead of COMMIT
@@ -207,7 +209,7 @@ SELECT * FROM users WHERE name = :'name';
 -- However, :'varname' is NOT safe for identifiers or unquoted contexts.
 -- For identifiers (table/column names), use :"varname" (double-quoted form).
 -- For the safest parameterized queries, use \bind:
-SELECT * FROM users WHERE name = $1;
+SELECT * FROM users WHERE name = $1
 \bind 'Robert' \g
 ```
 

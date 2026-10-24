@@ -138,7 +138,8 @@ class IUserRepository(ABC):
 from domain.entities.user import User
 from domain.interfaces.user_repository import IUserRepository
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import Optional
 import uuid
 
 @dataclass
@@ -148,7 +149,7 @@ class CreateUserRequest:
 
 @dataclass
 class CreateUserResponse:
-    user: User
+    user: Optional[User]
     success: bool
     error: Optional[str] = None
 
@@ -173,7 +174,7 @@ class CreateUserUseCase:
             id=str(uuid.uuid4()),
             email=request.email,
             name=request.name,
-            created_at=datetime.now(),
+            created_at=datetime.now(timezone.utc),
             is_active=True
         )
 
@@ -267,6 +268,8 @@ async def create_user(
     return {"user": response.user}
 ```
 
+The multi-file example requires composition-root wiring for get_create_user_use_case, asyncpg pool lifecycle and the actual users schema. Enforce a database unique constraint on the canonicalized email and translate its conflict: find-then-save alone races. Define authorization and privacy for user creation separately; parameterized SQL does not provide them.
+
 ## Hexagonal Architecture Pattern
 
 ```python
@@ -326,23 +329,9 @@ class NotificationPort(ABC):
         pass
 
 # Adapters (implementations)
-class StripePaymentAdapter(PaymentGatewayPort):
-    """Primary adapter: connects to Stripe API."""
-
-    def __init__(self, api_key: str):
-        self.stripe = stripe
-        self.stripe.api_key = api_key
-
-    async def charge(self, amount: Money, customer: str) -> PaymentResult:
-        try:
-            charge = self.stripe.Charge.create(
-                amount=amount.cents,
-                currency=amount.currency,
-                customer=customer
-            )
-            return PaymentResult(success=True, transaction_id=charge.id)
-        except stripe.error.CardError as e:
-            return PaymentResult(success=False, error=str(e))
+# Production payment adapter intentionally omitted. Implement the selected
+# provider's current SDK in sandbox, with async-safe I/O, per-order idempotency,
+# amount/currency validation and redacted errors before any live charge.
 
 class MockPaymentAdapter(PaymentGatewayPort):
     """Test adapter: no external dependencies."""
@@ -355,8 +344,9 @@ class MockPaymentAdapter(PaymentGatewayPort):
 
 ```python
 # Value Objects (immutable)
-from dataclasses import dataclass
-from typing import Optional
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
+from typing import Optional, List
 
 @dataclass(frozen=True)
 class Email:
@@ -397,7 +387,12 @@ class Order:
 
     def total(self) -> Money:
         """Calculated property."""
-        return sum(item.subtotal() for item in self.items)
+        if not self.items:
+            raise ValueError("No currency can be inferred for an empty order")
+        total = self.items[0].subtotal()
+        for item in self.items[1:]:
+            total = total.add(item.subtotal())
+        return total
 
     def submit(self):
         """State transition with business rules."""
@@ -433,7 +428,7 @@ class Customer:
 @dataclass
 class OrderSubmittedEvent:
     order_id: str
-    occurred_at: datetime = field(default_factory=datetime.now)
+    occurred_at: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 # Repository (aggregate persistence)
 class OrderRepository:
@@ -450,13 +445,13 @@ class OrderRepository:
         order._events.clear()
 ```
 
-## Resources
+## Example Boundaries
 
-- **references/clean-architecture-guide.md**: Detailed layer breakdown
-- **references/hexagonal-architecture-guide.md**: Ports and adapters patterns
-- **references/ddd-tactical-patterns.md**: Entities, value objects, aggregates
-- **assets/clean-architecture-template/**: Complete project structure
-- **assets/ddd-examples/**: Domain modeling examples
+The snippets illustrate separate patterns and are not one standalone application. Supply domain types, imports, database schema and dependency wiring; the simplified Email check is not a complete address validator. Do not apply real payment/email adapters during a design demonstration.
+
+place_order is a naïve success-path sketch: a crash after charge can duplicate billing, and a failure after saving can lose a notification. Persist an order/payment attempt and idempotency key, reconcile uncertain charge outcomes, then use a transactional outbox for notifications. Publishing events after persistence in OrderRepository likewise has a crash gap: save aggregate and outbox entries atomically, dispatch with retries and idempotent consumers, then mark delivery. Durable execution does not create a transaction across external providers.
+
+The previously listed clean/hexagonal/DDD reference files and asset templates are not bundled here; only this playbook and the root exist. Use their inline examples or separately verified primary materials, not imagined local files.
 
 ## Best Practices
 

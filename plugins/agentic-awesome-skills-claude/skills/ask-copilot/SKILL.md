@@ -87,7 +87,7 @@ copilot -p "Summarize the prior advice in this session." -s --resume "my-session
 - ❌ **Don't:** Automatically trigger this skill for background second opinions without the user's explicit ask.
 - ❌ **Don't:** Send files, logs, environment details, or private repository context to Copilot without explicit approval.
 - ❌ **Don't:** use `--allow-all-paths` for a review, or interpolate untrusted text inside `copilot -p "..."`.
-- ❌ **Don't:** Run `copilot` without permission-bypass flags in background tasks, as it will hang waiting for interactive input.
+- ❌ **Don't:** add permission bypasses to avoid a prompt. Discover supported non-interactive scoped permissions; stop if the approved read-only invocation cannot run without broader access.
 
 ## Limitations
 

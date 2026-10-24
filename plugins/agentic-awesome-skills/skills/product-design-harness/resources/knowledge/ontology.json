@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0.0",
+  "canonical_language": "en",
+  "name": "UX3 knowledge kernel",
+  "description": "Canonical product judgment terms for machine review and human documentation.",
+  "flows": [
+    {
+      "id": "user_flow",
+      "name": "User Flow",
+      "definition": "Identifies target populations, affected people, excluded groups, situations, tasks, current workarounds, and the conditions under which the product should create an outcome.",
+      "must_answer": [
+        "Who is the product for?",
+        "Who is affected by the product decision?",
+        "What are those actors trying to accomplish?",
+        "What cost, friction, risk, or loss of control exists now?"
+      ]
+    },
+    {
+      "id": "evidence_flow",
+      "name": "Evidence Flow",
+      "definition": "Evidence Flow is the product sensing, learning, and calibration system joining internal and external data, behavior, subjective experience, interpretation, counter-signals, evaluations, and action traces; evidence informs decisions, while taste is recorded separately as an accountable human decision input.",
+      "must_answer": [
+        "What signal was observed?",
+        "Where did the signal come from?",
+        "What interpretation is being made?",
+        "What counter-signal weakens it?",
+        "What decision impact follows?"
+      ]
+    },
+    {
+      "id": "business_flow",
+      "name": "Business Flow",
+      "definition": "Identifies the company, project owner, issuer, accountable owner, and stakeholders who create value, receive value, pay, decide, operate, or absorb risk.",
+      "must_answer": [
+        "Who creates value?",
+        "Who receives value?",
+        "Who pays or decides?",
+        "Who bears cost or risk?",
+        "Can the exchange remain viable and legitimate?"
+      ]
+    }
+  ],
+  "intersections": [
+    {
+      "id": "user_evidence",
+      "name": "User + Evidence",
+      "label": "Situated understanding",
+      "required_question": "Do behavior, subjective experience, context, and system signals support the same interpretation?"
+    },
+    {
+      "id": "evidence_business",
+      "name": "Evidence + Business",
+      "label": "Viable learning",
+      "required_question": "Is there sufficient evidence to justify investment, risk, operation, and continued learning?"
+    },
+    {
+      "id": "user_business",
+      "name": "User + Business",
+      "label": "Sustainable value exchange",
+      "required_question": "Is value created and captured without hiding cost, exclusion, or responsibility?"
+    },
+    {
+      "id": "ux3_decision_kernel",
+      "name": "User + Evidence + Business",
+      "label": "UX3 Decision Kernel",
+      "required_question": "What bounded, explainable, testable, and accountable action follows?"
+    }
+  ],
+  "actor_roles": [
+    {
+      "id": "primary_user",
+      "definition": "The target actor expected to operate the product for the main outcome."
+    },
+    {
+      "id": "secondary_user",
+      "definition": "An actor who uses part of the product or is involved in the workflow without being the primary target."
+    },
+    {
+      "id": "machine_actor",
+      "definition": "An automated agent, model, workflow, or software component that can sense, decide, call tools, or act on behalf of a person or organization."
+    },
+    {
+      "id": "beneficiary",
+      "definition": "A person or group expected to receive benefit without necessarily operating the product."
+    },
+    {
+      "id": "affected_person",
+      "definition": "A person or group changed by the product decision, including those who do not consent to or operate the product."
+    },
+    {
+      "id": "excluded_group",
+      "definition": "A population intentionally or unintentionally underserved, blocked, misrepresented, or left outside the product boundary."
+    }
+  ],
+  "stakeholder_roles": [
+    {
+      "id": "company",
+      "definition": "The organization that creates, distributes, and remains accountable for the product."
+    },
+    {
+      "id": "project_owner",
+      "definition": "The named person or team accountable for the current product decision."
+    },
+    {
+      "id": "issuer",
+      "definition": "The entity that issues a credential, claim, artifact, decision, or product promise."
+    },
+    {
+      "id": "customer",
+      "definition": "The person or organization that receives the product's value."
+    },
+    {
+      "id": "buyer",
+      "definition": "The person or organization that pays, approves purchase, or controls budget."
+    },
+    {
+      "id": "employee_operator",
+      "definition": "Internal worker or operator who must deliver, support, review, or recover the product."
+    },
+    {
+      "id": "partner_channel",
+      "definition": "External partner, distributor, integrator, or channel that changes adoption, cost, or accountability."
+    },
+    {
+      "id": "investor_funder",
+      "definition": "Stakeholder providing capital, grants, or other resources that shape constraints and expectations."
+    },
+    {
+      "id": "platform_provider",
+      "definition": "Infrastructure, marketplace, model, payment, identity, or distribution provider that can enable or constrain the product."
+    },
+    {
+      "id": "regulator",
+      "definition": "Authority or rule-setting body that can define compliance, legitimacy, or permitted operation."
+    },
+    {
+      "id": "externality_bearer",
+      "definition": "Community or group that absorbs cost, risk, confusion, exclusion, or other product externalities."
+    }
+  ],
+  "evidence_terms": [
+    {
+      "id": "source",
+      "definition": "Where the signal came from."
+    },
+    {
+      "id": "signal",
+      "definition": "What was observed or reported before interpretation."
+    },
+    {
+      "id": "interpretation",
+      "definition": "What the reviewer thinks the signal means."
+    },
+    {
+      "id": "counter_signal",
+      "definition": "Evidence or reasoning that weakens, contradicts, or reframes the interpretation."
+    },
+    {
+      "id": "decision_impact",
+      "definition": "What changes in the product decision because of the interpreted evidence."
+    },
+    {
+      "id": "observed_outcome",
+      "definition": "What happened after the bounded action was taken."
+    }
+  ],
+  "human_judgment_terms": [
+    {
+      "id": "human_taste",
+      "definition": "A person's accountable preference about quality, feel, meaning, taste, or strategic appetite; it is not an evidence score."
+    },
+    {
+      "id": "human_judgment",
+      "definition": "A named person's accountable decision on taste, ethics, meaning, risk appetite, or final responsibility."
+    },
+    {
+      "id": "accountable_input",
+      "definition": "A recorded human-owned input that may set a direction, raise a proof bar, or accept a bounded risk without pretending to be observed evidence."
+    }
+  ],
+  "learning_loop": [
+    "signal",
+    "interpretation",
+    "counter_signal",
+    "decision_impact",
+    "human_judgment",
+    "bounded_action",
+    "observed_outcome",
+    "evidence_update_or_rule_update"
+  ]
+}

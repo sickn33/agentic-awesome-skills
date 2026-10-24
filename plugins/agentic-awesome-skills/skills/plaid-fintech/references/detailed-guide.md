@@ -1,5 +1,7 @@
 # Plaid Fintech - Detailed Guide
 
+> Catalog modification (2026-10-23): repaired authentication, webhook and sync guidance; removed unsafe money-movement and non-durable webhook examples. Upstream Apache-2.0 source attribution is retained.
+
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Patterns
@@ -27,7 +29,7 @@ const plaidClient = new PlaidApi(configuration);
 
 // Create link token for new user
 app.post('/api/plaid/create-link-token', async (req, res) => {
-  const { userId } = req.body;
+  const userId = req.user.id; // authenticated server-side session; never trust body userId
 
   try {
     const response = await plaidClient.linkTokenCreate({
@@ -47,14 +49,15 @@ app.post('/api/plaid/create-link-token', async (req, res) => {
 
     res.json({ link_token: response.data.link_token });
   } catch (error) {
-    console.error('Link token creation failed:', error);
+    console.error('Link token creation failed');
     res.status(500).json({ error: 'Failed to create link token' });
   }
 });
 
 // Exchange public token for access token
 app.post('/api/plaid/exchange-token', async (req, res) => {
-  const { publicToken, userId } = req.body;
+  const { publicToken } = req.body;
+  const userId = req.user.id; // authenticated server-side session
 
   try {
     // Exchange for permanent access token
@@ -80,7 +83,7 @@ app.post('/api/plaid/exchange-token', async (req, res) => {
 
     res.json({ success: true, itemId: item_id });
   } catch (error) {
-    console.error('Token exchange failed:', error);
+    console.error('Token exchange failed');
     res.status(500).json({ error: 'Failed to exchange token' });
   }
 });
@@ -155,7 +158,9 @@ async function syncTransactions(
     where: { itemId },
   });
 
-  let cursor = item?.transactionsCursor || null;
+  if (!item) throw new Error('Item not found');
+  const initialCursor = item.transactionsCursor || null;
+  let cursor = initialCursor;
   let hasMore = true;
   let addedCount = 0;
   let modifiedCount = 0;
@@ -171,62 +176,18 @@ async function syncTransactions(
 
       const { added, modified, removed, next_cursor, has_more } = response.data;
 
-      // Process added transactions
-      if (added.length > 0) {
-        await db.transaction.createMany({
-          data: added.map(txn => ({
-            plaidTransactionId: txn.transaction_id,
-            itemId,
-            accountId: txn.account_id,
-            amount: txn.amount,
-            date: new Date(txn.date),
-            name: txn.name,
-            merchantName: txn.merchant_name,
-            category: txn.personal_finance_category?.primary,
-            subcategory: txn.personal_finance_category?.detailed,
-            pending: txn.pending,
-            paymentChannel: txn.payment_channel,
-            location: txn.location ? JSON.stringify(txn.location) : null,
-          })),
-          skipDuplicates: true,
-        });
-        addedCount += added.length;
-      }
-
-      // Process modified transactions
-      for (const txn of modified) {
-        await db.transaction.updateMany({
-          where: { plaidTransactionId: txn.transaction_id },
-          data: {
-            amount: txn.amount,
-            name: txn.name,
-            merchantName: txn.merchant_name,
-            pending: txn.pending,
-            updatedAt: new Date(),
-          },
-        });
-        modifiedCount++;
-      }
-
-      // Process removed transactions
-      if (removed.length > 0) {
-        await db.transaction.deleteMany({
-          where: {
-            plaidTransactionId: {
-              in: removed.map(r => r.transaction_id),
-            },
-          },
-        });
-        removedCount += removed.length;
-      }
+      // Stage all added/modified/removed updates in a bounded private buffer or staging table.
+      // Do not mutate the canonical transaction table until has_more is false.
+      // The staging/atomic-commit implementation is application-specific and omitted.
+      throw new Error('Implement bounded staging and atomic item-scoped commit before enabling sync');
 
       cursor = next_cursor;
       hasMore = has_more;
 
     } catch (error: any) {
       if (error.response?.data?.error_code === 'TRANSACTIONS_SYNC_MUTATION_DURING_PAGINATION') {
-        // Data changed during pagination, restart from null
-        cursor = null;
+        // Discard staged pages and restart from the original saved cursor, with bounded retries.
+        cursor = initialCursor;
         continue;
       }
       throw error;
@@ -247,7 +208,7 @@ app.post('/api/plaid/webhooks', async (req, res) => {
   const { webhook_type, webhook_code, item_id } = req.body;
 
   // Verify webhook (see webhook verification pattern)
-  if (!verifyPlaidWebhook(req)) {
+  if (!await verifyPlaidWebhook(req)) {
     return res.status(401).send('Invalid webhook');
   }
 
@@ -291,7 +252,7 @@ app.post('/api/plaid/create-update-token', async (req, res) => {
     include: { user: true },
   });
 
-  if (!item) {
+  if (!item || item.userId !== req.user.id) {
     return res.status(404).json({ error: 'Item not found' });
   }
 
@@ -310,13 +271,14 @@ app.post('/api/plaid/create-update-token', async (req, res) => {
 
     res.json({ link_token: response.data.link_token });
   } catch (error) {
-    console.error('Update token creation failed:', error);
+    console.error('Update token creation failed');
     res.status(500).json({ error: 'Failed to create update token' });
   }
 });
 
 // Handle item errors from webhooks
 app.post('/api/plaid/webhooks', async (req, res) => {
+  if (!await verifyPlaidWebhook(req)) return res.status(401).send('Invalid webhook');
   const { webhook_type, webhook_code, item_id, error } = req.body;
 
   if (webhook_type === 'ITEM') {
@@ -377,7 +339,7 @@ async function getItemWithValidation(itemId: string) {
     throw new Error('Item not found');
   }
 
-  if (item.status === 'ERROR') {
+  if (item.status !== 'ACTIVE') {
     throw new ItemNeedsUpdateError(item.errorCode, item.errorMessage);
   }
 
@@ -423,78 +385,10 @@ async function getACHNumbers(accessToken: string): Promise<ACHInfo[]> {
   });
 }
 
-// Verify identity before ACH transfer
-async function verifyAndInitiateTransfer(
-  accessToken: string,
-  userId: string,
-  amount: number
-): Promise<TransferResult> {
-  // Get identity from linked account
-  const identityResponse = await plaidClient.identityGet({
-    access_token: accessToken,
-  });
-
-  const accountOwners = identityResponse.data.accounts[0]?.owners || [];
-
-  // Get user's stored identity
-  const user = await db.user.findUnique({
-    where: { id: userId },
-  });
-
-  // Match identity
-  const matchResponse = await plaidClient.identityMatch({
-    access_token: accessToken,
-    user: {
-      legal_name: user.legalName,
-      phone_number: user.phoneNumber,
-      email_address: user.email,
-      address: {
-        street: user.street,
-        city: user.city,
-        region: user.state,
-        postal_code: user.postalCode,
-        country: 'US',
-      },
-    },
-  });
-
-  const matchScores = matchResponse.data.accounts[0]?.legal_name;
-
-  // Require high confidence for transfers
-  if ((matchScores?.score || 0) < 70) {
-    throw new Error('Identity verification failed');
-  }
-
-  // Get real-time balance for the transfer
-  const balanceResponse = await plaidClient.accountsBalanceGet({
-    access_token: accessToken,
-  });
-
-  const account = balanceResponse.data.accounts[0];
-
-  // Check sufficient funds (consider pending)
-  const availableBalance = account.balances.available ?? account.balances.current;
-  if (availableBalance < amount) {
-    throw new Error('Insufficient funds');
-  }
-
-  // Get ACH numbers and initiate transfer
-  const authResponse = await plaidClient.authGet({
-    access_token: accessToken,
-  });
-
-  const achNumbers = authResponse.data.numbers.ach.find(
-    n => n.account_id === account.account_id
-  );
-
-  // Initiate ACH transfer with your payment processor
-  return await initiateACHTransfer({
-    routingNumber: achNumbers.routing,
-    accountNumber: achNumbers.account,
-    amount,
-    accountType: account.subtype,
-  });
-}
+// Money movement intentionally not implemented: identity-match scores and a balance snapshot
+// do not authorize ACH, guarantee ownership or reserve funds. Implement explicit account selection,
+// server-side user/item/account authorization, debit mandate, processor authorization/risk controls,
+// idempotency and reconciliation before dispatching a transfer.
 
 ### Context
 
@@ -511,10 +405,10 @@ real-time decisions.
 interface BalanceInfo {
   accountId: string;
   available: number | null;
-  current: number;
+  current: number | null;
   limit: number | null;
-  isoCurrencyCode: string;
-  lastUpdated: Date;
+  isoCurrencyCode: string | null;
+  lastUpdated: Date | null;
   isRealtime: boolean;
 }
 
@@ -529,8 +423,8 @@ async function getCachedBalances(accessToken: string): Promise<BalanceInfo[]> {
     available: account.balances.available,
     current: account.balances.current,
     limit: account.balances.limit,
-    isoCurrencyCode: account.balances.iso_currency_code || 'USD',
-    lastUpdated: new Date(account.balances.last_updated_datetime || Date.now()),
+    isoCurrencyCode: account.balances.iso_currency_code ?? null,
+    lastUpdated: account.balances.last_updated_datetime ? new Date(account.balances.last_updated_datetime) : null,
     isRealtime: false,
   }));
 }
@@ -550,8 +444,8 @@ async function getRealTimeBalance(
     available: account.balances.available,
     current: account.balances.current,
     limit: account.balances.limit,
-    isoCurrencyCode: account.balances.iso_currency_code || 'USD',
-    lastUpdated: new Date(),
+    isoCurrencyCode: account.balances.iso_currency_code ?? null,
+    lastUpdated: account.balances.last_updated_datetime ? new Date(account.balances.last_updated_datetime) : null,
     isRealtime: true,
   }));
 }
@@ -571,7 +465,7 @@ async function validatePayment(
 
   const available = account.available ?? account.current;
 
-  if (available < amount) {
+  if (!Number.isFinite(amount) || amount <= 0 || available === null || available < amount) {
     return {
       valid: false,
       reason: 'Insufficient funds',
@@ -599,107 +493,14 @@ Verify Plaid webhooks using the verification key endpoint.
 Handle duplicate webhooks idempotently and design for out-of-order
 delivery.
 
-import jwt from 'jsonwebtoken';
-import jwksClient from 'jwks-rsa';
+Webhook verification implementation requirements:
 
-// Cache JWKS client
-const client = jwksClient({
-  jwksUri: 'https://production.plaid.com/.well-known/jwks.json',
-  cache: true,
-  cacheMaxAge: 86400000,  // 24 hours
-});
+1. Preserve exact raw request bytes before JSON parsing. Reject a missing/invalid Plaid-Verification JWT.
+2. Read kid from the untrusted header only to retrieve the JWK through the authenticated /webhook_verification_key/get endpoint; validate algorithm/key status and cache under bounded expiry. Do not invent a public JWKS URL.
+3. Verify ES256 signature and required finite iat freshness, rejecting stale/future claims under the documented clock policy. Hash raw bytes with SHA-256 and compare request_body_sha256, not JSON.stringify(req.body).
+4. Route all ITEM/TRANSACTIONS events through the same verified entry point. Authenticate item ownership in the stored mapping, deduplicate atomically and durably enqueue before 2xx. Mark processing complete only after success; retry/reconcile failures. A check-then-insert plus fire-and-forget promise can lose events.
 
-async function getSigningKey(kid: string): Promise<string> {
-  const key = await client.getSigningKey(kid);
-  return key.getPublicKey();
-}
-
-async function verifyPlaidWebhook(req: Request): Promise<boolean> {
-  const signedJwt = req.headers['plaid-verification'];
-
-  if (!signedJwt) {
-    return false;
-  }
-
-  try {
-    // Decode to get kid
-    const decoded = jwt.decode(signedJwt, { complete: true });
-    if (!decoded?.header?.kid) {
-      return false;
-    }
-
-    // Get signing key
-    const key = await getSigningKey(decoded.header.kid);
-
-    // Verify JWT
-    const claims = jwt.verify(signedJwt, key, {
-      algorithms: ['ES256'],
-    }) as any;
-
-    // Verify body hash
-    const bodyHash = crypto
-      .createHash('sha256')
-      .update(JSON.stringify(req.body))
-      .digest('hex');
-
-    if (claims.request_body_sha256 !== bodyHash) {
-      return false;
-    }
-
-    // Check timestamp (within 5 minutes)
-    const issuedAt = new Date(claims.iat * 1000);
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-    if (issuedAt < fiveMinutesAgo) {
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error('Webhook verification failed:', error);
-    return false;
-  }
-}
-
-// Idempotent webhook handler
-app.post('/api/plaid/webhooks', async (req, res) => {
-  // Verify webhook signature
-  if (!await verifyPlaidWebhook(req)) {
-    return res.status(401).send('Invalid signature');
-  }
-
-  const { webhook_type, webhook_code, item_id } = req.body;
-
-  // Create idempotency key
-  const idempotencyKey = `${webhook_type}:${webhook_code}:${item_id}:${JSON.stringify(req.body)}`;
-  const idempotencyHash = crypto.createHash('sha256').update(idempotencyKey).digest('hex');
-
-  // Check if already processed
-  const existing = await db.webhookLog.findUnique({
-    where: { idempotencyHash },
-  });
-
-  if (existing) {
-    console.log('Duplicate webhook, skipping:', idempotencyHash);
-    return res.sendStatus(200);
-  }
-
-  // Record webhook before processing
-  await db.webhookLog.create({
-    data: {
-      idempotencyHash,
-      webhookType: webhook_type,
-      webhookCode: webhook_code,
-      itemId: item_id,
-      payload: req.body,
-      processedAt: new Date(),
-    },
-  });
-
-  // Process webhook (async for quick response)
-  processWebhookAsync(req.body).catch(console.error);
-
-  res.sendStatus(200);
-});
+The catalog does not bundle this verifier/queue implementation. Keep the route disabled until implemented and tested; no example should be deployed as a working webhook service.
 
 ### Context
 

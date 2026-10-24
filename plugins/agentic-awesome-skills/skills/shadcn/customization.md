@@ -111,14 +111,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        warning: "oklch(var(--warning) / <alpha-value>)",
+        warning: "var(--warning)",
         "warning-foreground":
-          "oklch(var(--warning-foreground) / <alpha-value>)",
+          "var(--warning-foreground)",
       },
     },
   },
 }
 ```
+
+The variables above hold complete `oklch(...)` colors, so do not wrap them in another color function. For Tailwind v3 slash-opacity modifiers, store channels separately and configure `oklch(var(--warning-channels) / <alpha-value>)`.
 
 ```tsx
 // 3. Use in components.
@@ -165,6 +167,7 @@ warning: "bg-warning text-warning-foreground hover:bg-warning/90",
 Compose shadcn/ui primitives into higher-level components:
 
 ```tsx
+// Radix composition; use the installed Base render API for Base primitives.
 export function ConfirmDialog({ title, description, onConfirm, children }) {
   return (
     <AlertDialog>

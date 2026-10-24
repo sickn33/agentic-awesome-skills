@@ -8,4 +8,4 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `assets/template.py` | `.github/plugins/azure-sdk-python/skills/fastapi-router-py/assets/template.py` | `aeaa23b2f6808898bc808882dc6aabf77b82ded9` | content unchanged |
+| `assets/template.py` | `.github/plugins/azure-sdk-python/skills/fastapi-router-py/assets/template.py` | `aeaa23b2f6808898bc808882dc6aabf77b82ded9` | AAS review: enable required update/delete ownership checks; adapt owner field to actual model |

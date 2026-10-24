@@ -31,6 +31,8 @@ Asio's API changed shape three times, so the same task has three correct answers
 - Use when the target toolchain is old: an older Boost or a pre-C++20 standard, where coroutine examples will not compile.
 - Use when async code compiles but misbehaves: interleaved writes, dangling buffers, sockets closing early, `operation_aborted` treated as an error.
 
+The bundled examples are sketches, not a locally verified build matrix. Upstream compilation/CI claims below are author-reported historical evidence, not results from this catalog review. Verify API headers, tokens and namespace locations against the installed release; some coroutine snippets assume newer default completion tokens. Use explicit `asio::use_awaitable` for older supported releases. Bound read buffers and outbound queues, handle cancellation and shutdown, and supply all omitted declarations before treating a sketch as a server.
+
 ## Step 1: pick the style (do this before writing code)
 
 Determine the Boost (or Asio) version and the C++ standard actually in use — `find_package(Boost)` output, `dpkg -l libboost-dev`, `brew info boost`, `CMAKE_CXX_STANDARD`, or ask. Do not assume the newest.
@@ -79,7 +81,7 @@ Language, not library: the chrono literals `250ms` / `30s` are **C++14**. For a 
 
 **Re-arming a timer resolves the pending wait with `operation_aborted`.** In an idle-timeout loop that is the signal to keep waiting, not an error.
 
-**GCC needs `-fcoroutines`** for the C++20 style, and header-only Boost needs `BOOST_ERROR_CODE_HEADER_ONLY` defined in exactly one place (CMake).
+**Check the GCC toolchain** for the C++20 style: current GCC enables coroutines with C++20; older toolchains may require `-fcoroutines`, and header-only Boost needs `BOOST_ERROR_CODE_HEADER_ONLY` defined in exactly one place (CMake).
 
 ## Common mistakes
 
@@ -96,7 +98,7 @@ Language, not library: the chrono literals `250ms` / `30s` are **C++14**. For a 
 | Blocking inside a handler | Never block in a completion handler |
 | Accepting a socket with the wrong executor type | See `async_accept(make_strand(...))` in Step 3 |
 | Requiring the `Boost::system` component | Header-only since 1.74: `Boost::headers` + `BOOST_ERROR_CODE_HEADER_ONLY`. Only classic (pre-1.66) needs the link |
-| Missing `-fcoroutines` on GCC | Build fails — add `$<$<CXX_COMPILER_ID:GNU>:-fcoroutines>` |
+| Coroutine support unavailable on the chosen compiler | Check that compiler's C++20 support and flags; modern GCC enables coroutines with C++20 |
 | Writing coroutine code for a Boost that predates it | Do Step 1 first |
 
 ## Boost.Asio vs standalone Asio
@@ -146,9 +148,9 @@ Check the code you just wrote against this list:
 
 Three CI-verified implementations of the same full-duplex framed-protocol server, one per style — copy from the one matching Step 1. Paths are relative to this skill directory; if only the skill was installed, they are at https://github.com/alexprivalov/boost-asio-skill/tree/main/examples.
 
-- `../../examples/market-data-feed/` — C++20 coroutines (Boost 1.77+; verified 1.83–1.90)
-- `../../examples/market-data-feed-precpp20/` — callbacks, C++11-clean (verified Boost 1.74+, incl. Windows/MSVC)
-- `../../examples/market-data-feed-classic/` — classic `io_service` (verified back to Boost 1.62 / Debian 9)
+- Upstream `examples/market-data-feed/` (not bundled) — C++20 coroutines (Boost 1.77+; verified 1.83–1.90)
+- Upstream `examples/market-data-feed-precpp20/` (not bundled) — callbacks, C++11-clean (verified Boost 1.74+, incl. Windows/MSVC)
+- Upstream `examples/market-data-feed-classic/` (not bundled) — classic `io_service` (verified back to Boost 1.62 / Debian 9)
 
 ## Official documentation
 
@@ -164,7 +166,7 @@ Three CI-verified implementations of the same full-duplex framed-protocol server
 
 ## Security & Safety Notes
 
-- Read-only guidance: this skill contains no shell commands, network fetches, credentials, or mutation instructions. The commands it names (`dpkg -l libboost-dev`, `brew info boost`) are local version queries.
+- This is guidance, but it includes installation and build commands, and server examples open listening sockets. Run only the requested setup, bind test servers to loopback, and do not expose them publicly without authentication and resource limits.
 - Networking code it produces accepts untrusted input. Validate length prefixes before allocating (`std::string body(n, 0)` with an attacker-controlled `n` is a memory-exhaustion vector — cap it), and verify peer certificates when using TLS rather than disabling verification to make a handshake pass.
 
 ## Related Skills

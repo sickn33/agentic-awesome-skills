@@ -32,6 +32,10 @@ report_count: 6
 ## 20. SAML / SSO ATTACKS
 > SSO bugs frequently pay High–Critical. XML parsers are notoriously inconsistent.
 
+### Evidence boundaries
+
+The XML fragments below omit namespace declarations and protocol-required fields; they illustrate parser/validation failure classes, not valid signed requests or proof that a target is vulnerable. Use only synthetic identities/accounts controlled by the engagement and a harmless agreed canary for file-read tests; never target a real administrator or extract system files merely to demonstrate impact. Determine severity from reproduced authorization impact and the program rubric, not these shorthand labels. Review actual library/version advisories before attributing a CVE.
+
 ### Attack Surface
 ```bash
 # Find SAML endpoints

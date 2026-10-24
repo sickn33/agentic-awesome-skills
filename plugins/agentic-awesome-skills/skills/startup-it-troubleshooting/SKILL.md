@@ -23,7 +23,7 @@ Runbooks for startups and small teams where engineers double as the IT departmen
 
 ## When to Use
 
-You are the "accidental IT person." Nobody has IT in their title, but laptops freeze, Wi-Fi drops during investor demos, someone gets locked out of Google Workspace at midnight, and a new hire starts Monday with zero accounts. This skill gives you copy-paste commands to handle it all.
+You are the "accidental IT person." Nobody has IT in their title, but laptops freeze, Wi-Fi drops during investor demos, someone gets locked out of Google Workspace at midnight, and a new hire starts Monday with zero accounts. Commands are platform/version-specific examples. Start read-only, preserve current configuration and apply only authorized, reviewed changes to the exact account/device.
 
 **Priority triage:** (1) Company-wide outages, (2) Executive/customer-facing blockers, (3) Team-wide degradations, (4) Individual workstation issues. Always ask: "How many people are affected?" and "Is revenue impacted?"
 
@@ -34,29 +34,33 @@ You are the "accidental IT person." Nobody has IT in their title, but laptops fr
 ### Google Workspace via GAM
 
 ```bash
-curl -s -S -L https://gam-shortn.appspot.com/gam-install -o /tmp/gam-install.sh && bash /tmp/gam-install.sh && rm /tmp/gam-install.sh  # install GAM
+# Obtain GAM from its official project, pin/verify the release and inspect installation instructions before installing.
 gam oauth create                                                     # authorize
 
-gam update user jane@company.com password "TempPass123!" changepassword on  # reset password
+# Reset through the approved secure admin workflow; never literal or generated passwords in process argv.
 gam update user jane@company.com suspended off       # unsuspend locked-out user
 gam user jane@company.com signout                    # force sign-out all sessions
 gam user jane@company.com update backupcodes         # new MFA backup codes
-gam user jane@company.com turnoff2sv                 # disable 2SV (re-enable within 24h)
+# Do not disable2SV as routine recovery; use verified recovery/backup methods.
 ```
 
 ### Okta API
 
 ```bash
-OKTA="company.okta.com"; T="your-api-token"; UID="00u1abcdef"
-curl -X POST -H "Authorization: SSWS $T" "https://$OKTA/api/v1/users/$UID/lifecycle/unlock"
-curl -X POST -H "Authorization: SSWS $T" "https://$OKTA/api/v1/users/$UID/lifecycle/reset_password?sendEmail=true"
-curl -X POST -H "Authorization: SSWS $T" "https://$OKTA/api/v1/users/$UID/lifecycle/reset_factors"
-curl -X DELETE -H "Authorization: SSWS $T" "https://$OKTA/api/v1/users/$UID/sessions"
+: "${OKTA_DOMAIN:?Set the authorized Okta domain}"
+: "${OKTA_API_TOKEN:?Inject admin token securely}"
+: "${OKTA_USER_ID:?Verify the exact target user}"
+curl -X POST -H "Authorization: SSWS $OKTA_API_TOKEN" "https://$OKTA_DOMAIN/api/v1/users/$OKTA_USER_ID/lifecycle/unlock"
+curl -X POST -H "Authorization: SSWS $OKTA_API_TOKEN" "https://$OKTA_DOMAIN/api/v1/users/$OKTA_USER_ID/lifecycle/reset_password?sendEmail=true"
+curl -X POST -H "Authorization: SSWS $OKTA_API_TOKEN" "https://$OKTA_DOMAIN/api/v1/users/$OKTA_USER_ID/lifecycle/reset_factors"
+curl -X DELETE -H "Authorization: SSWS $OKTA_API_TOKEN" "https://$OKTA_DOMAIN/api/v1/users/$OKTA_USER_ID/sessions"
 ```
 
-**MFA recovery flow:** Verify identity via video call, generate backup codes or reset factors, have user re-enroll immediately, confirm old device is deregistered, log the incident.
+**MFA recovery flow:** Verify identity with the established independent recovery procedure (a video call alone is insufficient), generate backup codes or reset factors, have user re-enroll immediately, confirm old device is deregistered, log the incident.
 
 ---
+
+Network resets, DNS overrides and VPN resets can break managed policy or remote access. Record current resolver/interface settings first, choose the actual interface and restore them after diagnostics. Public DNS may not resolve internal zones and may disclose internal queries. Package/update/reboot, encryption, account transfer and printer-queue changes below are separate mutating actions, not an automatic checklist.
 
 ## Network Troubleshooting
 
@@ -121,7 +125,7 @@ networkQuality -s              # macOS 12+ bufferbloat test
 df -h                                    # volume overview
 du -sh ~/* | sort -rh | head -15         # biggest dirs in home
 docker system df                         # Docker disk usage (common culprit)
-docker system prune -a --volumes         # reclaim Docker space
+docker system df -v                      # inventory; review exact unused artifacts/volumes before deletion
 brew cleanup --prune=all                 # macOS Homebrew cleanup
 ```
 
@@ -136,7 +140,7 @@ Get-ChildItem C:\ -Recurse -File -EA SilentlyContinue | Sort Length -Desc | Sele
 # macOS
 memory_pressure
 top -o rsize -l 1 -n 10 -stats pid,command,rsize
-pkill -f "Google Chrome Helper"
+# Inspect exact processes and save work before quitting; avoid broad pkill patterns.
 
 # Linux
 free -h && ps aux --sort=-%mem | head -11
@@ -145,7 +149,7 @@ sudo dmesg | grep -i "oom\|out of memory"
 
 ```powershell
 Get-Process | Sort WorkingSet64 -Desc | Select -First 10 Name,@{N='MB';E={[math]::Round($_.WorkingSet64/1MB,2)}}
-Stop-Process -Name "Teams" -Force
+# Quit the verified application after saving work; force termination is a separate approved recovery.
 ```
 
 ### Battery Health
@@ -165,7 +169,7 @@ powercfg /batteryreport /output "$env:USERPROFILE\Desktop\battery.html"
 
 ```bash
 profiles status -type enrollment          # MDM enrollment check
-sudo systemsetup -setremotelogin on       # enable SSH for remote admin
+sudo systemsetup -getremotelogin          # inspect; enabling SSH changes remote access
 
 # Homebrew fleet setup — standard Brewfile
 cat > Brewfile <<'EOF'
@@ -179,7 +183,7 @@ brew bundle dump --file=~/Brewfile --force  # export current setup
 sudo fdesetup status && sudo fdesetup enable  # store recovery key in 1Password
 
 # Updates
-softwareupdate -l && sudo softwareupdate -ia --restart
+softwareupdate -l  # schedule installation/restart only after approved downtime
 ```
 
 ---
@@ -191,10 +195,10 @@ gpresult /r; gpupdate /force             # check and refresh Group Policy
 
 # Windows Update
 Install-Module PSWindowsUpdate -Force -Scope CurrentUser
-Install-WindowsUpdate -AcceptAll -AutoReboot
+Get-WindowsUpdate  # review and schedule approved install/reboot
 # If stuck: reset update components
 Stop-Service wuauserv,cryptSvc,bits,msiserver -Force
-Remove-Item "C:\Windows\SoftwareDistribution" -Recurse -Force
+# Follow the supported repair procedure; preserve diagnostics instead of blind recursive deletion.
 Start-Service wuauserv,cryptSvc,bits,msiserver
 
 # BitLocker
@@ -267,45 +271,20 @@ dig TXT _dmarc.company.com                       # DMARC
 ## Onboarding Checklist
 
 ```bash
-# 1. Google Workspace account
-gam create user newhire@company.com firstname "Jane" lastname "Smith" \
-  password "Welcome2Company!" changepassword on org "/Engineering"
-gam update group engineering@company.com add member newhire@company.com
-
-# 2. 1Password
-op user provision --email newhire@company.com --name "Jane Smith"
-
-# 3. Slack
-curl -X POST "https://slack.com/api/admin.users.invite" \
-  -H "Authorization: Bearer xoxp-your-admin-token" \
-  -d "email=newhire@company.com&channel_ids=C01GENERAL,C02ENGINEERING&team_id=T01YOURTEAM"
-
-# 4. GitHub
-gh api orgs/your-company/invitations -f email="newhire@company.com" -f role="direct_member"
-gh api orgs/your-company/teams/engineering/memberships/newhire-username -f role="member" -X PUT
-
-# 5. VPN / Tailscale
-tailscale up --authkey tskey-auth-abc123
+# Provision only the approved joiner, role, start date and groups through the IdP.
+# Use secure credential bootstrap; no shared welcome password or token in CLI flags.
+# Send invitations only to the verified corporate identity and approved teams.
+# Discover supported GAM/1Password/Slack/Tailscale commands for the installed versions;
+# use SSO/secure secret injection instead of literal admin tokens/auth keys.
 ```
 
 ### First-Day Setup Script (macOS)
 
-Give new hires this script. It installs Homebrew, your standard tools from a hosted Brewfile, configures Git, authenticates GitHub CLI, clones core repos, and enables FileVault.
-
-```bash
-#!/bin/bash
-set -e
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-curl -sL https://internal.company.com/setup/Brewfile -o /tmp/Brewfile && brew bundle install --file=/tmp/Brewfile
-read -p "Full name: " N; read -p "Email: " E
-git config --global user.name "$N" && git config --global user.email "$E" && git config --global pull.rebase true
-gh auth login && mkdir -p ~/src && cd ~/src && gh repo clone your-company/main-app
-sudo fdesetup enable
-```
+Give new hires a reviewed, versioned setup procedure. Download installers only from official sources, verify their release identity and inspect them before authorized execution. Inspect the exact hosted Brewfile and package sources before installation. Preserve existing Git settings; configure identity only as requested. Enable FileVault only after recovery-key escrow is verified; never claim escrow succeeded from a comment.
 
 ## Offboarding Checklist
 
-Run these **immediately** when someone departs. Speed matters for security.
+Apply the approved offboarding plan at the authorized time, after confirming identity, holds/retention and transfer scope. Suspension, session revocation, data transfer and mailbox delegation are separate actions; do not grant a manager blanket mailbox access automatically.
 
 ```bash
 gam update user departed@company.com suspended on             # 1. block all access
@@ -377,7 +356,8 @@ sudo /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate
 sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 
 # Linux
-sudo ufw enable && sudo ufw default deny incoming && sudo ufw default allow outgoing
+# Before firewall changes, verify the actual remote-management path and recovery console.
+sudo ufw status verbose  # do not blindly enable default-deny over a remote session.
 ```
 
 ```powershell
@@ -389,18 +369,18 @@ Get-NetFirewallProfile | Select Name, Enabled
 ### Phishing Response
 
 ```bash
-gam update user compromised@company.com password "$(openssl rand -base64 16)" changepassword on
+# Reset credentials through the approved secure workflow; do not put passwords in argv.
 gam user compromised@company.com signout             # kill sessions
-gam user compromised@company.com turnoff2sv          # reset MFA
+# Recover/reset compromised factors under the verified incident procedure; retain MFA enforcement.
 gam user compromised@company.com show tokens         # check rogue OAuth apps
 gam user compromised@company.com show forwarding     # check attacker persistence
 ```
 
 ### Lost / Stolen Device Protocol
 
-1. **Immediately** -- Remote wipe via MDM or Find My Mac.
+1. **Immediately** -- Confirm device identity and approved containment: lock/revoke sessions; assess evidence preservation and backup before authorizing irreversible remote wipe.
 2. **Within 15 min** -- Reset password and kill sessions (SSO commands above).
-3. **Within 1 hour** -- Rotate API keys and secrets: `gh auth refresh`, delete AWS access keys.
+3. **Within 1 hour** -- Revoke and rotate affected credentials at their issuer. `gh auth refresh` is not token revocation/rotation; inventory dependent services before key replacement.
 4. **Within 24 hours** -- Review access logs for suspicious activity.
 
 ## Related Skills

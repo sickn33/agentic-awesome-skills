@@ -1,4 +1,6 @@
-# Overview - Detailed Guide
+# Overview - Historical Integration Reference
+
+The scripts, Python wrapper and example JSON files described below are not included in this tree. Commands are upstream integration designs, not runnable bundled functionality. Do not execute them until the actual implementation and pinned dependencies have been supplied and reviewed. The root skill provides a supported-client alternative. Privacy, licensing, authorization and resource limits in the root apply to all designs.
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
@@ -52,7 +54,7 @@ Supports diverse dataset types through template system:
 
 # Usage Instructions
 
-The skill includes two Python scripts that use PEP 723 inline dependency management:
+The upstream design refers to two Python scripts (not bundled here) that use PEP 723 inline dependency management:
 
 > **All paths are relative to the directory containing this SKILL.md
 file.**
@@ -63,7 +65,7 @@ file.**
 
 ### Prerequisites
 - `uv` package manager installed
-- `HF_TOKEN` environment variable must be set with a Write-access token
+- Use no token for accessible public reads or a least-privilege read token where needed; write access is required only for authorized mutations.
 
 ---
 
@@ -106,7 +108,7 @@ SELECT * FROM data WHERE subject='nutrition'
 SELECT subject, COUNT(*) as cnt FROM data GROUP BY subject ORDER BY cnt DESC
 
 -- Column selection and transformation
-SELECT question, choices[answer] AS correct_answer FROM data
+SELECT question, choices[answer + 1] AS correct_answer FROM data
 
 -- Regex matching
 SELECT * FROM data WHERE regexp_matches(question, 'nutrition|diet')
@@ -226,7 +228,7 @@ Examples:
 - `hf://datasets/cais/mmlu@~parquet/default/train/*.parquet`
 - `hf://datasets/ibm/duorc@~parquet/ParaphraseRC/test/*.parquet`
 
-The `@~parquet` revision provides auto-converted Parquet files for any dataset format.
+The `@~parquet` conversion may be unavailable or limited; inspect actual files/config/splits and pin a reproducible revision before querying.
 
 
 ## Useful DuckDB SQL Functions
@@ -239,7 +241,7 @@ regexp_matches(col, 'pattern')    -- Regex match
 LOWER(col), UPPER(col)           -- Case conversion
 
 -- Array functions
-choices[0]                        -- Array indexing (0-based)
+choices[1]                        -- DuckDB LIST indexing (1-based; JSON differs)
 array_length(choices)             -- Array length
 unnest(choices)                   -- Expand array to rows
 
@@ -372,7 +374,7 @@ You are an AI assistant expert at using MCP tools effectively.
 
 ### Example Categories & Templates
 
-The skill includes diverse training examples beyond just MCP usage:
+The upstream design refers to diverse training examples (not bundled here) beyond just MCP usage:
 
 **Available Example Sets:**
 - `training_examples.json` - MCP tool usage examples (debugging, project setup, database analysis)

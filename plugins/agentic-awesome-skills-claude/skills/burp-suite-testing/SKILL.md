@@ -29,6 +29,8 @@ date_added: "2026-02-27"
 
 Execute comprehensive web application security testing using Burp Suite's integrated toolset, including HTTP traffic interception and modification, request analysis and replay, automated vulnerability scanning, and manual testing workflows. This skill enables systematic discovery and exploitation of web application vulnerabilities through proxy-based testing methodology.
 
+Use a dedicated test browser/profile and trust Burp’s CA only there; remove that trust when finished. Scope filters reduce noise but are not a security boundary: explicitly constrain scan/replay destinations, redirects, external services, account actions and rate budgets. Credential testing requires named test accounts and attempt/lockout limits. Store captured sessions privately and redact tokens/passwords from reports. Examples below are hypothetical, not findings from an assessment.
+
 ## Inputs / Prerequisites
 
 ### Required Tools
@@ -132,7 +134,7 @@ productId=1&quantity=1&price=100
 productId=1&quantity=1&price=1
 ```
 
-Result: Item added to cart at modified price.
+Hypothetical vulnerable result: item added at the modified price. Record the observed server behavior; a changed request alone proves nothing.
 
 ### Phase 3: Setting Target Scope
 
@@ -344,7 +346,7 @@ javascript:alert(1)
 2. Identify `price=9999` parameter in POST body
 3. Modify to `price=1`
 4. Forward request
-5. Complete checkout at manipulated price
+5. Verify server-calculated totals using a sandbox cart/test payment; do not place a real order without separate explicit scope
 
 **Finding**: Server trusts client-provided price values.
 

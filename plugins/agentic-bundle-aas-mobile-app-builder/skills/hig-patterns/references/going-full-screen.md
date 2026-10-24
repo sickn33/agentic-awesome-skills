@@ -1,8 +1,11 @@
 ---
 title: "Going full screen | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/going-full-screen
+---
 
 # Going full screen
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 iPhone, iPad, and Mac offer full-screen modes that let people expand a window to fill the screen, hiding system controls and providing a distraction-free environment.
 
@@ -77,3 +80,7 @@ Date| Changes
 June 9, 2025| Updated guidance for hiding toolbars and navigation controls, and deferring Home Screen indicator gestures in full-screen iOS and iPadOS apps and games.  
 June 10, 2024| Enhanced guidance for playing a game in full-screen mode.  
   
+
+## Implementation checks
+
+Use the system presentation APIs and preserve a discoverable exit, keyboard access, VoiceOver focus and Reduce Motion behavior. Full screen and visionOS Full Space are different concepts; a modal full-screen view does not itself authorize an immersive transition or hiding system safety controls.

@@ -16,11 +16,11 @@ Vector-powered CLI for semantic file search with a Claude/Codex skill
 
 Use this skill when you need to work with vector-powered cli for semantic file search with a claude/codex skill.
 
-## Instructions
+## Procedure
 
-This skill provides guidance and patterns for vector-powered cli for semantic file search with a claude/codex skill.
+This is a guide to an external semantic file-search tool, not a bundled executable. Identify the authorized project root, search question and file exclusions. Inspect an already installed, reviewed Vexor version and its actual help before constructing a query. Confirm whether indexing or embedding sends file content to a provider and obtain the required data/cost scope before doing so. Exclude credentials and unrelated private files. Read returned source locations to verify relevance; a semantic match is not proof. Report missing runtime or index explicitly, and use an available local text search when appropriate.
 
-For more information, see the [source repository](https://github.com/scarletkc/vexor).
+See the [source repository](https://github.com/scarletkc/vexor) for version-specific setup.
 
 ## Example
 

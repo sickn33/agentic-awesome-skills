@@ -12,8 +12,8 @@ A.x < B.x + B.w  AND  B.x < A.x + A.w
 A.y < B.y + B.h  AND  B.y < A.y + A.h
 ```
 
-- **Pass:** zero overlapping content objects per slide.
-- **Fail:** any overlap → move objects, resize bboxes, reduce content density, or split the slide.
+- **Pass:** zero unintended overlapping content objects per slide; record intended overlays and validate their readability.
+- **Fail:** an unintended overlap → move objects, resize bboxes, reduce content density, or split the slide.
 
 ## 2. Text Overflows
 
@@ -63,7 +63,7 @@ For each normal content slide (exclude section headers and hidden appendix slide
 
 ## 6. Narrative and Count
 
-- Slide count is within ±2 of the user's requested count.
+- Slide count matches the user's requested count; deviations require an explicitly accepted range.
 - Topic sequence matches the requested business framework (McKinsey, SCQA, pyramid, etc.) or the user's stated structure.
 - For action-title frameworks (e.g., `action-title`, McKinsey): every content slide has an **action title** (not a descriptive label). Run the ghost-deck test: read only slide titles — they must tell the full story on their own.
 
@@ -72,7 +72,7 @@ For each normal content slide (exclude section headers and hidden appendix slide
 If the deck contains hidden slides (`hidden: true`):
 
 - **Pass:** hidden slides are last in the `slides` array unless the user specified otherwise.
-- In the rendered PPTX, confirm `ppt/presentation.xml` contains `p:sldId show="0"` on the correct entries.
+- Resolve the correct slide parts and verify their actual hidden-slide state with a compatible OOXML library/viewer; do not infer it from the specification alone.
 
 ## 8. Asset Layering
 

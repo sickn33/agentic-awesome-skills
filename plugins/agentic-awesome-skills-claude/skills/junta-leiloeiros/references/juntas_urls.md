@@ -1,7 +1,7 @@
 # Juntas Comerciais do Brasil — URLs e Status de Scraping
 
-Tabela de referência atualizada com todas as 27 Juntas Comerciais e seus sites de leiloeiros.
-**Última verificação:** 2026-02-25
+Tabela histórica de rotas upstream; disponibilidade e cobertura atuais não foram verificadas nesta revisão.
+**Data declarada pelo upstream:** 2026-02-25 (não é evidência de teste atual).
 
 | UF | Junta | URL Leiloeiros | Método | Status |
 |----|-------|---------------|--------|--------|
@@ -29,7 +29,7 @@ Tabela de referência atualizada com todas as 27 Juntas Comerciais e seus sites 
 | AM | JUCEA | https://www.jucea.am.gov.br/leiloeiros/ | httpx+BS4 | GENÉRICO |
 | RO | JUCER | https://rondonia.ro.gov.br/jucer/lista-de-leiloeiros-oficiais/ | httpx+BS4 | CUSTOMIZADO (migrou para portal estadual) |
 | RR | JUCERR | https://jucerr.rr.gov.br/leiloeiros/ | httpx+BS4 | GENÉRICO |
-| AP | JUCAP | http://www.jucap.ap.gov.br/leiloeiros | httpx+BS4 | CUSTOMIZADO (TLS inseguro somente via `JUNTA_INSECURE_TLS=1`) |
+| AP | JUCAP | http://www.jucap.ap.gov.br/leiloeiros | httpx+BS4 | CUSTOMIZADO (rota histórica; conferir o endpoint HTTPS no código atual) |
 | AC | JUCEAC | https://juceac.ac.gov.br/leiloeiro/ | httpx+BS4 | CUSTOMIZADO (URL: /leiloeiro/ singular) |
 | TO | JUCETINS | https://www.to.gov.br/jucetins/leiloeiros/152aezl6blm0 | httpx+BS4 | CUSTOMIZADO (domínio antigo: juceto.to.gov.br APOSENTADO) |
 
@@ -40,7 +40,7 @@ Tabela de referência atualizada com todas as 27 Juntas Comerciais e seus sites 
 - **PLAYWRIGHT**: Requer renderização JS (browser headless)
 - **INDISPONÍVEL**: Site fora do ar ou sem página de leiloeiros (registrado no log)
 
-## Migrações Confirmadas (2025-2026)
+## Migrações relatadas pelo upstream (2025-2026)
 
 | Antigo | Novo | Junta |
 |--------|------|-------|
@@ -66,16 +66,20 @@ Caso um site esteja indisponível, verificar:
 - **InnLei**: https://innlei.org.br/juntas-comerciais
 - **FENAJU**: https://www.fenaju.org.br/federados
 
-## Integração com Web-Scraper (skill)
+## Fallback local
 
-Para estados com baixa coleta ou sites problemáticos, o `web_scraper_fallback.py` aciona
-automaticamente a skill web-scraper para extração inteligente adicional.
-
-Execute: `python scripts/web_scraper_fallback.py --estado MA RN AP`
+`web_scraper_fallback.py` usa somente o parser genérico local. Não instala nem
+executa uma skill externa. Requer `--allow-collect` e não persiste candidatos sem
+matrícula como profissionais verificados. Os caminhos na tabela podem divergir
+do código; confira as URLs exatas antes de qualquer rede.
 
 ## Como Atualizar Este Arquivo
 
-Após cada scraping, verificar no `data/scraping_log.json`:
+Após cada scraping, verificar no os logs de execução com nome único em `JUNTA_DATA_DIR`:
 - Estados com `status: VAZIO` → investigar se URL mudou
 - Estados com `status: ERRO` → possível necessidade de Playwright
 - Atualizar colunas `Método` e `URL` se necessário
+
+As rotas HTTP são bloqueadas por padrão; não desative TLS para recuperar uma
+fonte. `PARTIAL` sinaliza lacunas e candidatos não verificados. Falha/ausência de
+registros não autoriza contornar controles ou inventar dados.

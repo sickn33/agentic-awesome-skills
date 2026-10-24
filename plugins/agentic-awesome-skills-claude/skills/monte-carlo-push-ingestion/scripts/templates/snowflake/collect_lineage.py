@@ -26,7 +26,6 @@ Usage (table-level):
     python collect_lineage.py \\
         --account  <SNOWFLAKE_ACCOUNT> \\
         --user     <SNOWFLAKE_USER> \\
-        --password <SNOWFLAKE_PASSWORD> \\
         --warehouse <SNOWFLAKE_WAREHOUSE>
 
 Usage (column-level):
@@ -211,6 +210,8 @@ def _fetch_query_history(conn, lookback_hours: int) -> list[dict]:
         if not batch:
             break
         rows.extend(dict(zip(columns, row)) for row in batch)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     cursor.close()
     return rows
 
@@ -248,6 +249,7 @@ def collect(
         print("No lineage queries found in the specified window.")
         manifest = {
             "resource_type": RESOURCE_TYPE,
+        "lineage_candidates": True,
             "collected_at": datetime.now(tz=timezone.utc).isoformat(),
             "column_lineage": column_lineage,
             "edges": [],
@@ -260,6 +262,7 @@ def collect(
 
     manifest = {
         "resource_type": RESOURCE_TYPE,
+        "lineage_candidates": True,
         "collected_at": datetime.now(tz=timezone.utc).isoformat(),
         "column_lineage": column_lineage,
         "edges": [
@@ -302,7 +305,7 @@ def main() -> None:
         help="Snowflake username (env: SNOWFLAKE_USER)",
     )
     parser.add_argument(
-        "--password",
+        "--password", choices=[],
         default=os.environ.get("SNOWFLAKE_PASSWORD"),
         help="Snowflake password (env: SNOWFLAKE_PASSWORD)",
     )

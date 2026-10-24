@@ -1,5 +1,8 @@
 # Configuration Security Patterns
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 Dangerous configuration patterns that enable security failures.
 
 ## Zero/Empty/Null Semantics
@@ -170,7 +173,7 @@ export DATABASE_PASSWORD="secret"
 export API_KEY="sk_live_xxx"
 
 # Risks:
-# - Visible in process listings (ps aux)
+# - May be exposed by privileged process inspection, dumps or platform-specific tools; ordinary ps aux typically lists arguments, not all environment variables
 # - Inherited by child processes
 # - Logged in error dumps
 # - Visible in container inspection
@@ -288,7 +291,7 @@ new NetworkConfig(callbackUrl: 'javascript:alert(1)');
 
 **Detection**: String constructor parameters named `host`, `hostname`, `domain`, `*_url`, `*_uri`, `endpoint`, `callback*` without validation.
 
-**Fix**: Validate format at construction:
+**Fix**: Validate format at construction; this alone does not authorize a network destination or prevent SSRF. Enforce approved schemes/hosts, DNS/IP policy, redirects and egress controls at request time:
 
 ```php
 public function __construct(public string $hostname = 'localhost') {

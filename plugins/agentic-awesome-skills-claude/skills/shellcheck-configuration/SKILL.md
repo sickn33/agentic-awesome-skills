@@ -80,82 +80,24 @@ disable=SC1091
 disable=SC2086
 ```
 
-### Environment Variables
+### Options and diagnostic reference
 
-```bash
-# Set default shell target
-export SHELLCHECK_SHELL=bash
+Use the installed `shellcheck --help` and official diagnostic pages. Do not rely
+on invented SHELLCHECK_SHELL/STRICT/CONFIG environment variables or numeric-code
+ranges as categories. Set `--shell=bash` (or sh), `--enable` and exclusions
+explicitly; scope suppressions narrowly with a recorded reason.
 
-# Enable strict mode
-export SHELLCHECK_STRICT=true
+- SC2086: unquoted expansions can split/glob. For a Bash array, iterate with
+  `for item in "${items[@]}"; do ...; done`; quoting an entire scalar list changes
+  semantics and is not a universal fix.
+- SC2206: `array=( $items )` still performs splitting/globbing; construct an array
+  deliberately or use a suitable read/mapfile operation for the actual format.
+- SC2181: check the command directly with `if command; then ...; fi`.
+- SC2015: `a && b || c` also runs c when b fails; use if/else when that matters.
+- SC3010: `[[ ... ]]` is not POSIX sh; use a valid `[ ... ]` or case construct.
 
-# Specify configuration file location
-export SHELLCHECK_CONFIG=~/.shellcheckrc
-```
-
-## Common ShellCheck Error Codes
-
-### SC1000-1099: Parser Errors
-```bash
-# SC1004: Backslash continuation not followed by newline
-echo hello\
-world  # Error - needs line continuation
-
-# SC1008: Invalid data for operator `=='
-if [[ $var =  "value" ]]; then  # Space before ==
-    true
-fi
-```
-
-### SC2000-2099: Shell Issues
-
-```bash
-# SC2009: Consider using pgrep or pidof instead of grep|grep
-ps aux | grep -v grep | grep myprocess  # Use pgrep instead
-
-# SC2012: Use `ls` only for viewing. Use `find` for reliable output
-for file in $(ls -la)  # Better: use find or globbing
-
-# SC2015: Avoid using && and || instead of if-then-else
-[[ -f "$file" ]] && echo "found" || echo "not found"  # Less clear
-
-# SC2016: Expressions don't expand in single quotes
-echo '$VAR'  # Literal $VAR, not variable expansion
-
-# SC2026: This word is non-standard. Set POSIXLY_CORRECT
-# when using with scripts for other shells
-```
-
-### SC2100-2199: Quoting Issues
-
-```bash
-# SC2086: Double quote to prevent globbing and word splitting
-for i in $list; do  # Should be: for i in $list or for i in "$list"
-    echo "$i"
-done
-
-# SC2115: Literal tilde in path not expanded. Use $HOME instead
-~/.bashrc  # In strings, use "$HOME/.bashrc"
-
-# SC2181: Check exit code directly with `if`, not indirectly in a list
-some_command
-if [ $? -eq 0 ]; then  # Better: if some_command; then
-
-# SC2206: Quote to prevent word splitting or set IFS
-array=( $items )  # Should use: array=( $items )
-```
-
-### SC3000-3999: POSIX Compliance Issues
-
-```bash
-# SC3010: In POSIX sh, use 'case' instead of 'cond && foo'
-[[ $var == "value" ]] && do_something  # Not POSIX
-
-# SC3043: In POSIX sh, use 'local' is undefined
-function my_func() {
-    local var=value  # Not POSIX in some shells
-}
-```
+See [SC2086](https://www.shellcheck.net/wiki/SC2086) and the
+[official project/options](https://github.com/koalaman/shellcheck).
 
 ## Practical Configuration Examples
 
@@ -261,7 +203,7 @@ jobs:
       - name: Run ShellCheck
         run: |
           sudo apt-get install shellcheck
-          find . -type f -name "*.sh" -exec shellcheck {} \;
+          find . -type f -name "*.sh" -print0 | xargs -0 shellcheck
 ```
 
 ### GitLab CI Pipeline
@@ -271,7 +213,7 @@ shellcheck:
   stage: lint
   image: koalaman/shellcheck-alpine
   script:
-    - find . -type f -name "*.sh" -exec shellcheck {} \;
+    - find . -type f -name "*.sh" -print0 | xargs -0 shellcheck
   allow_failure: false
 ```
 
@@ -311,8 +253,7 @@ source helper.sh
 for i in $list; do done
 
 # Solution
-for i in $list; do done  # If $list is already quoted, or
-for i in "${list[@]}"; do done  # If list is an array
+for i in "${list[@]}"; do printf '%s\n' "$i"; done  # Bash array, not a scalar list
 ```
 
 #### SC2181: Check exit code directly
@@ -380,6 +321,8 @@ done
 find . -name "*.sh" -print0 | \
     xargs -0 -P 4 -n 1 shellcheck
 ```
+
+Bind cached results to ShellCheck version/options, shell dialect, rc files and sourced-file contents as well as the main script. The hash-only example below is insufficient for CI reuse when those inputs change. Pre-commit checks must inspect staged bytes (including partially staged files) rather than silently linting a different working tree. Use NUL-delimited paths and exclude deleted files.
 
 ### Caching Results
 

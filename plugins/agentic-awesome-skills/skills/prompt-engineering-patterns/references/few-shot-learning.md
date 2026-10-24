@@ -17,10 +17,10 @@ class SemanticExampleSelector:
     def __init__(self, examples, model_name='all-MiniLM-L6-v2'):
         self.model = SentenceTransformer(model_name)
         self.examples = examples
-        self.example_embeddings = self.model.encode([ex['input'] for ex in examples])
+        self.example_embeddings = self.model.encode([ex['input'] for ex in examples], normalize_embeddings=True)
 
     def select(self, query, k=3):
-        query_embedding = self.model.encode([query])
+        query_embedding = self.model.encode([query], normalize_embeddings=True)
         similarities = np.dot(self.example_embeddings, query_embedding.T).flatten()
         top_indices = np.argsort(similarities)[-k:][::-1]
         return [self.examples[i] for i in top_indices]
@@ -38,7 +38,7 @@ class DiversityExampleSelector:
     def __init__(self, examples, model_name='all-MiniLM-L6-v2'):
         self.model = SentenceTransformer(model_name)
         self.examples = examples
-        self.embeddings = self.model.encode([ex['input'] for ex in examples])
+        self.embeddings = self.model.encode([ex['input'] for ex in examples], normalize_embeddings=True)
 
     def select(self, k=5):
         # Use k-means to find diverse cluster centers
@@ -67,9 +67,11 @@ class ProgressiveExampleSelector:
         self.examples = sorted(examples, key=lambda x: x['difficulty'])
 
     def select(self, k=3):
-        # Select examples with linearly increasing difficulty
-        step = len(self.examples) // k
-        return [self.examples[i * step] for i in range(k)]
+        if k <= 0 or not self.examples:
+            return []
+        k = min(k, len(self.examples))
+        indices = np.linspace(0, len(self.examples) - 1, k, dtype=int)
+        return [self.examples[i] for i in indices]
 ```
 
 **Best For**: Complex reasoning tasks, code generation
@@ -330,7 +332,7 @@ class LearnedExampleSelector:
             score = self.selector_model.predict_proba([features])[0][1]
             scores.append((score, example))
 
-        return [ex for _, ex in sorted(scores, reverse=True)[:k]]
+        return [ex for _, ex in sorted(scores, key=lambda item: item[0], reverse=True)[:k]]
 ```
 
 ### Adaptive Example Count

@@ -28,10 +28,10 @@ allowed-tools:
 ## Checks
 
 ### Alt Text
-- Present on all `<img>` elements (except decorative: `role="presentation"`)
+- Provide meaningful alt text for informative images; decorative images should use `alt=""` rather than merely omitting alt or relying on role.
 - Descriptive: describes the image content, not "image.jpg" or "photo"
 - Includes relevant keywords where natural, not keyword-stuffed
-- Length: 10-125 characters
+- Keep text as concise as the image’s purpose allows; 10–125 characters is not a universal accessibility requirement.
 
 **Good examples:**
 - "Professional plumber repairing kitchen sink faucet"
@@ -78,7 +78,7 @@ Use progressive enhancement with the most efficient format first:
 </picture>
 ```
 
-The browser will use the first supported format. Current browser support: AVIF 93.8%, WebP 95.3%.
+The browser will use the first supported format. Verify current target-browser support rather than relying on stale global percentages.
 
 #### JPEG XL: Emerging Format
 

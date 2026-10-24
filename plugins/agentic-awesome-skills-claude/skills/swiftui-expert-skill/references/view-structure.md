@@ -39,7 +39,7 @@ struct ContentView: View {
 
     // MARK: - State Properties
     @Binding var isToggled: Bool
-    @State private var viewModel: SomeViewModel
+    @State private var counter = 0
 
     // MARK: - Private Properties
     private let title: String = "SwiftUI Guide"
@@ -114,6 +114,8 @@ struct ContentView: View {
 // Good - same view, different states
 SomeView()
     .opacity(isVisible ? 1 : 0)
+    .allowsHitTesting(isVisible)
+    .accessibilityHidden(!isVisible)
 
 // Avoid - creates/destroys view identity
 if isVisible {
@@ -121,7 +123,7 @@ if isVisible {
 }
 ```
 
-**Why**: Conditional view inclusion can cause loss of state, poor animation performance, and breaks view identity. Using modifiers maintains view identity across state changes.
+Keeping identity can preserve local state, but opacity alone still occupies layout and can leave hit testing/focus/accessibility active. Add appropriate hit-testing and accessibility behavior, or remove conditional content when absence is the intended semantic state.
 
 ### When Conditionals Are Appropriate
 
@@ -331,7 +333,7 @@ struct FilteredListView: View {
     private let filteredValues: [Int]
 
     init(values: [Int]) {
-        self.filteredValues = values.filter { $0 > 0 } // Perform filtering once
+        self.filteredValues = values.filter { $0 > 0 } // Repeats on each initializer call; not a persistent cache
     }
 
     var body: some View {
@@ -521,7 +523,7 @@ HStack(spacing: 12) { Text("Inbox"); Text("Next") }
 
 ## Compositing Group Before Clipping
 
-**Always add `.compositingGroup()` before `.clipShape()` when clipping layered views (`.overlay` or `.background`).** Without it, each layer is antialiased separately and then composited. Where antialiased edges overlap — typically at rounded corners — you get visible color fringes (semi-transparent pixels of different colors blending together).
+**Consider `.compositingGroup()` before `.clipShape()` when a reproduced layered-edge artifact warrants it.** Without it, each layer is antialiased separately and then composited. Where antialiased edges overlap — typically at rounded corners — you get visible color fringes (semi-transparent pixels of different colors blending together).
 
 ```swift
 let shape = RoundedRectangle(cornerRadius: 16)
@@ -540,7 +542,7 @@ Color.red
     .frame(width: 200, height: 150)
 ```
 
-`.compositingGroup()` forces all child layers to be rendered into a single offscreen buffer before the clip is applied. This means antialiasing only happens once — on the final composited result — eliminating the fringe artifacts.
+Compositing changes how a subtree participates in blending; it is not a universal offscreen-buffer or antialiasing guarantee. Inspect the actual result and performance. It can affect blend modes and is unnecessary for many layered views.
 
 ## Split State-Driven Parts into Custom View Types
 
@@ -702,6 +704,7 @@ Apply `.redacted` on a container to redact all children at once.
 `AnyView` is type erasure. SwiftUI uses structural identity based on type information to determine when views should be updated.
 
 ```swift
+@ViewBuilder
 private var nameView: some View {
     if isEditable {
         TextField("Your name", text: $name)
@@ -731,8 +734,8 @@ Use `AnyView` only when type erasure is truly necessary for API design.
 
 When bridging UIKit views into SwiftUI:
 
-- `makeUIView(context:)` is called **once** to create the UIKit view
-- `updateUIView(_:context:)` is called on **every SwiftUI redraw** to sync state
+- `makeUIView(context:)` creates a UIKit instance for a representable lifetime; identity changes can create another instance
+- `updateUIView(_:context:)` synchronizes relevant SwiftUI updates; its exact call frequency is not a public redraw contract
 - The representable struct itself is **recreated on every redraw** -- avoid heavy work in its init
 - Use a `Coordinator` for delegate callbacks and two-way communication
 
@@ -747,7 +750,9 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateUIView(_ map: MKMapView, context: Context) {
-        map.setCenter(coordinate, animated: true)
+        if map.centerCoordinate.latitude != coordinate.latitude || map.centerCoordinate.longitude != coordinate.longitude {
+            map.setCenter(coordinate, animated: true)
+        }
     }
 
     func makeCoordinator() -> Coordinator { Coordinator() }
@@ -852,3 +857,5 @@ Ways to fix it:
 - [ ] In `UIViewRepresentable`, keep heavy work out of struct init
 - [ ] Use `_printChanges()` / `_logChanges()` to debug rendering behavior
 - [ ] Break up overly complex expressions when the compiler struggles
+
+Subview extraction can establish a useful invalidation boundary; it does not guarantee a skipped body or GPU render. Environment/state dependencies still matter. Stored content builders are a useful API option, not a ban on deferred builder closures. Redaction is visual styling, not confidential-data removal or an interaction/accessibility control. The UIKit and placeholder-model snippets require project imports, complete definitions and deployment checks.

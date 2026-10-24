@@ -24,6 +24,12 @@ To jump: `grep -in '<keyword>' references/china-network.md` (try `mirror`, `HF_E
 
 ## 1. Mirrors table
 
+Third-party mirrors are separate trust boundaries. Use them only with explicit user authorization
+for public artifacts. Never forward HF/API credentials or private/gated model requests to a mirror.
+Pin the intended upstream revision and independently verify downloaded artifact hashes/provenance;
+a matching repository name does not establish identical model bytes. Review `hfd.sh` before execution.
+Prefer invocation-scoped settings over persistent global package-index changes.
+
 Swap the *source*, not the workflow. Same package names, same repo IDs — only the endpoint changes. Ship
 this verbatim; it is identical across every CN platform.
 
@@ -89,20 +95,22 @@ Source: HF-Mirror `https://hf-mirror.com/`; ModelScope client
 Bulk weight pulls are the prototypically flaky step on a CN link — a stall is **not** a permanent failure,
 and every tier below accumulates progress across kills. Escalate by file size and instability.
 
-**Tier 1 — `hf download <repo> --resume-download` (default).**
+**Tier 1 — `hf download <repo> ` (default).**
 Writes partial blobs as `*.incomplete`; re-running the identical command resumes from the byte offset. Best
 for single repos under ~10 GB. Wrap in a `timeout … && break` retry loop so a stall self-recovers:
 
 ```bash
 #!/usr/bin/env bash
 set -u
+download_ok=0
 for _ in $(seq 1 20); do
-  timeout 600 hf download "$REPO" --local-dir "$DIR" --resume-download && break
-  echo "stall, retrying (progress is saved)"; sleep 5
+  if timeout 600 hf download "$REPO" --local-dir "$DIR"; then download_ok=1; break; fi
+  echo "download failed or timed out; retrying"; sleep 5
 done
+[ "$download_ok" -eq 1 ] || exit 1
 ```
 
-(Underlying verbs — `hf download --resume-download`, `hf cache verify` — belong to **REQUIRED:**
+(Underlying verbs — `hf download `, `hf cache verify` — belong to **REQUIRED:**
 `huggingface-skills:hf-cli`; this ladder only wraps them with CN-mirror routing + stall-retry.)
 
 **Tier 2 — `hfd.sh` (aria2 multi-connection) for any single file > 10 GB.**
@@ -159,7 +167,7 @@ quirks:
   value.
 - **List `127.0.0.1` AND `localhost`.** They are distinct entries; omitting either lets a loopback call
   (TensorBoard, a local API) get proxied.
-- **`pip` ignores `no_proxy` for its own connections** — pass `pip install --proxy ""` to force pip onto the
+- **Proxy handling depends on pip/requests configuration** — pass `pip install --proxy ""` to force pip onto the
   direct route regardless of an inherited proxy env.
 
 ```bash

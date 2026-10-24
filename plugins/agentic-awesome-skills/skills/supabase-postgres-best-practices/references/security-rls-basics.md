@@ -33,9 +33,13 @@ create policy orders_user_policy on orders
 -- Force RLS even for table owners
 alter table orders force row level security;
 
+-- Only a trusted authenticated server may set this context; a client with arbitrary SQL can spoof it.
+-- Use SET LOCAL inside a transaction to prevent pool/session leakage.
 -- Set user context and query
-set app.current_user_id = '123';
-select * from orders;  -- Only returns orders for user 123
+begin;
+set local app.current_user_id = '123';
+select * from orders;  -- Test under the actual non-owner, non-BYPASSRLS application role
+commit;
 ```
 
 Policy for authenticated role:

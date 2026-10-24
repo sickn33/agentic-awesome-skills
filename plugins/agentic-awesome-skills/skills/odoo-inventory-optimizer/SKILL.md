@@ -57,7 +57,7 @@ Location: WH/Stock
 Min Qty: 100   (trigger reorder when stock falls below this)
 Max Qty: 500   (purchase up to this quantity)
 Multiple Qty: 50  (always order in multiples of 50)
-Route: Buy    (triggers a Purchase Order automatically)
+Route: Buy    (procurement behavior depends on trigger, vendor and configuration; may create an RFQ)
        or Manufacture (triggers a Manufacturing Order)
 ```
 
@@ -99,7 +99,7 @@ Operations created automatically:
 - ✅ **Do:** Use **Lots/Serial Numbers** for high-value or regulated items (medical devices, electronics).
 - ✅ **Do:** Run a **physical inventory adjustment** at least quarterly (Inventory → Operations → Physical Inventory) to correct drift.
 - ✅ **Do:** Set reordering rules on fast-moving items so purchase orders are generated automatically.
-- ✅ **Do:** Enable **Putaway Rules** on warehouses with multiple storage zones — it eliminates manual location selection errors.
+- ✅ **Do:** Enable **Putaway Rules** on warehouses with multiple storage zones — verify suggested destinations and exceptions; rules do not eliminate all handling errors.
 - ❌ **Don't:** Switch stock valuation method (FIFO ↔ AVCO) after recording transactions — it produces incorrect historical cost data.
 - ❌ **Don't:** Use "Update Quantity" to fix stock errors — always use Inventory Adjustments to maintain a proper audit trail.
 - ❌ **Don't:** Mix product categories with different costing methods in the same storage location without understanding the valuation impact.

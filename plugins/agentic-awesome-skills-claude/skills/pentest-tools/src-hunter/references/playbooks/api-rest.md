@@ -78,7 +78,7 @@ PATCH /api/orders/123
 
 测试方法：
 for i in {1..50}; do curl -I https://target/api/login; done | grep "HTTP"
-# 50 个连续不被拒 = 速率缺失
+# 少量请求未被拒不能证明无限制；确认限额键、时间窗口、响应业务结果与项目批准预算。
 ```
 
 ### 3.4 功能权限（OWASP API #5）
@@ -86,7 +86,7 @@ for i in {1..50}; do curl -I https://target/api/login; done | grep "HTTP"
 ```
 # 普通用户调用 admin 端点
 DELETE /api/admin/users/1   Authorization: 普通用户 token
-→ 200 = 垂直越权
+→ 200 仅是线索；验证未授权的实际权限或状态变更，不能只按状态码判断。
 
 # 隐藏管理参数
 GET /api/users/me?admin_view=true
@@ -107,7 +107,7 @@ curl -H "Origin: https://attacker.com" -I https://target/api/me
 
 # 危险组合
 Access-Control-Allow-Origin: *
-Access-Control-Allow-Credentials: true     ← 危险（虽然 spec 不允许 * + credentials）
+Access-Control-Allow-Credentials: true     ← 浏览器阻止凭据模式下的 * 响应；此组合本身不是可利用证明
 
 Access-Control-Allow-Origin: https://attacker.com    ← 任意 Origin 接受
 Access-Control-Allow-Credentials: true
@@ -140,7 +140,7 @@ Origin: https://target.com.attacker.com
 | 后端只信 Authorization 不验内容 | 修改 JWT payload（见 `oauth-saml-jwt.md`） |
 | API 文档不公开 | swagger / openapi / 抓 mobile / 解包小程序 |
 | `is_admin` 字段拦 | 试 `isAdmin` / `admin` / `role:1` / `level:99` |
-| 速率限制 | 多 IP / X-Forwarded-For 注入 / 多 token |
+| 速率限制 | 遇到限流先停止；只在明确批准的沙箱中验证限额键，不通过出口轮换规避封禁 |
 | CORS 严格 | 找 trusted 子域的 XSS / 开放重定向，再投毒 |
 
 ---
@@ -236,6 +236,8 @@ GET /api/v1/orders/{id} 接口未校验资源所有权，账号 A 可读取账�
 - **禁**：用 CORS 漏洞做真实跨域 PoC（让朋友访问 attacker.com）。自己浏览器自演。
 
 
+> 以下代码含占位符和版本相关 API，是受控实验室示意，未经运行验证。仅使用两个自有测试账户及其资源 ID，限制请求/消息总量与时长；不得在生产遍历真实用户、发短信、提现或制造 DoS。WebSocket 的 101/连接成功仅证明协议升级，不能单独证明走私、越权或跨站劫持。
+
 ## Payload 库
 
 _15 个结构化 web payload，含完整攻击链 + WAF/EDR 绕过变体_
@@ -257,9 +259,9 @@ _解码JWT内容_
 ```
 JWT格式: header.payload.signature
 解码:
-echo "HEADER" | base64 -d
+echo "HEADER" | base64 -d  # 示意：JWT 实际使用 base64url，需处理 URL 字符与 padding
 echo "PAYLOAD" | base64 -d
-或使用jwt.io
+在本地解码，不把真实 token 发到第三方网站
 ```
 
 **2. 2. None算法攻击**
@@ -432,7 +434,7 @@ _GraphQL中的NoSQL注入_
 # MongoDB注入
 {
   user(filter: {
-    $or: [{name: "admin"}, {name: "root"}]
+    or: [{name: "test_a"}, {name: "test_b"}]  # only if this input field exists in the schema
   }) {
     name
     password
@@ -504,14 +506,14 @@ _使用GraphQL指令绕过_
 ```
 # 使用指令绕过
 query {
-  user(id: 1) @deprecated {
+  user(id: 1) @include(if: true) {
     name
   }
 }
 
 # 自定义指令攻击
-mutation @skip(if: false) {
-  deleteUser(id: 1)
+mutation {
+  updateTestUser(id: 1) @include(if: true) { id }
 }
 ```
 
@@ -901,11 +903,10 @@ curl http://target.com/api/users/%2531
 **1. 1. 解码JWT**
 _解码JWT令牌_
 ```
-# 在线解码
-https://jwt.io
+# 本地解码；不要上传真实令牌到第三方
 
 # 使用命令行
-echo "HEADER" | base64 -d
+echo "HEADER" | base64 -d  # 示意：JWT 实际使用 base64url，需处理 URL 字符与 padding
 echo "PAYLOAD" | base64 -d
 
 # 使用Python
@@ -1032,7 +1033,8 @@ _算法混淆攻击_
 import jwt
 import base64
 
-# 获取公钥
+# 获取并核对真实 JWT 验签密钥；TLS 证书公钥不一定是 JWT 密钥。
+# 当前 JWT 库通常拒绝将 PEM 非对称密钥用于 HMAC，此片段仅解释错误配置前提。
 public_key = open("public.pem").read()
 
 # 构造payload
@@ -2011,16 +2013,16 @@ async def rate_test():
     async with websockets.connect(uri) as ws:
         # 快速发送消息测试速率限制
         start = time.time()
-        for i in range(1000):
+        for i in range(APPROVED_MESSAGE_BUDGET):
             await ws.send(json.dumps({"action": "ping", "seq": i}))
         elapsed = time.time() - start
-        print(f"Sent 1000 messages in {elapsed:.2f}s")
+        print(f"Sent {APPROVED_MESSAGE_BUDGET} messages in {elapsed:.2f}s")
         
         # 大消息测试
         large_msg = "A" * (1024 * 1024)  # 1MB
         try:
             await ws.send(large_msg)
-            print("Large message accepted - no size limit!")
+            print("Send completed; server acceptance and size limit remain unverified")
         except Exception as e:
             print(f"Large message rejected: {e}")
 

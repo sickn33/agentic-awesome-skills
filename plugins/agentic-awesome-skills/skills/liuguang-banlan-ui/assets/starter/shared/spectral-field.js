@@ -29,10 +29,11 @@
     uniform float uLuminanceCap;
     uniform float uLevels;
     uniform vec3 uBase;
-    uniform vec3 uColors[6];
-    uniform float uStrengths[6];
-    uniform float uFieldScales[6];
-    uniform vec2 uPhases[6];
+    uniform float uColorCount;
+    uniform vec3 uColors[12];
+    uniform float uStrengths[12];
+    uniform float uFieldScales[12];
+    uniform vec2 uPhases[12];
 
     float hash21(vec2 p) {
       p = fract(p * vec2(123.34, 456.21));
@@ -121,8 +122,9 @@
         + dot(warped, vec2(0.72, -0.49))
         + uSeed * 0.000017
       );
-      for (int i = 0; i < 6; i++) {
-        float hueStop = float(i) / 6.0;
+      for (int i = 0; i < 12; i++) {
+        if (float(i) >= uColorCount) break;
+        float hueStop = float(i) / uColorCount;
         float hueDistance = abs(spectralFlow - hueStop);
         hueDistance = min(hueDistance, 1.0 - hueDistance);
         float hueBand = 1.0 - smoothstep(0.035, 0.205, hueDistance);
@@ -261,6 +263,9 @@
     constructor(canvas, config) {
       this.canvas = canvas;
       this.config = config;
+      if (!Array.isArray(config.colors) || config.colors.length < 3 || config.colors.length > MAX_COLORS) {
+        throw new Error("Palette must contain 3 to 12 colors");
+      }
       this.applyFallbackConfig(config);
       this.available = false;
       this.error = null;
@@ -271,6 +276,14 @@
       this.lastFrame = 0;
       this.frameHandle = 0;
       try {
+      canvas.addEventListener("webglcontextlost", (event) => {
+        event.preventDefault();
+        this.available = false;
+        if (this.frameHandle) cancelAnimationFrame(this.frameHandle);
+        this.frameHandle = 0;
+        document.documentElement.classList.add("field-fallback");
+        window.dispatchEvent(new Event("spectral-renderer-change"));
+      });
       this.gl = canvas.getContext("webgl", {
         alpha: false,
         antialias: false,
@@ -310,6 +323,7 @@
         luminanceCap: uniform(this.gl, this.program, "uLuminanceCap"),
         levels: uniform(this.gl, this.program, "uLevels"),
         base: uniform(this.gl, this.program, "uBase"),
+        count: uniform(this.gl, this.program, "uColorCount"),
         colors: uniform(this.gl, this.program, "uColors[0]"),
         strengths: uniform(this.gl, this.program, "uStrengths[0]"),
         fieldScales: uniform(this.gl, this.program, "uFieldScales[0]"),
@@ -358,13 +372,17 @@
       if (!this.available) return;
       const gl = this.gl;
       const config = this.config;
-      const colors = config.colors.slice(0, 6);
-      while (colors.length < 6) colors.push(colors[colors.length - 1]);
+      const colors = config.colors.slice(0, MAX_COLORS);
+      const count = colors.length;
+      while (colors.length < MAX_COLORS) {
+        colors.push({oklch: config.base.oklch, intensity: 0, peakOpacity: 0, fieldScale: 1, phase: [0, 0]});
+      }
       const colorValues = colors.flatMap((entry) => oklchToLinearRgb(entry.oklch));
       const strengthValues = colors.map((entry) => entry.intensity * entry.peakOpacity * 3.0);
       const fieldScaleValues = colors.map((entry) => entry.fieldScale);
       const phaseValues = colors.flatMap((entry) => entry.phase);
       gl.useProgram(this.program);
+      gl.uniform1f(this.locations.count, count);
       gl.uniform1f(this.locations.seed, config.seed);
       gl.uniform1f(this.locations.mode, config.mode === "obsidian" ? 1 : 0);
       gl.uniform1f(this.locations.overall, config.overallColorIntensity);

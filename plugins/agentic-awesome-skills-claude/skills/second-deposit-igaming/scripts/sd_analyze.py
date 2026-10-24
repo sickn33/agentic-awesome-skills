@@ -77,6 +77,8 @@ def parse_args(argv=None):
     ap.add_argument('--control-share', type=float, default=.2, help='доля контрольной группы в списке (им не пишут), 0 выключает')
     ap.add_argument('--profile', '--baseline', dest='profile', help='профиль проекта из полного запуска, по умолчанию <out>/profile.json')
     ap.add_argument('--country', help='страна игроков, у которых в выгрузке нет страны (код ISO, например BR): для правил стран')
+    ap.add_argument('--confirmed-contact-eligibility', action='store_true', help='оператор проверил возраст, согласие, RG/самоисключение, ограничения и юрисдикцию каждого кандидата; только создание локального списка')
+    ap.add_argument('--verified-country-rules', action='store_true', help='оператор проверил актуальность и применимость справочника для своей лицензии/территории')
     ap.add_argument('--check', action='store_true', help='только проверить готовность данных: какие причины посчитаются и чего не хватает, без расчета и файлов')
     return ap.parse_args(argv)
 
@@ -349,7 +351,7 @@ def suggest_method(appr, rules, r, mtypes, methods_seen):
     hit = best(r.country)
     if not hit:
         hit = next(((m, None) for t in sd_geo.preferred(rules, r.code) for m in methods_seen
-                    if m != avoid and sd_geo.method_type(mtypes, m) == t), None)
+                    if m != avoid and ok(m) and sd_geo.method_type(mtypes, m) == t), None)
     if not hit:
         hit = best('*')
     return (hit or ('', None)) + (skipped,)
@@ -398,7 +400,7 @@ def metrics(mature, vmature, data, avail):
     """Показатели второго депозита, денег, кассы, выводов, бонусов и игры. Подписи и определения: sd_report, ключ metric."""
     m = {'ftd': len(mature)}
     for key, hrs in (('std_24h', 24), ('std_72h', 72)):
-        m[key] = share(r.second is not None and r.second <= r.ftd + dt.timedelta(hours=hrs) for r in mature)
+        m[key] = share(r.second is not None and r.second <= r.ftd + dt.timedelta(hours=hrs) for r in mature if r.hours_since >= hrs)
     m['std_7d'] = share(r.returned for r in mature)
     m30 = [r for r in mature if r.hours_since >= 30 * 24]
     if len(m30) >= 30:
@@ -605,14 +607,14 @@ def full_analysis(recs, meta, data, quality, o):
     appr = approval_table(data['deposits'], data['players'], o.min_group)
     hours = [(r.second - r.ftd).total_seconds() / 3600 for r in mature if r.returned]
     mt = metrics(mature, vmature, data, meta['avail'])
-    ch = list(CURVE_HOURS) + [o.std_days * 24]
+    ch = sorted({h for h in CURVE_HOURS if h < o.std_days * 24} | {o.std_days * 24})
     curves = {'all': curve(mature, ch), 'norm': curve(others, ch)}
     for x in scen:
         g = [r for r in mature if r.scenario == x['key']]
         if len(g) >= o.min_group:
             curves[x['key']] = curve(g, ch)
     baseline = {
-        'version': 2, 'source': 'history',
+        'version': 2, 'source': 'history', 'std_days': o.std_days, 'value_days': value_days,
         'created': as_of.strftime('%Y-%m-%d %H:%M'), 'cohort_from': min(r.ftd for r in mature).strftime('%Y-%m-%d'),
         'cohort_to': max(r.ftd for r in mature).strftime('%Y-%m-%d'), 'ftd': len(mature), 'currency': data['currency'],
         'geo': geo_mix(mature),
@@ -729,7 +731,7 @@ def build_rescue(recs, as_of, o, appr, rules=None, mtypes=None):
     excluded = [r for r in window if r.rg]
     rescue, skipped = [], 0
     for r in window:
-        if r.rg:
+        if r.rg or not getattr(o, 'contact_ready', False):
             continue
         variant = action_variant(r)
         sugg, sugg_rate = '', None
@@ -888,12 +890,14 @@ def load_profile(o):
 
 
 def analyze(data, quality, o):
-    rules = sd_geo.load()
+    rules = sd_geo.load() if getattr(o, 'verified_country_rules', False) else None
     recs, meta = build(data, quality, o, rules)
     as_of = meta['as_of']
     std = dt.timedelta(days=o.std_days)
     mature = [r for r in recs if not r.rg and r.ftd <= as_of - std]
     base_saved, base_path = load_profile(o)
+    if base_saved and (base_saved.get('currency') != data['currency'] or base_saved.get('std_days', 7) != o.std_days or base_saved.get('value_days', 30) != o.value_days):
+        base_saved = None  # Never reuse a profile with incompatible money/window semantics.
     mix = geo_mix(recs)
     common = {
         'lang': o.lang, 'demo': bool(data.get('demo')), 'currency': data['currency'], 'as_of': as_of.strftime('%Y-%m-%d %H:%M'),
@@ -936,7 +940,10 @@ def analyze(data, quality, o):
                        profile_view=profile_view(base_saved, base_saved.get('ftd', 0) if base_saved else 0))
         value = base_saved.get('value_per_returner') if base_saved else None
         second = base_saved.get('second_deposit') if base_saved else None
+    o.contact_ready = bool(getattr(o, 'confirmed_contact_eligibility', False) and quality.get('rg_flags'))
     rescue, excluded, info = build_rescue(recs, as_of, o, appr, rules, data.get('method_types') or {})
+    info['contact_list_enabled'] = o.contact_ready
+    info['manual_review_pending'] = not o.contact_ready
     summary['rescue'] = info
     summary['forecast'] = forecast(rescue, profile, o.std_days * 24)
     summary['geo'] = mix
@@ -979,7 +986,7 @@ def readiness(meta, data, quality, recs, mature_n, has_profile, rules):
 
 def check(data, quality, o):
     """Только готовность данных (--check): без расчета и без файлов."""
-    rules = sd_geo.load()
+    rules = sd_geo.load() if getattr(o, 'verified_country_rules', False) else None
     recs, meta = build(data, quality, o, rules)
     mature_n = sum(1 for r in recs if not r.rg and r.ftd <= meta['as_of'] - dt.timedelta(days=o.std_days))
     return readiness(meta, data, quality, recs, mature_n, bool(load_profile(o)[0]), rules)
@@ -1042,11 +1049,17 @@ def list_rows(summary, rescue, tr, lang):
     return rows
 
 
+def csv_safe(value):
+    # Spreadsheet exports must not interpret untrusted identifiers/text as formulas.
+    text = str(value) if value is not None else ''
+    return "'" + text if text.lstrip().startswith(('=', '+', '-', '@', '\t', '\r', '\n')) else value
+
+
 def write_csv(path, rows, fields):
     with open(path, 'w', newline='', encoding='utf-8-sig') as f:
         w = csv.DictWriter(f, fieldnames=fields)
         w.writeheader()
-        w.writerows(rows)
+        w.writerows({k: csv_safe(v) for k, v in row.items()} for row in rows)
 
 
 def write_list_xlsx(path, rows, index, tr):
@@ -1115,11 +1128,14 @@ def write_outputs(summary, rescue, excluded, segs, baseline, o):
             w = csv.writer(f)
             w.writerow(['dimension', 'group', 'ftd', 'std_rate', 'expected_rate', 'lost_sum_dep_month_min', 'lost_sum_dep_month_max', 'z', 'significant'])
             for x in segs:
-                w.writerow([x['dim'], sd_report.group_label(x, summary, tr), x['n'], f"{x['rate']:.4f}", f"{x['expected_rate']:.4f}",
+                w.writerow([x['dim'], csv_safe(sd_report.group_label(x, summary, tr)), x['n'], f"{x['rate']:.4f}", f"{x['expected_rate']:.4f}",
                             f"{x['lost_month_min']:.0f}", f"{x['lost_month']:.0f}", f"{x['z']:.1f}", 'yes' if x['significant'] else 'no'])
     write_csv(os.path.join(o.out, 'rescue_list.csv'), rows, LIST_FIELDS)
     os.makedirs(day_dir, exist_ok=True)
+    owned = set(SCENARIOS) | set(PRIORITY) | {'control', 'rescue_list', 'actions'}
     for old in glob.glob(os.path.join(day_dir, '*.csv')):
+        if os.path.splitext(os.path.basename(old))[0] not in owned:
+            continue
         os.remove(old)  # повторный запуск за ту же дату: файлы действий, которых больше нет, не должны остаться
     write_csv(os.path.join(day_dir, 'rescue_list.csv'), rows, LIST_FIELDS)
     write_csv(os.path.join(day_dir, 'actions.csv'), index, ACTION_FIELDS)
@@ -1130,7 +1146,7 @@ def write_outputs(summary, rescue, excluded, segs, baseline, o):
         w = csv.writer(f)
         w.writerow(['player_id', 'ftd_time', 'reasons'])
         for r in excluded:
-            w.writerow([r.pid, r.ftd.strftime('%Y-%m-%d %H:%M'), '; '.join(tr['rg_bank_block'] if x == 'bank_block' else x for x in r.rg)])
+            w.writerow([csv_safe(r.pid), r.ftd.strftime('%Y-%m-%d %H:%M'), '; '.join(tr['rg_bank_block'] if x == 'bank_block' else x for x in r.rg)])
     with open(os.path.join(o.out, 'report.html'), 'w', encoding='utf-8') as f:
         f.write(sd_report.render(summary))
     shutil.copyfile(os.path.join(o.out, 'report.html'), os.path.join(day_dir, 'report.html'))
@@ -1138,6 +1154,9 @@ def write_outputs(summary, rescue, excluded, segs, baseline, o):
 
 def print_summary(s):
     tr = sd_report.LANGS[s['lang']]
+    print(tr['review_notice'])
+    if s['rescue'].get('manual_review_pending'):
+        print('Contact list withheld: confirm current per-player eligibility and map RG flags before opting in.')
     cur, lang = s['currency'], s['lang']
     money = lambda x: sd_report.fmt_money(x, cur, lang).replace(' ', ' ')
     used = [os.path.basename(p) for f in s.get('files_used', {}).values() for p in f]
@@ -1250,9 +1269,17 @@ def check_quality(q):
 
 def main(argv=None):
     o = parse_args(argv)
+    for key in ('std_days', 'value_days', 'rescue_hours', 'heavy_wager', 'burn_turnover', 'slow_withdrawal_hours'):
+        value = getattr(o, key)
+        if not math.isfinite(value) or value <= 0:
+            raise SystemExit(f'{key}: требуется конечное положительное число')
+    if not math.isfinite(o.warmup_days) or o.warmup_days < 0 or o.min_group < 1 or not 0 <= o.control_share < 1:
+        raise SystemExit('неверные warmup-days, min-group или control-share')
     if o.as_of:
         from sd_common import parse_time
         o.as_of = parse_time(o.as_of)
+        if o.as_of is None:
+            raise SystemExit('неверный --as-of')
     try:
         m = load_mapping(o.mapping)
         data, quality = load_data(m)

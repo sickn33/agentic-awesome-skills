@@ -110,7 +110,8 @@ class LocalizationHelper:
         return {
             'recommended_markets': recommended_markets,
             'total_markets': len(recommended_markets),
-            'estimated_total_revenue_lift': f"{total_potential_revenue_share*100:.1f}%",
+            'estimated_total_revenue_lift': None,
+            'assumption_note': 'Market weights and costs are illustrative inputs, not measured revenue shares or a causal lift forecast',
             'estimated_cost': self._estimate_total_localization_cost(recommended_markets),
             'implementation_priority': self._prioritize_implementation(recommended_markets)
         }
@@ -134,6 +135,8 @@ class LocalizationHelper:
         Returns:
             Localized metadata with character limit validation
         """
+        if platform not in ("apple", "google"):
+            raise ValueError("Platform must be apple or google")
         # Get character multiplier
         target_lang_code = target_language.split('-')[0]
         char_multiplier = self.CHAR_MULTIPLIERS.get(target_lang_code, 1.0)
@@ -142,7 +145,7 @@ class LocalizationHelper:
         if platform == 'apple':
             limits = {'title': 30, 'subtitle': 30, 'description': 4000, 'keywords': 100}
         else:
-            limits = {'title': 50, 'short_description': 80, 'description': 4000}
+            limits = {'title': 30, 'short_description': 80, 'description': 4000}
 
         localized_metadata = {}
         warnings = []
@@ -221,7 +224,7 @@ class LocalizationHelper:
                     keyword,
                     target_market
                 ),
-                'cultural_considerations': cultural_notes.get(keyword, []),
+                'cultural_considerations': cultural_notes,
                 'priority': 'high' if keyword in source_keywords[:3] else 'medium'
             })
 
@@ -256,11 +259,13 @@ class LocalizationHelper:
         Returns:
             Validation report
         """
+        if platform not in ("apple", "google"):
+            raise ValueError("Platform must be apple or google")
         # Platform limits
         if platform == 'apple':
             limits = {'title': 30, 'subtitle': 30, 'description': 4000, 'keywords': 100}
         else:
-            limits = {'title': 50, 'short_description': 80, 'description': 4000}
+            limits = {'title': 30, 'short_description': 80, 'description': 4000}
 
         validation_results = {
             'is_valid': True,
@@ -273,7 +278,7 @@ class LocalizationHelper:
             if field not in limits:
                 continue
 
-            actual_length = len(text)
+            actual_length = len(text.encode("utf-8")) if platform == "apple" and field == "keywords" else len(text)
             limit = limits[field]
             is_within_limit = actual_length <= limit
 
@@ -325,6 +330,8 @@ class LocalizationHelper:
         Returns:
             ROI analysis
         """
+        if current_monthly_downloads < 0 or localization_cost <= 0 or not 0 <= expected_lift_percentage <= 1:
+            raise ValueError("Downloads must be nonnegative, cost positive, and scenario lift in [0, 1]")
         # Estimate market-specific lift
         market_data = []
         total_expected_lift = 0
@@ -360,6 +367,8 @@ class LocalizationHelper:
 
         return {
             'markets_analyzed': len(market_data),
+            'scenario_only': True,
+            'assumptions': 'Illustrative market weights, user-specified lift and $2 revenue/download; not a financial forecast',
             'market_breakdown': market_data,
             'total_expected_monthly_lift': total_expected_lift,
             'expected_monthly_revenue_increase': f"${monthly_additional_revenue:,.2f}",
@@ -481,7 +490,7 @@ class LocalizationHelper:
 
         return recommendations
 
-    def _get_cultural_keyword_considerations(self, target_market: str) -> Dict[str, List[str]]:
+    def _get_cultural_keyword_considerations(self, target_market: str) -> List[str]:
         """Get cultural considerations for keywords by market."""
         # Simplified example - real implementation would be more comprehensive
         considerations = {

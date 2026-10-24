@@ -56,7 +56,7 @@ HYPOTHESIS: You want a way to answer "how are we doing?" in standup, and "dashbo
 CONFIDENCE: ~30% — missing: who it's for, what "metrics" means in context, and what success looks like
 ```
 
-The number forces honesty. If you wrote down a high number but can't actually predict the user's reactions to the next three questions you'd ask, the number is wrong. Start at the confidence level you can defend.
+The number is a subjective estimate, not a calibrated probability or evidence of shared understanding. If you wrote down a high number but can't actually predict the user's reactions to the next three questions you'd ask, the number is wrong. Start at the confidence level you can defend.
 
 When confidence is below ~70%, append a brief reason on the same line — what's still unresolved or missing. This tells the user exactly what the interview needs to surface, and prevents the number from being a vague signal.
 
@@ -84,7 +84,7 @@ Wait for the user to react before asking the next question.
 - It commits you to a hypothesis you can be visibly wrong about, which keeps you honest
 - It surfaces *your* assumptions, which is what the interview is meant to expose
 
-The risk here is a polite user agreeing with your guess to be agreeable. Mitigate by being visibly willing to be wrong, and occasionally guess in a direction you expect the user to push back on.
+The risk here is a polite user agreeing with your guess to be agreeable. Mitigate by being visibly willing to be wrong, and offer a neutral question or alternative when a guess could anchor the answer. Never deliberately misstate your belief to provoke a reaction.
 
 ### Step 3: Listen for "want vs. should want"
 
@@ -120,16 +120,9 @@ Yes / no / refine?
 
 Including "Out of scope" is non-negotiable. Half of misalignment is silent disagreement about what is *not* being built.
 
-### Step 5: Confirm — explicit yes, not "whatever you think"
+### Step 5: Confirm the concrete restatement
 
-The gate is an explicit "yes." The following are **not** yes:
-
-- "Whatever you think is best." → The user is delegating, which means they don't have 95% confidence either. Re-ask with two concrete options framed as a choice.
-- "Sounds good." → Ambiguous. Ask: "Anything you'd refine?" Silence isn't confirmation.
-- "Sure, let's go." → Often a polite exit, not an endorsement. Same follow-up.
-- Silence followed by "okay let's start." → The user has given up on the interview, not converged. Stop and ask whether you've missed something.
-
-If they correct you, fold the correction in and restate. Loop until you get an explicit yes.
+Accept clear contextual agreement such as “sounds good,” “sure, let’s go,” or “okay, start.” Honor “whatever you think is best” as delegation for routine choices: state the selected assumption and proceed within scope. Ask a focused follow-up only when a material ambiguity or required authorization remains. Silence is not approval. Do not infer disengagement, hidden disagreement or lack of confidence from a user's wording alone.
 
 ### The 95% Confidence Stop
 
@@ -139,7 +132,7 @@ You're done when you can answer yes to this:
 
 If yes, you have shared understanding. Stop interviewing and produce the restate. If no, you're not done; ask the next question.
 
-This is a checkable test, not a vibe. It also has a floor: if you've gone several rounds and still can't predict, that's information about the ask, not a reason to keep grinding. Stop and tell the user: "I've asked X questions and I still can't predict your reactions. Something foundational is missing. Want to step back?"
+This is a subjective stopping heuristic; user confirmation and sufficient task information matter more than mind-reading. It also has a floor: if you've gone several rounds and still can't predict, that's information about the ask, not a reason to keep grinding. Stop and tell the user: "I've asked X questions and I still can't predict your reactions. Something foundational is missing. Want to step back?"
 
 ## Output
 
@@ -201,18 +194,18 @@ Two questions in, the agent has discovered the actual ask isn't "a dashboard." I
 |---|---|
 | "The ask is clear enough" | If you can't write the user's desired outcome in one sentence right now, the ask isn't clear. Run Step 1 before deciding. |
 | "Asking too many questions wastes their time" | Time wasted by 4–6 targeted questions is small. Time wasted by building the wrong thing is enormous, and the user is the one bearing that cost. |
-| "I'll figure it out as I build" | Switching costs after code exists are 10x what they are now. Discovery during implementation is rework. |
-| "They said 'whatever you think,' so I should just decide" | "Whatever you think" is delegation, not decision. Re-ask with two concrete options as a choice. |
+| "I'll figure it out as I build" | Changes can cost more after implementation, but no universal multiplier is established. Discovery during implementation is rework. |
+| "They said 'whatever you think,' so I should just decide" | Delegation authorizes routine choices; state assumptions and proceed unless a consequential missing decision blocks work. |
 | "I should give them several options to pick from" | Options work when the user knows what they want and is choosing between trade-offs. They don't know what they want yet. Listing options widens the search; asking narrows it. |
-| "If I attach my guess, I'm leading them" | Leading is the point. Reacting is faster than generating from scratch. The risk is sycophancy, not leading; mitigate by being visibly willing to be wrong. |
+| "If I attach my guess, I'm leading them" | A guess can help, but leading questions can bias answers; label assumptions and use neutral alternatives. |
 | "We've talked enough, I get it" | Test it: can you predict their reaction to the next three questions? If not, you don't get it yet. |
-| "The user said yes, we're done" | If the yes followed a vague restate or an open-ended "sounds good," the yes is hollow. Restate concretely and re-confirm. |
+| "The user said yes, we're done" | Accept contextual agreement; clarify only a specific unresolved material ambiguity. |
 
 ## Red Flags
 
 - Three or more questions in a single message: that's batching, not interviewing
 - A question without your hypothesis attached: that's surveying, not committing
-- Accepting "whatever you think is best" as a terminal answer
+- Ignoring a delegated choice and repeatedly demanding confirmation
 - Producing a spec, plan, or task list before the user has explicitly confirmed your restate
 - Questions framed as "what would be best practice?" instead of "what do you actually want?"
 - The user gives a sophistication-signaling answer ("scalable", "clean", "modern") and you accept it without probing whether it's what they actually want
@@ -230,7 +223,7 @@ After applying interview-me:
 - [ ] Questions were asked one at a time, each with the agent's guess attached
 - [ ] At least one "what would you actually want if you didn't have to justify it?" probe ran when the user gave a sophistication-signaling or convention-signaling answer
 - [ ] A concrete restate (Outcome / User / Why now / Success / Constraint / Out of scope) was written back to the user
-- [ ] The user confirmed the restate with an explicit yes (not "whatever you think," not "sounds good," not silence)
+- [ ] The user confirmed the restate with an explicit yes (clear contextual agreement counts; silence does not)
 - [ ] At the stop point, the agent could predict reactions to the next three questions it would ask
 - [ ] Any handoff to a downstream skill (`idea-refine`, `spec-driven-development`) was framed in terms of the confirmed intent, not the original underspecified ask
 

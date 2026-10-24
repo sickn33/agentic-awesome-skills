@@ -12,12 +12,18 @@ One word change can flip behavior. Treat them with the same rigor as code. | Exa
 - RAG over fine-tuning for most use cases | Description: Fine-tuning is expensive, slow, and hard to update. RAG lets you add
 knowledge without retraining. Start with RAG. Fine-tune only when RAG
 hits clear limits. | Examples: Good: Company docs in vector store, retrieved at query time | Bad: Fine-tuned model on company data, stale after 3 months
-- Design for latency | Description: LLM calls take 1-30 seconds. Users hate waiting. Stream responses.
+- Design for latency | Description: LLM latency varies by model, workload, output and provider. Users hate waiting. Stream responses.
 Show progress. Pre-compute when possible. Cache aggressively. | Examples: Good: Streaming response with typing indicator, cached embeddings | Bad: Spinner for 15 seconds, then wall of text appears
 - Cost is a feature | Description: LLM API costs add up fast. At scale, inefficient prompts bankrupt you.
 Measure cost per query. Use smaller models where possible. Cache
-everything cacheable. | Examples: Good: GPT-4 for complex tasks, GPT-3.5 for simple ones, cached embeddings | Bad: GPT-4 for everything, no caching, verbose prompts
+everything cacheable. | Examples: Good: evaluated suitable models for each task, cached embeddings | Bad: GPT-4 for everything, no caching, verbose prompts
 
+
+## Execution and data contract
+
+All fragments are independent sketches, not a bundled application. Supply pinned SDKs, initialized clients, schemas, error/refusal handling and tests; model names and old streaming helpers are historical examples requiring current API verification. Do not execute imports or provider calls during a document review. External data transfer, paid calls, deployment and agent delegation require user authorization. Enforce server-derived tenant identity, authorization, request/output/token limits, timeout/cancellation and atomic spend/concurrency reservations before provider calls. A usage log/alert records spending after the fact and does not cap it. Never include raw prompts/secrets in telemetry by default.
+
+Use a tenant/model/revision/access-policy-scoped cache, bounded TTL and revocation/invalidation; a content hash alone is not an authorization boundary. Retrieval must enforce tenant/document permissions before ranking and again before presenting results. Provider fallbacks need approved data destinations and shared budgets; do not send customer data to a new vendor automatically.
 
 ## Patterns
 
@@ -41,7 +47,9 @@ const response = await openai.chat.completions.create({
   response_format: { type: 'json_object' }
 });
 
-const parsed = schema.parse(JSON.parse(response.content));
+const content = response.choices[0]?.message?.content;
+if (!content) throw new Error('No model output'); // handle refusal/truncation upstream
+const parsed = schema.parse(JSON.parse(content)); // caller handles parse/schema failures
 
 ### Streaming with Progress
 
@@ -84,12 +92,12 @@ assert.equal(result.category, test_case.expected.category);
 
 ### Caching Expensive Operations
 
-Cache embeddings and deterministic LLM responses
+Cache embeddings and eligible LLM responses with scoped validity
 
 **When to use**: Same queries processed repeatedly
 
 // Cache embeddings (expensive to compute)
-const cacheKey = `embedding:${hash(text)}`;
+const cacheKey = `embedding:${tenantId}:${modelRevision}:${hash(text)}`;
 let embedding = await cache.get(cacheKey);
 
 if (!embedding) {
@@ -181,14 +189,16 @@ async function queryLLM(prompt: string) {
     response_format: { type: 'json_object' },
   });
 
-  const parsed = JSON.parse(response.choices[0].message.content);
+  const content = response.choices[0]?.message?.content;
+  if (!content) throw new Error("No model output");
+  const parsed = JSON.parse(content); // caller catches parse/refusal/truncation failures
   const validated = ResponseSchema.parse(parsed); // Throws if invalid
   return validated;
 }
 ```
 
 # Better: Use function calling
-Forces structured output from the model
+Use supported strict structured output to constrain shape; refusals, truncation and schema-valid semantic errors still require handling.
 
 # Have fallback:
 What happens when validation fails?
@@ -208,7 +218,7 @@ Symptoms:
 - Users able to change model behavior
 
 Why this breaks:
-LLMs execute instructions. User input in prompts is like SQL injection
+LLMs produce outputs influenced by instructions and untrusted content. User input in prompts is like SQL injection
 but for AI. Attackers can hijack the model's behavior.
 
 Recommended fix:
@@ -229,8 +239,8 @@ const messages = [
 
 ### 2. Input sanitization:
 - Limit input length
-- Strip control characters
-- Detect prompt injection patterns
+- Handle problematic control characters without silently corrupting legitimate task data
+- Treat pattern detection as an advisory signal, not an injection firewall
 
 ### 3. Output filtering:
 - Check for system prompt leakage
@@ -312,21 +322,10 @@ Recommended fix:
 # Stream responses:
 
 ```typescript
-// Next.js + Vercel AI SDK
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-
-export async function POST(req: Request) {
-  const { messages } = await req.json();
-
-  const response = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages,
-    stream: true,
-  });
-
-  const stream = OpenAIStream(response);
-  return new StreamingTextResponse(stream);
-}
+// Pseudocode: select the streaming response helper for the pinned AI SDK version.
+// Authenticate and validate the body, use server-controlled system messages,
+// reserve budget and wire abort/timeout before beginning the provider stream.
+// Render plain text safely; never stream unvalidated tool calls or HTML execution.
 ```
 
 # Frontend:
@@ -337,7 +336,7 @@ const { messages, isLoading } = useChat();
 ```
 
 # Fallback for structured output:
-Stream thinking, then parse final JSON
+Show a neutral progress state, then validate completed JSON before rendering or taking actions. Do not expose private model reasoning or unvalidated executable markup.
 Or show skeleton + stream into it
 
 ### Not monitoring LLM API costs
@@ -354,7 +353,7 @@ Symptoms:
 - No rate limiting per user
 
 Why this breaks:
-LLM costs add up fast. GPT-4 is $30-60 per million tokens. Without
+LLM costs add up fast. Prices depend on the selected model, token direction, caching and provider; verify the actual dated rate card. Without
 tracking, you won't know until the bill arrives. At scale, this is
 existential.
 
@@ -465,6 +464,11 @@ Recommended fix:
 ```typescript
 const response = await generateWithSources(query);
 
+// Pseudocode only: existence does not establish support. Fetch only approved
+// public/internal sources through an SSRF-safe bounded adapter; check the
+// cited passage supports the exact claim and permissions still allow access.
+// Rebuild or withhold unsupported claims, not merely remove their citations.
+// A model-provided confidence value is uncalibrated, not an accuracy probability.
 // Verify each cited source exists
 for (const source of response.sources) {
   const exists = await verifySourceExists(source);
@@ -495,12 +499,11 @@ timeout. Request fails. Or thread blocked, can't handle other requests.
 
 Symptoms:
 - Request timeouts on LLM features
-- Blocking await in handlers
+- Unbounded synchronous work or request lifetimes
 - No job queue for LLM tasks
 
 Why this breaks:
-LLM calls are slow (1-30 seconds). Blocking on them in request handlers
-causes timeouts, poor UX, and scalability issues.
+LLM calls are slow (1-30 seconds). Awaiting asynchronous network I/O does not itself block the event loop, but unbounded request lifetimes, concurrency or CPU work can exhaust capacity.
 
 Recommended fix:
 
@@ -514,8 +517,10 @@ Response streams as it generates
 ## Job queue (best for processing):
 ```typescript
 app.post('/process', async (req, res) => {
-  const jobId = await queue.add('llm-process', { input: req.body });
-  res.json({ jobId, status: 'processing' });
+  // Supply authenticated tenant, validated payload, idempotency key and quota.
+  const job = await queue.add('llm-process', { input: validatedInput, tenantId });
+  res.status(202).json({ jobId: job.id, status: 'processing' });
+  // Poll/cancel endpoints must authorize ownership; worker enforces shared budget.
 });
 
 // Separate worker processes jobs
@@ -529,7 +534,7 @@ Push update when complete
 
 
 ## Serverless consideration:
-Edge function timeout is often 30s
+Verify the selected runtime/plan duration; streaming does not remove its limits.
 Background processing for long tasks
 
 ### Changing prompts in production without version control
@@ -599,7 +604,7 @@ Symptoms:
 
 Why this breaks:
 Fine-tuning is expensive, slow to iterate, and hard to update.
-RAG + good prompting solves 90% of knowledge problems. Only fine-tune
+Compare retrieval/prompting against a task-specific held-out evaluation; no universal success fraction is established. Only fine-tune
 when you have clear evidence RAG is insufficient.
 
 Recommended fix:
@@ -622,7 +627,7 @@ Recommended fix:
 - When latency matters (smaller fine-tuned model)
 
 # Fine-tuning requirements:
-- 100+ high-quality examples
+- A task-appropriate validated training/evaluation set; no universal minimum guarantees quality
 - Clear evaluation metrics
 - Budget for iteration
 
@@ -712,7 +717,11 @@ Message: Single LLM provider without fallback. Consider backup provider for outa
 
 ## Collaboration
 
-### Delegation Triggers
+### Optional collaboration suggestions
+
+These are conceptual role names, not installed tools or authority to launch agents. Delegate only when user/repository instructions authorize it; otherwise implement the relevant responsibilities within the task.
+
+### Role mapping
 
 - backend|api|server|database -> backend (AI needs backend implementation)
 - ui|component|streaming|chat -> frontend (AI needs frontend implementation)

@@ -28,7 +28,7 @@ source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community
 source: community
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -39,12 +39,14 @@ risk: unknown
 This skill determines which Monte Carlo skill or workflow best fits the user's current context. It activates reactively for ambiguous or multi-step data-related messages, gathers signals, and routes to the right skill or workflow.
 
 > **Monte Carlo tool routing (required):** Always call Monte Carlo MCP tools through this plugin's
-> bundled server, whose fully-qualified tool names are
+> upstream bundled server when installed and verified for the intended account; its historical tool names are
 > `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__<tool>` (e.g.
 > `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__get_alerts`). Bare tool names used in this skill
 > (`get_alerts`, `search`, `get_table`, …) refer to that bundled server. If the session also has a
 > separately-configured `monte-carlo-mcp` server, do **not** route to it — it may point at a
 > different endpoint or credentials.
+
+This catalog tree does not bundle that server, routing CLAUDE.md, hooks, or companion skills. Verify availability and account identity; do not invent tools or silently use a different tenant. Routing does not authorize monitor creation, deployment, or other writes beyond the user's request.
 
 Reference file for signal definitions: `references/signal-definitions.md` (relative to this file). Read it before routing.
 
@@ -60,7 +62,7 @@ This skill is activated by the CLAUDE.md routing table when:
 
 - A skill or workflow is already active in the conversation — the active skill owns the conversation, do not intercept
 - The user's message clearly matches a single skill in the CLAUDE.md routing table — route directly, no need for context detection
-- The user is editing a dbt model — defer to the `prevent` skill which auto-activates via hooks
+- The user is editing a dbt model — defer to the `prevent` skill only when its hooks are verified active
 - The user's message is not data-related at all
 
 ---
@@ -113,7 +115,7 @@ Only make API calls when you have enough context to scope them:
 - **Specific asset** → call `get_alerts` with the table's MCON or name filter, and `get_monitors` for that table
 - **Active incident with scope** → call `get_alerts` with the user's time range / severity filters
 - **Coverage/monitoring** → skip API probe, route directly to proactive monitoring workflow (it handles its own API calls)
-- **If MCP tool calls fail** (auth not configured) → skip API, fall back to conversation intent alone
+- **If MCP tool calls fail** → report the actual failure and missing evidence; use conversation intent only for routing, never infer healthy assets or configured authentication.
 
 **Always scope MCP calls tightly.** Unscoped `get_alerts`, `search`, or `get_monitors` on large accounts can return hundreds of results, overflow the tool-result token limit, spill to disk, and force expensive chunk reads — burning user tokens and risking workflow failure. Minimum scoping:
 
@@ -121,8 +123,7 @@ Only make API calls when you have enough context to scope them:
 - `search` → needed to resolve a table name to its MCON (`get_table` requires MCON). ALWAYS pass `limit` (e.g. 5), the table name as `query`, and filter by `warehouse_uuid` or `database`/`schema`. `warehouse_types` alone ("snowflake") matches thousands of tables. Disambiguation rules when multiple matches return:
   1. If the user named a warehouse (e.g. "analytics-snowflake") → auto-pick the match whose `warehouse_display_name` matches and proceed. Do NOT stop to ask.
   2. If the user named a database/schema → auto-pick the match in that database/schema.
-  3. If one match is flagged `is_key_asset: true` and others aren't → auto-pick the key asset.
-  4. Only ask the user to disambiguate when none of the above resolve it.
+  3. If multiple matches remain, ask the user to choose the fully qualified asset. `is_key_asset` is importance metadata, not identity; warehouse or schema matches must also be unique.
 - `get_monitors` → always filter by `mcons` (table MCON) or `warehouse_uuid`
 
 If you don't have enough scope, ask the user before calling.

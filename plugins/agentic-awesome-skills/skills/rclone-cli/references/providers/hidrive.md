@@ -80,7 +80,7 @@ token as returned from HiDrive. This only runs from the moment it opens
 your browser to the moment you get back the verification code.
 The webserver runs on `http://127.0.0.1:53682/`.
 If local port `53682` is protected by a firewall you may need to temporarily
-unblock the firewall to complete authorization.
+permit the required loopback callback only; do not disable the firewall.
 
 Once configured you can then use `rclone` like this (replace `remote` with the
 name you gave your remote):
@@ -184,7 +184,9 @@ This is the directory that rclone considers to be the root of your HiDrive.
 
 Usually, you will leave this blank, and rclone will use the root of the account.
 
-However, you can set this to restrict rclone to a specific folder hierarchy.
+This selects a client-side starting folder; it does not narrow OAuth token
+permissions. Use server-side permissions and an appropriate OAuth scope for
+access restrictions.
 
 This works by prepending the contents of the `root_prefix` option
 to any paths accessed by rclone.

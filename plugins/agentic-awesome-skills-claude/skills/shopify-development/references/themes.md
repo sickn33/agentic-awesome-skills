@@ -8,7 +8,7 @@ Guide for developing Shopify themes with Liquid templating.
 
 **Objects (Output):**
 ```liquid
-{{ product.title }}
+{{ product.title | escape }}
 {{ product.price | money }}
 {{ customer.email }}
 ```
@@ -22,7 +22,7 @@ Guide for developing Shopify themes with Liquid templating.
 {% endif %}
 
 {% for product in collection.products %}
-  {{ product.title }}
+  {{ product.title | escape }}
 {% endfor %}
 
 {% case product.type %}
@@ -49,7 +49,7 @@ Guide for developing Shopify themes with Liquid templating.
 **Product:**
 ```liquid
 {{ product.id }}
-{{ product.title }}
+{{ product.title | escape }}
 {{ product.handle }}
 {{ product.description }}
 {{ product.price }}
@@ -217,11 +217,11 @@ Legacy format (`templates/product.liquid`):
 ```liquid
 <div class="product">
   <div class="product-images">
-    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title }}">
+    <img src="{{ product.featured_image | img_url: 'large' }}" alt="{{ product.title | escape }}">
   </div>
 
   <div class="product-details">
-    <h1>{{ product.title }}</h1>
+    <h1>{{ product.title | escape }}</h1>
     <p class="price">{{ product.price | money }}</p>
 
     {% form 'product', product %}
@@ -246,8 +246,8 @@ Reusable content blocks (`sections/product-grid.liquid`):
   {% for product in section.settings.collection.products %}
     <div class="product-card">
       <a href="{{ product.url }}">
-        <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-        <h3>{{ product.title }}</h3>
+        <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title | escape }}">
+        <h3>{{ product.title | escape }}</h3>
         <p>{{ product.price | money }}</p>
       </a>
     </div>
@@ -290,9 +290,9 @@ Small reusable components (`snippets/product-card.liquid`):
 <div class="product-card">
   <a href="{{ product.url }}">
     {% if product.featured_image %}
-      <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
+      <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title | escape }}">
     {% endif %}
-    <h3>{{ product.title }}</h3>
+    <h3>{{ product.title | escape }}</h3>
     <p class="price">{{ product.price | money }}</p>
     {% if product.compare_at_price > product.price %}
       <p class="sale-price">{{ product.compare_at_price | money }}</p>
@@ -363,31 +363,32 @@ shopify theme check --auto-correct
 
 ## Common Patterns
 
-### Product Form with Variants
+Escape plain text/attribute values such as titles, alt text, option names and
+values with `escape`; merchant description HTML needs an explicit trust policy.
+Use `image_url`/`image_tag` for current themes; `img_url` examples are legacy.
+Cart Ajax URLs should use `window.Shopify.routes.root` for localized storefronts;
+check response.ok before claiming success. Never log customer/cart payloads.
+
+### Product form with variants
 
 ```liquid
 {% form 'product', product %}
-  {% unless product.has_only_default_variant %}
-    {% for option in product.options_with_values %}
-      <div class="product-option">
-        <label>{{ option.name }}</label>
-        <select name="options[{{ option.name }}]">
-          {% for value in option.values %}
-            <option value="{{ value }}">{{ value }}</option>
-          {% endfor %}
-        </select>
-      </div>
+  <label for="variant-{{ section.id }}">Variant</label>
+  <select id="variant-{{ section.id }}" name="id">
+    {% for variant in product.variants %}
+      <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+        {{ variant.title | escape }} — {{ variant.price | money }}
+      </option>
     {% endfor %}
-  {% endunless %}
-
-  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-  <input type="number" name="quantity" value="1" min="1">
-
-  <button type="submit" {% unless product.available %}disabled{% endunless %}>
-    {% if product.available %}Add to Cart{% else %}Sold Out{% endif %}
-  </button>
+  </select>
+  <label for="qty-{{ section.id }}">Quantity</label>
+  <input id="qty-{{ section.id }}" type="number" name="quantity" value="1" min="1">
+  <button type="submit" {% unless product.available %}disabled{% endunless %}>Add to cart</button>
 {% endform %}
 ```
+
+The submitted variant ID must change with the selector. Separate option menus
+without JavaScript mapping to an actual variant ID silently purchase the default.
 
 ### Pagination
 

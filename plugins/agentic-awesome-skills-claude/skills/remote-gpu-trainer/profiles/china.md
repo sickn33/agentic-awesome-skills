@@ -16,6 +16,8 @@ local_nvme: per-platform     # Gpushare /hy-tmp, LanRui /home/user/datadisk, Fea
 
 # Profile: Chinese GPU-rental family (Matpool · Gpushare · Featurize · LanRui)
 
+Historical June 2026 provider snapshot: verify current official console, pricing, retention and mount behavior before authorized operations. No provider was exercised in this review. Use third-party mirrors/proxies only for approved public artifacts; never forward private data or credentials through them (see china-network.md).
+
 One-line purpose: the AutoDL-shaped Chinese rentals — near-clones that share AutoDL's SSH+tmux+prebuilt-base
 spine but diverge on **what survives a stop**, **whether a stopped data disk still bills**, and **which (if
 any) academic proxy** ships. Treat AutoDL (`profiles/autodl.md`) as the reference implementation; this profile
@@ -149,9 +151,7 @@ console first).
 
 ## 4. SPOT / INTERRUPTION + RESUME  *(principle #7/#8)*
 
-**These are on-demand-only platforms — there is NO spot bid and NO documented mid-run reclaim.** Do not
-build SIGTERM-grace preemption handling here; aggressive retry-on-preemption is over-engineering on this
-family. The real involuntary-loss vectors are:
+**No spot tier was documented in the snapshot.** This does not exclude hardware failure, maintenance or provider incidents. Keep periodic full-state checkpoints and a tested restart path; do not assume a signal grace period. Other loss vectors include:
 
 1. **Auto-release of *stopped* instances.** Gpushare auto-releases (deletes, unrecoverable) a stopped
    pay-as-you-go instance **10 days after stop** (`实例停止 10 天后，会自动释放` — verified
@@ -231,7 +231,7 @@ RAM. Audit with `ls <persistent-mount>` after a test stop before trusting it for
 **CN2 — GPU-idle auto-stop kills a quiet job.**
 Symptom: a long job dies mid-run with no error; console shows "auto-stopped (idle)". → Root cause: an opt-in
 idle-shutdown policy stopped the instance during a low-GPU-util phase (data loading, eval, between epochs).
-→ Fix: disable idle-auto-stop for long jobs, or emit a periodic GPU-touching heartbeat; confirm the policy
+→ Fix: disable idle-auto-stop for long jobs, or configure a documented workload-aware policy with an approved cost limit; do not generate artificial GPU activity to defeat cost controls. Confirm the policy
 state in Phase 0.
 
 ### Matpool (matpool.com)
@@ -310,8 +310,7 @@ non-persistent disk, not the cloud drive.
 §5.) Symptom: a stopped LanRui workspace still accrues cost. → Root cause: the 数据盘
 (`/home/user/datadisk`) bills hourly from creation until *destroyed*, independent of workspace run-state
 (`工作空间停止运行，未销毁的数据盘也将持续计费` — verified docs.lanrui.co storage 2026-06). → Fix: to stop
-all billing, stop the workspace **and** 销毁 the 数据盘 — only after the Iron-Law pull+verify; the 网盘 keeps
-the data.
+all billing, stop the workspace **and** 销毁 the 数据盘 — only after the Iron-Law pull+verify; only data explicitly copied to and verified on 网盘 survives destruction of the 数据盘.
 
 **LR2 — shared `netdisk/data` folder mounted into every same-zone workspace → cross-run clobber.** Symptom:
 a parallel ablation overwrites another run's outputs. → Root cause: `/home/user/netdisk/data` is auto-mounted
@@ -336,7 +335,7 @@ Before trusting a run, in Phase 0 (per platform):
   Featurize — match versions.
 - **Detect a stuck / throttled download.** `du -sh <cache-dir>` twice ~30 s apart — flat size = stalled (often
   the GFW or a left-on Gpushare turbo proxy restricting a non-whitelisted host, GS2). Cross-check with
-  `curl -sI -x "$https_proxy" https://hf-mirror.com` / `env | grep -i proxy`; `unset http_proxy https_proxy`
+  `curl -sI -x "$https_proxy" https://hf-mirror.com` / a redacted proxy configuration check (proxy URLs may contain credentials); `unset http_proxy https_proxy`
   and retry on the mirror.
 - **Disk / inode pressure (the silent §2 risk).** `df -h <persistent-mount>` AND `df -i <persistent-mount>` —
   a full inode table fails writes while `df -h` still shows free GB. On Matpool, a filling 5 GB netdisk is

@@ -53,7 +53,7 @@ var body: some View {
 
 ### Sheets Own Their Actions
 
-**Sheets should handle their own dismiss and actions internally** using `@Environment(\.dismiss)`. Avoid passing `onSave`/`onCancel` closures from the parent -- it creates callback prop-drilling and reduces reusability.
+A sheet can dismiss itself using Environment dismiss read inside its presented context. Parent-provided save/cancel callbacks are also valid, especially for dependency injection and testability; choose the ownership contract that fits the app.
 
 ```swift
 struct EditItemSheet: View {
@@ -358,6 +358,6 @@ For `alert` and `confirmationDialog` API patterns, see `latest-apis.md`.
 - [ ] Set column widths with `navigationSplitViewColumnWidth(min:ideal:max:)` or `inspectorColumnWidth(min:ideal:max:)`
 - [ ] Use appropriate presentation modifiers (sheet, fullScreenCover, popover)
 - [ ] Alerts and confirmation dialogs use modern API with actions
-- [ ] Avoid passing dismiss/save callbacks to sheets
+- [ ] Dismiss/save ownership and error handling are explicit; callbacks are valid when appropriate
 - [ ] Use enum-based `Identifiable` type with `.sheet(item:)` when presenting multiple sheets
 - [ ] Navigation state can be saved/restored when needed

@@ -73,6 +73,7 @@ class MyNativeView(context: Context, appContext: AppContext) : ExpoView(context,
 
 ```typescript
 import { requireNativeView } from "expo";
+import type { ViewProps } from "react-native";
 
 export type MyViewProps = {
   title?: string;
@@ -131,10 +132,11 @@ OnViewDestroys { view: MyNativeView ->
 
 ## AsyncFunction on Views
 
-Functions defined inside `View` are accessible via React ref:
+Functions defined inside `View` are accessible via React ref. Supply the matching native `reset` method (omitted above), expose/forward the ref using the React/Expo version’s supported pattern and import `useRef`:
 
 ```typescript
-const ref = useRef<MyView>(null);
+type MyViewHandle = { reset(): Promise<void> };
+const ref = useRef<MyViewHandle>(null);
 // Call native function
 await ref.current?.reset();
 ```

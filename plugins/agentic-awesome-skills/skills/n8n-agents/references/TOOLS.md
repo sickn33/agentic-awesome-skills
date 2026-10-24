@@ -1,5 +1,7 @@
 # Agent tools
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 The agent picks tools by reading their **name** and **description** — nothing else. Both are part of the prompt. Treat tool design like API design: what it does, when to use it, what each parameter means, and how it fails.
 
 ---
@@ -103,13 +105,13 @@ Treat `$fromAI` descriptions like JSDoc — the model reads them to figure out w
 
 ## Plumbed params: hide what the agent shouldn't decide
 
-Not every parameter has to be `$fromAI`. Any parameter can be filled deterministically from workflow context, and **plumbed values are invisible to the agent** — not in the tool schema, not influenceable by anything the model produces:
+Not every parameter has to be `$fromAI`. Any parameter can be filled deterministically from workflow context, and **plumbed values are not model-selected inputs** — not in the tool schema, must still be validated server-side against authenticated context:
 
 ```
 reason:        ={{ $fromAI('reason', 'Why the user is requesting a refund', 'string') }}   // agent-filled
 customerId:    ={{ $('Chat Trigger').first().json.user.id }}                                 // hidden
 maxRefund:     ={{ $('Get user tier').first().json.refundLimit }}                            // hidden
-idempotencyKey:={{ $('Chat Trigger').first().json.sessionId }}                               // hidden
+idempotencyKey:={{ $('Authorized Action').first().json.actionId }}                               // hidden
 ```
 
 Plumb anything the agent shouldn't get wrong or see:
@@ -118,7 +120,7 @@ Plumb anything the agent shouldn't get wrong or see:
 - **Authority limits** — refund caps, tier flags, allowed regions.
 - **Correlation IDs** — `sessionId`, idempotency keys, trace IDs.
 
-**Give the agent a button to push, not a steering wheel.** The strongest version is a sensitive tool with **zero `$fromAI` parameters**: a "Refund order" tool takes `orderId` from the trigger, `amount` from the fetched order record, `actor` from the session — all plumbed. The agent literally cannot refund the wrong order; it only chooses whether to fire. Pair with **HUMAN_REVIEW.md** for actions needing both deterministic params and sign-off.
+**Give the agent a button to push, not a steering wheel.** The strongest version is a sensitive tool with **zero `$fromAI` parameters**: a "Refund order" tool takes `orderId` from the trigger, `amount` from the fetched order record, `actor` from the session — all plumbed. The model only selects invocation, but deterministic inputs still require ownership, amount/currency, remaining balance and replay checks. Use an action-specific idempotency key, not a conversation ID. Pair with **HUMAN_REVIEW.md** for actions needing both deterministic params and sign-off.
 
 ---
 
@@ -170,7 +172,7 @@ Anything specific to *how to call this tool* belongs in the tool's description, 
 | "If the search tool returns nothing, summarize politely" | `Search`: "Returns up to 10 results; if empty, report 'no matches' rather than retrying broader" |
 | "Use 9:16 for video tools" | `Generate Video`: "Defaults to 9:16; pass `aspectRatio: '16:9'` for landscape" |
 
-Three reasons: **reusability** (the tool teaches each new agent how to use it), **token efficiency** (per-tool guidance only loads when the model considers that tool, not every turn), **maintainability** (one description, not a buried paragraph).
+Three reasons: **reusability** (the tool teaches each new agent how to use it), **token efficiency** (tool schemas can still be sent every turn; measure actual token usage), **maintainability** (one description, not a buried paragraph).
 
 ---
 

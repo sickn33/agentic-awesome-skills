@@ -6,6 +6,10 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 Comprehensive guide to tracking, calculating, and optimizing key performance metrics for different startup business models from seed through Series A.
 
+## Measurement boundaries
+
+Numerical ranges below are unsourced illustrative planning heuristics, not universal investor requirements or current industry benchmarks. Define cohorts, time periods, currency, gross margin and cash conventions consistently. Guard zero/negative denominators; do not report runway for cash-generative periods using a negative burn denominator. Simple churn-based LTV assumes stable churn and ARPU and is unreliable for early or changing cohorts. Verify forecasts with sensitivity scenarios. The references/ and examples/ files listed later are not bundled in this tree.
+
 ## Overview
 
 Track the right metrics at the right stage. Focus on unit economics, growth efficiency, and cash management metrics that matter for fundraising and operational excellence.
@@ -33,7 +37,7 @@ YoY Growth = (This Year ARR - Last Year ARR) / Last Year ARR
 **Target Benchmarks:**
 - Seed stage: 15-20% MoM growth
 - Series A: 10-15% MoM growth, 3-5x YoY
-- Series B+: 100%+ YoY (Rule of 40)
+- Series B+: illustrative growth target only; Rule of 40 is growth plus profit margin, not 100% growth
 
 ### Unit Economics
 
@@ -78,14 +82,14 @@ CAC Payback = CAC / (ARPU × Gross Margin%)
 
 **Burn Rate**
 ```
-Monthly Burn = Monthly Revenue - Monthly Expenses
+Monthly Net Cash Burn = Cash Outflows - Cash Inflows
 ```
 
-Negative burn = losing money (typical early-stage)
+Positive net cash burn means cash is being consumed. Use cash movements, not accrual revenue/expenses, for runway.
 
 **Runway**
 ```
-Runway (months) = Cash Balance / Monthly Burn Rate
+Runway (months) = Available Cash Balance / Positive Monthly Net Cash Burn
 ```
 
 **Target:** Always maintain 12-18 months runway
@@ -174,7 +178,7 @@ Rule of 40 = Revenue Growth Rate% + Profit Margin%
 - < 20% = Needs improvement
 
 **Example:**
-50% growth + (10%) margin = 40% ✓
+50% growth + (-10%) margin = 40%
 
 **Quick Ratio**
 ```

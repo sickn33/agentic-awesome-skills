@@ -23,6 +23,9 @@ const config: WhatsAppConfig = {
   verifyToken: process.env.VERIFY_TOKEN!,
 };
 
+for (const value of [config.token, config.phoneNumberId, config.wabaId, config.appSecret, config.verifyToken]) {
+  if (!value || value.startsWith('your_')) throw new Error('Missing or placeholder WhatsApp configuration');
+}
 const whatsapp = new WhatsAppClient(config);
 const templates = new TemplateManager(config);
 
@@ -33,7 +36,7 @@ app.disable('x-powered-by');
 const PORT = process.env.PORT || 3000;
 
 // Raw body capture MUST come before express.json()
-app.use(express.json({ verify: rawBodyMiddleware }));
+app.use(express.json({ verify: rawBodyMiddleware, limit: '1mb' }));
 
 // === Webhook Routes ===
 
@@ -42,6 +45,12 @@ app.get('/webhook', handleWebhookVerification(config.verifyToken));
 
 // POST - Receive messages and status updates
 app.post('/webhook', validateHMAC(config.appSecret), async (req, res) => {
+  if (process.env.DEMO_AUTOREPLY !== 'true') {
+    // Disabled demo: no external API effects. Add durable ingest/worker before production.
+    res.sendStatus(200);
+    return;
+  }
+  // Local demo only: not durable; do not deploy this ack-before-processing path.
   // Respond 200 immediately (WhatsApp requires response within 5 seconds)
   res.sendStatus(200);
 
@@ -56,7 +65,7 @@ app.post('/webhook', validateHMAC(config.appSecret), async (req, res) => {
       handleStatusUpdate(status);
     }
   } catch (error) {
-    console.error('Error processing webhook:', error);
+    console.error('Webhook processing failed (details omitted)');
   }
 });
 
@@ -66,7 +75,7 @@ async function handleIncomingMessage(message: IncomingMessage): Promise<void> {
   const from = message.from;
   const content = extractMessageContent(message);
 
-  console.log(`Message from ${from}: [${content.type}] ${content.text || content.buttonId || ''}`);
+  console.log('WhatsApp message received (personal content omitted)');
 
   // Mark as read
   await whatsapp.markAsRead(message.id);
@@ -75,15 +84,15 @@ async function handleIncomingMessage(message: IncomingMessage): Promise<void> {
   // Example: Echo back the message
   switch (content.type) {
     case 'text':
-      await whatsapp.sendText(from, `Recebi sua mensagem: "${content.text}"`);
+      await whatsapp.sendText(from, 'Recebi sua mensagem.');
       break;
 
     case 'button':
-      await whatsapp.sendText(from, `Voce selecionou: ${content.text}`);
+      await whatsapp.sendText(from, 'Selecao recebida.');
       break;
 
     case 'list':
-      await whatsapp.sendText(from, `Voce escolheu: ${content.text}`);
+      await whatsapp.sendText(from, 'Escolha recebida.');
       break;
 
     case 'image':
@@ -105,7 +114,7 @@ function handleStatusUpdate(status: StatusUpdate): void {
   console.log(`Status update: ${status.id} -> ${status.status}`);
 
   if (status.status === 'failed') {
-    console.error(`Message delivery failed:`, status.errors);
+    console.error('Message delivery failed (details omitted)');
   }
 }
 

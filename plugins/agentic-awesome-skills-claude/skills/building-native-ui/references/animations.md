@@ -112,6 +112,7 @@ import {
   useSharedValue,
   withSpring,
   withTiming,
+  useAnimatedStyle,
 } from "react-native-reanimated";
 
 const offset = useSharedValue(0);
@@ -218,3 +219,5 @@ Animate list items with delays:
 - Keep animations under 300ms for responsive feel
 - Use spring animations for natural movement
 - Avoid animating layout properties (width, height) when possible — prefer transforms
+
+All shared-value hooks run inside a component/custom hook; examples showing only statements are excerpts. Import Easing for easing examples and provide styles.box. Respect reduced motion and avoid unbounded stagger delays.

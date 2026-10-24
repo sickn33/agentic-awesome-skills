@@ -2,6 +2,8 @@
 
 > Extended reference content for `azure-networking`, kept under `references/` so the entrypoint stays within the audit budget.
 
+The Terraform fragment assumes resource group, variables, data subnet, SQL server and private DNS resources are supplied by the caller. Pin a compatible provider, validate and review a plan; do not apply as a standalone module. The root explains app/data deny rules, DNS/public-access controls and route validation.
+
 ## Terraform Configuration
 
 ```hcl

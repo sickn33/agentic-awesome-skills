@@ -51,7 +51,7 @@ class JucepiScraper(AbstractJuntaScraper):
                     nome=nome,
                     matricula=gcol(cells, ["matr", "registro", "nº"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Teresina",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr", "endere"]),
@@ -64,6 +64,6 @@ class JucepiScraper(AbstractJuntaScraper):
             for el in soup.select(".entry-content li, .conteudo li, article li, p"):
                 text = self.clean(el.get_text(" | "))
                 if text and len(text) > 10:
-                    results.append(self.make_leiloeiro(nome=text, municipio="Teresina"))
+                    results.append(self.make_leiloeiro(nome=text, municipio=None))
 
         return results

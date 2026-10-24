@@ -1,7 +1,7 @@
 ---
 name: deploy-to-vercel
 description: "Deploy applications and websites to Vercel. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\"."
-risk: safe
+risk: critical
 source: "https://github.com/vercel-labs/agent-skills"
 date_added: "2026-06-02"
 ---
@@ -57,7 +57,7 @@ Either file means the project is linked. Check for both.
 
 ### Linked (`.vercel/` exists) + has git remote → Git Push
 
-This is the ideal state. The project is linked and has git integration.
+A local link plus a Git remote does not prove Vercel Git integration. Verify the linked project, target directory, connected repository and production branch in the dashboard. Use a preview branch or a direct preview deployment; never push a production branch for a preview request.
 
 1. **Ask the user before pushing.** Never push without explicit approval:
    ```
@@ -67,7 +67,7 @@ This is the ideal state. The project is linked and has git integration.
 
 2. **Commit and push:**
    ```bash
-   git add .
+   git add -- <reviewed-project-paths>
    git commit -m "deploy: <description of changes>"
    git push
    ```
@@ -78,7 +78,7 @@ This is the ideal state. The project is linked and has git integration.
    sleep 5
    vercel ls --format json
    ```
-   The JSON output has a `deployments` array. Find the latest entry — its `url` field is the preview URL.
+   The JSON output has a `deployments` array. Match the project, commit SHA, branch and deployment target; the latest entry could belong to another build. A queued URL is not a successful build.
 
    If the CLI is not authenticated, tell the user to check the Vercel dashboard or the commit status checks on their git provider for the preview URL.
 
@@ -114,7 +114,7 @@ The CLI is working but the project isn't linked yet. This is the opportunity to 
 2. **Once a team is selected, proceed directly to linking.** Tell the user what will happen but do not ask for separate confirmation:
    ```
    Linking this project to <team name> on Vercel. This will create a Vercel
-   project to deploy to and enable automatic deployments on future git pushes.
+   project to deploy to and write local link metadata. Git auto-deployment requires a separately configured Git integration.
    ```
 
 3. **If a git remote exists**, use repo-based linking with the selected team scope:
@@ -185,9 +185,9 @@ bash /mnt/skills/user/deploy-to-vercel/resources/deploy.sh /path/to/project
 bash /mnt/skills/user/deploy-to-vercel/resources/deploy.sh /path/to/project.tgz
 ```
 
-The script auto-detects the framework from `package.json`, packages the project (excluding `node_modules`, `.git`, `.env`), uploads it, and waits for the build to complete.
+The helper guesses the framework and uploads an archive to the hosted endpoint shown in the script. Obtain authorization for that recipient and inspect the complete archive first: its small exclusion list is not a secret scanner and does not implement .gitignore/.vercelignore. A supplied archive is uploaded byte-for-byte. Returned URLs do not establish build success.
 
-**Tell the user:** "Your deployment is ready at [previewUrl]. Claim it at [claimUrl] to manage your deployment."
+**Tell the user:** "Deployment submitted at [previewUrl]; build status is unverified. The private claim link is [claimUrl]."
 
 ---
 
@@ -219,11 +219,11 @@ The script auto-detects the framework from `package.json`, packages the project 
    bash "$skill_dir/resources/deploy-codex.sh" /path/to/project.tgz
    ```
 
-The script handles framework detection, packaging, and deployment. It waits for the build to complete and returns JSON with `previewUrl` and `claimUrl`.
+The same archive-review and recipient-authorization requirements apply. The script submits the archive and returns JSON; it does not verify the build. Keep the claim URL private to the requesting owner.
 
-**Tell the user:** "Your deployment is ready at [previewUrl]. Claim it at [claimUrl] to manage your deployment."
+**Tell the user:** "Deployment submitted at [previewUrl]; build status is unverified. The private claim link is [claimUrl]."
 
-**Escalated network access:** Only escalate the actual deploy command if sandboxing blocks the network call (`sandbox_permissions=require_escalated`). Do **not** escalate the `command -v vercel` check.
+**Escalated network access:** Follow the active environment approval policy if sandboxing blocks the actual deployment; no skill can authorize bypassing it. Do **not** escalate the `command -v vercel` check.
 
 ---
 
@@ -257,7 +257,7 @@ Always show the user the deployment URL.
 - **CLI deploy:** Show the URL returned by `vercel deploy --no-wait`. Use `vercel inspect <url>` to check build status and report it to the user.
 - **No-auth fallback:** Show both the preview URL and the claim URL:
   ```
-  Deployment successful!
+  Deployment submitted; verify build status before calling it successful.
 
   Preview URL: https://my-app-abc123.vercel.app
   Claim URL:   https://vercel.com/claim-deployment?code=...
@@ -266,7 +266,7 @@ Always show the user the deployment URL.
   To transfer this deployment to your Vercel account, visit the Claim URL.
   ```
 
-**Do not** curl or fetch the deployed URL to verify it works. Just return the link.
+Verify the matched deployment status through the authenticated CLI/dashboard. Report pending or failed status truthfully; a URL alone is not live verification. Only fetch an expected project-owned HTTPS URL after checking its origin.
 
 ---
 
@@ -286,7 +286,7 @@ Deployment failed due to network restrictions. To fix this:
 
 ### Escalated Network Access (Codex / sandboxed environments)
 
-If deployment fails due to network issues (timeouts, DNS errors, connection resets) in a sandboxed environment, rerun with escalated permissions (`sandbox_permissions=require_escalated`). Do not escalate the initial CLI availability check — only escalate the actual deploy command.
+If deployment fails due to network issues (timeouts, DNS errors, connection resets) in a sandboxed environment, follow the active environment approval policy; a timeout alone does not prove sandbox blocking. Never bypass a denied network policy. Do not escalate the initial CLI availability check — only escalate the actual deploy command.
 
 Example guidance to the user:
 ```

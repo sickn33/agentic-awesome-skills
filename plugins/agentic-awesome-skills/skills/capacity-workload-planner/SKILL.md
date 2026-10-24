@@ -92,9 +92,9 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 If an artifact was requested, build it after resolving essential missing facts. Otherwise give a short recommendation and offer the relevant artifact.
 
-**Recommended approach:** Plan by week, not by day, and flag over-allocation rather than trying to optimise it. Nobody acts on a daily capacity model.
+**Recommended approach:** Start with weekly planning when it fits the work, and flag over-allocation; use daily detail when shift or delivery constraints require it.
 
-**Why this one:** Weekly capacity is the smallest unit people actually plan in. If the model is daily it will be ignored within a fortnight.
+**Why this one:** Weekly planning can be a useful starting point; confirm the actual planning horizon and avoid unsupported claims about how every team works.
 
 **Workflow:** People → Available hours → Allocation by week → Over-allocation flag → Rebalance
 
@@ -102,19 +102,18 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 ```
 Utilisation %    = Allocated Hours / Available Hours x 100, rounded once to the nearest whole number
-Allocation Check = Over-allocated  when Utilisation % > 100
-                   Within capacity when Utilisation % is 100 or less
-                   Under-allocated when Utilisation % < 100
+Allocation Check = Over-allocated  when Allocated Hours > Available Hours
+                   Within capacity when Allocated Hours = Available Hours
+                   Under-allocated when Allocated Hours < Available Hours
 ```
 
 The percentage is stored as a whole number: `80` means 80%, never `0.8`. Round once, at this
-step, and use the rounded value everywhere so the stored number and the flag can never
-disagree. If `Available Hours` is `0` the ratio is undefined: leave `Utilisation %` and
+step for display only. Compare unrounded hours for the flag: 40.1/40 displays 100% but is still over-allocated. Do not let rounding hide excess demand. If `Available Hours` is `0` the ratio is undefined: leave `Utilisation %` and
 `Allocation Check` empty and flag the row for a human rather than dividing by zero or
 defaulting to 0. A person on full leave has no capacity, which is not the same as having
 spare capacity.
 
-**Approval gate:** a week may only be `Approved` when `Allocation Check` is `Within capacity`.
+**Approval gate:** a week may only be `Approved` when capacity is positive and allocated hours do not exceed available hours; both `Within capacity` and `Under-allocated` may qualify.
 An over-allocated week is a real finding, not a rounding error - raise it, do not approve it,
 and do not quietly trim `Allocated Hours` to make it fit. Reallocate with the people affected,
 or record why the over-allocation is accepted.
@@ -165,12 +164,13 @@ CREATE TABLE capacity_workload_planner (
   -- Utilisation and the check are derived, so they stay nullable: zero capacity is undefined, not zero.
   CHECK (allocation_check IS NULL OR allocation_check IN ('Over-allocated', 'Within capacity', 'Under-allocated')),
   -- An over-allocated week is a finding to escalate, not a plan to sign off.
-  CHECK (status <> 'Approved' OR allocation_check = 'Within capacity')
+  CHECK (available_hours >= 0 AND allocated_hours >= 0 AND leave_days >= 0),
+  CHECK (status <> 'Approved' OR (available_hours > 0 AND allocated_hours <= available_hours
+    AND COALESCE(allocation_check IN ('Within capacity', 'Under-allocated'), FALSE)))
 );
 
 CREATE INDEX idx_capacity_workload_planner_status ON capacity_workload_planner (status);
 CREATE INDEX idx_capacity_workload_planner_week_start ON capacity_workload_planner (week_start);
-```
 ```
 
 ```json
@@ -219,10 +219,11 @@ CREATE INDEX idx_capacity_workload_planner_week_start ON capacity_workload_plann
 | Notes | Text | Leave as Text |
 | Capacity ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
-```
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Aggregate allocations across all projects for the same person/week before comparing against their capacity; otherwise each project can appear safe while the total is over-allocated. Available Hours is net of agreed leave/non-project time; do not subtract leave twice. SQL columns are inputs unless the application enforces calculations: a Select property in Notion does not automatically compute or block approval. Implement and verify a formula/approval workflow in the target system rather than claiming the mapping enforces it.
 
 ## Field Reference
 
@@ -249,7 +250,7 @@ and anything pointing at another table stays `relation`.
 Over-allocated | Within capacity | Under-allocated
 ```
 
-Calculated from `Utilisation %`, not chosen. Leave empty when `Available Hours` is 0.
+Calculated from unrounded allocated/available hours, not chosen. Leave empty when `Available Hours` is 0.
 
 **Status**
 
@@ -284,7 +285,7 @@ We keep overcommitting and miss delivery dates.
 
 **Recommended next step** - offered, not built:
 
-> Plan by week, not by day, and flag over-allocation rather than trying to optimise it. Nobody acts on a daily capacity model.
+> Start with weekly planning when it fits the work, and flag over-allocation; use daily detail when shift or delivery constraints require it.
 >
 > Workflow: People → Available hours → Allocation by week → Over-allocation flag → Rebalance
 >

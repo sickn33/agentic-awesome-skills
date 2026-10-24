@@ -51,7 +51,7 @@ The evaluation should happen through manual prototyping: take one representative
 
 ### The Manual Prototype Step
 
-Before investing in automation, validate task-model fit with a manual test. Copy one representative input into the model interface. Evaluate the output quality. This takes minutes and prevents hours of wasted development.
+Before investing in automation, validate task-model fit with a manual test. Use an authorized synthetic or minimized input in an approved model interface; do not upload proprietary data to an unapproved service. Evaluate the output quality. This takes minutes and prevents hours of wasted development.
 
 This validation answers critical questions:
 - Does the model have the knowledge required for this task?
@@ -59,13 +59,13 @@ This validation answers critical questions:
 - What level of quality should you expect at scale?
 - Are there obvious failure modes to address?
 
-If the manual prototype fails, the automated system will fail. If it succeeds, you have a baseline for comparison and a template for prompt design.
+A failed prototype is a diagnosis point, not proof that every architecture fails. A successful example is a starting point, not scale validation; test representative and adversarial cases with held-out evaluation.
 
 ### Pipeline Architecture
 
 LLM projects benefit from staged pipeline architectures where each stage is:
 - **Discrete**: Clear boundaries between stages
-- **Idempotent**: Re-running produces the same result
+- **Idempotent**: Repeating an operation does not duplicate its externally visible effects; identical LLM text is a separate determinism property
 - **Cacheable**: Intermediate results persist to disk
 - **Independent**: Each stage can run separately
 
@@ -81,7 +81,7 @@ acquire → prepare → process → parse → render
 4. **Parse**: Extract structured data from LLM outputs
 5. **Render**: Generate final outputs (reports, files, visualizations)
 
-Stages 1, 2, 4, and 5 are deterministic. Stage 3 is non-deterministic and expensive. This separation allows re-running the expensive LLM stage only when necessary, while iterating quickly on parsing and rendering.
+Acquisition can change over time; preparation, parsing and rendering can be deterministic only with pinned inputs, versions and settings. Stage 3 is non-deterministic and expensive. This separation allows re-running the expensive LLM stage only when necessary, while iterating quickly on parsing and rendering.
 
 ### File System as State Machine
 
@@ -95,13 +95,7 @@ data/{id}/
 ├── parsed.json      # parse stage complete
 ```
 
-To check if an item needs processing: check if the output file exists. To re-run a stage: delete its output file and downstream files. To debug: read the intermediate files directly.
-
-This pattern provides:
-- Natural idempotency (file existence gates execution)
-- Easy debugging (all state is human-readable)
-- Simple parallelization (each directory is independent)
-- Trivial caching (files persist across runs)
+File existence alone does not establish completion or idempotency. Write temporary files and atomically rename only after validation; record input hashes, model/prompt/tool versions, schema, status, output hash and request identifier in a manifest. Treat partial/stale outputs as incomplete, lock each item during mutation, and invalidate downstream caches when dependencies change. Do not delete evidence blindly to retry an uncertain paid or external action: reconcile using the persisted request ID. Use a database/queue when concurrent writers or transactional requirements exceed file-based coordination.
 
 ### Structured Output Design
 
@@ -133,7 +127,7 @@ Follow this format exactly because I will be parsing it programmatically.
 
 The parsing code must handle variations gracefully. LLMs do not follow instructions perfectly. Build parsers that:
 - Use regex patterns flexible enough to handle minor formatting variations
-- Provide sensible defaults when sections are missing
+- Reject or mark incomplete missing required fields; never invent a successful default score
 - Log parsing failures for later review rather than crashing
 
 ### Agent-Assisted Development
@@ -158,7 +152,7 @@ Key practices for effective agent-assisted development:
 LLM processing has predictable costs that should be estimated before starting. The formula:
 
 ```
-Total cost = (items × tokens_per_item × price_per_token) + API overhead
+Total cost = input_tokens × input_rate + output_tokens × output_rate + reasoning/tool/media charges + retries + infrastructure
 ```
 
 For batch processing:
@@ -193,9 +187,9 @@ See `multi-agent-patterns` skill for detailed architecture guidance.
 
 ### Architectural Reduction
 
-Start with minimal architecture. Add complexity only when proven necessary. Production evidence shows that removing specialized tools often improves performance.
+Start with minimal architecture. Add complexity only when proven necessary. Evaluate whether fewer tools improve the actual task; broader shell/SQL primitives can expand permissions and failure impact.
 
-Vercel's d0 agent achieved 100% success rate (up from 80%) by reducing from 17 specialized tools to 2 primitives: bash command execution and SQL. The file system agent pattern uses standard Unix utilities (grep, cat, find, ls) instead of custom exploration tools.
+The linked Vercel case study is one environment-specific example, not a general success-rate guarantee.
 
 **When reduction outperforms complexity:**
 - Your data layer is well-documented and consistently structured
@@ -213,7 +207,7 @@ See `tool-design` skill for detailed tool architecture guidance.
 
 ### Iteration and Refactoring
 
-Expect to refactor. Production agent systems at scale require multiple architectural iterations. Manus refactored their agent framework five times since launch. The Bitter Lesson suggests that structures added for current model limitations become constraints as models improve.
+Expect to refactor. Production agent systems at scale require multiple architectural iterations. The linked context-engineering experience is historical and environment-specific. The Bitter Lesson suggests that structures added for current model limitations become constraints as models improve.
 
 Build for change:
 - Keep architecture simple and unopinionated
@@ -260,7 +254,7 @@ Build for change:
 
 **Monolithic pipelines**: Combining all stages into one script makes debugging and iteration difficult. Separate stages with persistent intermediate outputs.
 
-**Over-constraining the model**: Adding guardrails, pre-filtering, and validation logic that the model could handle on its own. Test whether your scaffolding helps or hurts.
+**Over-constraining the model**: Remove redundant workflow complexity only after evaluation; retain deterministic authorization, input/output validation and safety boundaries outside the model.
 
 **Ignoring costs until production**: Token costs compound quickly at scale. Estimate and track from the beginning.
 
@@ -280,19 +274,7 @@ Architecture:
 - Structured output: 6 sections with explicit format requirements
 - Parallel execution: 15 workers for LLM calls
 
-Results: $58 total cost, ~1 hour execution, static HTML output.
-
-**Example 2: Architectural Reduction (Vercel d0)**
-
-Task: Text-to-SQL agent for internal analytics.
-
-Before: 17 specialized tools, 80% success rate, 274s average execution.
-
-After: 2 tools (bash + SQL), 100% success rate, 77s average execution.
-
-Key insight: The semantic layer was already good documentation. Claude just needed access to read files directly.
-
-See Case Studies for detailed analysis.
+Historical case-study results require verification against the linked primary sources and their evaluation conditions. They are not cost, latency or success estimates for a new project. No Case Studies or Pipeline Patterns support files are bundled.
 
 ## Guidelines
 

@@ -1,87 +1,34 @@
 #!/usr/bin/env bash
+# Local hardening: require a reviewed release and independently verified digest.
 set -euo pipefail
-
+umask 077
 REPO="AlmogBaku/debug-skill"
-BINARY="dap"
-
-go_install_fallback() {
-  if ! command -v go >/dev/null 2>&1; then
-    echo "Error: go is not installed. Install Go from https://go.dev/dl/ and re-run, or download a binary from:"
-    echo "  https://github.com/$REPO/releases/latest"
-    exit 1
-  fi
-  echo "Falling back to go install..."
-  go install "github.com/$REPO/cmd/dap@latest"
-  exit 0
-}
-
-# Detect OS
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-case "$OS" in
-  linux)  OS="linux" ;;
-  darwin) OS="darwin" ;;
-  *)
-    echo "Unsupported OS: $OS."
-    go_install_fallback
-    ;;
-esac
-
-# Detect arch
-ARCH=$(uname -m)
-case "$ARCH" in
-  x86_64|amd64)  ARCH="amd64" ;;
-  aarch64|arm64) ARCH="arm64" ;;
-  *)
-    echo "Unsupported architecture: $ARCH."
-    go_install_fallback
-    ;;
-esac
-
-ASSET_NAME="dap-${OS}-${ARCH}"
-
-# Get latest release tag
-LATEST=$(curl -fsSL "https://api.github.com/repos/$REPO/releases/latest" \
-  | grep '"tag_name"' \
-  | sed 's/.*"tag_name": *"\([^"]*\)".*/\1/')
-
-if [ -z "$LATEST" ]; then
-  echo "Could not determine latest release."
-  go_install_fallback
-fi
-
-DOWNLOAD_URL="https://github.com/$REPO/releases/download/$LATEST/$ASSET_NAME"
-
-# Determine install location
-if mkdir -p "$HOME/.local/bin" 2>/dev/null && [ -w "$HOME/.local/bin" ]; then
-  INSTALL_DIR="$HOME/.local/bin"
-elif [ -w "/usr/local/bin" ]; then
-  INSTALL_DIR="/usr/local/bin"
+: "${DAP_VERSION:?Set a reviewed release tag}"
+: "${DAP_SHA256:?Set the trusted platform asset SHA-256}"
+[[ "$DAP_VERSION" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]] || exit 1
+[[ "$DAP_SHA256" =~ ^[A-Fa-f0-9]{64}$ ]] || exit 1
+case "$(uname -s)" in Darwin) task_os=darwin ;; Linux) task_os=linux ;; *) echo 'Unsupported OS' >&2; exit 1 ;; esac
+case "$(uname -m)" in x86_64|amd64) task_arch=amd64 ;; arm64|aarch64) task_arch=arm64 ;; *) echo 'Unsupported architecture' >&2; exit 1 ;; esac
+task_tmpdir=$(mktemp -d) || exit 1
+trap 'rm -rf -- "$task_tmpdir"' EXIT
+asset="dap-${task_os}-${task_arch}"
+curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
+  --connect-timeout 10 --max-time 120 --max-filesize 104857600 \
+  "https://github.com/$REPO/releases/download/$DAP_VERSION/$asset" -o "$task_tmpdir/dap"
+if command -v sha256sum >/dev/null 2>&1; then
+  actual=$(sha256sum "$task_tmpdir/dap"); actual=${actual%% *}
 else
-  echo "Error: no writable install directory found. Try running with sudo or ensure ~/.local/bin is accessible."
-  exit 1
+  actual=$(shasum -a 256 "$task_tmpdir/dap"); actual=${actual%% *}
 fi
-
-INSTALL_PATH="$INSTALL_DIR/$BINARY"
-
-echo "Downloading $ASSET_NAME ($LATEST)..."
-if ! curl -fsSL "$DOWNLOAD_URL" -o "$INSTALL_PATH"; then
-  rm -f "$INSTALL_PATH"
-  echo "Download failed."
-  go_install_fallback
+[[ "$(printf %s "$actual" | tr ABCDEF abcdef)" == "$(printf %s "$DAP_SHA256" | tr ABCDEF abcdef)" ]] || { echo 'Digest mismatch' >&2; exit 1; }
+# No implicit sudo, PATH edits, fallback builds, or replacement of an existing binary.
+install_dir="$HOME/.local/bin"
+[[ ! -L "$install_dir" ]] || { echo 'Refusing symlink install directory' >&2; exit 1; }
+mkdir -p "$install_dir"
+if [[ -e "$install_dir/dap" || -L "$install_dir/dap" ]]; then
+  echo 'Existing dap installation requires an explicit upgrade plan' >&2; exit 1
 fi
-
-chmod +x "$INSTALL_PATH"
-echo "Installed $BINARY to $INSTALL_PATH"
-
-# Suggest PATH update if needed
-if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
-  echo ""
-  echo "NOTE: Add $INSTALL_DIR to your PATH."
-  # Suggest the right shell config file
-  case "${SHELL:-}" in
-    */zsh)  RC_FILE="~/.zshrc" ;;
-    */fish) RC_FILE="~/.config/fish/config.fish" ;;
-    *)      RC_FILE="~/.bashrc" ;;
-  esac
-  echo "  echo 'export PATH=\"\$PATH:$INSTALL_DIR\"' >> $RC_FILE"
-fi
+# Reserve destination without clobbering it, then copy verified bytes.
+(set -o noclobber; cat "$task_tmpdir/dap" > "$install_dir/dap")
+chmod 700 "$install_dir/dap"
+printf 'Installed reviewed dap release %s in %s\n' "$DAP_VERSION" "$install_dir"

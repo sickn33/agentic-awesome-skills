@@ -10,11 +10,9 @@
 # Install ModSecurity for Nginx (Ubuntu)
 apt install -y libmodsecurity3 libmodsecurity-dev nginx libnginx-mod-http-modsecurity
 
-# Or compile from source
-git clone https://github.com/SpiderLabs/ModSecurity /opt/modsecurity
-cd /opt/modsecurity
-git submodule init && git submodule update
-./build.sh && ./configure && make && make install
+# Source builds execute third-party code. Use only a reviewed pinned release/commit
+# and matching connector/CRS versions in a disposable build environment; no moving clone.
+
 ```
 
 ### Nginx Configuration
@@ -43,12 +41,12 @@ http {
 
 ### ModSecurity Main Configuration
 
-```bash
+```apacheconf
 # /etc/nginx/modsec/main.conf
 Include /etc/nginx/modsec/modsecurity.conf
 
 # Set to DetectionOnly first, switch to On after tuning
-SecRuleEngine On
+SecRuleEngine DetectionOnly
 
 # Request body handling
 SecRequestBodyAccess On
@@ -62,7 +60,7 @@ SecResponseBodyMimeType text/plain text/html text/xml application/json
 # Logging
 SecAuditEngine RelevantOnly
 SecAuditLogRelevantStatus "^(?:5|4(?!04))"
-SecAuditLogParts ABIJDEFHZ
+SecAuditLogParts AHZ  # Minimal example; explicitly approve/redact body and header capture
 SecAuditLogType Serial
 SecAuditLog /var/log/modsec/modsec_audit.log
 
@@ -76,7 +74,8 @@ Include /etc/nginx/modsec/crs/rules/*.conf
 ```bash
 # Download and install OWASP CRS
 cd /etc/nginx/modsec
-git clone https://github.com/coreruleset/coreruleset crs
+git clone --no-checkout https://github.com/coreruleset/coreruleset crs
+git -C crs checkout --detach <reviewed-full-commit-sha>
 cp crs/crs-setup.conf.example crs/crs-setup.conf
 
 # Customize CRS settings
@@ -96,7 +95,7 @@ SecRule REQUEST_URI "@beginsWith /api/upload" \
 EOF
 
 # Create rule exclusions file
-cat > /etc/nginx/modsec/crs/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf << 'EOF'
+cat > /etc/nginx/modsec/crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf << 'EOF'
 # Exclude rules that cause false positives on specific paths
 SecRule REQUEST_URI "@beginsWith /api/webhook" \
   "id:1000001,phase:1,pass,nolog,ctl:ruleRemoveTargetById=942100;ARGS:payload"
@@ -109,7 +108,7 @@ EOF
 
 ### Custom ModSecurity Rules
 
-```bash
+```apacheconf
 # /etc/nginx/modsec/custom-rules.conf
 
 # Block requests with known attack tool user agents
@@ -120,14 +119,13 @@ SecRule REQUEST_HEADERS:User-Agent "@pm sqlmap nikto nmap masscan dirbuster" \
 SecRule REQUEST_URI "@rx /(\.git|\.env|\.svn|wp-admin|phpmyadmin|adminer)" \
   "id:10002,phase:1,deny,status:404,log,msg:'Blocked sensitive path access'"
 
-# Rate limit by IP (10 requests/second)
-SecRule IP:REQUEST_RATE "@gt 10" \
-  "id:10003,phase:1,deny,status:429,log,msg:'Rate limit exceeded',\
-  setvar:IP.request_rate=+1,expirevar:IP.request_rate=1"
+# IP:REQUEST_RATE is not automatically maintained; no working rate limiter is
+# provided by this example. Use a tested reverse-proxy or managed WAF limiter with
+# explicit trusted-client-IP extraction and bounded persistent state.
 
 # Block oversized cookies (potential overflow attack)
 SecRule REQUEST_HEADERS:Cookie "@gt 4096" \
-  "id:10004,phase:1,deny,status:400,log,msg:'Oversized cookie header'"
+  "id:10004,phase:1,t:none,t:length,deny,status:400,log,msg:'Oversized cookie header'"
 
 # Virtual patch: block specific CVE exploit pattern
 SecRule ARGS:filename "@contains ../../" \
@@ -140,6 +138,8 @@ SecRule &REQUEST_HEADERS:Content-Type "@eq 0" ""
 ```
 
 
+The Nginx fragment also needs a valid upstream, TLS certificate/key and included custom-rule file. Check `nginx -t` before an authorized reload. CRS examples must not duplicate enabled 900000/900110 IDs: edit the existing directives, and place runtime exclusions before CRS using the matched release’s documented order. Exclusions are examples only; constrain them to a verified path/parameter and regression-test both legitimate requests and the attack it must still block. Audit-log body capture can expose secrets.
+
 ## WAF Tuning Workflow
 
 ```bash
@@ -147,10 +147,10 @@ SecRule &REQUEST_HEADERS:Content-Type "@eq 0" ""
 # waf-tune.sh - Analyze WAF logs for false positives
 
 AUDIT_LOG="/var/log/modsec/modsec_audit.log"
-TIMEFRAME="24h"
+TIMEFRAME="entire selected log file; no time filter applied"
 
 echo "=== WAF Tuning Report ==="
-echo "Analyzing last ${TIMEFRAME} of audit logs"
+echo "Analyzing ${TIMEFRAME}"
 echo ""
 
 # Top blocked rules
@@ -184,7 +184,7 @@ grep -oP 'id "\K[0-9]+' "$AUDIT_LOG" | sort | uniq -c | sort -rn | \
 | WAF not blocking attacks | Rules in detection-only mode | Switch `SecRuleEngine On` after tuning period |
 | High latency with WAF enabled | Response body inspection overhead | Disable `SecResponseBodyAccess` if not needed; reduce `paranoia_level` |
 | AWS WAF rules not matching | Rule priority order wrong | Lower priority number = evaluated first; reorder rules |
-| ModSecurity crashes nginx | Memory exhaustion on large requests | Increase `SecRequestBodyLimit`; adjust `SecPcreMatchLimit` |
+| ModSecurity crashes nginx | Memory exhaustion on large requests | Reduce bounded request/inspection limits and profile memory/regex behavior; raising limits can worsen exhaustion |
 | Cloudflare WAF blocks API calls | Expression too broad | Narrow expression with path or method conditions |
 | CRS update breaks application | New rules trigger on existing traffic | Pin CRS version; test updates in staging first |
 
@@ -200,7 +200,7 @@ grep -oP 'id "\K[0-9]+' "$AUDIT_LOG" | sort | uniq -c | sort -rn | \
 - Set appropriate rate limits per endpoint
 - Maintain exclusion rules documentation with justifications
 - Test WAF rules with known attack payloads before deploying
-- Keep audit logs for at least 90 days for forensic analysis
+- Select retention from incident/compliance needs and privacy obligations; protect and minimize audit data
 
 
 ## Related Skills

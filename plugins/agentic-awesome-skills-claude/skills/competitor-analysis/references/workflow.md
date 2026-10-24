@@ -1,3 +1,5 @@
+> Review contract: follow the current SKILL.md authority and budget rules. Recipes below are illustrative; use a private run directory, quote paths, do not change global permissions, and use only authorized tools/parallelism. Unknown evidence stays unknown (never false); snippets and synthetic named-vendor examples are not verified facts. Do not publish, contact anyone or infer approval from silence. Dates must be observed, not invented from a year in a URL.
+
 # Competitor Analysis — Workflow Reference
 
 ## Contents
@@ -70,13 +72,13 @@ File: `{OUTPUT_DIR}/{competitor-slug}.md` — see `references/example-research.m
 `browse cloud fetch --allow-redirects` returns clean **markdown by default** — no HTML stripping needed. Just cap the length:
 
 ```bash
-browse cloud fetch --allow-redirects "https://rivalco.com/pricing" | head -c 3000
+browse cloud fetch "https://rivalco.com/pricing" | head -c 3000
 ```
 
 If you need the original HTML (e.g. to read the `<title>` tag or parse markup), add `--format raw` and strip tags:
 
 ```bash
-browse cloud fetch --allow-redirects --format raw "https://rivalco.com/pricing" | sed 's/<script[^>]*>.*<\/script>//g; s/<style[^>]*>.*<\/style>//g; s/<[^>]*>//g; s/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&nbsp;/ /g; s/&#[0-9]*;//g' | tr -s ' \n' | head -c 3000
+browse cloud fetch --format raw "https://rivalco.com/pricing" | sed 's/<script[^>]*>.*<\/script>//g; s/<style[^>]*>.*<\/style>//g; s/<[^>]*>//g; s/&amp;/\&/g; s/&lt;/</g; s/&gt;/>/g; s/&nbsp;/ /g; s/&#[0-9]*;//g' | tr -s ' \n' | head -c 3000
 ```
 
 Limit to ~3000 chars per page to keep subagent context manageable. For JS-heavy pages (client-rendered pricing tables) where the Fetch API returns thin content, open the page in a browser session and read it: `browse open "{url}" --remote` then `browse get markdown`.
@@ -175,7 +177,7 @@ COMPETITOR URLS TO PROCESS:
 TOOL RULES — CRITICAL, FOLLOW EXACTLY:
 1. You may ONLY use the Bash tool. No exceptions.
 2. All searches: Bash → browse cloud search "..." --num-results 10
-3. All page fetches: Bash → browse cloud fetch --allow-redirects "..."
+3. All page fetches: Bash → browse cloud fetch "..."
    browse cloud fetch returns clean markdown by default — just `| head -c 3000`, no HTML stripping.
    If you need the raw HTML, add --format raw and pipe through:
    sed 's/<script[^>]*>.*<\/script>//g; s/<style[^>]*>.*<\/style>//g; s/<[^>]*>//g' | tr -s ' \n' | head -c 3000
@@ -221,7 +223,7 @@ LANE 2 — External Signal (deep + deeper):
 
   Record each as a Mentions line with title + one-line snippet + URL + **date**. Always include
   the date when available. If a `browse cloud search` result carries a date field, prefer it.
-  If absent, parse the year from title/URL (e.g. "2026" or `/2025/11/` in a news URL).
+  If absent, leave the date unknown; a year or URL path does not establish an exact publication date.
   For LinkedIn and YouTube — use search snippet only, do NOT fetch the page.
 
 LANE 3 — Public Benchmarks (deeper only):
@@ -391,7 +393,7 @@ Two modes:
 
 Capture homepage hero screenshot for each competitor:
 ```bash
-node {SKILL_DIR}/scripts/capture_screenshots.mjs {OUTPUT_DIR} --mode remote --concurrency 1
+node {SKILL_DIR}/scripts/capture_screenshots.mjs {OUTPUT_DIR} --mode remote --allow-browser --concurrency 1
 ```
 Requires the `browse` CLI (`npm install -g browse`). `--mode remote` drives a Browserbase session (the script passes `--remote` on each `browse` command); use `--mode local` for local Chrome. Writes one PNG per competitor to `{OUTPUT_DIR}/screenshots/{slug}-hero.png`. `compile_report.mjs` auto-embeds the hero in the per-competitor HTML page when present.
 

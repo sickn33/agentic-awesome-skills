@@ -2,6 +2,16 @@
 
 Comprehensive guide to reading and writing data in various formats with Polars.
 
+## I/O contract
+
+Examples omit optional connector dependencies and credentials. Use least-privilege
+connections, parameterized user values, approved queries and private new output
+paths. `write_*` and sink methods can overwrite; reserve a new destination first.
+Cloud and BigQuery operations can incur fees and disclose data. For Excel,
+`sheet_id=0` returns all sheets; `1` selects the first. CSV quoting does not prevent
+spreadsheet formula execution; apply a spreadsheet-safe export policy if needed.
+Use typed dates (`pl.date(...)`) when filtering Date columns, not string literals.
+
 ## CSV Files
 
 ### Reading CSV
@@ -21,7 +31,7 @@ df = pl.read_csv(
     columns=["col1", "col2"],  # Select specific columns
     n_rows=1000,  # Read only first 1000 rows
     skip_rows=10,  # Skip first 10 rows
-    dtypes={"col1": pl.Int64, "col2": pl.Utf8},  # Specify types
+    schema_overrides={"col1": pl.Int64, "col2": pl.Utf8},  # Specify types
     null_values=["NA", "null", ""],  # Define null values
     encoding="utf-8",
     ignore_errors=False
@@ -147,7 +157,7 @@ lf = pl.scan_ndjson("data.ndjson")
 df = pl.read_json("data.json")
 
 # From JSON string
-df = pl.read_json('{"col1": [1, 2], "col2": ["a", "b"]}')
+df = pl.DataFrame(json.loads('{"col1": [1, 2], "col2": ["a", "b"]}'))  # import json
 ```
 
 ### Writing JSON
@@ -160,7 +170,7 @@ df.write_ndjson("output.ndjson")
 df.write_json("output.json")
 
 # Pretty printed
-df.write_json("output.json", pretty=True, row_oriented=False)
+json.dump(df.to_dicts(), output_handle, indent=2)  # import json; open a new output file explicitly
 ```
 
 ## Excel Files
@@ -174,15 +184,13 @@ df = pl.read_excel("data.xlsx")
 # Specific sheet
 df = pl.read_excel("data.xlsx", sheet_name="Sheet1")
 # Or by index
-df = pl.read_excel("data.xlsx", sheet_id=0)
+df = pl.read_excel("data.xlsx", sheet_id=1)
 
 # With options
 df = pl.read_excel(
     "data.xlsx",
     sheet_name="Sheet1",
-    columns=["A", "B", "C"],  # Excel columns
-    n_rows=100,
-    skip_rows=5,
+    columns=["Name", "Value"],  # Header names, not Excel column letters
     has_header=True
 )
 ```
@@ -194,7 +202,8 @@ df = pl.read_excel(
 df.write_excel("output.xlsx")
 
 # Multiple sheets
-with pl.ExcelWriter("output.xlsx") as writer:
+import xlsxwriter
+with xlsxwriter.Workbook("output.xlsx") as writer:
     df1.write_excel(writer, worksheet="Sheet1")
     df2.write_excel(writer, worksheet="Sheet2")
 ```
@@ -207,7 +216,7 @@ with pl.ExcelWriter("output.xlsx") as writer:
 import polars as pl
 
 # Read entire table
-df = pl.read_database("SELECT * FROM users", connection_uri="postgresql://...")
+df = pl.read_database_uri("SELECT * FROM users", uri=database_uri)  # supplied securely
 
 # Using connectorx for better performance
 df = pl.read_database_uri(
@@ -229,7 +238,7 @@ df.write_database("table_name", connection=engine)
 df.write_database(
     "table_name",
     connection=engine,
-    if_exists="replace",  # or "append", "fail"
+    if_table_exists="fail",  # explicit append/replace only after approval
 )
 ```
 
@@ -305,10 +314,8 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/path/to/credentials.json"
 
 ```python
 # Read from BigQuery
-df = pl.read_database(
-    "SELECT * FROM project.dataset.table",
-    connection_uri="bigquery://project"
-)
+# No generic connection_uri parameter exists on read_database.
+# Use a supported database connection or the SDK path below.
 
 # Or using Google Cloud SDK
 from google.cloud import bigquery
@@ -340,10 +347,10 @@ df.write_ipc("output.arrow", compression="zstd")
 
 ```python
 # Write streaming format
-df.write_ipc("output.arrows", compression="zstd")
+df.write_ipc_stream("output.arrows", compression="zstd")
 
 # Read streaming
-df = pl.read_ipc("output.arrows")
+df = pl.read_ipc_stream("output.arrows")
 ```
 
 ### From/To Arrow
@@ -401,7 +408,7 @@ pl_df = pl.from_pandas(pd_df)
 pd_df = pl_df.to_pandas()
 
 # Zero-copy when possible
-pl_df = pl.from_arrow(pd_df)
+pl_df = pl.from_arrow(pa.Table.from_pandas(pd_df, preserve_index=False))  # import pyarrow as pa
 ```
 
 ### Lists of Rows
@@ -419,7 +426,7 @@ rows = df.to_dicts()
 
 # From list of tuples
 data = [("Alice", 25), ("Bob", 30)]
-df = pl.DataFrame(data, schema=["name", "age"])
+df = pl.DataFrame(data, schema=["name", "age"], orient="row")
 ```
 
 ## Streaming Large Files
@@ -429,11 +436,11 @@ For datasets larger than memory, use lazy mode with streaming:
 ```python
 # Streaming mode
 lf = pl.scan_csv("very_large.csv")
-result = lf.filter(pl.col("value") > 100).collect(streaming=True)
+result = lf.filter(pl.col("value") > 100).collect(engine="streaming")
 
 # Streaming with multiple files
 lf = pl.scan_parquet("data/*.parquet")
-result = lf.group_by("category").agg(pl.col("value").sum()).collect(streaming=True)
+result = lf.group_by("category").agg(pl.col("value").sum()).collect(engine="streaming")
 ```
 
 ## Best Practices
@@ -472,13 +479,13 @@ lf = pl.scan_csv("large.csv")  # NOT read_csv
 # 2. Filter and select early (pushdown optimization)
 result = (
     lf
-    .select("col1", "col2", "col3")  # Only needed columns
+    .select("col1", "col2", "col3", "date")  # Retain filter input
     .filter(pl.col("date") > "2023-01-01")  # Filter early
     .collect()
 )
 
 # 3. Use streaming for very large data
-result = lf.filter(...).select(...).collect(streaming=True)
+result = lf.filter(...).select(...).collect(engine="streaming")
 
 # 4. Read only needed rows during development
 df = pl.read_csv("large.csv", n_rows=10000)  # Sample for testing
@@ -504,7 +511,7 @@ lf.sink_parquet("output.parquet")  # Streaming write
 # 1. Specify dtypes when reading CSV
 df = pl.read_csv(
     "data.csv",
-    dtypes={"id": pl.Int64, "name": pl.Utf8}  # Avoids inference
+    schema_overrides={"id": pl.Int64, "name": pl.Utf8}  # Avoids inference
 )
 
 # 2. Use appropriate compression
@@ -512,7 +519,7 @@ df.write_parquet("output.parquet", compression="snappy")  # Fast
 df.write_parquet("output.parquet", compression="zstd")    # Better compression
 
 # 3. Parallel reading
-df = pl.read_csv("data.csv", parallel="auto")
+df = pl.read_csv("data.csv")  # reader chooses threads; no parallel= argument
 
 # 4. Read multiple files in parallel
 lf = pl.scan_parquet("data/*.parquet")  # Automatic parallel read
@@ -526,7 +533,7 @@ try:
 except pl.exceptions.ComputeError as e:
     print(f"Error reading CSV: {e}")
 
-# Ignore errors during parsing
+# Opt-in lossy parsing: inspect rejected/null-converted records; never silently use for financial/scientific conclusions
 df = pl.read_csv("messy.csv", ignore_errors=True)
 
 # Handle missing files
@@ -544,7 +551,7 @@ else:
 schema = pl.read_csv("data.csv", n_rows=1000).schema
 
 # Use inferred schema for full read
-df = pl.read_csv("data.csv", dtypes=schema)
+df = pl.read_csv("data.csv", schema_overrides=schema)
 
 # Define schema explicitly
 schema = {
@@ -553,5 +560,5 @@ schema = {
     "date": pl.Date,
     "value": pl.Float64
 }
-df = pl.read_csv("data.csv", dtypes=schema)
+df = pl.read_csv("data.csv", schema_overrides=schema)
 ```

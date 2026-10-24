@@ -1,14 +1,14 @@
 ---
 name: vercel-optimize
 description: "Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations."
-risk: safe
+risk: critical
 source: "https://github.com/vercel-labs/agent-skills"
 date_added: "2026-06-02"
 ---
 
 # Vercel Optimize
 
-Run an observability-first Vercel optimization audit. Do not inspect source files until `signals.json` exists and a deterministic gate points to a route, file, or project setting.
+Run an observability-first Vercel optimization audit. Collect platform signals before source investigation. The deterministic scanner reads repository text to build `signals.json`; manual source investigation then stays within a selected candidate.
 
 Core doctrine: read [references/doctrine.md](references/doctrine.md) if any rule is unclear.
 
@@ -326,6 +326,8 @@ Use these messages without adding sales copy or process detail.
 > The route inventory matched fewer than half of the routes we saw in observability. This is common in monorepos with custom routing. I've surfaced what I can match; the rest appear in the "Not investigated in this run" section.
 
 ## Limitations
+- Scanner and prose-verifier checks are heuristics, not proof of framework semantics or runtime safety. A ready recommendation still needs source review and project tests before applying it.
+- Account, billing and observability output can contain private project data. Keep run artifacts local/private and do not upload or publish them without authorization.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

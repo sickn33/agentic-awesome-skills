@@ -1,3 +1,4 @@
+<!-- Modified 2026-10-23: CPU return, model-state safety and output retention. Apache-2.0 provenance retained. -->
 # Concurrency Safety
 
 Gradio handlers run **in parallel by default on ZeroGPU**. Code that works fine in single-user testing can silently corrupt or leak data in production. Always assume handlers execute concurrently.
@@ -59,11 +60,11 @@ def generate_image(prompt):
         return f.name
 ```
 
-The same applies to any intermediate files (audio, video, CSV exports). Always generate a unique path per invocation.
+Retain outputs until Gradio has served them, then use a bounded cleanup/retention policy. Do not share session files or expose arbitrary filesystem paths. The same applies to any intermediate files (audio, video, CSV exports). Always generate a unique path per invocation.
 
 ## Read-only globals are safe
 
-Model objects, tokenizers, and configs loaded once at startup and only read during requests are safe and encouraged. This is the standard ZeroGPU pattern: load at module scope, read inside `@spaces.GPU` handlers.
+Loading model objects/tokenizers/configs at startup is encouraged, but calls may mutate internal caches, RNG state or adapters even without an explicit assignment. Verify thread/process safety for each pipeline; serialize conflicting operations or use isolated per-request state. This is the standard ZeroGPU pattern: load at module scope, read inside `@spaces.GPU` handlers.
 
 ```python
 # SAFE — loaded once at module scope, read-only during requests
@@ -73,7 +74,7 @@ tokenizer = load_tokenizer()
 @spaces.GPU
 def predict(text):
     tokens = tokenizer(text, return_tensors="pt").to("cuda")
-    return model.generate(**tokens)
+    return model.generate(**tokens).cpu()
 ```
 
-The "no mutable global state" rule targets *writes* from handlers, not reads. A handler that only reads from a global is concurrency-safe.
+The "no mutable global state" rule targets *writes* from handlers, not reads. Apparent read-only use is not by itself proof that a model/library is concurrency-safe.

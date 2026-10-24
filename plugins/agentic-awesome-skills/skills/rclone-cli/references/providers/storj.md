@@ -9,15 +9,9 @@ versionIntroduced: "v1.52"
 > **Official documentation:** [https://rclone.org/storj/](https://rclone.org/storj/)
 # Storj
 
-[Storj](https://storj.io) is redefining the cloud to support the
-future of data—sustainably and economically. Storj leverages the vast
-global supply of underutilized resources to deliver better security,
-durability, and performance services. Experience up to 90% lower costs
-and carbon reduction with Storj.
-
-Storj is an encrypted, secure, and cost-effective object storage service
-that enables you to store, back up, and archive large amounts of data
-in a decentralized manner.
+[Storj](https://storj.io) provides distributed object storage with client-side
+encryption through this native backend. Evaluate current pricing, resource use
+and recovery requirements for your workload.
 
 ## Backend options
 
@@ -32,8 +26,8 @@ being uploaded to storage nodes across the network.
 Use the s3 backend and one of the S3 compatible Hosted Gateways to
 increase upload performance and reduce the load on your systems and
 network. Uploads will be encrypted and erasure-coded server-side, thus
-a 1GB upload will result in only in 1GB of data being uploaded to
-storage nodes across the network.
+a 1GB object requires roughly 1GB sent from your client to the gateway,
+while the gateway still sends erasure-coded data to storage nodes.
 
 Side by side comparison with more details:
 
@@ -167,6 +161,10 @@ e) Edit this remote
 d) Delete this remote
 y/e/d> y
 ```
+
+Access grants contain authorization and encryption material. Treat them, API
+keys and passphrases as secrets; restrict config access and keep recovery
+material securely. Do not publish setup output.
 
 ### Setup with API key and passphrase
 
@@ -392,8 +390,7 @@ rclone ls remote:bucket
 Add the folder to the remote path to list recursively all objects in this folder.
 
 ```console
-$ rclone ls remote:bucket
-/path/to/dir/
+$ rclone ls remote:bucket/path/to/dir/
 ```
 
 Use the `lsf` command to list non-recursively all objects in a bucket or a folder.

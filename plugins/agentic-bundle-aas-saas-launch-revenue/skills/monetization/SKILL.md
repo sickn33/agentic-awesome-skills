@@ -2,7 +2,7 @@
 name: monetization
 description: Estrategia e implementacao de monetizacao para produtos digitais - Stripe, subscriptions, pricing experiments, freemium, upgrade flows, churn prevention, revenue optimization e modelos de negocio SaaS.
 metadata:
-  aas-risk: none
+  aas-risk: critical
   aas-source: community
   aas-date-added: '2026-03-06'
   aas-author: renat
@@ -50,6 +50,12 @@ Usuarios pagam quando:
 - Churn invisivel (sem alertas de cancelamento iminente)
 
 ---
+
+## Limites de implementacao
+
+Exemplos parciais, nao prontos para producao. Fixe SDK/API Stripe compativeis e teste em sandbox. Resolva customer e price no servidor a partir do usuario autenticado e de uma allowlist; nunca aceite IDs de outra conta. Use idempotencia na criacao, assinatura de webhook sobre bytes originais, deduplicacao persistente de event.id e processamento tolerante a ordem. Nao conceda acesso pelo redirecionamento de sucesso: confirme o estado autorizado da assinatura. Trial pode nao criar invoice/payment_intent pagavel; nao dereferencie esse caminho sem verificar. Uma unica assinatura retornada com status=all nao determina o plano ativo de um cliente. Os handlers e persistencia nao estao implementados aqui.
+
+Precos, benchmarks, taxas e percentuais sao exemplos sem validacao atual. Consentimento para pesquisa nao autoriza cobrancas reais ou envio de campanhas. Cancelamento deve ser simples; pesquisa de saida e opcional e nao bloqueia cancelamento. Nao invente selo “mais popular”, urgencia ou capacidades.
 
 ## Setup Inicial
 
@@ -224,7 +230,7 @@ Plano anual com desconto claro: R$ 249/ano (economize R$ 99)
 Destaque no plano que voce quer vender (visual hierarchy)
 Ancoragem: mostra o plano caro primeiro
 Trial sem cartao para ativacao, com cartao para retencao
-Badge Mais popular no plano middle
+Badge Mais popular somente quando sustentado por dados reais
 ```
 
 ## Estrutura De Planos (3 E O Numero Certo)
@@ -280,7 +286,7 @@ Dia 30: Cancelou
         -> 3 meses depois: reativacao com novidades
 ```
 
-## Exit Survey (Obrigatorio)
+## Exit Survey (Opcional)
 
 ```python
 CANCELLATION_REASONS = [
@@ -308,6 +314,8 @@ def calculate_unit_economics(
     churned: int,
     cac_total: float,
 ):
+    if min(customers, new_customers, churned, cac_total) <= 0:
+        raise ValueError("Positive denominators required; zero churn needs a separate cohort estimate")
     arpu = mrr / customers
     churn_rate = churned / customers
     ltv = arpu / churn_rate

@@ -1,8 +1,11 @@
 ---
 title: "Complications | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/complications
+---
 
 # Complications
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 A complication displays timely, relevant information on the watch face, where people can view it each time they raise their wrist.
 
@@ -307,7 +310,7 @@ Image| 38mm| 40mm/42mm| 41mm| 44mm| 45mm/49mm
 Ring| 20x20 pt (40x40 px @2x)| 22x22 pt (44x44 px @2x)| 23.5x23.5 pt (47x47 px @2x)| 24x24 pt (48x48 px @2x)| 26x26 pt (52x52 px @2x)  
 Simple| 16x16 pt (32x32 px @2x)| 18x18 pt (36x36 px @2x)| 19x19 pt (38x38 px @2x)| 20x20 pt (40x40 px @2x)| 21.5x21.5 pt (43x43 px @2x)  
 Stack| 16x7 pt (32x14 px @2x)| 17x8 pt (34x16 px @2x)| 18x8.5 pt (36x17 px @2x)| 19x9 pt (38x18 px @2x)| 19x9.5 pt (38x19 px @2x)  
-Placeholder| 16x16 pt (32x32 px @2x)| 18x18x pt (36x36 px @2x)| 19x19 pt (38x38 px @2x)| 20x20 pt (40x40 px @2x)| 21.5x21.5 pt (43x43 px @2x)  
+Placeholder| 16x16 pt (32x32 px @2x)| 18x18 pt (36x36 px @2x)| 19x19 pt (38x38 px @2x)| 20x20 pt (40x40 px @2x)| 21.5x21.5 pt (43x43 px @2x)
   
 Note
 
@@ -423,3 +426,7 @@ October 24, 2023| Replaced links to deprecated ClockKit documentation with links
 June 5, 2023| Updated guidance for rectangular complications to support them as widgets in the Smart Stack.  
 September 14, 2022| Added specifications for Apple Watch Ultra.  
   
+
+## WidgetKit versus legacy templates
+
+The tables include older ClockKit-era templates, face names and hardware dimensions. WidgetKit accessory families use SwiftUI views and system rendering rather than requiring those exact raster placeholders or template measurements. Keep the legacy table for maintenance work; use supported WidgetFamily values, current layout previews, redaction and budgeted timelines for modern targets. Never promise exact refresh deadlines or expose health/account data on an always-visible face without privacy handling.

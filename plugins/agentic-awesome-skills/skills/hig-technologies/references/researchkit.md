@@ -1,8 +1,14 @@
 ---
 title: "ResearchKit | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/researchkit
+---
 
 # ResearchKit
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** ResearchKit consent UI does not by itself establish informed consent, ethics approval, regulatory compliance, or clinical validity. Use approved study materials, independent review where required, and clear withdrawal and data-retention procedures.
+
 
 A research app lets people everywhere participate in important medical research studies.
 

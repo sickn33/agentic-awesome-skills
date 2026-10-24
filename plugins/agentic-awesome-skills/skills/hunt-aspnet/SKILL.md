@@ -31,7 +31,7 @@ report_count: 1
 
 ## Crown Jewel Targets
 
-ASP.NET deserialization bugs pay among the highest amounts in bug bounty when they reach RCE. Even when patched, the disclosure-tier findings (signed-only ViewState, dual-parser differential, request-validator quirks) reliably pay Low-Medium.
+Prioritize demonstrated security impact under the engagement rules. Product fingerprints, signed-only ViewState and parser errors alone establish neither exploitability nor bounty eligibility.
 
 **Highest-value targets:**
 
@@ -66,7 +66,7 @@ Set-Cookie: ASP.NET_SessionId=...; SameSite=None  (suggests cross-origin embeddi
 <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="..." />
 <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="..." />
 <input type="hidden" name="__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="" />
-                                        ↑ EMPTY = signed-only, not encrypted = exploitable if key leaks
+                                        ↑ empty marker value is not an encryption-state test; inspect page configuration and protected state
 <input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="..." />
 <input type="hidden" name="__REQUESTDIGEST" id="__REQUESTDIGEST" value="0x...,...">
                                         ↑ SharePoint CSRF token; if anon-issued, see hunt-sharepoint
@@ -93,7 +93,7 @@ Set-Cookie: ASP.NET_SessionId=...; SameSite=None  (suggests cross-origin embeddi
 ```
 
 **Tech-stack signals:**
-- `Server: Microsoft-IIS/10.0` (or `/8.5`, `/7.5`) — confirmed Windows + IIS
+- `Server: Microsoft-IIS/10.0` (or `/8.5`, `/7.5`) — possible IIS fingerprint; headers can be rewritten or spoofed
 - `X-AspNet-Version` header — classic .NET Framework (4.x); .NET Core/5+ does NOT emit this
 - Cookies with `ASP.NET_SessionId`, `.ASPXAUTH`, `FedAuth` — Forms or claims auth
 - `__VIEWSTATE` in form bodies — Webforms (NOT MVC, NOT Razor Pages, NOT Blazor)
@@ -103,11 +103,11 @@ Set-Cookie: ASP.NET_SessionId=...; SameSite=None  (suggests cross-origin embeddi
 
 ## Step-by-Step Hunting Methodology
 
-1. **Fingerprint the framework version.** Trigger any 500 error (stale ViewState POST is a reliable way) and look for `Version Information: Microsoft .NET Framework Version:X.X.XXXXX; ASP.NET Version:X.X.XXXX.X` in the error body. This banner discloses both the runtime and ASP.NET-version-specific patch level. .NET 4.0.30319 + ASP.NET 4.8.x is the most common modern combination.
+1. **Fingerprint the framework version.** Trigger any 500 error (stale ViewState POST is a reliable way) and look for `Version Information: Microsoft .NET Framework Version:X.X.XXXXX; ASP.NET Version:X.X.XXXX.X` in the error body. Banners are hints and do not establish the installed security patch level. .NET 4.0.30319 + ASP.NET 4.8.x is the most common modern combination.
 
 2. **Locate every form with `__VIEWSTATE`.** Spider the target and grep for `name="__VIEWSTATE"`. Each is a candidate sink for deserialization attacks if MAC / encryption is bypassable.
 
-3. **Check `__VIEWSTATEENCRYPTED` value.** Empty (`value=""`) means ViewState is signed-only via `<machineKey>` but NOT encrypted. Recovery of the validation key → arbitrary deserialization. Non-empty (`value="something"`) means ViewState is BOTH signed and encrypted; both keys needed to forge.
+3. **Check `__VIEWSTATEENCRYPTED` value.** The hidden field’s value is not a reliable encryption-state indicator. Verify `ViewStateEncryptionMode`, relevant page/runtime settings, MAC protection and page-specific context; do not infer RCE from marker presence or emptiness.
 
 4. **Test the ViewState parser-error differential** (the dual-parser anti-pattern). Send 7+ ViewState shapes and classify responses:
    - Trivial garbage (`AAAA`) → `"Validation of viewstate MAC failed"`
@@ -117,11 +117,11 @@ Set-Cookie: ASP.NET_SessionId=...; SameSite=None  (suggests cross-origin embeddi
    - XML-shaped (`<xss/>`) → **"The state information is invalid for this page and might be corrupted"** ← different parser path
    - LosFormatter-style prefix (`/wEPDwUKMTcxNzgyOTQwMmRkkz9p4lzA...`) → **"The state information is invalid for this page and might be corrupted"**
 
-   The differential proves there are **two distinct deserialization entry points**, one of which dispatches BEFORE the MAC check on some payload shapes. Historically this enables MAC-before-parse-bypass exploits.
+   Different errors are observations only. They do not prove multiple deserializers, parsing order or a MAC bypass; establish those properties through approved source/runtime evidence or a vendor advisory for the exact version.
 
 5. **Look for load-balanced cross-node ViewState MAC failures.** If POST gets a 500 with `"Validation of viewstate MAC failed. If this application is hosted by a Web Farm or cluster, ensure that <machineKey> configuration specifies the same validationKey..."`, the farm has multiple WFEs WITHOUT machineKey sync, or without sticky-session affinity. Operationally this breaks legit users; security-wise it confirms farm topology.
 
-6. **Probe `trace.axd` and `elmah.axd`.** If either returns 200 anonymously, it's a Critical finding (trace leaks every request + headers + form data; ELMAH leaks every server error including stack traces).
+6. **Probe `trace.axd` and `elmah.axd`.** Inspect whether a genuine trace/error viewer and sensitive records are exposed; a 200 may be a login/SPA/error page. Rate severity by actual disclosed data and authorization boundary.
 
 7. **Enumerate WCF services (`.svc`).** For each, fetch `?wsdl` and `?mex` (metadata exchange). MEX endpoints sometimes return full service contracts including admin operations.
 
@@ -146,21 +146,22 @@ Set-Cookie: ASP.NET_SessionId=...; SameSite=None  (suggests cross-origin embeddi
 
 **Stack-trace fingerprint (trigger via stale ViewState POST):**
 ```bash
-curl -sk -X POST "https://target.example/page.aspx" \
+curl -sS -X POST "https://target.example/page.aspx" \
   --data "__VIEWSTATE=AAAA&__VIEWSTATEGENERATOR=AAAA"
 # Inspect body for:
 #  - "Validation of viewstate MAC failed" → confirms signed ViewState
-#  - "The state information is invalid for this page" → confirms ALTERNATE parser path
-#  - "Version Information: Microsoft .NET Framework Version:X.X.XXXXX" → exact patch level
+#  - "The state information is invalid for this page" → different error, not proof of parser ordering
+#  - "Version Information: Microsoft .NET Framework Version:X.X.XXXXX" → reported version string; verify installed patch inventory separately
 #  - "Microsoft.SharePoint.Client.ServerStub..." → SharePoint farm
 ```
 
 **ViewState parser-error differential probe (Python):**
 ```python
 import requests, re, json
-S = requests.Session(); S.verify = False
+S = requests.Session() # verify TLS; use an approved lab CA if necessary
 # Get fresh form
-r = S.get("https://target.example/path/page.aspx")
+r = S.get("https://target.example/path/page.aspx", timeout=(5, 15), allow_redirects=False)
+r.raise_for_status()
 real_vs = re.search(r'__VIEWSTATE" id="__VIEWSTATE" value="([^"]+)', r.text).group(1)
 real_vsg = re.search(r'__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="([^"]+)', r.text).group(1)
 
@@ -175,7 +176,8 @@ for label, vs in [
     ("losformatter", "/wEPDwUKMTcxNzgyOTQwMmRkkz9p4lzA" + "A"*50),
 ]:
     r = S.post("https://target.example/path/page.aspx",
-               data={"__VIEWSTATE": vs, "__VIEWSTATEGENERATOR": real_vsg})
+               data={"__VIEWSTATE": vs, "__VIEWSTATEGENERATOR": real_vsg},
+               timeout=(5, 15), allow_redirects=False)
     title = re.search(r'<title>([^<]+)</title>', r.text)
     title = title.group(1)[:100] if title else "—"
     print(f"  [{label:14s}] {r.status_code}  {title}")
@@ -183,18 +185,18 @@ for label, vs in [
 
 **`trace.axd` anonymous check:**
 ```bash
-curl -sk -o /dev/null -w "%{http_code}\n" "https://target.example/trace.axd"
-# 200 = full trace dump exposed → Critical
-# 403 = mod set to localhost-only → check via X-Forwarded-For: 127.0.0.1
+curl -sS -o /dev/null -w "%{http_code}\n" "https://target.example/trace.axd"
+# 200 alone is insufficient; inspect authorized minimized evidence
+# 403 does not identify the control; proxy-header tests require approved scope
 ```
 
 **WCF service enumeration:**
 ```bash
 # Find all .svc files
-curl -sk "https://target.example/" -o body.html
+curl -sS "https://target.example/" -o body.html
 grep -oE '/[a-zA-Z0-9/_-]+\.svc' body.html | sort -u
 # For each found:
-curl -sk "https://target.example/Service.svc?wsdl" | xmllint --format - | head -60
+curl -sS "https://target.example/Service.svc?wsdl" | xmllint --format - | head -60
 ```
 
 **Request-validator bypass categories:**
@@ -212,7 +214,7 @@ Referer: http://x.com/<script>  (referer not validated in classic ASP.NET)
 **Telerik exploit gate (CVE-2019-18935 — requires encryption keys):**
 ```bash
 # Fingerprint Telerik
-curl -sk "https://target.example/Telerik.Web.UI.WebResource.axd?type=rau" -X POST
+curl -sS "https://target.example/Telerik.Web.UI.WebResource.axd?type=rau" -X POST
 # If response is RadAsyncUploadHandler-style → Telerik present; try keys
 # Public exploits require leaked machineKey AND telerikEncryptionKey
 ```
@@ -221,7 +223,7 @@ curl -sk "https://target.example/Telerik.Web.UI.WebResource.axd?type=rau" -X POS
 
 ## Common Root Causes
 
-1. **`viewStateEncryption="Auto"` defaults to signed-only on pages without sensitive ViewState data.** Many SharePoint pages are configured this way. When `__VIEWSTATEENCRYPTED` is empty, ViewState is signed-only — recovery of `validationKey` alone enables forgery.
+1. **`viewStateEncryption="Auto"` defaults to signed-only on pages without sensitive ViewState data.** Many SharePoint pages are configured this way. The empty marker does not establish whether ViewState is encrypted — applicable exposed keys and context can enable forgery; verify exact runtime/page protections.
 
 2. **`<machineKey>` AutoGenerate in a Web Farm.** Each WFE generates a different key on first boot; ViewState issued by one WFE fails MAC validation on another. Operationally produces 500s; security-wise broadcasts the topology (the error message names the cluster).
 
@@ -231,7 +233,7 @@ curl -sk "https://target.example/Telerik.Web.UI.WebResource.axd?type=rau" -X POS
 
 5. **Forgotten WCF `.svc` admin endpoints.** Built for internal admin tooling, never disabled when the main app went to internet exposure.
 
-6. **Dual-parser anti-pattern: `ObjectStateFormatter` (legacy) vs `LosFormatter` (modern) deserialize in different orders relative to MAC validation.** Some payload shapes hit the legacy parser BEFORE MAC check.
+6. **Parser-order hypotheses require evidence.** Error text and formatter names alone do not establish MAC-check ordering or a bypass.
 
 7. **Request validator only applies to URL-encoded body and querystring.** Headers, cookies, XML/JSON bodies, and multipart fields are NOT validated by default. Developers assume validator is universal; it is not.
 
@@ -276,15 +278,15 @@ Before writing the report, confirm:
 
 ---
 
-## Real Impact Examples
+## Illustrative Impact Scenarios (not verified engagement evidence)
 
-### Scenario A — Signed-only ViewState + permissive ToolPane on EoL SharePoint 2013
+### Scenario A — Unverified SharePoint preconditions
 
-`https://target-portal.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit` returns 200 anonymously. The form contains `__VIEWSTATE` (signed only — `__VIEWSTATEENCRYPTED=""`), and `__REQUESTDIGEST` is anonymously issued via `_api/contextinfo`. Combined with SP2013 being end-of-life (no patch will ever ship), this is the canonical CVE-2025-53770 "ToolShell" precondition chain on a permanently-unpatched code path. Reported severity: **Critical**. The dual-parser test (Section 4 of Methodology) confirmed that XML-shaped payloads reach the legacy `ObjectStateFormatter` BEFORE MAC validation — additional evidence that the chain is reachable even without full machineKey recovery (though full RCE requires both).
+A reachable ToolPane route, issued request digest, ViewState field or error differential is not proof of CVE-2025-53770 or a complete RCE chain. Match the exact supported product/version to the Microsoft advisory and validate approved non-destructive evidence before claiming impact. Do not assert that EoL versions inherit a later CVE solely from similar routes.
 
-### Scenario B — Telerik RadAsyncUploadHandler exposed on legacy bank portal
+### Scenario B — Telerik fingerprint
 
-`/Telerik.Web.UI.WebResource.axd?type=rau` returns the Telerik upload handler. Telerik version (visible in JS bundle metadata) is 2016.3.1027. CVE-2017-11317 applies — keys are baked into the public Telerik DLL of that version. Upload → write `aspx` to `/app_data/` → request → RCE. Reported severity: **Critical**.
+An upload-handler response and version hint are leads, not an RCE demonstration. Verify the exact vendor advisory, keys/configuration, accepted upload behavior and execution constraints. A write under App_Data does not itself prove a web-executable path. Do not claim an engagement occurred or severity was verified from this illustrative scenario.
 
 ### Scenario C — trace.axd + elmah.axd both exposed on enterprise HR portal
 
@@ -294,7 +296,7 @@ Before writing the report, confirm:
 
 ## Related Skills & Chains
 
-- **`hunt-rce`** — ViewState deserialization is the headline ASP.NET RCE path; signed-only ViewState + leaked machineKey = RCE every time. Chain primitive: ASP.NET ViewState dual-parser MAC-bypass anti-pattern detected (signed but not encrypted, `<%@ Page enableViewStateMac="true" viewStateEncryptionMode="Never" %>`) + machineKey recovered (from web.config disclosure, `elmah.axd`, source leak, or GitHub) → `hunt-rce` ysoserial.net `TypeConfuseDelegate` gadget → arbitrary command in `w3wp.exe` worker-process identity.
+- **`hunt-rce`** — ViewState deserialization is the headline ASP.NET RCE path; signed-only ViewState with exposed applicable keys can enable code injection under additional page/runtime/gadget preconditions. Chain primitive: ASP.NET ViewState dual-parser MAC-bypass anti-pattern detected (signed but not encrypted, `<%@ Page enableViewStateMac="true" viewStateEncryptionMode="Never" %>`) + machineKey recovered (from web.config disclosure, `elmah.axd`, source leak, or GitHub) → `hunt-rce` ysoserial.net `TypeConfuseDelegate` gadget → arbitrary command in `w3wp.exe` worker-process identity.
 - **`hunt-sharepoint`** — SharePoint farms inherit every ASP.NET anti-pattern plus their own surface. Chain primitive: ASP.NET fingerprint reveals SharePoint (X-SharePoint headers + `/_layouts/` reachable) → pivot to `hunt-sharepoint` for SP-specific RCE paths (ToolShell, SafeControl reflection) before generic ViewState attack.
 - **`hunt-ntlm-info`** — IIS sites that advertise NTLM/Negotiate anonymously leak AD topology. Chain primitive: ASP.NET app behind IIS with `WWW-Authenticate: NTLM` → `hunt-ntlm-info` Type-2 challenge capture → internal forest name → cross-reference Entra tenant via `m365-entra-attack` discovery.
 - **`hunt-file-upload`** — Telerik RadAsyncUpload, Kentico, Umbraco, and DotNetNuke all have historical upload-handler RCE. Chain primitive: ASP.NET CMS fingerprinted → `hunt-file-upload` bypass matrix against the CMS upload handler → `.aspx` written into web-accessible path → request → RCE under app-pool identity.
@@ -319,3 +321,7 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Evidence and probe limits
+
+Keep the authorization gate and use controlled accounts/data. Approve request volume/body limits before malformed or oversized probes; stop on instability, and do not execute uploaded files or gadgets merely to confirm a fingerprint. Requests snippets require validated form-field parsing and page/session/CSRF context; missing regex matches must stop rather than crash or substitute values. Preserve TLS verification, explicit timeouts, private output paths and in-scope redirect handling. Do not retrieve production trace collections wholesale or print secrets. `customErrors` behavior can also be affected by IIS/proxies and custom handlers; a stack trace does not uniquely prove a config setting. WSDL can be intentionally public and does not prove callable admin operations. Request validation is not an XSS defense; demonstrate the actual output/execution context rather than a validator bypass alone. ViewState protection and exploit prerequisites are runtime/page specific, and the original CVE/version examples need fresh vendor confirmation before use. No scan, RCE, payout or imported helper execution has been established by this document.

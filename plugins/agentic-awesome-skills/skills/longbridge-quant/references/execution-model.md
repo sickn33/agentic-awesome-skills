@@ -9,11 +9,11 @@ Trade execution modelling framework for backtesting — slippage, VWAP/TWAP, mar
 3. Apply the requested execution model:
    - **Linear slippage**: `impact = k × (order_size / ADV)`
    - **Square-root impact**: `impact = σ × √(order_size / ADV)`
-   - **Kyle lambda (λ)**: estimate from tick data as `ΔP / ΔQ`
+   - **Kyle lambda (λ)**: estimate a regression of price changes on signed order flow with consistent units; a single `ΔP / ΔQ` is not a reliable estimate
    - **VWAP slice**: distribute order proportionally to historical volume curve
    - **TWAP slice**: divide order into equal time-weighted tranches
    - **POV**: cap participation at `p%` of each interval's volume
-4. Output estimated cost in bps and recommended execution schedule.
+4. Calibrate coefficients to comparable historical trades, include spread/fees and report units and uncertainty; output a hypothetical execution schedule, not an order.
 5. Generate Python code skeleton if the user wants a local implementation.
 
 > If unsure of exact flag names, run `longbridge <subcommand> --help` before proceeding.

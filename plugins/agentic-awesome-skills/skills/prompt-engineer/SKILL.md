@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-This skill transforms raw, unstructured user prompts into highly optimized prompts using established prompting frameworks. It analyzes user intent, identifies task complexity, and intelligently selects the most appropriate framework(s) to maximize Claude/ChatGPT output quality.
+This skill transforms raw, unstructured user prompts into highly optimized prompts using established prompting frameworks. It analyzes user intent, identifies task complexity, and intelligently selects the most appropriate framework(s) to improve clarity. Output quality depends on the model and task and requires evaluation.
 
 The skill operates in "magic mode" - it works silently behind the scenes, only interacting with users when clarification is critically needed. Users receive polished, ready-to-use prompts without technical explanations or framework jargon.
 
@@ -47,8 +47,8 @@ Invoke this skill when:
    - Is this exploratory or execution-focused?
 
 **Detection Patterns:**
-- **Simple tasks:** Short prompts (<50 chars), single verb, no context
-- **Complex tasks:** Long prompts (>200 chars), multiple requirements, conditional logic
+- **Simple tasks:** Short prompts, single verb, no context (weak hints, not reliable complexity tests)
+- **Complex tasks:** Multiple requirements and conditional logic; length alone does not establish complexity
 - **Ambiguous tasks:** Generic verbs ("help", "improve"), missing object/context
 - **Structured tasks:** Mentions steps, phases, deliverables, stakeholders
 
@@ -97,7 +97,7 @@ Step 2 (triggered — task type ambiguous):
 | **Communication** (reports, presentations, storytelling) | **RACE** (Role, Audience, Context, Expectation) | Audience-aware messaging |
 | **Investigation/analysis** (research, diagnosis) | **RISE** (Research, Investigate, Synthesize, Evaluate) | Systematic analytical approach |
 | **Contextual situations** (problem-solving with background) | **STAR** (Situation, Task, Action, Result) | Context-rich problem framing |
-| **Documentation** (medical, technical, records) | **SOAP** (Subjective, Objective, Assessment, Plan) | Structured information capture |
+| **Documentation** (medical, technical, records) | **SOAP** (Subjective, Objective, Assessment, Plan) | Structured information capture; clinical assessment requires a qualified clinician and verified inputs |
 | **Goal-setting** (OKRs, objectives, targets) | **CLEAR** (Collaborative, Limited, Emotional, Appreciable, Refinable) | Goal clarity and actionability |
 | **Coaching/development** (mentoring, growth) | **GROW** (Goal, Reality, Options, Will) | Developmental conversation structure |
 
@@ -111,8 +111,9 @@ Step 2 (triggered — task type ambiguous):
 - Secondary framework(s) = address additional complexity dimensions
 - Avoid over-engineering: simple tasks get simple frameworks
 
-**Critical Rule:** This selection happens **silently** - do not explain framework choice to user.
+**Critical Rule:** This selection happens **silently** - explain framework choice when the user requests it.
 
+```
 Role: You are a senior software architect. [RTF - Role]
 
 Objective: Design a microservices architecture for [system]. [RODES - Objective]
@@ -154,7 +155,7 @@ Before finalizing, verify:
 ### **NEVER:**
 
 - ❌ Assume information that wasn't provided - ALWAYS ask if critical details are missing
-- ❌ Explain which framework was selected or why (magic mode - keep it invisible)
+- ❌ Hide framework selection when the user asks for an explanation
 - ❌ Generate generic, one-size-fits-all prompts - always customize to context
 - ❌ Use technical jargon in the final prompt (unless user's domain is technical)
 - ❌ Ask more than 3 clarifying questions (avoid user fatigue)
@@ -197,11 +198,11 @@ Role: You are a senior machine learning engineer specializing in recommendation 
 Objective: Design a product recommendation system that combines user purchase history, preferences, and market trends.
 
 Details:
-- Input data sources: user transaction logs, preference surveys, market trend APIs
+- Input data sources: [confirm available purchase, preference and market-trend data; do not assume surveys or API access]
 - Algorithm considerations: collaborative filtering, content-based filtering, hybrid approaches
 - Performance metrics: precision, recall, diversity, novelty
-- Scalability: system must handle 100k+ users
-- Real-time constraints: recommendations updated within 500ms
+- Scalability: [confirmed user scale, or mark unknown]
+- Latency constraints: [confirmed requirement, or mark unknown]
 
 Approach step-by-step:
 1. Analyze the three data sources and their relationships
@@ -250,7 +251,7 @@ Debugging approach:
 5. Propose fix with explanation
 6. Suggest preventive measures to avoid similar bugs
 
-For each step, show your reasoning:
+Provide concise findings, evidence and a decision rationale rather than private internal reasoning traces:
 - What you're checking
 - What you found
 - Why it matters

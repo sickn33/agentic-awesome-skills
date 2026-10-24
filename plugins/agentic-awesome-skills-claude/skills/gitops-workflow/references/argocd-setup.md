@@ -2,15 +2,17 @@
 
 ## Installation Methods
 
+Obtain manifests from an explicitly selected immutable release, review their full content and privileges, and verify the target context before applying local files. Pin Helm chart versions and review rendered resources. Admin credentials are secrets; avoid printing them into shared logs.
+
 ### 1. Standard Installation
 ```bash
 kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -n argocd -f ./reviewed-argocd-install.yaml
 ```
 
 ### 2. High Availability Installation
 ```bash
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/ha/install.yaml
+kubectl apply -n argocd -f ./reviewed-argocd-ha-install.yaml
 ```
 
 ### 3. Helm Installation
@@ -69,7 +71,8 @@ argocd login argocd.example.com --username admin
 
 ### Add Repository
 ```bash
-argocd repo add https://github.com/org/repo --username user --password token
+# Use the installed CLI's supported secret-safe credential input flow; do not
+# pass a live token on the command line or commit it to configuration.
 ```
 
 ### Create Application

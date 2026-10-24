@@ -24,3 +24,5 @@ export const getCurrentUser = cache(async () => {
 ```
 
 Within a single request, multiple calls to `getCurrentUser()` execute the query only once.
+
+React.cache is request-scoped memoization within supported Server Component rendering, not a general process-wide cache. Use the same exported memoized function and stable arguments; do not treat it as authorization.

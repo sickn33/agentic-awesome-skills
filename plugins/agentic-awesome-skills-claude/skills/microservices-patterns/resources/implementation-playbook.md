@@ -175,6 +175,8 @@ class InventoryService:
 ```python
 from fastapi import FastAPI, HTTPException, Depends
 import httpx
+import asyncio
+from urllib.parse import quote
 from circuitbreaker import circuit
 
 app = FastAPI()
@@ -203,14 +205,16 @@ class APIGateway:
         """Aggregate data from multiple services."""
         # Parallel requests
         order, payment, inventory = await asyncio.gather(
-            self.call_order_service(f"/orders/{order_id}"),
-            self.call_payment_service(f"/payments/order/{order_id}"),
-            self.call_inventory_service(f"/reservations/order/{order_id}"),
+            self.call_order_service(f"/orders/{quote(order_id, safe='')}"),
+            self.call_payment_service(f"/payments/order/{quote(order_id, safe='')}"),
+            self.call_inventory_service(f"/reservations/order/{quote(order_id, safe='')}"),
             return_exceptions=True
         )
 
         # Handle partial failures
-        result = {"order": order}
+        if isinstance(order, Exception):
+            raise HTTPException(status_code=503, detail="Order service unavailable")
+        result = {"order": order, "partial": isinstance(payment, Exception) or isinstance(inventory, Exception)}
         if not isinstance(payment, Exception):
             result["payment"] = payment
         if not isinstance(inventory, Exception):
@@ -283,7 +287,9 @@ result = await payment_client.post("/payments", json=payment_data)
 from aiokafka import AIOKafkaProducer, AIOKafkaConsumer
 import json
 from dataclasses import dataclass, asdict
-from datetime import datetime
+from datetime import datetime, timezone
+from typing import List
+import uuid
 
 @dataclass
 class DomainEvent:
@@ -312,7 +318,7 @@ class EventBus:
         topic = event.event_type
         await self.producer.send_and_wait(
             topic,
-            value=asdict(event),
+            value={**asdict(event), "occurred_at": event.occurred_at.isoformat()},
             key=event.aggregate_id.encode()
         )
 
@@ -322,14 +328,16 @@ class EventBus:
             topic,
             bootstrap_servers=self.bootstrap_servers,
             value_deserializer=lambda v: json.loads(v.decode()),
-            group_id="my-service"
+            group_id="my-service",
+            enable_auto_commit=False
         )
         await consumer.start()
 
         try:
             async for message in consumer:
                 event_data = message.value
-                await handler(event_data)
+                await handler(event_data) # durable dedupe + business effect transaction required
+                await consumer.commit() # commit only after durable processing
         finally:
             await consumer.stop()
 
@@ -341,11 +349,12 @@ async def create_order(order_data: dict):
         event_id=str(uuid.uuid4()),
         event_type="OrderCreated",
         aggregate_id=order.id,
-        occurred_at=datetime.now(),
+        occurred_at=datetime.now(timezone.utc),
         data={
             "order_id": order.id,
             "customer_id": order.customer_id,
-            "total": order.total
+            "total": str(order.total), # explicit currency/decimal policy needed
+            "items": order.items # serialize approved primitive fields, not objects
         }
     )
 
@@ -424,12 +433,7 @@ class OrderFulfillmentSaga:
                 # Execute step
                 result = await step.action(context)
                 if not result.success:
-                    # Compensate
-                    await self.compensate(completed_steps, context)
-                    return SagaResult(
-                        status=SagaStatus.FAILED,
-                        error=result.error
-                    )
+                    raise RuntimeError("Saga step rejected")
 
                 completed_steps.append(step)
                 context.update(result.data)
@@ -447,8 +451,8 @@ class OrderFulfillmentSaga:
             try:
                 await step.compensation(context)
             except Exception as e:
-                # Log compensation failure
-                print(f"Compensation failed for {step.name}: {e}")
+                # Do not claim FAILED/rolled back after an incomplete compensation.
+                raise RuntimeError("Compensation requires durable reconciliation") from e
 
     # Step implementations
     async def create_order(self, context: dict) -> StepResult:
@@ -575,14 +579,11 @@ async def call_payment_service(payment_data: dict):
     )
 ```
 
-## Resources
+## Missing upstream resources
 
-- **references/service-decomposition-guide.md**: Breaking down monoliths
-- **references/communication-patterns.md**: Sync vs async patterns
-- **references/saga-implementation.md**: Distributed transactions
-- **assets/circuit-breaker.py**: Production circuit breaker
-- **assets/event-bus-template.py**: Kafka event bus implementation
-- **assets/api-gateway-template.py**: Complete API gateway
+The referenced service-decomposition/communication/saga guides and production
+circuit-breaker/event-bus/gateway assets are not bundled. The inline snippets are
+unexecuted sketches with absent domain types/adapters, not production implementations.
 
 ## Best Practices
 
@@ -605,3 +606,34 @@ async def call_payment_service(payment_data: dict):
 - **Premature Microservices**: Starting with microservices
 - **Ignoring Network Failures**: Assuming reliable network
 - **No Compensation Logic**: Can't undo failed transactions
+
+## Correctness and deployment boundaries
+
+Inventory check-then-reserve races: use a transaction/conditional decrement and an
+idempotent reservation key. Order persistence plus event publication needs a durable
+outbox; consumer effect plus deduplication needs a transaction/inbox. A broker ack
+is not proof every subscriber applied the event. Commit offsets after durable
+processing; crashes still permit duplicates, so every effect must be idempotent.
+The snippets do not implement those repositories or transactional adapters.
+
+Payment charge/refund need stable operation keys and reconciliation after unknown
+timeouts; do not assume an exception means no charge or immediately compensate only
+the earlier steps. Persist saga state/step outcomes and compensation progress.
+Compensation is a new business action, not ACID rollback. Example: reserve R1, charge
+with key P1, lose the response; query/reconcile P1 before deciding whether to release
+R1 or refund. Never charge again under a new key to “retry.”
+
+Gateway dependency construction must use application lifespan-managed shared clients
+with close(), not a new leaked AsyncClient per request. Missing payment/inventory
+methods must be implemented and response schemas bounded/validated. Derive identity
+and object/tenant authorization server-side; mTLS/service identity alone is insufficient.
+The HTTP URLs are private lab placeholders; production transport, auth and secret
+handling need an approved deployment design. Restrict constructed paths/hosts and
+redirects to approved services. Return partial/unavailable explicitly, never serialize
+Exception objects as successful order data.
+
+Retry only classified transient faults within a total deadline, with jitter and
+Retry-After support; broad retry decorators here include nonretryable errors and need
+configuration. The toy breaker has unsynchronized shared state/unbounded half-open
+probes, wall-clock timing and no bulkhead; use a tested concurrency-safe breaker,
+monotonic time and bounded probes. No load, broker, fault-injection or saga tests run.

@@ -78,16 +78,16 @@ If you cannot state all three, you do not understand the problem yet. Ask, or re
    - Dominant input dimension: `n = what`, with realistic magnitude (e.g. `n ~ 10^6 rows`)
    - If you cannot state these, you do not yet understand the problem. Ask, or read more code.
 
-2. **Name the data structure with a one-phrase reason.** Every collection-shaped value gets a deliberate choice from `Array / List / Set / HashMap / TreeMap / Heap / Deque / Trie / Graph / BitSet / Counter / LinkedList` — with the reason: "Set for O(1) membership inside the loop", "Heap for top-K in O(n log k)", "Counter to fold the nested loop into a single pass". Default to hashed structures (`Set`, `Map`) for lookup inside loops. Default to streaming/iterator over materialized list when n is large.
+2. **Name the data structure with a one-phrase reason.** Every collection-shaped value gets a deliberate choice from `Array / List / Set / HashMap / TreeMap / Heap / Deque / Trie / Graph / BitSet / Counter / LinkedList` — with the reason: "Set for expected/amortized constant-time membership under the runtime’s hash model", "Heap for top-K in O(n log k)", "Counter to fold the nested loop into a single pass". Default to hashed structures (`Set`, `Map`) for lookup inside loops. Default to streaming/iterator over materialized list when n is large.
 
 3. **Identify the algorithm family before writing.** Name one of: `linear scan`, `divide and conquer`, `two-pointer`, `sliding window`, `binary search`, `sort + sweep`, `hash join`, `BFS/DFS`, `topological sort`, `Dijkstra/A*`, `union-find`, `dynamic programming`, `greedy`, `recursion + memoization`, `prefix sum`, `segment tree`, `monoid reduction`. If you cannot name a family, you are about to write brute force. Stop and reconsider.
 
 4. **Repeated work in loops is algorithmic waste.** All of these are presumed wrong until justified:
-   - I/O inside a loop (database queries, HTTP calls, file reads) — batch with `IN (...)`, `Promise.all`, bulk endpoints, streaming
+   - I/O inside a loop (database queries, HTTP calls, file reads) — consider bounded batches, bulk endpoints or streaming. Use a concurrency limit and service rate/memory budget; unbounded Promise.all over n remote calls can exhaust resources. Preserve sequential dependencies and transaction semantics.
    - Recomputing the same value in a loop — hoist or memoize
    - Re-sorting / re-grouping inside a loop — sort once outside
    - Linear scan (`.find`, `.indexOf`, `.includes`, `in list`) inside a loop — precompute an index `Map`
-   - Allocating fresh structures per iteration when one can be reused — hoist allocation
+   - Allocating fresh structures per iteration when one can be safely reused — hoist only when values do not escape or alias across outputs/async tasks
    - Materializing intermediate collections only to iterate again — fuse into one pass
 
    If you must do any of these inside a loop, write one comment line explaining why.
@@ -121,14 +121,14 @@ The same problem with and without the seven-step protocol.
 const active = users.filter((u) => !bannedIds.includes(u.id));
 ```
 
-`bannedIds.includes` is O(m) per call. The filter runs it n times → 50k × 5k = 250M comparisons.
+`bannedIds.includes` is O(m) per call. The filter runs it n times → up to 50k × 5k = 250M comparisons in the worst case; early matches reduce actual comparisons.
 
 ### With the protocol — O(n + m)
 
 ```ts
 // Protocol applied:
-//   time = O(n + m), space = O(m), n = 50k users, m = 5k banned
-//   structure: Set<string> for O(1) membership inside the loop
+//   expected time = O(n + m), auxiliary index space = O(m), output space = O(n), n = 50k users, m = 5k banned
+//   structure: Set<string> for expected/amortized constant-time membership
 //   family: linear scan with hashed lookup
 //   edge cases: empty users → [], empty bannedIds → users, duplicates in bannedIds → fine (Set dedupes)
 const banned = new Set(bannedIds);
@@ -139,7 +139,7 @@ The first version is the default an AI ships when asked "filter the active users
 
 ## Rule catalog (the lemmaly scanner)
 
-The upstream repo ships a deterministic CLI scanner with the same anti-patterns this skill enforces (**59 rules across 11 languages**: JavaScript/TypeScript, Python, SQL, Java, C#, C++, Go, Rust, PHP, Ruby, Shell/Bash). Each rule has a documented why, an incorrect example, a correct example, and the sibling skill to escalate to.
+The upstream repo ships a deterministic CLI scanner with the same anti-patterns this skill enforces (a version-dependent rule catalog across multiple languages: JavaScript/TypeScript, Python, SQL, Java, C#, C++, Go, Rust, PHP, Ruby, Shell/Bash). Each rule has a documented why, an incorrect example, a correct example, and the sibling skill to escalate to.
 
 The scanner is optional. Do not automatically clone and run the upstream
 repository from its default branch, because that executes whatever code is
@@ -185,7 +185,7 @@ lemmaly handles classical, day-to-day algorithmic discipline. Escalate when:
 
 ## Rationalizations to watch for
 
-These are real verbatim thoughts captured from controlled tests where the model shipped O(n·m) code that the seven-step protocol would have prevented:
+These are illustrative rationalizations and counterarguments; this document does not provide controlled-test evidence:
 
 | Excuse | Reality |
 | --- | --- |
@@ -232,11 +232,13 @@ Cannot check every box? You did not run the protocol. Restart from step 1.
 - **English-language enforcement.** The rule catalog and prompts are English-only.
 - **n < ~10 is exempt.** The protocol explicitly accepts trivial collections and one-shot setup code; do not waste time stating complexity for `for i in range(3)`.
 - **Cannot prevent intentional brute force.** If the author writes a one-line justification ("n ≤ 100 in practice; readability matters more"), brute force ships. The skill only requires the justification, not its absence.
-- **CLI scanner is separate.** The 59 rules are enforced by `lemmaly scan` in the upstream repo, not by this SKILL.md alone.
+- **CLI scanner is separate.** The installed scanner’s rules are enforced by `lemmaly scan` in the upstream repo, not by this SKILL.md alone.
 
 ## The thesis, in one line
 
 > **AI ships algorithmically lazy code by default. lemmaly makes it think first.**
+
+Hash-based complexity is an expected/amortized model, not a universal worst-case guarantee; account for key length, collisions and runtime behavior. Include output storage in the space bound, distinguish auxiliary space, and use actual query plans/round trips for databases. Optional sibling skills or scanners may be absent; continue with the stated analysis rather than claiming they ran.
 
 ## Related Skills
 

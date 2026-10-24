@@ -92,8 +92,8 @@ Latency trend over time.
 **When to use:** Detecting gradual degradation.
 
 **What to look for:**
-- Step-changes in latency (sudden increase = regression from code change)
-- p95 >> p50 (>5x) means outlier queries are the problem, not the average case
+- Step-changes in latency (sudden increase requires investigation; code, workload, contention or capacity may have changed)
+- A large p95/p50 ratio suggests tail variability; inspect distributions and comparable query groups before assigning cause
 - Gradual upward trend means growing data volume or inefficient queries
 
 **Key parameters:**

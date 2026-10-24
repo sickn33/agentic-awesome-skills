@@ -1,8 +1,8 @@
 ---
 name: lex
-description: "Centralized 'Truth Engine' for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding."
+description: "Structured research aid for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding."
 category: business
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-10"
 author: Svobikl
@@ -14,13 +14,13 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-LEX is a structured truth engine designed to eliminate legal hallucinations by grounding agents in verified government references and legislation across 29+ jurisdictions. It provides deterministic context for business formation, employment, and contract drafting.
+LEX organizes research links and draft outlines for the US, Canada and EU member states. These bundled tables are broad research prompts, not verified current rules or a deterministic guarantee against legal error. State/province, national and sector-specific law still requires source verification.
 
 ## When to Use This Skill
 
 - Use when you need to cross-reference or compare legal requirements between different territories, such as verifying the compliance gap between an **EU SARL** and a **US LLC**.
 - Use when working with foundational business or employment documents that require specific, jurisdiction-compliant clauses to be inserted into a professional scaffold.
-- Use when the user asks about the specific regulatory nuances, formation steps, or "truth-based" definitions of legal entities within the **29 supported jurisdictions** (USA, Canada, and the EU).
+- Use when the user asks about the specific regulatory nuances, formation steps, or "truth-based" definitions of legal entities within the **listed geographic areas** (USA, Canada, and the EU).
 
 ## How It Works
 
@@ -33,10 +33,10 @@ Use the CLI shortcuts to find the relevant legal patterns and templates.
 - Run `lex get <path>` to read the granular metadata and requirements.
 
 ### Step 3: Scaffold Drafting
-Generate foundation-level documents using `lex draft <description>`. This ensures that all drafts include the mandatory AI-generated content disclaimer.
+Generate foundation-level documents using `lex draft <description>`. No CLI is bundled here; include an honest draft/AI-assistance disclaimer manually when applicable.
 
 ### Step 4: Verify Authority
-Always include a "Verified Sources" section in your output by running `lex verify`, which fetches official government links for the retrieved context.
+List only primary sources actually opened, with jurisdiction, provision and effective/retrieval date. A directory link or tool name is not verified legal authority.
 
 ## Examples
 
@@ -74,3 +74,5 @@ lex draft "Czech house sale contract"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The `lex search/get/draft/verify` commands have no executable implementation in this tree. Do not execute a same-named unrelated CLI or claim it verified a source; read the bundled templates directly. Specify state/province/country, entity and worker/contract context before drafting. Treat comparative tables as issues to investigate, not clauses to inject automatically; EU membership is not one uniform national law. Obtain current primary text and qualified local review before any filing, signature, employment action or transaction. Government domains are useful provenance signals, not proof the linked page governs the facts. Protect confidential contracts and do not send them to external models without scope.

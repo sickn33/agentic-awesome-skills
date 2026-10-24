@@ -31,6 +31,10 @@ report_count: 24
 
 # HUNT-NODEJS — Node.js Specific Vulnerabilities
 
+## Evidence and non-destructive test limits
+
+Runtime headers are hints, not proof; payload acceptance/reflection does not establish prototype pollution or RCE. Confirm the actual vulnerable merge/template version and reachable gadget in a disposable lab. Prototype pollution can persist across requests or affect other tenants: use isolated test processes, harmless markers and cleanup/restart plans, never `isAdmin` against real users. Bound request rates and prohibit secret extraction; `/proc` examples require explicit credential-access scope and minimal redacted evidence. OOB callbacks require an approved collector and unique marker; a callback alone proves only the demonstrated interaction, not arbitrary execution.
+
 ## Crown Jewel Targets
 
 Prototype Pollution reaching a sink in Node.js backend = Critical RCE.

@@ -51,7 +51,7 @@ sequenceDiagram
   actor User
   participant Web
   participant API
-  database DB
+  participant DB as Database
   User->>Web: Submit request
   Web->>API: POST /request
   API->>DB: Save record

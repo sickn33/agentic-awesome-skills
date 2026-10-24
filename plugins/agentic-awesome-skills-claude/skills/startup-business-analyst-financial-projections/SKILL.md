@@ -169,8 +169,9 @@ Beginning Cash Balance
 - CapEx
 = Ending Cash Balance
 
-Monthly Burn = Revenue - Expenses (if negative)
-Runway = Cash Balance / Monthly Burn Rate
+Net cash burn = Cash paid out - operating cash collected (positive when consuming cash)
+Runway approximation = Cash Balance / positive monthly net cash burn
+If burn is zero/negative, simple runway is not meaningful; model monthly cash dates and funding separately.
 ```
 
 **Include Funding Events:**
@@ -203,17 +204,17 @@ Calculate monthly/quarterly:
 
 Build conservative, base, and optimistic projections:
 
-**Conservative (P10):**
+**Conservative (illustrative downside, not a measured P10):**
 - New customers: -30% vs. base
 - Churn: +20% vs. base
 - Pricing: -15% vs. base
 - CAC: +25% vs. base
 
-**Base (P50):**
+**Base (planning assumptions, not an estimated P50):**
 - Most likely assumptions
 - Primary planning scenario
 
-**Optimistic (P90):**
+**Optimistic (illustrative upside, not a measured P90):**
 - New customers: +30% vs. base
 - Churn: -20% vs. base
 - Pricing: +15% vs. base
@@ -301,6 +302,10 @@ Offer to save as markdown file:
 - Include note that user can convert to Excel/Sheets
 - Provide formulas for key calculations
 
+## Model evidence and consistency
+
+All target percentages, loading factors and scenario shifts here are illustrative assumptions, not universal industry benchmarks. Source actual business inputs and label unknowns. Apply age-specific cumulative cohort retention (not one retention factor to every cohort), avoid double-counting expansion and payroll, and reconcile revenue versus cash collection, taxes, working capital, capex and financing. LTV requires consistent periods and a positive churn assumption; denominator-zero metrics are N/A. Keep currency, time basis and gross/net definitions explicit and verify formulas before investor use.
+
 ## Financial Model Best Practices
 
 **Do:**
@@ -342,7 +347,7 @@ Current state?
 → "$50K MRR, 100 customers, 5-person team, $500K cash"
 
 Growth assumptions?
-→ "Expect 15% MoM growth, 10% monthly churn, $500 ACV"
+→ "Expect 15% MoM growth, 10% monthly churn, $500 monthly ARPU"
 
 [Claude builds complete model with all sections]
 ```

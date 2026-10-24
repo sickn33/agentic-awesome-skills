@@ -49,7 +49,7 @@ interface ApiOrder {
     product_id: string;
     product_name: string;
     qty: number;
-    unit_price: number;
+    unit_price: number; // integer cents, validated at the API boundary
   }>;
   order_date: string;
   status: 'pending' | 'processing' | 'shipped' | 'delivered';
@@ -155,6 +155,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   },
 };
 
+// Input must be validated and omit undefined fields before spread merging.
 const deepMergeSettings = (
   defaults: AppSettings,
   user: DeepPartial<AppSettings>

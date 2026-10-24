@@ -48,7 +48,8 @@ hashes the path of the object and stores it in a file named after the
 hash. These hashes are stored on disk the directory controlled by
 `--cache-dir` or the exact directory may be specified with
 `--nfs-cache-dir`. Using this means that the NFS server can be
-restarted at will without affecting the connected clients.
+restarted with the same persistent handle cache, reducing stale-handle errors;
+this is not a guarantee of uninterrupted client operations.
 
 `--nfs-cache-type symlink` is similar to `--nfs-cache-type disk` in
 that it uses an on disk cache, but the cache entries are held as
@@ -56,8 +57,9 @@ symlinks. Rclone will use the handle of the underlying file as the NFS
 handle which improves performance. This sort of cache can't be backed
 up and restored as the underlying handles will change. This is Linux
 only. It requires running rclone as root or with `CAP_DAC_READ_SEARCH`.
-You can run rclone with this extra permission by doing this to the
-rclone binary `sudo setcap cap_dac_read_search+ep /path/to/rclone`.
+This capability bypasses normal file-read and directory-search permissions.
+Prefer `memory` or `disk` caching; do not grant it to a general-purpose rclone
+binary as a routine performance tweak.
 
 `--nfs-cache-handle-limit` controls the maximum number of cached NFS
 handles stored by the caching handler. This should not be set too low
@@ -66,25 +68,26 @@ is `1000000`, but consider lowering this limit if the server's system
 resource usage causes problems. This is only used by the `memory` type
 cache.
 
-To serve NFS over the network use following command:
+Start with a loopback listener; expose it to another host only after configuring
+a trusted tunnel or restrictive firewall, because the server has no authentication:
 
 ```sh
-rclone serve nfs remote: --addr 0.0.0.0:$PORT --vfs-cache-mode=full
+rclone serve nfs remote: --addr 127.0.0.1:$PORT --vfs-cache-mode=full
 ```
 
 This specifies a port that can be used in the mount command. To mount
 the server under Linux/macOS, use the following command:
 
 ```sh
-mount -t nfs -o port=$PORT,mountport=$PORT,tcp $HOSTNAME:/ path/to/mountpoint
+mount -t nfs -o port=$PORT,mountport=$PORT,tcp ${NFS_HOST}:/ path/to/mountpoint
 ```
 
 Where `$PORT` is the same port number used in the `serve nfs` command
-and `$HOSTNAME` is the network address of the machine that `serve nfs`
+and `${NFS_HOST}` is the network address of the machine that `serve nfs`
 was run on.
 
 If `--vfs-metadata-extension` is in use then for the `--nfs-cache-type disk`
-and `--nfs-cache-type cache` the metadata files will have the file
+and `--nfs-cache-type symlink` the metadata files will have the file
 handle of their parent file suffixed with `0x00, 0x00, 0x00, 0x01`.
 This means they can be looked up directly from the parent file handle
 is desired.
@@ -195,8 +198,8 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and metadata remain intact.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -306,7 +309,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not

@@ -12,7 +12,7 @@ These come from the Space build pipeline before the app starts. Read with `hf sp
 
 ### `CONFIG_ERROR: torch version in requirements.txt is not compatible with ZeroGPU`
 
-**Cause**: `requirements.txt` pins `torch==X.Y.Z` to a version outside the supported set (`2.8.0`, `2.9.1`, `2.10.0`, `2.11.0`).
+**Cause**: `requirements.txt` pins `torch==X.Y.Z` to a version outside the current platform-supported set (check the live compatibility table).
 **Fix**: Unpin torch (preferred — the runtime preinstalls the latest supported version), or pin to one of the supported values.
 
 ### `Cannot install … because these package versions have conflicting dependencies` / `ResolutionImpossible`
@@ -63,7 +63,7 @@ import spaces
 
 ### `RuntimeError: No @spaces.GPU function detected during startup`
 
-**Cause**: The function bound to `.click(fn=...)` / `.submit(...)` isn't decorated. Decorating an inner helper doesn't count — the startup scan only walks Gradio's registered handlers.
+**Cause**: No registered GPU path was detected. Check decoration, handler registration and the installed spaces/Gradio versions. Wrappers are version-sensitive; decorating the registered handler is the simplest supported pattern.
 **Fix**: Decorate the function Gradio binds. If that conflicts with another decorator, wrap explicitly:
 ```python
 @spaces.GPU(duration=60)
@@ -84,23 +84,13 @@ If a Gradio custom component locks the major (`gradio-image-prompter`, `gradio_l
 
 **Cause**: A dep with `torchaudio<2.1` / `torch<2` in its `setup.py` (e.g. `demucs`, `audiocraft`) downgraded torch silently. The build succeeded, the app booted, and `import spaces` then died on a missing torch symbol.
 **Fix**: Install the offender from `app.py` with `--no-deps` *before* `import spaces`:
-```python
-import subprocess, sys
-subprocess.run([sys.executable, "-m", "pip", "install", "--no-deps",
-                "git+https://github.com/facebookresearch/demucs"], check=True)
-import spaces
-```
+Resolve this at image/build time using an inspected immutable revision or verified wheel and explicitly declared compatible runtime dependencies. Do not install a moving Git branch during application import; `--no-deps` does not validate compatibility.
 List its actual runtime deps (`dora-search einops julius lameenc openunmix pyyaml tqdm` for demucs) yourself in `requirements.txt`.
 
 ### `_pickle.UnpicklingError: Weights only load failed`
 
 **Cause**: `torch.load` weights-only default flipped to `True` in torch 2.6. Old checkpoints pickling numpy/object globals fail.
-**Fix**: For trusted upstream checkpoints, monkey-patch before the package import:
-```python
-import torch
-_orig = torch.load
-torch.load = lambda *a, **k: _orig(*a, **{**k, "weights_only": k.get("weights_only", False)})
-```
+**Fix**: Prefer a safetensors checkpoint or migrate the checkpoint in an isolated reviewed environment. Do not globally monkey-patch `torch.load` to disable `weights_only`; pickle can execute code. If a legacy artifact truly needs `weights_only=False`, require explicit trust/provenance and scope the exception to that one load, with no unrelated secrets present.
 
 ### Stuck at `ZeroGPU init – 10.0%` then 60 s timeout
 
@@ -125,7 +115,7 @@ torch.load = lambda *a, **k: _orig(*a, **{**k, "weights_only": k.get("weights_on
 ### Exit code 128 / containerd / scheduling failure
 
 **Cause**: HF infra glitch.
-**Fix**: `hf spaces restart <id> --factory-reboot`. If it persists, retry later or report. Not fixable in code.
+**Fix**: Inspect build/runtime diagnostics first; a factory reboot interrupts service and clears ephemeral state. Use `hf spaces restart <id> --factory-reboot` only within the agreed deployment scope. If it persists, retry later or report. Not fixable in code.
 
 ---
 

@@ -71,10 +71,11 @@ def create_document():
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
-    doc = smgr.createInstanceWithContext("com.sun.star.text.TextDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/swriter", "_blank", 0, ())
     text = doc.Text
     cursor = text.createTextCursor()
     text.insertString(cursor, "Hello from LibreOffice Writer!", 0)
@@ -111,23 +112,9 @@ for file in *.odt; do
 done
 ```
 
-### Template-Based Generation
-```python
-import subprocess
-import tempfile
-from pathlib import Path
+### Template-based generation
 
-def generate_from_template(template_path, variables, output_path):
-    with tempfile.TemporaryDirectory() as tmpdir:
-        subprocess.run(['unzip', '-q', template_path, '-d', tmpdir])
-        content_file = Path(tmpdir) / 'content.xml'
-        content = content_file.read_text()
-        for key, value in variables.items():
-            content = content.replace(f'${{{key}}}', str(value))
-        content_file.write_text(content)
-        subprocess.run(['zip', '-rq', output_path, '.'], cwd=tmpdir)
-    return output_path
-```
+Load an approved template through UNO with an AsTemplate property, then replace defined document placeholders through the document model and save to a fresh destination. The previous unzip/string-replace/zip example was removed: it neither escaped XML nor handled split text runs/ODF packaging correctly, and unchecked subprocesses could return a nonexistent output. No templating implementation is bundled here; use an audited ODF-aware implementation and verify layout.
 
 ## Format Conversion Reference
 
@@ -172,8 +159,8 @@ pip install ezodf     # Easier ODF handling
 
 ### Cannot open socket
 ```bash
-killall soffice.bin
-soffice --headless --accept="socket,host=localhost,port=8100;urp;"
+# Inspect the listener and stop only the task-owned process after saving its documents.
+soffice --headless --accept="socket,host=127.0.0.1,port=8100;urp;"
 ```
 
 ### Conversion Quality Issues
@@ -194,11 +181,15 @@ soffice --headless --convert-to pdf:writer_pdf_Export document.odt
 - impress
 - draw
 - base
-- docx-official
-- pdf-official
 - workflow-automation
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Automation and document limits
+
+Verify the actual LibreOffice version, filters, Python UNO binding and database drivers; installing unrelated Python libraries does not provide UNO. Bind any UNO listener to loopback in a separate task-owned profile and stop it after use; UNO is not an authenticated sandbox. Do not terminate all office processes or expose the listener publicly. Use a fresh private output directory, check expected file type/nonempty output and inspect the rendered result; exit zero alone is insufficient.
+
+Opening documents can invoke macros, external links or embedded content: use approved inputs with macros/updates disabled and isolate untrusted conversions. Format conversion may lose layout, formulas, links, notes, multiple sheets/pages or features. Retain originals, clarify CSV sheet/delimiter/encoding and preserve formula/identifier semantics. Do not automatically install packages, publish documents or put sensitive records in Git. These examples were statically reviewed only; no LibreOffice process or conversion was run.

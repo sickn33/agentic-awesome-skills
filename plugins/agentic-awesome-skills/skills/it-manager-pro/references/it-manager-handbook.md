@@ -10,7 +10,7 @@ IT Management is now characterized by Volatility, Uncertainty, Complexity, and A
 ## 2. FinOps 2.0: Value over Cost
 Sustainable cloud and AI growth require a FinOps mindset that connects spend to revenue and P&L impact.
 - **Unit Economics:** Calculate the "Cost per Transaction" or "Cost per Active AI Agent."
-- **Waste Identification:** Historically, 30% of cloud spend is waste. Use AI-driven right-sizing and spot-instance automation.
+- **Waste Identification:** Measure waste against actual utilization, commitments and service objectives; do not assume a universal30%. Review interruption tolerance and recovery before spot-instance automation.
 
 ## 3. Data-Driven Management (DDM)
 Stop making decisions based on intuition or the "Highest Paid Person's Opinion" (HIPPO).

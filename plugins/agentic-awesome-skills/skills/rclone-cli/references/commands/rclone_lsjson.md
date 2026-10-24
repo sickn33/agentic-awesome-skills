@@ -34,7 +34,7 @@ The output is an array of Items, where each Item looks like this:
   "EncryptedPath" : "kja9098349023498/v0qpsdq8anpci8n929v3uu9338",
   "Path" : "full/path/goes/here/file.txt",
   "Size" : 6,
-  "Tier" : "hot",
+  "Tier" : "hot"
 }
 ```
 

@@ -1,11 +1,11 @@
-<!-- registry-sync: version=19.15.0; skills=2743; stars=48302; updated_at=2026-10-22T13:59:33+00:00 -->
+<!-- registry-sync: version=20.0.0; skills=2750; stars=48423; updated_at=2026-10-24T08:21:30+00:00 -->
 # AAS Core — Agentic Awesome Skills
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 2,743+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 2,750+ installable `SKILL.md` playbooks. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
-**Current release: V19.15.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.15.0/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V20.0.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.0.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -35,7 +35,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 2,743+ Skills](#browse-2743-skills)
+- [Browse 2,750+ Skills](#browse-2750-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -88,7 +88,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.15.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.0.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -97,22 +97,22 @@ The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifact
 Start with AAS Core in Codex or Claude. Configure the local MCP using the [Codex](docs/users/codex-cli-skills.md) or [Claude](docs/users/claude-code-skills.md) guide. With the MCP available, ask the agent to inspect your project, compare relevant skills, and save the exact selection. Then validate its manifest and review the resulting plan before any installation. The first configuration command previews a change and returns an approval digest:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.15.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
   --cache-root /absolute/path/to/aas-cache
 ```
 
-Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v19.15.0/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
+Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.0.0/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
 
 ### Install selected skills directly
 
 If you already know the IDs, preview a focused install into your host's skill directory:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@19.15.0 -- \
-  agentic-awesome-skills --release 19.15.0 --path .agents/skills \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- \
+  agentic-awesome-skills --release 20.0.0 --path .agents/skills \
   --skills brainstorming,systematic-debugging --dry-run
 ```
 
@@ -170,7 +170,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 2,743+ Skills
+## Browse 2,750+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -178,7 +178,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v19.15.0/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v20.0.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -343,10 +343,9 @@ Key source families include:
 - **[target1m/traderspy-mcp](https://github.com/target1m/traderspy-mcp)**: Official TraderSpy source for six crypto market research skills (`traderspy-*`) - market briefings, technical analysis, screening and backtests, AI signals, top-trader positioning, and position checks through the hosted, read-only TraderSpy MCP server (MIT).
 - **[MohammadHijjawi97/since-cutoff](https://github.com/MohammadHijjawi97/since-cutoff)**: Official source for the `since-cutoff` skill - lists which APIs of a project's pinned Python dependencies changed after the model's training cutoff, from a static diff of the two releases with no model calls, shows where the code uses them, and writes short AGENTS.md or CLAUDE.md notes (MIT).
 - **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
-- **[doomsday-network/doomsday](https://github.com/doomsday-network/doomsday)**: Official Doomsday Network source for the `doomsday-escrow` skill - verify cryptographic Proof-of-Escrow collateral (live L1 UTXO outpoint proofs and Base Mainnet ERC-20 `wDOOM` settlement receipts) on GitHub bounties with a zero-dependency standard-library Python CLI and read-only MCP server before agents spend compute (MIT).
 - **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)**: Official openCanviz source for the `opencanviz-json` skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion presets, LaTeX math, plots, tables, rings, 22 example projects), then import it at opencanviz.com/create, where a free account builds and plays it as a narrated, animated explainer and the MP4 download needs a plan or a one-time export purchase (MIT).
-- **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)**: Official FootVal source for four football (soccer) data skills (`footval-*`) - player valuations against the market and comparisons, scouting and rankings, scores, match centres and league tables, and season leaderboards and transfer news through the hosted, read-only FootVal MCP server (MIT).
 
+- **[a4a-network/a4a](https://github.com/a4a-network/a4a)**: Source for `a4a`.
 - **[beatra-ai/ai-audiobook-generator-skill](https://github.com/beatra-ai/ai-audiobook-generator-skill)**: Source for `ai-audiobook-narration`.
 - **[beatra-ai/ai-image-realism-skill](https://github.com/beatra-ai/ai-image-realism-skill)**: Source for `ai-image-realism`.
 - **[beatra-ai/ai-storyboard-generator-skill](https://github.com/beatra-ai/ai-storyboard-generator-skill)**: Source for `ai-storyboard-generator`.
@@ -354,11 +353,16 @@ Key source families include:
 - **[beatra-ai/xiaohongshu-copywriter-skill](https://github.com/beatra-ai/xiaohongshu-copywriter-skill)**: Source for `zhongcao-note-copywriter`.
 - **[beatra-ai/xiaohongshu-cover-maker-skill](https://github.com/beatra-ai/xiaohongshu-cover-maker-skill)**: Source for `zhongcao-cover-maker`.
 - **[ces107/agent-forge](https://github.com/ces107/agent-forge)**: Source for `launch-check`.
+- **[cooper-email/cooper-email](https://github.com/cooper-email/cooper-email)**: Source for `cooper-email`.
+- **[datawebot/datawebot-mcp](https://github.com/datawebot/datawebot-mcp)**: Source for `datawebot`.
+- **[doomsday-network/doomsday](https://github.com/doomsday-network/doomsday)**: Source for `doomsday-escrow`.
 - **[f-o-x11/deed-page-skill](https://github.com/f-o-x11/deed-page-skill)**: Source for `deed-page`.
+- **[faberlang/faber](https://github.com/faberlang/faber)**: Source for `faber-language`.
 - **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: Source for `neverapply`.
 - **[pangolin-spg/openclaw-skills](https://github.com/pangolin-spg/openclaw-skills)**: Source for `pangolinfo-amazon-data-research`.
 - **[pixeltable/pixeltable-skill](https://github.com/pixeltable/pixeltable-skill)**: Source for `pixeltable`.
 - **[sendblue-api/sendblue-cli](https://github.com/sendblue-api/sendblue-cli)**: Source for `sendblue/sendblue-cli`.
+- **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)**: Source for `footval-follow-matches-and-tables`, `footval-scout-and-rank-players`, `footval-stats-and-transfer-news`, `footval-value-and-compare-players`.
 - **[uiverify/uiverify](https://github.com/uiverify/uiverify)**: Source for `uiverify-triage-visual-changes`.
 - **[wassim-azi/agy-powerline](https://github.com/wassim-azi/agy-powerline)**: Source for `agy-powerline`.
 
@@ -657,6 +661,7 @@ Key source families include:
 
 - **[assaylabdesk-sudo/assay-lite](https://github.com/assaylabdesk-sudo/assay-lite)**: Source for `calibrate-first`.
 - **[cclank/lanshu-create-ai-presenter-video](https://github.com/cclank/lanshu-create-ai-presenter-video)**: Source for `lanshu-create-ai-presenter-video`.
+- **[cis2042/ux3-product-design-harness](https://github.com/cis2042/ux3-product-design-harness)**: Source for `product-design-harness`.
 - **[clagoss/claude-code-para-disenadores](https://github.com/clagoss/claude-code-para-disenadores)**: Source for `design-token-contrast`.
 - **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)**: Source for `us-watchlist-alerts`.
 - **[harshmaur/apify-facebook-ads-library-scraper](https://github.com/harshmaur/apify-facebook-ads-library-scraper)**: Source for `apify-facebook-ads-library-scraper`.
@@ -666,6 +671,7 @@ Key source families include:
 - **[igamingsychov/second-deposit-igaming](https://github.com/igamingsychov/second-deposit-igaming)**: Source for `second-deposit-igaming`.
 - **[igamingsychov/watch-igaming](https://github.com/igamingsychov/watch-igaming)**: Source for `watch-igaming`.
 - **[kevinmmiddleton/unpaid-intern](https://github.com/kevinmmiddleton/unpaid-intern)**: Source for `unpaid-intern`.
+- **[mksd0398/nitrogen](https://github.com/mksd0398/nitrogen)**: Source for `shopify-firebase-app`.
 - **[noamshorts22-prog/usage-engineer](https://github.com/noamshorts22-prog/usage-engineer)**: Source for `usage-engineer`.
 - **[wu736139669/goal-instruction-writer](https://github.com/wu736139669/goal-instruction-writer)**: Source for `goal-instruction-writer`.
 

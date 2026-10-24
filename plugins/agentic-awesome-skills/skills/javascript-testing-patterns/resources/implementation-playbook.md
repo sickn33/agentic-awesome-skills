@@ -17,6 +17,10 @@ Comprehensive guide for implementing robust testing strategies in JavaScript/Typ
 - Implementing test-driven development (TDD)
 - Setting up continuous testing in CI/CD pipelines
 
+## Example prerequisites and safe execution
+
+Choose the framework already used by the project; Jest and Vitest fragments are alternatives. App types/helpers and setup files are omitted. DOM tests need a jsdom/happy-dom environment and compatible jest-dom matchers. Restore global fetch/mocks and real timers even after failures. Database examples DROP/TRUNCATE tables: use disposable test-only databases/credentials, assert the target identity and never use production configuration. The CREATE TABLE (...) API fragment is pseudocode, not executable SQL. Coverage thresholds are policy examples, not proof of correctness; empty test bodies are outlines, not completed tests.
+
 ## Testing Frameworks
 
 ### Jest - Full-Featured Testing Framework
@@ -148,7 +152,7 @@ export class UserService {
     if (!user) {
       throw new Error('User not found');
     }
-    const updated = { ...user, ...updates };
+    const updated = { ...user, ...updates, id }; // identity cannot change through a partial update
     this.users.set(id, updated);
     return updated;
   }
@@ -224,6 +228,7 @@ export class ApiService {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
+    if (!response.ok) throw new Error('Create user failed');
     return response.json();
   }
 }
@@ -733,6 +738,7 @@ export function UserForm({ onSubmit }: Props) {
         placeholder="Name"
         value={name}
         onChange={(e) => setName(e.target.value)}
+        aria-label="Name"
         data-testid="name-input"
       />
       <input
@@ -740,6 +746,7 @@ export function UserForm({ onSubmit }: Props) {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        aria-label="Email"
         data-testid="email-input"
       />
       <button type="submit">Submit</button>

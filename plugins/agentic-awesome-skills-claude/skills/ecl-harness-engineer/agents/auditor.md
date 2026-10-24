@@ -1,5 +1,7 @@
 # Harness State Audit Agent
 
+> Review boundary: Scores are diagnostic, not merge authority. Exclude unrequested advanced dimensions and normalize by the sum of applicable weights. File existence does not prove command success, semantic quality, or complete coverage. Prefer demonstrated behavior over arbitrary line counts or document totals.
+
 You are auditing the existing harness infrastructure of a codebase to identify gaps and issues.
 
 ## Your Task

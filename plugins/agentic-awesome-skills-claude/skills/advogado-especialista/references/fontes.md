@@ -1,5 +1,7 @@
 # Referencias e Fontes — Advogado Especialista Elite
 
+As fontes abaixo sao um indice de pesquisa, nao prova de vigencia ou de aplicabilidade. Consultar texto consolidado/inteiro teor oficial e registrar URL/data para a resposta concreta. Edicoes de livros e precedentes sem inteiro teor nao foram validados por este indice.
+
 ## Legislacao Federal (Ordem Cronologica)
 
 ### Constituicao e Codigos
@@ -72,25 +74,22 @@
 ### STJ — Familia
 - Sumula 301: Recusa DNA = presuncao paternidade
 - Sumula 309: Prisao civil = ultimos 3 meses de alimentos
-- Sumula 336: Alimentos devidos desde citacao
 - Sumula 364: Bem de familia protege solteiro/viuvo
 - Sumula 377 STF: Separacao obrigatoria — aquestos comunicam
-- Sumula 596: Alimentos transitivos entre ex-conjuges
+- Sumula 596: Alimentos dos avos com natureza complementar e subsidiaria
 - REsp 1.954.279: Alimentos compensatorios
 - REsp 1.629.994: Guarda compartilhada nao exclui alimentos
 
 ### STJ — Responsabilidade Civil
 - Sumula 37: Cumulacao dano moral + material
 - Sumula 227: PJ pode sofrer dano moral
-- Sumula 370: Cirurgia plastica = obrigacao de resultado
 - Sumula 385: Negativacao anterior exclui novo dano moral
 - Sumula 387: Cumulacao dano estetico + dano moral
 - Tema 983: Dano moral minimo em violencia domestica
 
 ### STJ — Consumidor
 - Sumula 297: CDC aplica-se a bancos
-- Sumula 302: Carencia em plano de saude — urgencia afasta
-- Sumula 532: Notificacao previa obrigatoria para cadastro negativo
+- Sumula 302: Abusividade da limitacao temporal de internacao hospitalar
 
 ### STJ — Criminal/Maria da Penha
 - Sumula 536: Nao aplica suspensao processo
@@ -101,7 +100,7 @@
 
 ### STF — Constitucional
 - SV 25: Prisao civil so devedor alimentos
-- RE 878.694 (Tema 498): Companheiro = conjuge heranca
+- RE 878.694 (Tema 809): Companheiro = conjuge heranca
 - RE 898.060 (Tema 622): Socioafetiva nao impede biologica
 - ADI 4.277: Uniao estavel homoafetiva
 - RE 1.010.606: Direito ao esquecimento
@@ -137,3 +136,11 @@
 
 ### Digital
 - Patricia Peck Pinheiro — Direito Digital
+
+## Fontes oficiais conferidas nesta revisao
+
+- CNJ Resolucao 571/2024: https://atos.cnj.jus.br/atos/detalhar/5705
+- Lei 14.713/2023: https://www.planalto.gov.br/ccivil_03/_ato2023-2026/2023/lei/l14713.htm
+- Lei 9.099/1995: https://www.planalto.gov.br/ccivil_03/leis/l9099.htm
+- STF Tema 809: https://portal.stf.jus.br/jurisprudenciaRepercussao/tema.asp?num=809
+- INSS salario-maternidade: https://www.gov.br/inss/pt-br/direitos-e-deveres/salario-maternidade/salario-maternidade

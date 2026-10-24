@@ -4,10 +4,10 @@
 
 ## Principles
 
-- Description quality > implementation quality for LLM accuracy
-- Aim for fewer than 20 tools - more causes confusion
+- Descriptions aid selection; implementation enforces authorization and correct effects
+- Choose a discoverable relevant tool subset; no universal 20-tool limit
 - Every tool needs explicit error handling - silent failures poison agents
-- Return strings, not objects - LLMs process text
+- Return the provider/protocol-defined content and structured results; JSON text is one option
 - Validation gates before execution - reject, fix, or escalate, never silent fail
 - Test tools with the LLM, not just unit tests
 
@@ -40,7 +40,7 @@
 ### Frameworks
 
 - Anthropic SDK - When: Claude-based agents Note: Beta tool runner handles most complexity
-- OpenAI Functions - When: OpenAI-based agents Note: Use strict mode for guaranteed schema compliance
+- OpenAI Functions - When: OpenAI-based agents Note: Verify supported strict schema constraints; schema validity does not authorize actions or establish semantic correctness
 - Vercel AI SDK - When: Multi-provider tool handling Note: Abstracts differences between providers
 - LangChain Tools - When: LangChain-based agents Note: Converts MCP tools to LangChain format
 
@@ -162,7 +162,7 @@ Using examples to guide LLM tool usage
 
 """
 Examples show Claude concrete patterns that schemas can't express.
-Improves accuracy from 72% to 90% on complex operations.
+Potential benefit must be evaluated on your own task set; no measured improvement is evidenced here.
 """
 
 {
@@ -324,7 +324,7 @@ def get_weather(location: str) -> ToolResult:
     except Exception as e:
         return ToolResult(
             success=False,
-            content=f"Unexpected error: {str(e)}",
+            content="Internal failure; use the private correlation ID for diagnosis",
             error_type="internal_error"
         )
 """
@@ -343,88 +343,23 @@ connecting AI agents to external systems. Build once, use everywhere.
 """
 
 
-## Basic MCP Server (TypeScript)
-"""
-import { Server } from "@modelcontextprotocol/sdk/server";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio";
+## MCP adapter contract example
 
-const server = new Server({
-  name: "weather-server",
-  version: "1.0.0"
-});
+The old low-level TypeScript sketch used string request handlers rather than SDK
+request schemas and omitted runtime argument validation. No server implementation
+is bundled. Select a supported pinned SDK and its current registration API, then
+validate arguments and authorization inside the handler. For a synthetic read-only
+weather fixture, a successful call result can be shaped as:
 
-// Define tools
-server.setRequestHandler("tools/list", async () => ({
-  tools: [
-    {
-      name: "get_weather",
-      description: "Get current weather for a location. Returns
-        temperature, conditions, and humidity. Use for weather
-        queries about specific cities.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          location: {
-            type: "string",
-            description: "City and state, e.g. 'San Francisco, CA'"
-          },
-          unit: {
-            type: "string",
-            enum: ["celsius", "fahrenheit"],
-            default: "fahrenheit"
-          }
-        },
-        required: ["location"]
-      }
-    }
-  ]
-}));
+```json
+{"content":[{"type":"text","text":"Synthetic fixture: 22 C, clear"}],"isError":false}
+```
 
-// Handle tool calls
-server.setRequestHandler("tools/call", async (request) => {
-  const { name, arguments: args } = request.params;
-
-  if (name === "get_weather") {
-    try {
-      const weather = await fetchWeather(args.location, args.unit);
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(weather)
-          }
-        ]
-      };
-    } catch (error) {
-      return {
-        content: [
-          {
-            type: "text",
-            text: `Error: ${error.message}`
-          }
-        ],
-        isError: true
-      };
-    }
-  }
-
-  throw new Error(`Unknown tool: ${name}`);
-});
-
-// Start server
-const transport = new StdioServerTransport();
-await server.connect(transport);
-"""
-
-
-## MCP Benefits
-"""
-- Universal compatibility across LLM providers
-- Reusable tool libraries
-- Streaming and SSE transport support
-- Built-in observability
-- Tool access controls
-"""
+This is a fixture, not live weather. Unknown tools and malformed parameters must fail
+before external calls. A complete adapter needs transport-specific authentication,
+capability declaration, cancellation/timeouts, output bounds and safe error mapping.
+MCP protocol compatibility does not provide automatic access controls, observability
+or universal client support; structured results depend on negotiated/client support.
 
 ### Tool Runner Pattern
 
@@ -472,7 +407,9 @@ const runner = anthropic.beta.messages.toolRunner({
 });
 
 for await (const message of runner) {
-  console.log(message.content[0].text);
+  for (const block of message.content) {
+    if (block.type === "text") console.log(block.text);
+  }
 }
 """
 
@@ -557,7 +494,7 @@ response = client.messages.create(
 
 Severity: WARNING
 
-Tool descriptions should be at least 100 characters
+Tool descriptions should describe purpose, inputs, effects and boundaries; character count alone is not quality
 
 Message: Tool description is too short. Add details about when to use it, parameters, and return values.
 
@@ -589,17 +526,17 @@ Message: Tool function without try/except block. Add error handling.
 
 Severity: WARNING
 
-When returning errors, set is_error to true
+Use the protocol-specific error indicator: Anthropic tool_result is_error; MCP call result isError
 
-Message: Error result without is_error flag. Add 'is_error': true.
+Message: Tool failure must use the actual protocol error schema, not a universal flag spelling.
 
 ### Tools Should Return Strings
 
 Severity: WARNING
 
-Return JSON string, not dict/object
+Match the selected protocol output schema; do not convert all structured results blindly
 
-Message: Returning dict instead of string. Use json.dumps() or JSON.stringify().
+Message: Verify structured/text result compatibility with the actual host API.
 
 ### Tools Should Validate Inputs
 
@@ -648,3 +585,22 @@ Message: MCP tool definition missing inputSchema.
 ## Related Skills
 
 Works well with: `multi-agent-orchestration`, `api-designer`, `llm-architect`, `backend`
+
+## Safety and verification example
+
+All SDK/model examples are historical unexecuted sketches; beta signatures, message
+content variants and supported schema subsets must be verified before use. Several
+quoted JSON/schema fragments contain comments, ellipses or multiline strings and
+are explanatory pseudocode, not parseable JSON. Do not claim a bundled server/scanner.
+
+Derive account/tenant identity from verified host context, never model arguments.
+Treat tool descriptions/results and remote documents as untrusted data. Use scoped
+credentials, allowlisted destinations, secret-redacted errors and no shell evaluation.
+Mutations need explicit authority, idempotency keys, conflict checks and reconciliation
+of unknown timeout outcomes; a tool runner/retry does not make a send/payment safe.
+Parallelize only independent authorized operations with bounded concurrency; preserve
+call IDs and return an outcome for every call even when one fails.
+
+For example, `create_calendar_event` must reject a 0-minute duration and unauthorized
+attendees before sending invitations; retrying the same approved idempotency key must
+return the existing event, not invite twice. These are test requirements, not results.

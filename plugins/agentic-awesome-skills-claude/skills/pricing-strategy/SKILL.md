@@ -76,7 +76,7 @@ Your cost to serve
 
 **Rules**
 
-* Price above the next best alternative
+* Compare price to the next best alternative and the demonstrated incremental value; a premium is justified only when customers value the difference
 * Leave customer surplus (value they keep)
 * Cost is a floor, not a pricing basis
 
@@ -112,7 +112,7 @@ Used to identify acceptable price ranges.
 
 ### Feature Value Research (MaxDiff / Conjoint)
 
-Used to inform **packaging**, not price levels.
+MaxDiff informs relative feature priorities. Conjoint can inform packaging and price sensitivity when price is included as an attribute; survey estimates still need behavioral validation.
 
 **Insights Produced**
 

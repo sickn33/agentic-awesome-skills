@@ -15,9 +15,9 @@ import { resolveRepoRoot } from '../lib/repo-root.mjs';
 import { applySanitizers } from '../lib/sanitizers/index.mjs';
 
 const SCHEMA_VERSION = '1.0';
-const REGEN_PASS_RATE_THRESHOLD = 0.8;
+const REGEN_PASS_RATE_THRESHOLD = 1;
 // 1/1 failed is as broken as 1/5; below 2 claims is below the noise floor.
-const REGEN_MIN_CLAIMS = 2;
+const REGEN_MIN_CLAIMS = 1;
 // The Poor/Fair grade boundary — Poor recs erode trust faster than recall helps.
 const QUALITY_FLOOR = 0.55;
 
@@ -141,8 +141,8 @@ async function main() {
       const c = claims[j];
       const r = verifyResults[j];
       if (r?.disposition !== 'verified') continue;
-      if (c.sourceField === 'findingRefs' && c.type === 'file_exists') {
-        const ref = (rec.findingRefs ?? []).find((x) => String(x).startsWith(c.file + ':'));
+      if (c.sourceField === 'findingRefs' && c.type === 'file_exists' && Number.isInteger(c.line)) {
+        const ref = (rec.findingRefs ?? []).find((x) => String(x) === `${c.file}:${c.line}`);
         if (ref) {
           const m = String(ref).match(/^(.+?):(\d+)$/);
           if (m) verifiedRefs.push({ file: m[1], line: Number(m[2]) });
@@ -181,6 +181,7 @@ async function main() {
     );
     const semanticSafetyFailures = claimsWithResults.filter(
       (r) => r.disposition === 'failed' && (
+        r.claim?.type === 'file_exists' ||
         r.claim?.type === 'next_cached_not_found_causal_support' ||
         r.claim?.type === 'next_stable_cache_api_for_version' ||
         r.claim?.type === 'next_runtime_cache_api_for_version' ||
@@ -249,7 +250,7 @@ async function main() {
   const hardRegenIndexes = new Set(regenPlan.map((p) => p.index));
   const qualityDroppedIndexes = new Set(
     qualityCheck.dropped
-      .map((d) => recsGraded.findIndex((g) => g.rec === d.rec))
+      .map((d) => (recsGraded.find((g) => g.rec === d.rec)?.index ?? -1))
       .filter((i) => i >= 0)
   );
   const needsReviewIndexes = new Set(
@@ -303,7 +304,7 @@ async function main() {
     sanitizerDropped,
     regenPlan,
     qualityDropped: qualityCheck.dropped.map((d) => ({
-      index: recsGraded.findIndex((g) => g.rec === d.rec),
+      index: (recsGraded.find((g) => g.rec === d.rec)?.index ?? -1),
       candidateRef: d.rec.candidateRef ?? null,
       quality: d.rec.quality,
       reason: d.reason,

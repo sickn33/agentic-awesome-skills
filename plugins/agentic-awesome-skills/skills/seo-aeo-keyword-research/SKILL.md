@@ -26,10 +26,8 @@ rank for", "keyword analysis", "best keywords for [topic]",
   "target_audience": "string — who the content is for",
   "content_goal": "rank | convert | educate | all",
   "location": "string — optional, country or city for local SEO",
-  "intent_focus": "informational | transactional |
-                   commercial | navigational | all",
-  "competitor_urls": ["string — optional, up to 3 competitor URLs
-                       to inform keyword gaps"],
+  "intent_focus": "informational | transactional | commercial | navigational | all",
+  "competitor_urls": ["string — optional, up to 3 competitor URLs to inform keyword gaps"],
   "user_keywords": ["string — optional keywords the owner already cares about"],
   "site_context": "string — optional audit findings, page list, or product description",
   "research_mode": "browser | api | both | unavailable — default both"
@@ -57,10 +55,7 @@ Prioritize problem-related queries that the product can genuinely solve. Search 
 
 ## Difficulty & Volume Rubric
 
-**Important:** This skill estimates difficulty and volume based on
-semantic analysis and competitive signals. It does not connect to
-live data APIs. All figures are directional estimates, not
-verified data. Always validate with a live tool
+**Important:** This text bundles no API connector. Use actually available authorized tools for measured metrics; cite provider, market, date and definition. Semantic analysis alone cannot measure monthly searches or CPC: mark those unknown instead of inventing numeric estimates. Qualitative difficulty is a hypothesis, not a provider score. Validate with a live tool
 (Ahrefs, SEMrush, Google Keyword Planner) before committing
 to a full content strategy.
 
@@ -165,8 +160,7 @@ until significant topical authority is established.
 
 ## Long-Tail Keywords
 
-Lower volume, lower difficulty, higher conversion rate.
-These are your fastest wins.
+Long-tail specificity may improve intent fit; volume, difficulty and conversion performance require evidence and are not guaranteed by query length.
 
 | Long-Tail Keyword                    | Est. Volume | Difficulty | Intent        | Best For              |
 |--------------------------------------|-------------|------------|---------------|-----------------------|
@@ -197,18 +191,18 @@ People Also Ask boxes.
 
 ---
 
-## LSI and Semantic Keywords
+## Related Semantic Vocabulary
 
 Related terms that reinforce topical authority.
 Use these naturally throughout content —
 do not force them as primary targets.
 
-- [LSI term 1]
-- [LSI term 2]
-- [LSI term 3]
-- [LSI term 4]
-- [LSI term 5]
-- [LSI term 6]
+- [Related term 1]
+- [Related term 2]
+- [Related term 3]
+- [Related term 4]
+- [Related term 5]
+- [Related term 6]
 
 ---
 
@@ -235,7 +229,7 @@ them would compete against each other:
 |----------------------|----------------------|------------|-------------------------------------|
 | [keyword]            | [keyword]            | High/Med   | [which page should own which term]  |
 
-If none detected: ✅ No cannibalization risks found.
+If none detected: No overlap identified in the reviewed page/query sample; this does not establish site-wide absence.
 
 ---
 
@@ -296,7 +290,7 @@ Do not fill the table with near-duplicates to reach ten. If fewer than five dist
    and location modifiers if `location` is provided
 4. Generate AEO keyword list — convert the most common
    audience questions into direct-answer keyword targets
-5. Generate LSI terms — identify semantically related
+5. Generate related semantic terms — identify semantically related
    vocabulary that reinforces topical authority
    without targeting directly
 6. If live browser or API research is available, collect
@@ -304,9 +298,7 @@ Do not fill the table with near-duplicates to reach ten. If fewer than five dist
    Base any remaining estimate on
    keyword length, specificity, and likely
    competitive landscape
-7. Estimate volume using the volume scale —
-   shorter, broader terms get higher volume labels;
-   longer, more specific terms get lower
+7. Populate volume and CPC only from identified data sources; keyword length is not a measurement. Otherwise report unknown and retain qualitative intent hypotheses
 8. Assign intent category to every keyword
 9. Sort all keywords into Tier 1, 2, and 3
    based on difficulty and estimated volume

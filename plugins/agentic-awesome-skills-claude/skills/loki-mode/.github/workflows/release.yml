@@ -22,14 +22,19 @@ jobs:
       - name: Read version
         id: version
         run: |
-          VERSION=$(cat VERSION | tr -d '\n')
+          VERSION=$(cat VERSION)
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid version" >&2
+            exit 1
+          fi
+          echo "LOKI_VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=v$VERSION" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: check_tag
         run: |
-          if git rev-parse "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+          if git rev-parse "v${LOKI_VERSION}" >/dev/null 2>&1; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
@@ -49,11 +54,11 @@ jobs:
           cp -r references release/skill-root/
 
           cd release/skill-root
-          zip -r ../loki-mode-${{ steps.version.outputs.version }}.zip .
+          zip -r ../loki-mode-${LOKI_VERSION}.zip .
           cd ../..
 
           # Also create .skill file (same as zip, different extension)
-          cp release/loki-mode-${{ steps.version.outputs.version }}.zip release/loki-mode-${{ steps.version.outputs.version }}.skill
+          cp release/loki-mode-${LOKI_VERSION}.zip release/loki-mode-${LOKI_VERSION}.skill
 
           # ============================================
           # Artifact 2: loki-mode-api.zip (for console.anthropic.com)
@@ -64,7 +69,7 @@ jobs:
           cp -r references release/api-package/loki-mode/
 
           cd release/api-package
-          zip -r ../loki-mode-api-${{ steps.version.outputs.version }}.zip loki-mode
+          zip -r ../loki-mode-api-${LOKI_VERSION}.zip loki-mode
           cd ../..
 
           # ============================================
@@ -85,8 +90,8 @@ jobs:
           cp -r autonomy release/loki-mode/
 
           cd release
-          zip -r loki-mode-claude-code-${{ steps.version.outputs.version }}.zip loki-mode
-          tar -czvf loki-mode-claude-code-${{ steps.version.outputs.version }}.tar.gz loki-mode
+          zip -r loki-mode-claude-code-${LOKI_VERSION}.zip loki-mode
+          tar -czvf loki-mode-claude-code-${LOKI_VERSION}.tar.gz loki-mode
           cd ..
 
       - name: Create Git Tag
@@ -94,14 +99,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${{ steps.version.outputs.version }}" -m "Release v${{ steps.version.outputs.version }}"
-          git push origin "v${{ steps.version.outputs.version }}"
+          git tag -a "v${LOKI_VERSION}" -m "Release v${LOKI_VERSION}"
+          git push origin "v${LOKI_VERSION}"
 
       - name: Extract changelog for this version
         if: steps.check_tag.outputs.exists == 'false'
         id: changelog
         run: |
-          VERSION="${{ steps.version.outputs.version }}"
+          VERSION="${LOKI_VERSION}"
           CHANGELOG=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md)
           if [ -z "$CHANGELOG" ]; then
             CHANGELOG="Release v$VERSION"
@@ -113,16 +118,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ steps.version.outputs.version }}" \
-            release/loki-mode-${{ steps.version.outputs.version }}.zip \
-            release/loki-mode-${{ steps.version.outputs.version }}.skill \
-            release/loki-mode-api-${{ steps.version.outputs.version }}.zip \
-            release/loki-mode-claude-code-${{ steps.version.outputs.version }}.zip \
-            release/loki-mode-claude-code-${{ steps.version.outputs.version }}.tar.gz \
-            --title "Loki Mode v${{ steps.version.outputs.version }}" \
+          gh release create "v${LOKI_VERSION}" \
+            release/loki-mode-${LOKI_VERSION}.zip \
+            release/loki-mode-${LOKI_VERSION}.skill \
+            release/loki-mode-api-${LOKI_VERSION}.zip \
+            release/loki-mode-claude-code-${LOKI_VERSION}.zip \
+            release/loki-mode-claude-code-${LOKI_VERSION}.tar.gz \
+            --title "Loki Mode v${LOKI_VERSION}" \
             --notes-file changelog_body.txt
 
       - name: Skip message
         if: steps.check_tag.outputs.exists == 'true'
         run: |
-          echo "Tag v${{ steps.version.outputs.version }} already exists. Skipping release."
+          echo "Tag v${LOKI_VERSION} already exists. Skipping release."

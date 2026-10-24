@@ -28,6 +28,8 @@ This setup uses:
 - **NativeWind v5** - Metro transformer for Tailwind in React Native
 - **@tailwindcss/postcss** - PostCSS plugin for Tailwind v4
 
+This is a historical NativeWind 5 preview/nightly recipe. Verify the current Expo SDK/React/NativeWind compatibility and pinned dependency APIs before changing an existing app. Merge Metro/Babel/PostCSS settings without discarding unrelated plugins. Package-manager resolutions differ; do not assume Yarn resolutions affect npm. Validate native and web builds plus accessibility/reduced-motion behavior.
+
 ## Installation
 
 ```bash
@@ -134,6 +136,8 @@ With Tailwind v4 and NativeWind v5, you do NOT need a babel.config.js for Tailwi
 ## CSS Component Wrappers
 
 Since react-native-css requires explicit CSS element wrapping, create reusable components:
+
+Import src/global.css once in the actual app entry/root layout. Add `export { Image } from "./image";` to src/tw/index.tsx if using the barrel import shown below.
 
 ### Main Components (`src/tw/index.tsx`)
 
@@ -385,7 +389,7 @@ Create a CSS file for Apple semantic colors:
 /* src/css/sf.css */
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: light dark;
   }
 }
 

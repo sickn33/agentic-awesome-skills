@@ -17,6 +17,7 @@ Environment Variables:
 """
 
 import json
+import math
 import sys
 
 import typer
@@ -52,6 +53,8 @@ def main(
     """Perform keyword (BM25) search on a Weaviate collection."""
     query_properties = parse_properties(properties)
 
+    if not 1 <= limit <= 1000:
+        raise typer.BadParameter("limit must be 1..1000")
     try:
         with get_client() as client:
             if not client.collections.exists(collection):
@@ -131,10 +134,10 @@ def main(
                     print("No objects found matching the query.\n")
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

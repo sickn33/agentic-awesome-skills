@@ -1,3 +1,5 @@
+> Catalog review modification (2026-10-23): bounded async work and truthful write reporting; original attribution/license retained.
+
 # Triage Example Workflow
 
 This is a complete triage workflow that supports two modes:
@@ -42,7 +44,7 @@ Call `alert_assessment` in parallel for every alert from step 2, in batches of u
 
 ### Step 4: Troubleshoot and classify high-signal alerts
 
-For each alert where BOTH `incident_likelihood` AND `alert_impact` are MEDIUM or HIGH, call `run_troubleshooting_agent` (default `async_mode=True`). Fire all eligible alerts simultaneously — each call returns immediately with one of: `success` (previous results available immediately), `queued` (accepted, not started yet), or `running` (in progress).
+For each alert where BOTH `incident_likelihood` AND `alert_impact` are MEDIUM or HIGH, call `run_troubleshooting_agent` (default `async_mode=True`). Use a bounded, approved concurrency for eligible alerts — each call returns immediately with one of: `success` (previous results available immediately), `queued` (accepted, not started yet), or `running` (in progress).
 
 Skip any alert where either value is LOW — troubleshooting is expensive and not warranted for low-signal alerts.
 
@@ -100,7 +102,7 @@ After completing all steps, produce a summary table:
 | Alert ID | Type | Incident Likelihood | Potential Impact | Classification | Action Taken |
 |----------|------|---------------------|------------------|----------------|--------------|
 
-Include every alert from step 1. For untroubleshot alerts, leave Classification blank and set Action Taken to "Comment only".
+Include every alert from step 1. For untroubleshot alerts, leave Classification blank and set Action Taken to "Comment only" only after a successful authorized write; in recommendation mode use "No write — recommendation".
 
 ---
 

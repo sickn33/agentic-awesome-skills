@@ -36,7 +36,7 @@ maximize reach without hurting my SEO?
 
 | Feature | Dev.to | Hashnode |
 |---------|--------|----------|
-| Monthly visitors | ~10M+ | ~3M+ |
+| Monthly visitors | Unverified; check current analytics | Unverified; check current analytics |
 | Custom domain | No | Yes (free) |
 | Newsletter | No | Built-in |
 | Audience | Broader, beginners | More senior |
@@ -45,7 +45,7 @@ maximize reach without hurting my SEO?
 ## Cross-Posting Order
 
 1. Publish on your blog first (canonical)
-2. Wait 1-2 days for Google indexing
+2. Verify original is accessible; indexing timing varies
 3. Cross-post to Dev.to with canonical URL
 4. Cross-post to Hashnode with canonical URL
 
@@ -60,3 +60,5 @@ maximize reach without hurting my SEO?
 - `developer-audience-context` — Know who you're writing for
 - `hacker-news-strategy` — Drive traffic from HN
 - `x-devs` — Promote posts on Twitter/X
+
+Platform features, audience sizes, tag counts, performance rankings and cadence outcomes above are illustrative historical assumptions, not verified current measurements or growth guarantees. Verify current account features and UI before use. Canonical URLs are search-engine hints, not guarantees of indexing or ranking. Prepare drafts first; publish, create accounts, subscribe users or send newsletters only with explicit authorization. Respect consent, image licensing and content rights.

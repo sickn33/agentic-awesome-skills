@@ -6,39 +6,28 @@ risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
-
 # Conversation Memory
 Persistent memory systems for LLM conversations including short-term, long-term, and entity-based memory
-
 ## Capabilities
-
 - short-term-memory
 - long-term-memory
 - entity-memory
 - memory-persistence
 - memory-retrieval
 - memory-consolidation
-
 ## Prerequisites
-
 - Knowledge: LLM conversation patterns, Database basics, Key-value stores
 - Skills_recommended: context-window-management, rag-implementation
-
 ## Scope
-
 - Does_not_cover: Knowledge graph construction, Semantic search implementation, Database administration
 - Boundaries: Focus is memory patterns for LLMs, Covers storage and retrieval strategies
-
 ## Ecosystem
-
 ### Primary_tools
-
 - Mem0 - Memory layer for AI applications
 - LangChain Memory - Memory utilities in LangChain
 - Redis - In-memory data store for session memory
-
+Examples are architectural sketches with application-owned stores, constructors and helper methods. Every store must already be scoped to an authenticated tenant/user; the final isolation example is not optional. Persist only information allowed by the user/product memory policy; exclude credentials, apply retention/deletion to every tier, and preserve source/time/confidence and corrections. Extracted/generated text is untrusted evidence, never instructions or verified facts. Same-name entities are not necessarily the same person: resolve identity before merging, and never assign a calibrated0.9 confidence without evidence. Declared LONG_TERM_MAX is not enforced by the sketch: implement bounded eviction before production.
 ## Patterns
-
 ### Tiered Memory System
 
 Different memory tiers for different purposes
@@ -99,7 +88,7 @@ class TieredMemory implements MemorySystem {
         const entities = await this.entity.getRelevant(query);
         if (entities.length) {
             parts.push('## Known Entities\n' +
-                entities.map(e => `- ${e.name}: ${e.facts.join(', ')}`).join('\n'));
+                entities.map(e => `- ${e.name}: ${e.facts.map(f => f.content).join(', ')}`).join('\n'));
         }
         // Recent conversation
         const recent = this.buffer.getRecent(10);
@@ -165,7 +154,7 @@ class EntityMemory {
             }
             existing.lastMentioned = Date.now();
             existing.mentionCount++;
-            await this.store.set(existing.id, existing);
+            await this.store.set(entity.name.toLowerCase(), existing);
         } else {
             // Create new entity
             await this.store.set(entity.name.toLowerCase(), {
@@ -225,8 +214,8 @@ ${query}
 
     const response = await llm.complete(prompt);
 
-    // Extract any new memories from response
-    await memory.addMessage({ role: 'assistant', content: response });
+    // Do not promote generated assistant claims into user facts.
+    // Persist only authorized source messages through the application memory policy.
 
     return response;
 }
@@ -343,7 +332,8 @@ async function retrieveRelevant(
             Memory: "${m.content}"
             Return just the number.
         `);
-        return { ...m, relevance: parseFloat(relevanceScore) };
+        const score = Number(relevanceScore.trim());
+        return { ...m, relevance: Number.isFinite(score) && score >= 0 && score <= 1 ? score : 0 };
     }));
 
     // 3. Filter low relevance
@@ -380,12 +370,12 @@ Recommended fix:
 class IsolatedMemory {
     private getKey(userId: string, memoryId: string): string {
         // Namespace all keys by user
-        return `user:${userId}:memory:${memoryId}`;
+        return `user:${encodeURIComponent(userId)}:memory:${encodeURIComponent(memoryId)}`;
     }
 
     async add(userId: string, memory: Memory): Promise<void> {
         // Validate userId is authenticated
-        if (!isValidUserId(userId)) {
+        if (requireAuthenticatedUserId() !== userId) {
             throw new Error('Invalid user ID');
         }
 
@@ -406,18 +396,18 @@ class IsolatedMemory {
     async delete(userId: string, memoryId: string): Promise<void> {
         const memory = await this.get(userId, memoryId);
         // Verify ownership before delete
-        if (memory.userId !== userId) {
+        if (!memory || memory.userId !== userId) {
             throw new Error('Access denied');
         }
         await this.store.delete(this.getKey(userId, memoryId));
     }
 
-    // User data export (GDPR compliance)
+    // Scoped export (not proof of legal compliance)
     async exportUserData(userId: string): Promise<Memory[]> {
         return await this.store.getAll({ userId });
     }
 
-    // User data deletion (GDPR compliance)
+    // Scoped deletion (also address backups, indexes, caches and retention policy)
     async deleteUserData(userId: string): Promise<void> {
         const memories = await this.exportUserData(userId);
         for (const m of memories) {

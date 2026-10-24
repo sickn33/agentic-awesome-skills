@@ -77,3 +77,5 @@ export default function Page() {
   )
 }
 ```
+
+The waterfall here comes from awaiting a parent fetch before returning its child, not a rule that all Server Components always execute sequentially. Composition and streaming behavior depend on the framework; verify timing.

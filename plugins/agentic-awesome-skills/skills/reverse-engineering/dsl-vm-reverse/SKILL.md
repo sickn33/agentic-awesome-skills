@@ -1,7 +1,7 @@
 ---
 name: dsl-vm-reverse
 description: "Reverse JavaScript-based custom DSL/VM interpreters and risk-control engines: identify IIFE/switch-based opcode dispatch, extract opcode tables, and capture runtime semantics."
-risk: safe
+risk: critical
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -15,6 +15,10 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 - A protected web asset runs a custom bytecode VM (risk-control/captcha engines).
 - Recovering opcode semantics from a JS interpreter loop.
 
+
+## Scope and execution boundary
+
+Use only for authorized local fixtures or specifically scoped assessments. A file selected by a user does not itself prove authorization for live captcha/risk-control bypass. Runtime capture executes untrusted JavaScript; use a dedicated isolated browser/VM without real accounts or external network, not an object named fakeEnv or Node vm as a security boundary. The identifiers, opcode layouts and status codes below describe one case, not a universal protocol.
 
 ## 目录
 
@@ -125,11 +129,11 @@ if head[:4] == b'\x00asm':
 
 # 2. 检查零字节占比
 data = open('target.js', 'rb').read()
-zero_pct = data.count(b'\x00') / len(data) * 100
+zero_pct = data.count(b'\x00') / len(data) * 100 if data else 0
 print(f"零字节占比: {zero_pct:.1f}%")
 
 if zero_pct > 20:
-    print("WASM 二进制")
+    print("高零字节占比：仍需魔术字和格式验证，不能据此认定 WASM")
 elif head[:2] == b'!f':
     # 检查单字母变量模式
     if b'var U=void 0' in head or b'U=void 0,y=parseInt' in head:
@@ -151,7 +155,7 @@ with open('target.js', 'r', errors='replace') as f:
 mappings = re.findall(r'var\s+(\w+)\s*=\s*(\d+)', s[:2000])
 print('常量映射:')
 for name, val in mappings:
-    print(f"  {name:4s} = {val:3d} (0x{int(val):02x})")
+    print(f"  {name:4s} = {int(val):3d} (0x{int(val):02x})")
 ```
 
 ### Phase 3: Opcode 提取与分类（15 分钟）
@@ -190,7 +194,7 @@ const_refs = re.findall(r'C\[9\]\[(\d+)\]', s)
 unique_refs = sorted(set(int(x) for x in const_refs))
 
 print(f"C[9] 引用: {len(unique_refs)} 个索引")
-print(f"范围: {min(unique_refs)} - {max(unique_refs)}")
+print(f"范围: {min(unique_refs)} - {max(unique_refs)}" if unique_refs else "没有匹配索引")
 
 # 对每个引用分析上下文
 for ref in unique_refs[:20]:
@@ -274,30 +278,9 @@ const token = fakeEnv.AWSCInner._modules['fy'].getToken({});
 
 ## 5. 运行时捕获方案
 
-### 方案 A: Selenium + CDP 原生事件（推荐，成功率最高）
+### 方案 A: 本地受控浏览器捕获
 
-```python
-from selenium import webdriver
-
-driver = webdriver.Chrome()
-
-# 注入反检测
-driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
-    "source": r"""
-        Object.defineProperty(navigator, 'webdriver', {get: () => false});
-        Object.defineProperty(navigator, 'plugins', {get: () => [1,2,3,4,5]});
-        Object.defineProperty(navigator, 'languages', {get: () => ['zh-CN','zh','en']});
-    """
-})
-
-# 发送 CDP 原生鼠标事件
-driver.execute_cdp_cmd("Input.dispatchMouseEvent", {
-    "type": "mousePressed",
-    "x": 549.5, "y": 441.2,
-    "button": "left", "buttons": 1,
-    "clickCount": 1, "pointerType": "mouse"
-})
-```
+对自有测试页面使用可见的调试工具和合成事件，记录与真实用户交互的差异。不把隐藏 webdriver、伪造插件/语言等反检测手段作为默认步骤，也不保证能够通过风控。先验证测试环境隔离，避免收集真实账户 token。
 
 ### 方案 B: Playwright 无头浏览器
 
@@ -310,10 +293,10 @@ async function run() {
 
     // 拦截网络请求
     await page.route('**/api/**', async route => {
-        await route.continue_();
+        await route.continue();
     });
 
-    await page.goto('https://target-page.com');
+    await page.goto('http://127.0.0.1:8080/fixture'); // dedicated offline test server only
 
     // 等待 DSL VM 初始化
     await page.waitForFunction(() => {
@@ -330,9 +313,9 @@ async function run() {
 }
 ```
 
-### 方案 C: 纯协议验证（成功率极低）
+### 方案 C: 协议层验证的限制
 
-> DSL VM 生成的 token 通常与浏览器上下文强绑定（TLS JA3 指纹、IP、Cookie、请求头等），脱离浏览器后服务端可检测到上下文不匹配。**不建议使用纯协议方案**。
+> DSL VM 生成的 token 通常与浏览器上下文强绑定（TLS JA3 指纹、IP、Cookie、请求头等），脱离浏览器后服务端可检测到上下文不匹配。不能据此声称普遍成功率；仅在授权离线测试服务验证，不重放真实会话令牌。
 
 ---
 
@@ -355,9 +338,9 @@ async function run() {
 - [ ] 我是否提取了 opcode 列表并分类？
 - [ ] 我是否分析了常量表 C[9] 的引用范围？
 - [ ] 我是否定位了导出函数注册点？
-- [ ] 纯静态分析不够时，我是否尝试了运行时注入方案？
-- [ ] 任务完成后是否回写了 field-journal？
-- [ ] 是否发现新工具/新场景 → 更新 routing.md？
+- [ ] 若运行时分析确有必要，是否确认授权、隔离与停止条件；未执行时是否如实标注？
+- [ ] 是否在用户指定的实际案例记录中保存必要证据与限制？
+- [ ] 上游 routing.md 未附带，不假称已更新；记录本次实际使用路径。
 
 ---
 

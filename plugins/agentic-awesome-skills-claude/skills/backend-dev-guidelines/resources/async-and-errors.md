@@ -1,5 +1,8 @@
 # Async Patterns and Error Handling
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to async/await patterns and custom error handling.
 
 ## Table of Contents
@@ -15,16 +18,16 @@ Complete guide to async/await patterns and custom error handling.
 
 ## Async/Await Best Practices
 
-### Always Use Try-Catch
+### Propagate or Handle Rejections at an Explicit Boundary
 
 ```typescript
-// ❌ NEVER: Unhandled async errors
+// Valid propagation: the caller must await/return this promise
 async function fetchData() {
-    const data = await database.query(); // If throws, unhandled!
+    const data = await database.query(); // Rejects fetchData; caller/boundary handles it
     return data;
 }
 
-// ✅ ALWAYS: Wrap in try-catch
+// Catch only to recover, translate or capture at the owning boundary
 async function fetchData() {
     try {
         const data = await database.query();
@@ -77,7 +80,7 @@ try {
         settingsService.getAll(),
     ]);
 } catch (error) {
-    // One failure fails all
+    // Promise.all rejects on the first rejection; other operations continue unless explicitly cancelled
     Sentry.captureException(error);
     throw error;
 }
@@ -197,9 +200,9 @@ export function asyncErrorWrapper(
 ### Usage
 
 ```typescript
-// Without wrapper - error can be unhandled
+// Express 4 needs a wrapper; Express 5 forwards returned promise rejections
 router.get('/users', async (req, res) => {
-    const users = await userService.getAll(); // If throws, unhandled!
+    const users = await userService.getAll(); // Forward rejection according to the installed Express major
     res.json(users);
 });
 
@@ -222,7 +225,7 @@ async function repositoryMethod() {
     try {
         return await PrismaService.main.user.findMany();
     } catch (error) {
-        Sentry.captureException(error, { tags: { layer: 'repository' } });
+        // Preserve error; outer boundary owns telemetry.
         throw error; // Propagate to service
     }
 }
@@ -231,7 +234,7 @@ async function serviceMethod() {
     try {
         return await repositoryMethod();
     } catch (error) {
-        Sentry.captureException(error, { tags: { layer: 'service' } });
+        // Preserve error; avoid duplicate telemetry.
         throw error; // Propagate to controller
     }
 }
@@ -279,7 +282,9 @@ async function processRequest(req, res) {
 }
 ```
 
-### Unhandled Rejections
+### Last-Resort Failure Reporting
+
+These handlers are not recovery. Stop accepting requests, close resources, await a bounded telemetry flush, then exit nonzero under a supervisor. A handler that only sets exitCode may keep running while handles remain open; implement shutdown for the target application.
 
 ```typescript
 // ✅ Global handler for unhandled rejections
@@ -287,7 +292,8 @@ process.on('unhandledRejection', (reason, promise) => {
     Sentry.captureException(reason, {
         tags: { type: 'unhandled_rejection' }
     });
-    console.error('Unhandled Rejection:', reason);
+    // Stop accepting work and exit through a bounded shutdown; continuing is unsafe.
+    process.exitCode = 1;
 });
 
 process.on('uncaughtException', (error) => {

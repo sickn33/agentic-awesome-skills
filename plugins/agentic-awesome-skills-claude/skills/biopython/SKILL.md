@@ -16,7 +16,7 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 
 ## Overview
 
-Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks. The current version is **Biopython 1.85** (released January 2025), which supports Python 3 and requires NumPy.
+Biopython is a comprehensive set of freely available Python tools for biological computation. It provides functionality for sequence manipulation, file I/O, database access, structural bioinformatics, phylogenetics, and many other bioinformatics tasks. Examples span several Biopython releases. Record and pin the version actually used; do not treat the old 1.85 snapshot as the current release. Verify the matching Python/NumPy requirements and API documentation before running analysis.
 
 ## When to Use This Skill
 
@@ -51,7 +51,7 @@ Biopython is organized into modular sub-packages, each addressing specific bioin
 
 Install Biopython using pip (requires Python 3 and NumPy):
 
-```python
+```bash
 uv pip install biopython
 ```
 
@@ -387,14 +387,14 @@ Phylo.draw_ascii(tree)
 5. **Cache downloaded data** - Don't repeatedly download the same sequences
 6. **Respect NCBI rate limits** - Use API keys and proper delays
 7. **Test with small datasets** before processing large files
-8. **Keep Biopython updated** to get latest features and bug fixes
+8. **Pin and record Biopython and external-tool versions**; test migrations before upgrading a reproducible analysis
 9. **Use appropriate genetic code tables** for translation
 10. **Document analysis parameters** for reproducibility
 
 ## Troubleshooting Common Issues
 
 ### Issue: "No handlers could be found for logger 'Bio.Entrez'"
-**Solution:** This is just a warning. Set Entrez.email to suppress it.
+**Solution:** Configure Python logging for a missing-handler warning. Set Entrez.email separately for NCBI identification; it does not fix logging-handler configuration.
 
 ### Issue: "HTTP Error 400" from NCBI
 **Solution:** Check that IDs/accessions are valid and properly formatted.
@@ -409,7 +409,7 @@ Phylo.draw_ascii(tree)
 **Solution:** Use local BLAST for large-scale searches, or cache results.
 
 ### Issue: PDB parser warnings
-**Solution:** Use `PDBParser(QUIET=True)` to suppress warnings, or investigate structure quality.
+**Solution:** Investigate parser warnings and structure quality before optionally suppressing understood messages. QUIET does not repair malformed or missing structural data.
 
 ## Additional Resources
 
@@ -450,3 +450,7 @@ The modular reference documentation ensures detailed, searchable information for
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Data and interpretation boundaries
+
+Use local synthetic or authorized public data first. Remote BLAST, Entrez search terms/IDs, structure downloads and web services transmit data; obtain authorization before sending private, patient, proprietary or access-controlled material. Restrict output paths and preserve originals. Sequence matches, motifs, structural distances and inferred trees are research evidence, not clinical diagnoses or proof of orthology, causation or biosafety. Record dataset/accession versions, parameters, uncertainty and licensing.

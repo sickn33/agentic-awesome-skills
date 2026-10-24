@@ -4,7 +4,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 # React Native Architecture
 
-Production-ready patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.
+Integration patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.
 
 ## When to Use This Skill
 
@@ -14,6 +14,30 @@ Production-ready patterns for React Native development with Expo, including navi
 - Building offline-first mobile applications
 - Optimizing React Native performance
 - Setting up CI/CD for mobile releases
+
+## Integration and data boundaries
+
+These independent fragments omit app-specific API/domain types, styling and some
+imports. The blank Expo template does not automatically configure Router: follow
+the selected SDK's router entry/configuration and install all actually imported
+packages. Wrap route content in `AuthProvider` below the root navigator; navigation
+redirection is a UI gate, never server authorization. Revoke sessions and cancel
+queries/loads on logout, remove persisted user caches and prevent stale responses
+restoring a previous user. AsyncStorage is unencrypted; persist only allowlisted
+public queries as below, never tokens or personal data. Server secrets cannot be
+hidden inside mobile environment variables or a distributed bundle.
+
+Offline reads do not provide durable exactly-once offline mutations. Add a reviewed
+outbox, idempotency and conflict policy if writes must resume after restart. The
+optimistic example assumes serialized mutations; overlapping full-list rollbacks
+can erase newer updates. Biometrics only unlock local UI; server authorization
+must still validate each action. Ask notification permission in context and handle
+missing EAS project ID/unsupported devices and provider errors.
+
+Build, store submission and production OTA commands create external artifacts or
+publish changes: verify account/project/runtime compatibility, credential scope,
+rollback and explicit publication authorization first. Play service-account JSON
+is a private credential, distinct from Firebase `google-services.json`.
 
 ## Core Concepts
 
@@ -51,7 +75,10 @@ src/
 # Create new Expo project
 npx create-expo-app@latest my-app -t expo-template-blank-typescript
 
-# Install essential dependencies
+# Enter the generated project before installing
+cd my-app
+
+# Install dependencies compatible with its Expo SDK
 npx expo install expo-router expo-status-bar react-native-safe-area-context
 npx expo install @react-native-async-storage/async-storage
 npx expo install expo-secure-store expo-haptics
@@ -267,7 +294,7 @@ const queryClient = new QueryClient({
       networkMode: 'offlineFirst',
     },
     mutations: {
-      networkMode: 'offlineFirst',
+      networkMode: 'online', // No implicit offline write queue.
     },
   },
 })
@@ -281,7 +308,11 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister: asyncStoragePersister }}
+      persistOptions={{
+        persister: asyncStoragePersister,
+        dehydrateOptions: { shouldDehydrateQuery: (query) =>
+          query.state.status === 'success' && query.queryKey[0] === 'public-products' },
+      }}
     >
       {children}
     </PersistQueryClientProvider>
@@ -293,7 +324,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export function useProducts() {
   return useQuery({
-    queryKey: ['products'],
+    queryKey: ['public-products'],
     queryFn: api.getProducts,
     // Use stale data while revalidating
     placeholderData: (previousData) => previousData,
@@ -307,21 +338,21 @@ export function useCreateProduct() {
     mutationFn: api.createProduct,
     // Optimistic update
     onMutate: async (newProduct) => {
-      await queryClient.cancelQueries({ queryKey: ['products'] })
-      const previous = queryClient.getQueryData(['products'])
+      await queryClient.cancelQueries({ queryKey: ['public-products'] })
+      const previous = queryClient.getQueryData(['public-products'])
 
-      queryClient.setQueryData(['products'], (old: Product[]) => [
-        ...old,
+      queryClient.setQueryData(['public-products'], (old: Product[]) => [
+        ...(old ?? []),
         { ...newProduct, id: 'temp-' + Date.now() },
       ])
 
       return { previous }
     },
     onError: (err, newProduct, context) => {
-      queryClient.setQueryData(['products'], context?.previous)
+      queryClient.setQueryData(['public-products'], context?.previous)
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['public-products'] })
     },
   })
 }
@@ -590,14 +621,7 @@ export function ProductList({ products, onProductPress }: ProductListProps) {
       data={products}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      estimatedItemSize={100}
-      // Performance optimizations
-      removeClippedSubviews={true}
-      maxToRenderPerBatch={10}
-      windowSize={5}
-      // Pull to refresh
-      onRefresh={onRefresh}
-      refreshing={isRefreshing}
+      // Configure sizing/recycling for the selected FlashList major version.
     />
   )
 }
@@ -606,7 +630,6 @@ export function ProductList({ products, onProductPress }: ProductListProps) {
 ## EAS Build & Submit
 
 ```json
-// eas.json
 {
   "cli": { "version": ">= 5.0.0" },
   "build": {
@@ -626,7 +649,7 @@ export function ProductList({ products, onProductPress }: ProductListProps) {
   "submit": {
     "production": {
       "ios": { "appleId": "your@email.com", "ascAppId": "123456789" },
-      "android": { "serviceAccountKeyPath": "./google-services.json" }
+      "android": { "serviceAccountKeyPath": "./private-untracked-play-service-account.json" }
     }
   }
 }
@@ -650,13 +673,13 @@ eas update --branch production --message "Bug fixes"
 
 ### Do's
 - **Use Expo** - Faster development, OTA updates, managed native code
-- **FlashList over FlatList** - Better performance for long lists
-- **Memoize components** - Prevent unnecessary re-renders
+- **Choose lists by measurement** - Compare supported FlashList/FlatList versions on target devices
+- **Memoize measured hot components** - Stable props and profiling determine benefit
 - **Use Reanimated** - 60fps animations on native thread
 - **Test on real devices** - Simulators miss real-world issues
 
 ### Don'ts
-- **Don't inline styles** - Use StyleSheet.create for performance
+- **Choose readable styles** - Measure hot allocation paths before claiming speedups
 - **Don't fetch in render** - Use useEffect or React Query
 - **Don't ignore platform differences** - Test on both iOS and Android
 - **Don't store secrets in code** - Use environment variables

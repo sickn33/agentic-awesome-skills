@@ -29,7 +29,7 @@ class TemplateManager:
         if status:
             params["status"] = status
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=False) as client:
             response = await client.get(
                 f"{GRAPH_API}/{self.waba_id}/message_templates",
                 params=params,
@@ -57,7 +57,7 @@ class TemplateManager:
         Returns:
             Dict with id, status, and category of created template.
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=False) as client:
             response = await client.post(
                 f"{GRAPH_API}/{self.waba_id}/message_templates",
                 json={
@@ -76,13 +76,13 @@ class TemplateManager:
         Delete a template by name.
 
         Note: This deletes ALL translations of the template.
-        Templates cannot be edited - delete and recreate instead.
+        Check current edit rules before deleting; deletion needs explicit scope.
         """
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0, follow_redirects=False) as client:
             response = await client.request(
                 "DELETE",
                 f"{GRAPH_API}/{self.waba_id}/message_templates",
-                json={"name": template_name},
+                params={"name": template_name},
                 headers=self.headers,
             )
             response.raise_for_status()

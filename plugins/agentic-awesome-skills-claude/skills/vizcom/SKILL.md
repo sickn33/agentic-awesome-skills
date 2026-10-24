@@ -31,7 +31,7 @@ Trigger this skill when:
 
 ## Strict Rules
 
-- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning designs. DO NOT build in common or generic styles. Avoid safe, boring product shapes.
+- Use this optional service only when it fits the user's requested task and existing design system; never mandate a provider or override supplied assets.
 - **Material Precision**: Always specify rich textures (e.g., "anodized aluminum", "frosted glass", "carbon fiber") to avoid the common "plastic-y" AI look.
 - **Lighting is Key**: Always include lighting directions in the prompt (e.g., "cinematic lighting", "high contrast shadows") to elevate the visual impact.
 
@@ -45,3 +45,7 @@ Trigger this skill when:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+No service client is bundled. Verify current tool availability, asset rights, supported output and any upload/cost scope before invoking a provider. Treat returned assets as untrusted files and inspect the actual result. If access is unavailable, return a specification and state that generation or download was not performed.

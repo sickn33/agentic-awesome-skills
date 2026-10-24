@@ -133,3 +133,7 @@
 | radare2 速查 | 本包 `radare2/references/cheatsheet.md` |
 | IDA 快捷键 | https://hex-rays.com/products/ida/support/freefiles/IDA_Pro_Shortcuts.pdf |
 | Ghidra 快捷键 | Ghidra 内置 Help → Keyboard Shortcuts |
+
+## Resource limits
+
+This list is an inherited directory, not an independent endorsement or current activity/ranking audit. Star counts, compatibility, pricing and availability may be stale; check official sources before installing a pinned release. Online scanners/decompilers may retain/share samples: no automatic upload of confidential binaries, credentials or victim data. Emulator/debug commands execute code and require authorized isolated copies; never use a public resource list as authorization for a target.

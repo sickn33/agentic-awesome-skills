@@ -38,10 +38,10 @@ This AAS-ready copy preserves the original CrossFrame skill body below. Chinese 
 ## Limitations
 
 - The skill body is intentionally Chinese-canonical; English metadata is for discovery and does not replace the original Chinese terms.
-- Use only after explicit CrossFrame invocation or `crossframe-suite` routing; do not apply it as a generic default reasoning layer.
+- Use only after explicit `crossframe-critical` invocation; do not add it to default `crossframe-suite` routing.
 - It structures analysis, drafting, and review, but does not replace source verification, domain expertise, or legal, medical, or financial judgment.
 
-> **本 skill 不独立触发。** 所有 CrossFrame 任务统一从 `crossframe-suite` 入口调度。用户无需直接调用本 skill；suite 根据路由规则在需要时自动加载。
+> **本测试 skill 仅在用户显式点名 `crossframe-critical` 时触发。** 不纳入 `crossframe-suite` 默认路由；不得用通用 CrossFrame 请求代替显式调用。
 
 This is a parallel local test skill. It does not replace `crossframe`, `crossframe-essay`, `crossframe-public`, or `crossframe-suite`.
 
@@ -94,3 +94,13 @@ Do not collapse the result into a short answer, checklist, memo, or diagnosis su
 - Use at least two concrete examples in the essay body unless the user provides a single narrowly bounded case and asks not to expand.
 - Include at least one countercondition, evidence gap, or withdrawal condition.
 - Do not use Marxist terms as prestige vocabulary. If a term cannot be translated into who pays, who benefits, what is hidden, and how the condition repeats, remove it.
+
+## Example
+
+For “使用 crossframe-critical 批判复盘越多越进步”, compare two hypothetical
+organizations: one closes verified action items with owners/resources, another only
+adds meetings. Label them hypothetical, distinguish meeting count from repair evidence,
+and state that verified closure would weaken the critique. Do not invent company
+names or completion data. The bundled smoke prompts are proposed evaluations, not
+executed passing results. If sibling references are unavailable, identify the missing
+path and provide a bounded draft rather than pretending the routing checks ran.

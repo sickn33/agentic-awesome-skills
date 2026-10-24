@@ -10,7 +10,7 @@ Python 3.11+. There is no `pxt serve`, no `pxt deploy`, no `pxt app`, no `pxt db
 
 | Surface | Purpose | Requires |
 |---------|---------|----------|
-| **Catalog** | Inspect, query, mutate tables/views/dirs | `pip install pixeltable` |
+| **Catalog** | Inspect, query, mutate tables/views/dirs | An already installed, reviewed and locked Pixeltable runtime |
 | **Schema / service** | Apply a `TableModel` file; run `FastAPIRouter` services | `a separately installed and reviewed Pixeltable runtime with the serve extra` for `pxt service` |
 
 Verify: `pxt --help` and `pxt health`.
@@ -49,7 +49,7 @@ The daemon reads `config.toml` and the environment once, at startup, and local s
 | **Interactive** | `shell`, `cd`, `pwd` |
 | **Lifecycle** | `daemon`, `dashboard`, `localproxy`, `health` |
 
-`cd` / `pwd` set and print a working directory prepended to relative paths. It is scoped to the invoking shell's process, so it does **not** survive between separate tool calls: always pass full catalog paths instead. `localproxy` manages the daemons behind `pxt://local:<db>` URIs and is not part of the normal app loop.
+`cd` / `pwd` set and print a working directory prepended to relative paths. It is scoped to the invoking shell's process, so separate terminals and agent subprocesses may have independent state: always pass full catalog paths instead. `localproxy` manages the daemons behind `pxt://local:<db>` URIs and is not part of the normal app loop.
 
 ## Universal flags
 
@@ -76,7 +76,7 @@ The daemon reads `config.toml` and the environment once, at startup, and local s
 | Retry failed cells | `pxt recompute` | `pxt recompute my_app/docs embedding --errors-only -f` (which providers retry: [providers.md](providers.md#retries-and-proxies)) |
 | Debug a hosted service | `pxt service logs` | `pxt service logs pxt://org:db/ingest --since 10m --tail 50`. A local service is not readable this way (the command exits 1). Read it with `tail -50 "${PIXELTABLE_HOME:-$HOME/.pixeltable}/logs/services/<target>/<name>.log"` |
 | Check runtime/config | `pxt status`, `pxt config` | `pxt config --section openai` |
-| Sign in to Cloud | `pxt login`, `pxt whoami` | `pxt whoami` prints the credential commands will send |
+| Sign in to Cloud | `pxt login`, `pxt whoami` | `pxt whoami` identifies the credential used (do not print the credential secret) |
 | Many commands in sequence | `pxt shell` | amortizes startup; errors don't kill session |
 | Visual inspection | `pxt dashboard` | read-only UI at daemon port |
 | Hosted database | `pxt db update` | `pxt db update pxt://myorg:mydb -f`, then schema, then service |

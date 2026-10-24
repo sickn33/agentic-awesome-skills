@@ -474,7 +474,7 @@ function collectText(event, push) {
 function prepareRunDir(opts, brief) {
   const startedAt = new Date().toISOString();
   const outDir = opts.outDir || join(tmpdir(), "delegate-relay", `${basename(opts.cd) || "repo"}-${timestamp()}`);
-  mkdirSync(outDir, { recursive: true });
+  mkdirSync(outDir, { recursive: true, mode: 0o700 });
   const run = {
     startedAt,
     briefPath: join(outDir, "brief.txt"),
@@ -483,9 +483,10 @@ function prepareRunDir(opts, brief) {
     stderrPath: join(outDir, "stderr.txt"),
     resultPath: join(outDir, "result.json"),
   };
-  // A reused --out-dir must not leak a previous run's artifacts into this one.
-  rmSync(run.finalPath, { force: true });
-  rmSync(run.resultPath, { force: true });
+  // Never destroy previous evidence or share output paths with a live run.
+  if ([run.briefPath, run.finalPath, run.eventsPath, run.stderrPath, run.resultPath].some(existsSync)) {
+    fail("--out-dir already contains run artifacts; choose a fresh directory");
+  }
   writeFileSync(run.briefPath, brief, "utf8");
   writeFileSync(run.eventsPath, "", "utf8");
   writeFileSync(run.stderrPath, "", "utf8");

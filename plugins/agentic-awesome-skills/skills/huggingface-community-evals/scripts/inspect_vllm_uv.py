@@ -85,14 +85,13 @@ def run_inspect_vllm(
     # vLLM supports temperature=0 unlike HF inference providers
     cmd.extend(["--temperature", str(temperature)])
 
-    # Older inspect-ai CLI versions do not support --model-args; rely on defaults
-    # and let vLLM choose sensible settings for small models.
+    # Backend options are Inspect model arguments, not top-level CLI flags.
     if tensor_parallel_size != 1:
-        cmd.extend(["--tensor-parallel-size", str(tensor_parallel_size)])
+        cmd.extend(["-M", f"tensor_parallel_size={tensor_parallel_size}"])
     if gpu_memory_utilization != 0.8:
-        cmd.extend(["--gpu-memory-utilization", str(gpu_memory_utilization)])
+        cmd.extend(["-M", f"gpu_memory_utilization={gpu_memory_utilization}"])
     if dtype != "auto":
-        cmd.extend(["--dtype", dtype])
+        cmd.extend(["-M", f"dtype={dtype}"])
     if trust_remote_code:
         raise ValueError("Remote model code is disabled in this credential-bearing wrapper; use a separately reviewed, isolated, pinned workflow")
 
@@ -155,9 +154,9 @@ def run_inspect_hf(
     ]
 
     if device != "auto":
-        cmd.extend(["--device", device])
+        cmd.extend(["-M", f"device={device}"])
     if dtype != "auto":
-        cmd.extend(["--dtype", dtype])
+        cmd.extend(["-M", f"dtype={dtype}"])
     if trust_remote_code:
         raise ValueError("Remote model code is disabled in this credential-bearing wrapper; use a separately reviewed, isolated, pinned workflow")
 

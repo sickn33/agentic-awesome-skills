@@ -1,5 +1,8 @@
 # OpenAI Agent Patterns Reference
 
+> SDK compatibility: Python blocks below are conceptual pseudocode, including `GuardrailResult`, `blocking`, handoff metadata and exception fields; they are not a runnable SDK integration. For the current OpenAI Agents SDK use `GuardrailFunctionOutput(output_info=..., tripwire_triggered=...)`, the `(ctx, agent, input)` input-guardrail signature and `@input_guardrail(run_in_parallel=False)` when input checks must complete first. Handoffs use `handoff(agent=..., on_handoff=...)`; callback return values do not replace input. Output guardrails run after final output and cannot undo external writes. Validate authorization before side effects. See [guardrails](https://openai.github.io/openai-agents-python/guardrails/) and [handoffs](https://openai.github.io/openai-agents-python/handoffs/).
+
+
 Research-backed patterns from OpenAI's Agents SDK, Deep Research, and autonomous agent frameworks.
 
 ---

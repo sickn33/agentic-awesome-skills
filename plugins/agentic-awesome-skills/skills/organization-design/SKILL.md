@@ -106,7 +106,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -199,6 +199,8 @@ CREATE INDEX idx_organization_design_status ON organization_design (status);
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Declare the budget currency/fiscal year and whether headcount means people or FTE before comparing rows. Parent Department is a display label here, not an enforced relationship: for a regenerable chart use stable department IDs, a self-reference and cycle validation consistently across outputs. Proposed departments may lack an established date; adapt that constraint rather than inventing a date.
 
 ## Field Reference
 
@@ -309,9 +311,9 @@ We are 14 people across sales and delivery and want to plan hiring.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
+- [Notification hub](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

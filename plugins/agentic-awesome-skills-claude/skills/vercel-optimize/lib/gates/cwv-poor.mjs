@@ -1,4 +1,4 @@
-// Thresholds are Google's "Poor" band (https://web.dev/articles/vitals): LCP p75 > 2500ms, INP > 200ms, CLS > 0.1.
+// Thresholds are the upper bounds of Google's "Good" band (https://web.dev/articles/vitals): LCP p75 > 2500ms, INP > 200ms, CLS > 0.1.
 // When Speed Insights isn't wired up the metrics come back empty and the gate is a no-op.
 import { withRouteShapeWarnings } from '../route-normalize.mjs';
 
@@ -9,7 +9,7 @@ export const metadata = {
   scope: 'route',
   sourceCitation: 'https://web.dev/articles/vitals',
   description:
-    'Routes where Core Web Vitals fall into Google\'s "Poor" band on real-user traffic. LCP > 2500ms, INP > 200ms, or CLS > 0.1 each hurt SEO and conversion. Surfaces one candidate per (route, metric) pair to keep recommendations focused.',
+    'Routes where Core Web Vitals fall into the upper bounds of Google\'s "Good" band on real-user traffic. LCP > 2500ms, INP > 200ms, or CLS > 0.1 each hurt SEO and conversion. Surfaces one candidate per (route, metric) pair to keep recommendations focused.',
 };
 
 // Below this floor p75 is too noisy to act on.
@@ -47,7 +47,7 @@ export function gate(signals) {
       priority: issues.reduce((s, i) => s + ratioOverThreshold(i), 0) * 10,
       confidence: 0.82,
       o11ySignal: summary,
-      reason: 'real-user Core Web Vitals in poor band',
+      reason: 'real-user Core Web Vitals exceed good thresholds',
       question: `On ${route}, ${summary}. Which client-side work (bundle weight, blocking scripts, layout shifts, hydration) is responsible, and which change would land first?`,
       evidence: {
         metric: 'cwv',

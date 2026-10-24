@@ -64,6 +64,10 @@ Recommend updates before new skills when an existing project skill is already cl
    Use `$CODEX_HOME/skills` and `$CODEX_HOME/skills/public` to avoid proposing project-local skills for workflows already solved well by a generic shared skill.
    Do not reject a project-local skill just because a global skill exists; project-specific guardrails can still justify a local specialization.
 
+## Memory access boundaries
+
+The memory paths above are examples from one runtime layout, not guaranteed host locations. Prefer injected memory/current host guidance and inspect only project-relevant accessible records. Do not bulk-copy raw sessions or secrets into a skill/report; summarize supported workflows with narrow source pointers. Current source and user constraints supersede historical memory.
+
 ## Session Analysis
 
 ### 1. Search memory index first

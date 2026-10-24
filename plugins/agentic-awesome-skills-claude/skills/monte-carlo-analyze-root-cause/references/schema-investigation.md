@@ -11,7 +11,7 @@ Compare against the alert details — what columns were added/removed/modified?
 
 ### 2. Check for query changes
 
-Call `get_query_changes` — schema changes almost always come from ETL modifications:
+Call `get_query_changes` — schema changes may come from ETL, DDL, source evolution, or connector inference:
 - New SELECT columns → column additions
 - Removed SELECT columns → column removals
 - CAST or type conversion changes → type modifications
@@ -46,3 +46,5 @@ If no GitHub MCP, `get_query_changes` will show the SQL modifications.
 - **Source schema change** — upstream system changed its schema, propagating downstream
 - **Type promotion** — implicit type coercion changed (e.g., INT → FLOAT)
 - **Column rename** — a column was renamed, breaking downstream references
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

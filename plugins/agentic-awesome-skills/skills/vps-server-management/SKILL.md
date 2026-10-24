@@ -31,7 +31,7 @@ Source of truth: `library/infrastructure.md` (read it for the latest — IPs/exp
 | n8n-server | <IP> | Ubuntu 24.04 (n8n) | All n8n workflow automations (primary) | <expiry> |
 | hermes-server | <IP> | Ubuntu 24.04 | Hermes Agent — Discord gateway (Vilnius, LT) | <expiry> |
 
-SSH as `root@<IP>`.
+The server table is an upstream example, not the current user’s inventory; `library/infrastructure.md` and `library/hermes/` are not bundled here. Resolve the authorized host from the actual workspace inventory, verify its SSH host key, and use a named least-privileged account; elevate only for the operation that requires it.
 
 ## Access levels (never share higher than needed)
 
@@ -41,7 +41,7 @@ SSH as `root@<IP>`.
 
 ## Managing a VPS via an agent
 
-For multi-step or exploratory work, **SSH into the box first and launch the agent ON the VPS** (e.g. `codex --yolo`), then talk to that local-on-server agent — it has full filesystem/process context and avoids fragile SSH round-trips. For short command sequences (update, config change, restart), driving an existing SSH session directly (e.g. via a cmux pane) is fine.
+Start with read-only service status and scoped redacted logs. For multi-step work, use an existing authorized remote session or a scoped on-host agent with normal approval controls. Before an update or restart, identify the affected service, backup/rollback path and expected interruption; verify service health afterward. Do not disable agent safeguards merely to simplify SSH operations.
 
 When checking on a remote/on-box agent, send the user one concise status line each time: what it is doing and whether it is on track.
 
@@ -63,7 +63,7 @@ journalctl --user -u hermes-gateway --since '5 min ago' --no-pager   # gateway l
 ```
 
 - **Default model** lives in `~/.hermes/config.yaml` under `model.provider` + `model.default` — NOT in `.env`. Change via `hermes model` (interactive) or edit the yaml directly, then `hermes gateway restart` to propagate to gateways.
-- npm `EBADENGINE` warnings during update (deps want Node >=24, box runs v22) are non-blocking — do not "fix" them.
+- Treat `EBADENGINE` as evidence to check supported runtime ranges. Do not assume an unsupported runtime is safe because installation completed; plan a compatible dependency/runtime change and verify the gateway before declaring the update healthy.
 - Deeper docs (Discord/Slack/WhatsApp setup, file structure, vision config): `library/hermes/`.
 
 ## Limitations

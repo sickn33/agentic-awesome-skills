@@ -68,6 +68,8 @@ startServer(agent);
 
 ## Streaming responses with Azure OpenAI
 
+This optional example additionally requires reviewed `ai` and `@ai-sdk/azure` dependencies; inspect their installed streaming event schemas. Verify tenant/audience/token validation in the actual hosting configuration before exposing an agent endpoint. Incoming activities are untrusted and must not authorize arbitrary tool use, secret disclosure or messages to unrelated recipients.
+
 ```typescript
 import { azure } from "@ai-sdk/azure";
 import { AgentApplication, TurnContext, TurnState } from "@microsoft/agents-hosting";

@@ -25,6 +25,14 @@ const secretFile = readFlag('--job-secret-file', '');
 const runson = readFlag('--runson', '');
 const concurrency = readFlag('--concurrency', '');
 
+if (action === 'download') {
+  console.error('Download-only requires a verified existing-job API/CLI flow; download flags on a run command may start another paid job.');
+  process.exit(1);
+}
+if (concurrency && (!/^\d+$/.test(concurrency) || Number(concurrency) < 1)) {
+  console.error('Concurrency must be a positive integer.');
+  process.exit(1);
+}
 const command = [quote(cli), '--user "$LT_USERNAME"', '--key "$LT_ACCESS_KEY"'];
 
 if (action === 'analyze') {

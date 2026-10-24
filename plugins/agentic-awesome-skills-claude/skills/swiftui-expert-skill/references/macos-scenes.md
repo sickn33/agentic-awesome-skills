@@ -268,7 +268,11 @@ struct TextFile: FileDocument {
     var text: String = ""
     init() {}
     init(configuration: ReadConfiguration) throws {
-        text = String(data: configuration.file.regularFileContents ?? Data(), encoding: .utf8) ?? ""
+        guard let data = configuration.file.regularFileContents,
+              let decoded = String(data: data, encoding: .utf8) else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        text = decoded
     }
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         FileWrapper(regularFileWithContents: Data(text.utf8))

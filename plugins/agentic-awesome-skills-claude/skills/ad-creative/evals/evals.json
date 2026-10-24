@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Generate ad creative for our Meta (Facebook/Instagram) campaign. We sell an AI writing assistant for content marketers. Main value prop: write blog posts 5x faster. Target audience: content marketing managers at B2B SaaS companies. Budget: $5k/month.",
-      "expected_output": "Should check for product-marketing-context.md first. Should generate creative following the angle-based approach: identify 3-5 angles (speed, quality, ROI, pain of blank page, competitive edge). For each angle, should generate primary text (≤125 chars), headline (≤40 chars), and description (≤30 chars) respecting Meta character limits. Should provide multiple variations per angle. Should suggest image/visual direction for each. Should organize output with angle name, hook, body, CTA for each variation. Should recommend which angles to test first.",
+      "expected_output": "Should check for product-marketing-context.md first. Should generate creative following the angle-based approach: identify 3-5 angles (speed, quality, ROI, pain of blank page, competitive edge). For each angle, should generate primary text (\u2264125 chars), headline (\u226440 chars), and description (\u226430 chars) using the stated conservative Meta drafting targets. Should provide multiple variations per angle. Should suggest image/visual direction for each. Should organize output with angle name, hook, body, CTA for each variation. Should recommend which angles to test first.",
       "assertions": [
         "Checks for product-marketing-context.md",
         "Uses angle-based generation approach",
@@ -20,11 +20,11 @@
     {
       "id": 2,
       "prompt": "I need Google Ads copy for our CRM product. We're targeting the keyword 'best CRM for small business'. Need responsive search ads.",
-      "expected_output": "Should generate Google RSA creative respecting character limits: headlines (≤30 chars each, need 10-15 variations) and descriptions (≤90 chars each, need 4+ variations). Should note that pinning should be used sparingly as it reduces optimization. Should include the target keyword in headlines. Should provide multiple angle-based variations. Should suggest ad extensions (sitelinks, callouts, structured snippets). Should follow Google Ads best practices for RSA.",
+      "expected_output": "Should generate Google RSA creative respecting character limits: headlines (\u226430 chars each, need 10-15 variations) and descriptions (\u226490 chars each, up to 4 descriptions per uploaded RSA; extra candidates labeled alternatives). Should note that pinning should be used sparingly as it reduces optimization. Should include the target keyword in headlines. Should provide multiple angle-based variations. Should suggest ad extensions (sitelinks, callouts, structured snippets). Should follow Google Ads best practices for RSA.",
       "assertions": [
         "Respects Google RSA character limits (30 char headlines, 90 char descriptions)",
         "Generates 10-15 headline variations",
-        "Generates 4+ description variations",
+        "Separates extra description candidates from the maximum 4 uploaded per RSA",
         "Includes target keyword in headlines",
         "Notes pinning should be used sparingly per skill guidance",
         "Suggests ad extensions",
@@ -35,12 +35,12 @@
     {
       "id": 3,
       "prompt": "Here's our ad performance data: Ad A (pain point angle) - CTR 2.1%, CPC $3.20, Conv rate 4.5%. Ad B (social proof angle) - CTR 1.4%, CPC $4.10, Conv rate 6.2%. Ad C (feature angle) - CTR 0.8%, CPC $5.50, Conv rate 2.1%. Help me iterate on these.",
-      "expected_output": "Should activate the iteration-from-performance mode (not generate-from-scratch). Should analyze the data: Ad A has best CTR, Ad B has best conversion rate (highest efficiency despite lower CTR), Ad C is underperforming on all metrics. Should recommend doubling down on the pain point angle (high CTR) and social proof angle (high conversion), while pausing or reworking the feature angle. Should generate new variations that combine winning elements (pain point hook + social proof). Should suggest specific iterations on Ad A and Ad B.",
+      "expected_output": "Should activate the iteration-from-performance mode (not generate-from-scratch). Should analyze the data: Ad A has best CTR, Ad B has best conversion rate (a lower estimated CPA: $4.10 / 0.062 \u2248 $66.13 versus A $3.20 / 0.045 \u2248 $71.11, conditional on comparable conversion definitions), Ad C is underperforming on all metrics. Should recommend doubling down on the pain point angle (high CTR) and social proof angle (high conversion), while proposing reworking the feature angle; no live pausing without authorization or sufficient counts. Should generate new variations that combine winning elements (pain point hook + social proof). Should suggest specific iterations on Ad A and Ad B.",
       "assertions": [
         "Activates iteration mode based on performance data",
         "Analyzes CTR, CPC, and conversion rate for each ad",
         "Identifies winning angles from the data",
-        "Recommends pausing or reworking underperforming creative",
+        "Proposes reworking weak creative; acknowledges missing counts and no authority to pause",
         "Generates new variations combining winning elements",
         "Provides specific iterations on top performers"
       ],
@@ -49,10 +49,10 @@
     {
       "id": 4,
       "prompt": "we need linkedin ads for our enterprise security product. audience is CISOs and IT directors.",
-      "expected_output": "Should trigger on casual phrasing. Should generate LinkedIn ad creative respecting character limits: introductory text (≤150 chars), headline (≤70 chars), description (≤100 chars). Should adapt tone and messaging for enterprise security audience (CISOs, IT directors) — more formal, compliance-focused, risk-reduction language. Should provide multiple angles relevant to security buyers (risk reduction, compliance, incident response time, cost of breaches). Should suggest ad format recommendations for LinkedIn (sponsored content, message ads, etc.).",
+      "expected_output": "Should trigger on casual phrasing. Should generate LinkedIn ad creative using LinkedIn single-image drafting recommendations: intro \u2264150 chars, headline \u226470 chars, LAN description \u226470 chars. Should adapt tone and messaging for enterprise security audience (CISOs, IT directors) \u2014 more formal, compliance-focused, risk-reduction language. Should provide multiple angles relevant to security buyers (risk reduction, compliance, incident response time, cost of breaches). Should suggest ad format recommendations for LinkedIn (sponsored content, message ads, etc.).",
       "assertions": [
         "Triggers on casual phrasing",
-        "Respects LinkedIn character limits (150/70/100)",
+        "Uses LinkedIn single-image recommendations (150/70/70) and verifies placement",
         "Adapts tone for enterprise security audience",
         "Uses risk-reduction and compliance language",
         "Provides multiple angles relevant to security buyers",

@@ -22,6 +22,10 @@ scores your answers, and gets sharper the more you use it. Persist state to `coa
 
 This AAS entry contains the guide, not the 23-command implementation. `/coach` is an external package/host convention; discover actual availability before claiming it ran. Basic coaching can proceed directly with supplied role, CV and examples. Verify current company process/salary sources and dates; never invent achievements, hiring steps or ATS scores. Avoid unnecessary transcript identifiers and ask before third-party uploads.
 
+## Direct coaching workflow
+
+Without the optional command package, start with the supplied job description, CV and target interview. Extract five role requirements and map each to a verified example or a stated gap. Ask one behavioral question at a time; after the answer, assess relevance, concrete evidence, personal contribution, structure and reflection using a stated rubric. Draft a STAR revision using only supplied facts, then repeat the weakest portion as a drill. Return a short preparation plan and unresolved research questions. Coaching scores reflect that rubric, not an employer’s actual assessment or an ATS prediction.
+
 ## Install
 
 ```bash
@@ -46,7 +50,7 @@ Then type `/coach` → `kickoff`.
 - **Transcript analysis** — paste from Otter/Zoom/Grain, auto-detected format
 - **Storybank** — STAR stories with earned secrets, retrieval drills, portfolio optimization
 - **Comp + negotiation** — pre-offer scripting, offer analysis, exact negotiation scripts
-- **23 total commands** across the full search lifecycle
+- **Upstream advertises 23 commands** across the full search lifecycle; not bundled here
 
 ## Examples
 

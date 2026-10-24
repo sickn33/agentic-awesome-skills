@@ -45,7 +45,7 @@ body {
 
 .swiss-header {
   grid-column: 1 / 11; /* spans across multiple columns, leaving right side empty */
-  font-size: 6vw;
+  font-size: clamp(2rem, 6vw, 6rem);
   font-weight: 700;
   text-transform: lowercase; /* Optional, but common in brutalist/swiss */
   margin-bottom: 2rem;
@@ -219,7 +219,7 @@ const SwissDesignScreen = () => {
   );
 };
 ```
-- Link the Helvetica Neue font family. The contrast between `HelveticaNeue-CondensedBlack` for headers and `HelveticaNeue-Regular` for body copy defines this style.
+- Use a licensed, registered Helvetica Neue font family or a system sans-serif fallback. The contrast between `HelveticaNeue-CondensedBlack` for headers and `HelveticaNeue-Regular` for body copy defines this style.
 - Use `flexDirection: 'row'` to build the strict column structure.
 
 ### Jetpack Compose
@@ -291,3 +291,5 @@ fun SwissDesignScreen() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+Collapse structural empty columns at narrow widths and large text sizes. The flush-left examples should use logical start/end alignment for localized right-to-left content.

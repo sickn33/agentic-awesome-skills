@@ -20,7 +20,7 @@ and Mac OS.
 - Files and directories can be shared via public links
 - Partial uploads or streaming are not supported, file size must be known before
   upload
-- Maximum file size is limited to 2G for a free account, unlimited for paid accounts
+- File-size and storage limits depend on the current account plan
 - Storage keeps hash for all files and performs transparent deduplication,
   the hash algorithm is a modified SHA1
 - If a particular file is already present in storage, one can quickly submit file
@@ -462,9 +462,8 @@ Properties:
 
 ## Limitations
 
-File size limits depend on your account. A single file size is limited by 2G
-for a free account and unlimited for paid tariffs. Please refer to the Mail.ru
-site for the total uploaded size limits.
+File size and total storage limits depend on your current account plan.
+Confirm them on the Mail.ru site before planning a transfer.
 
 Note that Mailru is case insensitive so you can't have a file called
 "Hello.doc" and one called "hello.doc".

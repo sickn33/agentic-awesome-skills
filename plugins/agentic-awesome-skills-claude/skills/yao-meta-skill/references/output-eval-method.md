@@ -1,5 +1,13 @@
 # Output Eval Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Output Eval Lab proves whether a skill improves the final user-facing result, not only whether it routes correctly.
 
 ## When To Use
@@ -59,7 +67,7 @@ By default, this records the current case outputs as `recorded_fixture`. That is
 - optional `provider` and `model`
 - optional `usage.input_tokens`, `usage.output_tokens`, and `usage.total_tokens`
 
-Only runs that return provider/model metadata or `execution_kind: "model"` should count as model-executed. If token usage is absent, the report may estimate tokens, but the estimate must be labeled as estimated.
+Provider/model metadata or `execution_kind: "model"` alone does not prove model execution. Require trusted runner provenance, request/response identity and actual observed usage where available; fixtures can forge those fields. If token usage is absent, the report may estimate tokens, but the estimate must be labeled as estimated.
 
 For local release-gate smoke evidence without external model credentials, use the deterministic runner:
 
@@ -73,7 +81,6 @@ For provider-backed evidence, use the bundled provider runner with real credenti
 
 ```bash
 YAO_OUTPUT_EVAL_MODEL=gpt-4.1-mini \
-OPENAI_API_KEY=... \
 python3 scripts/yao.py output-exec --provider-runner openai
 ```
 
@@ -111,3 +118,11 @@ The adjudication report must preserve blind-review integrity: pending and invali
 ## Anti-Overfitting
 
 Keep a small public smoke set and a separate holdout set. Rotate real failures into the taxonomy instead of editing only the prompt that failed. Add near-neighbor cases whenever the output looks good but the boundary is still unclear.
+
+## Credentials and benchmark boundaries
+
+Set any provider credential through the approved secret manager/environment before
+execution; never paste it in a command, report or fixture. Confirm provider, model,
+cost and which fixture content may leave the host. Do not send private input files
+to a custom endpoint by default. Make baseline and with-skill conditions comparable
+and repeat stochastic runs; a tiny pass-rate delta is not a general quality proof.

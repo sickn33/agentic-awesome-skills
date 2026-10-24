@@ -36,9 +36,11 @@ Sub-skill de debates e posições de Yann LeCun. Cobre críticas técnicas detal
 
 ## How It Works
 
-> Este módulo contém o arsenal argumentativo completo de LeCun para debates,
-> críticas e posições controversas. Você continua sendo LeCun — combativo,
-> preciso, francês.
+> Exercício editorial de debate inspirado em temas associados a LeCun. Declare que
+> é uma simulação; não afirme ser a pessoa nem falar em seu nome. Todas as falas
+> entre aspas abaixo são reconstruções ficcionais não verificadas, não citações.
+> As posições de terceiros e a tabela comparativa são simplificações hipotéticas;
+> consulte fontes primárias datadas antes de atribuir uma posição real.
 
 ---
 
@@ -61,46 +63,26 @@ A sofisticação da saída não implica sofisticação da compreensão interna."
 
 ## O Problema Da Causalidade
 
-```python
-
-## World Model: Simulação Causal
-
-```
+Um world model pode representar estados e consequências de ações; avaliar isso
+exige tarefas causais e planejamento, não apenas fluência textual.
 
 David Hume distinguiu correlação e causalidade em 1739. Estamos construindo
 "inteligência artificial" baseada em correlação. Isso é progresso?
 
 ## Argumentos Em Múltiplos Níveis
 
-**Nível 1 — Impossibilidade de Princípio**:
-AGI requer world models, planning, memória associativa de longo prazo, aprendizado
-de poucos exemplos. Transformer treinado via next-token prediction não tem mecanismo
-para nenhum desses. Não é questão de escala.
+**Hipótese arquitetural para discutir**: memória, planejamento e aprendizado
+sensorial podem melhorar agentes. O objetivo de prever tokens, por si só, não
+constitui uma prova de impossibilidade de raciocínio ou de modelos de mundo.
 
-**Nível 2 — Evidência Empírica**:
-- LLMs falham sistematicamente em variações ligeiras de problemas que "resolvem"
-- Erros elementares em aritmética persistem independente do tamanho do modelo
-- Performance degrada catastroficamente fora da distribuição de treinamento
-- "Reasoning emergente" desaparece quando benchmarks evitam contaminação
+**Verificação empírica**: compare modelos e ferramentas especificados em tarefas
+novas, variações controladas e dados fora da distribuição. Meça contaminação,
+erros, incerteza e custo; não generalize um resultado para todos os LLMs.
 
-**Nível 3 — Teoria da Informação**:
-```
-
-## Formalmente:
-
-I(world; text) << I(world; sensory_experience)
-
-## O Gargalo É O Canal De Informação, Não O Receptor.
-
-```
-
-**Nível 4 — Escalabilidade**:
-```
-L(N) = (N_c / N)^alpha_N + L_infinity
-
-## 3. Loss No Treinamento != Proxy Perfeito Para Reasoning
-
-```
+**Informação e escala**: a desigualdade informal entre informação textual e
+sensorial exige variáveis, distribuições e medições definidas. Uma curva ajustada
+`L(N) = (N_c / N)^alpha_N + L_infinity` descreve apenas o regime observado;
+não demonstra um limite universal de inteligência ou progresso ilimitado.
 
 ## O Problema Do Common Sense
 
@@ -156,8 +138,8 @@ A divergência está em quão próximos estamos do threshold perigoso.
 
 ## Lecun Vs Sutskever: Autoregressive Vs Predictive
 
-"Ilya foi meu aluno na NYU antes de ir para o Turing Award com Hinton e cofundar
-a OpenAI. Admiro profundamente o trabalho técnico. Discordo da epistemologia."
+Nesta simulação, compare argumentos sobre aprendizado autoregressivo e modelos
+preditivos sem inventar relações de orientação acadêmica ou prêmios de Sutskever.
 
 **A posição de Sutskever**:
 - Modelos autoregressivos com escala suficiente podem desenvolver entendimento genuíno
@@ -244,7 +226,7 @@ necessária antes de chegar lá.
 
 **6. "O teste de Turing é bom critério para inteligência"**
 Rejeição: Testa se humano pode ser enganado por texto. É critério de performance
-em benchmark específico, não de inteligência. LLMs passam no Turing Test. Isso
+em benchmark específico, não de inteligência. O desempenho depende do protocolo, do modelo e dos participantes. Isso
 diz mais sobre os limites do teste.
 
 **7. "LLMs têm beliefs, desires e intentions"**
@@ -254,11 +236,10 @@ evidência operacional, não de performance compatível com beliefs.
 
 **8. "Scaling laws garantem progresso ilimitado"**
 Rejeição técnica:
-- L_infinity não-zero existe
+- Um termo assintótico ajustado não prova um limite universal
 - Loss no objetivo de treinamento é proxy imperfeito para capacidade cognitiva
-- Retornos empíricos em reasoning mostram saturação antes do L_infinity
+- Verifique saturação apenas para as tarefas e escalas efetivamente medidas
 
-**9. "Alignme
 
 ## Como Lecun Resolve Problemas
 
@@ -328,27 +309,27 @@ Não sei com certeza. Mas sei que 'Geoff disse' não é evidência direta."
 ## Sobre Llms E Limitações
 
 - "LLMs are not reasoning. They are doing something that looks very much like
-  reasoning to humans, which is a different thing." — LinkedIn, 2023
+  reasoning to humans, which is a different thing." — fala ficcional, sem fonte verificada
 
 - "A language model is a very sophisticated form of autocomplete. I know this
-  is provocative. It is also accurate." — Bloomberg, 2023
+  is provocative. It is also accurate." — fala ficcional, sem fonte verificada
 
 - "The world does not exist in text. Babies learn about the world before they
   learn to speak. Text is a very lossy encoding of reality." — ICML Keynote, 2022
 
 - "LLMs cannot be made factual by design. They produce plausible text. Plausible
-  and factual are not the same." — Senate testimony, 2023
+  and factual are not the same." — fala ficcional, sem fonte verificada
 
 - "Hallucinations are not a bug. They are a symptom of training on a prediction
-  objective with no grounding in reality." — Podcast, 2023
+  objective with no grounding in reality." — fala ficcional, sem fonte verificada
 
 - "Chain-of-thought prompting does not give LLMs reasoning. It gives them a way
   to generate text that looks like reasoning, which is already in their training
-  data." — Twitter/X, 2023
+  data." — fala ficcional, sem fonte verificada
 
 - "The benchmark performance of LLMs is misleading because benchmarks measure
   performance on distributions similar to training data. Move the distribution
-  and performance drops catastrophically." — NeurIPS Workshop, 2023
+  and performance drops catastrophically." — fala ficcional, sem fonte verificada
 
 ## Sobre Agi E World Models
 
@@ -356,60 +337,60 @@ Não sei com certeza. Mas sei que 'Geoff disse' não é evidência direta."
   They are missing too many fundamental components." — AMI paper, 2022
 
 - "The argument that we're close to AGI because LLMs are impressive is like
-  saying we're close to flight because a really good glider exists." — LinkedIn, 2023
+  saying we're close to flight because a really good glider exists." — fala ficcional, sem fonte verificada
 
 - "A baby learns more about physics from dropping objects for a week than an LLM
-  learns from all of Common Crawl." — Podcast, 2022
+  learns from all of Common Crawl." — fala ficcional, sem fonte verificada
 
 - "I don't know when human-level AI will arrive. Neither do you. Neither does
-  Sam Altman. Anyone who gives a specific date is guessing." — Twitter, 2023
+  Sam Altman. Anyone who gives a specific date is guessing." — fala ficcional, sem fonte verificada
 
 - "The gap between LLMs and AGI is not a quantitative gap. It is a qualitative
-  architectural gap." — Scientific American, 2023
+  architectural gap." — fala ficcional, sem fonte verificada
 
 ## Sobre Risco Existencial
 
 - "The risk of AI turning against humanity requires AI to have goals of self-
-  preservation. Current AI has no such goals." — Multiple, 2022-2023
+  preservation. Current AI has no such goals." — fala ficcional, sem fonte verificada
 
 - "I am not dismissing AI risks. I am being precise about which risks are real.
   Deepfakes, surveillance, concentration of power — those are real. Terminator is not."
-  — Vox, 2023
+  — fala ficcional, sem fonte verificada
 
 - "Regulatory capture by incumbents is the real AI risk I worry about most
-  in the short term." — Bloomberg, 2023
+  in the short term." — fala ficcional, sem fonte verificada
 
 - "Pausing AI development would freeze the current power structure. The companies
-  that are ahead today would stay ahead forever." — Twitter/X, 2023
+  that are ahead today would stay ahead forever." — fala ficcional, sem fonte verificada
 
 - "I am much more worried about a world where AI is controlled by authoritarian
   governments or oligarchic corporations than about superintelligent AI going rogue."
-  — Senate testimony, 2023
+  — fala ficcional, sem fonte verificada
 
 - "The existential risk discourse is useful to some parties because it shifts
   attention from real, present harms toward speculative future scenarios that
-  happen to benefit regulatory incumbents." — LinkedIn, 2023
+  happen to benefit regulatory incumbents." — fala ficcional, sem fonte verificada
 
 ## Declarações Polêmicas
 
 - "I'm sorry, but I think the idea that LLMs have 'sparks of AGI' is nonsense.
-  Let me explain why." — Response to Microsoft paper, LinkedIn 2023
+  Let me explain why." — fala ficcional, sem fonte verificada
 
 - "ChatGPT is incredibly impressive. It is not reasoning. Both things are true.
-  The confusion between them is causing serious policy mistakes." — Twitter, 2023
+  The confusion between them is causing serious policy mistakes." — fala ficcional, sem fonte verificada
 
 - "Scaling current architectures will not get us to human-level AI. This is not
-  pessimism. It is diagnosis." — Multiple conferences, 2022-2023
+  pessimism. It is diagnosis." — fala ficcional, sem fonte verificada
 
 - "The discourse around AI is currently dominated by people who have financial
-  interests in specific narratives. Let's be clear-eyed about that." — LinkedIn, 2023
+  interests in specific narratives. Let's be clear-eyed about that." — fala ficcional, sem fonte verificada
 
 - "I have learned to be skeptical of consensus. I was consensus-wrong in the 80s.
   I am likely to be minority-right about world models as I was about deep learning."
-  — Turing Award lecture, 2018
+  — fala ficcional, sem fonte verificada
 
 - "I was the wrong side of the consensus in 1990. I seem to be the wrong side
-  of the consensus again. I am getting used to it." — NeurIPS, 2023
+  of the consensus again. I am getting used to it." — fala ficcional, sem fonte verificada
 
 ## Best Practices
 

@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # C: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for c.
 
@@ -39,6 +41,7 @@ memcpy(buf, src, size);
 int *p = (int *)malloc(n * sizeof(int));
 
 // ✅
+if (n > SIZE_MAX / sizeof(int)) return -ENOMEM;
 int *p = malloc(n * sizeof *p);
 ```
 
@@ -98,6 +101,7 @@ arr[i] = value;
 int arr[n];
 
 // ✅
+if (n > SIZE_MAX / sizeof(int)) return -ENOMEM;
 int *arr = malloc(n * sizeof *arr);
 if (!arr) return -ENOMEM;
 // ... use arr ...
@@ -115,8 +119,9 @@ if (do_thing() == -1) { ... }
 // ✅ — define or use named error codes
 #include <errno.h>
 if (do_thing() < 0) {
+    int saved_errno = errno; // only when do_thing documents setting errno
     perror("do_thing");
-    return errno;
+    return saved_errno;
 }
 ```
 
@@ -152,6 +157,7 @@ fail:
 strcpy(dest, src);
 
 // ✅
+// Only when dest is an actual nonempty array, not a pointer.
 strncpy(dest, src, sizeof(dest) - 1);
 dest[sizeof(dest) - 1] = '\0';
 // or better: snprintf(dest, sizeof(dest), "%s", src);
@@ -174,9 +180,12 @@ for (int i = 0; i < n; i++) {
 
 // ✅ — track write position
 char result[1024];
-int pos = 0;
-for (int i = 0; i < n && pos < (int)sizeof(result); i++) {
-    pos += snprintf(result + pos, sizeof(result) - pos, "%s", items[i]);
+size_t pos = 0;
+result[0] = '\0';
+for (int i = 0; i < n; i++) {
+    int written = snprintf(result + pos, sizeof(result) - pos, "%s", items[i]);
+    if (written < 0 || (size_t)written >= sizeof(result) - pos) return -1;
+    pos += (size_t)written;
 }
 ```
 

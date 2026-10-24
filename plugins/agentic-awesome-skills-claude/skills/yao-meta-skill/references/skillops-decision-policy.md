@@ -1,5 +1,13 @@
 # SkillOps Decision Policy
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Use this policy when turning explicit-source conversation evidence into SkillOps opportunities, proposals, or release work. The goal is to make repeated user signals actionable without letting automation write durable instructions, skills, scripts, or evals without review.
 
 ## Decision Order

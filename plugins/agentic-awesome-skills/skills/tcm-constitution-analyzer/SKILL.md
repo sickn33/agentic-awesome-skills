@@ -21,6 +21,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - 你需要面向个体化调理的养生建议、趋势跟踪和相关性分析结果。
 
 ## Limitations
+- 本包缺完整量表、计分键和知识库；仅可解释传统概念与已授权的数据，不能输出已验证的诊断或疾病风险。不得生成个体方剂、剂量或自行艾灸操作。
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

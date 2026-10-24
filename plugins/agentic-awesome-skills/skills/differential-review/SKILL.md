@@ -69,6 +69,10 @@ Phase 3: Blast Radius → Phase 4: Deep Context → Phase 5: Adversarial → Pha
 
 ---
 
+## Supporting material availability
+
+Only SKILL.md is bundled. methodology.md, adversarial.md, reporting.md and patterns.md are unavailable here; obtain inspected upstream material or use the inline quick reference and explicitly report limited depth. Classify by actual data flow: UI/logging/docs can contain XSS, sensitive disclosure or unsafe instructions and are not automatically low risk.
+
 ## Decision Tree
 
 **Starting a review?**
@@ -163,7 +167,7 @@ Time: ~6-8 hours
 ## When NOT to Use This Skill
 
 - **Greenfield code** (no baseline to compare)
-- **Documentation-only changes** (no security impact)
+- **Documentation-only changes with no security-relevant guidance**
 - **Formatting/linting** (cosmetic changes)
 - **User explicitly requests quick summary only** (they accept risk)
 

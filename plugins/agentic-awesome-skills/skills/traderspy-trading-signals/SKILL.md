@@ -30,6 +30,8 @@ translate and contextualise them; the decision stays with the user.
 - Use when the user asks how signals have resolved (hits vs stops) over the last 4h to 7d.
 - Not for placing trades (no tool can), not for top-trader positioning (`@traderspy-smart-money`), not for indicator reads on a coin (`@traderspy-technical-analysis`).
 
+All provider capability, scoring and resolution descriptions below require validation against the connected tool/version. Attribute outcomes to TraderSpy; this skill does not independently verify the complete archive or profitability. A hit-rate statistic that retains a win after a later stop is not a trade P&L backtest.
+
 ## Tools
 
 | Tool | Use it for | Key arguments |
@@ -72,7 +74,7 @@ Convert target percentages to prices before showing them — users think in pric
 | `stop` | Stop level touched before any take-profit |
 | `expired` | Window ended with neither side touched |
 
-Outcomes are judged on 1-minute wicks, so "TP1 hit" means price actually traded there. The
+Provider outcomes are based on reported 1-minute highs/lows. A level touch is not proof a user order filled, nor proof of realized profit after fees, spread, slippage, funding, partial exits or liquidation. The
 tracking window is 24 × the signal timeframe (24h for a 1h signal, 4 days for a 4h signal); a 1h
 signal that is still `pending` two days later is stale rather than alive.
 
@@ -145,7 +147,7 @@ How have the signals resolved over the last 7 days?
 ## Limitations
 
 - Needs the hosted TraderSpy MCP server connected in the client (`https://mcp.traderspy.app/mcp`, Streamable HTTP), authorized with OAuth or a personal key from https://traderspy.app/mcp. A free TraderSpy account is enough. Without the server the skill has no data to work from.
-- Tool calls are metered per day: 300 on the free tier, 5,000 on premium.
+- Verify current account access, tool schemas and metering limits with the provider; historical plan quotas are not a guarantee.
 - Every tool is read-only. Nothing here places, closes or modifies an order, and there is no withdrawal or transfer tool.
 - The output is market data and analysis for the user's own research, not investment advice.
 - Covers TraderSpy's own AI signals only. Signal statistics describe signals that already resolved; they are not a forecast.

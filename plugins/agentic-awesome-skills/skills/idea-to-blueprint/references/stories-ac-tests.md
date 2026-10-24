@@ -84,7 +84,7 @@ Minimum coverage per story (skip a category only when it truly cannot apply, and
 
 **Story DoD** (default; extend per story):
 - All ACs have passing automated tests (or a completed manual step recorded in PROGRESS.md with evidence).
-- Each of those tests was seen **failing before** the implementation and passing after; PROGRESS.md records that.
+- Record which new behavior/regression tests failed for the intended reason before the fix and passed after; preserve existing passing tests and state any exception.
 - `check` is green on the whole repo — no gate rule weakened, skipped or ignored to get there (if one was, a DR says why).
 - The **review checklist** (blueprint section 14.4) has been applied end to end and every item answered; unanswered items are fixed, not batched.
 - Copy lines used match the copy table exactly (no improvised strings).
@@ -103,7 +103,7 @@ Minimum coverage per story (skip a category only when it truly cannot apply, and
 **Goal** (one line, outcome-oriented, in the user's language then English if bilingual)
 **Personas served** P1, P2
 **Depends on** E00, E01 (what specifically: tables, endpoints, components)
-**Preconditions for the session** — PROGRESS.md shows E00–E02 DONE; `check` green on clean `main`; env vars X, Y present; `[VERIFY-AT-BUILD]` items for this epic re-checked: INT-sms availability, …
+**Preconditions for the session** — PROGRESS.md shows E00–E02 DONE; `check` green on the authorized topic branch/worktree; env vars X, Y present; `[VERIFY-AT-BUILD]` items for this epic re-checked: INT-sms availability, …
 **Scope** — In: stories below. Out: … (where handled)
 **Flows and screens implemented** F-02, F-03; SCR-03, SCR-04
 **Data and API touched** ENT-User (new fields …), API-04, API-05

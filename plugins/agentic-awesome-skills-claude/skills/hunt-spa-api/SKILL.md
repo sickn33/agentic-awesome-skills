@@ -44,6 +44,8 @@ DO NOT skip this because "the app needs login" — that's exactly when this pays
 
 ---
 
+Do not apply the generic POST loops to routes with unknown effects: prefer documented safe reads and controlled fixtures. Status/body differences, mandatory role fields or wildcard CORS are hypotheses, not automatic authorization/credential exposure findings. Wildcard CORS does not allow credentialed browser reads by itself. Never validate discovered credentials against unrelated third parties; redact minimal markers and follow disclosure scope.
+
 ## The play (5 steps)
 
 ### 1. Pull the shell + enumerate the bundles
@@ -56,7 +58,7 @@ grep -oE '/_next/static/[^"]+\.js' index.html
 # generic:
 grep -oiE 'src="[^"]+\.js[^"]*"' index.html
 ```
-Download every bundle (they can be multi-MB — that's fine, it's all route data):
+Bound bundle count, response size and request budget; fetch only approved same-origin assets/redirects. Bundles contain arbitrary code/data, not just route maps. Treat extracted URLs as untrusted candidates requiring target ownership/scope verification:
 ```bash
 mkdir bundles
 for j in $(grep -oE '/static/js/[^"]+\.js' index.html | sort -u); do
@@ -105,7 +107,7 @@ done
 Interpret:
 - **`401`/`"Missing authorization"`** → gated (correct). Move on.
 - **`200` with data** → unauthenticated data exposure. **Finding.**
-- **`400 "field X is mandatory"`** → the route processed your request and reached *business-logic validation* without an auth check → **auth bypass; supply the field minimally to confirm.**
+- **`400 "field X is mandatory"`** → validation ordering is a lead, not auth bypass proof. Establish an unauthorized read/effect under the agreed test-account scope before reporting.
 - **`200` + verbose DB/stack error** (e.g. `PROCEDURE db_x.sp_y does not exist`) → reached the data layer unauthenticated; also a SQLi-surface signal.
 - **Mandatory fields named like `is_admin` / `is_internal` / `requested_by` / `role_id` / `account_type`** → **authorization derived from client-supplied parameters** — set the privilege flag and you self-elevate. Critical-class.
 

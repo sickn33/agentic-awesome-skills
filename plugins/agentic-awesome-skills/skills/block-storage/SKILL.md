@@ -38,6 +38,10 @@ Manage block storage volumes including LVM, cloud-based EBS, filesystem creation
 - AWS CLI configured for EBS operations
 - Understanding of the workload's I/O characteristics (IOPS, throughput)
 
+## Destructive operation contract
+
+Examples are alternatives, not one sequential script. Identify devices by stable serial/WWN and current filesystem/mounts, map cloud volume IDs to actual NVMe devices and confirm the exact target before mklabel/wipefs/mkfs/pvcreate/mdadm creation or shrink/remove. Verify an independent tested backup; RAID and snapshots alone are not backups. Quiesce databases/filesystems for application-consistent snapshots and monitor snapshot COW capacity. Read-only mount can still replay a journal; use filesystem-specific no-recovery options when forensic immutability matters. Start filesystem repair with assessment/image capture rather than unattended -y. Validate fstab without overwriting existing entries and test boot recovery. Extend the partition/container before its filesystem; ext4 shrink requires correct units/space and offline checks, XFS cannot shrink. Wait for EBS modification/snapshot completion and verify encryption/AZ/costs before attach/detach; never format restored data or force-detach mounted workloads.
+
 ## Disk Discovery and Partitioning
 
 ```bash
@@ -195,11 +199,12 @@ mount -o ro /dev/data_vg/app_snap /mnt/snapshot
 # Perform backup from the snapshot
 tar czf /backup/app-$(date +%Y%m%d).tar.gz -C /mnt/snapshot .
 
-# Unmount and remove the snapshot when done
+# Backup completion path: unmount and remove the snapshot when no rollback is needed
 umount /mnt/snapshot
 lvremove -f /dev/data_vg/app_snap
 
-# Restore from snapshot (reverts LV to snapshot point -- destructive)
+# Alternative restore path: retain the snapshot above; do not run lvremove first.
+# Reverts LV to snapshot point -- destructive
 lvconvert --merge /dev/data_vg/app_snap
 # Note: if the LV is mounted, merge happens at next activation (reboot)
 ```
@@ -269,7 +274,7 @@ aws ec2 modify-volume \
 
 # After resize, grow the filesystem on the instance
 growpart /dev/nvme1n1 1              # If partitioned
-resize2fs /dev/nvme1n1               # ext4
+resize2fs /dev/nvme1n1p1            # ext4 when partitioned; use whole device only if filesystem is directly on it
 # xfs_growfs /data                   # XFS
 
 # Create a snapshot

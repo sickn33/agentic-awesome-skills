@@ -21,8 +21,6 @@ log_test() { echo -e "${YELLOW}[TEST]${NC} $1"; }
 
 cleanup() {
     rm -rf "$TEST_DIR"
-    # Kill any test processes
-    pkill -f "test-long-running" 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -39,22 +37,18 @@ run_with_timeout() {
     shift
     local cmd="$@"
 
-    # Use gtimeout if available (from coreutils), otherwise use Perl
-    if command -v gtimeout &> /dev/null; then
-        gtimeout "$timeout_seconds" bash -c "$cmd"
-        return $?
-    elif command -v timeout &> /dev/null; then
-        timeout "$timeout_seconds" bash -c "$cmd"
-        return $?
-    else
-        # Perl-based timeout (works on macOS)
-        perl -e '
-            alarm shift @ARGV;
-            $SIG{ALRM} = sub { exit 124 };
-            exec @ARGV;
-        ' "$timeout_seconds" bash -c "$cmd"
-        return $?
-    fi
+    # Each command owns a new process group; timeout cleanup never matches names.
+    python3 - "$timeout_seconds" "$cmd" <<'PYTIMEOUT'
+import os, signal, subprocess, sys
+process = subprocess.Popen(['bash', '-c', sys.argv[2]], start_new_session=True)
+try:
+    code = process.wait(timeout=float(sys.argv[1]))
+except subprocess.TimeoutExpired:
+    os.killpg(process.pid, signal.SIGKILL)
+    process.wait()
+    sys.exit(124)
+sys.exit(code if code >= 0 else 128 - code)
+PYTIMEOUT
 }
 
 # Test 1: Command timeout with short process
@@ -164,27 +158,13 @@ fi
 
 # Test 5: Process group killing
 log_test "Process group killing (cleanup)"
-# Create a process that spawns children
-(
-    echo "parent-$$" > "$TEST_DIR/parent.pid"
-    (sleep 100 & echo $! > "$TEST_DIR/child.pid") &
-    wait
-) &
-PARENT_PID=$!
-sleep 0.5
-
-# Kill the process group
-if kill -0 $PARENT_PID 2>/dev/null; then
-    kill -TERM -$PARENT_PID 2>/dev/null || kill -TERM $PARENT_PID 2>/dev/null || true
-    sleep 0.5
-    if ! kill -0 $PARENT_PID 2>/dev/null; then
-        log_pass "Process group killed successfully"
-    else
-        kill -9 $PARENT_PID 2>/dev/null || true
-        log_pass "Process killed with SIGKILL"
-    fi
+# Exercise timeout cleanup of a child in the command's owned process group.
+run_with_timeout 1 "sleep 100 & wait"
+RESULT=$?
+if [ "$RESULT" -eq 124 ]; then
+    log_pass "Owned process group timed out"
 else
-    log_pass "Process already terminated"
+    log_fail "Expected timeout status 124, got $RESULT"
 fi
 
 # Test 6: npm/node process timeout simulation
@@ -213,7 +193,7 @@ if command -v node &> /dev/null; then
         log_fail "Node process should have timed out"
     fi
 else
-    log_pass "Node not available - skipping (acceptable)"
+    echo "[SKIP] Node not available"
 fi
 
 # Test 7: Task retry after timeout
@@ -315,7 +295,7 @@ fi
 log_test "Graceful shutdown with timeout"
 (
     trap 'echo "Received SIGTERM"; exit 0' TERM
-    sleep 100
+    while :; do sleep 1; done
 ) &
 PID=$!
 sleep 0.2

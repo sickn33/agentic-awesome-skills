@@ -2,7 +2,7 @@
 name: 2slides-ppt-generator
 description: "AI-powered presentation generation via the 2slides API — create slides from text, match a reference image style, summarize documents into decks, add AI voice narration, and export pages/audio. Use for any \"make slides\", \"create a deck\", or \"slides from this document\" request."
 category: api-integration
-risk: safe
+risk: critical
 source: community
 source_repo: 2slides/slides-generation-2slides-skills
 source_type: community
@@ -36,11 +36,15 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 - **Credentials:** This skill reads the API key from the `SLIDES_2SLIDES_API_KEY` environment variable. Never hard-code the key in commands, commit it, or echo it back to the user. The scripts send it as a bearer/`apikey` value to `https://2slides.com` over HTTPS only.
 - **Network + paid mutations:** Every generation call makes an outbound network request to the 2slides API and **spends the user's credits** (10–210 credits/page depending on mode). Treat generation, reference-image, custom-PDF, and narration calls as billable actions — confirm intent before generating large or high-resolution (4K) decks, and surface the expected page count/cost when it is non-trivial.
-- **No destructive local actions:** The scripts only read content/files the user points to and write generated output (e.g. a downloaded ZIP) to the path the user specifies. They do not modify or delete unrelated files.
+- **Local outputs:** Downloads are limited to the current workspace, public HTTPS and 128 MiB; existing output files are refused. Signed download URLs are bearer capabilities: avoid logging/sharing them beyond the intended recipient. Validate ZIP entries and extraction size before unpacking.
 - **Input handling:** Reference-image and document inputs are sent to the 2slides service for processing. Do not submit confidential material the user has not authorized for third-party processing.
 - **Download URLs expire in 1 hour** — fetch artifacts promptly and do not treat the URLs as durable storage.
 
 ## Limitations
+
+- A request timeout may still leave a paid server job running. Check job/account state before retrying; these scripts do not provide idempotency keys or refunds. `page=0` selects an unknown page count, so set an agreed explicit budget/count before billable generation.
+- API response schemas, pricing, voices, rate limits and URL expiry are version-dependent; current sources take precedence over snapshots.
+
 
 - Requires a valid 2slides account, API key, and sufficient credits; this skill does not provision or pay for credits.
 - Results are AI-generated drafts intended as a starting point, not a final, fact-checked deliverable — review content before use.

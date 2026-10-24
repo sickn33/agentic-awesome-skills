@@ -23,6 +23,10 @@ Deploy and manage Azure SQL Database, Elastic Pools, and Cosmos DB. Covers serve
 
 ## Prerequisites
 
+These independent examples provision billable resources and can interrupt databases. Confirm subscription, unique names, region/SKU support, SQL_ADMIN_GROUP_ID, cost ceilings, retention/RPO/RTO and tested restore/failover procedures. Use Entra-only authentication below; never put passwords/keys in argv or tracked configuration. Public firewall/VNet rules do not enable a server with public access disabled: configure private endpoints, DNS and an authorized client network. A regional replica is asynchronous and failover can lose data. Cosmos indexing-policy.json and referenced network/secondary-server/storage resources are external prerequisites, not bundled. Choose database-shared or dedicated container throughput and review costs; converting manual throughput to autoscale may require the dedicated migrate operation.
+
+## Prerequisites
+
 ```bash
 # Install Azure CLI
 # Prerequisite: organization-approved Azure CLI installed from a verified signed package.
@@ -46,8 +50,10 @@ az sql server create \
   --resource-group database-rg \
   --name myapp-sqlserver \
   --location eastus \
-  --admin-user sqladmin \
-  --admin-password 'S3cur3P@ssw0rd!' \
+  --enable-ad-only-auth \
+  --external-admin-principal-type Group \
+  --external-admin-name "SQL Admins" \
+  --external-admin-sid "$SQL_ADMIN_GROUP_ID" \
   --enable-public-network false \
   --minimal-tls-version 1.2
 
@@ -141,13 +147,7 @@ az sql elastic-pool list-dbs \
 ## Firewall Rules and Network Security
 
 ```bash
-# Allow Azure services
-az sql server firewall-rule create \
-  --resource-group database-rg \
-  --server myapp-sqlserver \
-  --name AllowAzureServices \
-  --start-ip-address 0.0.0.0 \
-  --end-ip-address 0.0.0.0
+# Keep public access disabled. The 0.0.0.0 AllowAzureServices exception permits other Azure tenants too; do not enable it as a default.
 
 # Allow specific IP range (office network)
 az sql server firewall-rule create \
@@ -162,8 +162,8 @@ az sql server firewall-rule create \
   --resource-group database-rg \
   --server myapp-sqlserver \
   --name AllowMyIP \
-  --start-ip-address "$(curl -s ifconfig.me)" \
-  --end-ip-address "$(curl -s ifconfig.me)"
+  --start-ip-address "$APPROVED_CLIENT_IP" \
+  --end-ip-address "$APPROVED_CLIENT_IP"
 
 # Create VNet rule for subnet access
 az sql server vnet-rule create \
@@ -194,8 +194,10 @@ az sql server create \
   --resource-group database-rg \
   --name myapp-sqlserver-secondary \
   --location westus \
-  --admin-user sqladmin \
-  --admin-password 'S3cur3P@ssw0rd!'
+  --enable-ad-only-auth \
+  --external-admin-principal-type Group \
+  --external-admin-name "SQL Admins" \
+  --external-admin-sid "$SQL_ADMIN_GROUP_ID"
 
 az sql failover-group create \
   --resource-group database-rg \
@@ -254,7 +256,7 @@ az sql db ltr-policy set \
 az sql db restore \
   --resource-group database-rg \
   --server myapp-sqlserver \
-  --name myapp-db-restored \
+  --name myapp-db \
   --dest-name myapp-db-restored \
   --time "2026-03-23T10:00:00Z"
 
@@ -265,27 +267,18 @@ az sql db ltr-backup list \
   --database myapp-prod-db \
   --output table
 
-# Export database to bacpac
-az sql db export \
-  --resource-group database-rg \
-  --server myapp-sqlserver \
-  --name myapp-db \
-  --admin-user sqladmin \
-  --admin-password 'S3cur3P@ssw0rd!' \
-  --storage-key-type StorageAccessKey \
-  --storage-key "{storage-account-key}" \
-  --storage-uri "https://mystorageacct.blob.core.windows.net/backups/myapp-db.bacpac"
+# BACPAC export needs a separately reviewed supported authentication/network path.
+# Do not pass admin passwords/storage account keys in argv; Entra-only setup above does not support the old SQL-login example.
+# Prefer tested backup/restore for recovery; BACPAC is not a transaction-log backup.
+
 ```
 
 ## Performance Tuning
 
 ```bash
-# Enable automatic tuning
-az sql db update \
-  --resource-group database-rg \
-  --server myapp-sqlserver \
-  --name myapp-prod-db \
-  --set tags.autoTuning=enabled
+# Configure automatic tuning in an authenticated connection to the intended primary
+# database using T-SQL: ALTER DATABASE CURRENT SET AUTOMATIC_TUNING = AUTO;
+# Review the Azure defaults and Query Store state before applying; this is not an az sql db subcommand.
 
 # Check database performance recommendations
 az sql db advisor list \
@@ -348,9 +341,7 @@ az sql db tde set \
   --status Enabled
 
 # Enable vulnerability assessment
-az sql vm update \
-  --resource-group database-rg \
-  --name myapp-sqlserver
+# Configure the supported Defender for SQL vulnerability-assessment policy for this logical server; az sql vm targets SQL on Azure VMs, a different resource type.
 ```
 
 ## Cosmos DB
@@ -383,7 +374,15 @@ az cosmosdb sql container create \
   --throughput 400 \
   --idx @indexing-policy.json
 
-# Enable autoscale throughput
+# Migrate this dedicated-throughput container from manual to autoscale first.
+az cosmosdb sql container throughput migrate \
+  --resource-group database-rg \
+  --account-name myapp-cosmos \
+  --database-name myappdb \
+  --name orders \
+  --throughput-type autoscale
+
+# After migration completes, set the approved autoscale maximum.
 az cosmosdb sql container throughput update \
   --resource-group database-rg \
   --account-name myapp-cosmos \

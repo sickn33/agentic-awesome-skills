@@ -80,7 +80,7 @@ idle; single-node looked fine.
 
 **Root cause**: the script did `torch.cuda.set_device(RANK)`. On a single node `RANK==LOCAL_RANK` so
 the bug hides; on node 1 of a 2-node job `RANK` is 8-15 but the node only has GPUs 0-7, so
-`set_device` wraps/collides and everything funnels to device 0.
+`set_device` normally raises an invalid-device-ordinal error; code that ignores the index or falls back to zero can instead pile onto GPU 0.
 
 **Fix**: **always index the local device by `LOCAL_RANK`**, never `RANK`:
 `torch.cuda.set_device(int(os.environ["LOCAL_RANK"]))`. `RANK` selects the *data shard*; `LOCAL_RANK`
@@ -118,7 +118,7 @@ accelerate launch --multi_gpu --num_processes=4 --mixed_precision=bf16 train.py
 # or a checked-in YAML (reproducible, diffable):
 accelerate launch --config_file configs/acc_fsdp.yaml train.py
 ```
-Switching DDP↔FSDP↔DeepSpeed is *only* a config swap — the training script is unchanged. The same
+A compatible Accelerate script can often switch via config, but optimizer construction, unsupported operations, checkpointing and framework integration still need validation. The same
 `--num_machines`/`--machine_rank`/`--main_process_ip` map onto multi-node (D2 territory).
 
 ### D6 — DeepSpeed: `deepspeed` launcher vs `accelerate launch`, and the `hostfile`
@@ -185,7 +185,7 @@ filter, or a `IterableDataset` can leave counts uneven — the short rank stops 
 **Symptom**: DDP converges worse than single-GPU at the same effective batch, or eval is unstable —
 each rank computed BN statistics on only its local shard.
 
-**Root cause**: DDP all-reduces **gradients**, not **buffers** (BN running mean/var). With small
+**Root cause**: DDP all-reduces gradients and, by default, broadcasts buffers such as BN running stats from rank 0 before forward. That broadcast does not compute global batch statistics; each rank still computes its local BN training statistics. With small
 per-GPU batches each replica's BN stats are noisy and inconsistent.
 
 **Fix**: convert BN to synchronized BN before wrapping:
@@ -324,8 +324,7 @@ set them there, not in two places.
 **Symptom**: optimizer steps far less often than expected (gradient accumulation double-counted), or a
 `RuntimeError` about unscaled gradients.
 
-**Root cause**: two traps. (a) Setting `gradient_accumulation_steps` in *both* the Trainer/Accelerate
-config *and* the JSON to non-`"auto"` values multiplies them. (b) With DeepSpeed's own AMP, gradient
+**Root cause**: two traps. (a) Conflicting accumulation settings can be rejected or overridden by the integration; they do not inherently multiply. Double accumulation arises when a custom loop adds another accumulation layer around the engine. (b) With DeepSpeed's own AMP, gradient
 scaling lives inside the engine — calling bare `loss.backward()` instead of `model_engine.backward(loss)`
 skips scaling ([DeepSpeed engine](https://github.com/microsoft/DeepSpeed/blob/master/deepspeed/runtime/engine.py)).
 
@@ -340,7 +339,7 @@ loop call `model_engine.backward(loss); model_engine.step()` — never `loss.bac
 A distributed hang has **no traceback** — every rank sits in a collective waiting for a peer that will
 never call it. The job to do is identify *which rank* diverged and *which collective* mismatched.
 (Distinct from a **single-process** vanish — for OOM/reboot/SSH-HUP/kill, see `gotchas_universal.md`
-U3; for the *inter-node* causes — fabric-manager, wrong NIC, MTU, the 1800 s NCCL timeout that *masks*
+U3; for the *inter-node* causes — fabric-manager, wrong NIC, MTU, the configured process-group timeout that *masks*
 the real failure — see `references/multinode.md` MN1-MN4.)
 
 ### D19 — The desync-debug toolkit: turn a silent freeze into a named mismatch
@@ -353,8 +352,8 @@ the collective the others are blocked in.
 **Fix — set these and relaunch the hang**:
 - `export TORCH_DISTRIBUTED_DEBUG=DETAIL` + `export TORCH_CPP_LOG_LEVEL=INFO` → on mismatch PyTorch prints `Detected mismatch between collectives on ranks`, naming the op + sequence number per rank ([PyTorch forum](https://discuss.pytorch.org/t/torch-distributed-collectives-call-logging/172726)). (DETAIL itself does collectives — use to *diagnose*, remove for production; it can perturb timing.)
 - `export NCCL_DEBUG=INFO` (or `WARN`) → the node whose log **stops first** before others print their topology is the culprit.
-- `export TORCH_NCCL_ASYNC_ERROR_HANDLING=1` (older PyTorch: `NCCL_ASYNC_ERROR_HANDLING=1`) → a dead rank tears the group down *promptly* instead of every rank waiting out the 1800 s NCCL timeout (`references/multinode.md` MN3).
-- **Flight Recorder** (`TORCH_NCCL_TRACE_BUFFER_SIZE=2000`) dumps the last N collectives per rank with stack traces — read it to see which rank's queue is one collective behind.
+- `export TORCH_NCCL_ASYNC_ERROR_HANDLING=1` (older PyTorch: `NCCL_ASYNC_ERROR_HANDLING=1`) → a dead rank tears the group down *promptly* instead of every rank waiting out the configured process-group timeout (`references/multinode.md` MN3).
+- **Flight Recorder** (`TORCH_NCCL_TRACE_BUFFER_SIZE=2000`) records the last N collectives per rank; configure the installed version's dump-on-timeout and stack-trace options when needed — read it to see which rank's queue is one collective behind.
 
 ### D20 — One rank diverged (NaN/OOM) and the survivors hang waiting for it
 
@@ -363,7 +362,7 @@ data/CUDA error, the rest are stuck in allreduce.
 
 **Root cause**: a rank that crashes or `return`s early **stops calling collectives**; the others block.
 The crash is the cause, the hang is the symptom — and without async error handling (D19) it surfaces
-30 min later as a timeout, far from the cause.
+after the configured timeout, far from the cause.
 
 **Fix**: with `TORCH_NCCL_ASYNC_ERROR_HANDLING=1` the group aborts near the true failure. Then fix the
 *diverged rank*, not the hang — common roots: one shard hit a bad sample (rank-dependent data), a
@@ -406,8 +405,8 @@ to write the same checkpoint file (corrupting it). If the eval/save path contain
 *also* rank-gated, it's the D21 deadlock; if not, it's just noisy + wasteful + a file race.
 
 **Fix**: gate pure side effects (logging, progress bar, file writes) to `if rank == 0:` — but keep any
-collective *outside* the gate (D21). Write checkpoints from rank 0 only, to a temp path, atomic-rename
-(`references/spot-resilience.md`), and `dist.barrier()` (on **all** ranks) before others read the file.
+collective *outside* the gate (D21). For an ordinary replicated state dict, write the consolidated file from rank 0 only, to a temp path, atomic-rename
+(`references/spot-resilience.md`), and `dist.barrier()` (on **all** ranks) before others read the file. FSDP/DeepSpeed/DCP save APIs can require participation and per-rank writes from all ranks; do not rank-gate those APIs.
 A genuine hang vs noisy-but-progressing is told apart by the Flight Recorder / step counter (D19), not
 by the log soup.
 
@@ -415,7 +414,7 @@ by the log soup.
 
 ## Pointers — handled elsewhere, do not restate
 
-- **Inter-node wire** (NCCL NIC pinning, `nvidia-fabricmanager`, the 1800 s timeout masking a dead rank, jumbo-frame MTU, torchrun/Horovod elastic restart restoring the *group* not the *state*) → `references/multinode.md` (**REQUIRED** for ≥2 instances).
+- **Inter-node wire** (NCCL NIC pinning, `nvidia-fabricmanager`, the configured timeout masking a dead rank, jumbo-frame MTU, torchrun/Horovod elastic restart restoring the *group* not the *state*) → `references/multinode.md` (**REQUIRED** for ≥2 instances).
 - **Sharding *to fit a model that OOMs*** (the FSDP/ZeRO ladder in cost order, activation checkpointing, offload, LoRA/QLoRA, reading the OOM trace) → `references/training/oom-memory.md`.
 - **Restart-and-resume mechanics** (atomic write, load-latest, cadence, preemption signals) → `references/spot-resilience.md`; the spine is `references/principles.md` #8.
 - **Single-process vanish** (OOM vs reboot vs SSH-HUP vs manual kill) → `references/gotchas_universal.md` U3; **cgroup host-RAM OOM from `num_workers`** → U9; **zombie VRAM after a crashed DDP run** → U11.

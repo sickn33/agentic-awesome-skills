@@ -17,7 +17,7 @@
         "keyword": "productivity app",
         "search_volume": 38000,
         "competition_level": "high",
-        "relevance_score": 0.90,
+        "relevance_score": 0.9,
         "difficulty_score": 68.2,
         "potential_score": 75.1,
         "recommendation": "High priority - target immediately"
@@ -86,12 +86,16 @@
     "keyword_gaps": [
       {
         "keyword": "ai prioritization",
-        "used_by": ["None of the major competitors"],
+        "used_by": [
+          "None of the major competitors"
+        ],
         "opportunity": "Unique positioning opportunity"
       },
       {
         "keyword": "smart task manager",
-        "used_by": ["Things 3"],
+        "used_by": [
+          "Things 3"
+        ],
         "opportunity": "Underutilized by most competitors"
       }
     ]
@@ -102,13 +106,19 @@
         {
           "title": "TaskFlow - AI Task Manager",
           "length": 26,
-          "keywords_included": ["task manager", "ai"],
+          "keywords_included": [
+            "task manager",
+            "ai"
+          ],
           "strategy": "brand_plus_primary"
         },
         {
           "title": "TaskFlow: Smart Todo & Tasks",
-          "length": 29,
-          "keywords_included": ["todo", "tasks"],
+          "length": 28,
+          "keywords_included": [
+            "todo",
+            "tasks"
+          ],
           "strategy": "brand_plus_multiple"
         }
       ],
@@ -119,9 +129,14 @@
     "google_play_store": {
       "title_options": [
         {
-          "title": "TaskFlow - AI Task Manager & Team Productivity",
-          "length": 48,
-          "keywords_included": ["task manager", "ai", "team", "productivity"],
+          "title": "TaskFlow - AI Task Manager",
+          "length": 26,
+          "keywords_included": [
+            "task manager",
+            "ai",
+            "team",
+            "productivity"
+          ],
           "strategy": "keyword_rich"
         }
       ],
@@ -140,22 +155,22 @@
     {
       "action": "Optimize app title with primary keyword",
       "priority": "high",
-      "expected_impact": "15-25% improvement in search visibility"
+      "expected_impact": "Unknown; validate with an appropriately designed experiment"
     },
     {
       "action": "Create description highlighting AI features with natural keyword integration",
       "priority": "high",
-      "expected_impact": "10-15% improvement in conversion rate"
+      "expected_impact": "Unknown; validate with an appropriately designed experiment"
     },
     {
       "action": "Plan A/B tests for icon and screenshots post-launch",
       "priority": "medium",
-      "expected_impact": "5-10% improvement in conversion rate"
+      "expected_impact": "Unknown; validate with an appropriately designed experiment"
     }
   ],
   "aso_health_estimate": {
     "current_score": "N/A (pre-launch)",
-    "potential_score_with_optimizations": "75-80/100",
+    "potential_score_with_optimizations": "Unknown",
     "key_strengths": [
       "Unique AI differentiation",
       "Clear target audience",
@@ -166,5 +181,6 @@
       "Monitor and respond to reviews",
       "Continuous keyword optimization"
     ]
-  }
+  },
+  "data_classification": "synthetic illustrative report; not observed market data or deterministic output for sample_input.json"
 }

@@ -32,7 +32,7 @@ n) New remote
 s) Set configuration password
 q) Quit config
 n/s/q> n
-name> putio
+name> remote
 Type of storage to configure.
 Enter a string value. Press Enter for the default ("").
 Choose a number from below, or type in your own value
@@ -56,7 +56,7 @@ Log in and authorize rclone for access
 Waiting for code...
 Got code
 --------------------
-[putio]
+[remote]
 type = putio
 token = {"access_token":"XXXXXXXX","expiry":"0001-01-01T00:00:00Z"}
 --------------------
@@ -68,7 +68,7 @@ Current remotes:
 
 Name                 Type
 ====                 ====
-putio                putio
+remote               putio
 
 e) Edit existing remote
 n) New remote
@@ -88,8 +88,8 @@ token as returned from put.io  if using web browser to automatically
 authenticate. This only
 runs from the moment it opens your browser to the moment you get back
 the verification code.  This is on `http://127.0.0.1:53682/` and this
-it may require you to unblock it temporarily if you are running a host
-firewall, or use manual mode.
+allow the loopback callback temporarily in your host firewall, or use
+manual mode; do not expose the callback listener to other machines.
 
 You can then use it like this,
 
@@ -241,6 +241,6 @@ Properties:
 put.io has rate limiting. When you hit a limit, rclone automatically
 retries after waiting the amount of time requested by the server.
 
-If you want to avoid ever hitting these limits, you may use the
+To reduce requests and the likelihood of hitting limits, you may use the
 `--tpslimit` flag with a low number. Note that the imposed limits
 may be different for different operations, and may change over time.

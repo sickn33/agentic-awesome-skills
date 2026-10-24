@@ -29,6 +29,8 @@ Build and deploy serverless applications with Azure Functions. Covers function a
 - You need to respond to Azure service events (Blob Storage, Service Bus, Cosmos DB changes).
 - You are implementing lightweight microservices or scheduled tasks.
 
+Historical snippets require current runtime/plan/region and extension compatibility verification; scale-to-zero, billing and slot support vary by plan. Confirm subscription/resource IDs, cost, secrets, storage and rollback before provisioning/deploying/swapping. Function keys are shared access secrets, not user/object-level authorization. HTTP records here are synthetic examples, not persisted users. Validate/allowlist request fields and never spread arbitrary input into protected output/state.
+
 ## Prerequisites
 
 ```bash
@@ -150,7 +152,7 @@ def create_user(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.info(f"Creating user: {body.get('name')}")
     return func.HttpResponse(
-        json.dumps({"id": "new-id", **body}),
+        json.dumps({"id": "new-id", "name": body.get("name")}),
         status_code=201,
         mimetype="application/json"
     )
@@ -187,7 +189,7 @@ app.http("createUser", {
     const body = await request.json();
     context.log(`Creating user: ${body.name}`);
 
-    return { status: 201, jsonBody: { id: "new-id", ...body } };
+    return { status: 201, jsonBody: { id: "new-id", name: body.name } };
   },
 });
 ```
@@ -279,7 +281,9 @@ func azure functionapp publish myapp-func
 func azure functionapp publish myapp-func --build remote
 
 # Deploy using ZIP package
-zip -r function.zip . -x ".git/*" ".venv/*" "__pycache__/*"
+zip -r function.zip . -x ".git/*" ".venv/*" "__pycache__/*" "local.settings.json" ".env" ".env.*"
+# Inspect the complete archive allowlist before upload; exclusion patterns alone
+# cannot establish that keys, private files or old archives are absent.
 az functionapp deployment source config-zip \
   --resource-group functions-rg \
   --name myapp-func \
@@ -414,12 +418,12 @@ resource "azurerm_linux_function_app" "main" {
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| Cold start latency > 10s | Consumption plan cold start | Use Premium plan (EP1+) or enable `WEBSITE_RUN_FROM_PACKAGE=1` |
+| Cold start latency > 10s | Consumption plan cold start | Measure startup/dependency latency and plan options; run-from-package does not guarantee no cold starts |
 | Function not triggering | Connection string misconfigured | Check `az functionapp config appsettings list` for correct binding values |
 | `ModuleNotFoundError` in Python | Dependencies not installed during deploy | Use `--build remote` flag or include `requirements.txt` in package |
 | HTTP 401 Unauthorized | Auth level mismatch or missing function key | Verify auth level in code matches expectations; pass `x-functions-key` header |
 | Blob trigger not firing | Storage account connection wrong | Verify `AzureWebJobsStorage` points to the correct account |
-| Timer trigger runs twice | Multiple instances on Premium plan | Set `WEBSITE_MAX_DYNAMIC_APPLICATION_SCALE_OUT=1` or use singleton lock |
+| Timer trigger runs twice | Multiple instances on Premium plan | Inspect host IDs, timer storage leases, retries and duplicate registrations; use idempotent business logic. Reducing scale is not a correctness guarantee |
 | Deployment slot swap fails | Slot settings not configured | Ensure slot-specific settings are marked with `--slot-settings` |
 | Out of memory errors | Large payloads or memory leaks | Stream data instead of loading entirely; increase plan tier |
 

@@ -58,7 +58,7 @@ Run `/skill skill-suggester` to scan the full history. Optionally pass `--since 
 ## Key rules
 
 - Only flag patterns that happen more than twice. One-offs are not skills.
-- Include direct quotes from your past prompts as evidence.
+- Use minimal redacted excerpts only when needed for evidence; summarize sensitive prompts and never disclose secrets. Analyze only the user-authorized history window locally. Tool-call counts and time savings must be marked unavailable or estimated when prompt-only records do not contain them.
 - Rate each candidate: `high` (clear ROI, use weekly), `medium` (nice to have), `low` (rare but worth noting).
 - If nothing qualifies, say so and explain why.
 - After presenting candidates, ask if you want to create any of them.

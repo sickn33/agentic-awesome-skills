@@ -63,17 +63,17 @@ This skill aggregates outputs from all GEO audit skills into a single, professio
 GEO Score = (Platform Score * 0.25) + (Content Score * 0.25) + (Technical Score * 0.20) + (Schema Score * 0.15) + (Brand Score * 0.15)
 ```
 
-Round to the nearest integer. Cap at 100.
+Validate each available component in [0,100] and round only the final sum. These weights are an editorial rubric, not a platform-endorsed ranking or citation probability. Missing audits are N/A, not zero; do not publish a comparable composite unless all five components use the same rubric/scope/date. Example: five scores of 80 yield 80/100; this does not predict 80% citation likelihood.
 
 ### Score Interpretation for Clients
 
 | Score Range | Label | Client-Facing Description |
 |---|---|---|
-| 85-100 | Excellent | Your site is well-positioned for AI search. Focus on maintaining and expanding your advantage. |
-| 70-84 | Good | Solid foundation with clear opportunities to improve AI visibility. Targeted optimizations will yield significant results. |
-| 55-69 | Moderate | Your site has gaps in AI readiness that competitors may be exploiting. A structured optimization plan will close these gaps. |
-| 40-54 | Below Average | Significant barriers to AI search visibility exist. Without action, your brand risks being invisible in AI-generated answers. |
-| 0-39 | Needs Attention | Critical AI readiness issues require immediate action. Your competitors are likely capturing the AI search traffic your brand should own. |
+| 85-100 | Excellent | Few gaps under the documented audit rubric; actual visibility unmeasured unless separately sampled. |
+| 70-84 | Good | Several documented improvements remain. |
+| 55-69 | Moderate | Review the observed gaps and coverage limits. |
+| 40-54 | Below Average | Many rubric checks need attention; no competitive-loss inference follows. |
+| 0-39 | Needs Attention | Prioritize verified access/content defects; score alone does not prove invisibility. |
 
 ---
 
@@ -90,9 +90,9 @@ Write exactly ONE paragraph (4-6 sentences) covering:
 - The overall GEO Readiness Score with context ("XX/100, which places [brand] in the [label] tier")
 - The single most impactful finding (positive or negative)
 - Top 3 priority recommendations in one sentence
-- One sentence on the business impact ("Addressing these recommendations could increase AI-driven traffic by an estimated XX%, representing approximately $X,XXX/month based on current traffic patterns")
+- One evidence-supported business implication. Include monetary scenarios only with measured baseline, explicit assumptions and uncertainty; otherwise state impact unmeasured.
 
-**Tone**: Confident, direct, professional. No jargon. No hedging. Write as a consultant delivering findings, not as a tool generating a report.
+**Tone**: Confident, direct, professional. No jargon. Distinguish observations, uncertainty and hypotheses. Write as a consultant delivering findings, not as a tool generating a report.
 
 ### Section 2: GEO Readiness Score
 
@@ -131,7 +131,7 @@ Present per-platform readiness scores:
 | Bing Copilot | XX/100 | [One-line gap] | [One-line action] |
 ```
 
-Add a brief paragraph explaining what these scores mean: "These scores reflect how likely your content is to be cited by each AI search platform. A score below 50 indicates significant barriers to citation on that platform."
+Add a brief paragraph explaining what these scores mean: "These scores summarize checks in our disclosed rubric; they do not estimate citation probability. Report measured citations separately with prompt set, locale, date, account/mode and sampling limitations."
 
 ### Section 4: AI Crawler Access Status
 
@@ -143,7 +143,8 @@ Present as a clear table:
 | AI Crawler | Platform | Status | Impact | Recommendation |
 |---|---|---|---|---|
 | Googlebot | Google Search + AIO | Allowed/Blocked | Critical | [Action] |
-| GPTBot | ChatGPT / OpenAI | Allowed/Blocked | High | [Action] |
+| OAI-SearchBot | OpenAI search discovery | Allowed/Blocked/Unknown | [Observed effect] | [Action] |
+| GPTBot | OpenAI model-training crawl | Allowed/Blocked/Unknown | Policy choice | [Action] |
 | Bingbot | Bing + Copilot + ChatGPT | Allowed/Blocked | High | [Action] |
 | PerplexityBot | Perplexity AI | Allowed/Blocked | Medium | [Action] |
 | Google-Extended | Gemini Training | Allowed/Blocked | Medium | [Action] |
@@ -151,7 +152,7 @@ Present as a clear table:
 | Applebot-Extended | Apple Intelligence | Allowed/Blocked | Medium | [Action] |
 ```
 
-**Translate for the client**: "Blocking AI crawlers is like closing your store during business hours. If a crawler cannot access your site, the AI platform it powers cannot cite your content. We recommend allowing all major AI crawlers unless you have a specific data licensing concern."
+**Translate for the client**: Distinguish search discovery, user-requested fetching and training controls using current vendor documentation. Allowing training is not required for search eligibility. Respect the owner’s licensing/privacy opt-outs; robots rules do not guarantee crawling, indexing, citation or access control.
 
 ### Section 5: Brand Authority Analysis
 
@@ -162,17 +163,17 @@ Present entity presence across platforms:
 
 | Platform | Presence | Status | Impact on AI Visibility |
 |---|---|---|---|
-| Wikipedia | Yes/No | [Detail] | Very High — 47.9% of ChatGPT citations are Wikipedia |
+| Wikipedia | Yes/No | [Detail] | [Observed relevance; no universal citation share] |
 | Wikidata | Yes/No | [Detail] | High — machine-readable entity data |
 | LinkedIn | Yes/No | [Detail] | High — Bing Copilot and ChatGPT signal |
 | YouTube | Yes/No | [Detail] | High — Gemini and Perplexity signal |
-| Reddit | Yes/No | [Detail] | Very High — 46.7% of Perplexity citations are Reddit |
+| Reddit | Yes/No | [Detail] | [Observed relevance; no universal citation share] |
 | Google Knowledge Panel | Yes/No | [Detail] | High — Gemini entity recognition |
 | Crunchbase | Yes/No | [Detail] | Medium — entity validation |
 | GitHub | Yes/No | [Detail] | Medium — tech brand signal |
 ```
 
-**Translate for the client**: "AI platforms build trust by cross-referencing your brand across multiple authoritative sources. Each platform where your brand has an accurate, consistent presence increases the likelihood of being cited in AI answers."
+**Translate for the client**: "AI platforms build trust by cross-referencing your brand across multiple authoritative sources. Accurate relevant profiles help readers verify identity; no causal citation increase is established by profile count alone."
 
 ### Section 6: Citability Analysis
 
@@ -188,7 +189,7 @@ For each page:
 - Why it is unlikely to be cited (thin content, poor structure, missing signals)
 - Specific rewrite or restructure recommendation
 
-**Business impact framing**: "Your most citable pages are your best candidates for appearing in AI-generated answers. Improving the 5 least citable pages represents the highest-ROI content investment you can make for AI visibility."
+**Business impact framing**: "Your most citable pages are your best candidates for appearing in AI-generated answers. Prioritize those pages only after assessing audience need, observed defects, effort and measured outcomes."
 
 ### Section 7: Technical Health Summary
 
@@ -207,7 +208,7 @@ Present the key technical findings in business-friendly language:
 | IndexNow Protocol | Implemented/Not | [Impact on Bing/ChatGPT indexing speed] |
 ```
 
-**Critical finding callout**: If SSR is missing or partial, highlight this prominently: "Your site uses client-side rendering, which means AI crawlers see an empty page when they visit. This is the single most impactful technical issue for AI search visibility. Until this is resolved, most AI platforms cannot cite your content."
+**Rendering finding**: Compare fetched HTML and rendered content for representative URLs and named crawlers. Client-side rendering does not by itself prove an empty page, exclusion or the highest-impact defect. Report observed missing content and rendering limitations.
 
 ### Section 8: Schema & Structured Data
 
@@ -221,11 +222,11 @@ Present the key technical findings in business-friendly language:
 | Article + Author | Yes/No | [Valid/Issues] | High — E-E-A-T signal |
 | sameAs (entity links) | Yes/No | [Count] links | Critical — cross-platform entity graph |
 | [Business-specific] | Yes/No | [Valid/Issues] | [Impact] |
-| WebSite + SearchAction | Yes/No | [Valid/Issues] | Medium — sitelinks |
+| WebSite | Yes/No | [Valid/Issues] | [Applicable use; Google sitelinks search box retired in 2024] |
 | BreadcrumbList | Yes/No | [Valid/Issues] | Low-Medium — navigation context |
 ```
 
-If schemas are missing, note: "Ready-to-use structured data code has been prepared and is included in the technical appendix. Your development team can add this to your site with minimal effort."
+Only claim code is prepared if actual reviewed markup is included and matches visible content. Valid schema is not a promise of rich results or AI citation.
 
 ### Section 9: llms.txt Status
 
@@ -238,7 +239,7 @@ If schemas are missing, note: "Ready-to-use structured data code has been prepar
 | /llms-full.txt | Present/Missing | [Action] |
 ```
 
-**Translate for the client**: "llms.txt is an emerging standard (similar to robots.txt) that tells AI systems what your site is about and which pages are most important. While not universally adopted yet, implementing it positions your brand ahead of competitors and provides direct guidance to AI platforms."
+**Translate for the client**: "llms.txt is a proposal for a content guide, not robots access control or a required AI-search eligibility file. No adoption, ranking or competitive benefit is implied; treat implementation as optional and avoid publishing private content."
 
 ### Section 10: Prioritized Action Plan
 
@@ -301,15 +302,12 @@ This is the most important section of the report. Organize actions by timeline a
 ### Estimated Impact
 After the action plan, include an impact estimate:
 
-"Based on industry benchmarks and the specific gaps identified in this audit:
-- **Quick Wins alone** could improve your GEO score by approximately [X-Y] points
-- **Full implementation** of this action plan could improve your GEO score to approximately [XX]/100
-- At current traffic levels and conversion rates, improved AI visibility represents an estimated **$X,XXX - $XX,XXX per month** in additional organic value"
-
-Use conservative estimates. Base the dollar figure on:
-- Current estimated organic traffic value (from analytics if available, or estimate from industry benchmarks)
-- AI search is projected to drive 25-40% of organic discovery by end of 2026
-- A 10-point GEO score improvement typically correlates with a 15-25% increase in AI citation frequency
+Use measured baseline data or state “impact not quantified.” Never translate rubric
+points directly into citation/traffic/revenue lift. An explicitly hypothetical scenario
+may show the arithmetic: 100 incremental qualified visits × 2% conversion × $50
+contribution per conversion = $100/month before implementation cost, assuming those
+visits and conversions occur. Record attribution window, uncertainty and validation
+plan; this arithmetic is not a forecast or industry benchmark.
 
 ### Section 11: Competitor Comparison (if competitor URLs provided)
 
@@ -346,15 +344,15 @@ This GEO audit was conducted using the following methodology:
 - **Pages analyzed**: [List of specific URLs audited]
 - **Platforms assessed**: Google AI Overviews, ChatGPT, Perplexity AI, Google Gemini, Bing Copilot
 - **Technical checks**: HTTP headers, robots.txt, HTML source analysis, structured data validation
-- **Content assessment**: E-E-A-T framework (Experience, Expertise, Authoritativeness, Trustworthiness) per Google's December 2025 Quality Rater Guidelines
+- **Content assessment**: E-E-A-T framework (Experience, Expertise, Authoritativeness, Trustworthiness) as a disclosed editorial framework; cite the exact edition actually consulted
 - **Schema validation**: JSON-LD parsing and Schema.org specification compliance
 - **Date of analysis**: [Date]
 
 ### Data Sources
-- Google Search Quality Rater Guidelines (December 2025 update)
+- Google Search Quality Rater Guidelines (actual consulted edition/date/link)
 - Schema.org full type hierarchy
-- Industry citation studies (Zyppy, Authoritas, Semrush AI search research, 2025-2026)
-- Core Web Vitals thresholds (web.dev, 2026 standards)
+- Only studies actually consulted, with URL, sample/method/date and applicable limitations
+- Core Web Vitals documentation actually consulted (URL/date)
 - AI crawler user-agent documentation (per-platform official docs)
 
 ### Glossary
@@ -391,27 +389,24 @@ This GEO audit was conducted using the following methodology:
 
 ### Tone
 - **Professional but accessible** — written for a business owner, not a developer
-- **Confident and direct** — state findings as conclusions, not possibilities
+- **Confident and direct** — state verified observations clearly and label uncertain inferences
 - **Action-oriented** — every finding should connect to a specific action
 - **Business-impact focused** — translate technical issues into business outcomes
-- Avoid: jargon without explanation, hedging language, passive voice, excessive caveats
+- Avoid: jargon without explanation, unsupported certainty, passive voice, irrelevant caveats
 - Use: "Your site [does/does not]...", "We recommend...", "This impacts..."
 
 ### Dollar-Value Framing
-Where possible, connect recommendations to business value:
-- "Improving your Google AIO readiness from 35 to 70 could increase your presence in AI Overviews by an estimated 50%, which at current search volumes represents approximately 2,000 additional monthly visitors"
-- "Server-side rendering would make your content accessible to ChatGPT, Perplexity, and other AI platforms — collectively representing an audience your competitors are already reaching"
-- "The investment in Schema.org markup (estimated 8-16 hours of developer time) could increase your entity recognition score from 20 to 75, significantly improving citation probability"
-
-Be conservative with estimates. State assumptions clearly. Never guarantee specific results.
-
+Connect recommendations to verified user/business problems and measured baselines.
+Use the explicit hypothetical arithmetic above only as a scenario, never as evidence
+that a score increase causes traffic or revenue. Report implementation costs and
+measurement gaps; never guarantee results.
 ---
 
 ## Output
 
 Generate **GEO-CLIENT-REPORT.md** using the complete template above, filled with actual audit data. The report should be:
-- 40-80 pages equivalent in detail (3,000-6,000 words)
-- Ready to send to a client without editing
+- Appropriate to scope and audience; word count does not imply a fixed page count
+- Ready for factual/privacy/owner review before authorized delivery
 - Self-contained (no references to other report files — all relevant data is included)
 - Printable and presentable (clean markdown formatting)
 

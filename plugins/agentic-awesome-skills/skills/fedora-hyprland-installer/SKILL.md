@@ -16,7 +16,7 @@ license_source: https://github.com/maleksaadi0109/hyprfedora/blob/3ec6d4fc5eecdb
 
 # Fedora Hyprland Installer Skill
 
-This skill provides an automated, safety-first workflow for managing Hyprland on Fedora Linux.
+This skill provides a limited workflow for a conventional mutable Fedora desktop. Fedora Atomic variants require a separate package-management plan; do not run these DNF scripts there. Use the target desktop user session, not a root shell, for user configuration and services. Backups and a working alternate session are prerequisites for disruptive changes.
 
 ## Resolve the Skill Directory
 
@@ -51,10 +51,10 @@ example `bash "$SKILL_DIR/scripts/detect-system.sh"`.
 ### 1. Installation Workflow
 When the user asks to **"Install Hyprland"** or **"Setup Hyprland on Fedora"**:
 1. Execute `bash "$SKILL_DIR/scripts/detect-system.sh"` and `bash "$SKILL_DIR/scripts/detect-gpu.sh"`.
-2. Execute `bash "$SKILL_DIR/scripts/preflight.sh"` to verify Fedora release, network, package manager, and sudo access.
+2. Execute `bash "$SKILL_DIR/scripts/preflight.sh"` to inspect the Fedora marker, network reachability, package-manager presence and sudo binary. It does not establish Fedora lifecycle support, repository health or effective sudo authorization.
 3. Execute `bash "$SKILL_DIR/scripts/backup.sh"` to preserve any pre-existing configurations.
 4. Show the package plan with `bash "$SKILL_DIR/scripts/install.sh" --dry-run`; after explicit approval, execute `bash "$SKILL_DIR/scripts/install.sh"` to install Hyprland, Wayland portal packages (`xdg-desktop-portal-hyprland`, `xdg-desktop-portal-gtk`), PipeWire/WirePlumber, terminal, launcher, status bar, and authentication agent.
-5. Execute `bash "$SKILL_DIR/scripts/configure.sh"` to write a clean, functional initial Hyprland config (`~/.config/hypr/hyprland.conf`) tailored to detected terminal/launcher and GPU environment variables.
+5. Include configuration creation in the approved plan, then execute `bash "$SKILL_DIR/scripts/configure.sh"` to write a clean, functional initial Hyprland config (`~/.config/hypr/hyprland.conf`) using detected terminal/launcher defaults. Review keyboard layout, autostart paths and exact-version syntax; GPU vendor presence alone must not force NVIDIA environment variables on hybrid or non-proprietary-driver setups.
 6. Execute `bash "$SKILL_DIR/scripts/verify.sh"` to ensure binaries, portal services, PipeWire, and login desktop entries (`/usr/share/wayland-sessions/hyprland.desktop`) exist and validate.
 7. Present a summary report detailing installed packages, backup paths, and login instructions.
 
@@ -70,7 +70,7 @@ When the user asks to **"Update Hyprland"**:
 1. Run `bash "$SKILL_DIR/scripts/backup.sh"`.
 2. Show the package plan with `bash "$SKILL_DIR/scripts/install.sh" --dry-run --update` and obtain approval.
 3. Update Hyprland and related Wayland packages via `bash "$SKILL_DIR/scripts/install.sh" --update`.
-4. Validate configuration syntax and verify system integrity via `bash "$SKILL_DIR/scripts/verify.sh"`.
+4. Run the limited presence/service checks via `bash "$SKILL_DIR/scripts/verify.sh"`.
 
 ### 4. Uninstall Workflow
 When the user asks to **"Uninstall Hyprland"**:
@@ -100,6 +100,8 @@ bash "$SKILL_DIR/scripts/detect-system.sh"
 bash "$SKILL_DIR/scripts/detect-gpu.sh"
 bash "$SKILL_DIR/scripts/install.sh" --dry-run
 ```
+
+`install.sh --dry-run` prints a requested package list, not a resolved DNF transaction. Inspect the actual transaction before accepting it. DNF removal can include dependencies; the script cannot promise preservation from its two-package input list. `verify.sh` does not parse Hyprland configuration, exercise login/screensharing/audio, or prove overall system integrity. A zero exit with PARTIAL status is not a successful end-to-end installation.
 
 ## Limitations
 

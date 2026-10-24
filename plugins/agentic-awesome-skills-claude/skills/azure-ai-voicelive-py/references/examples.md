@@ -15,7 +15,7 @@
 
 ## Basic Voice Assistant
 
-Complete voice assistant with Server VAD.
+Illustrative assistant with Server VAD; microphone/playback functions and task cleanup must be implemented.
 
 ```python
 import asyncio
@@ -144,7 +144,7 @@ def handle_function_call(name: str, arguments: str) -> dict:
         }
     elif name == "set_reminder":
         # Mock reminder service
-        return {"status": "success", "reminder_id": "123"}
+        return {"status": "mock_only", "created": False, "message": "No reminder was scheduled"}
     else:
         return {"error": f"Unknown function: {name}"}
 
@@ -217,7 +217,7 @@ async def push_to_talk():
 
         # Simulate push-to-talk
         while True:
-            input("Press Enter to start recording...")
+            await asyncio.to_thread(input, "Press Enter to start recording...")
 
             # Record audio (simulate with chunks)
             chunks = await record_audio_until_release()
@@ -245,6 +245,8 @@ asyncio.run(push_to_talk())
 ---
 
 ## Audio File Processing
+
+Only raw PCM matching the negotiated format is valid here; WAV/MP3 containers must be decoded/resampled first. Stream bounded chunks and cap output/session duration; this in-memory example is for small test files. Input transcription events may arrive after response.done, so correlate/wait for the relevant completion separately.
 
 Process an audio file and get a response.
 
@@ -308,7 +310,8 @@ async def process_audio_file(audio_path: str):
 result = asyncio.run(process_audio_file("input.pcm"))
 print(f"User: {result['user_said']}")
 print(f"Assistant: {result['assistant_said']}")
-Path("output.pcm").write_bytes(result['audio'])
+with Path("output.pcm").open("xb") as output:
+    output.write(result["audio"])
 ```
 
 ---
@@ -465,6 +468,8 @@ asyncio.run(azure_voice_assistant())
 
 ## Avatar Integration
 
+This is incomplete signaling pseudocode: implement the actual WebRTC offer/answer/ICE flow and current model configuration before expecting video. Never log ICE credentials.
+
 Connect to Azure Avatar for visual output.
 
 ```python
@@ -511,6 +516,8 @@ asyncio.run(avatar_assistant())
 ---
 
 ## Transcription Only
+
+Text-only modalities suppress audio output, not necessarily automatic model responses. Configure a supported transcription session or verified create_response=False mode; the sketch below alone does not guarantee transcription-only billing/behavior.
 
 Speech-to-text without AI response.
 

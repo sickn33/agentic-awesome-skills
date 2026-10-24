@@ -38,6 +38,25 @@ Choreography                    Orchestration
 | **Failed**       | Saga failed after compensation |
 
 
+## Durability contract
+
+These are single-worker teaching fragments, not a complete transaction engine.
+The state guards below stop sequential duplicates but do not solve concurrent
+messages: production needs transactional compare-and-swap/row locks, a durable
+inbox (event ID), and outbox writes atomic with state changes. Delivery and service
+side effects remain at-least-once; use stable `(saga,step,attempt)` command keys and
+provider idempotency. Never blindly repeat charges/refunds. Correlation metadata
+must not be overridden by user data; publish only per-service allowlisted fields,
+not the full payment/address-bearing `saga.data` shown for illustration.
+
+Compensation is a business action, not an ACID rollback. A failed or timed-out
+step may already have effects; reconcile unknown outcomes first. Add durable
+compensation retries/deadlines and an operator-visible manual-intervention state.
+A cancellation notice cannot undo an email and a shipment may be irreversible.
+The choreography fragment illustrates event relationships only and must not emit
+terminal failure until required compensations are acknowledged. Do not infer
+exactly-once external payments from a durable workflow product.
+
 ## Templates
 
 ### Template 1: Saga Orchestrator Base
@@ -47,7 +66,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import List, Dict, Any, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
 import uuid
 
 class SagaState(Enum):
@@ -117,6 +136,14 @@ class SagaOrchestrator(ABC):
         """Handle successful step completion."""
         saga = await self.saga_store.get(saga_id)
 
+        if saga is None or saga.state not in (SagaState.STARTED, SagaState.PENDING):
+            return
+        if saga.current_step >= len(saga.steps):
+            return
+        expected = saga.steps[saga.current_step]
+        if expected.name != step_name or expected.status != "executing":
+            return  # Duplicate, unknown or out-of-order completion.
+
         # Update step
         for step in saga.steps:
             if step.name == step_name:
@@ -142,6 +169,14 @@ class SagaOrchestrator(ABC):
         """Handle step failure - start compensation."""
         saga = await self.saga_store.get(saga_id)
 
+        if saga is None or saga.state not in (SagaState.STARTED, SagaState.PENDING):
+            return
+        if saga.current_step >= len(saga.steps):
+            return
+        expected = saga.steps[saga.current_step]
+        if expected.name != step_name or expected.status != "executing":
+            return
+        # A timeout is an unknown outcome; reconcile the service before this failure path.
         # Mark step as failed
         for step in saga.steps:
             if step.name == step_name:
@@ -169,52 +204,45 @@ class SagaOrchestrator(ABC):
         await self.event_publisher.publish(
             step.action,
             {
+                **saga.data,
                 "saga_id": saga.saga_id,
-                "step_name": step.name,
-                **saga.data
+                "step_name": step.name
             }
         )
 
     async def _compensate(self, saga: Saga):
         """Execute compensation for completed steps."""
-        # Compensate in reverse order
-        for i in range(saga.current_step - 1, -1, -1):
-            step = saga.steps[i]
+        # Wait for acknowledgement before compensating the preceding step.
+        if any(step.status == "compensating" for step in saga.steps):
+            return
+        for step in reversed(saga.steps[:saga.current_step]):
             if step.status == "completed":
                 step.status = "compensating"
                 await self.saga_store.save(saga)
-
-                await self.event_publisher.publish(
-                    step.compensation,
-                    {
-                        "saga_id": saga.saga_id,
-                        "step_name": step.name,
-                        "original_result": step.result,
-                        **saga.data
-                    }
-                )
+                await self.event_publisher.publish(step.compensation, {
+                    **saga.data,
+                    "saga_id": saga.saga_id,
+                    "step_name": step.name,
+                    "original_result": step.result,
+                })
+                return
+        saga.state = SagaState.FAILED
+        await self.saga_store.save(saga)
+        await self._on_saga_failed(saga)
 
     async def handle_compensation_completed(self, saga_id: str, step_name: str):
         """Handle compensation completion."""
         saga = await self.saga_store.get(saga_id)
 
-        for step in saga.steps:
-            if step.name == step_name:
-                step.status = "compensated"
-                step.compensated_at = datetime.utcnow()
-                break
-
-        # Check if all compensations complete
-        all_compensated = all(
-            s.status in ("compensated", "pending", "failed")
-            for s in saga.steps
-        )
-
-        if all_compensated:
-            saga.state = SagaState.FAILED
-            await self._on_saga_failed(saga)
-
+        if saga is None or saga.state != SagaState.COMPENSATING:
+            return
+        step = next((step for step in saga.steps if step.name == step_name), None)
+        if step is None or step.status != "compensating":
+            return
+        step.status = "compensated"
+        step.compensated_at = datetime.utcnow()
         await self.saga_store.save(saga)
+        await self._compensate(saga)
 
     async def _on_saga_completed(self, saga: Saga):
         """Called when saga completes successfully."""
@@ -448,18 +476,20 @@ class TimeoutSagaOrchestrator(SagaOrchestrator):
         step = next(s for s in saga.steps if s.name == data["step_name"])
 
         if step.status == "executing":
-            # Step timed out - fail it
+            # Do not assume timeout means no side effect: reconciliation is required.
+            raise NotImplementedError("Reconcile provider result before compensation")
+            # Only after reconciliation establishes failure:
             await self.handle_step_failed(
                 data["saga_id"],
                 data["step_name"],
-                "Step timed out"
+                "Reconciled failure after timeout"
             )
 ```
 
 
 ## Durable Execution Alternative
 
-The templates above build saga infrastructure from scratch — saga stores, event publishers, compensation tracking. **Durable execution frameworks** (like DBOS) eliminate much of this boilerplate: the workflow runtime automatically persists state to a database, retries failed steps, and resumes from the last checkpoint after crashes. Instead of building a `SagaOrchestrator` base class, you write a workflow function with steps — the framework handles persistence, crash recovery, and exactly-once execution semantics. Consider durable execution when you want saga-like reliability without managing the coordination infrastructure yourself.
+The templates above build saga infrastructure from scratch — saga stores, event publishers, compensation tracking. **Durable execution frameworks** (like DBOS) eliminate much of this boilerplate: the workflow runtime automatically persists state to a database, retries failed steps, and resumes from the last checkpoint after crashes. Instead of building a `SagaOrchestrator` base class, you write a workflow function with steps — the framework handles persistence, crash recovery, and framework-specific replay semantics. Consider durable execution when you want saga-like reliability without managing the coordination infrastructure yourself.
 
 
 ## Best Practices
@@ -470,7 +500,7 @@ The templates above build saga infrastructure from scratch — saga stores, even
 - **Design compensations carefully** - They must work
 - **Use correlation IDs** - For tracing across services
 - **Implement timeouts** - Don't wait forever
-- **Log everything** - For debugging failures
+- **Log redacted state transitions** - Exclude payment tokens, addresses and message payloads
 
 ### Don'ts
 

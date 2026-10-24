@@ -72,7 +72,7 @@ runapi auth status
 | Saved config | `printf '%s' "$RUNAPI_API_KEY" \| runapi auth import-token --token -` |
 | Browser login | `runapi login` only when the user explicitly wants browser auth |
 
-`RUNAPI_BASE_URL` overrides the default base URL.
+`RUNAPI_BASE_URL` overrides the default base URL. Verify its resolved HTTPS destination before sending account credentials or private prompts/media; do not inherit an unreviewed endpoint override. Generation requires authorization for the selected provider, input transfer and credit spend; inspect actual task status and output before claiming success.
 
 Avoid passing secrets directly in command arguments. Prefer `RUNAPI_API_KEY` or stdin token import with `--token -`.
 

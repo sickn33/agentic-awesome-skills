@@ -18,7 +18,7 @@ Automate Datadog monitoring and observability operations through Composio's Data
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Adding the endpoint does not authenticate Datadog; use the host-supported authorized connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -27,6 +27,8 @@ Automate Datadog monitoring and observability operations through Composio's Data
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Confirm the Datadog site/org, environment, service and time window before reading or changing state. Logs/traces may include credentials and personal data; limit and redact output. Monitor/event messages can notify Slack/PagerDuty recipients, so sending/mentions require explicit scope authorization. Downtime/muting suppresses alerts: use the narrowest approved monitor/scope with a bounded end and verify restoration. Preserve dashboard definitions before replacement/deletion and reconcile ambiguous writes before retrying. Missing metrics/logs or sampled traces are not proof of health; report retention, sampling and query coverage. Current API versions can differ in downtime shapes and dashboard behavior; use discovered schemas.
 
 ### 1. Query and Explore Metrics
 

@@ -1,6 +1,9 @@
 # Rate Limits — Instagram Graph API
 
-## Limites Principais
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
+## Estimativas históricas (não limites atuais garantidos)
 
 | Recurso | Limite | Janela | Notas |
 |---------|--------|--------|-------|
@@ -13,7 +16,7 @@
 ## Como a Skill Rastreia
 
 ### Sliding Window (SQLite)
-O `governance.py` usa a tabela `action_log` para contar ações dentro da janela:
+Os contadores são estimativas locais incompletas: não cobrem concorrência, outros clientes, todas as falhas ou limites de DM. O `governance.py` usa a tabela `action_log` para contar ações dentro da janela:
 
 ```sql
 -- Requests na última hora
@@ -47,7 +50,7 @@ WHERE account_id = ? AND searched_at >= datetime('now', '-7 days')
   }
 }
 ```
-**Ação:** Backoff de 1 hora. O `api_client.py` detecta e faz retry automático.
+**Ação:** Backoff de 1 hora. O cliente não repete escritas; respeite o erro/Retry-After e reconcilie resultados ambíguos antes de nova tentativa.
 
 ### Erro code 17 (User-level)
 ```json

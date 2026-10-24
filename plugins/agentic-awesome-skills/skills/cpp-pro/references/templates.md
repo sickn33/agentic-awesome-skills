@@ -77,7 +77,7 @@ template<typename T, typename = void>
 struct has_serialize : std::false_type {};
 
 template<typename T>
-struct has_serialize<T, std::void_t<decltype(std::declval<T>().serialize())>>
+struct has_serialize<T, std::void_t<decltype(std::declval<const T&>().serialize())>>
     : std::true_type {};
 
 template<typename T>
@@ -223,6 +223,7 @@ public:
     }
 
     T pop() {
+        if (data_.empty()) throw std::out_of_range("empty stack");
         T value = data_.back();
         data_.pop_back();
         return value;
@@ -254,7 +255,7 @@ constexpr int fact_5 = factorial(5);  // Computed at compile time
 // Compile-time prime checking
 constexpr bool is_prime(int n) {
     if (n < 2) return false;
-    for (int i = 2; i * i <= n; ++i) {
+    for (int i = 2; i <= n / i; ++i) {
         if (n % i == 0) return false;
     }
     return true;
@@ -309,6 +310,7 @@ public:
     // Evaluate expression template
     template<typename E>
     Vec& operator=(const VecExpression<E>& expr) {
+        if (size() != expr.size()) throw std::invalid_argument("size mismatch");
         for (size_t i = 0; i < size(); ++i) {
             data_[i] = expr[i];
         }
@@ -323,7 +325,9 @@ class VecSum : public VecExpression<VecSum<E1, E2>> {
     const E2& rhs_;
 
 public:
-    VecSum(const E1& lhs, const E2& rhs) : lhs_(lhs), rhs_(rhs) {}
+    VecSum(const E1& lhs, const E2& rhs) : lhs_(lhs), rhs_(rhs) {
+        if (lhs.size() != rhs.size()) throw std::invalid_argument("size mismatch");
+    }
 
     double operator[](size_t i) const {
         return lhs_[i] + rhs_[i];
@@ -340,7 +344,9 @@ VecSum<E1, E2> operator+(const VecExpression<E1>& lhs,
                           static_cast<const E2&>(rhs));
 }
 
-// Usage: a = b + c + d  (no temporaries created!)
+// Evaluate a = b + c + d within the same full expression. Expression
+// nodes are temporary objects; storing auto expr = b + c + d leaves
+// dangling references to inner nodes. Production libraries own rvalue nodes.
 ```
 
 ## Quick Reference

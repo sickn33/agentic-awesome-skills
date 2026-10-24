@@ -29,17 +29,9 @@ This reference covers everything that happens after recommendations are drafted:
 
 Performance numbers come from `signals.json.metrics.*` — they're observed, not extrapolated. Cite the exact route + metric value.
 
-**Dollar cost: never precise.** Use MAGNITUDE BUCKETS via `lib/impact-magnitude.mjs`'s `impactMagnitude({currentCost, impactTier})`:
-
-| Estimated reduction (USD) | Magnitude | Customer-facing phrase |
-|---|---|---|
-| < $5 | `negligible` | "small cost impact at current traffic" |
-| $5 – $50 | `small` | "low-tens of dollars per month at current traffic" |
-| $50 – $500 | `medium` | "hundreds of dollars per month at current traffic" |
-| $500 – $5,000 | `large` | "low-thousands of dollars per month at current traffic" |
-| > $5,000 | `very-large` | "thousands+ of dollars per month at current traffic" |
-
-Reduction is computed as `currentCost × fraction` where `fraction = {high: 0.4, medium: 0.2, low: 0.1}[impactTier]`. The fraction is intentionally conservative — we'd rather under-promise than mislead.
+**Savings require measurement.** Billed spend and an impact tier do not establish a reduction
+fraction. `impactMagnitude` returns an unmeasured phrase until before-and-after evidence supports a
+savings claim. Do not turn a 14-day bill into a monthly estimate or attach arbitrary tier fractions.
 
 ### Discountable vs non-discountable SKUs
 
@@ -61,7 +53,7 @@ A recommendation that targets a non-discountable SKU should never frame savings 
 
 - Traffic varies. A "20% reduction in edge requests" is exact at today's traffic and meaningless next quarter.
 - Pricing changes. Vercel's billing rates move; precise dollar projections rot.
-- The user is smart. They'd rather see "hundreds of dollars per month" with a real metric backing it than `$340/mo` with a hand-wave behind it.
+- A qualitative savings claim still requires evidence; removing dollar precision does not make an unsupported estimate valid.
 - The `$-strip` sanitizer enforces this at output time. Any `$N` literal that slips into customer-facing fields is replaced with "the billed cost" before rendering.
 
 ## `impactLabel` schema
@@ -179,10 +171,10 @@ This section earns the user's trust. For every metric signal we considered but d
 Common data gaps to call out when the underlying metric returned empty rows. If the metric query failed (`ok=false`), say the metric was not usable with the code; do not convert failed queries into "no measurements" or "not used" claims.
 
 - **Core Web Vitals empty.** The Speed Insights metric returned no measurements for the 14-day window. The `cwv_poor` gate stayed dormant; no claims about LCP/INP/CLS are made.
-- **ISR empty.** Project doesn't use Incremental Static Regeneration. The `isr_overrevalidation` gate stayed dormant.
-- **Middleware empty.** No `middleware.ts` (or matcher excludes all observed traffic). The `middleware_heavy` gate stayed dormant.
-- **Image transformations empty.** No `next/image` usage or no images served in the window.
-- **BotID checks empty.** BotID is disabled — see the `platform_bot_protection` recommendation for the toggle.
+- **ISR empty.** No ISR units were returned for this window; this does not establish that the project never uses ISR. The `isr_overrevalidation` gate stayed dormant.
+- **Middleware empty.** No middleware invocations were returned; source/configuration and metric availability determine why. The `middleware_heavy` gate stayed dormant.
+- **Image transformations empty.** No transformations were returned; cache reuse, no traffic, custom loaders or missing metrics are possible.
+- **BotID checks empty.** No checks were returned; verify project configuration before calling BotID disabled.
 - **Cold-start data near-zero.** Fluid Compute may already be enabled, or the project's traffic pattern keeps warm instances available; the `cold_start` gate evaluates the data but emits no candidate.
 
 The "Not investigated in this run" section is critical. It comes directly from `gate.json` produced by the gate. It tells the user we considered everything; we didn't just pick the easy targets.

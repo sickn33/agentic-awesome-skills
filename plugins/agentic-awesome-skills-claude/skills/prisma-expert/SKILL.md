@@ -39,6 +39,8 @@ ls -la node_modules/.prisma/client/ 2>/dev/null | head -3
 3. Apply progressive fixes (minimal → better → complete)
 4. Validate with Prisma CLI and testing
 
+These CLI/client patterns depend on the installed Prisma major and engine/driver adapter. Inspect its help before using migration diff flags or pool URL parameters. Do not let npx fetch an unreviewed CLI for detection. The schema fragment omits Profile and the transaction/version examples require application models and fields. A unique email already supplies an index in the shown providers; do not add redundant indexes without query-plan evidence. Log query timing/shape without sensitive values. Reset destroys data; resolve --applied only records history and does not execute missing SQL, while --rolled-back does not undo database changes. Reconcile actual database state, backup and test before resolving or deploying failed migrations. Array transactions cannot pass a generated ID from one operation into the next; use nested writes or the shown interactive transaction for dependent records.
+
 ## Problem Playbooks
 
 ### Schema Design
@@ -199,7 +201,7 @@ const users = await prisma.user.findMany({
 const result = await prisma.$queryRaw`
   SELECT u.id, u.email, COUNT(p.id) as post_count
   FROM users u
-  LEFT JOIN posts p ON p.author_id = u.id
+  LEFT JOIN posts p ON p."authorId" = u.id
   GROUP BY u.id
 `;
 ```

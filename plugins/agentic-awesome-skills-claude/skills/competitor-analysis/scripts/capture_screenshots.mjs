@@ -12,32 +12,15 @@
 //
 // Usage: node capture_screenshots.mjs <research-dir> [--mode remote|local] [--concurrency 2]
 
-import sanitizeFilename from 'sanitize-filename';
-import { readdirSync, readFileSync, mkdirSync, existsSync } from 'fs';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
+import { readdirSync, readFileSync, mkdirSync, existsSync, unlinkSync } from 'fs';
 import { isAbsolute, join, relative, resolve } from 'path';
 import { spawnSync } from 'child_process';
 import { parseFrontmatter } from './md_utils.mjs';
 
 const args = process.argv.slice(2);
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeCliPath(value, base = process.cwd()) { return checkedPath(value, base); }
 
-function safeCliPath(pathValue, baseDir = process.cwd()) {
-  const root = resolve(baseDir);
-  const target = resolve(root, ...sanitizePathSegments(pathValue));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || isAbsolute(rel)) {
-    throw new Error(`Path escapes allowed directory: ${pathValue}`);
-  }
-  return target;
-}
 
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
@@ -62,11 +45,13 @@ Options:
 const dir = safeCliPath(args[0]);
 const modeIdx = args.indexOf('--mode');
 const browseMode = modeIdx !== -1 ? args[modeIdx + 1] : 'remote';
+if (!['local','remote'].includes(browseMode)) throw new Error('Invalid browser mode');
+if (!args.includes('--allow-browser')) throw new Error('Explicit --allow-browser is required after authorization of provider cost and page access');
 const modeFlag = browseMode === 'local' ? '--local' : '--remote';
 // Drive a dedicated named session so we never collide with whatever `browse` session
 // the user already has open (the default session is bound to one mode — opening it
 // --remote while a --local session is live errors out). Stopped at the end of the run.
-const SESSION = 'competitor-analysis-shots';
+const SESSION = `competitor-analysis-shots-${process.pid}-${Date.now()}`;
 const browseFlags = [modeFlag, '-s', SESSION];
 const concurrencyIdx = args.indexOf('--concurrency');
 let concurrency = concurrencyIdx !== -1 ? parseInt(args[concurrencyIdx + 1], 10) : 1;
@@ -92,24 +77,26 @@ function run(cmd, args, { timeout = 30000 } = {}) {
 }
 
 async function captureOne(slug, website) {
-  const heroPath = join(shotsDir, `${slug}-hero.png`);
+  const heroPath = insidePath(shotsDir, `${slug}-hero.png`);
   const result = { slug, hero: null, errors: [] };
 
   if (skipExisting && existsSync(heroPath)) {
     return { ...result, hero: heroPath, skipped: true };
   }
 
+  // Remove only this owned screenshot so a failed navigation cannot reuse stale output.
+  if (existsSync(heroPath)) unlinkSync(heroPath);
   // Hero: viewport 1280x800, single-screen shot. The mode + session flags are passed on
   // each command so every call resolves to the same dedicated browser session.
   try {
-    const openRes = run('browse', ['open', website, ...browseFlags], { timeout: 30000 });
+    const openRes = run('browse', ['open', publicURL(website), ...browseFlags], { timeout: 30000 });
     // `browse open` exits 0 even when navigation fails — it just lands the tab on
     // `chrome-error://chromewebdata/`. Detect failure from the resulting URL, not the exit
     // code, so we never screenshot a Chrome error page (and, since the session is reused
     // across competitors, never save one competitor's page under another's slug).
     let landedUrl = '';
     try { landedUrl = (JSON.parse(openRes.stdout || '{}').url) || ''; } catch { /* non-JSON stdout */ }
-    if (openRes.status !== 0 || !landedUrl || /^chrome-error:\/\//.test(landedUrl) || landedUrl === 'about:blank') {
+    if (openRes.status !== 0 || !landedUrl || /^chrome-error:\/\//.test(landedUrl) || landedUrl === 'about:blank' || new URL(publicURL(landedUrl)).hostname !== new URL(website).hostname) {
       result.errors.push(`open failed (landed: ${landedUrl || 'unknown'}): ${openRes.stderr || openRes.stdout || `exit ${openRes.status}`}`.slice(0, 200));
       return result;
     }
@@ -127,7 +114,7 @@ async function captureOne(slug, website) {
 const files = readdirSync(dir).filter(f => f.endsWith('.md')).sort();
 const jobs = [];
 for (const f of files) {
-  const content = readFileSync(join(dir, f), 'utf-8');
+  const content = readFileSync(insidePath(dir, f), 'utf-8');
   const fm = parseFrontmatter(content);
   if (!fm || !fm.website) continue;
   const slug = f.replace('.md', '');
@@ -161,3 +148,4 @@ run('browse', ['stop', '-s', SESSION]);
 const okHero = results.filter(r => r.hero).length;
 console.error(`\nDone: ${okHero}/${jobs.length} hero`);
 console.log(JSON.stringify({ total: jobs.length, hero: okHero, outputDir: shotsDir }));
+if (!jobs.length || okHero !== jobs.length) process.exitCode = 1;

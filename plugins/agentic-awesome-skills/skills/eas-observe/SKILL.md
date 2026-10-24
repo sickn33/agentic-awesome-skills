@@ -7,7 +7,7 @@ source_repo: expo/skills
 source_type: official
 source: expo
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -20,6 +20,10 @@ risk: unknown
 EAS Observe tracks startup, navigation, and custom-event performance from production Expo apps. It needs a development or production build — the native library is not in Expo Go.
 
 > **Source of truth:** https://docs.expo.dev/eas/observe/ — always consult the canonical docs when API details matter, especially get-started, configuration, integrations, and the metrics reference. EAS Observe is evolving; this skill's references are written to stay accurate but may lag the docs.
+
+## Authorization and privacy
+
+Confirm the existing EAS account/project, telemetry data policy and current plan before enabling collection, sending events or starting paid builds. Adding instrumentation can transmit routes, identifiers, error messages/stacks and request hosts. Do not collect secrets or unnecessary personal data; use synthetic test data, review route filtering before enabling integrations, and verify behavior on the installed SDK. Do not redirect telemetry to a custom endpoint without authorization. Preparing an integration does not authorize EAS project creation, dependency-wide repair, builds or feedback submission. Feedback commands download and execute a package and send data externally; use only when explicitly requested, with redacted content.
 
 ## Which reference to read
 
@@ -46,7 +50,7 @@ The four reference files in `./references/` cover what people typically need thi
 
 ## Known gaps between the docs and the shipped code
 
-Verified against `eas-cli` 21.8.0 and `expo-observe` 57.0.9. Trust this skill's references over the docs on these points, but re-check with `--help` and the installed package before relying on them:
+Verified against `eas-cli` 21.8.0 and `expo-observe` 57.0.9. These are upstream snapshot observations, not a current verification; re-check with `--help` and the installed package before relying on them:
 
 - All six CLI commands are on the [Querying with EAS CLI](https://docs.expo.dev/eas/observe/eas-cli/) page. Older doc builds list only four and omit `observe:routes` and `observe:session`.
 - Navigation metric aliases are `nav_cold_ttr`, `nav_warm_ttr`, and `nav_tti`. There are no bare `cold_ttr` / `warm_ttr` aliases in the CLI.

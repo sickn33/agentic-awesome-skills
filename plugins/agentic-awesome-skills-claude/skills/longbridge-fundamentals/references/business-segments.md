@@ -43,7 +43,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge business-segments --format json
+longbridge business-segments AAPL.US --format json
 
 # See all options
 longbridge business-segments --help

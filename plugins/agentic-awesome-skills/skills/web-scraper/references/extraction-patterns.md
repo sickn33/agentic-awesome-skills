@@ -235,7 +235,8 @@ function extractJsonLd(targetType) {
   }).filter(Boolean);
 
   // Flatten @graph arrays
-  const flat = allData.flatMap(d => d['@graph'] || [d]);
+  const flat = allData.flatMap(d => Array.isArray(d) ? d : (d['@graph'] || [d]))
+    .filter(d => d && typeof d === 'object');
 
   if (targetType) {
     return flat.filter(d =>
@@ -348,13 +349,14 @@ JSON.stringify(extractFAQ());
 ```javascript
 function extractLinks(scope) {
   const container = scope ? document.querySelector(scope) : document;
+  if (!container) return { error: 'Container not found' };
   const links = Array.from(container.querySelectorAll('a[href]'))
     .map(a => ({
       text: a.textContent.trim(),
       href: a.href,
       title: a.title || null
     }))
-    .filter(l => l.text && l.href && !l.href.startsWith('javascript:'));
+    .filter(l => l.text && l.href && ['http:', 'https:'].includes(new URL(l.href).protocol));
   return { links, count: links.length };
 }
 JSON.stringify(extractLinks());
@@ -365,6 +367,7 @@ JSON.stringify(extractLinks());
 ```javascript
 function extractImages(scope) {
   const container = scope ? document.querySelector(scope) : document;
+  if (!container) return { error: 'Container not found' };
   const images = Array.from(container.querySelectorAll('img'))
     .map(img => ({
       src: img.src,
@@ -395,7 +398,7 @@ Then in the workflow:
 3. `computer(action="wait", duration=2)`
 4. `javascript_tool`: `countItems('.item')` -> get new count
 5. If new count > old count, repeat from step 2
-6. If count unchanged after 2 scrolls, all items loaded
+6. If count unchanged after 2 scrolls, stop as a heuristic; completeness remains unverified (virtualized lists may keep a constant DOM count)
 7. Extract all items at once
 
 ---
@@ -429,7 +432,7 @@ Then in the workflow:
 - May have download links for CSV/Excel - check for `.csv`, `.xlsx` links
 - Data dictionaries may be on separate pages
 - Look for API endpoints in page source (`/api/`, `.json` links)
-- CORS may block direct API access; use Bash curl instead
+- Use a documented authorized API/export route; a different HTTP client does not grant access permission
 
 ### Social Media (Public Profiles)
 - Content is almost always JS-rendered - use Browser automation

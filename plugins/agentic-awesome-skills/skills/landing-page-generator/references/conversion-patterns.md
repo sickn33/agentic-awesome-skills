@@ -32,6 +32,8 @@ This reference catalogs proven landing page design patterns that drive higher co
 
 ## Social Proof Placement
 
+Use only real consented testimonials/logos and verifiable numbers/certifications. Placement suggestions are hypotheses, not guaranteed conversion lifts.
+
 ### Logo Bar
 - **Position:** Immediately below hero section
 - **Count:** 5-7 logos for credibility without clutter
@@ -115,7 +117,7 @@ This reference catalogs proven landing page design patterns that drive higher co
 ## Form Optimization
 
 ### Field Reduction
-- Every additional field reduces conversion ~10%
+- Extra fields may add friction; measure the effect for this audience rather than assuming a fixed percentage
 - Start with email only, progressive profiling later
 - Use single-column layouts for forms
 
@@ -170,7 +172,7 @@ Test these elements in order of expected impact:
 
 ### Testing Best Practices
 - Test one variable at a time for clear attribution
-- Run tests for minimum 2 weeks or 1,000 visitors per variant
+- Predefine metric, allocation, minimum effect, power/sample size and stopping rule; account for business cycles and multiple comparisons
 - Use 95% statistical significance threshold
 - Document all test results for institutional knowledge
 - Winner becomes new control for next test iteration

@@ -46,7 +46,8 @@ class JucemaScraper(AbstractJuntaScraper):
             async with httpx.AsyncClient(
                 headers={**self.HEADERS, "Accept": "application/json"},
                 verify=True,
-                follow_redirects=True,
+                follow_redirects=False,
+                event_hooks=self.request_hooks(),
                 timeout=30.0,
             ) as client:
                 resp = await client.get(self._API_URL)
@@ -149,7 +150,7 @@ class JucemaScraper(AbstractJuntaScraper):
             if is_nome:
                 if current and current.get("nome"):
                     records.append(current)
-                current = {"nome": text, "municipio": "Sao Luis"}
+                current = {"nome": text, "municipio": None}
             elif current and text and re.search(r"\(\d{2}\)", text):
                 current.setdefault("telefone", text)
 
@@ -164,7 +165,8 @@ class JucemaScraper(AbstractJuntaScraper):
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
                 timeout=30.0,
-                follow_redirects=True,
+                follow_redirects=False,
+                event_hooks=self.request_hooks(),
                 verify=should_verify_tls(),
             ) as client:
                 resp = await client.get(url)

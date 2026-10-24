@@ -124,7 +124,7 @@ import { SuspenseLoader } from '@/components/SuspenseLoader';
 - Shows loading indicator while lazy component loads
 - Smooth fade-in animation
 - Consistent loading experience
-- Prevents layout shift
+- Can reduce layout shift when fallback and content reserve matching space
 
 ### Where to Place Suspense Boundaries
 
@@ -499,4 +499,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 **See Also:**
 - [data-fetching.md](data-fetching.md) - useSuspenseQuery details
 - [loading-and-error-states.md](loading-and-error-states.md) - Suspense best practices
-- [complete-examples.md](complete-examples.md) - Full working examples
+- [complete-examples.md](complete-examples.md) - Illustrative application excerpts
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

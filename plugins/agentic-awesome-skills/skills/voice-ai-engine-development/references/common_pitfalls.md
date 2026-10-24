@@ -1,5 +1,8 @@
 # Common Pitfalls and Solutions
 
+> These examples are mock implementations and illustrative integration sketches, not production adapters. Full-response buffering is optional and raises first-audio latency; ordered sentence streaming is valid. Muting the sole microphone/transcriber prevents barge-in: use echo cancellation and an independent speech detector for duplex interruption. Pacing must derive from actual sample rate, channels and bytes per sample, account for generator wait and client buffer acknowledgements, and flush stale playback on interruption. Estimated text offsets are not proof of words heard. Keep provider input/output formats compatible rather than universally forcing 16kHz PCM.
+
+
 This document covers common issues encountered when building voice AI engines and their solutions.
 
 ## 1. Audio Jumping/Cutting Off
@@ -21,7 +24,7 @@ Sending text to the synthesizer in small chunks (sentence-by-sentence or word-by
 - Inconsistent voice characteristics between chunks
 
 ### Solution
-Buffer the entire LLM response before sending it to the synthesizer:
+One simple tradeoff is to buffer the full response and serialize playback; for lower latency, use ordered sentence streaming with cancellation:
 
 **❌ Bad: Yields sentence-by-sentence**
 ```python
@@ -47,7 +50,7 @@ async def generate_response(self, prompt):
 - Single TTS call for the entire response
 - Consistent voice characteristics
 - Proper timing and pacing
-- No gaps or overlaps
+- Avoids overlapping calls only when the playback orchestrator serializes output
 
 ---
 
@@ -66,7 +69,7 @@ The bot hears itself speaking and responds to its own audio, creating an infinit
 The transcriber continues to process audio while the bot is speaking. If the bot's audio is being played through speakers and captured by the microphone, the transcriber will transcribe the bot's own speech.
 
 ### Solution
-Mute the transcriber when the bot starts speaking:
+For a deliberately half-duplex fallback, mute the transcriber during playback; this prevents voice barge-in and needs a separate stop control. For duplex use echo cancellation/VAD instead:
 
 ```python
 # Before sending audio to output
@@ -135,7 +138,7 @@ Rate-limit audio chunks to match real-time playback:
 ```python
 async for chunk in synthesis_result.chunk_generator:
     # Sends all chunks as fast as possible
-    output_device.consume_nonblocking(chunk)
+    await output_device.consume_nonblocking(chunk)
 ```
 
 **✅ Good: Rate-limit chunks**
@@ -149,20 +152,20 @@ async for chunk in synthesis_result.chunk_generator:
         )
         return partial_message, True  # cut_off = True
     
-    start_time = time.time()
+    start_time = asyncio.get_running_loop().time()
     
     # Send chunk
-    output_device.consume_nonblocking(chunk)
+    await output_device.consume_nonblocking(chunk)
     
     # CRITICAL: Wait for chunk duration before sending next
-    processing_time = time.time() - start_time
+    processing_time = asyncio.get_running_loop().time() - start_time
     await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
     
     chunk_idx += 1
 ```
 
 ### Why This Works
-- Only one chunk is buffered on client at a time
+- Pacing can bound queued audio, but only client acknowledgements expose actual playback buffering
 - Interrupts can stop mid-sentence
 - Natural conversation flow
 - Real-time playback maintained
@@ -241,8 +244,8 @@ async def terminate(self):
     self.agent.terminate()
     self.synthesizer.terminate()
     
-    # Wait for queues to drain
-    await asyncio.sleep(0.5)
+    # Sleep does not drain queues. Cancel and await tracked tasks; for graceful
+    # draining use Queue.join() paired with task_done() for each retrieved item.
     
     # Close connections
     if self.websocket:
@@ -448,8 +451,8 @@ await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
 
 | Problem | Root Cause | Solution |
 |---------|-----------|----------|
-| Audio jumping | Multiple TTS calls | Buffer entire response |
-| Echo/feedback | Transcriber active during bot speech | Mute transcriber |
+| Audio jumping | Uncoordinated synthesis/playback | Serialize output; choose response or sentence buffering |
+| Echo/feedback | Acoustic echo reaches input | Echo cancellation/VAD; half-duplex muting disables barge-in |
 | Interrupts not working | All chunks sent immediately | Rate-limit chunks |
 | Memory leaks | Unclosed streams | Proper cleanup |
 | Lost context | History not maintained | Update conversation history |
@@ -461,11 +464,11 @@ await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
 
 ## Best Practices
 
-1. **Always buffer LLM responses** before sending to synthesizer
-2. **Always mute transcriber** when bot is speaking
+1. **Serialize LLM/TTS responses** before sending to synthesizer
+2. **Use echo cancellation or a separate barge-in detector; half-duplex muting disables voice interruption** when bot is speaking
 3. **Always rate-limit audio chunks** to enable interrupts
 4. **Always cleanup resources** in finally blocks
 5. **Always maintain conversation history** for context
 6. **Always use streaming** for low latency
-7. **Always use LINEAR16 PCM** at 16kHz for audio
+7. **Match the negotiated codec, channels and sample rate**; 16kHz mono PCM is only one option
 8. **Always implement error handling** in worker loops

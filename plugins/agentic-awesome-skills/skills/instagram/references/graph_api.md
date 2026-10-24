@@ -1,6 +1,9 @@
 # Instagram Graph API — Referência de Endpoints
 
-Base URL: `https://graph.instagram.com/v21.0`
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
+Base URL: `https://graph.facebook.com/v21.0`
 
 ## Índice
 
@@ -115,18 +118,9 @@ POST /{user-id}/media_publish
 
 **Resposta:** `{"id": "ig_media_id"}`
 
-### Agendamento via API
+### Agendamento
 
-```
-POST /{user-id}/media
-  image_url=URL
-  caption=texto
-  published=false
-  scheduled_publish_time=UNIX_TIMESTAMP
-```
-
-- Timestamp deve ser entre 10 min e 75 dias no futuro
-- Apenas contas Business (Creator não suporta scheduling nativo)
+Não há agendamento nativo implementado. Os parâmetros `published=false` e `scheduled_publish_time` não devem ser usados como contrato da Instagram Content Publishing API. O processador local está desativado até implementar aprovação persistida e reconciliação.
 
 ---
 
@@ -283,7 +277,7 @@ Enviar mensagem.
 
 **Restrições:**
 - Apenas responder a conversas existentes (dentro de janela de 24hrs)
-- Ou usar Message Templates aprovados (requer aprovação Meta)
+- Não presume que templates aprovados autorizem envio fora da janela; verifique a política específica do Instagram. Templates de WhatsApp não são um mecanismo de Instagram DM.
 
 ---
 

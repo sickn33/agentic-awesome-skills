@@ -4,7 +4,7 @@
 
 ## Purpose
 
-Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats. Content organized into 15 major vulnerability categories aligned with industry standards and real-world attack patterns.
+Provide an overlapping, illustrative reference using historical source numbering for web application vulnerability patterns organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats. Content organized into 15 major vulnerability categories aligned with industry standards and real-world attack patterns.
 
 
 ## Outputs and Deliverables
@@ -91,7 +91,7 @@ Assess authentication mechanism weaknesses:
 - Definition: Circumventing bot detection mechanisms
 - Root Cause: Weak CAPTCHA algorithms, improper validation
 - Impact: Automated attacks, credential stuffing, spam
-- Mitigation: reCAPTCHA v3, layered bot detection, rate limiting
+- Mitigation: Accessible layered bot detection, rate limiting
 
 ### Phase 3: Sensitive Data Exposure
 
@@ -158,7 +158,7 @@ Assess configuration weaknesses:
 **Misconfigured CORS (35)**
 - Definition: Overly permissive Cross-Origin Resource Sharing policies
 - Root Cause: Wildcard origins, improper CORS configuration
-- Impact: Cross-site request attacks, data theft
+- Impact: Possible cross-origin response disclosure when the browser policy permits attacker access; CORS does not prevent CSRF
 - Mitigation: Whitelist trusted origins, validate CORS headers
 
 **Unpatched Software (34)**
@@ -215,7 +215,7 @@ Assess authorization enforcement:
 - Definition: Direct URL manipulation to access restricted resources
 - Root Cause: Weak access controls, predictable URLs
 - Impact: Unauthorized file/directory access
-- Mitigation: Server-side access controls, unpredictable resource paths
+- Mitigation: Server-side object/function authorization; unpredictable paths are defense in depth
 
 **Missing Function-Level Access Control (44)**
 - Definition: Unprotected administrative or privileged functions
@@ -427,7 +427,7 @@ Assess SSRF vulnerabilities:
 | 93 | Race Conditions | Missing sync | Privilege escalation | Proper locking |
 | 94-95 | Business Logic Flaws | Missing validation | Financial fraud | Server-side validation |
 | 96 | Account Enumeration | Different responses | Targeted attacks | Uniform responses |
-| 98-99 | Unpatched Vulnerabilities | Patch delays | Zero-day exploitation | Patch management |
+| 98-99 | Unpatched Vulnerabilities | Patch delays | Known-vulnerability exploitation | Patch management |
 | 100 | Zero-Day Exploits | Unknown vulns | Unmitigated attacks | Defense in depth |
 
 ---
@@ -461,8 +461,8 @@ Assess SSRF vulnerabilities:
 Content-Security-Policy: default-src 'self'; script-src 'self'
 X-Content-Type-Options: nosniff
 X-Frame-Options: DENY
-X-XSS-Protection: 1; mode=block
-Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-XSS-Protection: 0
+Strict-Transport-Security: max-age=300
 Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: geolocation=(), microphone=()
 ```
@@ -494,7 +494,7 @@ Permissions-Policy: geolocation=(), microphone=()
 | False positives in scanning | Manual verification, contextual analysis |
 | Business logic flaws missed | Manual testing, threat modeling, abuse case analysis |
 | Encrypted traffic analysis | Proxy configuration, certificate installation |
-| WAF blocking tests | Rate adjustment, IP rotation, payload encoding |
+| WAF blocking tests | Stop on blocking; coordinate permitted rates and scope with the owner |
 | Session handling issues | Cookie management, authentication state tracking |
 | API discovery | Swagger/OpenAPI enumeration, traffic analysis |
 
@@ -503,7 +503,7 @@ Permissions-Policy: geolocation=(), microphone=()
 | Vulnerability Type | Verification Approach |
 |-------------------|----------------------|
 | Injection | Payload testing with encoded variants |
-| XSS | Alert boxes, cookie access, DOM inspection |
+| XSS | Harmless controlled marker and DOM inspection; no real session-cookie extraction |
 | CSRF | Cross-origin form submission testing |
 | SSRF | Out-of-band DNS/HTTP callbacks |
 | XXE | External entity with controlled server |
@@ -521,3 +521,9 @@ Permissions-Policy: geolocation=(), microphone=()
 - OWASP Application Security Verification Standard (ASVS)
 - NIST Cybersecurity Framework
 - Source: Kumar MS - Top 100 Web Vulnerabilities
+
+## Interpretation and safe validation
+
+This is not a ranked, complete list of 100 distinct vulnerabilities or a current OWASP taxonomy: numbers overlap and some are omitted. Missing headers, open ports, reverse engineering capability and wildcard public CORS alone are not proof of exploitable impact. URLs, callback endpoints and test accounts must be within authorized scope. Timing alone is inconclusive. Do not perform load/DoS, leaked-credential use or sensitive file/data extraction; validate with bounded canaries in a controlled lab.
+
+Header examples require compatibility testing: start CSP in report-only mode where needed, use frame-ancestors for modern embedding controls, and expand HSTS lifetime/subdomain scope only after HTTPS readiness checks. Encryption/signatures and input validation do not make unsafe deserialization safe. SSRF controls must validate resolved destinations and each redirect and restrict egress; CORS is not an authentication mechanism.

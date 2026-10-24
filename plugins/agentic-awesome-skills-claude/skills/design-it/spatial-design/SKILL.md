@@ -30,7 +30,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 ```css
 body {
   /* Needs a complex background to look right */
-  background: url('room-environment.jpg') cover;
+  background: #203040 url('room-environment.jpg') center / cover no-repeat;
 }
 
 .spatial-panel {
@@ -212,7 +212,7 @@ const SpatialDesignScreen = () => {
   );
 };
 ```
-- `BlurView` from `@react-native-community/blur` is the only way to achieve this.
+- `BlurView` from `@react-native-community/blur` is one backdrop-blur option; evaluate platform support and reduced-transparency fallback.
 - Use `blurType="light"` for the main panel and `blurType="dark"` for the buttons to create contrast between the glass layers.
 
 ### Jetpack Compose
@@ -230,7 +230,7 @@ fun SpatialDesignScreen() {
                 .shadow(20.dp, RoundedCornerShape(32.dp), spotColor = Color.Black.copy(alpha = 0.1f))
                 // Android 12+ Blur
                 .graphicsLayer {
-                    renderEffect = RenderEffect.createBlurEffect(30f, 30f, Shader.TileMode.DECAL).asComposeRenderEffect()
+                    // No renderEffect here: it would blur this panel and its text, not the room.
                     clip = true
                     shape = RoundedCornerShape(32.dp)
                 }
@@ -266,3 +266,5 @@ fun SpatialDesignScreen() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+These flat-screen examples simulate spatial styling; they do not implement eye tracking, AR anchoring, environmental lighting or 3D windows. Keep content contrast stable over every background and use actual labeled controls for interaction. Native visionOS windows should use the platform window/material APIs.

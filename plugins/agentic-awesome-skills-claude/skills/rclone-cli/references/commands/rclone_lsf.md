@@ -100,8 +100,7 @@ $ rclone lsf  --separator "," --format "tshp" swift:bucket
 2016-06-25 18:55:40,37600,8fd37c3810dd660778137ac3a66cc06d,fubuwic
 ```
 
-You can output in CSV standard format.  This will escape things in "
-if they contain,
+Use `--csv` for CSV quoting of fields containing commas, quotes, or newlines.
 
 E.g.
 
@@ -119,7 +118,7 @@ For example, to find all the files modified within one day and copy
 those only (without traversing the whole directory structure):
 
 ```console
-rclone lsf --absolute --files-only --max-age 1d /path/to/local > new_files
+rclone lsf -R --absolute --files-only --max-age 1d /path/to/local > new_files
 rclone copy --files-from-raw new_files /path/to/local remote:path
 ```
 

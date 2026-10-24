@@ -12,6 +12,10 @@ tools: [claude, cursor, gemini]
 
 # k6 Load Testing
 
+## Execution scope
+
+Confirm exact target, environment, VU/request-rate/duration ceilings, window, stop conditions, downstream effects and test-data cleanup before load. Start at one VU; examples are not permission to stress a public endpoint. Cloud output requires authorization to upload results and incur charges. Checks alone do not fail a k6 run: add checks thresholds for asserted functional correctness. Fixtures must be nonempty and user allocation must match concurrency; modulo reuse can distort auth results.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
@@ -70,10 +74,14 @@ export default function () {
   const user = users[__VU % users.length];
   
   const loginRes = http.post('https://api.example.com/login',
-    JSON.stringify({ email: user.email, password: user.password })
+    JSON.stringify({ email: user.email, password: user.password }),
+    {headers: {'Content-Type': 'application/json'}, timeout: '10s', redirects: 0}
   );
   
-  const token = loginRes.json('access_token');
+  if (!check(loginRes, {'login succeeded': r => r.status === 200})) return;
+  let token;
+  try { token = loginRes.json('access_token'); } catch (_) { return; }
+  if (typeof token !== 'string' || !token) return;
   
   const headers = { 'Authorization': `Bearer ${token}` };
   const res = http.get('https://api.example.com/profile', { headers });

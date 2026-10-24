@@ -21,6 +21,7 @@ Assess current dependency state and upgrade needs:
 **Comprehensive Dependency Audit**
 ```python
 import json
+import re
 import subprocess
 from datetime import datetime, timedelta
 from packaging import version
@@ -53,7 +54,7 @@ class DependencyAnalyzer:
             if npm_output.stdout:
                 npm_data = json.loads(npm_output.stdout)
                 for pkg, info in npm_data.items():
-                    deps[pkg] = {
+                    deps[f"npm:{pkg}"] = {
                         'current': info['current'],
                         'wanted': info['wanted'],
                         'latest': info['latest'],
@@ -75,7 +76,7 @@ class DependencyAnalyzer:
             if pip_output.stdout:
                 pip_data = json.loads(pip_output.stdout)
                 for pkg_info in pip_data:
-                    deps[pkg_info['name']] = {
+                    deps[f"pip:{pkg_info['name']}"] = {
                         'current': pkg_info['version'],
                         'latest': pkg_info['latest_version'],
                         'ecosystem': 'pip',
@@ -278,12 +279,11 @@ If issues arise, follow these steps to rollback:
 
 ```bash
 # Revert package version
-git checkout package.json package-lock.json
-npm install
+# Restore only the reviewed dependency change from a recorded clean base; preserve unrelated work.
+# Reinstall from its verified lockfile using the project package manager.
 
 # Or use the backup branch
-git checkout main
-git branch -D upgrade/{package_name}-{target_version}
+# Preserve the topic branch/evidence; do not force-delete it as a rollback.
 ```
 
 ## Common Issues & Solutions
@@ -343,7 +343,7 @@ class IncrementalUpgrader:
 npm install {package_name}@{step['version']}
 
 # Test command
-npm test -- --updateSnapshot
+npm test  # review snapshot differences; never auto-accept changed behavior
 
 # Verification
 npm run integration-tests
@@ -474,7 +474,7 @@ def generate_compatibility_matrix(dependencies):
     for pkg, info in matrix.items():
         compatible = '✅' if not info['conflicts'] else '⚠️'
         conflicts = ', '.join(info['conflicts']) if info['conflicts'] else 'None'
-        action = 'Safe to upgrade' if not info['conflicts'] else 'Resolve conflicts first'
+        action = 'No declared conflicts found; runtime tests still required' if not info['conflicts'] else 'Resolve conflicts first'
         
         report += f"| {pkg} | {info['current']} | {info['target']} | {compatible} | {conflicts} | {action} |\n"
     
@@ -499,61 +499,9 @@ def check_compatibility(package_name, version):
 
 Implement safe rollback procedures:
 
-**Rollback Manager**
-```bash
-#!/bin/bash
-# rollback-dependencies.sh
+**Rollback procedure**
 
-# Create rollback point
-create_rollback_point() {
-    echo "📌 Creating rollback point..."
-    
-    # Save current state
-    cp package.json package.json.backup
-    cp package-lock.json package-lock.json.backup
-    
-    # Git tag
-    git tag -a "pre-upgrade-$(date +%Y%m%d-%H%M%S)" -m "Pre-upgrade snapshot"
-    
-    # Database snapshot if needed
-    if [ -f "database-backup.sh" ]; then
-        ./database-backup.sh
-    fi
-    
-    echo "✅ Rollback point created"
-}
-
-# Perform rollback
-rollback() {
-    echo "🔄 Performing rollback..."
-    
-    # Restore package files
-    mv package.json.backup package.json
-    mv package-lock.json.backup package-lock.json
-    
-    # Reinstall dependencies
-    rm -rf node_modules
-    npm ci
-    
-    # Run post-rollback tests
-    npm test
-    
-    echo "✅ Rollback complete"
-}
-
-# Verify rollback
-verify_rollback() {
-    echo "🔍 Verifying rollback..."
-    
-    # Check critical functionality
-    npm run test:critical
-    
-    # Check service health
-    curl -f http://localhost:3000/health || exit 1
-    
-    echo "✅ Rollback verified"
-}
-```
+Record the exact clean source/lockfile and deployed artifact before upgrading. Preserve user changes and private state; prepare database/config rollback separately because downgrading a package cannot undo a migration. After approval, restore the reviewed dependency diff or prior artifact and verify health. Do not overwrite fixed .backup files, force-delete branches, automatically execute a repository database-backup.sh or print success after unchecked commands. Use fail-fast commands and the project’s documented package manager; inspect lifecycle scripts before any install.
 
 ### 8. Batch Update Strategy
 
@@ -577,7 +525,12 @@ def plan_batch_updates(dependencies):
         if info.get('has_security_vulnerability'):
             groups['security'].append(dep)
         else:
-            groups[info['update_type']].append(dep)
+            update_type = info.get('update_type', 'unknown')
+            if update_type == 'none':
+                continue
+            if update_type not in groups:
+                continue  # unknown versions require manual review, not an assumed safe batch
+            groups[update_type].append(dep)
     
     # Create update batches
     batches = []
@@ -635,7 +588,7 @@ framework_upgrades = {
     'angular': {
         'upgrade_command': 'ng update',
         'pre_checks': [
-            'ng update @angular/core@{version} --dry-run',
+            'ng update --help  # verify supported options before mutation',
             'npm audit',
             'ng lint'
         ],
@@ -654,7 +607,7 @@ framework_upgrades = {
         'upgrade_command': 'npm install react@{version} react-dom@{version}',
         'codemods': [
             'npx react-codemod rename-unsafe-lifecycles',
-            'npx react-codemod error-boundaries'
+            '# Verify an applicable codemod exists at the reviewed version'
         ],
         'verification': [
             'npm run build',
@@ -664,7 +617,7 @@ framework_upgrades = {
     },
     'vue': {
         'upgrade_command': 'npm install vue@{version}',
-        'migration_tool': 'npx @vue/migration-tool',
+        'migration_tool': 'Use the versioned official Vue migration guide; no generic executable assumed',
         'breaking_changes': {
             '2_to_3': [
                 'Composition API',
@@ -691,7 +644,7 @@ const monitoring = {
             'memory_usage': { threshold: 512, unit: 'MB' }
         },
         errors: {
-            'error_rate': { threshold: 0.01, unit: '%' },
+            'error_rate': { threshold: 1, unit: '%' } // example: 1 percent, not fraction 0.01,
             'console_errors': { threshold: 0, unit: 'count' }
         },
         bundle: {

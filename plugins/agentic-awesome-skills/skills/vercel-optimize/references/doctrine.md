@@ -4,7 +4,7 @@ The four non-negotiable rules that shape every action this skill takes. If a fut
 
 ## Rule 1: Observability before investigation
 
-The skill never reads a source file without an observability signal pointing at it. Step 1 (`node scripts/collect-signals.mjs`) is always first. Nothing reads source code until `signals.json` exists.
+Collect platform signals first. The deterministic scanner necessarily reads repository text to build the merged `signals.json`; candidate-bound manual investigation follows gating. Framework/config preflight and traffic-independent checks are explicit exceptions.
 
 **Why this fails when skipped:** without metrics, the skill defaults to "grep the repo for known anti-patterns and complain." That produces noisy, low-impact recs that aren't tied to traffic, cost, or user pain. Metrics-first investigation keeps the skill focused on observed traffic, cost, and reliability signals.
 
@@ -60,7 +60,7 @@ Three sanitizers enforce this:
 
 Two verifier claim types check it: `citation_in_library` (URL ∈ allow-list) and `citation_applies_to_version` (semver match).
 
-**Why this matters:** LLMs cite plausible-looking URLs that 404, or recommend Next 15 features to Next 13 users. Both are trust-killers. The allow-list closes the first failure mode; the `applicableFrameworks` field closes the second.
+**Why this matters:** LLMs cite plausible-looking URLs that 404, or recommend Next 15 features to Next 13 users. Both are trust-killers. The curated library reduces these failure modes but does not verify current URL availability or installed package resolution; check current docs and the project lockfile before applying.
 
 ### Performance citations cite observed data
 
@@ -68,7 +68,7 @@ Every performance claim cites the actual observability datum from `signals.json`
 
 ### Cost framing is magnitude, never precise
 
-Cost claims like `$340/mo` are forbidden. The dollar noise floor on projections is too high to justify precision. The `impactMagnitude({currentCost, impactTier})` helper maps to phrases like `"hundreds of dollars per month at current traffic"` (computed against the user's actual `vercel usage` data).
+Cost claims like `$340/mo` are forbidden. The dollar noise floor on projections is too high to justify precision. Billed usage and an impact tier do not establish a savings fraction or a monthly rate. The helper withholds a savings magnitude until before-and-after measurement supports one.
 
 The `$-strip` sanitizer enforces this at output time — any `$N` literal in customer-facing fields is stripped.
 

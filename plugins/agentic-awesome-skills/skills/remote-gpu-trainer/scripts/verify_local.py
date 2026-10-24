@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """Verify integrity of downloaded ckpt directories.
 
+This is a structural, restricted-load check, not proof of model correctness, expected run identity, full resume state or a complete transfer manifest. Compare expected names/hashes and test the actual model separately before teardown.
+
 For each <name>/ in the target dir, check:
   - best.pth exists
   - best.pth loads cleanly via torch.load
@@ -82,9 +84,15 @@ def main() -> int:
 
     for d in dirs:
         name = d.name
+        if d.is_symlink():
+            errors.append((name, "symlink ablation directory is not accepted"))
+            continue
         pth = d / "best.pth"
         metrics_path = d / "best_metrics.json"
 
+        if pth.is_symlink() or metrics_path.is_symlink():
+            errors.append((name, "symlink checkpoint/metrics file is not accepted"))
+            continue
         if not pth.exists():
             errors.append((name, "missing best.pth"))
             continue
@@ -125,6 +133,9 @@ def main() -> int:
             errors.append((name, f"best_metrics.json invalid: {str(e)[:80]}"))
             continue
 
+        if not isinstance(m, dict):
+            errors.append((name, "best_metrics.json must contain a JSON object"))
+            continue
         epoch = m.get("epoch", "?")
         if epoch is None:  # {"epoch": null} → .get returns None (not the default); guard the :3 format. `or` would wrongly eat epoch 0.
             epoch = "?"
@@ -149,7 +160,7 @@ def main() -> int:
         print()
         print("=== Per-ablation metrics ===")
         for name, epoch, metric in metrics_rows:
-            print(f"  {name:40s} epoch={epoch:3} {metric}")
+            print(f"  {name:40s} epoch={str(epoch):>3} {metric}")
 
     return 0 if not errors else 1
 

@@ -1,5 +1,13 @@
 # Autonomous Adaptation Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 This reference defines the safe foundation for adaptive self-iteration.
 
 ## Scope
@@ -63,3 +71,12 @@ Each approved application should include:
 ## Review Boundary
 
 The adaptive loop improves iteration quality, but it does not replace normal review. Any proposal touching trigger behavior, reports, packaging, telemetry, privacy, or governance must still pass the same tests and release gates as a manually designed change. `adapt-apply` evidence proves that an approved patch path was checked or applied; it does not make world-class external or human evidence complete.
+
+## Apply and rollback limits
+
+A local make target or Python script is executable code, not a safe allowlist by
+name. Review exact verification inputs/code before execution. Validate relative
+paths, reject symlink/traversal targets, compare full before hashes and serialize
+writes. Reverse-apply can fail or conflict with concurrent edits: record failure,
+preserve evidence and stop rather than claim rollback succeeded. Current explicit
+user authorization applies; no extra approval ledger is inferred from this prose.

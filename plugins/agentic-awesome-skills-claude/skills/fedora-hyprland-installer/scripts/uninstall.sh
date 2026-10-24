@@ -23,12 +23,12 @@ for pkg in "${PACKAGES_TO_REMOVE[@]}"; do
 done
 
 echo ""
-echo "Note: Base desktop environments (GNOME, KDE Plasma, Xfce) and user backup files will NOT be touched."
+echo "Review the resolved DNF transaction; cancel if it removes shared desktop packages. User backup files are not explicitly removed."
 
 # Run backup prior to uninstallation
 if [ -f "${SCRIPT_DIR}/backup.sh" ]; then
     echo "[+] Creating final backup before uninstallation..."
-    bash "${SCRIPT_DIR}/backup.sh" || true
+    bash "${SCRIPT_DIR}/backup.sh"
 fi
 
 if command -v dnf &>/dev/null; then
@@ -44,7 +44,7 @@ if command -v dnf &>/dev/null; then
     done
 
     if [ "${#INSTALLED_TO_REMOVE[@]}" -gt 0 ]; then
-        sudo dnf remove -y "${INSTALLED_TO_REMOVE[@]}"
+        sudo dnf remove "${INSTALLED_TO_REMOVE[@]}"
         echo "[✓] Hyprland packages removed successfully."
     else
         echo "[i] No Hyprland packages found to remove."

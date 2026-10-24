@@ -158,7 +158,7 @@ Platform: Responsive web (desktop-first)
 
 ## About Google Stitch
 
-Google Stitch is an experimental AI UI generator powered by Gemini 2.5 Flash that transforms text prompts and visual references into functional UI designs. It supports text-to-UI generation, image-to-UI conversion, multi-screen flows, and exports to HTML/CSS, Figma, and code.
+Google Stitch is an experimental AI UI generator whose available models/features depend on the current product version that transforms text prompts and visual references into functional UI designs. It supports text-to-UI generation, image-to-UI conversion, multi-screen flows, and exports to HTML/CSS, Figma, and code.
 
 ---
 

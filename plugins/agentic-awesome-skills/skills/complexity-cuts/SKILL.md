@@ -82,7 +82,7 @@ The vast majority of real-world Big-O wins come from a small set of moves. Try t
 | `for x in A: if x in B` where B is list/array | Convert B to `Set`/`Map` once | O(n·m) → O(n+m) |
 | Nested loop computing pairs/joins | Hash-join on the key; index by lookup field | O(n·m) → O(n+m) |
 | Repeated `.find` / `.indexOf` / `.includes` inside a loop | Precompute index `Map<key, item>` outside loop | O(n^2) → O(n) |
-| Repeated recomputation of same value | Memoize / cache by input key | O(n·f(n)) → O(n + f(n)) |
+| Repeated recomputation of same value | Memoize / cache by complete input key | O(n·f(n)) → O(n + f(n)) only when all n calls share one result; account for distinct keys and storage |
 | Sort inside a loop | Sort once outside | O(n^2 log n) → O(n log n) |
 | Linear scan for min/max/median repeatedly | Heap / sorted structure | O(n·k) → O(n log k) |
 | Recursive recomputation (naive Fibonacci shape) | Memoize, or convert to iterative DP | exponential → O(n) |
@@ -93,8 +93,8 @@ The vast majority of real-world Big-O wins come from a small set of moves. Try t
 | Repeated prefix sums | Precompute prefix array, O(1) range queries | O(n·q) → O(n+q) |
 | Pairwise distance / containment checks on intervals | Sort + sweep line | O(n^2) → O(n log n) |
 | Top-K via full sort | Heap of size K | O(n log n) → O(n log k) |
-| Repeated set membership in loop body | `Set` once, reuse | O(n·m) → O(n) |
-| `await` inside a `for` over independent items | `Promise.all` / batched concurrency | wall-clock O(n·latency) → O(latency) |
+| Repeated list membership in loop body | `Set` once, reuse | Expected O(n·m) → O(n+m), including construction |
+| `await` inside a `for` over independent items | Bounded batched concurrency, honoring rate limits and cancellation | Ideally O(ceil(n/c)·latency) at concurrency c; unbounded Promise.all can exhaust resources |
 | ORM query inside a loop (N+1) | `IN (...)` / `select_related` / bulk fetch | O(n) round-trips → O(1) |
 
 ### Space-complexity reductions
@@ -104,13 +104,13 @@ The vast majority of real-world Big-O wins come from a small set of moves. Try t
 | Materializing whole list/array just to iterate | Generator / iterator / stream | O(n) → O(1) |
 | Building intermediate arrays via chained `.map().filter().map()` on huge data | Single-pass loop or lazy pipeline | k·O(n) → O(n) (often O(1) extra) |
 | Caching every intermediate result of a recursion | Rolling window (keep last k states) | O(n) → O(k) |
-| Storing parents/visited for graph traversal when only count needed | Bitset / counter only | O(n) → O(1) |
+| Storing parents for graph traversal when only count needed | Omit parents, retain visited state when cycles or duplicate visits are possible | Removes parent storage; visited bitset is still O(n) bits |
 | Copying input to mutate | In-place mutation when caller allows | O(n) → O(1) |
 | Reading entire file before processing | Stream line-by-line / chunked | O(file) → O(chunk) |
 | Deep-clone for safety in a loop | Clone once, or use structural sharing / immutables | O(n·m) → O(n+m) |
 | Holding references that prevent GC (closures, listeners, caches) | Bound the cache (LRU), remove listeners, scope closures tightly | unbounded → bounded |
 | Loading full result set from DB | Cursor / pagination / streaming query | O(rows) → O(page) |
-| `JSON.parse(JSON.stringify(x))` for cloning | `structuredClone` or targeted copy | O(n) work and allocation removed |
+| `JSON.parse(JSON.stringify(x))` for cloning | Targeted copy or structural sharing when semantics permit; structuredClone for supported clone types | A full structuredClone still takes O(n) traversal/allocation; it is not an asymptotic reduction |
 
 ### When you cannot lower asymptotic Big-O
 
@@ -164,16 +164,20 @@ Faster, *and* changes the result set. Existing tests catch it — but the diff a
 //   Current: time = O(n·m), space = O(1)
 //   Target:  time = O(n+m), space = O(m)
 //   Transformation: precompute index Map<userId, User> outside the loop
-//   Semantic risk: None — orders with missing users still emit `user: undefined` exactly as before
+//   Semantic risk: first duplicate and missing-user behavior preserved; Map equality matches strict equality for the declared finite integer user IDs. Validate that contract first.
 //   Reverts so far: 0
 
 export function getOrdersWithUsers(orders, users) {
-  const userById = new Map(users.map(u => [u.id, u]));
+  const userById = new Map();
+  // Array.find returns the first duplicate, so keep the first value.
+  for (const user of users) {
+    if (!userById.has(user.id)) userById.set(user.id, user);
+  }
   return orders.map(o => ({ ...o, user: userById.get(o.userId) }));
 }
 ```
 
-One transformation. Existing tests stay untouched. Run them. If green, ship. If red, revert (don't patch). After 3 reverts, stop and load `invariant-guard` — the bottleneck is wrong, or the function has a contract no one wrote down.
+The example assumes finite integer IDs and side-effect-free ordinary objects; add duplicate-ID and missing-ID characterization cases before transforming. NaN IDs or getters require a different equivalence argument. One transformation. Existing tests stay untouched. Run them. If green, ship. If red, revert (don't patch). After 3 reverts, stop and load `invariant-guard` — the bottleneck is wrong, or the function has a contract no one wrote down.
 
 ## Output discipline
 

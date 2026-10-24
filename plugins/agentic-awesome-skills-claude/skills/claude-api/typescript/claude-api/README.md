@@ -1,5 +1,7 @@
 # Claude API — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Installation
 
 ```bash
@@ -24,11 +26,11 @@ const client = new Anthropic({ apiKey: "your-api-key" });
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "What is the capital of France?" }],
 });
-console.log(response.content[0].text);
+console.log(response.content.filter(b => b.type === "text").map(b => b.text).join(""));
 ```
 
 ---
@@ -37,7 +39,7 @@ console.log(response.content[0].text);
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   system:
     "You are a helpful coding assistant. Always provide examples in Python.",
@@ -53,7 +55,7 @@ const response = await client.messages.create({
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     {
@@ -78,7 +80,7 @@ import fs from "fs";
 const imageData = fs.readFileSync("image.png").toString("base64");
 
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     {
@@ -105,7 +107,7 @@ Use top-level `cache_control` to automatically cache the last cacheable block in
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   cache_control: { type: "ephemeral" }, // auto-caches the last cacheable block
   system: "You are an expert on this large document...",
@@ -119,7 +121,7 @@ For fine-grained control, add `cache_control` to specific content blocks:
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   system: [
     {
@@ -133,7 +135,7 @@ const response = await client.messages.create({
 
 // With explicit TTL (time-to-live)
 const response2 = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   system: [
     {
@@ -150,13 +152,12 @@ const response2 = await client.messages.create({
 
 ## Extended Thinking
 
-> **Opus 4.6 and Sonnet 4.6:** Use adaptive thinking. `budget_tokens` is deprecated on both Opus 4.6 and Sonnet 4.6.
-> **Older models:** Use `thinking: {type: "enabled", budget_tokens: N}` (must be < `max_tokens`, min 1024).
+> **Thinking:** Verify the selected model and SDK support adaptive/enabled/disabled modes and effort. Do not assume a fixed budget or adaptive option is accepted by every model.
 
 ```typescript
 // Opus 4.6: adaptive thinking (recommended)
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 16000,
   thinking: { type: "adaptive" },
   output_config: { effort: "high" }, // low | medium | high | max
@@ -198,7 +199,7 @@ try {
 }
 ```
 
-All classes extend `Anthropic.APIError` with a typed `status` field. Check from most specific to least specific. See [shared/error-codes.md](../../shared/error-codes.md) for the full error code reference.
+HTTP status exceptions extend `Anthropic.APIError`; connection errors may not have a status. Check from most specific to least specific. See [shared/error-codes.md](../../shared/error-codes.md) for the full error code reference.
 
 ---
 
@@ -214,7 +215,7 @@ const messages: Anthropic.MessageParam[] = [
 ];
 
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: messages,
 });
@@ -222,7 +223,7 @@ const response = await client.messages.create({
 
 **Rules:**
 
-- Messages must alternate between `user` and `assistant`
+- Preserve valid role/content structure; consecutive same-role inputs may be combined by the API
 - First message must be `user`
 - Use SDK types (`Anthropic.MessageParam`, `Anthropic.Message`, `Anthropic.Tool`, etc.) for all API data structures — don't redefine equivalent interfaces
 
@@ -230,7 +231,7 @@ const response = await client.messages.create({
 
 ### Compaction (long conversations)
 
-> **Beta, Opus 4.6 only.** When conversations approach the 200K context window, compaction automatically summarizes earlier context server-side. The API returns a `compaction` block; you must pass it back on subsequent requests — append `response.content`, not just the text.
+> **Version-sensitive compaction example.** Verify the selected model, context limit, trigger and required beta header before enabling server-side history summarization. The API returns a `compaction` block; you must pass it back on subsequent requests — append `response.content`, not just the text.
 
 ```typescript
 import Anthropic from "@anthropic-ai/sdk";
@@ -243,7 +244,7 @@ async function chat(userMessage: string): Promise<string> {
 
   const response = await client.beta.messages.create({
     betas: ["compact-2026-01-12"],
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     messages,
     context_management: {
@@ -273,7 +274,7 @@ The `stop_reason` field in the response indicates why the model stopped generati
 | Value           | Meaning                                                         |
 | --------------- | --------------------------------------------------------------- |
 | `end_turn`      | Claude finished its response naturally                          |
-| `max_tokens`    | Hit the `max_tokens` limit — increase it or use streaming       |
+| `max_tokens`    | Output is truncated; review and adjust within the selected model and budget limits       |
 | `stop_sequence` | Hit a custom stop sequence                                      |
 | `tool_use`      | Claude wants to call a tool — execute it and continue           |
 | `pause_turn`    | Model paused and can be resumed (agentic flows)                 |
@@ -288,7 +289,7 @@ The `stop_reason` field in the response indicates why the model stopped generati
 ```typescript
 // Automatic caching (simplest — caches the last cacheable block)
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   cache_control: { type: "ephemeral" },
   system: largeDocumentText, // e.g., 50KB of context
@@ -303,11 +304,13 @@ const response = await client.messages.create({
 
 ```typescript
 const countResponse = await client.messages.countTokens({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   messages: messages,
   system: system,
 });
 
-const estimatedInputCost = countResponse.input_tokens * 0.000005; // $5/1M tokens
+const approvedInputPrice = Number(process.env.ANTHROPIC_INPUT_PRICE_PER_MILLION);
+if (!Number.isFinite(approvedInputPrice) || approvedInputPrice < 0) throw new Error("Set approved current pricing");
+const estimatedInputCost = countResponse.input_tokens * approvedInputPrice / 1_000_000;
 console.log(`Estimated input cost: $${estimatedInputCost.toFixed(4)}`);
 ```

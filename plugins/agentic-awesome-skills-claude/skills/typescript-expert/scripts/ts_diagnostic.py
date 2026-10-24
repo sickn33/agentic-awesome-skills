@@ -15,8 +15,10 @@ TSC = ["npx", "--no-install", "tsc"]
 def run_cmd(args):
     """Run a command as an argument list (no shell). Return (returncode, output)."""
     try:
-        result = subprocess.run(args, capture_output=True, text=True, errors="replace")
+        result = subprocess.run(args, capture_output=True, text=True, errors="replace", timeout=60)
         return result.returncode, result.stdout + result.stderr
+    except subprocess.TimeoutExpired:
+        return None, "Command exceeded the 60-second diagnostic limit"
     except OSError as e:
         return None, str(e)
 
@@ -208,7 +210,7 @@ def check_any_usage():
         if matches:
             print("\n".join(matches[:5]))
     else:
-        print("  ✅ No explicit 'any' types found")
+        print("  No literal ' : any' matches in scanned src files; this is not an AST-wide absence check")
 
 def check_type_assertions():
     """Check for type assertions."""
@@ -219,7 +221,7 @@ def check_type_assertions():
     if count:
         print(f"  ⚠️ Found {count} type assertions")
     else:
-        print("  ✅ No type assertions found")
+        print("  No literal assertion-pattern matches in scanned src files; this is not an AST-wide absence check")
 
 def check_performance():
     """Check type checking performance."""
@@ -250,7 +252,7 @@ def main():
     check_performance()
     
     print("\n" + "=" * 50)
-    print("✅ Diagnostic Complete")
+    print("Diagnostic collection complete (not a passing typecheck/CI verdict)")
     print("=" * 50)
 
 if __name__ == "__main__":

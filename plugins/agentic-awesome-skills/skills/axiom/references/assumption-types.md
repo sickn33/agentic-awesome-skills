@@ -8,7 +8,7 @@ A detailed reference for the 4-type assumption classification system used in Axi
 
 Most first-principles tools skip classification and jump straight to "question everything." But **different types of assumptions require fundamentally different challenge strategies**:
 
-- Questioning a **physical fact** wastes time and credibility
+- For a **physical constraint**, verify the applicable model, units and conditions before treating it as fixed
 - Questioning a **convention** requires checking if the environment has changed
 - Questioning a **belief** requires finding whose experience shaped it
 - Questioning an **interest-driven** assumption requires following the money
@@ -37,18 +37,18 @@ Laws of nature, mathematical truths, verified scientific constants, and logical 
 - Is this based on repeatable, measurable evidence? / 这是否基于可重复、可测量的证据？
 
 **Challenge Strategy / 质疑策略:**
-**Accept it. Do not waste energy.** If something is genuinely a physical fact, the correct response is to work within its constraints, not against them.
+**Verify scope and then work within the supported constraint.** If something is genuinely a physical fact, the correct response is to work within its constraints, not against them.
 
-接受它。不要浪费精力质疑引力。如果确实是物理事实，正确的做法是在它的约束内工作。
+先核实模型、单位和适用条件，再在有证据支持的约束内工作。
 
 **Examples / 示例:**
 
 | ✅ Genuine Physical Facts | ❌ Often Misclassified As Facts |
 |---------------------------|-------------------------------|
-| Gravity exists (9.8 m/s²) | "Housing always appreciates" (convention) |
-| Entropy increases over time | "You need 8 hours of sleep" (convention — varies by person) |
-| Speed of light is constant | "People are rational economic actors" (belief) |
-| Compound interest formula | "Innovation requires disruption" (interest-driven) |
+| Local gravitational acceleration depends on location; state the approximation | "Housing always appreciates" (convention) |
+| Entropy of an isolated system does not decrease in the thermodynamic formulation | "You need 8 hours of sleep" (convention — varies by person) |
+| Speed of light in vacuum is constant in the stated physical model | "People are rational economic actors" (belief) |
+| Compound interest formula under declared rate/compounding assumptions | "Innovation requires disruption" (interest-driven) |
 
 **Common Misclassification Trap:**
 People often classify **social patterns** or **statistical trends** as physical facts. "The economy always recovers" is a historical pattern, not a law of physics. "People resist change" is a tendency, not a constant.
@@ -82,7 +82,7 @@ Practices, rules, or beliefs that were once valid and widely adopted but origina
 |-----------|------------------|-----------------|
 | 大学学历是好工作的门票 | 1990s: 大学生稀缺 | 2020s: 本科普及，技能导向增强 |
 | "You must be in the office to be productive" | Pre-2020: Limited remote tools | Post-COVID: Remote infrastructure mature |
-| 在一家公司待 5-10 年才算忠诚 | Lifetime employment era | Average tenure is now 2-3 years |
+| 在一家公司待 5-10 年才算忠诚 | Lifetime employment era | Check current tenure data by country, sector and cohort |
 | "Real estate is the best investment for the middle class" | 1980-2010: Population growth + urbanization | 2020s+: Demographic decline in many countries |
 | 创业要写完整的商业计划书 | Before Lean Startup methodology | Now: MVP → iterate → pivot is standard |
 | "Get a STEM degree for job security" | Pre-AI era | AI is now disrupting STEM roles too |
@@ -129,9 +129,9 @@ Conclusions drawn from personal experience, projected as general truths. The per
 | "Good developers don't need to be good at communication" | Belief that protects from discomfort |
 
 **Red Flag — Belief Disguised As Fact:**
-If someone says "That's just how it is" or "Everyone knows that" about something that isn't a physical law, it's almost certainly a belief or convention that has been promoted to "fact" status in their mind.
+If someone says "That's just how it is" or "Everyone knows that" about something that isn't a physical law, investigate whether it is an empirical, definitional or normative claim rather than assuming it is a belief or convention that has been promoted to "fact" status in their mind.
 
-> 🚩 如果有人说"就是这样的"或"大家都知道"，但说的不是物理定律，那几乎肯定是信念或惯例被提升成了"事实"。
+> 🚩 如果有人说"就是这样的"或"大家都知道"，但说的不是物理定律，应核实它是经验命题、定义还是价值判断，而不是直接断定其类别。
 
 ---
 
@@ -147,7 +147,7 @@ Assumptions that someone (an industry, company, influencer, or social group) act
 - Does the source of this information have a financial incentive for you to believe it? / 这个信息来源是否有经济动机让你相信？
 - Would this idea still be popular if no one profited from it? / 如果没有人从中获利，这个观点还会流行吗？
 - Is this framed as urgent? Urgency often serves the seller. / 这是否被包装成紧迫的？紧迫感通常服务于卖方。
-- What's the null hypothesis — what happens if you do nothing? / 零假设是什么 — 如果你什么都不做会怎样？
+- What is the status-quo option — what happens if you do nothing? A statistical null hypothesis is a separately specified test proposition. / 维持现状的选项是什么 — 如果你什么都不做会怎样？这不等于统计检验中的零假设。
 
 **Challenge Strategy / 质疑策略:**
 **Follow the money.** Trace the incentive chain from the idea back to whoever benefits. This doesn't automatically disprove the claim, but it changes how much weight you should give it.
@@ -200,7 +200,7 @@ Many real-world assumptions are **hybrids**. When you encounter one:
 "Men are taller than women on average" — This is a **statistical fact** (measurable, repeatable), but applying it to any individual is a **subjective belief**. Classify the assumption based on how the user is using it.
 
 ### Outdated Facts
-"Pluto is a planet" — Was a physical fact, reclassified. If someone's assumption is based on an outdated fact, treat it as a **convention** that hasn't been updated.
+"Pluto is a planet" mixes observation with a classification definition. A revised classification does not change the physical object; specify the definition and authority in use. Do not relabel every updated empirical finding a convention.
 
 ### Self-Fulfilling Prophecies
 "The stock market will crash" — If enough people believe this, they sell, and it crashes. Classify as **interest-driven** if the source benefits from the prediction, or **subjective belief** if it's the user's personal anxiety.
@@ -225,3 +225,5 @@ Many real-world assumptions are **hybrids**. When you encounter one:
 🔴 主观信念  → 谁告诉你的？          → 寻找反面证据
 ⚫ 利益驱动  → 谁因此获利？          → 追踪利益链
 ```
+
+Local review: cultural and labor-market examples above are illustrative hypotheses requiring contextual evidence, not universal facts. Benefit to a source is a possible conflict of interest, not proof of deception or a reason to discard independently supported evidence. A missing counterexample does not prove a physical law; uncertainty and mixed labels are allowed.

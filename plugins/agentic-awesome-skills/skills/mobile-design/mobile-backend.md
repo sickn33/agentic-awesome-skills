@@ -86,7 +86,7 @@ Mobile clients are DIFFERENT from web clients:
 TOKEN LIFECYCLE:
 ├── App registers → Get token → Send to backend
 ├── Token can change → App must re-register on start
-├── Token expires → Clean from database
+├── Provider reports token invalid/unregistered → remove or refresh its binding
 ├── User uninstalls → Token becomes invalid (detect via error)
 └── Multiple devices → Store multiple tokens per user
 ```
@@ -109,7 +109,7 @@ WHAT TYPE OF DATA?
         │       └── Or timestamp-based merge
         │
         ├── Collaborative (shared docs)
-        │   └── CRDT or OT required
+        │   └── Choose CRDT, OT, locking or explicit merge according to collaboration semantics
         │       └── Consider Firebase/Supabase
         │
         └── Critical (payments, inventory)
@@ -173,7 +173,7 @@ CURSOR (Good for mobile):
 ├── First: ?limit=20
 ├── Next: ?limit=20&after=cursor_abc123
 ├── Cursor = encoded (id + sort values)
-├── No duplicates on data changes
+├── Stable ordering and snapshot semantics still need design; cursor alone cannot guarantee no duplicates
 └── Consistent performance
 ```
 
@@ -270,11 +270,11 @@ DEVICE TOKEN:
 ```
 REQUEST FLOW:
 ├── Make request with access token
-├── 401 Unauthorized?
+├── 401 Unauthorized? (single-flight refresh; at most one retry)
 │   ├── Have refresh token?
 │   │   ├── Yes → Call /auth/refresh
 │   │   │   ├── Success → Retry original request
-│   │   │   └── Failure → Force logout
+│   │   │   └── Network failure → preserve recoverable session; invalid/revoked refresh → reauthenticate
 │   │   └── No → Force logout
 │   └── Token just expired (not invalid)
 │       └── Auto-refresh, user doesn't notice
@@ -311,8 +311,8 @@ REQUEST FLOW:
 |------------|----------|-----------------|
 | 400-499 | Client error | Show message, user action needed |
 | 401 | Auth expired | Silent refresh or re-login |
-| 403 | Forbidden | Show upgrade/permission screen |
-| 404 | Not found | Remove from local cache |
+| 403 | Forbidden | Explain denied access; do not assume a paid upgrade is appropriate |
+| 404 | Not found | Apply endpoint-specific semantics; avoid destructive cache deletion on a transient/masked response |
 | 409 | Conflict | Show sync conflict UI |
 | 429 | Rate limit | Retry after header, backoff |
 | 500-599 | Server error | Retry with backoff, show "try later" |
@@ -381,24 +381,19 @@ VERIFY REAL DEVICE (not emulator/bot):
 │   └── Server verifies with Apple
 ├── Android: Play Integrity API (replaces SafetyNet)
 │   └── Server verifies with Google
-└── Fail closed: Reject if attestation fails
+└── Define an explicit threat/availability policy; a missing verdict is not proof of compromise
 ```
 
-### Request Signing
+### Request authenticity and replay
 
-```
-CLIENT:
-├── Create signature = HMAC(timestamp + path + body, secret)
-├── Send: X-Signature: {signature}
-├── Send: X-Timestamp: {timestamp}
-└── Send: X-Device-ID: {device_id}
-
-SERVER:
-├── Validate timestamp (within 5 minutes)
-├── Recreate signature with same inputs
-├── Compare signatures
-└── Reject if mismatch (tampering detected)
-```
+Do not embed a shared HMAC backend secret in a mobile binary or build-time env
+variable: it can be extracted. Use platform TLS plus server-side user/session
+validation. When a threat model needs request proof, use reviewed per-device
+nonexportable key provisioning and server validation, including user binding,
+method/path/body canonicalization, expiry and one-use nonce/replay controls.
+A timestamp alone does not prevent replay inside its accepted window. Device
+attestation is a risk signal, not proof a person/device is trustworthy or a
+replacement for authorization. Availability failures need an explicit policy.
 
 ### Rate Limiting
 
@@ -420,25 +415,19 @@ Retry-After: 60 (when 429)
 
 ## 9. Monitoring & Analytics
 
-### Required Headers from Mobile
+### Minimal diagnostics metadata
 
-```
-Every mobile request should include:
-├── X-App-Version: 2.1.0
-├── X-Platform: ios | android
-├── X-OS-Version: 17.0
-├── X-Device-Model: iPhone15,2
-├── X-Device-ID: uuid (persistent)
-├── X-Request-ID: uuid (per request, for tracing)
-├── Accept-Language: tr-TR
-└── X-Timezone: Europe/Istanbul
-```
+Send app/platform version and per-request correlation ID only when needed. A
+persistent device identifier, model, timezone or user ID can identify or profile
+people; do not require or log them universally. Define consent/notice, purpose,
+retention and access controls. Never log authorization, push tokens, payloads or
+all request headers. Treat every client-supplied field as untrusted.
 
 ### What to Log
 
 ```
 FOR EACH REQUEST:
-├── All headers above
+├── Explicitly allowlisted sanitized diagnostic fields only
 ├── Endpoint, method, status
 ├── Response time
 ├── Error details (if any)
@@ -489,3 +478,13 @@ ALERTS:
 ---
 
 > **Remember:** Mobile backend must be resilient to bad networks, respect battery life, and handle interrupted sessions gracefully. The client cannot be trusted, but it also cannot be hung up—provide offline capabilities and clear error recovery paths.
+
+## Sync, retries and push limitations
+
+Use server-controlled revisions/ETags for concurrency, not an untrusted client
+clock as authority. Queue writes with a stable idempotency key and bounded retries;
+a payment network error is an unknown outcome, not permission to repeat the charge.
+Reconcile status before retrying. Realtime transport alone does not implement CRDT,
+OT, conflict resolution or offline persistence. Push/silent background delivery is
+best-effort and cannot be the sole synchronization or safety-critical mechanism.
+Illustrative bandwidth savings and token lifetimes above are not measured guarantees.

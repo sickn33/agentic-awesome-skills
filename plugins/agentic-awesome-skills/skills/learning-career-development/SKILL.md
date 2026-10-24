@@ -122,27 +122,27 @@ that need a number, date or currency format applied.
 
 ```csv
 Course / Training,Certificate Earned,Completion Date,Course Category,Course URL,Delivery Method,Department,Duration (Hours),Employee Name,Course Request,LMS ID,Mandatory,Notes,Progress %,Provider,Score,Skills Gained,Start Date,Status
-Advanced SQL,FALSE,2026-10-30,General,https://example.com/courses/leadership,Self-paced online,Delivery,2.5,Aarav Sharma,CRS-2026-018,,FALSE,Course completion tracked to the February cohort; one learner has not started.,60, Udemy,4,"Advanced SQL, stakeholder mapping, contract review.",2026-08-03,In Progress
+Advanced SQL,FALSE,,General,https://example.com/courses/leadership,Self-paced online,Delivery,2.5,Aarav Sharma,CRS-2026-018,,FALSE,Course completion tracked to the February cohort; one learner has not started.,60,Udemy,,"Advanced SQL, stakeholder mapping, contract review.",2026-08-03,In Progress
 ```
 
 ```sql
 CREATE TABLE learning_career_development (
   course_training VARCHAR(255),
   certificate_earned BOOLEAN NOT NULL,
-  completion_date DATE NOT NULL,
+  completion_date DATE,
   course_category VARCHAR(100) NOT NULL,
   course_url TEXT,
   delivery_method VARCHAR(255),
   department VARCHAR(255),
-  duration_hours NUMERIC NOT NULL,
+  duration_hours NUMERIC NOT NULL CHECK (duration_hours >= 0),
   employee_name VARCHAR(255),
   course_request VARCHAR(255),  -- relation -> target record
   lms_id SERIAL PRIMARY KEY,
   mandatory BOOLEAN NOT NULL,
   notes TEXT,
-  progress_pct NUMERIC NOT NULL,
+  progress_pct NUMERIC NOT NULL CHECK (progress_pct BETWEEN 0 AND 100),
   provider VARCHAR(255),
-  score NUMERIC NOT NULL,
+  score NUMERIC,
   skills_gained VARCHAR(255),
   start_date DATE NOT NULL,
   status VARCHAR(100) NOT NULL,
@@ -167,13 +167,13 @@ CREATE INDEX idx_learning_career_development_status ON learning_career_developme
       "Course URL": { "type": "string", "format": "uri" },
       "Delivery Method": { "type": "string" },
       "Department": { "type": "string" },
-      "Duration (Hours)": { "type": "number" },
+      "Duration (Hours)": { "type": "number", "minimum": 0 },
       "Employee Name": { "type": "string" },
       "Course Request": { "type": "string" },
       "LMS ID": { "type": "integer" },
       "Mandatory": { "type": "boolean" },
       "Notes": { "type": "string" },
-      "Progress %": { "type": "number" },
+      "Progress %": { "type": "number", "minimum": 0, "maximum": 100 },
       "Provider": { "type": "string" },
       "Score": { "type": "number" },
       "Skills Gained": { "type": "string" },
@@ -181,11 +181,11 @@ CREATE INDEX idx_learning_career_development_status ON learning_career_developme
       "Status": { "type": "string" }
   },
   "required": [
-      "Completion Date",
+      "Certificate Earned",
+      "Mandatory",
       "Course Category",
       "Duration (Hours)",
       "Progress %",
-      "Score",
       "Start Date",
       "Status"
   ]
@@ -218,6 +218,8 @@ CREATE INDEX idx_learning_career_development_status ON learning_career_developme
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Completion Date and Score may be omitted until completion or assessment; leave their CSV cells blank. Progress is 0–100 and duration is nonnegative. A planned completion deadline needs its own field, rather than an actual Completion Date. Score scales depend on the course; document the scale before comparing courses.
 
 ## Field Reference
 
@@ -334,7 +336,7 @@ We send people to courses and lose the certificates.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

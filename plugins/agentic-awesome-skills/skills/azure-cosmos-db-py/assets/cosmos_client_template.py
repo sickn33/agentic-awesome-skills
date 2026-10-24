@@ -1,7 +1,7 @@
 """
 Cosmos DB Client Module Template
 
-Production-ready Azure Cosmos DB NoSQL client with:
+Application-specific starter Azure Cosmos DB NoSQL client with:
 - Dual authentication (DefaultAzureCredential for Azure, key for emulator)
 - Singleton pattern for connection reuse
 - Async wrapping via run_in_threadpool
@@ -32,7 +32,11 @@ _init_attempted: bool = False
 
 def _is_emulator_endpoint(endpoint: str) -> bool:
     """Detect if endpoint is Cosmos emulator."""
-    return "localhost" in endpoint.lower() or "127.0.0.1" in endpoint
+    from urllib.parse import urlsplit
+    parsed = urlsplit(endpoint)
+    return (parsed.scheme == "https" and parsed.username is None
+            and parsed.password is None
+            and parsed.hostname in {"localhost", "127.0.0.1", "::1"})
 
 
 def _create_client() -> CosmosClient:
@@ -118,10 +122,13 @@ async def upsert_document(doc: dict[str, Any], partition_key: str) -> dict[str, 
     Raises:
         RuntimeError: If Cosmos is not initialized
     """
-    container = get_container()
+    container = await run_in_threadpool(get_container)
     if container is None:
         raise RuntimeError("Cosmos DB not initialized")
 
+    # This template assumes a container partitioned on /workspaceId.
+    if doc.get("workspaceId") != partition_key:
+        raise ValueError("Document workspaceId does not match authorized partition")
     result = await run_in_threadpool(container.upsert_item, doc)
     return result
 
@@ -137,9 +144,9 @@ async def get_document(doc_id: str, partition_key: str) -> Optional[dict[str, An
     Returns:
         Document dict if found, None otherwise
     """
-    container = get_container()
+    container = await run_in_threadpool(get_container)
     if container is None:
-        return None
+        raise RuntimeError("Cosmos DB unavailable")
 
     try:
         result = await run_in_threadpool(
@@ -163,9 +170,9 @@ async def delete_document(doc_id: str, partition_key: str) -> bool:
     Returns:
         True if deleted, False if not found
     """
-    container = get_container()
+    container = await run_in_threadpool(get_container)
     if container is None:
-        return False
+        raise RuntimeError("Cosmos DB unavailable")
 
     try:
         await run_in_threadpool(
@@ -196,20 +203,21 @@ async def query_documents(
     Returns:
         List of matching documents
     """
-    container = get_container()
+    container = await run_in_threadpool(get_container)
     if container is None:
-        return []
+        raise RuntimeError("Cosmos DB unavailable")
 
     # Build parameterized query
     query = "SELECT * FROM c WHERE c.docType = @docType"
     query_params: list[dict[str, Any]] = [{"name": "@docType", "value": doc_type}]
 
+    # extra_filter must be an application-owned SQL fragment, never request text.
     if extra_filter:
         query += f" {extra_filter}"
         query_params.extend(parameters or [])
 
     # Execute query
-    if partition_key:
+    if partition_key is not None:
         items = container.query_items(
             query=query,
             parameters=query_params,

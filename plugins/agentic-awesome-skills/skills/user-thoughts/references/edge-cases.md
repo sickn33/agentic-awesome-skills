@@ -26,7 +26,7 @@ Agent: run the command and record the UI preference if instant capture is enable
 
 User: `This color experiment is temporary /ustht ignore`
 
-Agent: do not write it to raw. Record it in `ignored/` as a suffix-ignored entry if ignore tracking is available.
+Agent: do not write it to raw. Do not persist its content in ignored/ or another log.
 
 ## Ignore Interval
 
@@ -46,7 +46,7 @@ Agent: exit ignore mode.
 
 User: `/ustht ignore --last`
 
-Agent: remove the last unprocessed raw entry and append it to `ignored/`. If no entry exists, say so without failing.
+Agent: remove the last unprocessed raw entry without copying its content. If no entry exists, say so without failing.
 
 ## Processed Marker Mentioned by User
 

@@ -75,7 +75,7 @@ Action-based activation where user describes what they want to do rather than th
 
 **Component Creation:**
 - User prompt: "create a dashboard widget"
-- Matches: `(create).*?(component)` (if component in pattern)
+- Does not match `(create).*?(component)`; add `widget` if that intent should match
 - Activates: `frontend-dev-guidelines`
 
 ### Best Practices
@@ -83,7 +83,7 @@ Action-based activation where user describes what they want to do rather than th
 - Capture common action verbs: `(create|add|modify|build|implement)`
 - Include domain-specific nouns: `(feature|endpoint|component|workflow)`
 - Use non-greedy matching: `.*?` instead of `.*`
-- Test patterns thoroughly with regex tester (https://regex101.com/)
+- Test patterns locally with synthetic input; never upload private source/prompts to public regex services
 - Don't make patterns too broad (causes false positives)
 - Don't make patterns too specific (causes false negatives)
 

@@ -1,7 +1,7 @@
 # Vendor Report Rules（专业厂商报告结构叠加层）
 
-> Issue #65 问题 2。  
-> **只抽结构与写法规则，禁止抄录任何厂商报告正文、图表、真实 IOC 实例或大段表述。**  
+> Issue #65 问题 2。
+> **只抽结构与写法规则，禁止抄录任何厂商报告正文、图表、真实 IOC 实例或大段表述。**
 > 本文件是**叠加层**：不替换 `security-report-templates.md` 的任务模板，也不削弱 §0 Evidence→Finding→Path。
 
 结构参考（公开样例，仅骨架）：
@@ -26,7 +26,7 @@
 | 用户明确要求漏洞/补丁/CVE 技术分析，或任务证据为 OS/组件漏洞研究 | `flavor = null` + **thin overlay `vuln`**（见 §3b） |
 | 普通 APK/ELF/PE/Mach-O 逆向、算法分析、固件分析、渗透测试、CTF、JS 签名 | `flavor = null`；使用原任务模板和通用专业元素最小集 |
 
-用户显式指定「按卡巴/APT」「按火绒/病毒报告」「按漏洞技术分析」时，覆盖自动选型。  
+用户指定风格只改变组织结构，不证明 APT/恶意软件归因；没有证据时保留未知，不按标题编造 IOC 或攻击链。
 **禁止** 把普通 malware/APT/普通逆向默认套进 `vuln` 目录。
 
 ---
@@ -39,7 +39,7 @@
 |---|------|------|
 | G1 | 执行摘要 / 概述 | **MUST**：3–8 句：分析了什么、最严重结论、影响面、建议动作 |
 | G2 | 范围与授权 | **MUST**：链到 case `scope.md`（见模板 §0.1） |
-| G3 | Evidence→Finding→Path | **MUST**：见 `security-report-templates.md` §0 与 `skills/ops/evidence-finding-path.md` |
+| G3 | Evidence→Finding→Path | **MUST**：见 `security-report-templates.md` §0 与 本包 §0 字段（上游 ops 全文未随包提供） |
 | G4 | IOC 表 | `malware` / `apt` **MUST**；其他任务仅在存在相关指标时出现 |
 | G5 | 建议 / 处置 | `malware` / `apt` **MUST**：至少 1 条可执行建议；其他任务按原任务模板 |
 | G6 | 附录元数据 | **SHOULD**：工具与版本、样本哈希、完整复现命令 |
@@ -165,7 +165,7 @@
 
 ## 3b. Thin overlay：`vuln`（漏洞技术分析 · 可选）
 
-> Issue #65 补充。结构参考公开「操作系统/组件漏洞技术分析」类报告目录，**只抽章节骨架**，禁止抄录截图/正文中的 PoC 报文、利用细节或未授权攻击步骤。  
+> Issue #65 补充。结构参考公开「操作系统/组件漏洞技术分析」类报告目录，**只抽章节骨架**，禁止抄录截图/正文中的 PoC 报文、利用细节或未授权攻击步骤。
 > **不是** 第 3 个默认厂商全文 flavor；仅在漏洞研究任务或用户明确要求时叠加。
 
 **叙事目标**：读者能快速看到「影响谁 → 如何确认/复现（授权内）→ 根因与补丁差异 → 如何缓解」。
@@ -241,7 +241,7 @@ elif overlay == vuln:
 - [ ] `malware` / `apt` 报告有 IOC 表（或 n/a+原因）
 - [ ] `malware` / `apt` 报告有可执行建议/处置
 - [ ] 无 flavor 的任务没有被套入 malware/APT 专属章节
-- [ ] uln 仅在漏洞任务启用；含概述/分析/防护骨架与 E/F/P；无未授权 PoC 武器化
+- [ ] vuln 仅在漏洞任务启用；含概述/分析/防护骨架与 E/F/P；无未授权 PoC 武器化
 - [ ] 无厂商原文粘贴、无 placeholder/TODO
 - [ ] 导入表等硬门 Evidence 已进入静态/技术分析（若本任务做过二进制分析）
 

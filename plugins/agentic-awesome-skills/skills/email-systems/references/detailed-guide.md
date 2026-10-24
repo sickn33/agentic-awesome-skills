@@ -2,11 +2,23 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Scope and evidence
+
+Do not send, provision paid providers or change DNS merely because this skill is
+loaded: require the user's campaign/recipient or infrastructure mandate. SDK/API
+fragments need exact package versions and private credentials. IP warm-up numbers,
+bounce thresholds and named-provider endorsements below are illustrative; follow
+current provider guidance and observed volume/reputation, not a fixed four-week
+promise. Shared pools can suit low-volume transactional mail better than an idle
+dedicated IP. Keep suppression durable across imports and queued sends; minimize
+tracking data and apply applicable consent/retention rules.
+[FTC CAN-SPAM guide](https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business).
+
 ## Principles
 
-- Transactional vs Marketing separation | Description: Transactional emails (password reset, receipts) need 100% delivery.
-Marketing emails (newsletters, promos) have lower priority. Use separate
-IP addresses and providers to protect transactional deliverability. | Examples: Good: Password resets via Postmark, marketing via ConvertKit | Bad: All emails through one SendGrid account
+- Transactional vs Marketing separation | Description: Transactional emails (password reset, receipts) need measured reliability and an alternate recovery path.
+Marketing emails (newsletters, promos) have lower priority. Separate sending streams/subdomains and suppression policies; consider distinct
+IPs/providers at sufficient volume to protect transactional deliverability. | Examples: Good: Password resets via Postmark, marketing via ConvertKit | Bad: All emails through one SendGrid account
 - Permission is everything | Description: Only email people who asked to hear from you. Double opt-in for marketing.
 Easy unsubscribe. Clean your list ruthlessly. Bad lists destroy deliverability. | Examples: Good: Confirmed subscription + one-click unsubscribe | Bad: Scraped email list, hidden unsubscribe, bought contacts
 - Deliverability is infrastructure | Description: SPF, DKIM, DMARC are not optional. Warm up new IPs. Monitor bounce rates.
@@ -44,10 +56,10 @@ Track delivery, opens, clicks, bounces, and complaints
 # Track lifecycle:
 - Queued: Email entered system
 - Sent: Handed to provider
-- Delivered: Reached inbox
-- Opened: Recipient viewed
-- Clicked: Recipient engaged
-- Bounced: Permanent failure
+- Delivered: Receiving mail server accepted it; inbox placement is not established
+- Opened: Tracking pixel fetched; proxies/privacy features make this unreliable
+- Clicked: Link fetched; security scanners can generate clicks
+- Bounced: Failed delivery; distinguish temporary and permanent categories
 - Complained: Marked as spam
 
 ### Template Versioning
@@ -76,8 +88,8 @@ switch (bounceType) {
     await markEmailInvalid(email);
     break;
   case 'soft':
-    await incrementBounceCount(email);
-    if (count >= 3) await markEmailInvalid(email);
+    const count = await incrementBounceCount(email);
+    if (count >= configuredSoftBounceThreshold) await markEmailInvalid(email);
     break;
   case 'complaint':
     await unsubscribeImmediately(email);
@@ -116,7 +128,7 @@ Preferences:
 ☑ Account notifications (always)
 
 # Respect preferences in all sends
-# Required for GDPR compliance
+# A preference center alone does not establish GDPR/ePrivacy compliance
 
 
 ## Sharp Edges
@@ -145,7 +157,8 @@ Recommended fix:
 
 
 ## SPF (Sender Policy Framework)
-TXT record: v=spf1 include:_spf.google.com include:sendgrid.net ~all
+Illustrative only: authorize the actual sending providers in one SPF record and
+respect DNS lookup limits; do not copy unrelated Google/SendGrid includes.
 
 
 ## DKIM (DomainKeys Identified Mail)
@@ -154,7 +167,9 @@ Adds cryptographic signature to emails
 
 
 ## DMARC (Domain-based Message Authentication)
-TXT record: v=DMARC1; p=quarantine; rua=mailto:dmarc@yourdomain.com
+Review aligned SPF/DKIM for every legitimate stream; begin with monitored policy
+and approved report handling before moving to quarantine/reject. Do not blindly
+replace existing DNS or send reports to an unapproved third-party mailbox.
 
 # Verify setup:
 - Send test email to mail-tester.com
@@ -230,14 +245,13 @@ After 3 failures, treat as hard bounce
 
 ### Implementation:
 ```typescript
-// Webhook handler for bounces
-app.post('/webhooks/email', (req, res) => {
-  const event = req.body;
-  if (event.type === 'bounce') {
-    await markEmailInvalid(event.email);
-    await removeFromAllLists(event.email);
-  }
-});
+// Framework-independent adapter pseudocode: use the provider's exact signature scheme.
+async function handleEmailWebhook(rawBody: Uint8Array, headers: Headers) {
+  const event = verifyAndParseProviderWebhook(rawBody, headers); // Reject invalid signatures/replay.
+  if (await wasProcessed(event.id)) return;
+  await applySuppressionAndMarkProcessedAtomically(event);
+  // Hard bounce/complaint suppresses; transient failures follow provider semantics.
+}
 ```
 
 ### Monitor:
@@ -260,7 +274,7 @@ Symptoms:
 Why this breaks:
 Users who cannot unsubscribe will mark as spam. Spam complaints hurt
 reputation more than unsubscribes. Also it is literally illegal.
-CAN-SPAM, GDPR all require clear unsubscribe.
+Commercial-message opt-out and privacy obligations depend on jurisdiction and purpose.
 
 Recommended fix:
 
@@ -272,11 +286,16 @@ Recommended fix:
 - Not styled to be invisible
 
 ### One-click:
-- Link directly unsubscribes
+- RFC 8058 one-click uses an authenticated-by-opaque-token HTTPS POST, not a GET that scanners can trigger
 - No login required
 - No "are you sure" hoops
 
 ### List-Unsubscribe header:
+
+Implement the POST endpoint, opaque list/recipient token validation and DKIM coverage
+of both unsubscribe headers; do not redirect the POST or require login/cookies.
+Keep a separate visible human unsubscribe flow. See [RFC 8058](https://www.rfc-editor.org/rfc/rfc8058.html).
+
 ```
 List-Unsubscribe: <mailto:unsubscribe@example.com>,
   <https://example.com/unsubscribe?token=xxx>
@@ -375,7 +394,7 @@ Symptoms:
 - Spam complaints above 0.1%
 
 Why this breaks:
-Permission-based email is not optional. It is the law (CAN-SPAM, GDPR).
+Permission-based sending is this workflow's policy. Do not claim CAN-SPAM universally requires opt-in: it sets commercial-message identification/opt-out duties; EU privacy/ePrivacy rules and other local laws need separate applicability review.
 It is also effective - unwilling recipients hurt your metrics and
 reputation more than they help.
 
@@ -427,7 +446,7 @@ Recommended fix:
 # Balance images and text:
 
 
-## 60/40 rule:
+## Text/image accessibility heuristic (not a spam-filter threshold):
 - At least 60% text content
 - Images for enhancement, not content
 
@@ -464,8 +483,7 @@ Symptoms:
 
 Why this breaks:
 Preview text is prime real estate - appears right after subject line.
-Default or missing preview text wastes this space. Good preview text
-increases open rates 10-30%.
+Default or missing preview text wastes this space. Measure preview text against actual conversion outcomes; no fixed uplift is established.
 
 Recommended fix:
 
@@ -514,32 +532,16 @@ Recommended fix:
 
 # Track each send individually:
 
-```typescript
-async function sendCampaign(emails: string[]) {
-  const results = await Promise.allSettled(
-    emails.map(async (email) => {
-      try {
-        const result = await resend.emails.send({ to: email, ... });
-        await db.emailLog.create({
-          email,
-          status: 'sent',
-          messageId: result.id,
-        });
-        return result;
-      } catch (error) {
-        await db.emailLog.create({
-          email,
-          status: 'failed',
-          error: error.message,
-        });
-        throw error;
-      }
-    })
-  );
+```text
+Non-executable campaign worker design:
+1. Load only consented, unsuppressed recipients for an explicitly authorized campaign.
+2. Reserve a stable recipient+campaign idempotency key in a durable outbox.
+3. Send through a bounded worker pool within provider limits; handle API error fields
+   as well as thrown errors and retain provider message IDs privately.
+4. On timeout, mark outcome unknown and reconcile provider state before retrying.
+5. Persist acknowledgement/suppression atomically; redact recipient and raw error
+   payloads in shared logs. Do not Promise.all 10,000 remote sends at once.
 
-  const failed = results.filter(r => r.status === 'rejected');
-  // Retry failed sends or alert
-}
 ```
 
 # Best practices:

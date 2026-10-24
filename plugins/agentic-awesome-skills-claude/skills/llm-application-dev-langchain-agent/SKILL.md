@@ -32,7 +32,7 @@ Build sophisticated AI agent system for: $ARGUMENTS
 
 ## Core Requirements
 
-- Use latest LangChain 0.1+ and LangGraph APIs
+- Choose and pin compatible LangChain/LangGraph/provider versions; do not mix legacy and v1 APIs
 - Implement async patterns throughout
 - Include comprehensive error handling and fallbacks
 - Integrate LangSmith for observability
@@ -45,23 +45,26 @@ Build sophisticated AI agent system for: $ARGUMENTS
 ### LangGraph State Management
 ```python
 from langgraph.graph import StateGraph, MessagesState, START, END
-from langgraph.prebuilt import create_react_agent
+from langchain.agents import create_agent
 from langchain_anthropic import ChatAnthropic
 
+from typing import TypedDict, Annotated
+from langgraph.graph.message import add_messages
+
 class AgentState(TypedDict):
-    messages: Annotated[list, "conversation history"]
-    context: Annotated[dict, "retrieved context"]
+    messages: Annotated[list, add_messages]
+    context: dict
 ```
 
 ### Model & Embeddings
-- **Primary LLM**: Claude Sonnet 4.5 (`claude-sonnet-4-5`)
-- **Embeddings**: Voyage AI (`voyage-3-large`) - officially recommended by Anthropic for Claude
+- **Illustrative LLM**: Claude Sonnet 4.5 (`claude-sonnet-4-5`)
+- **Embeddings**: Voyage AI (`voyage-3-large`) - verify model availability and suitability for the pinned integration
 - **Specialized**: `voyage-code-3` (code), `voyage-finance-2` (finance), `voyage-law-2` (legal)
 
 ## Agent Types
 
 1. **ReAct Agents**: Multi-step reasoning with tool usage
-   - Use `create_react_agent(llm, tools, state_modifier)`
+   - Use `create_agent(model=llm, tools=tools, system_prompt="...")` in LangChain v1
    - Best for general-purpose tasks
 
 2. **Plan-and-Execute**: Complex tasks requiring upfront planning
@@ -89,16 +92,16 @@ from langchain_pinecone import PineconeVectorStore
 # Setup embeddings (voyage-3-large recommended for Claude)
 embeddings = VoyageAIEmbeddings(model="voyage-3-large")
 
-# Vector store with hybrid search
+# Vector store with dense similarity search
 vectorstore = PineconeVectorStore(
     index=index,
     embedding=embeddings
 )
 
-# Retriever with reranking
+# Dense retriever; add a separately implemented reranker if needed
 base_retriever = vectorstore.as_retriever(
-    search_type="hybrid",
-    search_kwargs={"k": 20, "alpha": 0.5}
+    search_type="similarity",
+    search_kwargs={"k": 20}
 )
 ```
 
@@ -168,17 +171,9 @@ async def invoke_agent(request: AgentRequest):
 ```python
 from langsmith.evaluation import evaluate
 
-# Run evaluation suite
-eval_config = RunEvalConfig(
-    evaluators=["qa", "context_qa", "cot_qa"],
-    eval_llm=ChatAnthropic(model="claude-sonnet-4-5")
-)
-
-results = await evaluate(
-    agent_function,
-    data=dataset_name,
-    evaluators=eval_config
-)
+# Prerequisites: a real callable agent_function, dataset_name and a list of
+# compatible evaluator callables; supply and test them for the pinned LangSmith SDK.
+results = evaluate(agent_function, data=dataset_name, evaluators=evaluator_functions)
 ```
 
 ## Key Patterns
@@ -251,3 +246,5 @@ Build production-ready, scalable, and observable LangChain agents following thes
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are partial schemas/fragments and legacy memory names may require `langchain-classic`; they are not a runnable production agent. Current v1 uses `create_agent` and `system_prompt`; verify the [official migration guide](https://docs.langchain.com/oss/python/migrate/langchain-v1). Supply model IDs actually available to the authorized account, bound retries/cost and validate tool arguments and user authority. Scope checkpoint thread IDs to authenticated tenants/users and authorize private tracing exports; a caller-supplied thread ID is not an access check. Return redacted tool errors and concise reasoning summaries, not private internal reasoning.

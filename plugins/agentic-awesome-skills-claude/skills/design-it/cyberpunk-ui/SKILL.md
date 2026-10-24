@@ -254,7 +254,7 @@ fun CyberButton() {
 - You can elegantly apply a border stroke directly to the custom shape using `Modifier.border()`.
 
 ## Do's and Don'ts
-- **DO**: Include tiny, meaningless technical details (crosshairs, serial numbers, "SYS.OVERRIDE" text).
+- **DO**: Keep decorative technical details out of accessibility labels; controls need clear action names and visible keyboard focus that is not clipped.
 - **DON'T**: Use soft, organic curves or gradients. It must be sharp and aggressive.
 
 ## Limitations

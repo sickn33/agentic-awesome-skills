@@ -58,7 +58,7 @@ Churn has two types requiring different strategies:
 | **Voluntary** | Customer chooses to cancel | Cancel flows, save offers, exit surveys |
 | **Involuntary** | Payment fails | Dunning emails, smart retries, card updaters |
 
-Voluntary churn is typically 50-70% of total churn. Involuntary churn is 30-50% but is often easier to fix.
+Measure voluntary and payment-related churn in your own subscriber cohorts; their shares vary by product and payment mix.
 
 This skill supports three modes:
 
@@ -72,7 +72,7 @@ This skill supports three modes:
 
 ### The Cancel Flow Structure
 
-Every cancel flow follows this sequence:
+An optional retention flow can follow this sequence, with a direct cancellation path available throughout:
 
 ```
 Trigger → Survey → Dynamic Offer → Confirmation → Post-Cancel
@@ -82,7 +82,7 @@ Trigger → Survey → Dynamic Offer → Confirmation → Post-Cancel
 Customer clicks "Cancel subscription" in account settings.
 
 **Step 2: Exit Survey**
-Ask why they're cancelling. This determines which save offer to show.
+Offer an optional, skippable reason question. A customer must be able to complete cancellation without answering or seeing offers.
 
 **Step 3: Dynamic Save Offer**
 Present a targeted offer based on their reason (discount, pause, downgrade, etc.)
@@ -134,15 +134,15 @@ The key insight: **match the offer to the reason.** A discount won't save someon
 ### Save Offer Types
 
 **Discount**
-- 20-30% off for 2-3 months is the sweet spot
+- Treat 20-30% off for 2-3 months as a test hypothesis, subject to margin and customer fairness
 - Avoid 50%+ discounts (trains customers to cancel for deals)
-- Time-limit the offer ("This offer expires when you leave this page")
+- State genuine eligibility and duration; never invent an expiring offer to pressure cancellation
 - Show the dollar amount saved, not just the percentage
 
 **Pause subscription**
 - 1-3 month pause maximum (longer pauses rarely reactivate)
-- 60-80% of pausers eventually return to active
-- Auto-reactivation with advance notice email
+- Measure pause return and subsequent paid retention; no universal return rate is established here
+- Disclose exact resume date, price and charging behavior; obtain agreement and send advance notice
 - Keep their data and settings intact
 
 **Plan downgrade**
@@ -234,7 +234,7 @@ Track these leading indicators of churn:
 
 ### Health Score Model
 
-Build a simple health score (0-100) from weighted signals:
+Build an illustrative health score (0-100) from normalized 0-100 signals. Calibrate weights/thresholds against later churn on held-out cohorts, handle missing data explicitly and avoid sensitive/proxy profiling:
 
 ```
 Health Score = (
@@ -270,7 +270,7 @@ Health Score = (
 
 ## Involuntary Churn: Payment Recovery
 
-Failed payments cause 30-50% of all churn but are the most recoverable.
+Measure the failed-payment share and recovery by failure reason using your own data.
 
 ### The Dunning Stack
 
@@ -282,7 +282,7 @@ Pre-dunning → Smart retry → Dunning emails → Grace period → Hard cancel
 
 - **Card expiry alerts**: Email 30, 15, and 7 days before card expires
 - **Backup payment method**: Prompt for a second payment method at signup
-- **Card updater services**: Visa/Mastercard auto-update programs (reduces hard declines 30-50%)
+- **Card updater services**: Visa/Mastercard auto-update programs (availability and issuer participation vary)
 - **Pre-billing notification**: Email 3-5 days before charge for annual plans
 
 ### Smart Retry Logic
@@ -302,7 +302,7 @@ Not all failures are the same. Retry strategy by decline type:
 - Retry 4: 7 days after failure (with dunning email escalation)
 - After 4 retries: Hard cancel with reactivation path
 
-**Smart retry tip:** Retry on the day of the month the payment originally succeeded (if Day 1 worked before, retry on Day 1). Stripe Smart Retries handles this automatically.
+**Retry implementation:** Follow the provider's current decline and network rules. Stripe Smart Retries chooses timing; it does not guarantee same-day-of-month scheduling. Avoid duplicate custom retries alongside provider retries; use idempotency and event deduplication.
 
 ### Dunning Email Sequence
 
@@ -314,13 +314,15 @@ Not all failures are the same. Retry strategy by decline type:
 | 4 | Day 10 | Final warning | "Last chance to keep your account active." |
 
 **Dunning email best practices:**
-- Direct link to payment update page (no login required if possible)
+- Use the provider's hosted payment-update session or a short-lived, scoped secure link; authorize the correct billing account and never expose card details in URLs
 - Show what they'll lose (their data, their team's access)
 - Don't blame ("your payment failed" not "you failed to pay")
 - Include support contact for help
 - Plain text performs better than designed emails for dunning
 
-### Recovery Benchmarks
+### Illustrative Recovery Targets
+
+The table below is an unsourced planning example, not an industry benchmark. Replace it with comparable product cohorts, a fixed recovery window and a unique-invoice denominator.
 
 | Metric | Poor | Average | Good |
 |--------|------|---------|------|
@@ -337,15 +339,17 @@ For the complete dunning playbook with provider-specific setup, see [references/
 
 ### Key Churn Metrics
 
+Targets below are illustrative hypotheses. Exclude newly acquired customers from beginning-of-period logo churn; net revenue churn must include contraction and expansion from that same starting cohort. Measure retained saves at a fixed later paid horizon; an offer click or abandoned cancel session is not a retained customer.
+
 | Metric | Formula | Target |
 |--------|---------|--------|
 | Monthly churn rate | Churned customers / Start-of-month customers | <5% B2C, <2% B2B |
-| Revenue churn (net) | (Lost MRR - Expansion MRR) / Start MRR | Negative (net expansion) |
+| Revenue churn (net) | (Churned MRR + Contraction MRR - Expansion MRR) / Starting-cohort MRR | Negative (net expansion) |
 | Cancel flow save rate | Saved / Total cancel sessions | 25-35% |
 | Offer acceptance rate | Accepted offers / Shown offers | 15-25% |
 | Pause reactivation rate | Reactivated / Total paused | 60-80% |
 | Dunning recovery rate | Recovered / Total failed payments | 50-60% |
-| Time to cancel | Days from first churn signal to cancel | Track trend |
+| Signal-to-cancel lag | Days from first churn signal to cancel | Track trend |
 
 ### Cohort Analysis
 
@@ -374,18 +378,20 @@ Test one variable at a time:
 
 ## Common Mistakes
 
-- **No cancel flow at all** — Instant cancel leaves money on the table. Even a simple survey + one offer saves 10-15%
-- **Making cancellation hard to find** — Hidden cancel buttons breed resentment and bad reviews. Many jurisdictions require easy cancellation (FTC Click-to-Cancel rule)
+- **Unmeasured retention offers** — Direct cancellation is a valid design. Test optional offers against later paid retention, margin, complaints and time needed to cancel.
+- **Making cancellation hard to find** — Hidden cancel buttons breed resentment and bad reviews. Check applicable current consumer and auto-renewal requirements; the FTC's 2024 amended rule was vacated in July 2025, as documented in its March 2026 notice
 - **Same offer for every reason** — A blanket discount doesn't address "missing feature" or "not using it"
 - **Discounts too deep** — 50%+ discounts train customers to cancel-and-return for deals
-- **Ignoring involuntary churn** — Often 30-50% of total churn and the easiest to fix
+- **Ignoring involuntary churn** — Measure its share and address recoverable failures
 - **No dunning emails** — Letting payment failures silently cancel accounts
 - **Guilt-trip copy** — "Are you sure you want to abandon us?" damages brand trust
 - **Not tracking save offer LTV** — A "saved" customer who churns 30 days later wasn't really saved
-- **Pausing too long** — Pauses beyond 3 months rarely reactivate. Set limits.
+- **Pausing too long** — Choose pause limits from your own customer needs and return data.
 - **No post-cancel path** — Make reactivation easy and trigger win-back emails, because some churned users will want to come back
 
 ---
+
+Before any live billing changes or customer messages, confirm the exact approved account, audience, offer terms and scope. Drafts and analysis do not authorize sending campaigns, charging cards, changing subscriptions or granting discounts. Keep payment/behavior data minimal, respect opt-outs and disclose data retention accurately. Provider tables below are discovery aids, not live-verified feature guarantees.
 
 ## Tool Integrations
 
@@ -395,7 +401,7 @@ For implementation, use the billing, analytics, and experimentation tools availa
 
 | Tool | Best For | Key Feature |
 |------|----------|-------------|
-| **Churnkey** | Full cancel flow + dunning | AI-powered adaptive offers, 34% avg save rate |
+| **Churnkey** | Full cancel flow + dunning | Adaptive offer workflows; verify current plan/features |
 | **ProsperStack** | Cancel flows with analytics | Advanced rules engine, Stripe/Chargebee integration |
 | **Raaft** | Simple cancel flow builder | Easy setup, good for early-stage |
 | **Chargebee Retention** | Chargebee customers | Native integration, was Brightback |

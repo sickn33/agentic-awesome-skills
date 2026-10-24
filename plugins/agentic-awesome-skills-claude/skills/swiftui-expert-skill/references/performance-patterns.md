@@ -10,12 +10,12 @@
 
 ### 1. Avoid Redundant State Updates
 
-SwiftUI doesn't compare values before triggering updates:
+Equality and invalidation behavior depend on the wrapper, value type and toolchain. Explicitly avoiding redundant writes can help hot paths; an equal assignment does not universally force body reevaluation:
 
 ```swift
 // BAD - triggers update even if value unchanged
 .onReceive(publisher) { value in
-    self.currentValue = value  // Always triggers body re-evaluation
+    self.currentValue = value  // May notify, depending on the observation mechanism
 }
 
 // GOOD - only update when different
@@ -58,7 +58,7 @@ FontSizeSlider(fontSize: config.fontSize)
 ThemeSelector(config: config)  // Notified of ALL config changes
 ```
 
-With `ObservableObject`, any `@Published` change triggers all observers. With `@Observable`, views update only when accessed properties change, but passing entire objects still creates broader dependencies than necessary.
+With `ObservableObject`, any `@Published` change triggers all observers. With Observation, reads establish dependencies on accessed properties. Merely passing an observable reference does not subscribe a child to every property; narrow inputs when measurements justify it.
 
 ### 4. Use Equatable Views
 
@@ -69,7 +69,7 @@ struct ExpensiveView: View, Equatable {
     let data: SomeData
 
     static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.data.id == rhs.data.id  // Custom equality check
+        lhs.data == rhs.data  // SomeData must be Equatable and include every rendered input
     }
 
     var body: some View {
@@ -84,56 +84,9 @@ ExpensiveView(data: data)
 
 **Caution**: If you add new state or dependencies to your view, remember to update your `==` function!
 
-### 5. POD Views for Fast Diffing
+### 5. Value shape is not a public diffing contract
 
-**POD (Plain Old Data) views use `memcmp` for fastest diffing.** A view is POD if it only contains simple value types and no property wrappers.
-
-```swift
-// POD view - fastest diffing
-struct FastView: View {
-    let title: String
-    let count: Int
-
-    var body: some View {
-        Text("\(title): \(count)")
-    }
-}
-
-// Non-POD view - uses reflection or custom equality
-struct SlowerView: View {
-    let title: String
-    @State private var isExpanded = false  // Property wrapper makes it non-POD
-
-    var body: some View {
-        Text(title)
-    }
-}
-```
-
-**Advanced Pattern**: Wrap expensive non-POD views in POD parent views:
-
-```swift
-// POD wrapper for fast diffing
-struct ExpensiveView: View {
-    let value: Int
-
-    var body: some View {
-        ExpensiveViewInternal(value: value)
-    }
-}
-
-// Internal view with state
-private struct ExpensiveViewInternal: View {
-    let value: Int
-    @State private var item: Item?
-
-    var body: some View {
-        // Expensive rendering
-    }
-}
-```
-
-**Why**: The POD parent uses fast `memcmp` comparison. Only when `value` changes does the internal view get diffed.
+SwiftUI's internal comparison strategy is not a supported guarantee. In particular, String contains reference-managed storage and is not a reliable example of trivial POD data. Do not promise memcmp, guaranteed skipped bodies or a performance ranking from a view's stored-property list. Extract focused value-based subviews when useful, then measure actual invalidation and rendering in the target SDK.
 
 ### 6. Lazy Loading
 
@@ -177,7 +130,9 @@ struct DataView: View {
         }
         .task {
             // Automatically cancelled when view disappears
-            data = await fetchData()
+            let result = await fetchData()
+            guard !Task.isCancelled else { return }
+            data = result
         }
     }
 }
@@ -232,7 +187,7 @@ struct ItemRow: View {
 }
 ```
 
-**Avoid storing frequently-changing values in the environment.** Every write to *any* environment key forces every view that reads *any* key in that subtree to be checked. So a high-frequency value (scroll offset, window/container size, drag translation, per-frame animation progress, timer ticks, hover location) flowing into an `@Entry` or `.environment(\.key, value)` becomes an invalidation storm.
+**Avoid storing frequently-changing values in the environment.** Environment dependency tracking is implementation-specific; a high-frequency environment value can broaden work among dependent views, but unrelated key writes are not guaranteed to reevaluate every reader. So a high-frequency value (scroll offset, window/container size, drag translation, per-frame animation progress, timer ticks, hover location) flowing into an `@Entry` or `.environment(\.key, value)` becomes an invalidation storm.
 
 Instead, hold the value in an `@Observable` model and expose a **coarsened** value — a boolean threshold rather than the raw measurement — so views invalidate only when crossing a meaningful boundary:
 
@@ -244,7 +199,7 @@ final class ViewportModel {
 }
 ```
 
-The same shape applies per row in a list: storing the raw offset on a model and having every row read it still invalidates all visible rows every frame. Give each item its own `@Observable` whose properties track only that item's derived state (e.g. `isVisible`), so each row invalidates at most twice (enter/leave) regardless of scroll speed — see item #10 below.
+The same shape applies per row in a list: storing the raw offset on a model and having every row read it still invalidates all visible rows every frame. Give each item its own `@Observable` whose properties track only that item's derived state (e.g. `isVisible`), so each row invalidates on each actual enter/leave change (which can occur repeatedly) — see item #10 below.
 
 For purely visual effects driven by scroll position (opacity, scale, rotation), prefer `scrollTransition` or `visualEffect(in:)` — they push the per-frame work to the renderer and skip body re-evaluation entirely. Reach for the `@Observable` + coarsening pattern only when the scroll-derived value must drive non-rendering logic (model updates, prefetches, sibling state).
 
@@ -378,7 +333,7 @@ var body: some View {
 
 var body: some View {
     List(sortedItems) { item in Text(item.name) }
-        .onChange(of: items) { _, newItems in
+        .onChange(of: items, initial: true) { _, newItems in
             sortedItems = newItems.sorted { $0.name < $1.name }
         }
 }
@@ -411,7 +366,7 @@ var itemCount: Int { items.count }  // Computed property
 - [ ] Derived state computed, not stored
 - [ ] Use `Self._logChanges()` or `Self._printChanges()` to debug unexpected updates
 - [ ] Equatable conformance for expensive views (when appropriate)
-- [ ] Consider POD view wrappers for advanced optimization
+- [ ] Measure subview comparison/invalidation rather than relying on undocumented POD or memcmp rules
 - [ ] Consider using granular @Observable dependencies for list items (smaller observable units per row when it measurably reduces updates)
 - [ ] Frequently-changing values not stored in the environment
 - [ ] Sendable closures (Shape, visualEffect, Layout) capture values instead of accessing @MainActor state

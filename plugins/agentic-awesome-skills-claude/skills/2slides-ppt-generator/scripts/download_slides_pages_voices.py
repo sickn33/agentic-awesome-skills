@@ -38,12 +38,14 @@ JOB_ID_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
 def validate_job_id(job_id: str) -> str:
-    if not JOB_ID_RE.match(job_id or ""):
+    if not JOB_ID_RE.fullmatch(job_id or ""):
         raise ValueError("Job ID contains unsupported characters")
     return job_id
 
 
 def validate_public_https_url(url: str) -> tuple[str, str]:
+    if any(ord(c) < 33 or ord(c) == 127 for c in url):
+        raise ValueError("Download URL contains whitespace/control characters")
     parsed = urlparse(url)
     if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password or parsed.port not in (None, 443):
         raise ValueError("Download URL must be HTTPS")
@@ -146,7 +148,7 @@ def download_slides_pages_voices(
 
     print(f"Requesting download for job: {job_id}...", file=sys.stderr)
 
-    response = requests.post(url, headers=headers, json=payload, timeout=30)
+    response = requests.post(url, headers=headers, json=payload, timeout=30, allow_redirects=False)
     response.raise_for_status()
 
     result = response.json()
@@ -179,13 +181,16 @@ def download_slides_pages_voices(
     print(f"Downloading ZIP archive to: {output_path}...", file=sys.stderr)
 
     destination = safe_user_path(output_path)
+    if destination.exists():
+        raise FileExistsError("Refusing to overwrite an existing output file")
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(prefix=".2slides-", suffix=".zip", dir=destination.parent, delete=False) as tmp:
         temporary = Path(tmp.name)
     try:
         file_size = download_pinned_https(download_url, pinned_ip, temporary)
         os.chmod(temporary, 0o600)
-        os.replace(temporary, destination)
+        # Hard-link creation is atomic and fails if another writer won the name.
+        os.link(temporary, destination)
     finally:
         temporary.unlink(missing_ok=True)
     print(f"✓ Downloaded successfully!", file=sys.stderr)

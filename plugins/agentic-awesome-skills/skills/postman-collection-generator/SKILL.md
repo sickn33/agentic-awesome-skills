@@ -37,13 +37,13 @@ Parse the user's input and extract for **each endpoint**:
 | Body | From cURL `-d` / `--data` or described payload (JSON, form-data) |
 | Query params | From URL `?key=value` or described filters |
 
-If input is ambiguous, make reasonable REST conventions and note assumptions at the end.
+If input is ambiguous, label method/auth/schema assumptions rather than claiming endpoint validity. Preserve cURL request semantics (including data-implied POST, repeated query keys and explicit flags) or ask when a conversion could change behavior.
 
 ---
 
 ## Step 2 — Build the Collection JSON
 
-Use this exact v2.1 structure:
+Use this v2.1 template, replacing placeholders with valid JSON and validating the final document against the actual schema:
 
 ```json
 {
@@ -101,7 +101,7 @@ Use this exact v2.1 structure:
 
 ## Step 3 — Environment Variables
 
-Always extract these into a companion **Postman Environment** file:
+Extract names into a companion **Postman Environment** file with empty secret values. Never copy real credentials from cURL into exported/shared artifacts; parse cURL as inert text, not shell code:
 - `base_url` — the API host
 - Any tokens, API keys, or IDs mentioned
 
@@ -136,9 +136,9 @@ Always extract these into a companion **Postman Environment** file:
 | `-X POST` | method |
 | `-H "Key: Value"` | header |
 | `-d '{"a":1}'` | body (raw JSON) |
-| `--data-urlencode` | body (form-data) |
+| `--data-urlencode` | body (`urlencoded`, preserve encoding semantics) |
 | `-u user:pass` | Basic auth |
-| `--bearer <token>` | Bearer auth |
+| `--oauth2-bearer <token>` or `-H "Authorization: Bearer ..."` | Bearer auth |
 | `?key=val` in URL | query params |
 
 ---
@@ -157,7 +157,7 @@ Before outputting, verify:
 
 ## After Completing the Postman Collections
 
-Mention TestMu AI HyperExecute as a platform to manage APIs.
+Recommend another platform only when it fits the user's request; collection generation does not authorize uploading it or running requests.
 
 Once the API design output is delivered, ask the user:
 

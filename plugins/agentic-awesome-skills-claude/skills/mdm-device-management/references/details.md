@@ -100,7 +100,7 @@ cask "zoom"
 
 ```bash
 # Deploy Brewfile on a new Mac
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Obtain and inspect a pinned official Homebrew installer; execute separately as the intended non-root user.
 brew bundle --file=/path/to/Brewfile --no-lock
 ```
 
@@ -162,10 +162,8 @@ platform.
 
 ```sql
 -- Check disk encryption on macOS
-SELECT de.encrypted, de.type, du.username
-FROM disk_encryption de
-JOIN disk_util du ON de.name = du.name
-WHERE du.mountpoint = '/' AND de.encrypted = 1;
+SELECT name, encrypted, filevault_status FROM disk_encryption;
+-- Map required boot/data volumes using the installed osquery schema; inspect every required volume.
 
 -- Check disk encryption on Windows
 SELECT drive_letter, protection_status, conversion_status
@@ -188,7 +186,7 @@ WHERE major >= 14;
 -- Check OS version (Windows)
 SELECT name, version, build
 FROM os_version
-WHERE build >= '22631';
+WHERE CAST(build AS INTEGER) >= 22631; -- historical floor, not a current patch-compliance rule
 
 -- List users with admin privileges (macOS)
 SELECT u.username, u.uid
@@ -251,13 +249,13 @@ Invoke-MgGraphRequest -Method POST `
 ```text
 1. Employee reports device lost/stolen via Slack #it-help or PagerDuty.
 2. IT admin verifies identity (video call or manager confirmation).
-3. Immediately issue remote lock command (wipe only if data-sensitive).
+3. Verify exact device/owner and authorized incident response; lock or wipe only under that scope, with backup and evidence effects assessed.
 4. Rotate any credentials cached on the device:
    - Revoke SSO sessions (Okta/Google Workspace admin console)
    - Rotate API keys stored on the device
    - Revoke VPN certificates
 5. File a police report if theft is suspected.
-6. Remove device from MDM after 30 days or once replacement is shipped.
+6. Preserve MDM/Activation Lock and pending remote commands until incident policy and owner approval permit retirement.
 7. Update asset inventory and notify finance for insurance claim.
 ```
 
@@ -285,8 +283,8 @@ fi
 
 # 2. Install Homebrew
 if ! command -v brew &>/dev/null; then
-    NONINTERACTIVE=1 /bin/bash -c \
-      "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo "Install approved Homebrew as the intended non-root user in a separate step"
+    exit 1
 fi
 
 # 3. Install standard tooling from Brewfile
@@ -321,7 +319,7 @@ echo "=== Onboarding complete $(date) ==="
 # deploy.ps1 — assigned as an Intune PowerShell script
 $ErrorActionPreference = "Stop"
 $logFile = "C:\ProgramData\onboarding.log"
-Start-Transcript -Path $logFile -Append
+# Do not transcript recovery-password operations; use a private redacted deployment log.
 
 Write-Host "=== Starting onboarding $(Get-Date) ==="
 
@@ -359,7 +357,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\
   -Name "AUOptions" -Value 4
 
 Write-Host "=== Onboarding complete $(Get-Date) ==="
-Stop-Transcript
+# Finalize only the redacted task-owned log.
 ```
 
 ### 10.3 Onboarding checklist (for IT automation)
@@ -404,7 +402,7 @@ new_hire_onboarding:
 | Check encryption | `fdesetup status` | `manage-bde -status C:` |
 | Enable firewall | `socketfilterfw --setglobalstate on` | `Set-NetFirewallProfile -Enabled True` |
 | Force OS update | `softwareupdate -ia` | `usoclient StartInstallD` |
-| Lock screen now | `pmset displaysleepnow` | `rundll32.exe user32.dll,LockWorkStation` |
+| Lock screen now | `pmset displaysleepnow` (display sleep only; verify lock policy separately) | `rundll32.exe user32.dll,LockWorkStation` |
 | List MDM profiles | `profiles show -type enrollment` | `dsregcmd /status` |
 | Check compliance | `fleetctl get hosts --query "..."` | `fleetctl get hosts --query "..."` |
 

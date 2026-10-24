@@ -37,7 +37,8 @@ qc.h(0)   # Hadamard gate on qubit 0
 ```python
 qc.s(0)   # S gate (√Z)
 qc.t(0)   # T gate (√S)
-qc.p(π/4, 0)   # Phase gate with custom angle
+from math import pi
+qc.p(pi/4, 0)   # Phase gate with custom angle
 ```
 
 ### Rotation Gates

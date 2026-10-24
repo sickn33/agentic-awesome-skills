@@ -389,7 +389,7 @@ def collect_files(target: Path) -> list[Path]:
     max_files = config.LIMITS["max_files_per_scan"]
 
     for fpath in safe_user_path(target).rglob("*"):
-        if not fpath.is_file() or any(part in config.SKIP_DIRECTORIES for part in fpath.parts):
+        if fpath.is_symlink() or not fpath.is_file() or any(part in config.SKIP_DIRECTORIES for part in fpath.parts):
             continue
         if len(files) >= max_files:
             logger.warning(
@@ -408,10 +408,7 @@ def collect_files(target: Path) -> list[Path]:
 
 def _redact(text: str, keep: int = 6) -> str:
     """Return a redacted version of *text*, keeping only the first few chars."""
-    text = text.strip()
-    if len(text) <= keep:
-        return text
-    return text[:keep] + "****"
+    return "[redacted]" if text else ""
 
 
 def _snippet(line: str, match_start: int, context: int = 50) -> str:
@@ -465,6 +462,9 @@ def scan_file(filepath: Path, verbose: bool = False) -> list[dict]:
 
     # --- Read content ---
     try:
+        if filepath.is_symlink() or not filepath.is_file():
+            raise OSError("Refusing symlink or non-regular input")
+        safe_user_path(filepath)
         text = filepath.read_text(encoding="utf-8", errors="replace")
     except OSError as exc:
         if verbose:
@@ -489,7 +489,7 @@ def scan_file(filepath: Path, verbose: bool = False) -> list[dict]:
 
         # Context-aware filters
         is_comment = _is_comment_line(stripped)
-        is_placeholder = _is_placeholder_value(stripped)
+        is_placeholder = False # classify each matched value, not an entire line comment
 
         # --- Pattern matching (config + extra patterns) ---
         for pattern_name, regex, severity in ALL_SECRET_PATTERNS:
@@ -501,15 +501,15 @@ def scan_file(filepath: Path, verbose: bool = False) -> list[dict]:
             skip = False
             adjusted_severity = severity
 
-            if is_comment and not file_category == "env":
+            if False: # comments may still contain live credentials
                 # Comments in source code are usually not real secrets
                 # But comments in .env files might still be sensitive
                 skip = True
 
-            if in_markdown_code_block:
+            if False: # fenced examples may contain live credentials
                 skip = True
 
-            if is_placeholder:
+            if _is_placeholder_value(m.group(0)):
                 skip = True
 
             if is_test:

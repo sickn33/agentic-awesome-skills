@@ -1,5 +1,8 @@
 # Swift Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Force Unwrapping
 
 ```swift
@@ -82,7 +85,7 @@ guard let user = object as? User else {
 
 ```swift
 // DANGEROUS: Different indexing semantics
-let nsString: NSString = "café"
+let nsString: NSString = "cafe\u{301}"  // decomposed accent
 let swiftString = nsString as String
 
 nsString.length        // 5 (UTF-16 code units)
@@ -127,7 +130,7 @@ class MyClass {
 }
 ```
 
-**Fix**: Use `weak` or `unowned`:
+**Fix**: Use weak references, or unowned only when the referred object is guaranteed to outlive the reference:
 ```swift
 class Apartment {
     weak var tenant: Person?  // Weak breaks cycle
@@ -226,7 +229,7 @@ user[keyPath: \.name]  // Uses KeyPath
 ## Codable Pitfalls
 
 ```swift
-// DANGEROUS: Decoding fails silently with wrong types
+// Decoding throws for a wrong type; silence comes only from caller error swallowing
 struct User: Codable {
     var id: Int
 }
@@ -268,7 +271,7 @@ struct User: Codable {
 
 // DANGEROUS: Objective-C performSelector
 let result = obj.perform(NSSelectorFromString(userInput))
-// Can call any method!
+// Invokes a dynamically selected selector supported by the receiver; allowlist permitted operations.
 ```
 
 ## Detection Patterns

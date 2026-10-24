@@ -22,7 +22,7 @@ Turn a raw idea into a single markdown document that is complete enough for a co
 
 The skill runs intake questions, web research and competitor benchmarking, then writes one Markdown blueprint: architecture drivers and style, a version-pinned stack with evidence tags, a quality gate, personas, flows, UX copy, edge cases, and epics broken into stories with Given/When/Then acceptance criteria, tests and a Definition of Done. The blueprint embeds a session protocol so Claude Code or Codex builds it one epic per fresh session.
 
-This is the author's own skill, published at [iniesohidham/idea-to-blueprint](https://github.com/iniesohidham/idea-to-blueprint) under the MIT license (see `LICENSE`). The files in `references/`, `assets/` and `scripts/` are unchanged copies of the upstream files; this `SKILL.md` adds the catalog sections (Overview, When to Use, Examples, Limitations, safety notes) around the upstream instructions.
+This is the author's own skill, published at [iniesohidham/idea-to-blueprint](https://github.com/iniesohidham/idea-to-blueprint) under the MIT license (see `LICENSE`). The bundled files derive from upstream, with catalog maintenance corrections to safety, examples and validation; this `SKILL.md` adds the catalog sections (Overview, When to Use, Examples, Limitations, safety notes) around the upstream instructions.
 
 ## When to Use This Skill
 
@@ -35,7 +35,7 @@ This is the author's own skill, published at [iniesohidham/idea-to-blueprint](ht
 
 ## How It Works
 
-Run this skill on the strongest model available at the highest effort/thinking setting the harness offers. If you cannot tell whether that is the case, say so once at the start and continue.
+Use the configured model and effort settings, respecting the user’s budget and preferences. A planning skill does not authorize changing host settings.
 
 ### Why this document has to be different
 
@@ -58,7 +58,7 @@ Everything below serves those three habits.
 | 4. Lint & deliver | Run `scripts/lint_blueprint.py`, fix every error, deliver the file with a short wrap-up | (below) |
 | 5. Build sessions | The user runs one epic per fresh Claude Code / Codex session using the protocol embedded in the blueprint | `references/session-protocol.md` |
 
-Do not skip phases 0 and 2. The user explicitly wants to be asked before a long document is produced, and a two-minute checkpoint prevents a hundred pages built on a wrong interpretation. Do not run the phases out of order: research before the intake answers wastes searches on the wrong problem; writing before the brief is approved wastes the document.
+Use phases 0 and 2 to resolve material unknowns. Reuse answers and authorization already supplied; do not assume every user requested a separate approval checkpoint. Do not run the phases out of order: research before the intake answers wastes searches on the wrong problem; writing before the brief is approved wastes the document.
 
 Talk to the user in the language they wrote in. Persian in → Persian out for all chat and for the human-facing prose of the document (see Language convention).
 
@@ -128,9 +128,9 @@ Read `references/blueprint-template.md` and keep it open; it has the full sectio
 Writing mechanics that matter:
 
 - **Write in chunks.** Create the file with the cover and table of contents, then append one major section per write operation. A hundred-page document written in one output gets truncated or rushed; a document written section by section keeps its quality to the end.
-- **IDs everywhere.** Personas `P1…`, flows `F-01…`, screens `S-01…`, copy lines `CP-<screen>-<n>`, entities `ENT-…`, epics `E00…`, stories `E03-S02`, criteria `AC-1…` inside a story, open questions `OQ-01…`, edge cases `EC-<cat>-<n>`. The linter and the future build sessions rely on them.
+- **IDs everywhere.** Personas `P1…`, flows `F-01…`, screens `SCR-01…`, copy lines `CP-<screen>-<n>`, entities `ENT-…`, epics `E00…`, stories `E03-S02`, criteria `AC-1…` inside a story, open questions `OQ-01…`, edge cases `EC-<cat>-<n>`. The linter and the future build sessions rely on them.
 - **Machine-facing text in English, human-facing prose in the user's language** (details in Language convention). Every heading carries an English anchor so the linter and the coding agent can find sections regardless of prose language.
-- **Depth beats brevity here.** The user has said a 100-page file is fine. The right length is whatever leaves no story, screen, copy line or edge case unspecified. Cut repetition, not content.
+- **Depth beats brevity here.** Respect the requested scope and length. Cover the decisions needed to build the agreed scope; do not assume the user authorized a hundred-page document. Cut repetition, not content.
 - **Every decision names its losers and its price.** Stack, architecture style, design system, auth model, data model: state the alternatives considered, the deciding reason, and *what the rejected option would have bought you*. A decision with no stated cost was not a decision.
 - **Decide the shape before the tools.** Architecture drivers → architecture style → technology. If a driver could not have changed the technology choice, the drivers are decoration.
 - **Quality is specified, not assumed.** The gate, the review checklist and the metrics go in the document with concrete commands and thresholds, because the reviewer is often one person reading a diff an agent produced in a minute, and a standard invented at review time is a different standard every time.

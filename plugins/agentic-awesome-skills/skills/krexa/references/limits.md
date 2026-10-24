@@ -40,3 +40,10 @@ Krexa app, signed by the owner.
 - A take-profit field. A rule can still exit on a gain if the strategy says so.
 - A cap on the number of open positions.
 - News-driven triggers.
+
+## Control limitations
+
+These are upstream-described controls, not independent enforcement evidence. A
+decision-time stop or daily-loss cap cannot guarantee fill price, liquidation
+avoidance or maximum realized loss. Confirm venue/account, open orders/positions,
+fees and acknowledged limits; perps lack a daily notional cap in this snapshot.

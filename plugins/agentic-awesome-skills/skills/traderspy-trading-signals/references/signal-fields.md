@@ -30,12 +30,12 @@ the size of the whole public archive when no filter is given, not "signals today
 | `history.entryPrice` | Price at entry (equals `price` unless recalibrated) |
 | `history.currentPrice` | Last tracked price; may be null on a fresh signal |
 | `history.highestPrice` / `lowestPrice` | Extremes seen since entry on 1-minute data |
-| `history.resolution` | `{ status, price, time }` once resolved; `price` is the level that was hit, so realised move = (resolution.price − entryPrice) / entryPrice, sign-flipped for sells |
+| `history.resolution` | `{ status, price, time }` once resolved; `price` is the level that was hit, so the level-to-entry price move = (resolution.price − entryPrice) / entryPrice, sign-flipped for sells |
 
 Interpretation notes:
 
 - `validation_score` around 70–80 has historically been the sweet spot; the very highest scores
-  tended to be late entries. Do not rank signals by score alone.
+  were claimed to be late entries by the upstream description. No reproducible sample is bundled; treat this as an unverified hypothesis, not a trading rule. Do not rank by score alone.
 - `validation_directional_move_pct` above ~1.5% means the move was already under way at
   publication — worth mentioning as "the entry chased the move".
 - The published TP2/TP3 are a ladder (≈1.7× and 2.4× TP1); they exist so a winner can be
@@ -60,5 +60,4 @@ The 4h and 8h windows are small samples; treat single-digit `total` as noise.
 - TP2 and TP3 count only after TP1; after TP1 a later stop touch does not downgrade the result.
 - `profit_locked` is set when a trend-exhaustion check fires before TP1 and locks a partial gain.
 - Only a subset of signals is ever marked `expired`; a signal that finishes its window untouched
-  can stay `pending` indefinitely. Treat old `pending` rows as roughly flat outcomes, not as open
-  ideas.
+  can stay `pending` indefinitely. Treat old `pending` rows as unresolved/stale with unknown economic outcome, not as flat returns or open ideas.

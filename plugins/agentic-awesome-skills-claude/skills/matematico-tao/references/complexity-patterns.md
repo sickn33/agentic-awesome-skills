@@ -1,3 +1,5 @@
+> Advisory patterns and hypothetical Auri examples; estimates are not measured properties of the current target. Regex scans do not compute formal McCabe/Sonar metrics. Thresholds require source review and context.
+
 # Padrões de Complexidade em Android/Kotlin
 
 ## 1. Complexidade Ciclomática (McCabe)
@@ -16,7 +18,7 @@ Limites recomendados:
 CC ≤ 5: simples, fácil de testar
 CC 6-10: moderado, testável
 CC 11-20: complexo, difícil de testar — refatorar
-CC > 20: muito complexo — dividir obrigatoriamente
+CC >20: advisory investigation threshold, not mandatory splitting or a security verdict
 ```
 
 ### Padrões Android com Alta CC
@@ -108,7 +110,7 @@ fun HomeScreen(viewModel: MainViewModel) {
         // ...
     }
 }
-// Cognitiva estimada: ~15-25 dependendo da implementação completa
+// Cognitiva ilustrativa (not a Sonar-compatible calculation): ~15-25 dependendo da implementação completa
 ```
 
 ---
@@ -138,7 +140,7 @@ Para módulos Auri:
 ### Lei de Dependência Estável (Martin)
 ```
 Regra: módulos devem depender apenas de módulos mais estáveis que eles
-I(dependente) > I(dependência) para cada aresta
+Prefer I(dependente) >= I(dependência); equal values and exceptions require architectural context
 
 Verificação Auri:
 app(I=1) → bluetooth(I≈0.5) ✅ (1 > 0.5)
@@ -217,7 +219,7 @@ Entrada: Set<AudioSource> (tamanho tipicamente 1-4)
 
 Algoritmo: max(availableSources, key=priority)
 Complexidade: O(n) onde n = |availableSources| ≤ 5
-Otimização: O(1) possível com ordenação antecipada (Set ordenado)
+For a fixed bounded source universe, a priority lookup may be constant-sized; maintaining a dynamic ordered set is not free.
 
 Invariante de corretude:
 ∀ s ∈ availableSources: priority(selectedSource) ≥ priority(s)
@@ -236,7 +238,7 @@ Algoritmos possíveis:
 2. Streaming parcial (implementar): acumula até sentença completa
    - Detectar fim de sentença: regex \.|\!|\?
    - Latência percebida: O(primeira_sentença / bandwidth) — baixa
-   - Complexidade: O(1) memória por sentença processada
+   - Memory is O(length of pending sentence/buffer), bounded only with explicit length limits
 
 Recomendação: streaming parcial para melhor UX
 Threshold de sentença: ~15-20 palavras ou primeiro ., !, ?
@@ -244,25 +246,9 @@ Threshold de sentença: ~15-20 palavras ou primeiro ., !, ?
 
 ---
 
-## 6. Big-O das Operações Principais
+## 6. Cost models require actual implementations
 
-```
-Operação                              | Complexidade | Notas
-──────────────────────────────────────┼──────────────┼─────────────────────
-Bluetooth scan                        | O(1) t-médio | Timeout-bounded
-SCO connect                           | O(1)         | Fixed protocol
-Audio route selection                 | O(n)         | n=sources (~5)
-STT (SpeechRecognizer)               | O(w²) pior   | w=palavras (HMM)
-LLM inference (local Ollama)         | O(t·d²)      | t=tokens, d=dimensão
-LLM inference (API)                   | O(t) perceb. | Latência de rede
-TTS synthesis                         | O(c)         | c=caracteres
-Tool execution (e.g., set alarm)      | O(1)         | Android API call
-Gmail search                          | O(n log n)   | n=emails (server-side)
-StateFlow update (CAS)                | O(1) amort.  | Lock-free
-Coroutine launch                      | O(1)         | ~1μs overhead
-```
-
----
+Bluetooth timeouts, third-party STT, LLM APIs and Gmail server queries do not expose enough implementation evidence here to assign the former universal Big-O table. Separate algorithmic input-size bounds from wall-clock latency and service limits. StateFlow update cost grows with active subscribers; atomic semantics do not imply lock-free O(1) updates. Record device/model/network conditions and profile runtime operations.
 
 ## 7. Análise de Entropia de Código
 

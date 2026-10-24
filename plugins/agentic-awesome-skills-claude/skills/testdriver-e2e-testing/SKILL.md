@@ -110,6 +110,8 @@ await done.click();
 
 ## Security & Safety Notes
 
+Remote sandbox execution and automatic screenshots can transmit application data and consume account quota. Use synthetic accounts, verify allowed app/network destinations and retention, and avoid capturing real secrets or personal records. The installed tool’s actual local/remote execution mode must be confirmed rather than inferred from this guide; initialization workflows can change CI and require source review.
+
 - `testdriverai init` writes project files to the current directory; run it only in a project you intend to modify.
 - The `TD_API_KEY` credential belongs in `.env` (gitignored by the scaffold). Never commit it.
 - Tests execute inside an isolated remote sandbox, not on the local machine.

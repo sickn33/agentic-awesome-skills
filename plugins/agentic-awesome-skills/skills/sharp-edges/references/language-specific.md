@@ -1,5 +1,8 @@
 # Language-Specific Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 General programming footguns by language—not limited to cryptography.
 
 ## C / C++
@@ -124,7 +127,7 @@ type User struct {
 // {"admin": false, "admin": true} → Admin = true
 ```
 
-**Fix**: Use `DisallowUnknownFields()` and consider exact-match libraries.
+**Fix**: DisallowUnknownFields rejects unknown fields, not duplicate keys or case variants; enforce a bounded exact schema separately.
 
 ### Defer in Loops
 
@@ -231,7 +234,7 @@ if (a == b) {  // FALSE - different objects
 
 Integer x = 128;
 Integer y = 128;
-if (x == y) {  // FALSE - outside cached range [-128, 127]
+if (x == y) {  // Not guaranteed: only the minimum cache range is specified
 }
 
 Integer p = 127;
@@ -263,7 +266,7 @@ ObjectInputStream ois = new ObjectInputStream(untrustedInput);
 Object obj = ois.readObject();  // Executes readObject() on malicious classes
 
 // "Gadget chains" in libraries enable RCE
-// Even without executing readObject(), deserialization triggers code
+// readObject invokes deserialization callbacks; merely constructing ObjectInputStream is not this complete gadget-chain example.
 ```
 
 ### Swallowed Exceptions
@@ -425,7 +428,7 @@ function merge(target, source) {
 
 // Attacker sends: {"__proto__": {"isAdmin": true}}
 merge({}, userInput);
-// Now ALL objects have isAdmin === true
+// A shallow __proto__ assignment affects the target prototype; a recursive merge into Object.prototype can affect all objects.
 ({}).isAdmin  // true
 ```
 

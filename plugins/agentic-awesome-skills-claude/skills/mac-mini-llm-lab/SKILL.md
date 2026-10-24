@@ -28,15 +28,19 @@ Use this skill when:
 - Setting up a dedicated local LLM inference server
 - Building a private AI development environment
 - Need always-on model serving without cloud costs
-- Running models that require Apple Silicon unified memory (32-192GB)
+- Running models that fit the actual machine’s unified memory
 - Creating a home lab AI server for a small team
 
 ## Prerequisites
 
-- Mac mini with Apple Silicon (M2/M3/M4, 16GB+ unified memory recommended)
+- An actual Apple Silicon Mac mini configuration with sufficient available memory for the selected model
 - macOS Sonoma 14+ or Sequoia 15+
 - Ethernet connection (recommended over Wi-Fi)
 - UPS for power protection (optional but recommended)
+
+## Host and exposure boundaries
+
+Check actual model hardware/memory and installed macOS/tool support first. The throughput/RAM table is illustrative, not measured evidence or a fit guarantee; include KV cache/context/concurrency overhead. Keep Ollama loopback-only by default; TLS alone in the Caddy example does not add authentication. Configure an authenticated private proxy/tunnel and access policy before remote exposure. Loopback binding must be deliberately adapted for Docker access, without exposing an unauthenticated LAN listener. Approve persistent services, downloads, updates, reboots and FileVault/power changes separately as applicable; preserve existing settings and recovery access. Create script/log directories before writing them and do not run privileged diagnostics unattended from cron.
 
 ## Initial System Setup
 
@@ -48,7 +52,8 @@ softwareupdate --install --all
 xcode-select --install
 
 # Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+# Obtain the official Homebrew installer at a reviewed version, inspect it,
+# and run the verified local file only after installation authorization.
 
 # Core packages
 brew install tmux htop btop wget jq git neovim
@@ -127,7 +132,7 @@ mlx_lm.server --model mlx-community/Llama-3.1-8B-Instruct-4bit --port 8080
     <key>EnvironmentVariables</key>
     <dict>
         <key>OLLAMA_HOST</key>
-        <string>0.0.0.0</string>
+        <string>127.0.0.1:11434</string>
         <key>OLLAMA_NUM_PARALLEL</key>
         <string>4</string>
         <key>OLLAMA_MAX_LOADED_MODELS</key>
@@ -161,7 +166,7 @@ launchctl unload ~/Library/LaunchAgents/com.ollama.serve.plist
 ## Power & Reliability
 
 ```bash
-# Prevent sleep (keeps running with lid closed on Mac mini)
+# Prevent idle sleep on this desktop (record existing values for rollback)
 sudo pmset -a disablesleep 1
 sudo pmset -a sleep 0
 
@@ -169,8 +174,7 @@ sudo pmset -a sleep 0
 sudo pmset -a autorestart 1
 
 # Schedule weekly reboot (Sunday 4 AM)
-sudo pmset repeat shutdown MTWRFSU 03:55:00
-sudo pmset repeat poweron MTWRFSU 04:00:00
+sudo pmset repeat shutdown U 03:55:00 poweron U 04:00:00
 
 # Check power settings
 pmset -g

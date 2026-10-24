@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/decision-rule.schema.json",
+  "title": "UX3 Decision Rule",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "rule_id",
+    "title",
+    "flow",
+    "strength",
+    "trigger",
+    "must_inspect",
+    "must_do",
+    "must_not_do",
+    "evidence_required",
+    "counter_signal",
+    "human_boundary",
+    "stop_condition",
+    "output_requirement",
+    "source"
+  ],
+  "properties": {
+    "rule_id": {
+      "type": "string",
+      "pattern": "^ux3\\.[A-Za-z0-9_.-]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "flow": {
+      "type": "string",
+      "minLength": 1
+    },
+    "strength": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trigger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "must_inspect": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "must_do": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "must_not_do": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_required": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "counter_signal": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "human_boundary": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "stop_condition": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "output_requirement": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

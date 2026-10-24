@@ -14,24 +14,20 @@ How claims in recommendations are mechanically verified, and when the recommende
 
 The recommender is an LLM. LLMs hallucinate counts, miscount file occurrences, and confuse code snippets between similar-looking files. Mechanical verification — grep + filesystem reads + JSON checks against `signals.json` and `references/docs-library.json` — catches these failures before the customer sees them.
 
-The contract: every numeric claim, file reference, code snippet, citation URL, and contradiction-with-other-claims is verified. The LLM is not asked to judge whether its own output is correct.
+The checker covers explicit structured verifiableClaims, listed files/citations, and selected prose triggers. It does not extract or prove every numeric claim, arbitrary snippet, causal statement or contradiction. A passing disposition means that specific mechanical check passed, not that the recommendation is runtime-safe. Review source and test the change before applying.
 
 ## Claim types
 
-The verifier extracts claims from `why`, `fix`, `currentBehavior`, `desiredBehavior`, and `verify` fields. Each matched claim runs through one of these handlers:
+The verifier uses selected triggers in these fields and accepts explicit structured claims. Counts, patterns and snippets generally require explicit verifiableClaims rather than automatic prose extraction. Implemented handlers include:
 
 | # | Claim type | Pattern in rec | Verification |
 |---|---|---|---|
 | 1 | `pattern_count` | "N fetch() calls in file X" | grep/ast-grep in X, exact count match |
 | 2 | `pattern_exists` | "uses JSON.parse(JSON.stringify())" | grep, boolean |
 | 3 | `pattern_absent` | "no Cache-Control header" | grep, verify absence (with guards — see below) |
-| 4 | `file_exists` | "app/not-found.tsx exists" | fs.access |
-| 5 | `finding_count` | "2 unoptimized images" | finding count vs `verifiedFindings.json` |
-| 6 | `contradiction` | Claim A vs Claim B | Substring conflict check |
+| 4 | `file_exists` | "app/not-found.tsx exists" | File boundary, existence and cited-line bounds |
 | 7 | `code_snippet` | Code fence labeled "Before:" | substring search in cited file |
-| 8 | `arithmetic` | "20% of 100K = 20K" | math check |
 | 9 | `repo_count` | "11 unstable_cache usages across 8 files" | grep repo, count distinct files |
-| 10 | `cited_count_literal` | "60+ icons in packages/ui/src/icons" | glob directory, count by extension |
 | 11 | `citation_in_library` | Any URL in `citations[]` | URL ∈ `references/docs-library.json` |
 | 12 | `citation_applies_to_version` | Any URL in `citations[]` | URL's `applicableFrameworks` matches `signals.json.stack.framework@frameworkVersion` |
 | 13 | `cache_vary_matches_dynamic_inputs` | CDN cache rec touches route files that read Vercel geolocation | Fails unless the rec varies by a coarse Vercel geolocation header such as `X-Vercel-IP-Country`, `X-Vercel-IP-Country-Region`, or `X-Vercel-IP-City` |
@@ -68,7 +64,7 @@ Each verified claim resolves to one of four states:
 
 | Disposition | Meaning | Counted toward `passRate`? |
 |---|---|---|
-| `verified` | Claim matches reality | yes (counts as pass) |
+| `verified` | Specific mechanical check passed | yes (counts as pass) |
 | `failed` | Claim contradicts reality | yes (counts as fail) |
 | `unsupported` | Claim can't be checked mechanically (see guards above) | no |
 | `unverifiable` | Out of scope (e.g., external API behavior, runtime-only) | no |
@@ -81,11 +77,11 @@ After verification:
 
 | Condition | Action |
 |---|---|
-| `passRate < 0.8 AND verifiableClaimCount >= 2` | Re-run Step 3.3 (the recommender) with `topFailures` injected as feedback |
+| `passRate < 1 AND verifiableClaimCount >= 1` | Re-run Step 3.3 (the recommender) with `topFailures` injected as feedback |
 | Project-config contradiction, cache-safety failure, or framework-semantic failure | Hard re-run. The customer report holds back the original rec until re-gen fixes it or abstains |
-| `passRate >= 0.8` OR `verifiableClaimCount < 2` | Accept the run, proceed to Step 4 |
+| `passRate = 1` (including no verifiable claims; this is not proof of correctness) | Accept the run, proceed to Step 4 |
 
-_(Floor lowered 5 → 2 in May 2026 audit: a rec with 1/1 failed claim is just as broken as 1/5, and the old floor let many small recs escape re-gen entirely.)_
+
 
 Re-gen accept criteria:
 
@@ -99,4 +95,4 @@ If re-gen makes things worse, keep the original output unless the trigger was ha
 
 `scripts/verify-and-regen.mjs` invokes `lib/extract-claims.mjs` and `lib/verify-claim.mjs` in-process for each verifiable claim. Pure functions, no network, no LLM — deterministic.
 
-For `citation_in_library` and `citation_applies_to_version`, the script uses `lib/citations.mjs`'s `isKnownUrl()` and `sanitizeCitations()` helpers (already tested). For everything else, it shells out to grep + ast-grep via execFile.
+For `citation_in_library` and `citation_applies_to_version`, the script uses `lib/citations.mjs`'s `isKnownUrl()` and `sanitizeCitations()` helpers (already tested). Other handlers use filesystem/string checks; rg is used for invalidation-file discovery. No AST analysis or runtime verification is performed.

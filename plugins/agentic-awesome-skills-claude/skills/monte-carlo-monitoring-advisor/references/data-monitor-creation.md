@@ -1,5 +1,7 @@
 # Data Monitor Creation Procedure
 
+Modified 2026-10-23: this is an upstream procedure snapshot. The per-type references it names are not bundled, and this catalog includes no MCP server. Verify current connected-tool schemas and account identity; stop parameter construction where the missing documentation cannot be resolved. No runtime capability or monitor deployment was tested by this review.
+
 This is the data monitor creation procedure for Monte Carlo warehouse tables. Use this reference when a user wants to create monitors for their data warehouse tables -- it walks through the full workflow from understanding the request through generating monitors-as-code (MaC) YAML and (optionally) deploying the monitor.
 
 All five `create_or_update_*_monitor` tools follow a **two-call preview-then-confirm pattern**:
@@ -103,7 +105,7 @@ Based on the monitor type, read the detailed reference for parameter guidance:
 | **Comparison** | `data-comparison-monitor.md` |
 | **Table**      | `data-table-monitor.md`      |
 
-All reference files are in the same directory as this file.
+These per-type reference files are not included in this catalog tree. Resolve an inspected upstream version or authoritative schema before continuing.
 
 **CRITICAL: Every enum value comes from the per-type reference.** `metric`, `operator`, predicate `name`, `schedule.type`, `aggregate_by`, and any other enum-shaped parameter must match the exact strings documented in the Tier-3 file for this monitor type. Never invent values by analogy or adjust casing — the backend rejects anything outside the documented set. Subsets apply per threshold type (e.g. custom_sql Absolute Threshold allows fewer operators than the full list); the per-type file spells those out too. If you're unsure, ask the user rather than guessing.
 
@@ -113,7 +115,7 @@ All reference files are in the same directory as this file.
 
 For all other monitor types, the creation tools default to a fixed schedule running every 60 minutes. Present these options:
 
-1. **Fixed interval** -- any integer for `interval_minutes` (30, 60, 90, 120, 360, 720, 1440, etc.)
+1. **Fixed interval** -- a supported positive interval for `interval_minutes` (30, 60, 90, 120, 360, 720, 1440, etc.)
 2. **Dynamic** -- MC auto-determines when to run based on table update patterns.
 3. **Manual** -- runs only on demand.
 
@@ -121,7 +123,7 @@ Pass the user's choice to the creation tool as `schedule_type` and (for fixed sc
 
 Valid arguments:
 
-- Fixed: `schedule_type="fixed"`, `interval_minutes=<N>` (any integer, e.g. 30, 60, 90, 360, 720, 1440)
+- Fixed: `schedule_type="fixed"`, `interval_minutes=<N>` (validate type-specific minimum and alignment in the current tool schema)
 - Dynamic: `schedule_type="dynamic"` (omit `interval_minutes`)
 - Manual: `schedule_type="manual"` (omit `interval_minutes`)
 
@@ -151,7 +153,7 @@ Also ask how the user wants to deploy it:
 
 If the user chooses MaC YAML: generate the preview YAML (dry_run=True) as usual, present it wrapped in the standard MaC structure (see MaC YAML Format), and stop -- do not call with `dry_run=False`. The user takes the YAML from there.
 
-If the user chooses live or does not express a preference, proceed with the standard two-call sequence in Step 7.
+Generate a concrete dry-run preview within the authorized scope. A missing deployment preference is not consent to live creation; require explicit confirmation of the preview before `dry_run=False`.
 
 ### Step 7: Create the monitor
 
@@ -244,7 +246,7 @@ Always add the following comment as the **first line** of any MaC YAML file you 
 # yaml-language-server: $schema=https://clidocs.getmontecarlo.com/mac/schema.json
 ```
 
-The published schema is available at `https://clidocs.getmontecarlo.com/mac/schema.json`. Use WebFetch to inspect it if you're uncertain whether a field name or value is valid for a given monitor type.
+The published schema is available at `https://clidocs.getmontecarlo.com/mac/schema.json`. Use an available read-only web/file tool to inspect it if you're uncertain whether a field name or value is valid for a given monitor type.
 
 Generated YAML must not include fields that don't appear in the schema for that monitor type. Unknown fields are silently ignored by the CLI but indicate a misconfiguration and may break future validation.
 

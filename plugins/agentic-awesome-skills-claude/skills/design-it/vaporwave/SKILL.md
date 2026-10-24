@@ -42,7 +42,8 @@ body {
   border: 2px outset #fff;
   border-right-color: #808080;
   border-bottom-color: #808080;
-  width: 400px;
+  width: min(400px, 100%);
+  box-sizing: border-box;
   padding: 2px;
 }
 
@@ -252,7 +253,7 @@ const VaporwaveScreen = () => {
 };
 ```
 - Use independent border color styles (`borderTopColor: '#FFF'`, `borderBottomColor: '#808080'`) to build 90s OS chroming.
-- Make sure to use Japanese fullwidth characters for text for maximum vaporwave aesthetic.
+- Decorative fullwidth lettering may fit the theme; use readable localized labels for real controls and expose ordinary text to assistive technology.
 
 ### Jetpack Compose
 ```kotlin
@@ -329,3 +330,5 @@ fun VaporwaveScreen() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+The X and container-only OK examples are visual decorations, not working close/confirm controls. Use semantic buttons with actual callbacks, labels, focus and minimum target sizes before use. LinearGradient requires an installed and imported gradient implementation.

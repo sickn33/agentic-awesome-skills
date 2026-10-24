@@ -17,16 +17,14 @@ Substitution points
 
 Prerequisites
 -------------
-    pip install pycarlo snowflake-connector-python
+    python -m pip install pycarlo==0.15.491 snowflake-connector-python
 
 Usage (table-level):
     python collect_and_push_lineage.py \\
         --account  <SNOWFLAKE_ACCOUNT> \\
         --user     <SNOWFLAKE_USER> \\
-        --password <SNOWFLAKE_PASSWORD> \\
         --warehouse <SNOWFLAKE_WAREHOUSE> \\
         --key-id  <MCD_INGEST_ID> \\
-        --key-token <MCD_INGEST_TOKEN> \\
         --resource-uuid <MCD_RESOURCE_UUID>
 
 Usage (column-level):
@@ -58,7 +56,7 @@ def main() -> None:
         help="Snowflake username (env: SNOWFLAKE_USER)",
     )
     parser.add_argument(
-        "--password",
+        "--password", choices=[],
         default=os.environ.get("SNOWFLAKE_PASSWORD"),
         help="Snowflake password (env: SNOWFLAKE_PASSWORD)",
     )
@@ -73,7 +71,7 @@ def main() -> None:
         help="Monte Carlo ingestion key ID (env: MCD_INGEST_ID)",
     )
     parser.add_argument(
-        "--key-token",
+        "--key-token", choices=[],
         default=os.environ.get("MCD_INGEST_TOKEN"),
         help="Monte Carlo ingestion key token (env: MCD_INGEST_TOKEN)",
     )

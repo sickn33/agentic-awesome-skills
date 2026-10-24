@@ -22,7 +22,7 @@ DEMO_TYPE="${1:-simple-todo}"
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 
 # Config
-DEMO_WORKSPACE="/tmp/loki-full-demo-$TIMESTAMP"
+DEMO_WORKSPACE=$(mktemp -d "${TMPDIR:-/tmp}/loki-full-demo.XXXXXX")
 OUTPUT_DIR="$SCRIPT_DIR/recordings"
 OUTPUT_FILE="$OUTPUT_DIR/loki-full-demo-$DEMO_TYPE-$TIMESTAMP.mp4"
 MAX_DURATION=1800  # 30 minutes max
@@ -148,8 +148,9 @@ log_info "Workspace ready: $DEMO_WORKSPACE"
 # Start screen recording
 log_step "Starting screen recording..."
 
-# Record screen (device 2 = Capture screen 0)
-ffmpeg -y -f avfoundation -framerate 30 -i "2:none" \
+# Select a reviewed avfoundation screen device; do not assume device 2 is a display.
+: "${LOKI_CAPTURE_DEVICE:?Set LOKI_CAPTURE_DEVICE to your reviewed screen device index}"
+ffmpeg -y -f avfoundation -framerate 30 -i "$LOKI_CAPTURE_DEVICE:none" \
     -c:v libx264 -preset ultrafast -crf 23 \
     -t $MAX_DURATION \
     "$OUTPUT_FILE" 2>/dev/null &
@@ -167,6 +168,8 @@ log_info "Recording started (PID: $FFMPEG_PID)"
 
 # Cleanup handler
 cleanup() {
+    local result=$?
+    trap - EXIT
     echo ""
     log_warn "Stopping demo..."
 
@@ -184,10 +187,12 @@ cleanup() {
     fi
 
     log_info "Demo workspace: $DEMO_WORKSPACE"
-    exit 0
+    exit "$result"
 }
 
-trap cleanup INT TERM
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 # Run Loki Mode
 echo ""
@@ -198,11 +203,10 @@ echo -e "${CYAN}  LOKI MODE OUTPUT${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
-# Run with dashboard enabled, skip prereqs (we already checked)
+# Run with legacy dashboard disabled; prerequisites were checked above.
 LOKI_SKIP_PREREQS=true \
-LOKI_DASHBOARD=true \
+LOKI_DASHBOARD=false \
 LOKI_MAX_ITERATIONS=10 \
 "$PROJECT_DIR/autonomy/run.sh" ./PRD.md
 
-# Demo complete
-cleanup
+# Demo complete; EXIT trap finalizes the owned recording process.

@@ -16,14 +16,15 @@ def should_archive(session_number: int, current_session: int) -> bool:
 
 
 def archive_session(session_path: Path):
-    """Move sessão para archive/ com resumo compacto."""
+    """Archive the complete session without overwriting a prior archive."""
     ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
 
     text = session_path.read_text(encoding="utf-8")
-    compressed = _compress_session(text)
 
     archive_path = ARCHIVE_DIR / session_path.name
-    archive_path.write_text(compressed, encoding="utf-8")
+    if archive_path.exists():
+        raise FileExistsError(f"Archive already exists: {archive_path}")
+    archive_path.write_text(text, encoding="utf-8")
 
     session_path.unlink()
 
@@ -82,10 +83,10 @@ def compress_archive():
         return  # Não vale consolidar com poucos arquivos
 
     consolidated_path = ARCHIVE_DIR / f"ARCHIVE_{year}.md"
-    consolidated_lines = [
-        f"# Arquivo Consolidado — {year}",
-        "",
-    ]
+    consolidated_lines = (
+        consolidated_path.read_text(encoding="utf-8").splitlines()
+        if consolidated_path.exists() else [f"# Arquivo Consolidado — {year}", ""]
+    )
 
     for af in archive_files:
         text = af.read_text(encoding="utf-8")
@@ -104,15 +105,17 @@ def compress_archive():
             elif in_decisions and line.strip().startswith("- "):
                 decisions.append(line.strip())
 
-        if session_header:
+        if session_header and not any(session_header.lstrip("#").strip() in line for line in consolidated_lines):
             consolidated_lines.append(f"### {session_header.lstrip('#').strip()}")
             for d in decisions:
                 consolidated_lines.append(f"  {d}")
             consolidated_lines.append("")
 
-        af.unlink()
+        # Keep complete archived sessions; the consolidated view is only an index.
 
-    consolidated_path.write_text("\n".join(consolidated_lines), encoding="utf-8")
+    temporary = consolidated_path.with_suffix(".tmp")
+    temporary.write_text("\n".join(consolidated_lines), encoding="utf-8")
+    temporary.replace(consolidated_path)
 
 
 def auto_maintain(current_session: int):

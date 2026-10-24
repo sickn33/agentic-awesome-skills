@@ -86,7 +86,7 @@ Keep a run log in the working folder (e.g. `RUNLOG.md`):
 
 - One change per step: a new source, a new model, a new tool, a prompt change.
 - After each change, re-run every existing test (regression). If something that passed now fails, fix it before adding anything else.
-- When tests were written by the same agent that built the system, ask for (or create via an independent subagent) a few held-out tests the builder has not seen, before claiming quality.
+- When tests were written by the same agent that built the system, use a few held-out tests or a human review; delegate to an independent subagent only when the user or applicable instructions authorize delegation, before claiming quality.
 
 ## Cost levers
 
@@ -96,7 +96,7 @@ General
 - Cheapest model that can pass the test; a stronger model only for the stage that fails.
 - Dry runs: compile, `EXPLAIN`, validate config without executing.
 - Cap spend per call: `max_tokens`, timeouts, low concurrency until proven.
-- Cache everything that is deterministic (embeddings, parsed files, API responses) so re-runs are free.
+- Cache suitable deterministic results with input, model/version and configuration identity; apply data-retention and access controls. Embeddings and API responses can depend on version or mutable state, and cache hits do not make the whole rerun free.
 - Count tokens on the sample and multiply before the full run.
 - Parse structure deterministically when it exists (headings, tables, templates); call an LLM only for prose.
 

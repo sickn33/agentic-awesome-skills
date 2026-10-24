@@ -2,7 +2,7 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing energy procurement communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by communication type and business context. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by communication type and business context. Select the template matching your scenario, substitute variables, review tone guidance, and return a draft; external sending/filing/enrollment requires explicit authorization.
 
 ---
 
@@ -56,7 +56,7 @@ Common variables used across templates:
 | `{{re_target}}` | RE100 target year | `2030` |
 | `{{docket_number}}` | Regulatory docket number | `Case No. 26-1234-EL-AIR` |
 | `{{budget_year}}` | Budget forecast year | `2027` |
-| `{{total_energy_spend}}` | Total annual energy spend | `$14.2M` |
+| `{{total_energy_spend}}` | Total annual energy spend | `$14.2 M` |
 | `{{num_facilities}}` | Number of facilities | `18` |
 
 ---
@@ -141,7 +141,7 @@ Thank you for the term sheet for {{ppa_project_name}} ({{ppa_capacity_mw}}). We'
 
 **Risk Allocation:**
 - **Curtailment:** We request that the developer bear curtailment risk for the first 5% annually, with shared risk (50/50) for curtailment between 5-10%, and developer risk above 10%. The current term sheet allocates all curtailment risk to the offtaker, which is not acceptable for a {{ppa_term_years}}-year commitment.
-- **Negative pricing:** We require a negative price floor provision: during intervals when the settlement point LMP is negative, no settlement occurs (neither party pays). This protects both parties from volatile negative pricing hours.
+- **Negative pricing:** We require a negative price floor provision: during intervals when the settlement point LMP is negative, no settlement occurs (neither party pays). This reallocates settlement risk and requires bilateral pricing/legal review; it does not automatically protect both parties.
 - **Change of law:** The term sheet's change-of-law provision is one-sided. We propose mutual termination rights if a regulatory change materially affects the economics for either party, with a defined materiality threshold of {{materiality_threshold}}.
 
 **Financial and Credit:**
@@ -149,7 +149,7 @@ Thank you for the term sheet for {{ppa_project_name}} ({{ppa_capacity_mw}}). We'
 - **Accounting treatment:** We require confirmation that the PPA structure qualifies for normal purchases and normal sales (NPNS) exception under ASC 815, or alternatively that hedge accounting is achievable. Our treasury team will need to review the final contract with our auditors.
 
 **REC Provisions:**
-- **Vintage delivery:** RECs must be delivered within 12 months of generation to maintain RE100 compliance.
+- **Vintage delivery:** REC vintage, delivery, retirement, geography and eligibility must match the applicable current framework and approved accounting period; no universal 12-month rule is asserted.
 - **Replacement RECs:** If the project underdelivers RECs by more than 10% in any year, the developer provides replacement RECs from a comparable facility at no additional cost.
 
 We would welcome a call this week to discuss these points. Please suggest availability.
@@ -314,8 +314,8 @@ The {{budget_year}} total energy spend is forecast at **${{base_case_total}}** u
 | Metric | {{prior_year}} | {{report_year}} | Change |
 |--------|---------------|-----------------|--------|
 | Total electricity consumed (MWh) | {{elec_prior_mwh}} | {{elec_current_mwh}} | {{elec_change_pct}} |
-| Scope 2 — Location-based (MT CO₂e) | {{scope2_loc_prior}} | {{scope2_loc_current}} | {{scope2_loc_change}} |
-| Scope 2 — Market-based (MT CO₂e) | {{scope2_mkt_prior}} | {{scope2_mkt_current}} | {{scope2_mkt_change}} |
+| Scope 2 — Location-based (MT CO₂e) | {{scope 2_loc_prior}} | {{scope 2_loc_current}} | {{scope 2_loc_change}} |
+| Scope 2 — Market-based (MT CO₂e) | {{scope 2_mkt_prior}} | {{scope 2_mkt_current}} | {{scope 2_mkt_change}} |
 | Renewable electricity (%) | {{re_pct_prior}} | {{re_pct_current}} | {{re_change}} |
 
 **Renewable Energy Procurement:**
@@ -333,7 +333,7 @@ The {{budget_year}} total energy spend is forecast at **${{base_case_total}}** u
 **Forward-Looking Targets:**
 - {{re_target_next_year}}% renewable electricity by end of {{next_year}}
 - Execute additional {{next_ppa_mw}} MW of renewable procurement by Q2 {{next_year}}
-- Reduce Scope 2 market-based emissions by {{scope2_reduction_target}}% by {{target_year}} (vs. {{baseline_year}} baseline)
+- Reduce Scope 2 market-based emissions by {{scope 2_reduction_target}}% by {{target_year}} (vs. {{baseline_year}} baseline)
 
 ---
 
@@ -479,7 +479,7 @@ Respectfully submitted,
 **Risk Summary:**
 - Market risk: {{hedge_pct}}% hedged through {{hedge_end}}. Unhedged exposure: ${{unhedged_exposure}} at current forwards.
 - Regulatory risk: {{regulatory_summary}}
-- Supplier risk: All supply contracts with investment-grade counterparties. No credit concerns.
+- Supplier risk: {{verified_counterparty_credit_status_and_remaining_concerns}}
 
 **Next Update:** {{next_update_date}}
 
@@ -490,3 +490,16 @@ Respectfully submitted,
 - Lead with the "ask" — if you need board approval for a PPA or capital project, put it in the executive summary.
 - Quantify everything. "Good progress on sustainability" means nothing. "38% RE, on track for 50% by year-end" means everything.
 - Acknowledge risks explicitly. A board that discovers unmentioned risks loses trust in management.
+
+## Draft verification
+
+Replace all placeholders, verify current tariff/program/filing rules and recipient
+authority, and show measured data separately from scenarios. Do not invent
+completed reviews, quantified benefits, counterparty credit or achieved RE100 progress.
+Reconcile MWh/kWh, kW/MW, timezone/DST and all bill components without double counting
+T&D/demand/capacity. Share account/load data only with approved qualified parties.
+Accounting classification, NPNS, hedge accounting, tax credit and default notices
+require qualified review; physical delivery and financial settlements differ.
+REC generation/ownership/retirement eligibility and additionality need evidence.
+No draft grants permission to execute contracts, enroll DR, file comments or change
+BAS/generator/critical process controls.

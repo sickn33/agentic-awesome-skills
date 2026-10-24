@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-observation-entropy-contraction-pack` 和 `long-evolution-deep-pack`。
+`v5-observation-reflexivity-release-pack` 和 `v5-long-evolution-progression-field-pack`。
 
 ## 证据要求
 

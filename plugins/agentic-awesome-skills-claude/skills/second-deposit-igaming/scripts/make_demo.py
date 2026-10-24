@@ -7,7 +7,7 @@
   players.csv        регистрация, страна, источник, флаги ответственной игры, запрос документов
 --xlsx вместо этого пишет одну книгу export.xlsx в формате examples/export-example.xlsx.
 Все данные вымышлены: доли ситуаций и вероятности возврата заданы ниже, за ними нет ни одного оператора.
---truth дописывает _truth.csv с причиной каждого FTD по тем же правилам, что у скрипта анализа (для проверки).
+--truth дописывает _truth.csv с синтетической исходной меткой; она не гарантирует итоговую классификацию анализа.
 """
 import argparse
 import csv
@@ -117,6 +117,10 @@ def main():
     ap.add_argument('--truth', action='store_true')
     ap.add_argument('--xlsx', action='store_true', help='одна книга export.xlsx в формате примера выгрузки вместо CSV')
     a = ap.parse_args()
+    if not 1 <= a.players <= 100000:
+        ap.error('--players must be between 1 and 100000')
+    if os.path.isdir(a.out) and os.listdir(a.out):
+        ap.error('use a new or empty demo output folder')
     rng = random.Random(a.seed)
     os.makedirs(a.out, exist_ok=True)
     start = END - dt.timedelta(days=DAYS)

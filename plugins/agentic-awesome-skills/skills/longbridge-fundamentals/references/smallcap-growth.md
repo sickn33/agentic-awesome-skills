@@ -17,7 +17,7 @@ Ask the user if they want to adjust any threshold before running.
 ## Workflow
 
 1. Clarify market (US / HK / A-share / all) and any sector preference.
-2. Fetch index constituents for the relevant small/mid-cap indices (e.g. `IWM.US` for Russell 2000, `399006.SZ` for ChiNext, `399005.SZ` for SME Board).
+2. Fetch index constituents for the relevant small/mid-cap indices (e.g. a provider-supported Russell 2000 index (IWM.US is an ETF and its holdings are not an identical index snapshot), `399006.SZ` for ChiNext, `399005.SZ` for SME Board).
 3. For each constituent, fetch market cap via `calc-index` and filter by size.
 4. For size-passing candidates, fetch the latest income statement to check revenue growth.
 5. Further filter by ROE from the balance sheet / financial-report data.
@@ -30,7 +30,7 @@ Ask the user if they want to adjust any threshold before running.
 ```bash
 # Small/mid-cap index constituents
 longbridge constituent <INDEX_SYMBOL> --format json
-# Examples: IWM.US (Russell 2000), 399006.SZ (ChiNext), HSI.HK (Hang Seng)
+# Examples: IWM.US (Russell 2000), 399006.SZ (ChiNext), a verified small/mid-cap index; HSI.HK is not a small-cap universe
 
 # Market cap and valuation indices per symbol
 longbridge calc-index <SYMBOL> --format json
@@ -69,4 +69,4 @@ For each top 5 candidate, include a brief (3–4 sentence) investment thesis:
 | `command not found: longbridge`  | 回退到 MCP；否则提示安装 longbridge-terminal | 回退到 MCP；否則提示安裝 / Fall back to MCP; prompt to install |
 | `not logged in` / `unauthorized` | 请运行 `longbridge auth login`               | 請運行 `longbridge auth login` / Run `longbridge auth login`   |
 | No market specified              | 请告知目标市场（美股/港股/A股）              | 請告知目標市場 / Please specify market (US/HK/A-share)         |
-| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface verbatim, no silent retry           |
+| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface a redacted error summary, no silent retry           |

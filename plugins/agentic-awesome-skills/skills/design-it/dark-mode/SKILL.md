@@ -16,9 +16,9 @@ source_type: self
 Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
-1. **Never Pure Black**: True `#000000` causes smearing on OLED screens and extreme eye strain with white text. Use dark greys (e.g., `#121212` or `#0A0A0A`).
-2. **Elevation via Lightness**: In light mode, shadows show elevation. In dark mode, shadows are invisible, so elevated surfaces must be lighter than the background.
-3. **Desaturated Accents**: Saturated colors vibrate painfully against dark backgrounds. Tone down the saturation of brand colors.
+1. **Choose Surface Colors**: Black and dark grey are both valid. OLED artifacts depend on the display; comfort depends on the user and lighting. Offer theme choice and test contrast.
+2. **Elevation via Lightness**: Lighter surfaces and borders can clarify layers when shadows are subtle. Shadows are not universally invisible in dark mode.
+3. **Test Accents**: Choose accent saturation for readable text and clear state indicators; avoid universal claims about discomfort.
 
 ## Visual DNA
 - **Colors**: **Midnight Luxury** or **Minimalist Slate** (inverted). Background `#121212`. Elevated cards `#1E1E1E`, `#252525`. Primary text `#E1E1E1` (not `#FFFFFF`).
@@ -42,7 +42,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 body {
   background-color: var(--bg-base);
   color: var(--text-high-emphasis);
-  font-weight: 300; /* Thinner weight for dark mode */
+  font-weight: 400; /* Preserve readable body weight; test with users. */
 }
 
 .dark-card {
@@ -108,13 +108,13 @@ struct DarkModeView: View {
             }
             .padding()
         }
-        // #121212 is the standard dark mode background, which systemBackground maps to closely
+        // Semantic systemBackground follows platform appearance; dark iOS may use black.
         .background(Color(UIColor.systemBackground))
     }
 }
 // .preferredColorScheme(.dark) to force
 ```
-- **Rely on Semantics**: SwiftUI's `Color.primary`, `Color.secondary`, `Color(UIColor.systemBackground)` and `Color(UIColor.secondarySystemBackground)` handle perfect dark mode transitions automatically.
+- **Rely on Semantics**: SwiftUI's `Color.primary`, `Color.secondary`, `Color(UIColor.systemBackground)` and `Color(UIColor.secondarySystemBackground)` adapt to platform appearance; verify custom combinations and increased-contrast settings.
 - Avoid forcing explicit hex codes for backgrounds unless you are building a custom-themed app.
 
 ### Flutter
@@ -277,7 +277,7 @@ fun DarkModeScreen() {
     }
 }
 ```
-- Material 3 handles Dark Mode semantics perfectly. Define your `darkColorScheme`.
+- Material 3 provides theme roles; custom palettes still need contrast testing. Define your `darkColorScheme`.
 - Use `Color(0xFF1E1E1E)` for `surface` and `Color(0xFF121212)` for `background`. Compose will automatically map these to `Card`s and Scaffolds.
 
 ## Do's and Don'ts

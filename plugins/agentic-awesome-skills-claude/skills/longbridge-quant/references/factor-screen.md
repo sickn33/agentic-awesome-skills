@@ -72,14 +72,14 @@ Universe: CSI 300 (300 stocks checked)  |  Passed: N
 
 Rank | Symbol       | Name    | PE   | PB  | ROE   | Rev YoY | NP YoY | Div Yield | Score
 -----|-------------|---------|------|-----|-------|---------|--------|-----------|------
-  1  | 600519.SH   | Maotai  | 28.1 | 9.5 | 31.2% | +18.4%  | +15.7% | 2.1%      | 0.87
-  2  | 601318.SH   | Ping An | 8.2  | 1.2 | 14.8% | +12.1%  | +10.3% | 4.5%      | 0.79
+  1  | 600519.SH   | Maotai  | 18.1 | 1.5 | 31.2% | +18.4%  | +15.7% | 2.1%      | 0.87
+  2  | 601318.SH   | Ping An | 8.2  | 1.2 | 16.8% | +12.1%  | +10.3% | 4.5%      | 0.79
  ...
 
 Notes:
 - Score = weighted composite (ROE 25%, Rev YoY 20%, PE 20%, PB 15%, Div 10%, NP YoY 10%)
 - PE and PB: lower is better (inverted for scoring); ROE / growth / yield: higher is better
-- N/A fields excluded from score denominator
+- Missing hard-filter fields make eligibility unknown; do not pass them silently. Missing scoring fields require a declared coverage rule; zero-dispersion factors do not support normalization.
 
 ⚠️ 数据仅供参考，不构成投资建议。/ 數據僅供參考，不構成投資建議。/ For reference only. Not investment advice.
 ```

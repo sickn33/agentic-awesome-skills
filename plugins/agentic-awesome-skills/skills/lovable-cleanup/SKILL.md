@@ -1,7 +1,7 @@
 ---
 name: lovable-cleanup
 description: "Audits and strips Lovable scaffolding from Vite + React projects — removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours."
-risk: safe
+risk: critical
 source: community
 source_repo: whoisabhishekadhikari/lovable-cleanup
 source_type: community
@@ -15,7 +15,7 @@ tools: [claude, cursor, codex, antigravity, gemini-cli]
 
 # lovable-cleanup
 
-> Remove every trace of Lovable scaffolding and ship the project as your own.
+> Remove unwanted Lovable scaffolding while preserving required attribution, licenses and useful project history.
 > Made with [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) · author: **whoisabhishekadhikari**
 
 ---
@@ -47,7 +47,7 @@ open-sourcing. This skill covers all 15 areas where Lovable leaves fingerprints.
 Lovable adds three categories of scaffolding that must be removed:
 
 1. **Dependency** — `lovable-tagger` dev dep + `componentTagger()` call in `vite.config.ts`.
-   This is the only runtime hook; removing it is always safe.
+   Verify all configuration/import references and project-specific use before removal.
 2. **Branding artifacts** — `favicon.ico/png`, `og-image.png`, `logo.png`, generic `<title>`,
    and a Lovable project URL in `README.md`.
 3. **Generated docs** — `CLEANUP_SUMMARY.md`, `DEPLOYMENT_GUIDE.md`, `DEVELOPMENT_SUMMARY.md`,
@@ -55,7 +55,7 @@ Lovable adds three categories of scaffolding that must be removed:
 
 ### Why the execution order matters
 
-Removing deps before editing source files avoids lockfile conflicts. Cleaning docs last
+Inspect source/config references before removing dependencies; update the manifest and lockfile with the project’s existing package manager. Cleaning docs last
 means the README reflects the already-cleaned project.
 
 ### Unused dep footprint
@@ -69,7 +69,7 @@ shadcn components via the `asChild` prop.
 
 ## Recommended Execution Order
 
-1. Dependencies (Areas 2 & 7) — clear the package graph first
+1. Audit source/config and dependencies (Areas 2 & 7) — establish each removal candidate first
 2. Build config (Area 3) — remove the tagger from Vite
 3. Entry points (Areas 4 & 6) — clear runtime references
 4. Assets (Area 5) — swap brand files (defer if assets not ready yet)
@@ -144,7 +144,7 @@ Replace these files (keep filenames, swap content):
 | `favicon.ico` | Overwrite with real icon — do NOT just delete, see Area 15 |
 | `favicon.png` | Replace with real icon |
 | `og-image.png` / `logo.png` | Replace with real brand assets |
-| `placeholder.svg` | Usually unused — safe to delete |
+| `placeholder.svg` | Delete only after checking source, CSS, dynamic paths and deployed references |
 
 ✅ Flag which files are actually referenced in `<head>` vs dead weight so the user
 knows what to prioritise.
@@ -191,8 +191,8 @@ grep -n '"lovable' package.json
 
 <!-- security-allowlist: grep over local env files, read-only, no credentials transmitted -->
 ```bash
-grep -rin "lovable" .env .env.local .env.example 2>/dev/null \
-  | sed -E 's/([A-Za-z_][A-Za-z0-9_]*LOVABLE[A-Za-z0-9_]*=).*/\1[REDACTED]/I'
+# Print filenames only: matching values may contain credentials.
+rg -l -i "lovable" -- .env .env.local .env.example 2>/dev/null
 ```
 
 Remove any Lovable API keys or project IDs. If a variable is Lovable-only, delete the
@@ -248,7 +248,7 @@ grep -in "lovable" .gitignore
 ls .git/hooks/
 ```
 
-Remove any Lovable-specific `.gitignore` entries or commit hooks.
+Inspect Lovable-specific entries/hooks. Preserve secret/build ignores, license notices and useful safety hooks; remove only confirmed obsolete behavior.
 
 ---
 
@@ -311,13 +311,7 @@ project cache only if the live response stays stale. Full commands/JSON live in
 
 <!-- security-allowlist: recursive grep across project directory, read-only, no network -->
 ```bash
-grep -rn "lovable\|Lovable\|LOVABLE\|lovable-tagger\|lovable\.dev" \
-  --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-  --include="*.json" --include="*.md" --include="*.html" --include="*.toml" \
-  --include="*.yaml" --include="*.yml" --include="*.txt" \
-  . 2>/dev/null \
-  | grep -v "node_modules\|\.git\|dist\|build" \
-  | sed -E 's/([A-Za-z_][A-Za-z0-9_]*LOVABLE[A-Za-z0-9_]*=).*/\1[REDACTED]/I'
+rg -l -i "lovable|lovable-tagger|lovable\.dev" --glob "!node_modules/**" --glob "!.git/**" --glob "!dist/**" --glob "!build/**" .
 ```
 
 ---
@@ -346,7 +340,7 @@ User: Just prune the unused Radix packages from my Lovable project.
 Agent:
 1. Runs grep diff (Area 13 only)
 2. Identifies 18 unused @radix-ui packages
-3. Removes them in bulk, keeps @radix-ui/react-slot
+3. Confirms each candidate including indirect/dynamic imports, then removes only unused packages
 4. Runs npm run build to verify — passes clean
 ```
 
@@ -354,7 +348,7 @@ Agent:
 
 ## Best Practices
 
-- ✅ **Do:** Run dep removal (Areas 2 & 7) before touching source files
+- ✅ **Do:** Inspect source/config imports before removing dependencies
 - ✅ **Do:** Skim Lovable-generated docs before deleting — may contain useful arch notes
 - ✅ **Do:** Verify `npm run build` passes after every batch of changes
 - ✅ **Do:** Replace favicons at the existing paths (Area 15), then verify the
@@ -370,7 +364,7 @@ Agent:
 
 - This skill does not create or source real brand assets (favicons, OG images). Area 15
   generates a transparent placeholder ICO only — the user must supply genuine artwork.
-- Dep pruning (Area 13) is safe but not foolproof — some Radix packages are indirect deps
+- Dep pruning (Area 13) is a candidate audit, not proof of safety — some Radix packages are indirect deps
   not caught by a direct `grep`. Always verify with `npm run build`.
 - The skill does not modify `components.json` aliases automatically — it only scans and
   flags mismatches for the user to fix manually.
@@ -390,7 +384,7 @@ the `from '@radix-ui/...'` import to find which component depends on it.
 ### Problem: lovable-tagger still in lockfile after uninstall
 
 **Symptoms:** `grep "lovable-tagger" package-lock.json` returns results  
-**Solution:** Delete `node_modules/` and `package-lock.json`, then run `npm install` fresh.
+**Solution:** Check direct/transitive dependency references, workspaces and package-manager consistency. Use its supported uninstall/lockfile update; preserve the lockfile and investigate remaining references before any clean reinstall.
 
 ### Problem: Generic title still showing in browser after updating index.html
 
@@ -443,3 +437,7 @@ After completing the audit, produce a cleanup report:
 ---
 
 *Made with [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) · author: [whoisabhishekadhikari](https://github.com/whoisabhishekadhikari)*
+
+## Audit limits and authority
+
+Fixed README line numbers and import greps are hints, not deletion rules. Include dynamic imports, CSS/assets, workspaces, tests and package metadata before pruning; a passing build alone does not establish runtime behavior or license clearance. Preserve third-party copyright/license and contributor attribution even when changing product branding. GNU `grep -P` examples require GNU grep and can miss imports; use an available parser/search tool and review candidates. Package-manager removal can execute lifecycle scripts or access the network: inspect scripts and use the project’s dependency policy. Do not expose secret values in scan results; filename-only matching avoids the incomplete redaction pattern. Back up replaced assets and review the diff before deployment or cache purge. The favicon helper overwrites the selected regular file atomically; its checks assume a trusted, non-concurrently-mutated directory and are not a race-proof hostile-filesystem sandbox. Link SVG/Apple icons only when those files actually exist; verify response bytes as well as headers.

@@ -194,7 +194,9 @@ TrustManagerImpl.verifyChain.implementation = function() { return []; };
 
 // 3. WebView SSL Error
 var SslErrorHandler = Java.use("android.webkit.SslErrorHandler");
-SslErrorHandler.proceed.implementation = function() { return this.proceed(); };
+// Hooking proceed to call itself does not change a cancel decision.
+// Identify the specific app WebViewClient.onReceivedSslError handler in a lab build;
+// no universal bypass is supplied here.
 
 // 4. Network Security Config
 // 需要修改 AndroidManifest.xml → android:networkSecurityConfig="@xml/network_security_config"

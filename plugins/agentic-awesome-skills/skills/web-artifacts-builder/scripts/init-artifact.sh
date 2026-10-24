@@ -3,43 +3,24 @@
 # Exit on error
 set -e
 
-# Detect Node version
-NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-
-echo "🔍 Detected Node.js version: $NODE_VERSION"
-
-if [ "$NODE_VERSION" -lt 18 ]; then
-  echo "❌ Error: Node.js 18 or higher is required"
-  echo "   Current version: $(node -v)"
-  exit 1
+# Modified in catalog review: require a reviewed scaffold, no global tool installation.
+if [ "$#" -ne 1 ] || [[ ! "$1" =~ ^[a-zA-Z0-9][a-zA-Z0-9_-]*$ ]]; then
+  echo "Usage: bash init-artifact.sh <new-simple-project-name>" >&2; exit 2
 fi
-
-# Set Vite version based on Node version
-if [ "$NODE_VERSION" -ge 20 ]; then
-  VITE_VERSION="latest"
-  echo "✅ Using Vite latest (Node 20+)"
-else
-  VITE_VERSION="5.4.11"
-  echo "✅ Using Vite $VITE_VERSION (Node 18 compatible)"
+if [ -e "$1" ] || [ -L "$1" ]; then
+  echo "Refusing an existing project path" >&2; exit 1
 fi
-
-# Detect OS and set sed syntax
+command -v pnpm >/dev/null || { echo "Install an approved pnpm version first" >&2; exit 1; }
+: "${CREATE_VITE_VERSION:?Set an explicitly reviewed exact create-vite version}"
+[[ "$CREATE_VITE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || exit 2
+node -e 'const [major,minor]=process.versions.node.split(".").map(Number); if(major<22 || (major===22 && minor<12)) process.exit(1)' || {
+  echo "Use supported Node >=22.12 and check the selected scaffold engine requirements" >&2; exit 1;
+}
+NODE_VERSION=$(node -p 'process.versions.node.split(".")[0]')
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  SED_INPLACE="sed -i ''"
+  SED_INPLACE=(sed -i '')
 else
-  SED_INPLACE="sed -i"
-fi
-
-# Check if pnpm is installed
-if ! command -v pnpm &> /dev/null; then
-  echo "📦 pnpm not found. Installing pnpm..."
-  npm install -g pnpm
-fi
-
-# Check if project name is provided
-if [ -z "$1" ]; then
-  echo "❌ Usage: ./create-react-shadcn-complete.sh <project-name>"
-  exit 1
+  SED_INPLACE=(sed -i)
 fi
 
 PROJECT_NAME="$1"
@@ -56,23 +37,17 @@ fi
 echo "🚀 Creating new React + Vite project: $PROJECT_NAME"
 
 # Create new Vite project (always use latest create-vite, pin vite version later)
-pnpm create vite "$PROJECT_NAME" --template react-ts
+pnpm dlx "create-vite@$CREATE_VITE_VERSION" "$PROJECT_NAME" --template react-ts
 
 # Navigate into project directory
 cd "$PROJECT_NAME"
 
 echo "🧹 Cleaning up Vite template..."
-$SED_INPLACE '/<link rel="icon".*vite\.svg/d' index.html
-$SED_INPLACE 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
+"${SED_INPLACE[@]}" '/<link rel="icon".*vite\.svg/d' index.html
+"${SED_INPLACE[@]}" 's/<title>.*<\/title>/<title>'"$PROJECT_NAME"'<\/title>/' index.html
 
 echo "📦 Installing base dependencies..."
 pnpm install
-
-# Pin Vite version for Node 18
-if [ "$NODE_VERSION" -lt 20 ]; then
-  echo "📌 Pinning Vite to $VITE_VERSION for Node 18 compatibility..."
-  pnpm add -D vite@$VITE_VERSION
-fi
 
 echo "📦 Installing Tailwind CSS and dependencies..."
 pnpm install -D tailwindcss@3.4.1 postcss autoprefixer @types/node tailwindcss-animate
@@ -89,7 +64,7 @@ export default {
 EOF
 
 echo "📝 Configuring Tailwind with shadcn theme..."
-cat > tailwind.config.js << 'EOF'
+cat > tailwind.config.cjs << 'EOF'
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
@@ -274,7 +249,20 @@ pnpm install sonner cmdk vaul embla-carousel-react react-day-picker react-resiza
 
 # Extract shadcn components from tarball
 echo "📦 Extracting shadcn/ui components..."
+node -e 'const fs=require("fs"), crypto=require("crypto"); const actual=crypto.createHash("sha256").update(fs.readFileSync(process.argv[1])).digest("hex"); if(actual!=="1296f069e825de7933de7e8ac63672495cacce3f88f2dc45554dbcddbcbca60f") throw Error("Component snapshot hash changed; review before extracting")' "$COMPONENTS_TARBALL"
 tar -xzf "$COMPONENTS_TARBALL" -C src/
+# Local fixes after extracting the preserved upstream snapshot.
+node <<'PATCH_COMPONENTS'
+const fs = require('fs');
+const fix = (path, before, after) => {
+  const content = fs.readFileSync(path, 'utf8');
+  if (!content.includes(before)) throw Error(`Unexpected component snapshot: ${path}`);
+  fs.writeFileSync(path, '// Modified by artifact initializer: local correctness fix.\n' + content.replace(before, after));
+};
+fix('src/components/ui/progress.tsx', 'ref={ref}\n    className=', 'ref={ref}\n    value={value}\n    className=');
+fix('src/components/ui/menubar.tsx', 'MenubarShortcut.displayname', 'MenubarShortcut.displayName');
+fix('src/components/ui/toast.tsx', 'toast-close=""', 'toast-close="" aria-label="Close notification"');
+PATCH_COMPONENTS
 
 # Create components.json for reference
 echo "📝 Creating components.json config..."
@@ -285,7 +273,7 @@ cat > components.json << 'EOF'
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.js",
+    "config": "tailwind.config.cjs",
     "css": "src/index.css",
     "baseColor": "slate",
     "cssVariables": true,

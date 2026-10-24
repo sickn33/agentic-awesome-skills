@@ -8,7 +8,7 @@ Use this template when dispatching a code quality reviewer subagent.
 
 ```
 Task tool (superpowers:code-reviewer):
-  Use template at requesting-code-review/code-reviewer.md
+  Use requesting-code-review/code-reviewer.md only if available; otherwise inspect the exact BASE_SHA..HEAD_SHA diff, relevant surrounding files, error paths and actual test evidence, and report actionable file/line findings.
 
   WHAT_WAS_IMPLEMENTED: [from implementer's report]
   PLAN_OR_REQUIREMENTS: Task N from [plan-file]

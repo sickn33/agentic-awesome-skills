@@ -53,7 +53,7 @@ class JucepaScraper(AbstractJuntaScraper):
                     matricula=gcol(cells, ["matr", "registro", "nº", "numero"]),
                     cpf_cnpj=gcol(cells, ["cpf", "cnpj"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Belém",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr"]),
@@ -69,6 +69,6 @@ class JucepaScraper(AbstractJuntaScraper):
                 for el in body.find_all(["p", "li", "div", "tr"]):
                     text = self.clean(el.get_text())
                     if text and len(text) > 5 and re.search(r"[A-ZÁÉÍÓÚÀÃÕÇ]{3,}", text):
-                        results.append(self.make_leiloeiro(nome=text, municipio="Belém"))
+                        results.append(self.make_leiloeiro(nome=text, municipio=None))
 
         return results

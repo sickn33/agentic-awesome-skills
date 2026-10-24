@@ -29,7 +29,7 @@ CISO operacional enterprise para gestao total de credenciais e segredos. Descobr
 - **NUNCA** peca para o usuario colar chaves/tokens no chat
 - Se o usuario colar uma chave por engano: tratar como INCIDENTE — orientar revogacao imediata e rotacao
 - Todo segredo deve existir APENAS em Secret Manager/Vault/env seguro e ser injetado em runtime
-- NENHUM client-side (browser/mobile) pode conter chave de API — zero excecoes
+- Segredos privados nunca vao ao client-side. Identificadores/client IDs e chaves explicitamente publicaveis pelo provedor nao sao segredos; aplicar as restricoes documentadas.
 - Todo token/key deve ter: owner, finalidade, ambiente, TTL/expiracao, restricoes e plano de rotacao
 - Logs NUNCA contem segredos — aplicar redaction em toda saida
 - Principio do menor privilegio: se nao precisa, nao tem acesso
@@ -49,7 +49,7 @@ Pense como um atacante para defender como um profissional:
 | Categoria | Exemplos | Criticidade Base |
 |-----------|----------|-----------------|
 | API Keys (strings) | OpenAI sk-*, Google AIza*, Stripe sk_live_* | CRITICA |
-| OAuth Secrets | client_id + client_secret | CRITICA |
+| OAuth Secrets | client_secret (client_id nao e segredo) | CRITICA |
 | Access/Refresh Tokens | Bearer tokens, JWT, refresh_token | ALTA |
 | Service Account Keys | GCP JSON, AWS IAM credentials | CRITICA |
 | Webhook Secrets | signing secrets, HMAC keys | ALTA |
@@ -126,7 +126,7 @@ CHECKLIST FASE 0:
 
 ## Scanner Principal — Padroes Regex De Alta Cobertura
 
-rg -n --hidden --no-ignore -S \
+rg -l --hidden --no-ignore -S \
   "(api[_-]?key|secret|token|bearer|authorization|x-api-key|client_secret|private_key|BEGIN PRIVATE KEY|BEGIN RSA|service_account|refresh_token|password\s*=|passwd|credential)" \
   . --glob '!node_modules' --glob '!.git' --glob '!*.lock'
 ```
@@ -152,39 +152,39 @@ find . -maxdepth 8 -type f \( \
 
 ## Openai (Sk-...)
 
-rg -n "sk-[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
+rg -l "sk-[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
 
 ## Google Cloud (Aiza...)
 
-rg -n "AIza[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
+rg -l "AIza[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
 
 ## Aws (Akia...)
 
-rg -n "AKIA[A-Z0-9]{16}" . --glob '!node_modules' --glob '!.git'
+rg -l "AKIA[A-Z0-9]{16}" . --glob '!node_modules' --glob '!.git'
 
 ## Stripe (Sk_Live_...)
 
-rg -n "sk_live_[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
+rg -l "sk_live_[a-zA-Z0-9]{20,}" . --glob '!node_modules' --glob '!.git'
 
 ## Meta/Facebook (Token Longo Numerico)
 
-rg -n "EAA[a-zA-Z0-9]{50,}" . --glob '!node_modules' --glob '!.git'
+rg -l "EAA[a-zA-Z0-9]{50,}" . --glob '!node_modules' --glob '!.git'
 
 ## Telegram Bot Token
 
-rg -n "[0-9]{8,10}:[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
+rg -l "[0-9]{8,10}:[a-zA-Z0-9_-]{35}" . --glob '!node_modules' --glob '!.git'
 
 ## Github Pat
 
-rg -n "ghp_[a-zA-Z0-9]{36}" . --glob '!node_modules' --glob '!.git'
+rg -l "ghp_[a-zA-Z0-9]{36}" . --glob '!node_modules' --glob '!.git'
 
 ## Jwt (Eyj...)
 
-rg -n "eyJ[a-zA-Z0-9_-]{10,}\\.eyJ[a-zA-Z0-9_-]{10,}" . --glob '!node_modules' --glob '!.git'
+rg -l "eyJ[a-zA-Z0-9_-]{10,}\\.eyJ[a-zA-Z0-9_-]{10,}" . --glob '!node_modules' --glob '!.git'
 
 ## Generic High-Entropy Strings (Possivel Segredo)
 
-rg -n "['\"][a-zA-Z0-9+/]{40,}['\"]" . --glob '!*.lock' --glob '!node_modules' --glob '!.git'
+rg -l "['\"][a-zA-Z0-9+/]{40,}['\"]" . --glob '!*.lock' --glob '!node_modules' --glob '!.git'
 ```
 
 #### 1D. Historico do Git (onde o bicho pega)
@@ -197,15 +197,15 @@ git log --all --oneline | head -50
 
 ## Padroes Especificos No Historico
 
-git grep -n "sk-"   $(git rev-list --all) 2>/dev/null | head -20
-git grep -n "AIza"  $(git rev-list --all) 2>/dev/null | head -20
-git grep -n "AKIA"  $(git rev-list --all) 2>/dev/null | head -20
-git grep -n "BEGIN PRIVATE KEY" $(git rev-list --all) 2>/dev/null | head -20
-git grep -n "password" $(git rev-list --all) 2>/dev/null | head -20
+git grep -l "sk-"   $(git rev-list --all) 2>/dev/null | head -20
+git grep -l "AIza"  $(git rev-list --all) 2>/dev/null | head -20
+git grep -l "AKIA"  $(git rev-list --all) 2>/dev/null | head -20
+git grep -l "BEGIN PRIVATE KEY" $(git rev-list --all) 2>/dev/null | head -20
+git grep -l "password" $(git rev-list --all) 2>/dev/null | head -20
 
 ## Diffs Que Removeram Segredos (Sinal De Vazamento Anterior)
 
-git log --all -p --diff-filter=D -- "*.env" "*.pem" "*.key" 2>/dev/null | head -50
+git log --all --name-only --format= --diff-filter=D -- "*.env" "*.pem" "*.key" 2>/dev/null | head -50
 ```
 
 #### 1E. Docker e Containers
@@ -218,7 +218,7 @@ docker images --format "{{.Repository}}:{{.Tag}}" 2>/dev/null | head -20
 
 ## Checar Docker-Compose Por Segredos Inline
 
-rg -n "(password|secret|token|key)" docker-compose*.yml 2>/dev/null
+rg -l "(password|secret|token|key)" docker-compose*.yml 2>/dev/null
 ```
 
 #### 1F. Variaveis de Ambiente (sem expor valores)
@@ -227,7 +227,7 @@ rg -n "(password|secret|token|key)" docker-compose*.yml 2>/dev/null
 
 ## Listar Nomes De Variaveis Suspeitas (Sem Valores!)
 
-env | rg -i "(openai|gcp|google|meta|facebook|whatsapp|telegram|token|secret|key|password|credential|api)" | sed 's/=.*/=***REDACTED***/'
+python3 -c 'import os,re; print("\n".join(sorted(k for k in os.environ if re.search("openai|gcp|google|meta|token|secret|key|password|credential|api",k,re.I))))'
 ```
 
 #### 1G. CI/CD e Pipelines
@@ -236,12 +236,12 @@ env | rg -i "(openai|gcp|google|meta|facebook|whatsapp|telegram|token|secret|key
 
 ## Github Actions — Checar Se Secrets Estao Sendo Logados
 
-rg -rn "echo.*\$\{\{.*secrets" .github/ 2>/dev/null
-rg -rn "env:.*\$\{\{.*secrets" .github/ 2>/dev/null
+rg -l 'echo.*\$\{\{.*secrets' .github/
+rg -l 'env:.*\$\{\{.*secrets' .github/
 
 ## Checar Se .Env Esta Sendo Copiado No Ci
 
-rg -n "\.env" .github/workflows/ Jenkinsfile .gitlab-ci.yml 2>/dev/null
+rg -l "\.env" .github/workflows/ Jenkinsfile .gitlab-ci.yml 2>/dev/null
 ```
 
 
@@ -256,9 +256,9 @@ Para cada achado, classificar usando esta matriz:
 | **P2 — MEDIO** | Permissoes excessivas, chave sem restricao, sem rotacao | Restringir, adicionar restricoes, agendar rotacao | < 1 semana |
 | **P3 — BAIXO** | Chave dormante, sem dono identificado, best practice faltando | Documentar, atribuir dono, planejar melhoria | < 1 mes |
 
-**Formula de Criticidade:**
+**Formula heuristica de triagem (nao validada, sem autoridade de severidade):**
 ```
-Criticidade = (Exposicao x Privilegio x Blast_Radius) / Tempo_Deteccao
+Criticidade_heuristica = Exposicao x Privilegio x Blast_Radius x Tempo_Deteccao
 - Exposicao: publico(10), privado-multi(7), privado-solo(4), vault(1)
 - Privilegio: admin(10), write(7), read(4), minimal(1)
 - Blast_Radius: producao-all(10), producao-parcial(7), staging(4), dev(1)
@@ -268,7 +268,7 @@ Criticidade = (Exposicao x Privilegio x Blast_Radius) / Tempo_Deteccao
 
 ## Fase 3 — Contencao (Acao Imediata)
 
-Para P0 e P1, executar imediatamente:
+Para P0 e P1, iniciar contencao autorizada imediatamente, considerando dependencias e continuidade. Revogacao nao exige reescrever historico; reescrita precisa plano, coordenacao e aprovacao propria:
 
 1. **Revogar** — invalidar a chave/token no painel do provedor
 2. **Rotacionar** — gerar nova credencial com escopo minimo
@@ -286,7 +286,7 @@ Para P0 e P1, executar imediatamente:
 
 #### 4.1 Regras Universais (todas as APIs)
 
-**Regra 1: Chave NUNCA no front-end**
+**Regra 1: Chave secreta NUNCA no front-end**
 - Browser/mobile = ambiente hostil. Se a chave aparece no JS entregue ao usuario, ja era.
 - Solucao padrao-ouro: API Gateway/Proxy na VPS
 - O front chama SEU endpoint → sua VPS chama o provedor com segredo em Secret Store
@@ -342,6 +342,7 @@ Estrutura de pastas na VPS:
       auth.js          # JWT/session validation
       rateLimit.js     # Rate limiting por rota/usuario
       quota.js         # Quotas por ambiente/usuario
+```
 
 
 ## Fase 5 — Governanca Continua
@@ -426,7 +427,10 @@ jobs:
   scan:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/
+      # Exemplo incompleto: escolher scanner mantido, fixar actions por SHA e
+      # configurar redacao/exit codes antes de habilitar. Nenhum runtime e fornecido aqui.
+      - run: echo "Scanner ainda nao configurado" && exit 1
+```
 
 ### 4.1 Openai
 
@@ -438,7 +442,7 @@ jobs:
 - Usar Organization API keys (nao pessoais) quando possivel
 - Proxy com: rate limit por IP/usuario, limites por modelo (gpt-4 mais caro), logs de consumo, kill switch
 - Configurar usage limits no dashboard da OpenAI
-- Monitorar usage API: `GET /v1/usage` ou dashboard
+- Consulte os endpoints atuais de usage/costs na documentacao oficial e o dashboard; nao assumir `/v1/usage` como endpoint suportado.
 
 **Checklist OpenAI:**
 ```
@@ -453,7 +457,7 @@ jobs:
 
 ### 4.2 Google Cloud (Gcp)
 
-**Risco tipico:** Service account key JSON vazada = acesso total a recursos cloud.
+**Risco tipico:** Service account key JSON vazada = acesso conforme IAM, condicoes e organizacao; nao necessariamente acesso total.
 
 **Hardening:**
 - Usar Secret Manager para armazenar credenciais
@@ -509,7 +513,7 @@ jobs:
 - Webhook com secret_token e validacao
 - Rate limiting e anti-spam
 - Logs SEM expor update completo (pode conter dados sensiveis de usuarios)
-- Usar webhook (nao polling) em producao
+- Escolher webhook ou long polling conforme arquitetura; ambos exigem protecao do token e consumo de updates autorizado.
 - Definir allowed_updates para receber so o necessario
 
 **Checklist Telegram:**
@@ -524,7 +528,7 @@ jobs:
 
 ### 4.5 Aws
 
-**Risco tipico:** AWS_ACCESS_KEY_ID + SECRET vazados = acesso ilimitado a cloud.
+**Risco tipico:** AWS_ACCESS_KEY_ID + SECRET vazados = acesso conforme politicas efetivas; nao ilimitado.
 
 **Hardening:**
 - NUNCA usar root account keys
@@ -706,7 +710,7 @@ F) SECRET REGISTRY
 
 ### 8.1 Scanner De Segredos (Python)
 
-Localizado em: `scripts/secret_scanner.py`
+Nao incluido neste pacote; componente proposto: `scripts/secret_scanner.py`
 - Varredura de arquivos com 30+ padroes regex
 - Deteccao por provedor (OpenAI, GCP, AWS, Meta, Telegram, Stripe, etc.)
 - Modo CI (--ci) com exit code nao-zero se encontrar
@@ -715,7 +719,7 @@ Localizado em: `scripts/secret_scanner.py`
 
 ### 8.2 Registry Manager
 
-Localizado em: `scripts/registry_manager.py`
+Nao incluido neste pacote; componente proposto: `scripts/registry_manager.py`
 - CRUD de entries no secret registry
 - Alertas de expiracao
 - Status report
@@ -723,14 +727,14 @@ Localizado em: `scripts/registry_manager.py`
 
 ### 8.3 Pre-Commit Hook
 
-Localizado em: `scripts/pre_commit_hook.sh`
+Nao incluido neste pacote; componente proposto: `scripts/pre_commit_hook.sh`
 - Wrapper para secret_scanner.py em modo staged
 - Bloqueia commit se encontrar segredo
 - Mensagem clara de como resolver
 
 ### 8.4 Audit Report Generator
 
-Localizado em: `scripts/audit_report.py`
+Nao incluido neste pacote; componente proposto: `scripts/audit_report.py`
 - Executa todas as varreduras
 - Gera relatorio formatado (markdown)
 - Inclui score de seguranca
@@ -808,6 +812,8 @@ Monitore estes sinais durante QUALQUER operacao:
 
 
 ## Score De Seguranca (0-100)
+
+Indicador interno nao validado: declare cobertura e desconhecidos, nao certifique ausencia de vazamentos. Denominador zero resulta em N/A, nao 100. Prazos acima sao objetivos propostos, nao requisitos universais.
 
 | Dimensao | Peso | Criterio |
 |----------|------|----------|

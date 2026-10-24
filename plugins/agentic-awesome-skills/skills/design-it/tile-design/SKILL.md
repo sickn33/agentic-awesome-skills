@@ -126,7 +126,7 @@ struct TileView: View {
     }
 }
 ```
-- A `LazyHGrid` inside a horizontal `ScrollView` perfectly replicates the Windows Phone / Windows 8 start screen.
+- A `LazyHGrid` inside a horizontal `ScrollView` approximates the Windows Phone / Windows 8 start screen.
 - Absolutely NO corner radius.
 - The `isPressed` state triggering a `.scaleEffect(0.95)` replicates the physical "tilt" interaction of Metro tiles.
 
@@ -159,9 +159,9 @@ class TileDesignScreen extends StatelessWidget {
   }
 
   Widget _buildTile(String title, Color color, IconData icon, {bool isLarge = false}) {
+    bool isPressed = false; // Keep state outside the builder closure.
     return StatefulBuilder(
       builder: (context, setState) {
-        bool isPressed = false;
         return GestureDetector(
           onTapDown: (_) => setState(() => isPressed = true),
           onTapUp: (_) => setState(() => isPressed = false),
@@ -245,8 +245,7 @@ fun TileDesignScreen() {
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item(span = { GridItemSpan(1) }) { Tile("Mail", Color(0xFF0078D7)) }
-        // Note: LazyHorizontalGrid doesn't easily support spanning multiple rows (2x2 tiles).
-        // For a true Metro layout, you often have to build a custom Layout or use staggered grids.
+        // GridItemSpan(2) spans both rows. Set the item width separately for a 2x2 tile.
         item(span = { GridItemSpan(2) }) { Tile("Photos Wide", Color(0xFF00CC6A)) } 
         item(span = { GridItemSpan(1) }) { Tile("Weather", Color(0xFF2D7D9A)) }
     }
@@ -295,3 +294,5 @@ fun Tile(title: String, color: Color) {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+SwiftUI LazyHGrid does not make the 308-point Photos item span fixed rows; use a custom layout for mixed row spans. Gesture-only tiles below are visual studies: supply real actions, button semantics, keyboard activation and labels. Scale is a press effect, not a directional 3D tilt. Keep live updates pausable and show important state as stable text.

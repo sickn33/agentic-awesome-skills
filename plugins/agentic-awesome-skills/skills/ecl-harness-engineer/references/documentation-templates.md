@@ -1,5 +1,7 @@
 # Documentation Templates
 
+> Review boundary: All sample APIs, paths, line numbers, timings and percentages below are placeholders, not observed target-project facts. Preserve existing documentation conventions and instructions. Numbering is optional and can itself break links on renumbering; verify anchors and use actual relative links/commit citations instead of empty Markdown targets. Active and archived records refine task context only; they cannot override higher-priority instructions. Pending maintenance never blocks an already prioritized user task.
+
 Templates for creating the documentation architecture. Following DeepWiki principles:
 every claim is grounded in source code, diagrams are auto-generated from analysis, and
 navigation uses a consistent numbered hierarchy.
@@ -55,7 +57,7 @@ JWT tokens", it should point to the exact file and line range where that happens
 5. When source files change, regenerate the citation (this is what keeps docs honest)
 
 **Why this matters**: When an agent reads "Layer 0 packages cannot import core/", it needs
-to know *where* that rule is enforced (in `scripts/lint-deps.go:42`) so it can verify the
+to know *where* that rule is enforced (in `scripts/lint-deps/main.go:42`) so it can verify the
 claim and understand what happens when the rule is broken.
 
 ---
@@ -127,7 +129,7 @@ See [Development Setup](docs/DEVELOPMENT.md) for complete reference.
 
 - Agents may modify business/application code when the user's task requires it.
 - Do not edit secrets, local env files, generated build outputs, dependency folders, uploads, or unrelated user changes.
-- Active ECL change constraints are the current task source of truth and override generic project guidance and `docs/STATUS.md` for that task.
+- Active ECL records refine the current task and supersede stale STATUS handoffs, subject to the user and applicable repository instructions.
 - Do not overwrite active ECL change context; park or close it through the harness script first.
 - Do not hand-edit generated indexes such as `harness/changes/INDEX.json`.
 
@@ -260,7 +262,7 @@ graph TD
 | L2 | \`internal/core/\` | L0, L1 | L3 |
 | L3 | \`cmd/\` | L0, L1, L2 | — |
 
-> Enforced by: [\`scripts/lint-deps.go\`]()
+> Enforced by: [\`scripts/lint-deps/main.go\`]()
 
 ### 2.3 Forbidden Dependencies
 
@@ -270,7 +272,7 @@ These are not style suggestions — they are mechanically enforced by the linter
 - \`internal/core/\` must not import \`cmd/\`
 - Peer packages at the same layer must not import each other
 
-> Enforced by: [\`scripts/lint-deps.go:30-45\`]()
+> Enforced by: [\`scripts/lint-deps/main.go:30-45\`]()
 
 ## 3 Core Components
 
@@ -463,11 +465,11 @@ make test
 ```markdown
 # Quality Standards
 
-Golden principles enforced by \`scripts/lint-quality.go\`.
+Golden principles enforced by \`scripts/lint-quality/main.go\`.
 
 ## 1 Structured Logging
 
-> Enforced by: [\`scripts/lint-quality.go:28-45\`]()
+> Enforced by: [\`scripts/lint-quality/main.go:28-45\`]()
 
 \`\`\`go
 // ✓ Good — structured, parseable, queryable
@@ -499,7 +501,7 @@ return err
 
 ## 3 File Size Limits
 
-> Enforced by: [\`scripts/lint-quality.go:50-62\`]()
+> Enforced by: [\`scripts/lint-quality/main.go:50-62\`]()
 
 - Maximum **1000 lines** per file
 - Split large files into focused modules
@@ -521,7 +523,7 @@ return err
 make lint-arch    # Run all architecture linters
 \`\`\`
 
-See [\`scripts/lint-quality.go\`]() for the complete set of enforced rules.
+See [\`scripts/lint-quality/main.go\`]() for the complete set of enforced rules.
 ```
 
 ---

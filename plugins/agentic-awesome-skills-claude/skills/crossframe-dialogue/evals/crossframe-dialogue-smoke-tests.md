@@ -11,7 +11,7 @@
 - 批评指向行为、流程、责任链或成本转嫁，不做人格审判。
 - 有稳妥建议、观察信号、停止条件、升级条件或撤回条件。
 - 第一段删掉术语后仍可读。
-- 按需读取 `../crossframe/SKILL.md` 与 `../crossframe/references/read-routing-map.md`。
+- 按需读取 `../../crossframe/SKILL.md` 与 `../../crossframe/references/read-routing-map.md`。
 
 ## 测试 1：只安慰不判断
 

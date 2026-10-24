@@ -1,8 +1,11 @@
 ---
 title: "Onboarding | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/onboarding
+---
 
 # Onboarding
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Onboarding can help people get a quick start using your app or game.
 
@@ -67,3 +70,7 @@ Date| Changes
 June 10, 2024| Clarified different approaches to onboarding and added a guideline on displaying a splash screen.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+There is no universal three-screen HIG maximum. Make optional education skippable while retaining genuinely necessary consent, account security or safety setup. App Store terms do not replace required in-app privacy disclosures or permissions. Use synthetic tutorials so practice does not send real messages, charge money or delete user data.

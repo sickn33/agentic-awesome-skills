@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-power-capture-malicious-compliance-pack`、`v3-evidence-visibility-pack`。
+`v5-ai-process-artifact-boundary-pack`、`v5-source-evidence-separation-pack`。
 
 ## 证据要求
 

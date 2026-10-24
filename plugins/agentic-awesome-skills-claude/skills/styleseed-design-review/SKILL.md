@@ -31,7 +31,7 @@ Full rule set (74 rules) and components: https://github.com/bitjaru/styleseed
 
 ## How to review
 
-Read the file(s). Score these **seven categories** (total 100); start each at full marks
+Respect the project’s actual brand and design system; deliberate high-contrast, card-free or mixed-radius designs are not automatically defects. Read the file(s). Score these **seven categories** (total 100); start each at full marks
 and subtract for violations you can cite by line. Be specific and evidence-based.
 
 ### 1. Coherence — 20  (the #1 "AI-generated" tell)
@@ -105,7 +105,7 @@ Re-score after: ~90 / 100.
 ## Rules
 
 - Review from real evidence (cite line numbers); never guess.
-- Order the fix list by **score gain**, not severity alone — fastest path to a better number.
+- Prioritize accessibility, task completion and misleading/destructive behavior before cosmetic score gain. This is an aesthetic rubric, not authorship detection or a universal design standard.
 - For a directory: one-line score per file, then the lowest file's full breakdown.
 - **Don't auto-edit.** This skill measures and recommends. Apply fixes only when asked.
 - Use it as a **quality gate**: review right after generating UI, apply the fix list, and

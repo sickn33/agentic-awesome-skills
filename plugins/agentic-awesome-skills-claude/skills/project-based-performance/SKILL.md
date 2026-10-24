@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Score a project at completion against three or four fixed measures, and keep a close reason code so the data improves over time.
 
-**Why this one:** Project performance needs a consistent denominator to be comparable. Fix the measures and the close reason, and the comparison works.
+**Why this one:** Project performance needs a consistent denominator to be comparable. Fix the measures, rating rubric, scope and review period; comparisons still require context and evidence.
 
 **Workflow:** Project delivered → Measures scored → Close reason recorded → Review across projects
 
@@ -202,6 +202,8 @@ CREATE INDEX idx_project_based_performance_status ON project_based_performance (
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+The baseline is a person-on-project review template, not a schedule/budget overrun dataset. For the worked overrun request, replace subjective person scores with planned/actual dates, planned/actual effort or cost, scope changes and close reason consistently across outputs. Overall Score is a supplied value; specify weights/rubric before calculating it and do not infer individual performance from project outcomes.
 
 ## Field Reference
 

@@ -273,7 +273,7 @@ $ tree /tmp/b
 However, if copied back without '-l'
 
 ```console
-$ rclone copyto remote:/tmp/a/ /tmp/b/
+$ rclone copy remote:/tmp/a/ /tmp/b/
 
 $ tree /tmp/b
 /tmp/b
@@ -295,7 +295,7 @@ Note that `--local-links` just enables this feature for the local
 backend. `--links` and `-l` enable the feature for all supported
 backends and the VFS.
 
-Note that this flag is incompatible with `-copy-links` / `-L`.
+Note that this flag is incompatible with `--copy-links` / `-L`.
 
 ### Restricting filesystems with --one-file-system
 

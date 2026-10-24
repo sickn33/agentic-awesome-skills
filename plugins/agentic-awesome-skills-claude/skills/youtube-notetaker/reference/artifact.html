@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Video Deep-Dives</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
@@ -184,8 +184,9 @@ async function loadVideo(id){
   document.getElementById('transcript').innerHTML='';
   try{
     var r=await fetch(API_URL+'/'+encodeURIComponent(id)); if(!r.ok) throw new Error('HTTP '+r.status);
-    DATA=await r.json(); var m=DATA.meta||{};
+    var fetched=await r.json(); if(CURRENT_ID!==id)return; DATA=fetched; var m=DATA.meta||{};
     YTID=m.youtube_id||id;
+    if(!/^[A-Za-z0-9_-]{11}$/.test(YTID)) throw new Error('Invalid YouTube id');
     SLIDES=(m.slides||[]).slice().sort(function(a,b){return a.t-b.t;});
     document.title=m.title||'Video deep-dive';
     document.getElementById('title').textContent=m.title||'';
@@ -256,16 +257,21 @@ function hlRow(t){var rows=document.querySelectorAll('.trow'),best=null;rows.for
 function filt(q){q=q.toLowerCase().trim();document.querySelectorAll('.trow').forEach(function(r){r.style.display=(!q||r.dataset.text.indexOf(q)>-1)?'flex':'none';});}
 // note write-back to markdown via PATCH
 var timers={};
+var writeToken=null;
 function onNote(i,val){
   SLIDES[i].note=val;
   var s=document.getElementById('saved-'+i);s.textContent='saving…';
-  clearTimeout(timers[i]);
-  timers[i]=setTimeout(function(){saveNotes(i,s);},700);
+  var timerKey=CURRENT_ID+":"+i;
+  clearTimeout(timers[timerKey]);
+  var itemId=CURRENT_ID; var snapshot=SLIDES.map(function(slide){return Object.assign({},slide);});
+  timers[timerKey]=setTimeout(function(){saveNotes(i,s,itemId,snapshot);},700);
 }
-async function saveNotes(i,badge){
+async function saveNotes(i,badge,itemId,snapshot){
+  if(!writeToken) writeToken=window.prompt("Enter the local server write token (kept only in this page memory):");
+  if(!writeToken){badge.textContent="not saved (read-only)";return;}
   try{
-    var payload={fields:{slides:SLIDES.map(function(s){return {idx:s.idx,t:s.t,mmss:s.mmss,title:s.title,note:s.note,img:s.img};})}};
-    var r=await fetch(API_URL+'/'+encodeURIComponent(CURRENT_ID),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var payload={fields:{slides:snapshot.map(function(s){return {idx:s.idx,t:s.t,mmss:s.mmss,title:s.title,note:s.note,img:s.img};})}};
+    var r=await fetch(API_URL+'/'+encodeURIComponent(itemId),{method:'PATCH',headers:{'Content-Type':'application/json','X-Video-Library-Token':writeToken},body:JSON.stringify(payload)});
     badge.textContent=r.ok?'✓ saved':'save failed';
   }catch(e){badge.textContent='save failed';}
   setTimeout(function(){badge.textContent='';},1500);

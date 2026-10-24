@@ -1,5 +1,8 @@
 # Configuration Management - UnifiedConfig Pattern
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to managing configuration in backend microservices.
 
 ## Table of Contents
@@ -123,26 +126,33 @@ import * as path from 'path';
 import * as ini from 'ini';
 
 const configPath = path.join(__dirname, '../../config.ini');
-const iniConfig = ini.parse(fs.readFileSync(configPath, 'utf-8'));
+const iniConfig = fs.existsSync(configPath) ? ini.parse(fs.readFileSync(configPath, 'utf-8')) : {};
 
-export const config: UnifiedConfig = {
+export const config: Pick<UnifiedConfig, 'database' | 'server' | 'tokens'> = {
     database: {
-        host: iniConfig.database?.host || process.env.DB_HOST || 'localhost',
-        port: parseInt(iniConfig.database?.port || process.env.DB_PORT || '3306'),
-        username: iniConfig.database?.username || process.env.DB_USER || 'root',
-        password: iniConfig.database?.password || process.env.DB_PASSWORD || '',
-        database: iniConfig.database?.database || process.env.DB_NAME || 'blog_dev',
+        host: process.env.DB_HOST || iniConfig.database?.host || 'localhost',
+        port: Number(process.env.DB_PORT || iniConfig.database?.port || '3306'),
+        username: process.env.DB_USER || iniConfig.database?.username || 'app_user',
+        password: process.env.DB_PASSWORD || iniConfig.database?.password || '',
+        database: process.env.DB_NAME || iniConfig.database?.database || 'blog_dev',
     },
     server: {
-        port: parseInt(iniConfig.server?.port || process.env.PORT || '3002'),
-        sessionSecret: iniConfig.server?.sessionSecret || process.env.SESSION_SECRET || 'dev-secret',
+        port: Number(process.env.PORT || iniConfig.server?.port || '3002'),
+        sessionSecret: process.env.SESSION_SECRET || iniConfig.server?.sessionSecret || '',
     },
-    // ... more configuration
+    tokens: {
+        jwt: process.env.JWT_SECRET || iniConfig.tokens?.jwt || '',
+        inactivity: '30m',
+        internal: process.env.INTERNAL_API_TOKEN || iniConfig.tokens?.internal || '',
+    },
 };
 
 // Validate critical config
-if (!config.tokens.jwt) {
-    throw new Error('JWT secret not configured!');
+if (!config.tokens.jwt || !config.tokens.internal || !config.server.sessionSecret || !config.database.password) {
+    throw new Error('Required secrets are not configured');
+}
+for (const port of [config.database.port, config.server.port]) {
+    if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid port');
 }
 ```
 
@@ -164,7 +174,7 @@ if (!config.tokens.jwt) {
 host = localhost
 port = 3306
 username = root
-password = password1
+password = <LOCAL_SECRET_NOT_COMMITTED>
 database = blog_dev
 
 [server]
@@ -193,13 +203,15 @@ tracesSampleRate = 0.1
 ```bash
 # .env file (optional overrides)
 DB_HOST=production-db.example.com
-DB_PASSWORD=secure-password
+DB_PASSWORD=<INJECTED_SECRET>
 PORT=80
 ```
 
+The snippets are partial configuration fragments; read config.ini only if present, fail on malformed files, and complete/validate every field required by the actual application. Never silently substitute production secrets.
+
 **Precedence:**
-1. config.ini (highest priority)
-2. process.env variables
+1. process.env variables (highest priority; implement consistently in the bootstrap)
+2. local development config.ini
 3. Hard-coded defaults (lowest priority)
 
 ---

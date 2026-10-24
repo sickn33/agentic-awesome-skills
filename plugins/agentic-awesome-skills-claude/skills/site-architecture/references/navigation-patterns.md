@@ -4,6 +4,10 @@ Detailed navigation patterns for different site types and contexts.
 
 ---
 
+## Interaction and accessibility
+
+Use real links for navigation and buttons for expandable disclosures. Support keyboard/touch operation, visible focus, Escape-to-close and accurate expanded state; ordinary site navigation generally does not need application-style ARIA menu roles. Test zoom/reflow and avoid sticky elements obscuring focused content. See the [WAI disclosure navigation example](https://www.w3.org/WAI/ARIA/apg/patterns/disclosure/examples/disclosure-navigation/).
+
 ## Header Navigation
 
 ### Simple Header (4-6 items)
@@ -279,7 +283,7 @@ Rules:
 - **Inconsistent nav between pages**: nav should be identical across the site (except app vs marketing)
 - **No mobile consideration**: desktop nav that doesn't translate to mobile
 - **Footer as sitemap dump**: 50+ links in the footer with no organization
-- **Breadcrumbs that don't match URLs**: breadcrumb says "Products > Widget" but URL is `/shop/widget-pro`
+- **Misleading breadcrumbs**: hierarchy labels/links do not help users locate the page; URL segment names may legitimately differ
 
 ### Common Fixes
 
@@ -297,8 +301,8 @@ Rules:
 
 Internal links in navigation pass PageRank. Use this strategically:
 
-- **Header nav links are strongest** — put your most important pages here
-- **Footer links pass less value** but still matter — good for comparison pages, location pages
+- **Header nav** — make frequent tasks easy to reach; no universal link-weight ranking is asserted
+- **Footer links** — group genuinely useful secondary destinations; do not add pages solely to manipulate rankings
 - **Sidebar links** help with section-level authority — good for blog categories, doc sections
 - **Breadcrumbs** provide structural signals to search engines — implement with schema markup
 - **Don't use JavaScript-only nav** — search engines need crawlable HTML links

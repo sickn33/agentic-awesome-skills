@@ -17,6 +17,8 @@ date_added: "2026-02-27"
 
 ---
 
+The five guides below are bundled; the author-local Angor solution is not. Examples are partial and need the actual Avalonia/Zafiro/package versions and XML namespace declarations; UntouchedClassBehavior and icon resources must exist in that installation. Do not assume MultiBinding supplies logical And/Or without a suitable converter, or merge style files as ResourceDictionary resources when they contain Styles. Use StyleInclude for style collections and ResourceInclude for resource dictionaries as appropriate to the file root. Keep icons accessible, preserve focus/keyboard behavior and test light/dark themes, text scaling and localization. Avoiding converters/code-behind is a design preference, not a universal correctness or performance rule.
+
 ## 📑 Content Map
 
 | File | Description | When to Read |

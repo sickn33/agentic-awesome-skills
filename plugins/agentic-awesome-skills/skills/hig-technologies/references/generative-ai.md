@@ -1,8 +1,12 @@
 ---
 title: "Generative AI | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/generative-ai
+---
 
 # Generative AI
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Generative AI empowers you to enhance your app or game with dynamic content and offer intelligent features that unlock new levels of creativity, connection, and productivity.
 
@@ -30,7 +34,7 @@ Generative artificial intelligence uses [machine learning](https://developer.app
 
 ## [Privacy](https://developer.apple.com/design/human-interface-guidelines/generative-ai#Privacy)
 
-**Prefer on-device processing.** Depending on your needs, you may be able to get great responses using on-device models, which prevent people’s information from leaving the device. For example, you may choose to use the on-device models available through the Apple Foundation Models framework. On-device models may also respond quicker than server-based models, and are available even when the device is offline. Server-based models are usually good options in situations that need larger, powerful models that require more memory and power than is typically available on a person’s device. Always consider privacy and user experience tradeoffs when selecting a model type. If you’re using server-based processing, process as much information as you can locally first and minimize what’s shared. Make sure people know if their information may be sent to a server, can see what’s being shared, and understand what data may be stored off-device or even used for training.
+**Prefer on-device processing.** Depending on your needs, you may be able to get great responses using on-device models, which can keep inference inputs local. That guarantee applies only if the entire pipeline — including tools, telemetry, storage, and fallbacks — also avoids external transmission. For example, you may choose to use the on-device models available through the Apple Foundation Models framework. On-device models may also respond quicker than server-based models, and are available even when the device is offline. Server-based models are usually good options in situations that need larger, powerful models that require more memory and power than is typically available on a person’s device. Always consider privacy and user experience tradeoffs when selecting a model type. If you’re using server-based processing, process as much information as you can locally first and minimize what’s shared. Make sure people know if their information may be sent to a server, can see what’s being shared, and understand what data may be stored off-device or even used for training.
 
 **Ask permission before using personal information and usage data.** Some interactions with an AI model may involve sensitive information, like personal details, messages, photos, and feature usage information. After obtaining permission, use the minimum data you need and always offer a clear way to opt out of its use. If you need sensitive data for model improvement or storage, get explicit permission and handle it with care. If you share data with third parties, understand their approach to privacy. Be aware that model outputs can inadvertently contain sensitive information. Note that [apps for kids](https://developer.apple.com/app-store/kids-apps/) have stricter rules and laws around what data you can use. For guidance, see [Requesting permission](https://developer.apple.com/design/human-interface-guidelines/privacy#Requesting-permission).
 

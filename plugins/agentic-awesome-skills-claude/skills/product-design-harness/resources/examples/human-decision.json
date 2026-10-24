@@ -1,0 +1,18 @@
+{
+  "decision_id": "decision-example-001",
+  "review_id": "example-council-001",
+  "decision_type": "risk",
+  "decision": "Keep human approval for customer-facing workflow actions.",
+  "options_considered": [
+    "Full autonomous execution.",
+    "Draft-only assistance with approval.",
+    "No workflow assistance."
+  ],
+  "rationale": "Current t1 evidence cannot support irreversible customer-facing action.",
+  "accountable_owner": "Product owner",
+  "decided_at": "2026-07-10T12:00:00Z",
+  "reversal_conditions": [
+    "Observed error and recovery evidence reaches t3.",
+    "The accountable owner approves a new bounded execution policy."
+  ]
+}

@@ -5,13 +5,9 @@ category. Items in the main `SKILL.md` recipe list are NOT duplicated here.
 
 ## Security
 
-### Passwords need updating — Tier 1
-Users with weak or reused passwords. Inform the admin, list affected users:
-```
-wp user list --field=user_login | while read u; do echo "$u: $(wp user meta get "$u" session_tokens | wc -c)"; done
-```
-No automated fix — the admin must ask each user to update via
-`wp user reset-password <user>` or Users > Profile.
+### Password policy review — not inferred from session metadata
+
+No core Site Health password-strength check is established here. Session-token metadata length does not reveal weak/reused passwords; do not dump it or use username text where an API expects a user ID. Request an authorized policy review without resetting accounts automatically.
 
 ### The site is not using a persistent connection (not an object cache) — Tier 3
 Persistent database connections (`mysqli.persist`). Purely informational;
@@ -26,7 +22,7 @@ backup material. Draft the expected permissions for the WordPress-owned paths:
 chmod 600 wp-config.php
 find wp-content -type d -exec chmod 755 {} +
 find wp-content -type f -exec chmod 644 {} +
-chmod 400 .htaccess # if Apache; nginx ignores it
+# Choose ownership/permissions for the actual Apache user and update policy; 400 can make .htaccess unreadable to the server.
 ```
 The user must verify with their host that the filesystem supports these
 permissions (some managed WP hosts lock permissions).
@@ -38,14 +34,14 @@ Autoloaded options larger than 1 MB. List the worst offenders:
 ```
 SELECT option_name, LENGTH(option_value) AS size
 FROM wp_options
-WHERE autoload = 'yes'
+WHERE autoload IN ('yes', 'on', 'auto-on', 'auto')
 ORDER BY size DESC
 LIMIT 20;
 ```
 If a plugin is the source, report the plugin name. Cleaning involves:
 - `wp option delete <key>` (only if the option is safe to delete — confirm
   with the plugin author first).
-- Disabling autoload: `wp option update <key> <value> --autoload=no`.
+- Disabling autoload: use the installed version’s dedicated autoload setter after approval; update_option with an unchanged value may not update autoload.
 
 ### Can not process scheduled maintenance jobs (wp_cron) — Tier 2
 `DISABLE_WP_CRON` is set but no system cron is running. Fix by either:
@@ -69,15 +65,11 @@ define('DISALLOW_FILE_MODS', false); // wp-config.php
 
 ## SEO
 
-### llms.txt generation not configured — Tier 1
-The site is missing an `llms.txt` file at the domain root. Install and
-activate an SEO plugin that supports it, or create a manual file via
-wp-admin > SEO > Settings. Not a ranking factor, but recommended for
-AI crawler discoverability.
+### llms.txt — optional external/plugin concern, not a core Site Health fix
+Do not invent this as a core failing check or install a plugin to clear it. An optional llms.txt artifact has no established indexing/discoverability guarantee here.
 
 ### No XML sitemap detected — Tier 1
-Install an SEO plugin with sitemap support (Yoast, Rank Math, etc.) or
-a dedicated sitemap plugin. Enable sitemap generation from the plugin
+Check the existing core /wp-sitemap.xml and current SEO/host configuration before installing another plugin. Enable sitemap generation from the plugin
 settings screen (no WP-CLI toggle reliably available across plugins).
 
 ### Social preview images missing — Tier 2
@@ -106,7 +98,7 @@ wp option update wp_page_for_privacy_policy <page-id>
 ### Privacy policy page is outdated — Tier 2
 The privacy policy page was created before the site's current privacy
 guidance generation date. Re-run the guidance generator in
-Tools > Export Personal Data and update the page content. No WP-CLI
+Settings > Privacy policy guide (not the personal-data export tool) and update the page content. No WP-CLI
 command for this — manual step.
 
 ## Diagnostics / hard-to-classify

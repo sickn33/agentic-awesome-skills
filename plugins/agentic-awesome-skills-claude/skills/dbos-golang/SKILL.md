@@ -1,7 +1,7 @@
 ---
 name: dbos-golang
 description: "Guide for building reliable, fault-tolerant Go applications with DBOS durable workflows. Use when adding DBOS to existing Go code, creating workflows and steps, or using queues for concurrency control."
-risk: safe
+risk: critical
 source: "https://docs.dbos.dev/"
 date_added: "2026-02-27"
 ---
@@ -19,6 +19,10 @@ Reference these guidelines when:
 - Configuring and launching DBOS applications
 - Using the DBOS Client from external applications
 - Testing DBOS applications
+
+## Reliability and version boundaries
+
+Pin and verify the DBOS Go SDK version before adapting these illustrative fragments; the current SDK documentation uses dbos.Context while this snapshot uses dbos.DBOSContext. Helpers, imports, registrations and application-specific functions are omitted. Do not claim snippets compile as a complete app. Check every returned error before using a handle or result. Workflow IDs and checkpointed steps do not make external payment/API side effects exactly-once: a crash after the remote action but before checkpointing can replay it. Use provider idempotency keys and reconciliation. Authenticate and deduplicate webhook messages before Send; scope workflow access to the caller. Queue limits govern workflow starts, not every request/retry inside a workflow. Cancellation cannot undo committed effects. Keep workflow inputs, outputs and error payloads free of secrets/unnecessary personal data. Do not enable admin endpoints, schedules, paid calls or management mutations without authorization.
 
 ## Rule Categories by Priority
 

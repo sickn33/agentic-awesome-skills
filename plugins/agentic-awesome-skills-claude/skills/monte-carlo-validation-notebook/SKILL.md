@@ -2,7 +2,7 @@
 name: monte-carlo-validation-notebook
 description: "Generates SQL validation notebooks for dbt PR changes with before/after comparison queries."
 category: data
-risk: safe
+risk: critical
 source: community
 source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community
@@ -17,6 +17,8 @@ tools: [claude, cursor, codex]
 Generate a SQL Notebook with validation queries for dbt changes.
 
 **Arguments:** $ARGUMENTS
+
+The import URL contains reversible notebook SQL and metadata. Review the destination and content before --open; no automatic browser import is performed. Require trusted base/head compiled relation metadata rather than treating the helper’s hardcoded PROD convention as authoritative.
 
 ## Detailed Guide
 
@@ -40,7 +42,7 @@ Parse the arguments:
 - **`python3`** — required for helper scripts.
 - **`pyyaml`** — install with `pip3 install pyyaml` (or `pip install pyyaml`, `uv pip install pyyaml`, etc.)
 
-**Note:** Generated SQL uses ANSI-compatible syntax that works across Snowflake, BigQuery, Redshift, and Athena. Minor adjustments may be needed for specific warehouse quirks.
+**Dialect gate:** These templates require warehouse-specific review for identifiers, composite distinct, timestamps and intervals. LIMIT bounds returned rows, not scan cost. Use read-only credentials, timeouts and scan budgets; do not execute queries as part of notebook generation.
 
 This skill includes two helper scripts in `${CLAUDE_PLUGIN_ROOT}/skills/monte-carlo-validation-notebook/scripts/`:
 

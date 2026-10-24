@@ -32,7 +32,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge trade-stats --format json
+longbridge trade-stats 700.HK --format json
 
 # See all options
 longbridge trade-stats --help

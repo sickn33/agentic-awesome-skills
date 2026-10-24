@@ -31,6 +31,8 @@ Deploy frontend projects with preview builds, edge functions, and global CDN del
 
 ## Prerequisites
 
+Pin a supported Wrangler/Node version; framework adapters and provider limits change. Full-stack Next.js requires the current supported Workers/OpenNext workflow rather than assuming the legacy next-on-pages adapter. Confirm account/project/environment before deploy/delete/domain changes; previews can expose private builds and need access control. `_headers` applies to static assets, not Functions responses: set security/CORS headers in Functions and implement OPTIONS as needed. Bindings/cache keys must be scoped to authorized users/tenants when data is private; the shared `key` sample is only for public data. The CI example needs trusted-branch secret boundaries and an explicit preview branch; do not deploy untrusted PR builds with production credentials.
+
 - Node.js 18+ and npm installed locally.
 - A Cloudflare account (free tier works for most projects).
 - Wrangler CLI installed: `npm install -g wrangler`.
@@ -64,7 +66,7 @@ npx wrangler pages deploy dist --project-name=my-site
 # Deploy with a custom branch name (triggers preview URL)
 npx wrangler pages deploy dist --project-name=my-site --branch=feature-auth
 
-# Deploy and get the deployment URL in JSON
+# Deploy and inspect the actual result (tailing text is not JSON parsing)
 npx wrangler pages deploy dist --project-name=my-site --branch=main 2>&1 | tail -1
 ```
 
@@ -96,7 +98,7 @@ Cloudflare auto-detects frameworks. Override if needed:
 |------------|----------------------|------------------|
 | React CRA  | `npm run build`      | `build`          |
 | Vite       | `npm run build`      | `dist`           |
-| Next.js    | `npx @cloudflare/next-on-pages` | `.vercel/output/static` |
+| Next.js static export | `npm run build` with export configuration | `out` |
 | Astro      | `npm run build`      | `dist`           |
 | Hugo       | `hugo`               | `public`         |
 | SvelteKit  | `npm run build`      | `.svelte-kit/cloudflare` |
@@ -153,7 +155,9 @@ export const onRequestGet: PagesFunction = async (context) => {
 // functions/_middleware.ts — runs before all routes
 export const onRequest: PagesFunction = async (context) => {
   const authHeader = context.request.headers.get("Authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  // validateBearerToken is application code: verify signature/issuer/audience/expiry
+  // or use Cloudflare Access validation; header presence is not authentication.
+  if (!authHeader || !(await validateBearerToken(authHeader, context.env))) {
     return new Response("Unauthorized", { status: 401 });
   }
   return context.next();
@@ -296,13 +300,13 @@ jobs:
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| Build fails with out-of-memory | Build exceeds 1 GB RAM limit | Reduce dependencies; use `NODE_OPTIONS=--max_old_space_size=768` |
+| Build fails with out-of-memory | Inspect current platform limit and logs | Reduce build memory or use a supported build environment |
 | Functions return 404 | `functions/` directory not at project root | Move `functions/` to repo root, not inside `src/` |
 | Preview URL shows old content | Browser cache or stale deployment | Hard refresh; check deployment list for latest commit hash |
-| Custom domain shows SSL error | DNS not proxied through Cloudflare | Enable orange cloud (proxy) on the CNAME record |
+| Custom domain shows SSL error | DNS/domain activation or certificate issue | Verify Pages domain status and official DNS requirements before changing records |
 | `_headers` file ignored | File not in build output directory | Place in `public/` so it copies to `dist/` during build |
 | Bindings undefined in Functions | Missing `wrangler.toml` or dashboard config | Add bindings in `wrangler.toml` and redeploy |
-| 1 MB function size limit exceeded | Too many dependencies bundled | Tree-shake; move large deps to KV or R2 |
+| Function size limit exceeded | Bundle exceeds current plan limit | Inspect bundle and supported limits; storing libraries remotely is not an automatic runtime fix |
 
 ## Related Skills
 

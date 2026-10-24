@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">UX3 decision gate</title>
+  <desc id="desc">A UX3 decision gate with Continue, Verify, and Stop/Reframe outcomes.</desc>
+  <rect width="1200" height="760" fill="#fbfaf7"/>
+  <text x="72" y="78" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="800" fill="#1f2933">Gate Logic</text>
+  <text x="72" y="116" font-family="Inter, Arial, sans-serif" font-size="19" fill="#66727a">A review is useful only when it changes the next action.</text>
+  <text x="1044" y="82" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#8b5f2a">PLATE 04</text>
+
+  <rect x="364" y="174" width="472" height="104" fill="#1f2933"/>
+  <text x="600" y="219" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="800" fill="#fbfaf7">Is the next step earned?</text>
+  <text x="600" y="250" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" fill="#d8d0c2">Review user, evidence, and business together.</text>
+
+  <path d="M600 278 V346" stroke="#1f2933" stroke-width="3"/>
+  <path d="M600 346 H214 V410" stroke="#1f2933" stroke-width="3" fill="none"/>
+  <path d="M600 346 V410" stroke="#1f2933" stroke-width="3"/>
+  <path d="M600 346 H986 V410" stroke="#1f2933" stroke-width="3" fill="none"/>
+
+  <g font-family="Inter, Arial, sans-serif">
+    <g transform="translate(94 410)">
+      <line x1="0" y1="0" x2="240" y2="0" stroke="#2f5d59" stroke-width="4"/>
+      <text x="0" y="48" font-size="30" font-weight="850" fill="#2f5d59">Continue</text>
+      <text x="0" y="94" font-size="18" fill="#1f2933">Scope is clear.</text>
+      <text x="0" y="124" font-size="18" fill="#1f2933">Risks are bounded.</text>
+      <text x="0" y="154" font-size="18" fill="#1f2933">Evidence is enough for</text>
+      <text x="0" y="184" font-size="18" fill="#1f2933">the next step.</text>
+    </g>
+
+    <g transform="translate(480 410)">
+      <line x1="0" y1="0" x2="240" y2="0" stroke="#9d7550" stroke-width="4"/>
+      <text x="0" y="48" font-size="30" font-weight="850" fill="#9d7550">Verify</text>
+      <text x="0" y="94" font-size="18" fill="#1f2933">Direction is plausible.</text>
+      <text x="0" y="124" font-size="18" fill="#1f2933">Proof is still thin.</text>
+      <text x="0" y="154" font-size="18" fill="#1f2933">Run the smallest test</text>
+      <text x="0" y="184" font-size="18" fill="#1f2933">before building more.</text>
+    </g>
+
+    <g transform="translate(866 410)">
+      <line x1="0" y1="0" x2="240" y2="0" stroke="#9b3a2f" stroke-width="4"/>
+      <text x="0" y="48" font-size="30" font-weight="850" fill="#9b3a2f">Stop / Reframe</text>
+      <text x="0" y="94" font-size="18" fill="#1f2933">The problem, user, or</text>
+      <text x="0" y="124" font-size="18" fill="#1f2933">value is unstable.</text>
+      <text x="0" y="154" font-size="18" fill="#1f2933">Change the frame before</text>
+      <text x="0" y="184" font-size="18" fill="#1f2933">execution begins.</text>
+    </g>
+  </g>
+</svg>

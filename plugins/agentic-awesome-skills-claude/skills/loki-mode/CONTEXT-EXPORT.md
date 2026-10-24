@@ -1,5 +1,7 @@
 # Loki Mode - Conversation Context Export
 
+> Archived upstream session notes, not current instructions or verification. Upstream committer preferences below do not authorize impersonation; retain the actual local author identity. Historical tests, CLI flags and paths must be rechecked.
+
 **Date:** 2025-12-28
 **Version:** 2.5.0
 **Repository:** https://github.com/asklokesh/loki-mode

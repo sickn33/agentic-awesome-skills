@@ -53,7 +53,7 @@ class JucernScraper(AbstractJuntaScraper):
                     nome=nome,
                     matricula=gcol(cells, ["matr", "registro", "nº"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Natal",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr"]),
@@ -66,6 +66,6 @@ class JucernScraper(AbstractJuntaScraper):
             for el in soup.select("td, li, p"):
                 text = self.clean(el.get_text())
                 if text and len(text) > 10 and any(c.isupper() for c in text[:20]):
-                    results.append(self.make_leiloeiro(nome=text, municipio="Natal"))
+                    results.append(self.make_leiloeiro(nome=text, municipio=None))
 
         return results

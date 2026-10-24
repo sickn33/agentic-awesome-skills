@@ -14,7 +14,7 @@
 - AI product differentiation
 
 
-## Patterns
+These are illustrative architecture fragments with unbundled `db`, cache, parser, sleep and business helpers. Historical model names/prices/latencies below are not current recommendations; verify supported model IDs, dated provider pricing and measured workload latency. Keep API credentials server-side, enforce user/tenant authorization and approve data/provider/budget before calls. Treat model output as untrusted data; structured shape does not prove factual correctness or authorize sending emails/actions.
 
 ### AI Product Architecture
 
@@ -48,7 +48,7 @@ const anthropic = new Anthropic();
 
 async function generateContent(userInput, context) {
   // 1. Validate input
-  if (!userInput || userInput.length > 5000) {
+  if (typeof userInput !== "string" || !userInput.trim() || userInput.length > 5000) {
     throw new Error('Invalid input');
   }
 
@@ -69,8 +69,9 @@ async function generateContent(userInput, context) {
   });
 
   // 4. Parse and validate output
-  const output = response.content[0].text;
-  return parseOutput(output);
+  if (response.stop_reason !== "end_turn") throw new Error("Incomplete/refused output");
+  const output = response.content.filter(p => p.type === "text").map(p => p.text).join("\n");
+  return parseAIOutput(output);
 }
 ```
 
@@ -124,14 +125,12 @@ const systemPrompt = `
 
 // Parse with fallback
 function parseAIOutput(text) {
-  try {
-    return JSON.parse(text);
-  } catch {
-    // Fallback: extract JSON from response
-    const match = text.match(/\{[\s\S]*\}/);
-    if (match) return JSON.parse(match[0]);
-    throw new Error('Invalid AI output');
+  const value = JSON.parse(text); // Reject surrounding text; no greedy-brace repair.
+  if (!value || typeof value.title !== 'string' || typeof value.content !== 'string' ||
+      !Array.isArray(value.suggestions) || !value.suggestions.every(x => typeof x === 'string')) {
+    throw new Error('Invalid AI output schema');
   }
+  return value;
 }
 ```
 
@@ -278,6 +277,8 @@ Recommended fix:
 
 
 ## Controlling AI Costs
+
+Usage examples below are check-only sketches and race under concurrent requests. Reserve worst-case call cost atomically per user/tenant before submitting, bound concurrency/output, then reconcile actual token/cache/tool charges. Persist provider operation IDs and handle crashes/uncertain outcomes so retries do not duplicate billable work. Provider dashboard budgets/alerts are not necessarily a hard spend cap; verify actual enforcement. Do not cache across tenants or authorization scopes: include model/prompt/schema versions and permitted context in keys.
 
 ### Set Hard Limits
 ```javascript
@@ -518,7 +519,7 @@ async function* streamResponse(prompt) {
   });
 
   for await (const event of stream) {
-    if (event.type === 'content_block_delta') {
+    if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
       yield event.delta.text;
     }
   }
@@ -526,13 +527,17 @@ async function* streamResponse(prompt) {
 
 // Frontend
 const response = await fetch('/api/generate', { method: 'POST' });
+if (!response.ok || !response.body) throw new Error("Generation failed");
 const reader = response.body.getReader();
+const decoder = new TextDecoder();
 while (true) {
   const { done, value } = await reader.read();
   if (done) break;
-  appendToOutput(new TextDecoder().decode(value));
+  appendToOutput(decoder.decode(value, { stream: true }));
 }
 ```
+
+Flush `decoder.decode()` after stream end and render generated text safely (not unsanitized innerHTML). Cancel upstream generation on authorized client cancellation where supported.
 
 ### Caching
 ```javascript

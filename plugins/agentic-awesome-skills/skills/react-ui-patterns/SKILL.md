@@ -24,7 +24,7 @@ date_added: "2026-02-27"
 
 ```typescript
 // CORRECT - Only show loading when no data exists
-const { data, loading, error } = useGetItemsQuery();
+const { data, loading, error, refetch } = useGetItemsQuery();
 
 if (error) return <ErrorState error={error} onRetry={refetch} />;
 if (loading && !data) return <LoadingState />;
@@ -112,7 +112,7 @@ const ErrorState = ({ error, onRetry, title }: ErrorStateProps) => (
   <div className="error-state">
     <Icon name="exclamation-circle" />
     <h3>{title ?? 'Something went wrong'}</h3>
-    <p>{error.message}</p>
+    <p>Unable to load this content. Try again if the problem persists.</p>
     {onRetry && (
       <Button onClick={onRetry}>Try Again</Button>
     )}
@@ -201,7 +201,8 @@ const MyForm = () => {
     onError: handleError,
   });
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!isValid) {
       toast.error({ title: 'Please fix errors' });
       return;
@@ -210,7 +211,7 @@ const MyForm = () => {
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <Input
         value={values.name}
         onChange={handleChange('name')}
@@ -218,7 +219,6 @@ const MyForm = () => {
       />
       <Button
         type="submit"
-        onClick={handleSubmit}
         disabled={!isValid || loading}
         isLoading={loading}
       >

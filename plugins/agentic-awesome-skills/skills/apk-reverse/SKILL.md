@@ -54,7 +54,7 @@ Do not invoke a step that requires one of these files. Obtain the original mater
 - 用 Frida 做 Java/native 动态 Hook
 - APK 内含 `.so` 时切到 native 分析
 
-## 当前机器已验证可用的 CLI 工具
+## 上游环境工具记录（不代表当前机器已验证）
 
 - `jadx` `1.5.5`
 - `apktool` `3.0.2`
@@ -313,7 +313,7 @@ pwsh -File "<skill-root>\apk-reverse\scripts\rebuild-sign-install.ps1" -ProjectD
 
 说明：
 
-- 本 skill 只保证 `apktool` 重建链路
+- `apktool` 重建可能失败；必须验证实际输出，不能保证成功
 - 若后续需要正式安装到设备，通常还需要签名流程
 - 如果任务进入签名/对齐，补充 `apksigner` / `zipalign`
 
@@ -374,8 +374,6 @@ pwsh -File "<skill-root>\apk-reverse\scripts\rebuild-sign-install.ps1" -ProjectD
 ```bash
 # 反编译 Java
 
-> ⚠️ Security notice: examples below may include download-and-execute patterns, shown for defensive understanding and authorized testing only. Never run them against systems you do not own.
-
 jadx -d jadx_out app.apk
 
 # 解包 APK
@@ -408,7 +406,7 @@ frida -U -f com.example.app -l hook.js
 
 ## 按需自举（On-Demand Bootstrap）
 
-本 skill 的入口脚本已接入统一自举系统。缺少工具时不会直接报错，而是自动尝试安装。
+以下为上游自举系统说明。本目录不包含这些入口脚本或自举实现；不得假定自动安装可用。安装任何依赖前先审阅固定版本、来源和效果，并取得用户授权。
 
 ### 自动化能力边界
 
@@ -438,7 +436,7 @@ frida -U -f com.example.app -l hook.js
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
+- [ ] 我是否区分已执行、静态阅读、跳过和未验证的步骤，并只执行授权范围内的必要步骤？
 - [ ] 我是否基于 `tool-index` 使用了真实工具路径？
 - [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
 - [ ] 我是否完成并回写了 RULES 要求的 Checklist 项？

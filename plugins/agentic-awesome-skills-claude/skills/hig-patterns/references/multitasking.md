@@ -1,8 +1,11 @@
 ---
 title: "Multitasking | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/multitasking
+---
 
 # Multitasking
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Multitasking lets people switch quickly from one app to another, performing tasks in each.
 
@@ -29,13 +32,13 @@ A great multitasking experience helps people accomplish tasks in multiple apps b
 
 For guidance, see [Playing audio](https://developer.apple.com/design/human-interface-guidelines/playing-audio).
 
-**Finish user-initiated tasks in the background.** When someone starts a task like downloading assets or processing a video file, they expect it to finish even if they switch away from your app. If your app is in the middle of performing a task that doesn’t need additional input, complete it in the background before suspending.
+**Finish user-initiated tasks in the background.** When someone starts a task like downloading assets or processing a video file, they expect it to finish even if they switch away from your app. If your app is in the middle of performing a task that doesn’t need additional input, use supported background APIs when eligible, checkpoint progress and handle expiration or suspension; arbitrary work is not guaranteed to finish.
 
 **Use notifications sparingly.** Your app can send notifications when it’s suspended or running in the background. If people start an important or time-sensitive task in your app, and then switch away from it, they might appreciate receiving a notification when the task completes so they can switch back to your app and take the next step. In contrast, people don’t generally need to know the moment a routine or secondary task completes. In this scenario, avoid sending an unnecessary notification; instead, let people check on the task when they return to your app. For guidance, see [Managing notifications](https://developer.apple.com/design/human-interface-guidelines/managing-notifications).
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/multitasking#Platform-considerations)
 
- _Not supported in watchOS._
+ _watchOS supports app switching and selected background tasks; simultaneous windowed app layouts differ from iPadOS/macOS._
 
 ### [iOS](https://developer.apple.com/design/human-interface-guidelines/multitasking#iOS)
 
@@ -129,3 +132,7 @@ June 9, 2025| Reorganized guidance in platform considerations, and added guidanc
 December 5, 2023| Added artwork for primary and auxiliary windows in iPadOS.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Pause gameplay that needs attention, but preserve intentional audio/PiP playback where platform behavior permits it. Background runtime budgets and scene transitions can interrupt work. Preserve state per scene/account and avoid using a particular multitasking mode as an authorization or lifetime signal.

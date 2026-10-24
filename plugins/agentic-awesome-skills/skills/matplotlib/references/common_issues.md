@@ -161,7 +161,7 @@ ax.plot(x, y, rasterized=True)
 plt.savefig('figure.pdf')  # or .svg
 
 # Solution 4: Compress PNG
-plt.savefig('figure.png', dpi=300, optimize=True)
+plt.savefig('figure.png', dpi=300, pil_kwargs={'optimize': True})
 ```
 
 ### Issue: Slow Plotting with Large Datasets
@@ -172,15 +172,15 @@ plt.savefig('figure.png', dpi=300, optimize=True)
 ```python
 # Solution 1: Downsample data
 from scipy.signal import decimate
-y_downsampled = decimate(y, 10)  # Keep every 10th point
+y_downsampled = decimate(y, 10)  # Low-pass filter then downsample; not simple slicing
 
 # Solution 2: Use rasterization
 ax.plot(x, y, rasterized=True)
 
-# Solution 3: Use line simplification
+# Solution 3: Use actual line simplification (not rasterization)
+plt.rcParams['path.simplify'] = True
+plt.rcParams['path.simplify_threshold'] = 0.1
 ax.plot(x, y)
-for line in ax.get_lines():
-    line.set_rasterized(True)
 
 # Solution 4: For scatter plots, consider hexbin or 2d histogram
 ax.hexbin(x, y, gridsize=50, cmap='viridis')
@@ -199,12 +199,12 @@ from matplotlib.font_manager import findfont, FontProperties
 print(findfont(FontProperties(family='sans-serif')))
 
 # Solution 2: Rebuild font cache
-import matplotlib.font_manager
-matplotlib.font_manager._rebuild()
+# There is no supported font_manager._rebuild() public API.
+# Install/register the required font, then restart the plotting process.
 
 # Solution 3: Suppress warnings
 import warnings
-warnings.filterwarnings("ignore", category=UserWarning)
+# Avoid blanket warning suppression; investigate missing glyphs/fonts.
 
 # Solution 4: Specify fallback fonts
 plt.rcParams['font.sans-serif'] = ['Arial', 'DejaVu Sans', 'sans-serif']
@@ -334,9 +334,8 @@ ax.set_yscale('log')
 # Solution 2: Use symlog for data with positive and negative values
 ax.set_yscale('symlog')
 
-# Solution 3: Add small offset
-ax.plot(x, data + 1e-10)
-ax.set_yscale('log')
+# Do not add arbitrary offsets to hide non-positive values.
+# Any scientifically justified transformation must be disclosed.
 ```
 
 ### Issue: Dates Not Displaying Correctly
@@ -475,7 +474,7 @@ ax.imshow(img, interpolation='bilinear')
 # Solution 2: Increase DPI when saving
 plt.savefig('figure.png', dpi=300)
 
-# Solution 3: Use vector format if appropriate
+# A PDF still embeds raster image pixels; vector output does not restore missing resolution.
 plt.savefig('figure.pdf')
 ```
 

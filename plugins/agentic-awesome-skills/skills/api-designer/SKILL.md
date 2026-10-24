@@ -83,13 +83,17 @@ First list down all the endpoints one after another as output then expand each i
 
 ---
 
+## Security contract
+
+Specify object/tenant authorization, input and size bounds, rate limits, sensitive-field redaction and idempotency/concurrency for each applicable state-changing operation. Bearer tokens need not be JWTs; choose authentication from the actual system. Endpoint lists are proposed designs, not production-readiness or implementation proof.
+
 ## Rules for Output
 
 1. **Cover all major resources** for the described system. Infer resources if the user doesn't list them.
 2. **Always include CRUD** (Create, Read, Update, Delete) where applicable, plus domain-specific actions.
 3. **Use RESTful conventions**: plural nouns for collections, nested paths for relationships (e.g. `/hotels/{id}/rooms`).
 4. **Auth**: Default to Bearer token (JWT) for protected routes. Add API key header where relevant (e.g. third-party integrations). Mark public endpoints clearly.
-5. **Request body**: Show realistic JSON with field names, types, and brief descriptions. Mark required vs optional fields in comments.
+5. **Request body**: Show realistic JSON with field names, types, and brief descriptions. Mark required versus optional fields in prose tables or JSON Schema, not comments inside JSON.
 6. **Responses**: Show the success response shape with realistic fields. Always include the HTTP status code.
 7. **Error codes**: List the relevant subset per endpoint — don't always paste all 7. Use judgement.
 8. **Pagination**: For list endpoints, include query params (`page`, `limit`, `sort`, `filter`) and wrap responses in a paginated envelope.

@@ -1,5 +1,8 @@
 # Tipos de Conta Instagram — Business vs Creator
 
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
 ## Comparação
 
 | Feature | Personal | Creator | Business |
@@ -10,10 +13,10 @@
 | Insights de conta | Proibido | Sim | Sim |
 | DMs via API | Proibido | Sim | Sim |
 | Comentários via API | Proibido | Sim | Sim |
-| Agendamento nativo API | Proibido | Limitado | Sim |
+| Native scheduling in this bundle | Not supported | Not implemented | Not implemented |
 | Hashtag search | Proibido | Sim | Sim |
 | Shopping/Catalog | Proibido | Proibido | Sim |
-| Facebook Page link | Não necessário | Opcional | Obrigatório |
+| Facebook Page link (this Facebook Login implementation) | Not supported | Required | Required |
 
 ## Quando Usar Cada Tipo
 
@@ -38,7 +41,7 @@ Recomendado para:
 ### Pré-requisitos
 1. Conta Instagram ativa
 2. Para Business: Facebook Page vinculada (pode criar uma nova)
-3. Para Creator: não precisa de Page (opcional)
+3. Para Creator: Page vinculada exigida por este fluxo Facebook Login
 
 ### Passo a Passo (no app Instagram)
 

@@ -31,40 +31,15 @@ report_count: 174
 
 ## Autonomous Testing Priority
 
-**Verify reflection before claiming XSS — encoding is everything.**
+**Reflection is a candidate, not XSS proof.** Choose a unique random canary, compare the baseline, identify the actual HTML/attribute/JavaScript/URL context and trace source to sink. Raw `<script>` text can be inert inside comments, text/plain, a template, a nonexecuting DOM insertion or a restrictive CSP. HTML encoding can protect one context while a later decode or different JavaScript context remains unsafe. DOM XSS can occur without payload text in the server response.
 
-Your payload must appear in the response body with angle brackets UNESCAPED. `<script>` is XSS. `&lt;script&gt;` is safe encoding — not vulnerable.
-
-**Use a UNIQUE NUMERIC CANARY in your proof payload** — e.g. `<script>alert(91234)</script>` or `"><img src=x onerror=alert(91234)>`. Pick a distinctive 4+ digit number, not `alert(1)`. Practice pages are full of *example* payloads like `alert(1)`/`alert('XSS')` in their hint text; a unique number is how you tell YOUR reflected payload apart from the page's decoy examples. Proof = your `alert(<canary>)` shows up in the response with raw, unescaped angle brackets.
-
-**Try these contexts in order:**
-
-1. **Inline script injection** (works when HTML context allows new tags):
-   ```
-   <script>alert(CANARY)</script>
-   ```
-   Use whatever canary string your proof contract specifies. Confirmed when `<script>alert(CANARY)` appears literally (not HTML-encoded) in the response.
-
-2. **Attribute event injection** (when `<` is filtered but attributes are injectable):
-   ```
-   " onmouseover="alert(CANARY)
-   " onerror="alert(CANARY)
-   " onload="alert(CANARY)
-   ```
-
-3. **URL/href context:**
-   ```
-   javascript:alert(CANARY)
-   ```
-
-**Distinguishing success from failure:**
-- **Vulnerable:** response contains `<script>alert(` unescaped — browser would execute it
-- **Filtered/safe:** response contains `&lt;script&gt;` or `&#x3C;script&#x3E;` — properly encoded
-- **Blocked:** response is an error, or the reflected value is absent entirely
-
-**For stored XSS:** inject into a field that other pages display (comments, usernames, ticket titles). Then fetch the rendering page and check for unescaped payload. The payload executes when any user views that page — higher severity than reflected.
+Confirm harmless canary execution in the supported real browser, recording origin, trigger, CSP, user role and delivery prerequisites. Use only owned test sessions. An alert/canary can establish code execution; further credential theft or account changes are not required if outside scope. For stored payloads, use a private test resource, approved viewers and a cleanup plan; never expose real users or administrators to unsolicited payloads.
 
 ---
+
+## Scope and interpretation
+
+The examples and imported historical case summaries are not verified current exploits. Apply the written target/method/request budget, and do not claim broad tenants, users or origins without evidence. Cache tests must use isolated keys and approved cleanup, not poison shared production pages. Linked helpers are not bundled.
 
 ## Crown Jewel Targets
 
@@ -84,20 +59,7 @@ XSS is high-value when it combines **privileged context + persistent delivery + 
 
 ## OOB-Or-It-Didn't-Happen Gate (Blind / Stored XSS)
 
-For blind and stored XSS — claims require an out-of-band confirmation, the same as blind SSRF. The OOB receiver fires when the payload actually executes in a browser somewhere (an admin reviewing logs, a SOC analyst opening a ticket, an email rendering a stored payload).
-
-### What is NOT confirmation
-
-- ASP.NET request validator rejected your `<` and returned a different status code → not XSS, that's WAF noise.
-- Your payload appears in the response body URL-encoded or HTML-encoded → not XSS, that's correct output encoding.
-- The form action attribute contains your payload string as `%22onclick%3D…` → not XSS, the browser does NOT decode URL encoding inside HTML attribute values; the `%22` stays as literal `%22` in the DOM.
-- Your `<script>` tag appears in the response as `&lt;script&gt;` → not XSS, that's escaping.
-
-### What IS confirmation
-
-- A request to your unique Collaborator subdomain (e.g., `bxss-err-<random>.<collab>.oastify.com`) arrives in the OOB listener after your payload was stored / reflected / queued.
-- For stored XSS: the request arrives **hours or days later** when an admin views the affected resource. Plant payloads early in the engagement and keep the listener open.
-- The User-Agent of the firing request is a browser (Mozilla/Chrome), not the server's own backend HTTP client.
+A controlled browser execution trace can confirm stored XSS without OOB. A callback alone, even with a browser User-Agent, is not definitive proof: scanners, previews, normal image loads and server clients can request the same URL. Correlate a unique execution-only canary with sink, time, origin and browser evidence. DNS alone proves resolution. No callback within ten minutes is inconclusive, not proof that logs never render HTML. Delayed beacons need explicit authorized recipients, lifetime and cleanup.
 
 ### Where to plant blind-XSS beacons
 
@@ -112,7 +74,7 @@ Any field whose value might be viewed in an admin UI / log viewer / email / repo
 
 **Always sub-tag the Collaborator subdomain by sink** so callbacks identify which field fired.
 
-**Lesson from a authorized engagement:** 10 blind-XSS Collaborator beacons planted across `ErrorMessage`, `Source`, the Authentication.asmx username field, User-Agent header, Referer header, and request paths. Zero callbacks over a 10-minute polling window. Conclusion: the SharePoint SOC views logs / errors in tooling that does not render HTML, AND the ASP.NET request validator blocks `<` in query strings before the payload reaches storage. Stored-XSS claim correctly retracted.
+**Imported anecdote limitation:** Zero callbacks in a polling window cannot establish the rendering behavior of all SOC tools. Report only the attempted sinks, timing and observed absence of callbacks.
 
 ---
 
@@ -176,7 +138,7 @@ $(location
 
 3. **Probe sanitizer behavior** — Send harmless canary strings first: `aaa"bbb'ccc<ddd` to determine which characters are escaped. Observe if output is in HTML context, attribute context, JS context, or URL context.
 
-   **Marker Discipline:** When choosing canary strings, they MUST be unique random alphanumeric strings (8+ chars, no English words, no protocol keywords). Bad markers: `test`, `marker`, `evil`, `attacker`, `payload`, `javascript`, `script`. Good markers: `cpmark987abc`, `x4hd2k9pq`, `__ZZ_MARKER_<random>_ZZ__`. Before claiming reflection, search the baseline (no-marker) response for the marker — if it appears naturally in the page (e.g., the word `javascript` is in every page's help-link hrefs), it's a false-positive trap and you need a different marker. This single check catches 80% of false-positive reflection reports.
+   **Marker Discipline:** When choosing canary strings, they MUST be unique random alphanumeric strings (8+ chars, no English words, no protocol keywords). Bad markers: `test`, `marker`, `evil`, `attacker`, `payload`, `javascript`, `script`. Good markers: `cpmark987abc`, `x4hd2k9pq`, `__ZZ_MARKER_<random>_ZZ__`. Before claiming reflection, search the baseline (no-marker) response for the marker — if it appears naturally in the page (e.g., the word `javascript` is in every page's help-link hrefs), it's a false-positive trap and you need a different marker. This reduces a false-positive source; no measured percentage is established.
 
 4. **Test allowlisted tag combinations** — If a sanitizer is in use, probe for dangerous tag combos: `<math>+<style>`, `<svg>+<style>`, `<iframe srcdoc>`, `<style>` with expressions.
 
@@ -243,14 +205,14 @@ aaa"bbb'ccc<ddd>eee`fff
 ```
 
 **Kroki/diagram injection:**
-```
+````
 ```kroki
 plantuml
 @startuml
 :<script>alert(1)</script>;
 @enduml
 ```
-```
+````
 
 **DOM XSS via hash/search:**
 ```javascript
@@ -313,10 +275,10 @@ curl -sk "https://target.com/page" | grep -i "evil.com"
 ## Bypass Techniques
 
 **CSP Bypass:**
-- SVG uploads bypass script-src because `image/svg+xml` responses may not inherit the page's CSP
+- SVG behavior depends on embedding mode, response CSP, origin and sandboxing; SVG used as an image commonly disables scripting, so upload alone is not a bypass
 - Find JSONP endpoints on whitelisted domains (`*.googleapis.com`, `*.cloudflare.com`)
 - Use `<base>` tag injection to redirect script sources
-- Exploit `unsafe-eval` or `unsafe-inline` in style-src to execute CSS-based attacks
+- Inspect actual directive scopes: style-src unsafe-inline does not authorize JavaScript and unsafe-eval is relevant to script execution, not a generic CSS bypass
 - `<link rel=preload>` or `<meta http-equiv>` gadgets to bypass strict policies
 
 **Sanitizer Bypasses:**
@@ -377,7 +339,7 @@ curl -sk "https://target.com/page" | grep -i "evil.com"
 Before writing the report, answer all three:
 
 1. **What can the attacker DO right now?**
-   The attacker must demonstrate a concrete action: execute JavaScript in victim's browser session on the target domain, steal session cookies/tokens, perform actions as the victim, or exfiltrate sensitive data. "Alert box appears" is not sufficient — state what the alert box *represents* in terms of access (e.g., "I can read `document.cookie` which contains the auth token used for all admin API calls").
+   A harmless canary in an owned test session can demonstrate script execution. State the affected origin/role and possible access with evidence; never require live cookie/token theft or a real victim — state what the alert box *represents* in terms of access (e.g., "I can read `document.cookie` which contains the auth token used for all admin API calls").
 
 2. **What does the victim LOSE?**
    The victim must lose something real: session control (account takeover), sensitive data (cookies, CSRF tokens, PII), money (financial action performed without consent), or trust (credential phishing via DOM manipulation). If the victim is an unauthenticated user on a public page with no session, quantify what *that* user's browser is exposed to.

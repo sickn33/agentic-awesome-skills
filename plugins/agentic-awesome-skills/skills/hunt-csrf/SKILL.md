@@ -29,28 +29,9 @@ report_count: 18
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
-## Shortcut: a raw HTTP client beats a real cross-origin page for header-check CSRF
+## Browser delivery is required for confirmation
 
-A raw HTTP client (curl, Burp Repeater, any scripting client) is not a browser: it will send
-whatever `Origin`/`Referer` header VALUE you set, from any path, on the same connection as your
-authenticated cookie. Many apps that claim to defend against CSRF only do a naive **string check**
-on the incoming `Origin`/`Referer` header (does it contain/equal some expected value?) rather than
-real same-origin enforcement — you can satisfy that check directly by setting the header, with no
-actual cross-site delivery (hosting an HTML page, a headless browser) required. This is faster and
-more reliable than building a real attacker page for this exact pattern:
-```
-POST /profile HTTP/1.1
-Content-Type: application/x-www-form-urlencoded
-Origin: https://a-domain-the-app-treats-as-trusted-or-attacker-controlled.example
-Cookie: <authenticated session>
-
-username=csrf_poc
-```
-If some text names a SPECIFIC origin/domain as the "expected" attacker page, that literal value is
-often exactly what the server's check is looking for — try it verbatim in `Origin` (fall back to
-`Referer` if `Origin` alone doesn't flip it). Only build a real cross-origin page (actual browser
-delivery) when the target does genuine SameSite/fetch-based origin enforcement that a spoofed header
-can't satisfy.
+Raw clients can vary headers to diagnose checks, but can spoof values a browser cannot send. Success with an authenticated cookie and forged Origin is not CSRF evidence. Confirm a harmless reversible state change using a real supported browser, separate controlled origin and test accounts, documenting cookies, SameSite, preflight, redirects and actual before/after state. Never transfer money or alter real users as a demonstration.
 
 ## Autonomous Testing Priority
 
@@ -60,7 +41,7 @@ can't satisfy.
 1. **GET the form endpoint** to establish a baseline and check what fields exist (look for hidden `csrf_token`, `authenticity_token`, `_token`, `csrfmiddlewaretoken` fields).
 2. **POST the state-changing action without any CSRF token field.** Send only the functional parameters (email, amount, etc.).
 3. **Use a "simple-request" Content-Type** — `application/x-www-form-urlencoded`, `multipart/form-data`, OR `text/plain` are the three CORS "simple" content-types a cross-origin form can send with no preflight. A JSON endpoint is CSRF-resistant **only if the server rejects those** — if it also accepts a `text/plain` body (common), craft a `text/plain` payload that parses as valid JSON (see the JSON-CSRF-via-text/plain section). Don't skip a JSON endpoint on the assumption that `application/json` alone is protective.
-4. **If the action succeeds (2xx, no "invalid token" error) → CSRF is confirmed.**
+4. **A successful raw replay is only a candidate. Confirm browser-deliverable credentials and the actual state change.**
 
 **High-value targets (in order of impact):**
 - Email/password change → account takeover
@@ -73,7 +54,7 @@ can't satisfy.
 - Send an empty value (`_token=`) — some validate format, not presence
 - Copy a token from another session — some tokens aren't tied to the session
 
-**Scope:** Don't test CSRF on login forms (no existing session to exploit), logout (no real impact), or read-only GET endpoints.
+**Scope:** Login CSRF can have impact and belongs in an authorized assessment; evaluate logout by concrete harm. GET endpoints can also mutate state. Exclude only genuinely read-only behavior.
 
 ---
 
@@ -108,13 +89,13 @@ CSRF becomes high-value when it touches **state-changing actions with account-le
 ### Response Header Signals
 ```
 # Missing or weak SameSite cookie attributes
-Set-Cookie: session=abc123; HttpOnly        # no SameSite = vulnerable
+Set-Cookie: session=abc123; HttpOnly        # inspect browser default and delivery; absence alone is not proof
 Set-Cookie: session=abc123; SameSite=None   # explicitly allows cross-site
 
 # Missing CSRF headers
 # No X-Frame-Options or permissive CORS
 Access-Control-Allow-Origin: *
-Access-Control-Allow-Credentials: true      # dangerous combo
+Access-Control-Allow-Credentials: true      # wildcard origin cannot authorize credentialed CORS in browsers
 ```
 
 ### JS / DOM Patterns
@@ -146,11 +127,11 @@ fetch('/api/heartbeat', {method: 'POST', body: JSON.stringify(data)})
 2. **Check cookie SameSite attributes** — In DevTools → Application → Cookies. Flag any session cookie without `SameSite=Strict` or `Lax`.
 
 3. **Test token staticness** — Log in twice (different sessions or incognito). Compare `authenticity_token` / `csrfmiddlewaretoken` / `csrf-token` values across:
-   - Same session, different page loads (should be different)
+   - Same session, different page loads (stable per-session tokens may be valid)
    - Different sessions for same user
    - Different users entirely
 
-4. **Test token omission** — Remove the CSRF token field entirely from a POST request. If the server returns 200, you have CSRF.
+4. **Test token omission** — Remove the CSRF token field entirely from a POST request. A 200 response alone does not prove CSRF; verify browser delivery and state change.
 
 5. **Test token substitution** — Replace the token with one from a different session. Server accepting it = broken validation.
 
@@ -243,7 +224,7 @@ curl -s https://monitoring.target.com/api/health | jq '.version'
 
 ## Common Root Causes
 
-1. **Static CSRF tokens per session** — Developers generate one token at login and reuse it. Airbnb bug: `authenticity_token` was the same across all page loads for a session, making it trivially leakable.
+1. **Predictable, exposed or improperly bound tokens** — A random per-session token can be legitimate; stability alone is not a vulnerability.
 
 2. **Token not tied to user identity** — Token is valid server-wide or rotates on a schedule, not per-user/session. Mozilla bug: `csrftoken` reusable across users.
 
@@ -274,7 +255,7 @@ curl -s https://monitoring.target.com/api/health | jq '.version'
 - Token tied to session but session is predictable
 
 ### Defense: `Content-Type: application/json` enforcement
-**Bypass:** Use `text/plain` enctype with crafted form input names that produce valid JSON. Server receives JSON body, skips CORS preflight.
+**Candidate only if enforcement fails:** `text/plain` cannot bypass a server that strictly rejects it; confirm the server actually accepts a browser-generated body.
 
 ### Defense: Referer/Origin header check
 **Bypasses:**
@@ -300,7 +281,7 @@ CSRF is not browser-only. For targets with a mobile app, enumerate exported deep
 
 2. **What does the victim LOSE?** — Identify the concrete harm: account access (ATO), data exposure, financial loss, reputation damage. "A CSRF token is missing" is not impact — "attacker can link their Oculus account to victim's Facebook account, gaining full profile access" is impact.
 
-3. **Can it be reproduced in 10 minutes from scratch?** — You must be able to: (a) create attacker and victim accounts, (b) host a static HTML PoC, (c) have victim visit PoC, (d) confirm the action executed in victim's account — all within 10 minutes with no additional prerequisites.
+3. **Can it be reproduced in 10 minutes from scratch?** — You must be able to: (a) create attacker and victim accounts, (b) host a static HTML PoC, (c) have victim visit PoC, (d) confirm the action executed in victim's account — with documented prerequisites and reasonable effort; ten minutes is not a validity requirement.
 
 ---
 
@@ -319,7 +300,7 @@ A POST endpoint accepting `application/json` was assumed CSRF-safe by developers
 
 ## Disclosed Report Citations (Backfill +5 — 2020-2024)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. Four cases chain CSRF to full ATO; all five are modern (SameSite-era).
+The following upstream case descriptions and payout figures have not been independently verified in this catalog review; consult each primary disclosure before citing it. Four cases chain CSRF to full ATO; all five are modern (SameSite-era).
 
 11. **Argo CD — SameSite=Lax bypass via sibling subdomain + Content-Type abuse (CVE-2024-22424)** ([GHSA-92mw-q256-5vwg](https://github.com/argoproj/argo-cd/security/advisories/GHSA-92mw-q256-5vwg) · [Writeup](https://blog.calif.io/p/argo-cd-csrf))
     - Subclass: SameSite=None/Lax misconfig chain — same parent-domain bypass + JSON CSRF via missing Content-Type enforcement
@@ -353,41 +334,9 @@ The following real, verified bug-bounty / coordinated-disclosure cases extend th
 
 ---
 
-## Duende BFF — Role-Partitioned Antiforgery (2024-2026 surface)
+## BFF and WebSocket assessment boundaries
 
-Duende BFF (commercial successor to IdentityServer4) is the canonical ASP.NET Core BFF library for SPAs. Its antiforgery primitive is **non-standard and not user-bound**: instead of ASP.NET Core's per-session/per-user double-submit token, Duende only requires the presence of a **static header `X-CSRF: 1`** on every BFF-mapped endpoint. The header value is identical for every caller; it exists only to force a CORS preflight on cross-origin calls. This collapses CSRF defence to "same-origin + session cookie present" — and produces several distinct attack patterns when one BFF serves multiple privilege partitions.
-
-**Architecture primer:** browser↔BFF authenticates via an encrypted HttpOnly session cookie (default `.AspNetCore.Cookies`); BFF↔API uses OAuth tokens cached server-side. Endpoints registered via `MapBffManagementEndpoints` / `MapRemoteBffApiEndpoint` / `MapBffApiEndpoint` enforce `X-CSRF: 1` and session presence — nothing else. ([docs.duendesoftware.com/bff](https://docs.duendesoftware.com/bff/), [Duende blog Mar 2025](https://duendesoftware.com/blog/20250325-understanding-antiforgery-in-aspnetcore))
-
-### Attack class 1 — `X-CSRF: 1` is not user-bound, so cross-role replay succeeds same-origin
-
-When a single BFF serves `/admin/*` and `/user/*` partitions, the antiforgery primitive cannot distinguish role-A from role-B. Any same-origin script that can land an XHR with `X-CSRF: 1` and the victim's session cookie reaches admin endpoints if the victim has the admin role. Stock ASP.NET Core antiforgery (which binds the token to `HttpContext.User.Identity.Name` and rejects on identity change) does the right thing here; Duende BFF does not. ([docs.duendesoftware.com/bff/fundamentals/options](https://docs.duendesoftware.com/bff/fundamentals/options/))
-
-**Payload shape:** from a logged-in low-priv session, `fetch('/bff/admin/users/delete?id=42', {credentials:'include', headers:{'X-CSRF':'1'}})` — succeeds if the victim's session happens to hold the admin role and the attacker can land any same-origin script (self-XSS, subdomain-takeover JS, dependency-confusion).
-
-### Attack class 2 — SignalR/WebSocket carve-out (the `/negotiate` shortcut)
-
-Browser WebSockets cannot send custom headers, so `X-CSRF: 1` cannot be enforced on the upgrade. Developers routinely work around this by **excluding SignalR hub paths from BFF antiforgery** (`MapHub<X>().DisableAntiforgery()` or registering them as non-BFF endpoints). Once excluded, any same-site origin (including a takenover sibling subdomain or a stored-XSS page) can open the WS with the ambient session cookie → CSRF-over-WebSocket to invoke hub methods that mutate state.
-
-**Payload shape:** cross-origin page opens `new WebSocket("wss://bff.example.com/hubs/admin")` — browser sends session cookie, no `X-CSRF` required, attacker invokes `DeleteUser(id)` via standard SignalR JSON frame. ([DuendeArchive/Support#972](https://github.com/DuendeArchive/Support/issues/972), [learn.microsoft.com/aspnet/core/signalr/security](https://learn.microsoft.com/en-us/aspnet/core/signalr/security))
-
-### Attack class 3 — Cookie-domain wildcarding turns subdomain takeover into session fixation
-
-BFF session cookies default to host-only, but developers commonly override with `options.Cookie.Domain = ".example.com"` to share login across `app.example.com` and `admin.example.com`. This drops the `__Host-` prefix protection. Take over `legacy.example.com` (CNAME to deprovisioned Heroku/S3) → set `Set-Cookie: .AspNetCore.Cookies=<attacker_session>; Domain=.example.com` → victim hits `app.example.com` carrying attacker's session = session-fixation ATO. ([nestenius.se BFF cookie hardening](https://nestenius.se/net/bff-in-asp-net-core-3-the-bff-pattern-explained/))
-
-### Evidence strength
-
-No Duende.BFF-direct CVE exists as of 2026-05. The three classes above are **design-level / documented behaviour** that becomes a live finding when paired with a co-resident primitive (same-origin script execution, SignalR carve-out, or subdomain takeover). Report severity should lean on the chain's business impact rather than CVE citation. Adjacent confirmed CVEs in the Duende ecosystem: CVE-2025-26620 (`Duende.AccessTokenManagement` race), CVE-2024-51987 (`Duende.AccessTokenManagement.OpenIdConnect` incorrect-token-after-refresh), CVE-2024-39694 (`Duende.IdentityServer` open redirect). ([Duende advisories on GitHub](https://github.com/advisories?query=duende))
-
-### Hunting checklist
-
-1. `curl https://target/bff/user -H 'X-CSRF: 1' -b '<session>'` — dumps the full claim set including internal IDs, role names, tenant IDs (info disclosure on its own).
-2. Inspect `Set-Cookie` on `/bff/login` callback — flag `Domain=` attribute (vs `__Host-` prefix); flag missing `Secure`/`HttpOnly`.
-3. From a low-priv session, replay admin-partition POSTs with `X-CSRF: 1` to confirm no per-role token binding.
-4. Enumerate SignalR/WS hubs (`/hubs/*`, `/signalr/*`) — open without `X-CSRF`; if 101 Switching Protocols, CSWSH-style attacks viable.
-5. Subdomain inventory + DNS-takeover scan for any `*.example.com` if BFF cookie has `Domain=.example.com`.
-
----
+A static custom header can be a valid CSRF defense when cross-origin callers cannot set it without an approved preflight. It is not intended to authorize roles. A same-origin XSS running with an administrator's session is not proof of a separate role-token CSRF flaw; test low-privilege authorization using that low-privilege session. WebSocket handshake success alone is also insufficient: verify origin restrictions, authentication, hub/method authorization and a harmless operation. Cookie-domain injection is not automatically account takeover; establish the session behavior and attacker capabilities. Do not claim product CVEs or universal flaws from these hypotheses.
 
 ## Related Skills & Chains
 
@@ -403,6 +352,8 @@ No Duende.BFF-direct CVE exists as of 2026-05. The three classes above are **des
 - You need the recon, exploitation, or validation workflow described below — executed strictly inside the approved scope.
 
 ## Limitations
+
+- Historical report counts, payouts and case attributions are upstream claims, not independently verified evidence. Never infer severity from payout or a missing header alone.
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
 - Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.

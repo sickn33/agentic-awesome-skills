@@ -32,6 +32,8 @@ Use this skill when:
 
 ## Prerequisites
 
+Confirm account/region/repository and image digest before pushing, publishing, granting cross-account access or enabling deletion policies. Preview cleanup candidates and preserve deployment/rollback digests. ACR retention and geo-replication require a supported SKU (the Standard setup above does not enable every later feature). Google cleanup policy files require the current CLI schema; validate the illustrative object before use. The Harbor archive/flags and Docker Content Trust are historical examples, not universal current signing instructions. TLS alone does not authorize registry clients: configure authentication/access controls before network exposure, and do not run both same-name registry examples simultaneously.
+
 - Docker or Podman installed
 - Cloud CLI tools (AWS CLI, az, gcloud) for respective registries
 - Appropriate IAM permissions
@@ -184,9 +186,8 @@ az acr show --name myregistry --query loginServer -o tsv
 az acr login --name myregistry
 
 # Login with service principal
-docker login myregistry.azurecr.io \
-  -u $SP_APP_ID \
-  -p $SP_PASSWORD
+printf '%s' "$SP_PASSWORD" | docker login myregistry.azurecr.io \
+  -u "$SP_APP_ID" --password-stdin
 
 # Get access token
 az acr login --name myregistry --expose-token
@@ -321,7 +322,7 @@ Configure in GitHub:
 
 ```bash
 # Run registry
-docker run -d -p 5000:5000 \
+docker run -d -p 127.0.0.1:5000:5000 \
   --name registry \
   -v registry-data:/var/lib/registry \
   registry:2
@@ -365,11 +366,9 @@ aws ecr describe-image-scan-findings \
   --repository-name myapp \
   --image-id imageTag=latest
 
-# ACR - Scan with Defender
-az acr task create \
-  --registry myregistry \
-  --name scan-images \
-  --cmd "mcr.microsoft.com/azure-cli az acr run-scan"
+# ACR: enable/configure Microsoft Defender for Containers/registries through
+# the supported subscription workflow, then inspect findings; there is no
+# generic `az acr run-scan` command.
 ```
 
 ### Image Signing

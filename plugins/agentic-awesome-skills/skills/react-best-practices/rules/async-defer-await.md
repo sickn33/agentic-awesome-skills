@@ -78,3 +78,5 @@ async function updateResource(resourceId: string, userId: string) {
 ```
 
 This optimization is especially valuable when the skipped branch is frequently taken, or when the deferred operation is expensive.
+
+Do not move an authorization check after a resource lookup if this exposes existence, crosses tenant boundaries, or performs protected work. The early-return example is only valid for an already authorized lookup; preserve the application’s nondisclosure policy.

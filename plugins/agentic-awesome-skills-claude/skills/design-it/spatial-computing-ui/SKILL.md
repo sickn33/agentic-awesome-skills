@@ -182,7 +182,7 @@ class SpatialComputingScreen extends StatelessWidget {
                         InkWell(
                           onTap: () {},
                           borderRadius: BorderRadius.circular(50),
-                          hoverColor: Colors.white.withOpacity(0.4), // Reacts to mouse/gaze
+                          hoverColor: Colors.white.withOpacity(0.4), // Pointer hover; does not add gaze tracking
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                             decoration: BoxDecoration(color: Colors.black.withOpacity(0.2), borderRadius: BorderRadius.circular(50)),
@@ -243,7 +243,7 @@ const SpatialComputingScreen = () => {
   );
 };
 ```
-- React Native's core cannot do background blur. You *must* install `@react-native-community/blur`.
+- The example uses @react-native-community/blur; other native integrations are possible. Choose a supported version and test the target platform.
 - Apply shadows to a wrapper `View`, and put the `BlurView` inside it with `borderRadius` and `borderWidth`.
 
 ### Jetpack Compose
@@ -261,7 +261,7 @@ fun SpatialComputingScreen() {
                 .size(600.dp, 400.dp)
                 // Note: Native Android background blur requires Android 12+ (RenderEffect)
                 .graphicsLayer {
-                    renderEffect = RenderEffect.createBlurEffect(40f, 40f, Shader.TileMode.DECAL).asComposeRenderEffect()
+                    // No renderEffect here: it would blur this panel and its text, not the room.
                     clip = true
                     shape = RoundedCornerShape(32.dp)
                 }
@@ -288,7 +288,7 @@ fun SpatialComputingScreen() {
     }
 }
 ```
-- On Android 12+, use `RenderEffect.createBlurEffect` applied to the `graphicsLayer` to blur the UI *behind* the compose element.
+- RenderEffect on this panel filters its own content, not the room behind it. This snippet is a tinted fallback; a backdrop effect requires separately captured background content or a compatible backdrop library.
 - The `border` modifier applies the bright specular rim-light crucial to glass effects.
 
 ## Do's and Don'ts
@@ -298,3 +298,5 @@ fun SpatialComputingScreen() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+These flat-screen examples simulate spatial styling; they do not implement eye tracking, AR anchoring, environmental lighting or 3D windows. Keep content contrast stable over every background and use actual labeled controls for interaction. Native visionOS windows should use the platform window/material APIs.

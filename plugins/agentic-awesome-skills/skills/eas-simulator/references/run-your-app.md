@@ -4,7 +4,7 @@ The remote sim boots blank. You install a **simulator-targeted** build onto the 
 
 In all modes, the session is started the same way and driven through `npx --yes eas-cli@latest simulator:exec`. Replace `dev.example.app` with the app's iOS `bundleIdentifier` (from `app.json` → `ios.bundleIdentifier`), and run from the project directory.
 
-> These sequences are **iOS**. For **Android**: build via `npx --yes eas-cli@latest build --platform android` (or local Gradle), `install` the `.apk` instead of an `.app`, and skip `pod install`. Current simulator session types include a web preview, though Android support is still in development and may lack iOS parity.
+> These sequences are **iOS**. For **Android**: build an installable APK via a reviewed EAS profile with `android.buildType: "apk"` (or local Gradle); the default production AAB is not a directly installable emulator APK. `install` the `.apk` instead of an `.app`, and skip `pod install`. Current simulator session types include a web preview, though Android support is still in development and may lack iOS parity.
 
 ## Starting a session (shared by all modes)
 
@@ -29,13 +29,13 @@ npx --yes eas-cli@latest simulator:start --platform ios --type agent-device --no
 # Poll up to ~16 min; IN_PROGRESS + remoteConfig = live; a terminal status = failed boot (stop + restart).
 for i in $(seq 1 64); do
   S=$(npx --yes eas-cli@latest simulator:get --json --non-interactive 2>/dev/null)
-  echo "$S" | grep -q '"status": *"IN_PROGRESS"' && echo "$S" | grep -q remoteConfig && { echo "live"; break; }
+  echo "$S" | python3 -c 'import json,sys; s=json.load(sys.stdin); sys.exit(0 if s.get("status")=="IN_PROGRESS" and isinstance(s.get("remoteConfig"),dict) and s["remoteConfig"] else 1)' && { echo "live"; break; }
   echo "$S" | grep -qE '"status": *"(STOPPED|ERRORED)"' && { echo "boot failed — stop + restart"; break; }
   sleep 15
 done
 ```
 
-If you need the id explicitly, it's `EAS_SIMULATOR_SESSION_ID` in `.env.eas-simulator`. `start` also prints a `webPreviewUrl` (iOS-only browser preview — surface it per the SKILL.md "watch it live" rules) and a job-run URL. Once live, the session env is in `.env.eas-simulator`, so `simulator:exec` works.
+If you need the id explicitly, it's `EAS_SIMULATOR_SESSION_ID` in `.env.eas-simulator`. `start` also prints a `webPreviewUrl` (browser preview when supported by this session/platform — surface it per the SKILL.md "watch it live" rules) and a job-run URL. If all poll attempts expire, report that readiness was not confirmed and stop the owned session rather than continuing. HTTP/CLI failure is not proof of readiness. Once live, the session env is in `.env.eas-simulator`, so `simulator:exec` works.
 
 ## Targeting a device — iPad, or several at once
 
@@ -53,7 +53,7 @@ The value must be a device the **remote runner** offers (NOT your local Xcode se
 npx --yes eas-cli@latest simulator:exec npx agent-device@latest devices --json
 ```
 
-Available iOS devices today: iPhone 17 / 17 Pro / 17 Pro Max / 17e / Air, and iPad (A16), iPad Air 11"/13" (M4), iPad mini (A17 Pro), iPad Pro 11"/13" (M5).
+Historical example devices (discover the current remote runner list): iPhone 17 / 17 Pro / 17 Pro Max / 17e / Air, and iPad (A16), iPad Air 11"/13" (M4), iPad mini (A17 Pro), iPad Pro 11"/13" (M5).
 
 **Switch devices mid-session:** a session exposes ~16 sims but boots only one at start. Pass the **controller's** global `--device "<name>"` on `open` (and other verbs) to boot + target another; it stays booted alongside the first, so pass `--device` on each verb to say which it hits.
 
@@ -69,7 +69,7 @@ npx --yes eas-cli@latest simulator:exec npx agent-device@latest open <bundleId> 
 
 ## Mode A — Local release build (embedded JS, no Metro)
 
-A Release build bundles the JS into the binary, so it renders without Metro. Good for a quick "run my current code on a cloud device" when a Mac toolchain is available.
+A typical Release build bundles the JS into the binary, so it renders without Metro. Good for a quick "run my current code on a cloud device" when a Mac toolchain is available.
 
 ```bash
 # 1. Generate native project + build a Release simulator .app
@@ -103,7 +103,7 @@ The `install` here **uploads** the (~90MB) `.app` to the remote daemon over the 
 
 ```bash
 npx --yes eas-cli@latest build:list --platform ios --profile <your-sim-profile> --status finished --json | \
-  head -20   # <your-sim-profile> = the profile you find/create in step 1; look for one whose fingerprint matches current source
+  python3 -m json.tool   # inspect complete structured output; do not truncate the JSON document
 ```
 
 If one matches, skip straight to step 3 with its artifact URL.
@@ -146,7 +146,7 @@ The agentic edit-and-see loop: a **dev (Debug) build** loads JS from your **Metr
 
 ### Get a dev-client build (either method needs one)
 
-- **Local (Mac):** `npx expo install expo-dev-client`; `npx expo prebuild --platform ios --clean` (set `ios.bundleIdentifier` first); `( cd ios && LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install )`; then `xcodebuild -workspace ios/<App>.xcworkspace -scheme <App> -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build-debug build` → `ios/build-debug/Build/Products/Debug-iphonesimulator/<App>.app`. A local `.app` → **Method 2 only**.
+- **Local (Mac):** `npx expo install expo-dev-client`; `npx expo prebuild --platform ios` (review native changes first; `--clean` deletes/regenerates native directories and is not a default repair) (set `ios.bundleIdentifier` first); `( cd ios && LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8 pod install )`; then `xcodebuild -workspace ios/<App>.xcworkspace -scheme <App> -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build-debug build` → `ios/build-debug/Build/Products/Debug-iphonesimulator/<App>.app`. A local `.app` → **Method 2 only**.
 - **EAS (no Mac, or to use Method 1):** ensure a profile with `developmentClient: true` + `ios.simulator: true`, then `npx --yes eas-cli@latest build --platform ios --profile <dev-sim> --non-interactive`. Note the **build id** (Method 1's `--build-id`) or the artifact URL. Reuse a fingerprint-matched build to skip the ~15-20 min.
 
 ### Method 1 — launch at session start (recommended)

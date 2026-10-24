@@ -8,7 +8,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/case-init.ps1` | `skills/scripts/case-init.ps1` | `413b895521ce2bfcea09be1af703050f7262b79c` | relocated inside this skill |
+| `scripts/case-init.ps1` | `skills/scripts/case-init.ps1` | `413b895521ce2bfcea09be1af703050f7262b79c` | relocated; local review removes preset-derived authorization and validates scope/output ancestry |
 | `scripts/lib/HostRuntime.ps1` | `skills/scripts/lib/HostRuntime.ps1` | `59dbece870de7ee5c01fa3597ede581a2b3bcf1b` | relocated inside this skill |
 | `scripts/lib/WorkRoot.ps1` | `skills/scripts/lib/WorkRoot.ps1` | `ceadb65cf459367a404c7f343c33e586b25c6975` | relocated inside this skill |
 

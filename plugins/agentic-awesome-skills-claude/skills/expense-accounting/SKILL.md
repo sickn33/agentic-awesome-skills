@@ -36,10 +36,7 @@ payable, TDS and department are payment-stage facts. They do not appear in an ex
 setup. If the user asks for payment tracking, that is a deliberate scope change and the
 fields are added then, not by default.
 
-**The document must be the real document.** Where no formal invoice exists, an internal
-supporting document is defensible only where the transaction would not normally produce
-one - purchases from farmers and individual suppliers, wage sheets, rent agreements and
-rent records. The absence of an invoice does **not** automatically justify raising a
+**The document must be the real document.** Where no formal invoice exists, the adequacy of an internal supporting document depends on the jurisdiction, transaction and reviewer decision; farmer purchases, wages or rent are examples to investigate, not blanket exemptions. The absence of an invoice does **not** automatically justify raising a
 purchase "Kharche/Kharpai". `Document Type`, `Internal Support Justified` and
 `Justification` exist to hold that decision, and a reviewer holds it, not this skill. No
 label in the `Document Type` list makes any document legally sufficient.
@@ -154,7 +151,7 @@ Build an already requested artifact without asking again. For advice-only reques
 
 **Recommended approach:** One expense row per bill or valid supporting document, carrying the expense nature, document information, applicable tax information, ledger account and approval/review status on the same row.
 
-**Why this one:** An expense is only auditable if the document behind it and the tax treatment on it travel together. Splitting them into two registers is what causes the mismatch at year end.
+**Why this one:** Keeping the document and tax treatment linked makes reconciliation easier. Separate linked registers can also be auditable; auditability depends on controls and evidence.
 
 **Workflow:** Nature identified → Supporting document recorded → Payee verified → Tax treatment recorded → Ledger account assigned → Approved/reviewed → Entry verified
 
@@ -232,7 +229,7 @@ CREATE TABLE expense_accounting (
 );
 ```
 
-`created_at`, `updated_at` and the primary key are technical metadata, not business fields.
+`created_at`, `updated_at` and the primary key are technical metadata, not business fields. `DEFAULT NOW()` sets insert-time values only; application logic or a trigger must maintain `updated_at`. State a currency code for the register, or add currency per row before combining currencies. Two decimal places and the example rounding are illustrative, not universal tax rules.
 No `FOREIGN KEY` is declared because the target table is not part of this artifact set.
 The month-end review filters on `expense_date` and the review queue filters on
 `entry_verified`; add an index on each column in the target database once the engine and
@@ -323,7 +320,7 @@ created.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Expense Number | `text` | `VARCHAR(255)` | `string` | Text | `EXP-EXAMPLE-001` |
+| 1 | Expense Number | `text` | `VARCHAR(255)` | `string` | Title | `EXP-EXAMPLE-001` |
 | 2 | Expense Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 3 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Professional Fees` |
 | 4 | Payee | `text` | `VARCHAR(255)` | `string` | Text | `Example Supplier` |
@@ -450,7 +447,7 @@ asked for entries only.
 - Money is `currency`, never `text`. Dates are `date`, never free text.
 - State the money basis in words before you build. An unstated basis is an assumed basis.
 - Record the real document type every time. A payment voucher standing in for a bill is
-  only correct where a bill would not exist anyway.
+  not automatically adequate; obtain a documented reviewer decision under the applicable rules.
 - Set `Internal Support Justified` to `No` and write the reason in `Justification` when you
   cannot explain why internal evidence is acceptable for that expense.
 - Keep `Payee PAN` and `Payee VAT Number` as separate fields. Do not merge them into one
@@ -463,9 +460,7 @@ asked for entries only.
 ## Limitations
 
 - Empty template only. It does not compute tax, post entries, or approve anything.
-- It does not decide whether a Kharche/Kharpai is acceptable in your case. Internal support
-  is only defensible where the transaction does not normally produce a formal invoice, and
-  the tax authority's position is what settles it. No document type here is declared legally
+- It does not decide whether a Kharche/Kharpai is acceptable in your case. The acceptability of internal support depends on applicable rules and evidence reviewed by a qualified person. No document type here is declared legally
   sufficient.
 - It does not determine tax liability, deductibility, or which rate applies.
 - It does not file returns, pay taxes, or give tax, legal or audit advice.
@@ -486,8 +481,7 @@ asked for entries only.
 - Local reads, generation commands, and validation are part of a requested artifact build.
   External writes, messages, provisioning, and publication require authorization for that
   action and target; existing explicit authorization does not need to be repeated.
-- If the user pastes real employee or supplier data, generate the template and tell them to
-  delete the pasted data from the conversation.
+- If the user pastes real employee or supplier data, avoid repeating it, use synthetic placeholders, and explain available conversation-retention controls without promising deletion from backups or logs.
 - Expense approvals and any tax treatment decision need a qualified human reviewer before
   anything is acted on.
 

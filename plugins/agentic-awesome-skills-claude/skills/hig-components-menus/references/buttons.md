@@ -1,10 +1,11 @@
 ---
 title: "Buttons | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/buttons
+---
 
 # Buttons
 
-A button initiates an instantaneous action.
+A button initiates an action; asynchronous work needs progress, failure and completion feedback.
 
 ![A stylized representation of two horizontally aligned buttons. The image is tinted red to subtly reflect the red in the original six-color Apple logo.](https://docs-assets.developer.apple.com/published/15781cd4e57f0e78b7a388a3fa009fa8/components-buttons-intro%402x.png)
 
@@ -25,7 +26,7 @@ There are also many button-like components that have distinct appearances and be
 
 When buttons are instantly recognizable and easy to understand, an app tends to feel intuitive and well designed.
 
-**Make buttons easy for people to use.** It’s essential to include enough space around a button so that people can visually distinguish it from surrounding components and content. Giving a button enough space is also critical for helping people select or activate it, regardless of the method of input they use. As a general rule, a button needs a hit region of at least 44x44 pt — in visionOS, 60x60 pt — to ensure that people can select it easily, whether they use a fingertip, a pointer, their eyes, or a remote.
+**Make buttons easy for people to use.** It’s essential to include enough space around a button so that people can visually distinguish it from surrounding components and content. Giving a button enough space is also critical for helping people select or activate it, regardless of the method of input they use. Use the target platform’s hit-region guidance: 44×44 pt is a common touch target and visionOS commonly calls for a 60×60 pt interaction region. These are not universal rendered button sizes for macOS, pointer or remote controls; test spacing and all supported inputs.
 
 **Always include a press state for a custom button.** Without a press state, a button can feel unresponsive, making people wonder if it’s accepting their input.
 
@@ -53,7 +54,7 @@ In macOS and visionOS, the system displays a tooltip after people hover over a b
 
 ## [Role](https://developer.apple.com/design/human-interface-guidelines/buttons#Role)
 
-A system button can have one of the following roles:
+The following are design meanings; exact role/style/default-action APIs vary by framework and SDK. Do not assume each label is a SwiftUI ButtonRole case:
 
   * **Normal.** No specific meaning.
 
@@ -70,7 +71,7 @@ A button’s role can have additional effects on its appearance. For example, a 
 
 ![An example alert with three system buttons, labeled Primary, Destructive, and Cancel. The primary button uses a blue accent color, the destructive button uses text in the system red color, and the cancel button appears as a standard button.](https://docs-assets.developer.apple.com/published/ffa011d457181b94f56257d7d59f71aa/buttons-roles-alert%402x.png)
 
-**Assign the primary role to the button people are most likely to choose.** When a primary button responds to the Return key, it makes it easy for people to quickly confirm their choice. In addition, when the button is in a temporary view — like a [sheet](https://developer.apple.com/design/human-interface-guidelines/sheets), an editable view, or an [alert](https://developer.apple.com/design/human-interface-guidelines/alerts) — assigning it the primary role means that the view can automatically close when people press Return.
+**Assign the primary role to the button people are most likely to choose.** When a primary button responds to the Return key, it makes it easy for people to quickly confirm their choice. In addition, when the button is in a temporary view — like a [sheet](https://developer.apple.com/design/human-interface-guidelines/sheets), an editable view, or an [alert](https://developer.apple.com/design/human-interface-guidelines/alerts) — configure the default keyboard action where supported. A role/style alone does not dismiss an arbitrary view; implement validation, the action and dismissal explicitly.
 
 **Don’t assign the primary role to a button that performs a destructive action, even if that action is the most likely choice.** Because of its visual prominence, people sometimes choose a primary button without reading it first. Help people avoid losing content by assigning the primary role to nondestructive buttons.
 
@@ -144,7 +145,7 @@ An _image button_ appears in a view and displays an image, symbol, or icon. You 
 
 **Use an image button in a view, not in the window frame.** For example, avoid placing an image button in a toolbar or status bar. If you need to use an image as a button in a toolbar, use a toolbar item. See [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars).
 
-**Include about 10 pixels of padding between the edges of the image and the button edges.** An image button’s edges define its clickable area even when they aren’t visible. Including padding ensures that a click registers correctly even if it’s not precisely within the image. In general, avoid including a system-provided border in an image button; for developer guidance, see [`isBordered`](https://developer.apple.com/documentation/AppKit/NSButton/isBordered).
+**Include about 10 points of layout padding (verify the framework’s units and target size) between the edges of the image and the button edges.** An image button’s edges define its clickable area even when they aren’t visible. Including padding ensures that a click registers correctly even if it’s not precisely within the image. In general, avoid including a system-provided border in an image button; for developer guidance, see [`isBordered`](https://developer.apple.com/documentation/AppKit/NSButton/isBordered).
 
 **If you need to include a label, position it below the image button.** For related guidance, see [Labels](https://developer.apple.com/design/human-interface-guidelines/labels).
 
@@ -172,7 +173,7 @@ visionOS buttons use different visual styles to communicate four different inter
 
 Note
 
-In visionOS, buttons don’t support custom hover effects.
+The cited snapshot describes the default hover treatment. Custom hover capabilities depend on the target visionOS SDK; verify supported APIs and prefer system feedback.
 
 In addition to the four states shown above, a button can also reveal a tooltip when people look at it for a brief time. In general, buttons that contain text don’t need to display a tooltip because the button’s descriptive label communicates what it does.
 

@@ -16,11 +16,15 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 Use this skill when you need generates TestNG tests in Java with groups, data providers, parallel execution, XML suite configuration, and listeners. Use when user mentions "TestNG", "@DataProvider", "testng.xml", "groups". Triggers on: "TestNG", "@DataProvider", "testng.xml", "TestNG suite", "parallel tests Java".
 
 
+Examples are separate fragments: supply loginService/dashboard and the project AuthenticationException, import org.testng.asserts.SoftAssert and listener interfaces as needed. The three parallel suite lines are alternatives, not one valid XML document. Maven suite-property/report locations depend on the actual Surefire configuration; inspect pom.xml rather than assuming these commands configure it. Isolate test users/data and per-thread browser/service state before parallel execution, and close only resources created by the test. The listed reference/playbook.md is absent from this catalog copy.
+
 ## Core Patterns
 
 ### Basic Test with Groups
 
 ```java
+package tests;
+
 import org.testng.annotations.*;
 import org.testng.Assert;
 

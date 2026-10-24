@@ -22,7 +22,7 @@ ciphey -t "密文"
 ciphey -f encrypted.txt
 ```
 
-Ciphey 支持：Base64/32/16、Caesar、Vigenere、XOR、AES（弱密钥）、Morse、Binary、Hex、URL encoding、HTML entities、哈希识别等。
+Ciphey 支持：Base64/32/16、Caesar、Vigenere、XOR、若格式/密钥条件受支持才可分析；不代表通用 AES 破解、Morse、Binary、Hex、URL encoding、HTML entities、哈希识别等。
 
 ### CyberChef 使用
 
@@ -161,7 +161,7 @@ xortool-xor -f encrypted -s "known_plaintext"
 | Feistel 结构（左右交换） | DES/Blowfish/TEA |
 | 大数乘法/模幂 | RSA |
 | 椭圆曲线点运算 | ECDSA/ECDH |
-| 固定 64 轮循环 | TEA/XTEA |
+| 通常 32 cycles、每 cycle 两次半轮更新 | TEA/XTEA |
 | 32 轮 + delta 常量 | XTEA |
 
 ---
@@ -185,8 +185,8 @@ xortool-xor -f encrypted -s "known_plaintext"
 
 1. 看长度和字符集
    - 只有 hex 字符 → 可能是 hex 编码或哈希
-   - 末尾有 = → Base64
-   - 三段点分 → JWT
+   - 末尾有 = → 可能 Base64，需验证字符集/解码
+   - 三段点分 → 可能 JWS/JWT，解码不代表签名有效
    - 32/40/64 字符 hex → 哈希（MD5/SHA1/SHA256）
 
 2. 用 Ciphey 自动尝试
@@ -218,3 +218,7 @@ xortool-xor -f encrypted -s "known_plaintext"
 | jwt.io | https://jwt.io/ | JWT 解码/验证 |
 | hashes.com | https://hashes.com/ | 哈希反查 |
 | crackstation | https://crackstation.net/ | 在线哈希破解 |
+
+## Privacy and verification
+
+Never upload real password hashes, tokens, private keys or confidential ciphertext to online lookup/decoder sites without explicit data-sharing authorization. Prefer reviewed offline tools on synthetic or authorized data. Format/length and constants only suggest candidates; hashes are not generally reversible, and no tool guarantees cracking a secure cipher. Validate recovered data against the actual target format and authentication, and use bounded offline search. Stars, support counts and prices above are inherited notes, not current verified rankings.

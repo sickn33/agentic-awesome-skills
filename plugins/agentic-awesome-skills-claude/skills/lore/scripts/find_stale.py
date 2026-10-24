@@ -39,6 +39,7 @@ def get_entries():
         text=True,
         encoding="utf-8",
         errors="replace",
+        timeout=30,
     )
     if r.returncode != 0:
         print(r.stderr.strip(), file=sys.stderr)
@@ -71,12 +72,15 @@ def main():
         if arg.startswith("--days="):
             days = int(arg.split("=", 1)[1])
 
+    if days < 0 or days > 36500:
+        raise ValueError("days must be between 0 and 36500")
     today = date.today()
     cutoff = today - timedelta(days=days)
 
     entries = get_entries()
     stale = []
     pending_review = []
+    undated_or_invalid = []
 
     # Build a quick lookup for chain validation.
     by_id = {e["id"]: e for e in entries}
@@ -111,8 +115,9 @@ def main():
         added = parse_date(e["tags"].get("added"))
         ref_date = last_v or added
 
-        if ref_date is None:
-            continue  # no date info, can't decide
+        if ref_date is None or ref_date > today:
+            undated_or_invalid.append(e)
+            continue
 
         if ref_date < cutoff:
             stale.append(e)
@@ -127,6 +132,7 @@ def main():
                        for target, entries_ in pending_by_chain.items()
                        if target is not None},
             "broken_chains": broken_chains,
+            "undated_or_invalid": undated_or_invalid,
         }
         print(json.dumps(out, indent=2, ensure_ascii=False))
         return
@@ -156,6 +162,8 @@ def main():
             )
             print(f"    [{e['file']}] {e['id']} {e['text']}{chain}")
 
+    if undated_or_invalid:
+        print("Unknown freshness: invalid, absent or future date on " + str(len(undated_or_invalid)) + " entries")
     if broken_chains:
         print()
         print("=== Broken chains (#superseded-by target not found) ===")

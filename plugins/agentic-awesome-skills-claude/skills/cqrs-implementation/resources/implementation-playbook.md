@@ -49,20 +49,21 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 ```python
 from abc import ABC, abstractmethod
+from decimal import Decimal
 from dataclasses import dataclass
 from typing import TypeVar, Generic, Dict, Any, Type
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 # Command base
-@dataclass
+@dataclass(kw_only=True)
 class Command:
     command_id: str = None
     timestamp: datetime = None
 
     def __post_init__(self):
         self.command_id = self.command_id or str(uuid.uuid4())
-        self.timestamp = self.timestamp or datetime.utcnow()
+        self.timestamp = self.timestamp or datetime.now(timezone.utc)
 
 
 # Concrete commands
@@ -78,7 +79,7 @@ class AddOrderItem(Command):
     order_id: str
     product_id: str
     quantity: int
-    price: float
+    price: Decimal
 
 
 @dataclass
@@ -143,8 +144,11 @@ class CreateOrderHandler(CommandHandler[CreateOrder]):
 
 ```python
 from abc import ABC, abstractmethod
+from decimal import Decimal
 from dataclasses import dataclass
-from typing import TypeVar, Generic, List, Optional
+from typing import TypeVar, Generic, List, Optional, Dict, Type, Any
+from datetime import datetime
+T = TypeVar("T")
 
 # Query base
 @dataclass
@@ -180,7 +184,7 @@ class OrderView:
     order_id: str
     customer_id: str
     status: str
-    total_amount: float
+    total_amount: Decimal
     item_count: int
     created_at: datetime
     shipped_at: Optional[datetime] = None
@@ -250,6 +254,8 @@ class GetCustomerOrdersHandler(QueryHandler[GetCustomerOrders, PaginatedResult[O
 
     async def handle(self, query: GetCustomerOrders) -> PaginatedResult[OrderView]:
         async with self.read_db.acquire() as conn:
+            if query.page < 1 or not 1 <= query.page_size <= 100:
+                raise ValueError("Invalid pagination bounds")
             # Build query with optional status filter
             where_clause = "customer_id = $1"
             params = [query.customer_id]
@@ -272,7 +278,7 @@ class GetCustomerOrdersHandler(QueryHandler[GetCustomerOrders, PaginatedResult[O
                        item_count, created_at, shipped_at
                 FROM order_views
                 WHERE {where_clause}
-                ORDER BY created_at DESC
+                ORDER BY created_at DESC, order_id DESC
                 LIMIT ${len(params) + 1} OFFSET ${len(params) + 2}
                 """,
                 *params, query.page_size, offset
@@ -306,7 +312,7 @@ class OrderResponse(BaseModel):
     order_id: str
     customer_id: str
     status: str
-    total_amount: float
+    total_amount: Decimal
     item_count: int
     created_at: datetime
 
@@ -340,7 +346,7 @@ async def add_item(
     order_id: str,
     product_id: str,
     quantity: int,
-    price: float,
+    price: Decimal,
     command_bus: CommandBus = Depends(get_command_bus)
 ):
     command = AddOrderItem(
@@ -394,7 +400,7 @@ async def get_customer_orders(
     return await query_bus.dispatch(query)
 
 
-@app.get("/orders/search")
+@app.get("/order-search")
 async def search_orders(
     q: str,
     sort_by: str = "created_at",
@@ -435,9 +441,8 @@ class ReadModelSynchronizer:
                 try:
                     await projection.apply(event)
                 except Exception as e:
-                    # Log error, possibly retry or skip
-                    logger.error(f"Projection error: {e}")
-                    continue
+                    # Stop before advancing past a failed event. Retry under an explicit policy.
+                    raise RuntimeError("Projection failed; checkpoint retained") from e
 
             await self._save_checkpoint(projection.name, event.global_position)
 
@@ -490,9 +495,9 @@ class ConsistentQueryHandler:
         Execute query, ensuring read model is at expected version.
         Used for read-your-writes consistency.
         """
-        start_time = time.time()
+        start_time = time.monotonic()
 
-        while time.time() - start_time < timeout:
+        while time.monotonic() - start_time < timeout:
             # Check if read model is caught up
             projection_version = await self._get_projection_version(stream_id)
 
@@ -529,7 +534,7 @@ class ConsistentQueryHandler:
 
 ### Don'ts
 
-- **Don't query in commands** - Use only for writes
+- **Do not read stale projections for write invariants** - command handlers may read authoritative state to validate changes
 - **Don't couple read/write schemas** - Independent evolution
 - **Don't over-engineer** - Start simple
 - **Don't ignore consistency SLAs** - Define acceptable lag
@@ -538,3 +543,9 @@ class ConsistentQueryHandler:
 
 - [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)
 - [Microsoft CQRS Guidance](https://docs.microsoft.com/en-us/azure/architecture/patterns/cqrs)
+
+## Integration and failure boundaries
+
+Python 3.10+ is required for kw_only dataclasses. These templates share domain types and require a concrete Order aggregate, Projection interface, bus registration/lifespan setup, database schema and missing checkpoint/query adapters; they are not a complete runnable server. Import asyncio/time for polling adapters. Validate Decimal amounts with currency and positive quantity bounds; derive price and customer identity from trusted server state, not client claims. Authenticate/authorize tenant access on both buses. Search sort keys need an allowlist and a registered handler.
+
+Projection application and checkpoint update must share a transaction or use event-ID deduplication. A crash can replay an event; an exception must never allow a later checkpoint to skip it. Only one owner may advance each projection. Rebuild into a separate model with a fixed replay boundary and atomic switch; do not clear a live model while synchronization is running. Bound read-your-writes waits and return explicit lag/version metadata; do not claim strong consistency from a timeout fallback. Event-store append and outgoing messages need an outbox/atomic protocol, stable command IDs and expected aggregate versions. CQRS can share one database and does not require event sourcing. Test concurrency, duplicate delivery and interrupted rebuilds before deployment.

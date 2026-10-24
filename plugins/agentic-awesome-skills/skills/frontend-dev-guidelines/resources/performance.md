@@ -16,7 +16,7 @@ export const DataDisplay: React.FC<{ items: Item[], searchTerm: string }> = ({
     searchTerm,
 }) => {
     // ❌ AVOID - Runs on every render
-    const filteredItems = items
+    const unoptimizedFilteredItems = items
         .filter(item => item.name.includes(searchTerm))
         .sort((a, b) => a.name.localeCompare(b.name));
 
@@ -131,7 +131,7 @@ export const ExpensiveComponent = React.memo<ExpensiveComponentProps>(
 ```typescript
 import { useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export const SearchComponent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -140,7 +140,7 @@ export const SearchComponent: React.FC = () => {
     const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
 
     // Query uses debounced value
-    const { data } = useSuspenseQuery({
+    const { data = [] } = useQuery({
         queryKey: ['search', debouncedSearchTerm],
         queryFn: () => api.search(debouncedSearchTerm),
         enabled: debouncedSearchTerm.length > 0,
@@ -236,7 +236,7 @@ useEffect(() => {
 }, []);
 ```
 
-**Note**: With TanStack Query, this is handled automatically.
+**Note**: Pass TanStack Query’s queryFn signal to the transport to support cancellation. Stable callbacks only help skip renders when the child is memoized; context/state changes still render it.
 
 ---
 
@@ -258,7 +258,8 @@ export const MyForm: React.FC = () => {
     const email = watch('email');
 
     // Or multiple specific fields
-    const [username, email] = watch(['username', 'email']);
+    // Alternative to the individual bindings above:
+    // const [username, email] = watch(['username', 'email']);
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -404,3 +405,6 @@ const handleExportExcel = async () => {
 - [component-patterns.md](component-patterns.md) - Lazy loading
 - [data-fetching.md](data-fetching.md) - TanStack Query optimization
 - [complete-examples.md](complete-examples.md) - Performance patterns in context
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

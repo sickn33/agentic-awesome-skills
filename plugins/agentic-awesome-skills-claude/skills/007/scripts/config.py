@@ -17,6 +17,7 @@ Usage:
     )
 """
 
+import math
 import json
 import logging
 import re
@@ -53,6 +54,8 @@ SCORE_HISTORY_PATH = DATA_DIR / "score_history.json"
 def ensure_directories() -> None:
     """Create data directories if they do not already exist."""
     for directory in (DATA_DIR, REPORTS_DIR, PLAYBOOKS_DIR):
+        if directory.is_symlink():
+            raise ValueError(f"Refusing symlink output directory: {directory}")
         directory.mkdir(parents=True, exist_ok=True)
 
 
@@ -113,14 +116,14 @@ VERDICT_THRESHOLDS = {
         "min": 90,
         "max": 100,
         "label": "Aprovado",
-        "description": "Pronto para producao",
+        "description": "Indicador heuristico; nao autoriza producao",
         "emoji": "[PASS]",
     },
     "approved_with_caveats": {
         "min": 70,
         "max": 89,
         "label": "Aprovado com Ressalvas",
-        "description": "Pode ir para producao com mitigacoes documentadas",
+        "description": "Revisao humana necessaria; nao autoriza producao",
         "emoji": "[WARN]",
     },
     "partial_block": {
@@ -149,9 +152,11 @@ def get_verdict(score: float) -> dict:
     Returns:
         A dict with keys: min, max, label, description, emoji.
     """
+    if not math.isfinite(score):
+        raise ValueError("Score must be finite")
     score = max(0.0, min(100.0, score))
     for verdict in VERDICT_THRESHOLDS.values():
-        if verdict["min"] <= score <= verdict["max"]:
+        if verdict["min"] <= score < (verdict["max"] + 1):
             return verdict
     # Fallback (should never happen)
     return VERDICT_THRESHOLDS["total_block"]
@@ -414,6 +419,8 @@ def log_audit_event(
     if details:
         event["details"] = details
 
+    if AUDIT_LOG_PATH.is_symlink():
+        raise ValueError("Refusing symlink audit log")
     with open(AUDIT_LOG_PATH, "a", encoding="utf-8") as fh:
         fh.write(json.dumps(event, ensure_ascii=False) + "\n")
 

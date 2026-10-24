@@ -1,8 +1,11 @@
 ---
 title: "Live-viewing apps | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/live-viewing-apps
+---
 
 # Live-viewing apps
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 As you design a live-viewing app, prioritize the content and create fun, fluid interactions that encourage immersion in the live-viewing experience.
 
@@ -77,3 +80,7 @@ If you support digital video recording (DVR) in the cloud, follow these guidelin
 
 [Playing video](https://developer.apple.com/design/human-interface-guidelines/playing-video)
 
+
+## Implementation checks
+
+This page concerns live video/television, not ActivityKit Live Activities. Autoplay, recordings and automatic DVR deletion must respect profile settings, parental controls, content rights and the user’s chosen retention policy. Show buffering, expired entitlement and schedule changes honestly. Preserve an explicit playback choice when changing context and support captions/audio descriptions.

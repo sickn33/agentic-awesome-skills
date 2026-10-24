@@ -48,6 +48,6 @@ An absent builtin property or absent/unsupported `custom_fields` container means
 
 ## Collection bounds and interpretation
 
-The helper accepts 5 MiB inputs, 20 selected lists, 1,000 captured calls, 1,000 total selected-list memberships, 200 nodes and 500 supported outbound text fields. It stops after 10,000 findings rather than producing an unbounded report. Partial pages may still be audited, but coverage is false. Duplicate prospects within one list count as a coverage issue; the same prospect appearing once in two selected lists is valid and checked for both memberships.
+The helper accepts 5 MiB inputs, 20 selected lists, 1,000 captured calls, 1,000 total captured selected-list memberships (including duplicate rows), 200 nodes and 500 supported outbound text fields. It stops after 10,000 findings rather than producing an unbounded report. Partial pages may still be audited, but coverage is false. Duplicate prospects within one list count as a coverage issue; the same prospect appearing once in two selected lists is valid and checked for both memberships.
 
 Do not silently remove duplicate rows, change totals, fill missing values or merge fields from another capture. The capture is not transactional: data may change between calls even when the numbers agree. `all_selected_memberships_captured` only describes internal coverage of the supplied snapshot. It cannot authenticate the file, prove live state or certify campaign readiness.

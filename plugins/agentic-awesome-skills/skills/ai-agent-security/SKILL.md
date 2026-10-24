@@ -22,6 +22,8 @@ metadata:
 
 Protect agentic AI systems from adversarial input, unsafe tool execution, data leakage, and privilege abuse with layered security controls.
 
+These are partial design sketches, not a working security boundary. Regexes/classifiers have false positives and false negatives; prompt text cannot grant permissions. Enforce tenant identity, resource scope and approved actions in the tool service using authenticated server-side context. Input signing authenticates origin, not the safety of signed content. Bind approvals to the exact operation/arguments and recheck immediately before execution. Test failure paths and concurrency before production use.
+
 ## Prerequisites
 
 - Python 3.10+ for guardrail code examples
@@ -116,7 +118,7 @@ def validate_agent_input(user_input: str, max_length: int = 4096) -> ValidationR
     if len(matched) >= 3:
         risk = RiskLevel.CRITICAL
 
-    is_safe = risk in (RiskLevel.LOW, RiskLevel.MEDIUM)
+    is_safe = not matched  # heuristic result only; never authorization
 
     return ValidationResult(
         is_safe=is_safe,
@@ -141,7 +143,7 @@ def input_guard(validator: Callable = validate_agent_input):
         async def wrapper(user_input: str, *args, **kwargs):
             result = validator(user_input)
 
-            if result.risk_level == RiskLevel.CRITICAL:
+            if not result.is_safe:
                 await log_security_event(
                     event="input_blocked",
                     risk=result.risk_level.value,
@@ -151,15 +153,6 @@ def input_guard(validator: Callable = validate_agent_input):
                 raise InputRejectedError(
                     f"Input blocked: matched {result.matched_rules}"
                 )
-
-            if result.risk_level == RiskLevel.HIGH:
-                await log_security_event(
-                    event="input_flagged",
-                    risk=result.risk_level.value,
-                    rules=result.matched_rules,
-                )
-                # Allow through but flag for review
-                kwargs["_security_flags"] = result.matched_rules
 
             return await func(result.sanitized_input, *args, **kwargs)
         return wrapper
@@ -178,7 +171,7 @@ async def handle_user_message(message: str, session_id: str, **kwargs):
 
 ## Tool Execution Sandboxing
 
-Never let an agent execute tools directly on the host. Isolate every tool invocation inside a sandbox.
+Isolate untrusted code in a sandbox appropriate to the threat model. Containers share the host kernel and do not replace tool-service authorization. Do not mount the Docker socket or host credentials; run as a non-root user and restrict mounts and egress. NET_BIND_SERVICE permits low-port binding, not network access.
 
 ### Docker Sandbox Configuration
 
@@ -195,8 +188,6 @@ services:
       - seccomp:seccomp-profile.json
     cap_drop:
       - ALL
-    cap_add:
-      - NET_BIND_SERVICE   # Only if tool needs network
     tmpfs:
       - /tmp:size=64M,noexec,nosuid
     mem_limit: 512m
@@ -205,7 +196,7 @@ services:
     networks:
       - sandbox-net
     environment:
-      - TOOL_TIMEOUT=30
+      - TOOL_TIMEOUT=30 # application must enforce this; env vars alone do nothing
       - MAX_OUTPUT_BYTES=65536
     volumes:
       - type: bind
@@ -231,7 +222,9 @@ echo "deb [signed-by=/usr/share/keyrings/gvisor-archive-keyring.gpg] https://sto
 sudo apt-get update && sudo apt-get install -y runsc
 
 # Configure Docker to use gVisor
-cat <<'EOF' | sudo tee /etc/docker/daemon.json
+# Illustrative fragment only: merge into a backed-up daemon.json, validate,
+# and schedule the disruptive Docker restart. Do not overwrite existing settings.
+cat <<'EOF' > runsc-daemon-fragment.json
 {
   "runtimes": {
     "runsc": {
@@ -247,7 +240,7 @@ EOF
 sudo systemctl restart docker
 
 # Run agent sandbox with gVisor
-docker run --runtime=runsc --rm \
+docker run --runtime=runsc --rm --network=none --cap-drop=ALL --security-opt=no-new-privileges --user=65534:65534 \
   --read-only \
   --memory=512m \
   --cpus=0.5 \
@@ -256,7 +249,9 @@ docker run --runtime=runsc --rm \
   python /tools/execute.py --tool="$TOOL_NAME" --args="$TOOL_ARGS"
 ```
 
-### Tool Allowlist Enforcement
+### Tool Allowlist Sketch (Incomplete)
+
+This sketch fails closed for approval-gated operations but is not a production gatekeeper. Replace cross-argument regex checks with tool-specific schemas: resolve paths under an OS-enforced root (including symlinks), use read-only scoped DB credentials and parameterized query APIs, and parse/resolve URLs with redirect/DNS/IP egress enforcement. A Python import denylist is not a sandbox. Counters need atomic tenant/session-scoped storage; this object alone is neither concurrent-safe nor tenant isolation.
 
 ```python
 from dataclasses import dataclass, field
@@ -329,9 +324,15 @@ class ToolGatekeeper:
 
         # Validate argument types
         for arg_name, expected_type in policy.allowed_args.items():
-            if arg_name in args and not isinstance(args[arg_name], expected_type):
+            if arg_name not in args or not isinstance(args[arg_name], expected_type):
                 return False
 
+        if set(args) != set(policy.allowed_args):
+            return False
+        if policy.requires_approval:
+            return False  # until an authenticated, argument-bound approval service is integrated
+
+        # Pattern checks are heuristics, not path/SQL/URL/code authorization.
         # Check patterns against all string arguments
         for arg_value in args.values():
             if not isinstance(arg_value, str):

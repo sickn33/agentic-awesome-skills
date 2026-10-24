@@ -1,8 +1,11 @@
 ---
 title: "Watch faces | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/watch-faces
+---
 
 # Watch faces
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 A watch face is a view that people choose as their primary view in watchOS.
 
@@ -38,3 +41,7 @@ You can also configure a watch face to share from within your app, on your websi
 
 [Sharing an Apple Watch face](https://developer.apple.com/documentation/ClockKit/sharing-an-apple-watch-face) — ClockKit
 
+
+## Scope of face sharing
+
+Sharing a configuration for an existing Apple watch face is different from shipping an arbitrary third-party face renderer. Historical Series 3/4 examples above are not a current hardware support matrix. Check the actual watchOS version, face availability, complication families and sharing API errors on supported target devices; avoid promising automatic app installation or lossless configuration across models.

@@ -133,9 +133,9 @@ CREATE TABLE policy_acknowledgement (
   policy_version VARCHAR(255),
   sent_date DATE NOT NULL,
   due_date DATE NOT NULL,
-  acknowledged_date DATE NOT NULL,
+  acknowledged_date DATE,
   acknowledged BOOLEAN NOT NULL,
-  days_overdue NUMERIC NOT NULL,
+  days_overdue INTEGER NOT NULL CHECK (days_overdue >= 0),
   reminder_sent BOOLEAN NOT NULL,
   status VARCHAR(100) NOT NULL,
   acknowledgement_id SERIAL PRIMARY KEY,
@@ -159,9 +159,9 @@ CREATE INDEX idx_policy_acknowledgement_status ON policy_acknowledgement (status
       "Policy Version": { "type": "string" },
       "Sent Date": { "type": "string", "format": "date" },
       "Due Date": { "type": "string", "format": "date" },
-      "Acknowledged Date": { "type": "string", "format": "date" },
+      "Acknowledged Date": { "type": ["string", "null"], "format": "date" },
       "Acknowledged": { "type": "boolean" },
-      "Days Overdue": { "type": "number" },
+      "Days Overdue": { "type": "integer", "minimum": 0 },
       "Reminder Sent": { "type": "boolean" },
       "Status": { "type": "string" },
       "Acknowledgement ID": { "type": "integer" }
@@ -169,7 +169,8 @@ CREATE INDEX idx_policy_acknowledgement_status ON policy_acknowledgement (status
   "required": [
       "Sent Date",
       "Due Date",
-      "Acknowledged Date",
+      "Acknowledged",
+      "Reminder Sent",
       "Days Overdue",
       "Status"
   ]
@@ -299,8 +300,8 @@ We have 6 policies and no idea who signed the latest code of conduct.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [People Directory](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/people-directory/SKILL.md) - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
 ## Reusable Prompt
@@ -312,3 +313,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Leave Acknowledged Date blank/null until a verified acknowledgment occurs; align it with the boolean and policy version. Define Days Overdue as max(0, reference_date - due_date), using acknowledgment date after sign-off or the stated as-of date while pending. A checkbox does not prove reading, understanding or a legally binding signature.

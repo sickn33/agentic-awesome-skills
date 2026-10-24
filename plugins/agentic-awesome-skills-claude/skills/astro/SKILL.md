@@ -116,6 +116,8 @@ const { Content } = await post.render();
 <Content />
 ```
 
+The collection examples in Steps 3–4 and RSS use the legacy pre-Astro-5 content API (`src/content/config.ts`, `post.slug`, `post.render()`). Do not combine them with a new project unchanged: select the API for the installed major, migrate to content loaders and `render()` as required, and import `getCollection` in the dynamic page. Tailwind integration setup also depends on its major. See the [Astro 5 migration guide](https://docs.astro.build/en/guides/upgrade-to/v5/).
+
 ### Step 4: Content Collections
 
 Content collections give you type-safe access to Markdown and MDX files:
@@ -230,10 +232,10 @@ Enable SSR for dynamic pages by setting an adapter:
 ```javascript
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 export default defineConfig({
-  output: 'hybrid',  // 'static' | 'server' | 'hybrid'
+  output: 'static',  // Astro 5+: prerender by default, opt routes out below
   adapter: vercel(),
 });
 ```
@@ -264,6 +266,8 @@ export async function GET(context) {
 }
 ```
 
+The subscribe handler is an incomplete application sketch: define `addToNewsletter`, opt this route out of prerendering in static mode, bound and validate JSON/email inputs, handle downstream errors and add consent, abuse and CSRF protections appropriate to the deployment before exposing it.
+
 ### Example 2: API Endpoint (SSR)
 
 ```typescript
@@ -293,11 +297,14 @@ import { useState } from 'react';
 
 export default function SearchBox() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<Array<{ id: string; title: string }>>([]);
 
   async function search(e: React.FormEvent) {
     e.preventDefault();
-    const data = await fetch(`/api/search?q=${query}`).then(r => r.json());
+    const data = await fetch(`/api/search?q=${encodeURIComponent(query)}`).then(r => {
+      if (!r.ok) throw new Error(`Search failed: ${r.status}`);
+      return r.json();
+    });
     setResults(data);
   }
 
@@ -325,15 +332,15 @@ import SearchBox from '../components/SearchBox.tsx';
 - ✅ Use content collections for all Markdown/MDX content — you get type safety and auto-validation
 - ✅ Prefer `client:visible` over `client:load` for below-the-fold components to reduce initial JS
 - ✅ Use `import.meta.env` for environment variables — prefix public vars with `PUBLIC_`
-- ✅ Add `<ViewTransitions />` from `astro:transitions` for smooth page navigation without a full SPA
+- ✅ Add `<ClientRouter />` from `astro:transitions` for smooth page navigation without a full SPA
 - ❌ Don't use `client:load` on every component — this defeats Astro's performance advantage
 - ❌ Don't put secrets in `.astro` frontmatter that gets used in client-facing templates
 - ❌ Don't skip `getStaticPaths` for dynamic routes in static mode — builds will fail
 
 ## Security & Safety Notes
 
-- Frontmatter code in `.astro` files runs server-side only and is never exposed to the browser.
-- Use `import.meta.env.PUBLIC_*` only for non-sensitive values. Private env vars (no `PUBLIC_` prefix) are never sent to the client.
+- Frontmatter executes at build time or on the server, but values interpolated into HTML, props or scripts are exposed to the browser. Keep secrets out of rendered output.
+- Use `import.meta.env.PUBLIC_*` only for non-sensitive values. Private env vars are not automatically exposed to client modules, but interpolating their values into rendered output still leaks them.
 - When using SSR mode, validate all `Astro.request` inputs before database queries or API calls.
 - Sanitize any user-supplied content before rendering with `set:html` — it bypasses auto-escaping.
 

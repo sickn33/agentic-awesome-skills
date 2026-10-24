@@ -1,5 +1,8 @@
 # Sequence Handling with Bio.Seq and Bio.SeqIO
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.Seq provides the `Seq` object for biological sequences with specialized methods, while Bio.SeqIO offers a unified interface for reading, writing, and converting sequence files across multiple formats.
@@ -33,7 +36,7 @@ rna = my_seq.transcribe()
 protein = my_seq.translate()
 
 # Back-transcription (RNA to DNA)
-dna = rna_seq.back_transcribe()
+dna = rna.back_transcribe()
 ```
 
 ### Sequence Methods
@@ -116,10 +119,11 @@ record.id = "new_id"
 record.description = "New description"
 
 # Extract subsequences
-sub_record = record[10:30]  # Slicing preserves annotations
+sub_record = record[10:30]  # Slices sequence, letter annotations and eligible features; review lost/global annotations
 
 # Modify sequence
-record.seq = record.seq.reverse_complement()
+record = record.reverse_complement(id=True, name=True, description=True)
+# Review feature and global annotation semantics; assigning only seq leaves features stale.
 ```
 
 ## Working with Large Files
@@ -182,12 +186,14 @@ with open("reads.fastq") as handle:
 
 ## Compressed Files
 
-Bio.SeqIO automatically handles compressed files:
+Pass an explicit decompression handle for ordinary gzip; SeqIO.parse does not infer gzip from the suffix:
 
 ```python
 # Works with gzip compression
-for record in SeqIO.parse("sequences.fasta.gz", "fasta"):
-    print(record.id)
+import gzip
+with gzip.open("sequences.fasta.gz", "rt") as handle:
+    for record in SeqIO.parse(handle, "fasta"):
+        print(record.id)
 
 # BGZF format for random access
 from Bio import bgzf
@@ -242,8 +248,12 @@ SeqIO.write(long_sequences, "filtered.fasta", "fasta")
 SeqIO.convert("input.gbk", "genbank", "output.fasta", "fasta")
 
 # Multiple format conversion
+records = list(SeqIO.parse("input.fasta", "fasta"))
+for record in records:
+    record.annotations["molecule_type"] = "DNA"  # Only after verifying the actual sequence type.
 for fmt in ["fasta", "genbank", "embl"]:
-    SeqIO.convert("input.fasta", "fasta", f"output.{fmt}", fmt)
+    SeqIO.write(records, f"output.{fmt}", fmt)
+# GenBank/EMBL require molecule_type; FASTA conversion cannot recover absent metadata.
 ```
 
 ### Quality Filtering (FASTQ)

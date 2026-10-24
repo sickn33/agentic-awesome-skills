@@ -1,8 +1,12 @@
+<!-- Modified by AAS: clarified authorization, evidence and runtime boundaries. -->
+
 # Remediation Patterns
 
 Common data quality issue patterns with example remediation workflows. These are illustrative examples for reasoning — not rigid step-by-step procedures. Real incidents often combine multiple patterns or present unique variations. Use these as a starting point, then adapt based on the specific TSA findings and available tools.
 
 ---
+
+External comments/status updates require authorization under the parent safety boundary. Validate proposed SQL and diagnose independently of TSA; reruns/backfills require idempotency, exact range and recovery evidence.
 
 ## Pattern 1: Stale data (freshness alert)
 
@@ -272,7 +276,7 @@ Present the context package to the user and ask how they'd like to proceed. They
 - Assign the alert to a specific person
 - Take a manual remediation action you can help with
 
-**Document on the alert regardless:**
+**Draft the following; write only when authorized for this alert:**
 ```
 createOrUpdateAlertComment(
   alert_id="<alert_uuid>",

@@ -31,22 +31,28 @@ Implement FedRAMP (Federal Risk and Authorization Management Program) requiremen
 - Preparing for a Third-Party Assessment Organization (3PAO) audit
 - Operating a FedRAMP-authorized system and maintaining authorization
 
-## Impact Levels
+## Resolve the Applicable Program First
+
+This is an illustrative Rev5 evidence-planning guide, not a current certification checklist. Record the service boundary, agency customers, selected Rev5 or 20x path, class, rule version and effective date before mapping controls. In the 2026 transition, FedRAMP uses certification and Classes A–D terminology; the timeline permits early adoption before January 2027 mandatory adoption, with area-specific effective dates. Legacy Low/Moderate/High labels below provide historical context only. Do not select a category from a data-type example alone: assess confidentiality, integrity and availability impact with the responsible agency and current rules.
+
+Use the current official baseline and templates, not the illustrative subset below. JAB P-ATO is not a required route for High systems; JAB authorizations transitioned to the single FedRAMP designation. An agency’s authorization to operate remains a separate decision.
+
+## Historical Impact Labels (Illustrative)
 
 ```yaml
 impact_levels:
   low:
-    control_count: ~125
+    baseline: "Resolve current applicable official baseline"
     use_case: "Publicly available federal information"
     examples:
       - Public-facing websites with no sensitive data
       - Open data portals
       - Marketing and informational systems
     data_types: "No PII, no CUI, publicly releasable only"
-    authorization_path: "FedRAMP Tailored (Li-SaaS) or standard Low"
+    path: "Resolve current program/class and eligibility"
 
   moderate:
-    control_count: ~325
+    baseline: "Resolve current applicable official baseline"
     use_case: "Most federal systems, including CUI"
     examples:
       - Email and collaboration platforms
@@ -54,19 +60,18 @@ impact_levels:
       - Financial management systems
       - HR and personnel systems
     data_types: "CUI, PII, law enforcement sensitive (LES)"
-    authorization_path: "Agency or JAB P-ATO"
-    note: "~80% of FedRAMP authorizations are at Moderate"
+    path: "Resolve current program/class and eligibility"
 
   high:
-    control_count: ~425
+    baseline: "Resolve current applicable official baseline"
     use_case: "High-impact federal systems"
     examples:
       - Law enforcement and criminal justice systems
       - Emergency services and public safety
       - Financial systems with significant impact
       - Healthcare systems with PHI
-    data_types: "Classified-adjacent, life-safety, critical infrastructure"
-    authorization_path: "JAB P-ATO required"
+    data_types: "Unclassified high-impact federal information; classified systems require a separate regime"
+    path: "Resolve current program/class and eligibility"
 ```
 
 ## NIST 800-53 Control Families
@@ -129,9 +134,9 @@ control_families:
     key_controls:
       IR-2: "Incident Response Training"
       IR-4: "Incident Handling - implement incident handling capability"
-      IR-6: "Incident Reporting - report incidents to US-CERT"
+      IR-6: "Incident Reporting - follow applicable agency/program communications procedures"
       IR-8: "Incident Response Plan"
-    implementation_notes: "US-CERT reporting within 1 hour for federal incidents"
+    implementation_notes: "Resolve recipient, severity/class and effective rules; maintain timed incident evidence"
 
   MA:
     name: "Maintenance"
@@ -190,9 +195,9 @@ control_families:
       SC-7: "Boundary Protection"
       SC-8: "Transmission Confidentiality and Integrity"
       SC-12: "Cryptographic Key Establishment and Management"
-      SC-13: "Cryptographic Protection - FIPS 140-2 validated"
+      SC-13: "Cryptographic Protection - currently acceptable CMVP-validated"
       SC-28: "Protection of Information at Rest"
-    implementation_notes: "FIPS 140-2 validated modules required"
+    implementation_notes: "currently acceptable CMVP-validated modules required"
 
   SI:
     name: "System and Information Integrity"
@@ -246,6 +251,8 @@ ssp_sections:
     - "Contingency plan"
     - "Configuration management plan"
 ```
+
+The family list is a subset, not a complete Rev5 baseline; in particular, resolve supply-chain (SR) controls and agency-specific privacy requirements from the official control set.
 
 ## POA&M (Plan of Action and Milestones) Tracking
 
@@ -305,6 +312,8 @@ poam_aging_thresholds:
   overdue_escalation: "Reported to authorizing official monthly"
 ```
 
+Treat the sample aging thresholds, CVSS labels and assessment cadence below as historical planning examples. Populate actual deadlines from the adopted rules and agency-approved package; do not infer a full assessment rotation or remediation approval from this sample.
+
 ## Continuous Monitoring (ConMon) Procedures
 
 ```yaml
@@ -358,16 +367,18 @@ continuous_monitoring:
       deliverable: "IR test report with lessons learned"
 ```
 
-## FedRAMP FIPS 140-2 Cryptography Requirements
+## Cryptographic Module Evidence
+
+Identify the exact module certificate, version, operational environment and approved mode in CMVP. FIPS 140-2 certificates moved to historical status in September 2026; consult current transition guidance and record any residual vulnerability/risk with the responsible authority. “FIPS-compatible” or a local mode flag is not validation. The following commands only collect partial local evidence; they do not prove the application uses the validated module for every cryptographic operation. Use only endpoints you administer or are authorized to inspect.
 
 ```bash
 # Verify FIPS mode is enabled on Linux systems
 cat /proc/sys/crypto/fips_enabled
-# Output should be: 1
+# A value of 1 is a local mode indicator, not a validation certificate
 
 # Check OpenSSL FIPS module
 openssl version
-openssl list -providers  # Should show FIPS provider
+openssl list -providers  # Provider availability alone does not show application usage
 
 # AWS: Use FIPS endpoints
 # Example: Use FIPS endpoint for S3
@@ -379,8 +390,7 @@ aws s3 ls --endpoint-url https://s3-fips.us-east-1.amazonaws.com
 # use_fips_endpoint = true
 
 # Verify TLS configuration meets FedRAMP requirements
-openssl s_client -connect your-service.example.com:443 -tls1_2 < /dev/null 2>/dev/null | \
-  grep -E "Protocol|Cipher"
+openssl s_client -connect your-service.example.com:443 -servername your-service.example.com -verify_return_error -verify_hostname your-service.example.com -tls1_2 < /dev/null
 # Must be TLS 1.2 or higher with FIPS-approved cipher suites
 ```
 
@@ -389,54 +399,66 @@ openssl s_client -connect your-service.example.com:443 -tls1_2 < /dev/null 2>/de
 ```yaml
 authorization_checklist:
   pre_authorization:
-    - [ ] Determine impact level (Low, Moderate, High)
-    - [ ] Choose authorization path (Agency ATO or JAB P-ATO)
-    - [ ] Engage FedRAMP PMO for readiness assessment
-    - [ ] Select 3PAO from FedRAMP marketplace
-    - [ ] Complete SSP with all control implementations documented
-    - [ ] Develop required policies and procedures
-    - [ ] Implement all applicable NIST 800-53 controls
-    - [ ] Ensure FIPS 140-2 validated cryptographic modules in use
+    - "Determine impact level (Low, Moderate, High)"
+    - "Resolve current certification path, class and agency ATO requirements"
+    - "Engage FedRAMP PMO for readiness assessment"
+    - "Select 3PAO from FedRAMP marketplace"
+    - "Complete SSP with all control implementations documented"
+    - "Develop required policies and procedures"
+    - "Implement all applicable NIST 800-53 controls"
+    - "Ensure currently acceptable CMVP-validated cryptographic modules in use"
 
   assessment:
-    - [ ] 3PAO conducts readiness assessment (optional but recommended)
-    - [ ] 3PAO conducts full security assessment
-    - [ ] 3PAO delivers Security Assessment Report (SAR)
-    - [ ] Develop POA&M for all findings
-    - [ ] Remediate critical and high findings before authorization
+    - "3PAO conducts readiness assessment (optional but recommended)"
+    - "3PAO conducts full security assessment"
+    - "3PAO delivers Security Assessment Report (SAR)"
+    - "Develop POA&M for all findings"
+    - "Remediate critical and high findings before authorization"
 
   authorization_package:
-    - [ ] System Security Plan (SSP)
-    - [ ] Security Assessment Report (SAR)
-    - [ ] Plan of Action and Milestones (POA&M)
-    - [ ] Continuous Monitoring Plan
-    - [ ] Incident Response Plan
-    - [ ] Contingency Plan
-    - [ ] Configuration Management Plan
-    - [ ] Control Implementation Summary (CIS)
-    - [ ] Interconnection Security Agreements
+    - "System Security Plan (SSP)"
+    - "Security Assessment Report (SAR)"
+    - "Plan of Action and Milestones (POA&M)"
+    - "Continuous Monitoring Plan"
+    - "Incident Response Plan"
+    - "Contingency Plan"
+    - "Configuration Management Plan"
+    - "Control Implementation Summary (CIS)"
+    - "Interconnection Security Agreements"
 
   post_authorization:
-    - [ ] Establish ConMon program with monthly deliverables
-    - [ ] Monthly vulnerability scanning and POA&M updates
-    - [ ] Annual 3PAO assessment of control subset
-    - [ ] Annual penetration testing
-    - [ ] Report significant changes to authorizing official
-    - [ ] Report security incidents to US-CERT within 1 hour
-    - [ ] Maintain authorization by meeting ConMon requirements
+    - "Establish ConMon program with monthly deliverables"
+    - "Monthly vulnerability scanning and POA&M updates"
+    - "Annual 3PAO assessment of control subset"
+    - "Annual penetration testing"
+    - "Report significant changes to authorizing official"
+    - "Report incidents under the applicable current procedure and contract"
+    - "Maintain authorization by meeting ConMon requirements"
 ```
+
+## Worked Evidence Example
+
+For AC-2, identify the IdP tenant and accounts inside the system boundary, name the implementation owner, and link the approved account-lifecycle procedure. Collect a dated configuration export and a staging disable/re-enable test result; record inherited versus provider-owned responsibilities separately. If the test fails, create a POA&M item with the exact gap, affected assets, owner, milestones and applicable due date. A completed spreadsheet row is evidence tracking, not a certification decision.
+
+## Sources and Version Limits
+
+- [2026 transition timeline](https://github.com/FedRAMP/2026/blob/main/content/timeline.md)
+- [Current certification classes](https://marketplace.fedramp.gov/)
+- [JAB transition](https://www.fedramp.gov/archive/2024-08-12-moving-to-one-fedramp-authorization-an-update-on-the-jab-transition/)
+- [FIPS transition guidance](https://help.fedramp.gov/hc/en-us/articles/53386638354843-Q-Will-FedRAMP-provide-guidance-on-the-sunsetting-of-FIPS-140-2-What-do-I-do-if-our-planned-140-3-Module-is-not-yet-approved)
+- [Incident procedure update and contract caveats](https://www.fedramp.gov/notices/0012/)
 
 ## Best Practices
 
 - Start with a FedRAMP Readiness Assessment to identify gaps before the formal 3PAO assessment
 - Use the FedRAMP SSP template exactly as provided to avoid review delays
 - Inherit controls from your IaaS provider (AWS GovCloud, Azure Government) and document the inheritance clearly
-- Implement FIPS 140-2 validated cryptographic modules for all encryption (TLS, at-rest, key management)
+- Implement currently acceptable CMVP-validated cryptographic modules for all encryption (TLS, at-rest, key management)
 - Automate continuous monitoring deliverables to reduce manual effort and human error
 - Maintain POA&M items within aging thresholds; overdue items risk losing authorization
 - Report significant system changes to the authorizing official before implementation
 - Treat the SSP as a living document and update it with every change to the system boundary
-- Use US-CERT reporting procedures and maintain the 1-hour incident notification requirement
+- Resolve current incident recipients and deadlines from the adopted rules and contracts; do not assume one universal one-hour CISA rule
 - Engage the FedRAMP PMO early and often for guidance on the authorization process
 
 ## Limitations

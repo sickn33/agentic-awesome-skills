@@ -43,6 +43,8 @@ of updating an existing file instead of creating a near-duplicate.
 
 ### Step 1: Pick the store
 
+Follow the host/user memory retention policy and authorized store location first; this skill does not authorize unsolicited durable memory writes. Retain current-source pointers and uncertainty when compiling, and do not modify a generated memory index managed by the host.
+
 - **Agent memory** — the per-agent folder your harness already loads (`memory/` with an
   index file such as `MEMORY.md`). This is the default and, for a solo agent, usually the
   only store you need.
@@ -98,7 +100,7 @@ All four are optional and portable; omitting them changes nothing.
 
 ```markdown
 ---
-name: reference_search_api_counts_prs_as_issues
+name: reference-search-api-counts-prs-as-issues
 description: "GitHub's /search/issues endpoint counts pull requests in total_count, so a zero there proves neither issues nor PRs exist — but a non-zero one does not tell you which."
 confidence: high
 provenance: "measured 2026-08-16 while dupe-checking four upstream repos"
@@ -106,15 +108,15 @@ provenance: "measured 2026-08-16 while dupe-checking four upstream repos"
 
 `total_count` from `/search/issues?q=<term>+repo:<owner>/<name>` is the sum of issues and
 pull requests. For a "has anyone submitted this yet?" check that is exactly what you want,
-and the zero is a real absence. To separate the two, add `type:pr` or `type:issue`.
+but zero means no indexed results visible to this query/account at that time, not proof no issue or PR exists. To separate the two, add `type:pr` or `type:issue`.
 
-Related: [[reference_gh_api_ref_serves_default_branch]].
+Related: [[reference-gh-api-ref-serves-default-branch]].
 ```
 
 Then one line in the index:
 
 ```markdown
-- Search API counts PRs as issues → reference_search_api_counts_prs_as_issues.md — a zero is a real absence, a non-zero is ambiguous
+- Search API counts PRs as issues → reference-search-api-counts-prs-as-issues.md — zero is query-scoped, a non-zero needs type filtering
 ```
 
 ### Example 2: Nothing durable came out of the task

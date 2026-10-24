@@ -86,7 +86,7 @@ This offer is contingent upon:
   - [Non-Compete Agreement, if applicable]
   - [IP Assignment Agreement]
 
-## At-Will Employment
+## At-Will Employment [optional US clause; include only after local counsel confirms applicability]
 
 Please note that employment with [Company Name] is at-will. This means that
 either you or the Company may terminate the employment relationship at any time,
@@ -226,9 +226,7 @@ inventions that Employee wishes to exclude from this Agreement.
 
 [NOTE: Enforceability varies by jurisdiction. Consult local counsel.]
 
-6.1 **Non-Competition.** During employment and for [12] months after
-termination, Employee shall not, directly or indirectly, engage in any business
-competitive with Company's business within [Geographic Area].
+6.1 **Non-Competition.** [Omit by default. Counsel must establish whether any restriction is permitted for the specific worker, jurisdiction and date, and draft any lawful scope/consideration/notice terms.]
 
 6.2 **Non-Solicitation of Customers.** During employment and for [12] months
 after termination, Employee shall not solicit any customer of the Company for
@@ -383,7 +381,7 @@ action up to termination.
 
 **PTO Guidelines:**
 - PTO accrues per pay period
-- Maximum accrual: [X] days (use it or lose it after)
+- Maximum accrual/carryover: [counsel-approved terms; statutory leave or earned-pay protections may prohibit forfeiture]
 - Request PTO at least [2] weeks in advance
 - Manager approval required
 - PTO may not be taken during [blackout periods]
@@ -429,7 +427,7 @@ All employees are expected to:
 
 **Monitoring:**
 - Company reserves the right to monitor company systems
-- Employees should have no expectation of privacy on company devices
+- Monitoring scope, notice, lawful basis, access and retention must be specified under applicable privacy/employment rules; no blanket waiver of statutory rights
 
 **Security:**
 - Use strong passwords and enable 2FA
@@ -457,7 +455,7 @@ understand that:
 
 1. I am responsible for reading and understanding its contents
 2. The handbook does not create a contract of employment
-3. Policies may be changed at any time at the company's discretion
+3. Policy changes remain subject to law, contracts, required notice and consultation
 4. Employment is at-will [if applicable]
 
 I agree to abide by the policies and procedures outlined in this handbook.
@@ -491,3 +489,7 @@ Date: _________________________
 - [Department of Labor](https://www.dol.gov/)
 - [EEOC Guidance](https://www.eeoc.gov/)
 - State-specific labor departments
+
+## Draft review boundaries
+
+These examples use US terms (at-will, exempt status, 401(k), state law) and are not universally applicable. Choose country/state, work location, worker classification, collective agreement and effective date first. Do not infer contractor status from a title or replace mandatory leave/wage/termination protections. Confidentiality/IP clauses need exclusions for protected reporting, lawful collective activity, prior inventions and statutory employee rights; a broad template assignment cannot waive all rights. Background checks require applicable notice/consent and discrimination review. Handbook acknowledgments and signatures do not prove enforceability. Resolve conflicting at-will/notice/fixed-term clauses and plan-specific equity forfeiture with counsel. The template has no filing/signature authority; deliver a draft with unresolved clauses highlighted and minimize personal data.

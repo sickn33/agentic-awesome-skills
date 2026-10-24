@@ -41,7 +41,7 @@ for v in resp.json().get("videoResults", []):
 
 Response: `videoResults`, `shortsResults`, `channelResults`, `playlistResults`, `adsResults`, `sponsoredResults`, `searchInformation`, `pagination`.
 
-Per-video result keys (verified live): `videoId`, `title`, `link`, `channel`, `description`, `length`, `views`, `viewsOriginal`, `publishedDate`, `thumbnail`, `positionOnPage`. `channel` is an object — read `.channel.name` and `.channel.link`.
+Per-video result keys (illustrative snapshot; verify current schema): `videoId`, `title`, `link`, `channel`, `description`, `length`, `views`, `viewsOriginal`, `publishedDate`, `thumbnail`, `positionOnPage`. `channel` is an object — read `.channel.name` and `.channel.link`.
 
 ## YouTube Video
 
@@ -84,7 +84,7 @@ resp = requests.get(
 
 Response: `channelInfo`, `featuredVideo`, `sections[]`.
 
-`channelInfo` (verified live): `name`, `handle`, `channelId`, `channelUrl`, `avatar`, `banner`, `description`, `subscribers`, `extractedSubscribers`, `videosCount`, `extractedVideosCount`, `keywords[]`, `availableTabs[]`, `verified`, `websiteUrl`, `rssUrl`, `isFamilySafe`.
+`channelInfo` (illustrative snapshot; verify current schema): `name`, `handle`, `channelId`, `channelUrl`, `avatar`, `banner`, `description`, `subscribers`, `extractedSubscribers`, `videosCount`, `extractedVideosCount`, `keywords[]`, `availableTabs[]`, `verified`, `websiteUrl`, `rssUrl`, `isFamilySafe`.
 
 `sections[]` each have `title` + `items[]` — shape depends on the tab. Iterate generically:
 

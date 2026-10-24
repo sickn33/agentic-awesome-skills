@@ -1,8 +1,11 @@
 ---
 title: "Nearby interactions | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/spatial-interactions
+---
 
-# Nearby interactions
+# Legacy spatial-interactions page: nearby UWB interactions
+
+This is the earlier name of the Nearby Interactions page, not a guide to visionOS hand manipulation. For spatial hand gestures use [Gestures](gestures.md) and for system-mediated eye targeting use [Eyes](eyes.md).
 
 Nearby interactions support on-device experiences that integrate the presence of people and objects in the nearby environment.
 
@@ -10,7 +13,7 @@ Nearby interactions support on-device experiences that integrate the presence of
 
 A great nearby interaction feels intuitive and natural to people, because it builds on their innate awareness of the world around them. For example, a person playing music on their iPhone can continue listening on their HomePod mini when they bring the devices close together, simply by transferring the audio output from their iPhone to the HomePod mini.
 
-Nearby interactions are available on devices that support Ultra Wideband technology (to learn more, see [Ultra Wideband availability](https://support.apple.com/en-us/HT212274)), and rely on the [Nearby Interaction](https://developer.apple.com/documentation/NearbyInteraction) framework. Before participating in nearby interaction experiences, people grant permission for their device to interact while they’re using your app. The Nearby Interaction APIs help you preserve people’s privacy by relying on randomly generated device identifiers that last only as long as the interaction session your app initiates.
+Nearby interactions are available on devices that support Ultra Wideband technology (to learn more, see [Ultra Wideband availability](https://support.apple.com/en-us/HT212274)), and rely on the [Nearby Interaction](https://developer.apple.com/documentation/NearbyInteraction) framework. Before participating in nearby interaction experiences, people grant permission for their device to interact while they’re using your app. Session-scoped discovery tokens help reduce persistent identification; they do not anonymize logged distance, direction or associated account/device data. Exchange tokens through an authenticated channel, obtain appropriate permission, minimize collection and retention, and never treat proximity as identity or authorization.
 
 ## [Best practices](https://developer.apple.com/design/human-interface-guidelines/nearby-interactions#Best-practices)
 
@@ -36,11 +39,11 @@ Nearby interactions are available on devices that support Ultra Wideband technol
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/nearby-interactions#Platform-considerations)
 
- _No additional considerations for iPadOS. Not supported in macOS, tvOS, or visionOS._
+ _Check hardware, framework availability, region and session mode; an OS name alone does not establish Ultra Wideband support. The examples are device- and snapshot-specific._
 
 ### [iOS](https://developer.apple.com/design/human-interface-guidelines/nearby-interactions#iOS)
 
-On iPhone, Nearby Interaction APIs provide a peer device’s distance and direction.
+On supported iPhone/device configurations, distance and direction may be available. Check actual device capabilities and per-update values; direction can be absent.
 
 ### [watchOS](https://developer.apple.com/design/human-interface-guidelines/nearby-interactions#watchOS)
 

@@ -13,7 +13,7 @@ Use this skill when building and managing a carrier network, conducting freight 
 
 ## Role and Context
 
-You are a senior transportation manager with 15+ years managing carrier portfolios ranging from 40 to 200+ active carriers across truckload, LTL, intermodal, and brokerage. You own the full lifecycle: sourcing new carriers, negotiating rates, running RFPs, building routing guides, tracking performance via scorecards, managing contract renewals, and making allocation decisions. You sit between procurement (who owns total logistics spend), operations (who tenders daily freight), finance (who pays invoices), and senior leadership (who sets cost and service targets). Your systems include TMS (transportation management), rate management platforms, carrier onboarding portals, DAT/Greenscreens for market intelligence, and FMCSA SAFER for compliance. You balance cost reduction pressure against service quality, capacity security, and carrier relationship health — because when the market tightens, your carriers' willingness to cover your freight depends on how you treated them when capacity was loose.
+Use a transportation-management perspective; do not claim personal credentials or years of experience. You own the full lifecycle: sourcing new carriers, negotiating rates, running RFPs, building routing guides, tracking performance via scorecards, managing contract renewals, and making allocation decisions. You sit between procurement (who owns total logistics spend), operations (who tenders daily freight), finance (who pays invoices), and senior leadership (who sets cost and service targets). Your systems include TMS (transportation management), rate management platforms, carrier onboarding portals, DAT/Greenscreens for market intelligence, and FMCSA SAFER for compliance. You balance cost reduction pressure against service quality, capacity security, and carrier relationship health — because when the market tightens, your carriers' willingness to cover your freight depends on how you treated them when capacity was loose.
 
 ## Core Knowledge
 
@@ -32,10 +32,10 @@ Every freight rate has components that must be negotiated independently — bund
 Measure what matters. A scorecard that tracks 20 metrics gets ignored; one that tracks 5 gets acted on:
 
 - **On-time delivery (OTD):** Percentage of shipments delivered within the agreed window. Target: ≥95%. Red flag: <90%. Measure pickup and delivery separately — a carrier with 98% on-time pickup and 88% on-time delivery has a linehaul or terminal problem, not a capacity problem.
-- **Tender acceptance rate:** Percentage of electronically tendered loads accepted by the carrier. Target: ≥90% for primary carriers. Red flag: <80%. A carrier that rejects 25% of tenders is consuming your operations team's time re-tendering and forcing spot market exposure. Tender acceptance below 75% on a contract lane means the rate is below market — renegotiate or reallocate.
+- **Tender acceptance rate:** Percentage of electronically tendered loads accepted by the carrier. Target: ≥90% for primary carriers. Red flag: <80%. A carrier that rejects 25% of tenders may be consuming your operations team's time re-tendering and forcing spot market exposure. Tender acceptance below 75% on a contract lane means the rate is below market — renegotiate or reallocate.
 - **Claims ratio:** Dollar value of claims filed divided by total freight spend with the carrier. Target: <0.5% of spend. Red flag: >1.0%. Track claims frequency separately from claims severity — a carrier with one $50K claim is different from one with fifty $1K claims. The latter indicates a systemic handling problem.
 - **Invoice accuracy:** Percentage of invoices matching the contracted rate without manual correction. Target: ≥97%. Red flag: <93%. Chronic overbilling (even small amounts) signals either intentional rate testing or broken billing systems. Either way, it costs you audit labor. Carriers with <90% invoice accuracy should be on corrective action.
-- **Tender-to-pickup time:** Hours between electronic tender acceptance and actual pickup. Target: within 2 hours of requested pickup for FTL. Carriers that accept tenders but consistently pick up late are "soft rejecting" — they accept to hold the load while shopping for better freight.
+- **Pickup timeliness:** Measure actual pickup minus the agreed pickup time separately from tender lead time (acceptance to requested pickup). A two-hour tolerance is an example SLA, not the definition of tender-to-pickup lead time. Carriers that accept tenders but consistently pick up late are "soft rejecting" — they accept to hold the load while shopping for better freight.
 
 ### Portfolio Strategy
 
@@ -43,7 +43,7 @@ Your carrier portfolio is an investment portfolio — diversification manages ri
 
 - **Asset carriers vs. brokers:** Asset carriers own trucks. They provide capacity certainty, consistent service, and direct accountability — but they're less flexible on pricing and may not cover all your lanes. Brokers source capacity from thousands of small carriers. They offer pricing flexibility and lane coverage, but introduce counterparty risk (double-brokering, carrier quality variance, payment chain complexity). Target mix: 60-70% asset, 20-30% broker, 5-15% niche/specialty.
 - **Routing guide structure:** Build a 3-deep routing guide for every lane with >2 loads/week. Primary carrier gets first tender (target: 80%+ acceptance). Secondary gets the fallback (target: 70%+ acceptance on overflow). Tertiary is your price ceiling — often a broker whose rate represents the "do not exceed" for spot procurement. For lanes with <2 loads/week, use a 2-deep guide or a regional broker with broad coverage.
-- **Lane density and carrier concentration:** Award enough volume per carrier per lane to matter to them. A carrier running 2 loads/week on your lane will prioritize you over a shipper giving them 2 loads/month. But don't give one carrier more than 40% of any single lane — a carrier exit or service failure on a concentrated lane is catastrophic. For your top 20 lanes by volume, maintain at least 3 active carriers.
+- **Lane density and carrier concentration:** Award enough volume per carrier per lane to matter to them. A carrier running 2 loads/week on your lane will prioritize you over a shipper giving them 2 loads/month. Set an approved lane-specific concentration limit with tested backup capacity — a carrier exit or service failure on a concentrated lane is catastrophic. For your top 20 lanes by volume, maintain at least 3 active carriers.
 - **Small carrier value:** Carriers with 10-50 trucks often provide better service, more flexible pricing, and stronger relationships than mega-carriers. They answer the phone. Their owner-operators care about your freight. The tradeoff: less technology integration, thinner insurance, and capacity limits during peak. Use small carriers for consistent, mid-volume lanes where relationship quality matters more than surge capacity.
 
 ### RFP Process
@@ -52,7 +52,7 @@ A well-run freight RFP takes 8-12 weeks and touches every active and prospective
 
 - **Pre-RFP:** Analyze 12 months of shipment data. Identify lanes by volume, spend, and current service levels. Flag underperforming lanes and lanes where current rates exceed market benchmarks (DAT, Greenscreens, Chainalytics). Set targets: cost reduction percentage, service level minimums, carrier diversity goals.
 - **RFP design:** Include lane-level detail (origin/destination zip, volume range, required equipment, any special handling), current transit time expectations, accessorial requirements, payment terms, insurance minimums, and your evaluation criteria with weightings. Make carriers bid lane-by-lane — portfolio bids ("we'll give you 5% off everything") hide cross-subsidization.
-- **Bid evaluation:** Don't award on price alone. Weight cost at 40-50%, service history at 25-30%, capacity commitment at 15-20%, and operational fit at 10-15%. A carrier 3% above the lowest bid but with 97% OTD and 95% tender acceptance is cheaper than the lowest bidder with 85% OTD and 70% tender acceptance — the service failures cost more than the rate difference.
+- **Bid evaluation:** Don't award on price alone. Weight cost at 40-50%, service history at 25-30%, capacity commitment at 15-20%, and operational fit at 10-15%. Model expected service-failure costs and uncertainty before claiming a higher rate is cheaper.
 - **Award and implementation:** Award in waves — primary carriers first, then secondary. Give carriers 2-3 weeks to operationalize new lanes before you start tendering. Run a 30-day parallel period where old and new routing guides overlap. Cut over cleanly.
 
 ### Market Intelligence
@@ -67,9 +67,9 @@ Rate cycles are predictable in direction, unpredictable in magnitude:
 
 Every carrier in your portfolio must pass compliance screening before their first load and on a recurring quarterly basis:
 
-- **Operating authority:** Verify active MC (Motor Carrier) or FF (Freight Forwarder) authority via FMCSA SAFER. An "authorized" status that hasn't been updated in 12+ months may indicate a carrier that's technically authorized but operationally inactive. Check the "authorized for" field — a carrier authorized for "property" cannot legally carry household goods.
-- **Insurance minimums:** $750K minimum for general freight (per FMCSA §387.9), $1M for hazmat, $5M for household goods. Require $1M minimum from all carriers regardless of commodity — the FMCSA minimum of $750K doesn't cover a serious accident. Verify insurance through the FMCSA Insurance tab, not just the certificate the carrier provides — certificates can be forged or outdated.
-- **Safety rating:** FMCSA assigns Satisfactory, Conditional, or Unsatisfactory ratings based on compliance reviews. Never use a carrier with an Unsatisfactory rating. Conditional carriers require case-by-case evaluation — understand what the conditions are. Carriers with no rating ("unrated") make up the majority — use their CSA (Compliance, Safety, Accountability) scores instead. Focus on Unsafe Driving, Hours-of-Service, and Vehicle Maintenance BASICs. A carrier in the top 25% percentile (worst) on Unsafe Driving is a liability risk.
+- **Operating authority:** Verify entity identity, applicable authority, insurance and out-of-service status using official FMCSA licensing/insurance records and SAFER. Check each record timestamp and actual operations; an old profile alone does not establish inactive authority. Check the "authorized for" field — a carrier authorized for "property" cannot legally carry household goods.
+- **Insurance minimums:** Determine current requirements by entity, vehicle weight, cargo and authority; do not use a single amount for all freight. FMCSA's table distinguishes non-hazardous property, specific hazardous materials and household goods. The $5M category is not a universal household-goods requirement. Contract limits may exceed statutory minima. Verify current authority/financial filings in the official licensing/insurance system and confirm policy scope/exclusions directly with the insurer through independently verified contacts; a certificate or filing alone does not prove cargo coverage for this load.
+- **Safety rating:** FMCSA assigns Satisfactory, Conditional, or Unsatisfactory ratings based on compliance reviews. Never use a carrier with an Unsatisfactory rating. Conditional carriers require case-by-case evaluation — understand what the conditions are. Carriers with no rating ("unrated") make up the majority — use available SMS data as one due-diligence input, not a substitute safety rating. Focus on Unsafe Driving, Hours-of-Service, and Vehicle Maintenance BASICs. A high available percentile warrants contextual review; missing/publicly unavailable data is not evidence of safety.
 - **Broker bond verification:** If using brokers, verify their $75K surety bond or trust fund is active. A broker whose bond has been revoked or reduced is likely in financial distress. Check the FMCSA Bond/Trust tab. Also verify the broker has contingent cargo insurance — this protects you if the broker's underlying carrier causes a loss and the carrier's insurance is insufficient.
 
 ## Decision Frameworks
@@ -192,3 +192,26 @@ Use this skill when you are **designing or tuning your carrier portfolio, routin
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Calibration and authority
+
+All rates, market-cycle durations, portfolio splits, KPI thresholds and timelines in
+this tree are illustrative planning assumptions, not current market quotes or
+regulatory standards. Validate comparable lanes, equipment, rate inclusions, date,
+sample size and customer contract; forecast uncertainty before awarding freight.
+Use one approved concentration policy across the root and reference examples.
+Normalize each score to the same 0–100 direction (lower claim ratios are better)
+and weights summing to 100%; do not sum percentages with incompatible denominators.
+Tender acceptance problems can reflect notice, equipment, schedules or capacity,
+not only price. Asset ownership does not guarantee available capacity.
+
+Prepare recommendations/drafts only. Awards, volume guarantees, rate changes,
+termination, system updates and external communications need the responsible
+owner's approval. Do not treat third-party complaints or truck/name mismatches
+as proven fraud; investigate identity, leases and disclosed subcontracting.
+Protect commercial bids, W-9/banking data and driver records; verify bank changes
+through an independent trusted channel. Legal remedies depend on contract and law.
+
+Sources: [FMCSA financial requirements](https://www.fmcsa.dot.gov/registration/insurance-filing-requirements),
+[SMS interpretation](https://ai.fmcsa.dot.gov/sms),
+[emergency exemption scope](https://www.fmcsa.dot.gov/regulations/docket-no-fmcsa-2022-0028-clarification-applicability-emergency-exemptions).

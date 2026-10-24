@@ -1,9 +1,9 @@
 ---
 name: skill-creator
-description: To create new CLI skills following Anthropic's official best practices with zero manual configuration. This skill automates brainstorming, template application, validation, and installation processes while maintaining progressive disclosure patterns and writing style standards.
+description: Create and review reusable skill drafts with bundled Python scaffolding, basic frontmatter validation and ZIP packaging helpers. Use for skill authoring and packaging; verify target-host requirements separately.
 metadata:
   aas-category: meta
-  aas-risk: safe
+  aas-risk: critical
   aas-source: community
   aas-tags: '[automation, scaffolding, skill-creation, meta-skill]'
   aas-date-added: '2026-02-27'
@@ -11,6 +11,8 @@ metadata:
 ---
 
 # skill-creator
+
+Modified for the AAS catalog: corrected bundled workflow, validation and packaging safeguards (2026-10-23).
 
 ## Detailed Guide
 

@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-evidence-visibility-pack`；公共或组织场景追加 `public-power-governance-pack`。
+`v5-source-evidence-separation-pack`；公共或组织场景追加 `v5-public-power-institution-pack`。
 
 ## 证据要求
 

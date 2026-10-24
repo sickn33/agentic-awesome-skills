@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Stellar Multi-
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Verification procedure
+
+Record the network passphrase, full account identifier and ledger sequence alongside this register; these placeholders are not valid public keys. Read current signers/weights and operation thresholds from the selected network. Weights/thresholds are bounded integers (0–255), not decimal amounts. Calculate reachable weight for the intended operation and loss/recovery scenarios; a signer count or total weight alone does not prove a safe quorum. Before setting master weight to zero or removing a signer, prove remaining authorized signers can meet the high threshold in a test network and preserve recovery material. An “emergency signer” has no protocol override unless its configured weight satisfies the actual threshold. This register does not authorize signing or changing a real account.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Coordination Record ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `MSIG-001` |
+| 1 | Coordination Record ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `MSIG-001` |
 | 2 | Controlled Account ID | `text` | `VARCHAR(56)` | `string` | Text | `GCTRL...` |
 | 3 | Low Threshold Weight | `number` | `INTEGER` | `number` | Number | `1` |
 | 4 | Medium Threshold Weight | `number` | `INTEGER` | `number` | Number | `2` |

@@ -1,5 +1,8 @@
 # Sequence Alignments with Bio.Align and Bio.AlignIO
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.Align provides tools for pairwise sequence alignment using various algorithms, while Bio.AlignIO handles reading and writing multiple sequence alignment files in various formats.
@@ -180,21 +183,20 @@ seq_record = alignment[0]  # First sequence
 ### Alignment Analysis
 
 ```python
-# Calculate alignment statistics
-from Bio.Align import AlignInfo
-
-summary = AlignInfo.SummaryInfo(alignment)
-
-# Get consensus sequence
-consensus = summary.gap_consensus(threshold=0.7)
-
-# Position-specific scoring matrix (PSSM)
-pssm = summary.pos_specific_score_matrix(consensus)
-
-# Calculate information content
+from collections import Counter
 from Bio import motifs
-motif = motifs.create([record.seq for record in alignment])
-information = motif.counts.information_content()
+# DNA alignment: explicitly exclude gaps and ambiguous bases from this consensus.
+columns = [Counter(base for base in alignment[:, i] if base in "ACGT")
+           for i in range(alignment.get_alignment_length())]
+consensus = "".join(max(c, key=c.get) if c else "N" for c in columns)
+# For a motif, use an ungapped aligned DNA subset and specify background/pseudocounts.
+ungapped = [i for i in range(alignment.get_alignment_length())
+            if all(record.seq[i] in "ACGT" for record in alignment)]
+from Bio.Seq import Seq
+motif = motifs.create([Seq("".join(record.seq[i] for i in ungapped))
+                       for record in alignment])
+information = sum(motif.relative_entropy)
+
 ```
 
 ## Creating Alignments Programmatically
@@ -259,6 +261,8 @@ alignment = MultipleSeqAlignment(sorted_alignment)
 ```python
 def pairwise_identity(seq1, seq2):
     """Calculate percent identity between two sequences."""
+    if len(seq1) != len(seq2):
+        raise ValueError("Aligned sequences must have equal lengths")
     matches = sum(a == b for a, b in zip(seq1, seq2) if a != '-' and b != '-')
     length = sum(1 for a, b in zip(seq1, seq2) if a != '-' and b != '-')
     return matches / length if length > 0 else 0
@@ -275,34 +279,23 @@ for i, record1 in enumerate(alignment):
 ### Clustal Omega (via Command Line)
 
 ```python
-from Bio.Align.Applications import ClustalOmegaCommandline
-
-# Setup command
-clustal_cmd = ClustalOmegaCommandline(
-    infile="sequences.fasta",
-    outfile="alignment.aln",
-    verbose=True,
-    auto=True
-)
-
-# Run alignment
-stdout, stderr = clustal_cmd()
-
-# Read result
+import subprocess
+# Install and select trusted external binaries separately. Explicit argv avoids shell parsing.
+subprocess.run(["clustalo", "-i", "sequences.fasta", "-o", "alignment.aln",
+                "--outfmt=clu"], check=True)
 alignment = AlignIO.read("alignment.aln", "clustal")
 ```
 
-### MUSCLE (via Command Line)
+### MUSCLE (version 5 command line)
 
 ```python
-from Bio.Align.Applications import MuscleCommandline
-
-muscle_cmd = MuscleCommandline(
-    input="sequences.fasta",
-    out="alignment.aln"
-)
-stdout, stderr = muscle_cmd()
+import subprocess
+# Confirm installed MUSCLE major version; v3 used different flags.
+subprocess.run(["muscle", "-align", "sequences.fasta", "-output", "alignment.fasta"], check=True)
 ```
+
+Biopython’s old Bio.Align.Applications wrappers are unavailable in current releases.
+Use the installed executable’s documented arguments and record its version.
 
 ## Best Practices
 

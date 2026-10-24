@@ -164,12 +164,14 @@ search engines never see two URLs for the same page.
 import { SITE_URL } from "@/constants/seo";
 
 export function canonicalUrl(path: string): string {
-  const normalized = path.startsWith("/") ? path : `/${path}`;
-  if (normalized === "/") return SITE_URL; // root → base, no trailing slash
-  const withoutTrailing = normalized.endsWith("/")
-    ? normalized.slice(0, -1)
-    : normalized;
-  return `${SITE_URL}${withoutTrailing}`;
+  if (!path.startsWith('/') || path.startsWith('//') || /[\\?#]/.test(path)) {
+    throw new Error('Expected a local route pathname without query or fragment');
+  }
+  const base = new URL(SITE_URL);
+  const url = new URL(path.replace(/\/{2,}/g, '/'), base);
+  if (url.origin !== base.origin) throw new Error('Unexpected canonical origin');
+  url.pathname = url.pathname === '/' ? '/' : url.pathname.replace(/\/+$/, '');
+  return url.href;
 }
 ```
 
@@ -197,13 +199,17 @@ import type { RouteDescriptor } from "@/types/seo";
 
 export function buildMetadata(route: RouteDescriptor): Metadata {
   const canonical = canonicalUrl(route.path);
-  const ogImageUrl = canonicalUrl(route.ogImage ?? OG_IMAGE_PATH);
+  const image = new URL(route.ogImage ?? OG_IMAGE_PATH, SITE_URL);
+  if (image.protocol !== 'https:') throw new Error('Expected HTTPS image');
+  const ogImageUrl = image.href;
 
   return {
     title: route.title,
     description: route.description,
     alternates: { canonical },
-    openGraph: { images: [ogImageUrl] },
+    openGraph: { url: canonical, title: route.title, description: route.description, images: [ogImageUrl] },
+    twitter: { card: 'summary_large_image', title: route.title, description: route.description, images: [ogImageUrl] },
+    robots: { index: route.indexable !== false, follow: true },
   };
 }
 ```
@@ -286,7 +292,8 @@ A dynamic route reads its entity and returns route-specific metadata. The title 
 import { buildMetadata } from "@/services/seo";
 
 export async function generateMetadata({ params }) {
-  const post = await loadPost(params.slug);
+  const { slug } = await params;
+  const post = await loadPost(slug);
   return buildMetadata({
     path: `/blog/${post.slug}`,
     title: post.title,
@@ -338,26 +345,22 @@ export function sitemapEntries(options: {
       entries.push(e);
     }
   };
-  const today = new Date().toISOString().split("T")[0];
 
   for (const r of PRIMARY_ROUTES)
     add({
       url: canonicalUrl(r.path),
-      lastModified: today,
       changeFrequency: r.changeFrequency,
       priority: r.priority,
     });
   for (const slug of options.blogSlugs)
     add({
       url: canonicalUrl(`/blog/${slug}`),
-      lastModified: today,
       changeFrequency: "monthly",
       priority: 0.7,
     });
   for (const slug of options.projectSlugs)
     add({
       url: canonicalUrl(`/projects/${slug}`),
-      lastModified: today,
       changeFrequency: "monthly",
       priority: 0.8,
     });
@@ -378,7 +381,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
   return entries.map((e) => ({
     url: e.url,
-    lastModified: e.lastModified ? new Date(e.lastModified) : new Date(),
+    lastModified: e.lastModified ? new Date(e.lastModified) : undefined,
     changeFrequency:
       e.changeFrequency as MetadataRoute.Sitemap[0]["changeFrequency"],
     priority: e.priority,
@@ -396,8 +399,7 @@ import { SITE_URL } from "@/constants/seo";
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: "*", allow: "/", disallow: ["/api/", "/_next/", "/admin/"] },
-      { userAgent: "Googlebot", allow: "/" },
+      { userAgent: "*", allow: "/", disallow: ["/api/", "/admin/"] },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
@@ -405,7 +407,7 @@ export default function robots(): MetadataRoute.Robots {
 }
 ```
 
-Always **disallow private surfaces** (`/api/`, `/admin/`, build internals) and **point at the sitemap**.
+Robots rules manage crawling, not privacy or reliable deindexing. Enforce authentication for private surfaces, use crawlable noindex where appropriate, and do not block CSS/JS required to render public pages. Check user-agent-specific groups do not override intended restrictions.
 
 ### 6.3 RSS feed
 
@@ -454,7 +456,7 @@ export function GET(): Response {
 }
 ```
 
-CDATA-wrap titles/descriptions so apostrophes and markup never break the feed.
+Use an XML serializer or escape text/attribute values, including channel metadata, links and GUIDs. Split any CDATA terminator `]]>` in title/description; CDATA wrapping alone is insufficient. RSS pubDate requires an RFC-822-style date, for example new Date(validatedISO).toUTCString(), not the raw ISO string shown in the fragment.
 
 ---
 
@@ -471,7 +473,7 @@ export function structuredData(
   type: SchemaType,
   data: Record<string, unknown>,
 ): JsonLd {
-  return { "@context": "https://schema.org", "@type": type, ...data };
+  return { ...data, "@context": "https://schema.org", "@type": type };
 }
 ```
 
@@ -584,7 +586,8 @@ import {
 } from "@/services/seo/structured-data";
 
 export default async function Page({ params }) {
-  const post = await loadPost(params.slug);
+  const { slug } = await params;
+  const post = await loadPost(slug);
   const url = canonicalUrl(`/blog/${post.slug}`);
   const postLd = blogPostingJsonLd(post, url);
   const crumbLd = breadcrumbListJsonLd([
@@ -596,13 +599,11 @@ export default async function Page({ params }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(postLd) }}
-        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(postLd).replace(/</g, '\\u003c') }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbLd) }}
-        suppressHydrationWarning
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(crumbLd).replace(/</g, '\\u003c') }}
       />
       {/* …page content */}
     </>

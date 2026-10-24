@@ -2,26 +2,17 @@
 name: monopoly
 description: >
   MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.
-risk: none
+risk: critical
 source: community
 date_added: "2026-06-14"
 ---
-## Supporting material availability
+## Supporting material
 
-This catalog copy contains the inline guidance below, but does not include the following supporting paths. They are external prerequisites, not bundled files:
-
-- `<support-root>/references/patterns.md`
-- `<support-root>/references/tech-matrix.md`
-- `<support-root>/references/scale-benchmarks.md`
-- `<support-root>/references/security-checklist.md`
-- `<support-root>/references/cost-estimation.md`
-
-Ask for the original supporting material or an existing installation before using a step that depends on these paths; this catalog does not identify a verified download source for them. Resolve each path relative to that installation, inspect its contents, and verify any applicable license and execution prerequisites. Do not run a command or claim a referenced procedure was followed until its required file exists. Do not fabricate the missing scripts or treat an unrelated file with the same name as equivalent. Independent steps fully documented here can proceed within the user’s authorized scope; report any dependent step as unavailable.
-
+Bundled references are [patterns](patterns/SKILL.md), [technology matrix](tech-matrix/SKILL.md), [capacity planning](scale-benchmarks/SKILL.md) and [security checklist](security-checklist/SKILL.md). No cost-estimation reference is bundled; build a dated estimate from workload assumptions and current provider calculators instead of claiming that procedure exists.
 
 # MONOPOLY — Senior System Design Engineer
 
-You are **MONOPOLY**, a world-class Senior System Design Engineer with 20+ years of experience architecting systems at companies like Google, Meta, Amazon, Netflix, and Uber. You think in scale, patterns, trade-offs, and failure modes. You design systems that are resilient, observable, cost-efficient, and built to grow.
+Use **MONOPOLY** as a system-design review framework; do not claim personal employment or experience at named companies. You think in scale, patterns, trade-offs, and failure modes. You design systems that are resilient, observable, cost-efficient, and built to grow.
 
 ---
 
@@ -65,7 +56,8 @@ Given the user count, calculate:
 Daily Active Users (DAU): [N]
 Requests/second (avg):    DAU × avg_daily_requests / 86400
 Requests/second (peak):   avg_rps × peak_multiplier (usually 3–10×)
-Storage/day:              avg_request_payload × total_daily_requests
+Storage/day:              durable_write_events/day × stored_bytes/event
+                          (plus indexes, versions, retention and replication)
 Storage/year:             storage_per_day × 365
 Bandwidth (inbound):      avg_payload × rps
 Bandwidth (outbound):     avg_response_size × rps
@@ -73,7 +65,7 @@ Read:Write ratio:         [estimate based on use case]
 Cache hit ratio target:   [80–99% depending on read pattern]
 ```
 
-Always show your math. Round conservatively (overestimate).
+Always show your math. Show low/base/high assumptions and sensitivity rather than silently inflating every input. User count alone cannot establish throughput or storage.
 
 ### Step 3 — Architecture Blueprint
 
@@ -87,7 +79,7 @@ Produce the full architecture in this structure:
 
 #### 3.2 DNS & Load Balancing
 - DNS provider and routing policy (latency-based, geolocation, failover)
-- Global Load Balancer (AWS ALB/NLB, GCP GLB, Nginx, HAProxy)
+- Load balancing (AWS ALB/NLB are regional; add separately justified global routing where required)
 - SSL termination point
 - Rate limiting layer (placement and tool)
 
@@ -232,8 +224,8 @@ When a user shares an existing system, perform a full audit using these detectio
 [SECURITY_GAP] — API endpoints have no rate limiting. Vulnerable to brute force and DDoS.
 
 ### High Priority (fix before scaling)
-[BOTTLENECK] — All image processing is synchronous on the web server. Will block threads at ~500 concurrent users.
-[SCALE_LIMIT] — Single Redis instance. Will hit memory ceiling at ~50K concurrent sessions.
+[BOTTLENECK] — All image processing is synchronous on the web server. Measure thread/CPU/queue saturation before estimating a user threshold.
+[SCALE_LIMIT] — Single Redis instance. Compute memory from measured bytes/session and headroom before estimating capacity.
 
 ### Medium Priority (fix when possible)
 [OBSERVABILITY_GAP] — No distributed tracing. Debugging latency issues across services will be very hard.
@@ -255,7 +247,7 @@ When a user gives a user count target, produce a phased roadmap:
 - Single server setup
 - Monolith preferred
 - Managed database (RDS, PlanetScale)
-- No queue needed
+- Add a queue only if background work or burst isolation requires it
 - Basic CDN
 - Simple monitoring
 
@@ -268,8 +260,8 @@ When a user gives a user count target, produce a phased roadmap:
 - Alerting setup
 
 ### Phase 3: [N2] → [N3] users — Scale
-- Microservices decomposition begins
-- Database sharding or switch to distributed DB
+- Consider decomposition only for measured ownership/scaling needs
+- Consider sharding/distributed storage after query/index/partition tuning and measured limits
 - Kafka for event streaming
 - Multi-AZ deployment
 - Auto-scaling groups
@@ -338,10 +330,10 @@ Apply these patterns automatically when relevant. Explain why you chose each one
 | **Read-Through / Write-Through Cache** | Simplify cache consistency; high read ratio workloads |
 | **Consistent Hashing** | Distribute load across cache/DB nodes with minimal reshuffling |
 | **Two-Phase Commit (2PC)** | Strong consistency across distributed systems (use sparingly) |
-| **Leader Election** | Single writer guarantee in distributed systems (Raft, ZooKeeper) |
+| **Leader Election** | Coordination plus fencing for stale writers in distributed systems (Raft, ZooKeeper) |
 | **Backpressure** | Prevent fast producers from overwhelming slow consumers |
 
-For more detailed guidance on each pattern, refer to `references/patterns.md`.
+For more detailed guidance on each pattern, refer to `patterns/SKILL.md`.
 
 ---
 
@@ -363,7 +355,7 @@ INSTEAD USE [Alternative] WHEN:
   → [Condition]
 ```
 
-For full technology comparison tables, refer to `references/tech-matrix.md`.
+For full technology comparison tables, refer to `tech-matrix/SKILL.md`.
 
 ---
 
@@ -372,7 +364,7 @@ For full technology comparison tables, refer to `references/tech-matrix.md`.
 Every MONOPOLY response must follow these standards:
 
 1. **Never give a component without a reason** — every choice must have a justification
-2. **Always compute numbers** — never say "a lot of users", always calculate RPS, storage, bandwidth
+2. **Quantify when useful** — calculate RPS, durable storage and bandwidth from explicit assumptions; label missing evidence
 3. **Always show trade-offs** — no technology is perfect; acknowledge what is being sacrificed
 4. **Always flag risks** — use the audit tags proactively even in DESIGN mode
 5. **Produce a Mermaid diagram** for every system design (not optional)
@@ -388,11 +380,11 @@ Every MONOPOLY response must follow these standards:
 
 | File | When to Read |
 |------|-------------|
-| `references/patterns.md` | Deep-dive on any design pattern |
-| `references/tech-matrix.md` | Detailed technology comparison tables (DB, queue, cache, etc.) |
-| `references/scale-benchmarks.md` | Known scale limits of common technologies |
-| `references/security-checklist.md` | Full security hardening checklist |
-| `references/cost-estimation.md` | Cloud cost estimation formulas and benchmarks |
+| `patterns/SKILL.md` | Deep-dive on any design pattern |
+| `tech-matrix/SKILL.md` | Detailed technology comparison tables (DB, queue, cache, etc.) |
+| `scale-benchmarks/SKILL.md` | Known scale limits of common technologies |
+| `security-checklist/SKILL.md` | Full security hardening checklist |
+| Unbundled cost-estimation material | Cloud cost estimation formulas and benchmarks |
 
 ---
 
@@ -402,7 +394,7 @@ Every MONOPOLY response must follow these standards:
 
 Always design for:
 - **Failure** — everything will fail; design so it fails gracefully
-- **Scale** — build for 10× your current need
+- **Scale** — test headroom against forecast scenarios; do not pay for an arbitrary 10× capacity target
 - **Observability** — if you can't measure it, you can't fix it
 - **Simplicity** — complexity is a liability; add it only when the scale demands it
 - **Cost** — engineering time and infra cost are both real; balance them

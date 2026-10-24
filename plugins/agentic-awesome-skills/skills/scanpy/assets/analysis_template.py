@@ -92,6 +92,8 @@ print("\n" + "=" * 80)
 print("NORMALIZATION")
 print("=" * 80)
 
+# Requires verified raw counts in X. Preserve them before normalization.
+adata.layers['counts'] = adata.X.copy()
 # Normalize to 10,000 counts per cell
 sc.pp.normalize_total(adata, target_sum=1e4)
 
@@ -215,18 +217,10 @@ for cell_type, genes in marker_genes.items():
                    save=f'_{cell_type.replace(" ", "_")}')
 
 # Manual annotation based on marker expression (customize this mapping)
-cluster_to_celltype = {
-    '0': 'CD4 T cells',
-    '1': 'CD14+ Monocytes',
-    '2': 'B cells',
-    '3': 'CD8 T cells',
-    '4': 'NK cells',
-    # Add more mappings based on your marker analysis
-}
+cluster_to_celltype = {}  # Populate only after dataset-specific biological review.
 
 # Apply annotations
-adata.obs['cell_type'] = adata.obs['leiden'].map(cluster_to_celltype)
-adata.obs['cell_type'] = adata.obs['cell_type'].fillna('Unknown')
+adata.obs['cell_type'] = adata.obs['leiden'].astype(str).map(cluster_to_celltype).fillna('Unknown')
 
 # Visualize annotated cell types
 sc.pl.umap(adata, color='cell_type', legend_loc='on data', save='_celltypes')

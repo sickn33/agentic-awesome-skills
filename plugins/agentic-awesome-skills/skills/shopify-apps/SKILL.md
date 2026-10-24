@@ -3,7 +3,7 @@ name: shopify-apps
 description: Expert patterns for Shopify app development including Remix/React
   Router apps, embedded apps with App Bridge, webhook handling, GraphQL Admin
   API, Polaris components, billing, and app extensions.
-risk: safe
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -13,6 +13,12 @@ date_added: 2026-02-27
 Expert patterns for Shopify app development including Remix/React Router apps,
 embedded apps with App Bridge, webhook handling, GraphQL Admin API,
 Polaris components, billing, and app extensions.
+
+<!-- Modified 2026-10-23: deployment and tenant/privacy boundaries; Apache-2.0 retained. -->
+
+## Integration limits
+
+Use the authorized development store/app, minimum scopes and protected-customer-data approvals; accessScopes does not prove protected-data approval. These legacy Remix/2024 API snippets are incomplete and require current generated SDK/template/schema validation. Test billing with explicit test mode and require merchant approval; production deploy/config/scopes/subscriptions and notification sends need task authority. Never log access tokens or customer payloads. Store tenant identity from verified sessions/webhooks and enforce it for every resource operation. No app/runtime was executed in this review.
 
 ## Detailed Guide
 

@@ -2,6 +2,8 @@
 
 This reference covers all common Polars operations with comprehensive examples.
 
+Use `import polars.selectors as cs` for selector examples.
+
 ## Selection Operations
 
 ### Select Columns
@@ -21,7 +23,7 @@ df.select(pl.col("name"), pl.col("age"))
 df.select(pl.col("^sales_.*$"))
 
 # All numeric columns
-df.select(pl.col(pl.NUMERIC_DTYPES))
+df.select(cs.numeric())
 
 # All columns except specific ones
 df.select(pl.all().exclude("id", "timestamp"))
@@ -55,9 +57,9 @@ df.with_columns(
 
 # Multiple operations in parallel
 df.with_columns(
-    pl.col("value") * 10,
-    pl.col("value") * 100,
-    pl.col("value") * 1000,
+    (pl.col("value") * 10).alias("value_x10"),
+    (pl.col("value") * 100).alias("value_x100"),
+    (pl.col("value") * 1000).alias("value_x1000"),
 )
 ```
 
@@ -232,6 +234,11 @@ df.group_by("store_id").agg(
 
 ## Window Functions
 
+Sort explicitly by entity/time before lag, cumulative and rolling calculations.
+`first`/`last` use input order, not chronological extrema. Null and floating NaN
+are distinct; `fill_null` does not replace NaN. Conditional branches are evaluated
+independently, so a when condition does not make an invalid branch safe.
+
 Window functions apply aggregations while preserving the original row count.
 
 ### Basic Window Operations
@@ -259,7 +266,7 @@ df.with_columns(
     dense_rank=pl.col("score").rank(method="dense").over("team"),
 
     # Row number
-    row_num=pl.col("timestamp").sort().rank(method="ordinal").over("user_id")
+    row_num=pl.col("timestamp").rank(method="ordinal").over("user_id")
 )
 ```
 
@@ -276,8 +283,9 @@ df.with_columns(
 **explode:**
 Faster, groups rows together:
 ```python
-df.with_columns(
-    group_mean=pl.col("value").mean().over("category", mapping_strategy="explode")
+df.select(
+    pl.col("category").over("category", mapping_strategy="explode"),
+    pl.col("value").over("category", mapping_strategy="explode")
 )
 ```
 
@@ -294,10 +302,7 @@ df.with_columns(
 **Time-based rolling:**
 ```python
 df.with_columns(
-    rolling_avg=pl.col("value").rolling_mean(
-        window_size="7d",
-        by="date"
-    )
+    rolling_avg=pl.col("value").rolling_mean_by("date", window_size="7d")
 )
 ```
 
@@ -367,7 +372,7 @@ df.sort("value", nulls_last=True)
 **Sort by expression:**
 ```python
 # Sort by computed value
-df.sort(pl.col("first_name").str.len())
+df.sort(pl.col("first_name").str.len_chars())
 
 # Sort by multiple expressions
 df.sort(
@@ -384,19 +389,19 @@ df.sort(
 # Basic conditional
 df.with_columns(
     status=pl.when(pl.col("age") >= 18)
-        .then("adult")
-        .otherwise("minor")
+        .then(pl.lit("adult"))
+        .otherwise(pl.lit("minor"))
 )
 
 # Multiple conditions
 df.with_columns(
     category=pl.when(pl.col("score") >= 90)
-        .then("A")
+        .then(pl.lit("A"))
         .when(pl.col("score") >= 80)
-        .then("B")
+        .then(pl.lit("B"))
         .when(pl.col("score") >= 70)
-        .then("C")
-        .otherwise("F")
+        .then(pl.lit("C"))
+        .otherwise(pl.lit("F"))
 )
 
 # Conditional computation
@@ -481,7 +486,7 @@ df.with_columns(
 # Add duration
 df.with_columns(
     next_week=pl.col("date") + pl.duration(weeks=1),
-    next_month=pl.col("date") + pl.duration(months=1)
+    next_month=pl.col("date").dt.offset_by("1mo")
 )
 
 # Difference between dates
@@ -512,7 +517,7 @@ df.filter(pl.col("date").dt.month().is_in([6, 7, 8]))  # Summer months
 ```python
 # Create list column
 df.with_columns(
-    items_list=pl.col("item1", "item2", "item3").to_list()
+    items_list=pl.concat_list("item1", "item2", "item3")
 )
 
 # List operations
@@ -529,7 +534,7 @@ df.explode("items")
 
 # Filter list elements
 df.with_columns(
-    filtered=pl.col("items").list.eval(pl.element() > 10)
+    filtered=pl.col("items").list.eval(pl.element().filter(pl.element() > 10))
 )
 ```
 

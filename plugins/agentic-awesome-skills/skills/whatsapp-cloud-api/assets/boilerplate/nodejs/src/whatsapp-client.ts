@@ -13,6 +13,8 @@ export class WhatsAppClient {
 
     this.client = axios.create({
       baseURL: `https://graph.facebook.com/${version}`,
+      timeout: 30000,
+      maxRedirects: 0,
       headers: {
         Authorization: `Bearer ${config.token}`,
         'Content-Type': 'application/json',
@@ -37,7 +39,7 @@ export class WhatsAppClient {
     to: string,
     templateName: string,
     languageCode: string,
-    components?: SendMessagePayload['template']
+    components?: NonNullable<SendMessagePayload['template']>['components']
   ): Promise<SendMessageResponse> {
     return this.sendMessage({
       messaging_product: 'whatsapp',
@@ -46,7 +48,7 @@ export class WhatsAppClient {
       template: {
         name: templateName,
         language: { code: languageCode },
-        ...components,
+        ...(components ? { components } : {}),
       },
     });
   }
@@ -161,33 +163,12 @@ export class WhatsAppClient {
     payload: SendMessagePayload,
     maxRetries = 3
   ): Promise<SendMessageResponse> {
-    const nonRetryableCodes = [100, 131026, 131051, 132000, 132001, 132005, 133010];
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        const response = await this.client.post<SendMessageResponse>(
-          `/${this.phoneNumberId}/messages`,
-          payload
-        );
-        return response.data;
-      } catch (error: any) {
-        const errorCode = error.response?.data?.error?.code;
-        const errorMessage = error.response?.data?.error?.message || error.message;
-
-        if (nonRetryableCodes.includes(errorCode)) {
-          throw new Error(`WhatsApp API Error ${errorCode}: ${errorMessage}`);
-        }
-
-        if (attempt < maxRetries) {
-          const delay = Math.pow(2, attempt) * 1000;
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          continue;
-        }
-
-        throw new Error(`WhatsApp API Error after ${maxRetries} retries: ${errorMessage}`);
-      }
+    // A timeout/server error may follow acceptance. Do not retry a non-idempotent send blindly.
+    try {
+      const response = await this.client.post<SendMessageResponse>(`/${this.phoneNumberId}/messages`, payload);
+      return response.data;
+    } catch {
+      throw new Error('WhatsApp send failed or outcome unknown; reconcile before retrying');
     }
-
-    throw new Error('Unexpected: retry loop exited without return or throw');
   }
 }

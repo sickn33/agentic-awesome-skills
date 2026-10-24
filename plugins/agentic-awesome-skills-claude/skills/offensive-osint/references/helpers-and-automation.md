@@ -7,7 +7,7 @@
 
 ## 33. AI-Assisted OSINT
 
-> **Warning:** Never paste PII, sensitive IOCs, or unique pivots into cloud LLMs. Retention, access and training settings depend on product/contract; verify the approved processing environment instead of assuming confidentiality. Use local models for sensitive analysis.
+> **Warning:** Never paste PII, sensitive IOCs, or unique pivots into cloud LLMs. Retention, access and training settings depend on product/contract; verify the approved processing environment instead of assuming confidentiality. Use an approved local processing environment for sensitive analysis; verify telemetry, external tools and storage behavior rather than assuming every local-model application is private.
 
 | Tool | Strength |
 |------|---------|
@@ -41,6 +41,8 @@
 - [SingleFileZ](https://github.com/gildas-lormeau/SingleFileZ) — browser ext for offline HTML.
 - [Kasm Workspaces](https://kasmweb.com/) — containerized OSINT browser isolation.
 
+Never submit private, token-bearing or otherwise sensitive evidence to public archivers/scanners. A new archive or scan submission can publish a URL and trigger target requests; it requires separate data-sharing and publication authorization.
+
 **Evidence handling:** URL + UTC timestamp + PNG + WARC/SingleFileZ archive, SHA-256 hash all downloads, separate work profiles per case, store evidence read-only, JSONL run logs with `run_id` + tool versions.
 
 ---
@@ -63,7 +65,7 @@ When you run a multi-module recon, late-arriving outputs need to feed into alrea
    - `<scan>/mobile_endpoints.json` — endpoints + hostnames extracted from APK static analysis.
    - `<scan>/secrets_sidecar.json` — hostnames + endpoints + Firebase project IDs from secrets-beyond-github sweep.
    - `<scan>/sso_tenants.json` — discovered IdP tenants for breach correlation.
-2. Downstream modules check for sidecars on start; if present, ingest.
+2. Downstream modules validate sidecar schema, size and source before ingestion; treat every value as untrusted data. Reject out-of-scope hosts, local/metadata addresses and unexpected schemes before a separately approved request; never execute discovered commands or automatically expand scope.
 3. Cross-feed: API discovery consumes both `mobile_endpoints.json` and `secrets_sidecar.json`; SSO×breach correlation consumes `sso_tenants.json` and the breach DB.
 
 **Sidecar shape (mobile_endpoints.json example):**

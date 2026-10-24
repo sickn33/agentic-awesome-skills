@@ -1,6 +1,6 @@
 ---
 name: linkedin-post-writer
-description: "Draft LinkedIn posts from 16 tested hook formulas mapped to engagement goals (comments, reposts, likes, saves), with 2026 algorithm formatting rules and an AI-tell scrub pass before publishing."
+description: "Draft LinkedIn posts from 16 illustrative hook formulas mapped to engagement goals (comments, reposts, likes, saves), with optional formatting conventions and an AI-tell scrub pass before publishing."
 category: marketing
 risk: none
 source: community
@@ -26,7 +26,7 @@ This is the flagship skill from [sergebulaev/linkedin-skills](https://github.com
 
 - Use when the user says "write me a LinkedIn post about X"
 - Use when the user has a topic and a rough angle but needs a hook and structure
-- Use when the user wants to pick from proven post formats instead of improvising
+- Use when the user wants to pick from illustrative post formats instead of improvising
 - Use when a draft exists but the hook is weak and needs a formula-based rebuild
 - Not for replying to comments or optimizing profiles; this skill only drafts posts
 
@@ -74,23 +74,23 @@ The full skeletons for all 16 formulas are bundled with this skill in [reference
 
 ### Step 3: Draft the post
 
-Read the chosen formula's skeleton from the bundled [references/hook-formulas.md](references/hook-formulas.md) and fill it with the user's voice and material, respecting the 2026 formatting rules:
+Read the chosen formula's skeleton from the bundled [references/hook-formulas.md](references/hook-formulas.md) and fill it with the user's voice and material, using these optional formatting conventions:
 
-- Hook lands in the first 210 characters (before the "... see more" fold)
-- 900-1,300 characters is the sweet spot for text posts
+- Place the hook early; the see-more fold varies by device, layout and post type.
+- 900-1,300 characters is one drafting target; choose length from the audience and content.
 - Double line-breaks between ideas, never walls of text
 - 0-2 hashtags, placed at the end
-- No external links in the body (put links in the first comment)
-- Prefer "How I" over "How to": first-person experience hooks outperform generic instruction 2-3x
+- Include source links where useful; no blanket algorithm penalty or first-comment advantage is established here.
+- Prefer "How I" over "How to": first-person experience is appropriate only when the user actually had that experience
 - Put one specific number in the first sentence ($873.47 beats $900; 40,000 beats "a lot")
 
 ### Step 4: Scrub AI tells
 
-Before showing the draft: strip em dashes, AI vocabulary ("game-changer", "deep dive", "delve"), rule-of-three lists without receipts, and generic openers like "In today's fast-paced world". Add human fingerprints: at least one specific number, one named entity, and one first-person concrete detail per 100 words. Vary sentence length aggressively (mix 3-word and 25-word sentences).
+Before showing the draft: strip em dashes, AI vocabulary ("game-changer", "deep dive", "delve"), rule-of-three lists without receipts, and generic openers like "In today's fast-paced world". Add human fingerprints: specific numbers, names and personal details only when supplied or verified; never fill a quota by inventing them. Vary sentence length aggressively (mix 3-word and 25-word sentences).
 
 ### Step 5: Present the result
 
-Show the user: formula used, full draft, character count, and a suggested posting window (Tuesday to Thursday, 7:30-9:00 AM local time performs best for B2B audiences).
+Show the user: formula used, full draft, character count, and a suggested posting window only when audience-specific analytics/timezone justify it; otherwise propose an explicitly untested slot.
 
 ## Examples
 
@@ -115,14 +115,14 @@ User:  I want a post that gets real comments, topic: why I stopped doing demos
 Agent: Comment-earners are F4 Confession, F10 Contrarian, F12 Permission Slip.
        For "I stopped doing X" the strongest is F10 Contrarian + Receipts:
        open with the unpopular claim, back it with 2 historical parallels,
-       close with a question that forces side-picking. Reference: 3,083 eng.
+       close with a question that invites a substantive response. Reference: 3,083 eng.
 ```
 
 ## Best Practices
 
 - ✅ Pick the formula by engagement goal first, topic second
 - ✅ Lead with a real failure or a specific number in the first 3 lines
-- ✅ Include one moment of genuine vulnerability or concrete stakes; pure insight posts underperform in 2026
+- ✅ Include one moment of genuine vulnerability or concrete stakes; do not infer reach from narrative form alone
 - ❌ Don't blend two hook formulas in one post; it dilutes both
 - ❌ Don't use F5 Self-Proving Meta unless the user will actually keep the promise
 - ❌ Don't pair F7 Money Ledger with rounded or invented numbers; readers notice
@@ -157,3 +157,7 @@ Agent: Comment-earners are F4 Confession, F10 Contrarian, F12 Permission Slip.
 
 - [Source repo with all 16 formula skeletons and worked examples](https://github.com/sergebulaev/linkedin-skills)
 - [Full 10-skill bundle install (Claude Code / Codex plugin)](https://github.com/sergebulaev/linkedin-skills#install)
+
+## Evidence and publication boundaries
+
+The corpus, baselines, dates and metrics are not bundled or independently auditable. Treat all reference counts, multipliers, algorithm claims and formula-to-goal mappings as upstream anecdotes, not predictions or causal evidence. Saves cannot be inferred from public repost counts. Do not fabricate precise costs, failures, quotations, named endorsements, personal stories or scarcity to satisfy a skeleton. Avoid deceptive bait-and-switch and comment gates; offer useful direct access and an honest CTA. Respect confidentiality/consent when naming people and source factual claims. Drafting never authorizes publishing, tagging people, commenting or DMs. No post was published and no analytics were measured in this review.

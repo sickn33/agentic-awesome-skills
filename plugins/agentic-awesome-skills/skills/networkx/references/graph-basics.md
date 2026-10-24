@@ -234,7 +234,7 @@ H = G.edge_subgraph(edge_subset)
 ### Graph Views
 ```python
 # Reverse view (for directed graphs)
-G_reversed = G.reverse()
+G_reversed = G.reverse(copy=False)  # DiGraph only; default reverse() makes a copy
 
 # Convert between directed/undirected
 G_undirected = G.to_undirected()
@@ -245,7 +245,7 @@ G_directed = G.to_directed()
 
 ### Basic Information
 ```python
-print(nx.info(G))   # Summary of graph structure
+print(G)  # nx.info was removed in NetworkX 3   # Summary of graph structure
 
 # Density (ratio of actual edges to possible edges)
 nx.density(G)

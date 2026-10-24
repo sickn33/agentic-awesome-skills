@@ -157,6 +157,9 @@ public with sharing class MyController {
 
 ### Bulkified Apex Trigger with Handler Pattern
 
+The guard below blocks only nested re-entry, then clears in finally so later batches are not silently skipped. It still needs operation/record-aware idempotency tests for automation re-entry. Do not use a transaction-wide static “already ran” set to skip later 200-record chunks.
+
+
 Apex triggers must be bulkified to handle 200+ records per transaction.
 Use handler pattern for separation of concerns, testability, and
 recursion prevention.
@@ -172,17 +175,18 @@ trigger AccountTrigger on Account (
 // TriggerHandler.cls (base class)
 public virtual class TriggerHandler {
   // Recursion prevention
-  private static Set<String> executedHandlers = new Set<String>();
+  private static Set<String> activeHandlers = new Set<String>();
 
   public void run() {
     String handlerName = String.valueOf(this).split(':')[0];
 
     // Prevent recursion
     String contextKey = handlerName + '_' + Trigger.operationType;
-    if (executedHandlers.contains(contextKey)) {
+    if (activeHandlers.contains(contextKey)) {
       return;
     }
-    executedHandlers.add(contextKey);
+    activeHandlers.add(contextKey);
+    try {
 
     switch on Trigger.operationType {
       when BEFORE_INSERT { this.beforeInsert(); }
@@ -193,6 +197,7 @@ public virtual class TriggerHandler {
       when AFTER_DELETE { this.afterDelete(); }
       when AFTER_UNDELETE { this.afterUndelete(); }
     }
+    } finally { activeHandlers.remove(contextKey); }
   }
 
   // Override in child classes
@@ -237,7 +242,8 @@ public class AccountTriggerHandler extends TriggerHandler {
         contactsToInsert.add(new Contact(
           AccountId = acc.Id,
           LastName = 'Primary Contact',
-          Email = 'contact@' + acc.Website
+          // Do not fabricate a contact email from a website URL; leave Email unset.
+          Description = 'Placeholder contact; verify with the account owner'
         ));
       }
     }
@@ -324,6 +330,8 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
     req.setEndpoint('callout:ExternalCRM/accounts');
     req.setMethod('POST');
     req.setHeader('Content-Type', 'application/json');
+    req.setTimeout(30000);
+    // Receiver must enforce stable per-record/version idempotency before retries.
     req.setBody(JSON.serialize(new Map<String, Object>{
       'salesforceId' => acc.Id,
       'name' => acc.Name,
@@ -334,7 +342,7 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
     HttpResponse res = http.send(req);
 
     if (res.getStatusCode() != 200 && res.getStatusCode() != 201) {
-      throw new CalloutException('Sync failed: ' + res.getBody());
+      throw new CalloutException('Sync failed: HTTP ' + res.getStatusCode());
     }
   }
 
@@ -366,10 +374,8 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
     // Retry only when the operation is idempotent. This example does not implement
     // delayed exponential backoff; production integrations should use a durable,
     // observable retry mechanism.
-    if (retryCount < 3) {
-      // Chain new job for retry
-      System.enqueueJob(new IndustryChangeQueueable(accountIds, retryCount + 1));
-    } else {
+    // Automatic retry is intentionally absent until receiver idempotency and
+    // retryable-error classification are implemented. Persist an observable failure.
       // Create error record for monitoring
       insert new Integration_Error__c(
         Type__c = 'Industry Sync',
@@ -377,7 +383,6 @@ public class IndustryChangeQueueable implements Queueable, Database.AllowsCallou
         Stack_Trace__c = e.getStackTraceString(),
         Record_Ids__c = String.join(new List<Id>(accountIds), ',')
       );
-    }
   }
 }
 
@@ -446,7 +451,7 @@ class SalesforceClient {
     const data = await response.json();
     this.accessToken = data.access_token;
     this.instanceUrl = data.instance_url;
-    this.tokenExpiry = Date.now() + 7200000;  // 2 hours
+    this.tokenExpiry = Date.now() + 300000; // local cache policy only, not a claim about Salesforce session lifetime
   }
 
   async query(soql: string): Promise<any> {
@@ -524,6 +529,9 @@ const accounts = await sf.query(
 
 ### Bulk API 2.0 for Large Data Operations
 
+This client is incomplete: CSV parsing and error/result reconciliation are not supplied. Check every HTTP response before treating the job/upload/close as successful; use a real CSV library and preserve failed/unprocessed row IDs. Timeout is an unknown outcome, not rollback. Reject unexpected fields/objects and pin the trusted instance URL before sending bearer tokens.
+
+
 Use Bulk API 2.0 for operations on 10K+ records. Asynchronous processing
 with job-based workflow. Part of REST API with streamlined interface
 compared to original Bulk API.
@@ -531,7 +539,7 @@ compared to original Bulk API.
 // Node.js - Bulk API 2.0 insert
 class SalesforceBulkClient extends SalesforceClient {
 
-  async bulkInsert(sobject: string, records: object[]): Promise<any> {
+  async bulkInsert(sobject: string, records: Record<string, unknown>[]): Promise<any> {
     await this.authenticate();
 
     // Step 1: Create job
@@ -549,7 +557,8 @@ class SalesforceBulkClient extends SalesforceClient {
 
     } catch (error) {
       // Abort job on error
-      await this.abortJob(job.id);
+      // Record job ID and reconcile status; abortJob is not implemented here and
+      // aborting after upload does not roll back records already processed.
       throw error;
     }
   }
@@ -654,7 +663,7 @@ class SalesforceBulkClient extends SalesforceClient {
     return this.parseCSV(csv);
   }
 
-  private recordsToCSV(records: object[]): string {
+  private recordsToCSV(records: Record<string, unknown>[]): string {
     if (records.length === 0) return '';
 
     const headers = Object.keys(records[0]);
@@ -668,7 +677,7 @@ class SalesforceBulkClient extends SalesforceClient {
   private escapeCSV(value: any): string {
     if (value === null || value === undefined) return '';
     const str = String(value);
-    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    if (str.includes(',') || str.includes('"') || str.includes('\n') || str.includes('\r')) {
       return `"${str.replace(/"/g, '""')}"`;
     }
     return str;
@@ -823,9 +832,14 @@ jobs:
         run: npm install -g @salesforce/cli
 
       - name: Authenticate Dev Hub
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
         run: |
-          echo "${{ secrets.SFDX_AUTH_URL }}" > auth.txt
-          sf org login sfdx-url --sfdx-url-file auth.txt --alias DevHub --set-default-dev-hub
+          umask 077
+          auth_file=$(mktemp)
+          trap 'rm -f "$auth_file"' EXIT
+          printf '%s' "$SFDX_AUTH_URL" > "$auth_file"
+          sf org login sfdx-url --sfdx-url-file "$auth_file" --alias DevHub --set-default-dev-hub
 
       - name: Create Scratch Org
         run: |
@@ -953,9 +967,9 @@ Message: Hardcoded Salesforce ID. Query by DeveloperName or ExternalId instead.
 
 Severity: ERROR
 
-Credentials must use Named Credentials or Custom Metadata
+Authentication data should use Named Credentials/External Credentials or a documented protected managed-package storage design
 
-Message: Hardcoded credentials. Use Named Credentials or Custom Metadata.
+Message: Hardcoded credentials. Prefer Named Credentials/External Credentials; ordinary public Custom Metadata is not a secret store.
 
 ### Unnecessary DOM Manipulation in LWC
 

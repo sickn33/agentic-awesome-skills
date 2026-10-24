@@ -128,8 +128,7 @@ Once the user asks, emit the workbook or the CSV as data only. No preamble, no s
 closing line. Every column comes from the canonical field list, with the exact field
 names, in the same order, every time.
 
-A `.xlsx` is a real file. A CSV is not a workbook: a CSV is UTF-8 with a byte order mark
-so Excel opens the text correctly, plus a note of which columns need a number, date or
+A `.xlsx` is a real file. A CSV is not a workbook: a CSV is UTF-8, with a byte order mark only for an Excel-oriented consumer that requires it, plus a note of which columns need a number, date or
 currency format applied. Create `.xlsx` only when the user asks for a workbook.
 
 #### Column rules
@@ -230,9 +229,7 @@ play. If it is missing or ambiguous, ask which workbook to prepare and stop.
 A helper has no field list of its own, so its input is a module: the Field Reference
 that module already confirmed. Read that section - field names, types, order,
 requiredness, options and calculations - and render exactly that. The list below is
-every module that owns a field list, grouped by the layer its catalog gives it, and it
-is generated from those catalogs and the module files, so it cannot name a module that
-does not exist. `CATALOG.md` is the index to show a user; the module's own
+every module that owns a field list, grouped by the layer its catalog gives it, and is a static reference snapshot that can drift. Verify the selected module exists and read its current confirmed field list; counts here are not schema authority. `CATALOG.md` is the index to show a user; the module's own
 `SKILL.md` holds the field list.
 
 **Layer 1: Foundation** - 6 modules
@@ -426,7 +423,7 @@ does not exist. `CATALOG.md` is the index to show a user; the module's own
 
 - `skills/observability-cloud-planning/SKILL.md` - Cloud and Observability Planning (24 fields)
 
-If the user has not named a module, ask which one before building: a file rendered from
+A directly confirmed field list is sufficient even without a named module. If neither fields nor a module are known, ask for the missing list before building: a file rendered from
 a guess is the guess again, in a format the user did not choose.
 
 ## Select Options
@@ -464,8 +461,7 @@ The dates in my register are sorting alphabetically.
 
 **Fix only** - formatting change, no rebuild:
 
-> Select the leave date column and apply a date format, `YYYY-MM-DD` or the format your
-> business writes. A column still stored as text sorts as text, whatever it looks like.
+> Inspect the cell type first. Formatting a text cell does not convert it to a date. Convert using the confirmed locale/day-month convention on a copy, preserve ambiguous values for review, then apply `YYYY-MM-DD` or the agreed format and verify chronological sorting.
 
 **Documented shape** - a leave register as a header row, no data. The column below is a
 documentation example: emit empty templates unless the user explicitly requests examples.
@@ -491,3 +487,6 @@ See the [Best Practices](references/best-practices.md) reference for the full gu
 
 See the [Security & Safety Notes](references/security-safety-notes.md) reference for the full guidance.
 
+## File fidelity and verification
+
+Use an available workbook-capable tool to create a real XLSX; renaming text does not create one. Reopen the saved file and inspect sheet names, header order, actual cell types, formulas, validation ranges and leading-zero/long-ID preservation before handoff. An empty template can be verified structurally before any business rows are entered. CSV has no workbook formatting or validation; quote delimiters/newlines correctly and specify the import locale and BOM convention. Treat user text beginning with formula-significant characters as literal text in XLSX, and apply the consumer's agreed CSV formula-injection defense without silently changing legitimate data. Do not activate macros, external links or data connections from an input workbook; preserve originals and avoid overwriting them. Artifact links and essential format caveats may accompany the file despite the data-only presentation preference.

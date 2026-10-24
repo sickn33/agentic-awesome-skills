@@ -40,6 +40,8 @@ def payment_workflow():
     else:
         cancel_order()
 
+# Illustrative only: authenticate provider signature, timestamp/replay ID and tenant/order binding before sending.
+# Never trust workflow_id/status URL parameters as proof of payment.
 # Webhook endpoint to receive payment notification
 @app.post("/payment_webhook/{workflow_id}/{status}")
 def payment_webhook(workflow_id: str, status: str):

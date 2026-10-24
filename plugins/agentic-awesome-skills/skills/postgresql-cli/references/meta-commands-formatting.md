@@ -48,7 +48,7 @@ Sets options affecting query result table output. Without arguments, displays cu
 | `aligned` | Standard human-readable table with column alignment (default). |
 | `wrapped` | Like `aligned` but long values wrap to fit column width. Headers with underscores are not repeated on continuation rows. |
 | `unaligned` | All columns on one line, separated by `fieldsep`. Useful for script output. |
-| `csv` | RFC 4180 compliant CSV output. Uses `csv_fieldsep` (default: comma). Safe for import into spreadsheets and other tools. |
+| `csv` | RFC 4180 compliant CSV output. Uses `csv_fieldsep` (default: comma). Quotes CSV delimiters correctly; untrusted spreadsheet formulas still require separate handling. |
 | `html` | HTML `<table>` markup. |
 | `asciidoc` | AsciiDoc table format for documentation. |
 | `latex` | LaTeX tabular format. |
@@ -71,7 +71,7 @@ Sets options affecting query result table output. Without arguments, displays cu
 
 ## Pipeline Mode
 
-Pipeline mode batches SQL statements into fewer network round trips for better performance. Available in PostgreSQL 14+.
+Pipeline mode batches SQL statements into fewer network round trips for better performance. These psql commands require psql 18+ (libpq pipeline support predates them).
 
 ### Pipeline commands
 

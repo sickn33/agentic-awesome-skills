@@ -1,10 +1,11 @@
 # Measurement Framework — KPIs, North Stars, Cadence
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 Every plan needs a measurement section that tells the team how to know if the plan is working. This doc is the source for Section 13's measurement subsection.
 
 **Related docs:**
-- `growth-patterns.md` — the 3-3-2-2-2 VC growth path (3× in years 1–2, 2× in years 3–7 from $1M ARR) and which phase of SaaS growth the company is in ($0–10K / $10K–100K / $100K–1M+)
-- `budget-planning.md` — CAC calculation (blended, not paid-only) and the forecasting reality check (forecasts under $100M ARR are educated guesses, not precise predictions)
+- `growth-patterns.md` — the 3-3-2-2-2 VC growth path (3× in years 1–2, 2× in years 3–5 from $1M ARR) and which phase of SaaS growth the company is in ($0–10K / $10K–100K / $100K–1M+)
+- `budget-planning.md` — CAC calculation (blended, not paid-only) and the forecasting reality check (forecasts require explicit assumptions and uncertainty at every company size)
 
 ## The north-star principle
 
@@ -13,13 +14,13 @@ A north star is one metric that captures the business-model thesis at the highes
 - Move slowly enough to be a strategic compass (not whipsawed by weekly noise)
 - Trade off correctly against other metrics — improving the north star should generally improve the business
 
-Don't default to "ARR" or "MRR" alone. Those are outcomes, not norths. Pick something that captures the business model.
+Don't default to "ARR" or "MRR" alone. They can be useful outcomes; choose a metric that reflects customer value and the specific model rather than enforcing a universal label. Pick something that captures the business model.
 
 ## North-star patterns by business model
 
 ### B2B SaaS (subscription)
 - **Net Revenue Retention (NRR)** — keeps existing customers + expansion in focus
-- Alternative: "Logo retention × expansion ARR"
+- Alternative: "Opening recurring revenue less churn/contraction plus expansion, divided by opening recurring revenue"
 - Why: ARR alone hides churn / lets gross-add growth mask product fit problems
 
 ### D2C consumer app (subscription)
@@ -47,7 +48,7 @@ Don't default to "ARR" or "MRR" alone. Those are outcomes, not norths. Pick some
 
 ### Commerce (DTC, non-subscription)
 - **Repeat purchase rate × AOV × frequency** — captures monetization layered on quality of customer
-- Alternative: "Customer LTV / CAC × payback period"
+- Alternative: "Contribution LTV/CAC, with payback period reported separately (shorter is better)"
 
 ## Leading indicators by AARRR stage
 
@@ -141,7 +142,7 @@ For each quarter in Section 10, the plan must include 3–5 specific KPI targets
 
 ## Anchoring against the VC growth path
 
-For VC-backed clients past $1M ARR, anchor 12-month and multi-year targets against the **3-3-2-2-2 rule** (3× in years 1 and 2, then 2× in years 3 through 7). Hitting it is rare; most companies don't. Anchoring against it forces the plan to either match it and show how, or explicitly defend choosing a slower trajectory. Full table and context in `growth-patterns.md`.
+For VC-backed clients past $1M ARR, anchor 12-month and multi-year targets against the **3-3-2-2-2 rule** (3× in years 1 and 2, then 2× in years 3 through 5). Hitting it is rare; most companies don't. Anchoring against it forces the plan to either match it and show how, or explicitly defend choosing a slower trajectory. Full table and context in `growth-patterns.md`.
 
 For non-VC-backed companies (bootstrapped, founder-funded, profit-focused), the 3-3-2-2-2 doesn't apply. Use linear-pattern targets ("$X MRR added per month") or step-function targets ("$Y revenue jump after the enterprise tier launches") instead.
 
@@ -149,7 +150,7 @@ For non-VC-backed companies (bootstrapped, founder-funded, profit-focused), the 
 
 A plan derives a budget and an annual goal. It does not produce a 12-month month-by-month forecast that's reliably accurate to the dollar.
 
-**Unless the company is publicly traded, all forecasts are educated guesses.** No startup under $100M ARR consistently hits month-by-month forecasts. Quarterly review is when the plan adjusts — not when variance is treated as failure.
+**All forecasts have uncertainty, regardless of listing status or ARR.** Record assumptions, ranges and reconciliation against actuals. Quarterly review is when the plan adjusts — not when variance is treated as failure.
 
 What the plan commits to honestly:
 - The annual goal is a defensible direction-of-travel
@@ -167,7 +168,7 @@ For every channel or initiative, the plan should specify when to stop. Often mis
 
 Examples:
 - "If a paid channel has CAC > 2× target after 30 days at meaningful spend, pause."
-- "If onboarding Variant 3 doesn't show statistically meaningful lift (or directional lift + congruent qualitative signal) after 4 weeks, move to Variant 1."
+- "Predefine eligible cohort, primary metric, minimum detectable effect, sample size, stopping rule and guardrails. An inconclusive four-week result is not evidence of no effect; do not promote a directional signal to a statistically demonstrated win."
 - "If lifecycle Flow 4 has open rate < 12% after 6 weeks, redo subject lines + audience segmentation."
 
 ## Guardrail metrics
@@ -208,6 +209,14 @@ A plan with un-measurable goals is a plan that can't be validated. Surface the i
 
 Where possible, auto-generate the metrics review rather than building it manually each time. Stripe MCP + GA4 MCP + Customer.io MCP can pull most of what's needed.
 
-For Tier 1 clients, a simple weekly metrics email to the team (Markdown table, generated via skills + MCPs) costs nothing and creates discipline.
+For Tier 1 clients, a simple weekly metrics email to the team (Markdown table, generated via skills + MCPs) still requires tooling, data access, review and explicit authorization to send.
 
 For Tier 2+ clients, consider a real dashboard (Hex, Metabase, Looker, or internal tool).
+
+## Metric definitions and evidence
+
+For every metric record the numerator/denominator, cohort eligibility, horizon, timezone, source/version and inclusion of refunds/taxes. Define NRR as `(opening recurring revenue - churn - contraction + expansion) / opening recurring revenue`; exclude new customers. NPS is a survey measure, not a referral count. Cumulative paid conversion atDay35 will normally exceedDay1; this alone does not show onboarding causality. Compare equally matured cohorts or randomized assignments.
+
+Prefer a meaningful customer-value event as north star, with revenue/margin/retention guardrails. NRR and LTV/CAC are often lagging diagnostics and must not be multiplied by arbitrary survey scores. Marketplace liquidity requires an explicit matching/window definition; take-rate×users alone is not revenue. Do not multiply ratios and counts without interpretable units. Gross-margin-adjusted, cohort-based LTV and fully loaded CAC need compatible cost scopes; see budget-planning.
+
+Email opens are distorted by privacy/proxy behavior and automated clicks can also mislead. Use qualified conversion, delivery, unsubscribe/complaint and customer outcomes; never optimize open rate alone. Attribution credits are not incrementality. Automated reporting may prepare a private draft; delivery, audience, personal-data joins and recurring schedules need explicit authorization. Use aggregate data and approved purpose/consent; billing tools do not automatically supply content salaries, hardware margin or causal CAC.

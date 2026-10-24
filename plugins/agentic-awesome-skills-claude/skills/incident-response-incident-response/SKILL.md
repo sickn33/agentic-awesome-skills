@@ -28,6 +28,8 @@ Orchestrate multi-agent incident response with modern SRE practices for rapid re
 
 ## Configuration
 
+Bind the response to the existing incident commander, severity policy, authorized services and change permissions. The Task/subagent names below are host-specific examples, not guaranteed installed tools. Delegate only with user/project authorization; otherwise perform the roles sequentially. Draft status/outreach artifacts first and send/publish only within explicit communication authority. Preserve evidence before mitigation where feasible, record timestamps and uncertainty, and require approved rollback criteria for production writes; urgency does not grant deployment or data-deletion permission.
+
 ### Severity Levels
 - **P0/SEV-1**: Complete outage, security breach, data loss - immediate all-hands response
 - **P1/SEV-2**: Major degradation, significant user impact - rapid response required

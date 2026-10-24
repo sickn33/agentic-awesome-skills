@@ -26,6 +26,8 @@ commit;  -- Lock held for entire duration
 
 ```sql
 -- Validate data and call APIs outside transaction
+-- Application: use an order-scoped provider idempotency key and reconcile uncertain charges.
+-- A successful charge followed by a failed DB update requires outbox/saga/recovery handling.
 -- Application: response = await paymentAPI.charge(...)
 
 -- Only hold lock for the actual update

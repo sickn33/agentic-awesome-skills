@@ -1,8 +1,11 @@
 ---
 title: "App Shortcuts | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/app-shortcuts
+---
 
 # App Shortcuts
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 An App Shortcut gives people access to your app’s key functions or content throughout the system.
 
@@ -24,11 +27,11 @@ When you use App Intents to make your app’s actions available to the system, i
 
 **Offer App Shortcuts for your app’s most common and important tasks.** Straightforward tasks that people can complete without leaving their current context work best, but you can also open your app if it helps people complete multistep tasks more easily.
 
-**Add flexibility by letting people choose from a set of options.** An App Shortcut can include a single optional value, or parameter, if it makes sense. For example, a meditation app could offer an App Shortcut that lets someone begin a specific type of meditation: “Start [morning, daily, sleep] meditation.” Include predictable and familiar values as options, because people won’t have the list in front of them for reference. For developer guidance, see [Adding parameters to an app intent](https://developer.apple.com/documentation/AppIntents/Adding-parameters-to-an-app-intent).
+**Add flexibility by letting people choose from a set of options.** An activation phrase can expose supported parameter substitutions; check the phrase initializer and SDK restrictions. The underlying App Intent can have multiple parameters, including required ones; do not confuse phrase-template restrictions with the intent’s full schema. For example, a meditation app could offer an App Shortcut that lets someone begin a specific type of meditation: “Start [morning, daily, sleep] meditation.” Include predictable and familiar values as options, because people won’t have the list in front of them for reference. For developer guidance, see [Adding parameters to an app intent](https://developer.apple.com/documentation/AppIntents/Adding-parameters-to-an-app-intent).
 
 ![A diagram of the activation phrase of a shortcut for ordering a drink from a coffee app. The activation phrase contains an optional value for the name of the drink, which is underlined and called out as the shortcut's parameter.](https://docs-assets.developer.apple.com/published/30601265724ed100cf9fbbe64c8b9c9c/app-intents-parameter-diagram%402x.png)
 
-**Ask for clarification in response to a request that’s missing optional information.** For example, someone might say “Start meditation” without specifying the type (morning, daily, or sleep); you could follow up by suggesting the one they used most recently, or one based on the current time of day. If one option is most likely, consider presenting it as the default, and provide a short list of alternatives to choose from if a person doesn’t want the default choice.
+**Use a sensible default for optional information, and ask only when the task requires clarification.** For example, someone might say “Start meditation” without specifying the type (morning, daily, or sleep); you could follow up by suggesting the one they used most recently, or one based on the current time of day. If one option is most likely, consider presenting it as the default, and provide a short list of alternatives to choose from if a person doesn’t want the default choice.
 
 **Keep voice interactions simple.** If your phrase feels too complicated when you say it aloud, it’s probably too difficult to remember or say correctly. For example, “Start [sleep] meditation with nature sounds” appears to have two possible parameters: the meditation type, and the accompanying sound. If additional information is absolutely required, ask for it in a subsequent step. For additional guidance on writing dialogue text for voice interactions, see [Siri](https://developer.apple.com/design/human-interface-guidelines/siri).
 
@@ -75,7 +78,7 @@ App Shortcuts can appear in the Top Hit area of Spotlight when people search for
 
 ### [macOS](https://developer.apple.com/design/human-interface-guidelines/app-shortcuts#macOS)
 
-App Shortcuts aren’t supported in macOS. However, actions you create for your app using App Intents are supported, and people can build custom shortcuts using them with the Shortcuts app on Mac.
+Do not infer blanket macOS unavailability from this older HIG summary: AppShortcut has macOS SDK availability. Confirm the target release and discovery surface separately; an available App Intent does not imply every Siri or Spotlight presentation is supported.
 
 ## [Resources](https://developer.apple.com/design/human-interface-guidelines/app-shortcuts#Resources)
 

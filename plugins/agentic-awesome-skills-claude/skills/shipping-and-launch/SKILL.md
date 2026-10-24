@@ -92,6 +92,8 @@ Ship with confidence. The goal is not just to deploy — it's to deploy safely, 
 - [ ] Changelog updated
 - [ ] User-facing documentation updated (if applicable)
 
+Treat the rollout percentages, windows and response-time targets below as examples requiring workload-specific SLOs and sufficient sample sizes. Automated scanners do not establish full security or accessibility compliance. A feature flag changes exposure; it cannot undo persisted data, sent notifications or third-party effects.
+
 ## Feature Flag Strategy
 
 Ship behind feature flags to decouple deployment from release:
@@ -207,7 +209,12 @@ Client metrics:
 
 ```typescript
 // Set up error boundary with reporting
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component<React.PropsWithChildren, { hasError: boolean }> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
   componentDidCatch(error: Error, info: React.ErrorInfo) {
     // Report to error tracking service
     reportError(error, {
@@ -229,7 +236,7 @@ class ErrorBoundary extends React.Component {
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   reportError(err, {
     method: req.method,
-    url: req.url,
+    path: req.path, // omit query parameters that may contain secrets
     userId: req.user?.id,
   });
 
@@ -268,12 +275,12 @@ Every deployment needs a rollback plan before it happens:
 ### Rollback Steps
 1. Disable feature flag (if applicable)
    OR
-1. Deploy previous version: `git revert <commit> && git push`
+1. Redeploy a known-good artifact through the approved deployment workflow; a Git revert alone does not deploy
 2. Verify rollback: health check, error monitoring
 3. Communicate: notify team of rollback
 
 ### Database Considerations
-- Migration [X] has a rollback: `npx prisma migrate rollback`
+- Migration [X]: document a tested compensating migration or restore plan; Prisma Migrate has no general `migrate rollback` command
 - Data inserted by new feature: [preserved / cleaned up]
 
 ### Time to Rollback

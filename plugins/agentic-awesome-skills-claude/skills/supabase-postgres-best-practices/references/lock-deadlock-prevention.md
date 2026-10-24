@@ -42,7 +42,7 @@ commit;
 Alternative: use a single statement to update atomically:
 
 ```sql
--- Single statement acquires all locks atomically
+-- One statement is atomic but does not guarantee lock acquisition order or prevent deadlocks
 begin;
 update accounts
 set balance = balance + case id

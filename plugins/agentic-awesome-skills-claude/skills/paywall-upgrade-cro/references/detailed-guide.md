@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+All experiment ideas must satisfy the no-dark-pattern rules below. Show total recurring charge, billing period, trial conversion, cancellation and actual data-retention terms before consent. Guarantees, savings, scarcity, unlimited claims and testimonials require evidence; proposals are not authorization to alter prices, send reminders, charge users or publish experiments.
+
 ## Initial Assessment
 
 Before providing recommendations, understand:
@@ -171,7 +173,7 @@ Pro plan: Unlimited projects
 
 You're active! Upgrade to keep building.
 
-[Upgrade to Pro]    [Delete a project]
+[Upgrade to Pro]    [Manage projects / Continue Free]
 ```
 
 ### Trial Expiration Paywall
@@ -183,7 +185,7 @@ Your trial ends in 3 days
 What you'll lose:
 • [Feature they've used]
 • [Feature they've used]
-• [Data/work they've created]
+• [Exact access/retention change under the published policy; keep export/recovery clear]
 
 What you've accomplished:
 • Created X projects
@@ -342,7 +344,7 @@ For each paywall:
 - Success state
 
 ### Metrics Plan
-What to measure and expected benchmarks
+Define denominators, randomization unit and observation window. Use measured baselines, label forecasts, and track refunds, cancellation success, accidental purchases, accessibility and retention alongside conversion. Do not stop at a flattering short-term conversion result.
 
 ---
 
@@ -452,19 +454,19 @@ What to measure and expected benchmarks
 - Show monthly vs. annual vs. both with toggle
 - Highlight savings for annual ($ amount vs. % off)
 - Price per day framing ("Less than a coffee")
-- Show price after trial vs. emphasize "Start Free"
-- Display price prominently vs. de-emphasize until click
+- Compare trial headlines while always showing post-trial price, billing date and auto-renewal terms
+- Compare clear price layouts while keeping total price, billing interval and renewal terms visible before commitment
 
 **Plan Options**
 - Single recommended plan vs. multiple tiers
-- Add "Most Popular" badge to target plan
+- Use a "Most Popular" badge only when current measured plan uptake supports it; otherwise label a recommendation
 - Test number of visible plans (2 vs. 3)
 - Show enterprise/custom tier vs. hide it
 - Include one-time purchase option alongside subscription
 
 **Discounts & Offers**
 - First month/year discount for conversion
-- Limited-time upgrade offer with countdown
+- A genuine, consistently enforced limited-time offer; never reset a fake countdown
 - Loyalty discount based on free usage duration
 - Bundle discount for annual commitment
 - Referral discount for social proof
@@ -476,9 +478,9 @@ What to measure and expected benchmarks
 **Headlines**
 - Benefit-focused ("Unlock unlimited projects") vs. feature-focused ("Get Pro features")
 - Question format ("Ready to do more?") vs. statement format
-- Urgency-based ("Don't lose your work") vs. value-based
+- Accurate retention-policy disclosure vs. value-based copy; never threaten unsupported data loss
 - Personalized headline with user's name or usage data
-- Social proof headline ("Join 10,000+ Pro users")
+- Social proof headline using a verified, dated customer count
 
 **CTAs**
 - "Start Free Trial" vs. "Upgrade Now" vs. "Continue with Pro"

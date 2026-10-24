@@ -1,6 +1,6 @@
 # Makepad 2.0 Widget Catalog
 
-Complete reference for all built-in widgets in Makepad 2.0. All widgets are defined using `script_mod!` blocks and used in Splash DSL syntax.
+Imported dev-branch widget reference; not an exhaustive or version-stable API list. All widgets are defined using `script_mod!` blocks and used in Splash DSL syntax.
 
 ---
 
@@ -386,7 +386,7 @@ Svg{
 - `use_local_mbtiles` - Use local mbtiles file (bool, default true)
 
 **CRITICAL MapView rules:**
-- MUST use fixed pixel height (e.g., `height: 400`). Never use `Fit` or `Fill` for height.
+- Establish a nonzero bounded viewport; fixed `height: 400` is a diagnostic starting point. Fill requires a known-height parent, and behavior needs verification on the installed build.
 - MUST wrap in a container with `new_batch: true`.
 
 ---

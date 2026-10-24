@@ -35,7 +35,7 @@ adapter:
   # ─── Commands ───────────────────────────────────────────────
   # Standard development commands. null = not applicable for this language.
   # These are defaults; project-level overrides in DEVELOPMENT.md or
-  # harness/config/validate.json always take priority.
+  # the actual installed consumer configuration are considered only after validation.
   commands:
     build: string | null         # Compile/transpile: "go build ./...", "npm run build"
     test: string | null          # Run tests: "go test ./...", "npm test"
@@ -134,7 +134,7 @@ adapter:
     # File extension for the linter script
     script_extension: string     # ".go", ".ts", ".py"
     # How to run the linter
-    run_command: string          # "go run scripts/lint-deps.go", "npx ts-node scripts/lint-deps.ts"
+    run_command: string          # "go run scripts/lint-deps/main.go", "npx ts-node scripts/lint-deps.ts"
 
   # ─── Naming Conventions ─────────────────────────────────────
   # File and directory naming rules for verify_action.py.
@@ -158,7 +158,7 @@ adapter:
 
 When the harness system needs language-specific behavior, it follows this resolution chain:
 
-1. **Project-level override** — `harness/config/validate.json`, `DEVELOPMENT.md` commands
+1. **Project-level override** — verified existing consumer configuration and `DEVELOPMENT.md` commands
 2. **Adapter defaults** — The matching adapter's `commands` section
 3. **Generic fallback** — `generic.md` adapter (discovers from Makefile/README)
 
@@ -202,3 +202,10 @@ adapter:
 - Routes via `@GetMapping`, `@PostMapping` annotations
 - ...
 ```
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.
+
+No detector or runtime scripts referenced in this specification are bundled. This skill must not invent or create static validate.json just to satisfy this legacy description; select existing commands and the real consumer contract.

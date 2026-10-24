@@ -1,8 +1,12 @@
 ---
 title: "Maps | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/maps
+---
 
 # Maps
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 A map displays outdoor or indoor geographical data in your app or on your website.
 
@@ -185,7 +189,7 @@ Apps connected with specific venues like shopping malls and stadiums can design 
 
 ### [watchOS](https://developer.apple.com/design/human-interface-guidelines/maps#watchOS)
 
-On Apple Watch, maps are static snapshots of geographic locations. Place a map in your interface at design time and show the appropriate region at runtime. The displayed region isn’t interactive; tapping it opens the Maps app on Apple Watch. You can add up to five annotations to a map to highlight points of interest or other relevant information. For developer guidance, see [`WKInterfaceMap`](https://developer.apple.com/documentation/WatchKit/WKInterfaceMap).
+The following describes legacy WatchKit WKInterfaceMap, not every MapKit or SwiftUI map on Apple Watch. WKInterfaceMap displays static snapshots of geographic locations. Place a map in your interface at design time and show the appropriate region at runtime. The displayed region isn’t interactive; tapping it opens the Maps app on Apple Watch. You can add up to five annotations to a map to highlight points of interest or other relevant information. For developer guidance, see [`WKInterfaceMap`](https://developer.apple.com/documentation/WatchKit/WKInterfaceMap).
 
 ![A screenshot of a map on Apple Watch, displaying Apple Park and some of the surrounding area.](https://docs-assets.developer.apple.com/published/befea7e8b96bc123bfef582ba3857d64/maps-watch1%402x.png)
 

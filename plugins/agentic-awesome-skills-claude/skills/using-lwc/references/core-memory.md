@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 # LWC Basic Memory
 
 ## Use when
@@ -39,9 +40,7 @@ treat `stale_span` as a revision boundary rather than fuzzy-remapping it.
 
 ## Consent boundaries
 
-A missing project Wiki requires consent on automatic Skill activation. Explicit
-`$using-lwc` invocation authorizes initialization inside the already-authorized
-active project root. View remains foreground, loopback-only, and read-only.
+A missing project Wiki requires consent on automatic Skill activation. Skill invocation alone does not authorize new durable memory. Initialize only when the user request or applicable project policy already covers that write scope. View remains foreground, loopback-only, and read-only.
 
 ## Completion evidence
 

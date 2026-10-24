@@ -38,7 +38,7 @@ Use this skill when:
 
 ## Production Patterns
 
-For production-ready state management patterns, see the `_base/` directory:
+The upstream `_base/` directory is not bundled. These pattern names are orientation only, not available production-ready implementations:
 
 | Pattern | Description |
 |---------|-------------|
@@ -55,7 +55,7 @@ For production-ready state management patterns, see the `_base/` directory:
 ```rust
 use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
-use matrix_sdk::ruma::OwnedRoomId;
+use matrix_sdk::ruma::{OwnedRoomId, RoomId, UserId, OwnedUserId};
 
 /// App-wide state that is stored persistently across multiple app runs
 /// and shared/updated across various parts of the app.
@@ -201,12 +201,15 @@ impl Widget for RoomsList {
 }
 ```
 
+The examples are fragments requiring application-defined layout types and a pinned Makepad/Matrix SDK. Keep state directories private, do not persist tokens, bound file sizes, version serialized data and serialize concurrent writers. A missing platform app-data directory now fails explicitly rather than silently writing in the working directory; adapt error handling to the application.
+
 ## Persistence Layer
 
 ### File Paths
 
 ```rust
 use std::path::{Path, PathBuf};
+use std::sync::OnceLock;
 
 const LATEST_APP_STATE_FILE_NAME: &str = "latest_app_state.json";
 const WINDOW_GEOM_STATE_FILE_NAME: &str = "window_geom_state.json";
@@ -215,7 +218,7 @@ const WINDOW_GEOM_STATE_FILE_NAME: &str = "window_geom_state.json";
 fn persistent_state_dir(user_id: &UserId) -> PathBuf {
     app_data_dir()
         .join("users")
-        .join(user_id.to_string().replace(':', "_"))
+        .join(user_id.as_str().as_bytes().iter().map(|b| format!("{b:02x}")).collect::<String>())
 }
 
 /// Get app-wide data directory
@@ -224,7 +227,7 @@ fn app_data_dir() -> &'static Path {
     static APP_DATA_DIR: OnceLock<PathBuf> = OnceLock::new();
     APP_DATA_DIR.get_or_init(|| {
         dirs::data_dir()
-            .unwrap_or_else(|| PathBuf::from("."))
+            .expect("Platform app-data directory is required")
             .join("myapp")
     })
 }
@@ -239,12 +242,14 @@ pub fn save_app_state(
     app_state: AppState,
     user_id: OwnedUserId,
 ) -> anyhow::Result<()> {
-    let file = std::fs::File::create(
-        persistent_state_dir(&user_id).join(LATEST_APP_STATE_FILE_NAME)
-    )?;
-    let mut writer = std::io::BufWriter::new(file);
-    serde_json::to_writer(&mut writer, &app_state)?;
-    writer.flush()?;
+    let directory = persistent_state_dir(&user_id);
+    std::fs::create_dir_all(&directory)?;
+    // Requires the application to add the tempfile crate. Same-filesystem atomic replace.
+    let mut temporary = tempfile::NamedTempFile::new_in(&directory)?;
+    serde_json::to_writer(temporary.as_file_mut(), &app_state)?;
+    temporary.as_file_mut().flush()?;
+    temporary.as_file().sync_all()?;
+    temporary.persist(directory.join(LATEST_APP_STATE_FILE_NAME))?;
     log!("Successfully saved app state to persistent storage.");
     Ok(())
 }
@@ -258,10 +263,12 @@ pub fn save_window_state(window_ref: WindowRef, cx: &Cx) -> anyhow::Result<()> {
         position: (position.x, position.y),
         is_fullscreen: window_ref.is_fullscreen(cx),
     };
-    std::fs::write(
-        app_data_dir().join(WINDOW_GEOM_STATE_FILE_NAME),
-        serde_json::to_string(&window_geom)?,
-    )?;
+    std::fs::create_dir_all(app_data_dir())?;
+    let mut temporary = tempfile::NamedTempFile::new_in(app_data_dir())?;
+    serde_json::to_writer(temporary.as_file_mut(), &window_geom)?;
+    temporary.as_file_mut().flush()?;
+    temporary.as_file().sync_all()?;
+    temporary.persist(app_data_dir().join(WINDOW_GEOM_STATE_FILE_NAME))?;
     Ok(())
 }
 ```
@@ -295,7 +302,7 @@ pub async fn load_app_state(user_id: &UserId) -> anyhow::Result<AppState> {
             // Backup old file
             let backup_path = state_path.with_extension("json.bak");
             if let Err(backup_err) = tokio::fs::rename(&state_path, &backup_path).await {
-                error!("Failed to backup old state: {}", backup_err);
+                return Err(backup_err.into()); // Never overwrite the only unreadable copy.
             } else {
                 log!("Old state backed up to: {:?}", backup_path);
             }

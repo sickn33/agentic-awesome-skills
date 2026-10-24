@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Rust: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for rust.
 
@@ -161,17 +163,17 @@ for (i, item) in items.iter().enumerate() {
 // ❌ if-let chain that should be match
 if let Some(x) = opt {
     if x > 0 {
-        use(x)
+        process(x)
     }
 }
 
 // ✅
 if let Some(x) = opt.filter(|&x| x > 0) {
-    use(x)
+    process(x)
 }
 // or match with guard:
 match opt {
-    Some(x) if x > 0 => use(x),
+    Some(x) if x > 0 => process(x),
     _ => {}
 }
 ```
@@ -269,7 +271,7 @@ use rayon::prelude::*;
 items.par_iter().for_each(|item| process(item));
 ```
 
-**For async: prefer `tokio::spawn` + `JoinHandle` over manual channels for structured concurrency. Use `tokio::join!` for concurrent awaits.**
+**Use tokio::join! for scoped concurrent awaits. Spawned tasks must be awaited/cancelled deliberately: dropping a JoinHandle detaches, so spawning alone is not structured concurrency.**
 
 ---
 

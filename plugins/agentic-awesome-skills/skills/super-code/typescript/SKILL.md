@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # TypeScript / JavaScript: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for typescript.
 
@@ -139,7 +141,7 @@ const result = await new Promise((resolve) => {
 const result = await someAsyncFn()
 ```
 
-**Don't `await` inside a `.map()` without `Promise.all` — it sequences what should be parallel.**
+**An async map produces promises and does not wait for them. Collect with Promise.all for bounded independent work, or use a sequential loop when ordering/rate limits require it.**
 
 ---
 
@@ -161,7 +163,8 @@ function greet(name?: string) {
 }
 
 // ✅
-function greet(name = "World") {
+function greet(name?: string) {
+    name = name || "World" // preserve the original empty-string fallback
     return `Hello, ${name}`
 }
 ```

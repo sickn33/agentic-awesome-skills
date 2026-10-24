@@ -32,14 +32,14 @@ Task tool (general-purpose):
     1. Implement exactly what the task specifies
     2. Write tests (following TDD if task says to)
     3. Verify implementation works
-    4. Commit your work
+    4. Commit only if authorized by the task/repository workflow, on the assigned branch
     5. Self-review (see below)
     6. Report back
 
     Work from: [directory]
 
     **While you work:** If you encounter something unexpected or unclear, **ask questions**.
-    It's always OK to pause and clarify. Don't guess or make assumptions.
+    Resolve routine choices from task context; raise a focused question for material missing requirements and continue independent work.
 
     ## Before Reporting Back: Self-Review
 

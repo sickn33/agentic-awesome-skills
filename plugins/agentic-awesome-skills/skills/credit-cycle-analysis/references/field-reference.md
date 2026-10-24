@@ -13,7 +13,7 @@
 | 8 | Settlement | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `47800.00` |
 | 9 | Adjustments | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `150.00` |
 | 10 | Closing Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `486500.00` |
-| 11 | Average Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `453175.00` |
+| 11 | Average Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `453250.00` |
 | 12 | Measurement Basis | `text` | `VARCHAR(255)` | `string` | Text | `Invoice date to settlement date` |
 | 13 | Contractual Terms Days | `number` | `NUMERIC` | `number` | Number | `30` |
 | 14 | Actual Collection/Payment Days | `number` | `NUMERIC` | `number` | Number | `42` |
@@ -26,7 +26,7 @@
 | 21 | Aging 91-180 Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `41429.60` |
 | 22 | Aging Over 180 Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `30000.00` |
 | 23 | Customer Credit Limit | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `500000.00` |
-| 24 | Customer Credit Utilisation % | `number` | `NUMERIC` | `number` | Number | `97.27` |
+| 24 | Customer Credit Utilisation % | `number` | `NUMERIC` | `number` | Number | `97.30` |
 | 25 | Benchmark Days | `number` | `NUMERIC` | `number` | Number | `35` |
 | 26 | Gap vs Benchmark | `number` | `NUMERIC` | `number` | Number | `7` |
 | 27 | Cycle Trend | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Deteriorating` |
@@ -34,7 +34,7 @@
 | 29 | Data Quality Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Incomplete` |
 | 30 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
 | 31 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
-| 32 | Notes | `long_text` | `TEXT` | `string` | Text | `The 150.00 difference against the balance identity is left open, not adjusted. Benchmark of 35 days is a proposed default, not an agreed target. Two invoices carry no due date, so their bucket and the utilisation figure stay Unknown.` |
+| 32 | Notes | `long_text` | `TEXT` | `string` | Text | `The 150.00 difference against the balance identity is left open, not adjusted. Benchmark of 35 days is a proposed default, not an agreed target. All displayed aging amounts assume documented due dates; utilisation is a provisional 97.30% from the unreconciled closing balance and limit.` |
 | 33 | Cycle Analysis ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
 `Measurement Basis` is in this list because the day counts above it cannot be interpreted without

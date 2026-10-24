@@ -12,7 +12,7 @@
 ```
 WHAT ARE YOU BUILDING?
         │
-        ├── Need OTA updates without app store review?
+        ├── Need OTA updates within current store policies and native runtime compatibility?
         │   │
         │   ├── Yes → React Native + Expo
         │   │         ├── Expo Go for development
@@ -130,9 +130,9 @@ WHAT'S YOUR STATE COMPLEXITY?
         │
         ├── Simple app, learning Flutter
         │   │
-        │   └── Provider (or setState)
-        │       ├── Official, simple
-        │       ├── Built into Flutter
+        │   └── Provider package (or built-in setState)
+        │       ├── Common third-party package
+        │       ├── Provider is a separate package, not Flutter SDK
         │       └── Good for small apps
         │
         ├── Modern, type-safe, testable
@@ -227,7 +227,7 @@ WHAT TYPE OF DATA?
         │   │
         │   └── ✅ Secure Storage
         │       ├── iOS: Keychain
-        │       ├── Android: EncryptedSharedPreferences
+        │       ├── Android: Android Keystore-backed storage (check current APIs; legacy EncryptedSharedPreferences is deprecated)
         │       └── RN: expo-secure-store / react-native-keychain
         │
         ├── User preferences (settings, theme)
@@ -312,8 +312,8 @@ HOW CRITICAL IS OFFLINE?
    Action → Write to local DB → Queue sync → Sync when online
    
 4. SYNC ENGINE
-   Use: Firebase, Realm Sync, Supabase realtime
-   Handles conflict resolution automatically
+   Use: a maintained sync engine; verify service lifecycle, offline and conflict guarantees
+   Define and test conflict semantics; realtime transport alone does not resolve concurrent edits
 ```
 
 ---
@@ -335,12 +335,12 @@ WHAT AUTH TYPE NEEDED?
         │   └── OAuth 2.0 + PKCE
         │       ├── Use platform SDKs
         │       ├── Deep link callback
-        │       └── Apple Sign-In required for iOS
+        │       └── Check current App Store login rules and exceptions; not every app requires Apple sign-in
         │
         ├── Enterprise/SSO
         │   │
         │   └── OIDC / SAML
-        │       ├── Web view or system browser
+        │       ├── System browser authentication session with PKCE/state; avoid embedded credential WebViews
         │       └── Handle redirect properly
         │
         └── Biometric (FaceID, fingerprint)
@@ -362,7 +362,7 @@ WHAT AUTH TYPE NEEDED?
 
 ✅ ALWAYS store tokens in:
 ├── iOS: Keychain
-├── Android: EncryptedSharedPreferences
+├── Android: Android Keystore-backed storage (check current APIs; legacy EncryptedSharedPreferences is deprecated)
 ├── Expo: SecureStore
 ├── Biometric-protected if available
 ```
@@ -380,7 +380,7 @@ RECOMMENDED STACK:
 ├── State: TanStack Query (products) + Zustand (cart)
 ├── Storage: SecureStore (auth) + SQLite (cart cache)
 ├── Offline: Cache products, queue cart actions
-└── Auth: Email/password + Social + Apple Pay
+└── Auth: Email/password or social identity; Apple Pay is a payment method, not app authentication
 
 KEY DECISIONS:
 ├── Product images: Lazy load, cache aggressively
@@ -398,7 +398,7 @@ RECOMMENDED STACK:
 ├── State: TanStack Query (feed) + Zustand (UI)
 ├── Storage: SQLite (feed cache, drafts)
 ├── Offline: Cache feed, queue posts
-└── Auth: Social login primary, Apple required
+└── Auth: Social login primary, Apple sign-in only when current store rules require it
 
 KEY DECISIONS:
 ├── Feed: Infinite scroll, memoized items
@@ -445,7 +445,7 @@ KEY DECISIONS:
 ```
 If project details are vague, ASK:
 
-1. "Will this need OTA updates without app store review?"
+1. "Will this need OTA updates within current store policies and native runtime compatibility?"
    → Affects framework choice (Expo = yes)
 
 2. "Do iOS and Android need identical UI?"
@@ -514,3 +514,13 @@ API cache?           → Query library
 ---
 
 > **Remember:** These trees are guides for THINKING, not rules to follow blindly. Every project has unique constraints. ASK clarifying questions when requirements are vague, and choose based on actual needs, not defaults.
+
+## Decision-tree limits
+
+The comparison table is illustrative, not benchmark evidence that one framework
+always has the best performance or smallest bundle. Do not switch an existing
+project solely from this tree. OTA applies to compatible non-native updates under
+store rules, not arbitrary code delivery. Riverpod/Provider/BLoC are separate
+versioned packages; verify current support instead of assuming a frozen major.
+Authentication requires server validation; biometrics only unlock local access.
+Never package a backend API secret in build-time app environment variables.

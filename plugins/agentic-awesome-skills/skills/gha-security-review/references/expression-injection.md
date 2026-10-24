@@ -33,7 +33,7 @@ The shell executes `echo`, then `curl`, then ignores the rest as a comment.
 
 ### Branch Name Injection
 
-Branch names allow most characters including `$`, `(`, `)`, `{`, `}`, and spaces (encoded).
+Branch names allow most characters including `$`, `(`, `)`, `{`, `}`, but not literal spaces (URL encoding does not make a space valid in a Git ref).
 
 ```yaml
 # VULNERABLE
@@ -157,7 +157,7 @@ grep -rn 'github\.head_ref\|pull_request\.head\.ref\|pull_request\.head\.label' 
 
 ## The Fix: Environment Variables
 
-The universal fix is to pass expressions through environment variables:
+For direct shell interpolation, pass expressions through environment variables and quote their use. This does not protect a later `eval`, `bash -c` constructed from input, or action-specific code generation:
 
 ```yaml
 # VULNERABLE
@@ -210,7 +210,7 @@ Why this works:
 
 ## Where ${{ }} Is Safe
 
-Expression substitution is NOT dangerous in these contexts:
+These contexts do not directly interpolate a shell script; still trace downstream consumers:
 
 ```yaml
 # SAFE: if: conditions (evaluated by Actions runtime, not shell)
@@ -259,7 +259,7 @@ These expressions are **dangerous when used in `run:` blocks** because an attack
 | `github.actor` | GitHub username, alphanumeric + hyphens |
 | `github.sha` | Hex string |
 | `github.ref_name` (on `push` to protected branch) | Protected branch rules apply |
-| `secrets.*` | Not expanded into shell literally |
+| `secrets.*` | Secrets interpolated into `run:` are literal script text too; use quoted environment variables instead |
 | `github.run_id` / `github.run_number` | Numeric |
 | `github.event.inputs.*` (workflow_dispatch) | Requires write access — not an external threat |
 | `github.event.commits[*].message` (push to protected) | Requires write access |

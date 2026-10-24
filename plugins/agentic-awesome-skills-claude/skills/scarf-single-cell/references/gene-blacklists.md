@@ -1,5 +1,10 @@
 # Gene blacklists for HVG selection
 
+These are optional sensitivity-analysis candidates, not universal corrected defaults. Removing
+HLA/MHC, sex-linked, histone, immunoglobulin or erythroid genes can erase the signal under study.
+Retain relevant families for immune activation, sex effects, cell cycle or lineage questions and
+compare retained/excluded alternatives. Marker evidence alone does not establish contamination.
+
 What `select_hvgs(blacklist=...)` removes, how to check it on your store, the corrected strings to
 pass today, and when to add the clonotype or haemoglobin add-ons. Docs:
 <https://scarf.readthedocs.io/en/latest/tutorials/feature_selection.html>, <https://scarf.readthedocs.io/en/latest/reference/api/pipeline.html>.
@@ -148,9 +153,9 @@ print(frac.round(2).to_string())
 
 | Parameter | Default | Change when |
 | --- | --- | --- |
-| `select_hvgs(blacklist=)` | `DEFAULT_HVG_BLACKLIST` | Always pass a species string on current-symbol stores. |
+| `select_hvgs(blacklist=)` | `DEFAULT_HVG_BLACKLIST` | Choose and record a question-specific regex; species strings below are optional candidates. |
 | `params={"hvg": {"blacklist": ...}}` | default regex | Same string through `ds.pipeline.run`; new label per string. |
-| `blacklist=""` | | Diagnostics only: shows what the name filter removes. |
+| `blacklist=""` | | Valid when the study needs these gene families; compare sensitivity to exclusions. |
 | `select_hvgs(max_cells=)` | selected cells - 20 | `np.inf` lets ubiquitous genes compete; the blacklist then matters more. |
 
 ## Check before moving on
@@ -172,7 +177,7 @@ print(frac.round(2).to_string())
   compare across Leiden seeds before attributing a change to the blacklist.
 - Run `groupby(...).head` on default-filtered marker tables; on a full table (`min_score=-1`) it
   crashed pandas 3.0 with a segmentation fault in testing.
-- A blacklist never fixes QC: high `percentMito` cells or red-cell contamination need filtering.
+- A blacklist never fixes QC: high `percentMito` cells or erythroid signals require context-specific review; erythroid cells may be the intended population.
 
 ## See also
 

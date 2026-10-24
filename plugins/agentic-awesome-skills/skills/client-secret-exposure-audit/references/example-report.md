@@ -1,12 +1,11 @@
 # Example Audit Report — Client-Side Secret & Sensitive-File Exposure
 
-**Target:** `https://demo-for-opensource.vercel.app/` (a public, intentionally
-vulnerable demonstration app — "Himalayan Vista Hotel")
-**Date:** 2026-09-10
+**Illustrative target:** `https://authorized-demo.example/` (fictional placeholder)
+**Template date:** 2026-09-10; no live verification asserted by this example
 **Method:** Unauthenticated `GET` requests only (see `SKILL.md`)
-**Scope note:** This is a public demo whose own source states *"All secrets are
-fake demonstration values."* It is used here purely to illustrate the report
-format the skill produces. Values below are redacted to prefix + length.
+**Scope note:** Imported findings below illustrate hypothetical impact if credentials
+were live. They are not evidence that a current real site was assessed or that
+any credential was validated. Obtain authorization before any target requests.
 
 ## Summary
 
@@ -41,8 +40,8 @@ set and use permissive CORS.
   `DATABASE_PASSWORD = "Vista#…!" (16 chars)`, plus a hidden `<div>` JSON blob
   containing `mongodb+srv://hvh-backend:****@cluster0.…/hvh_prod`.
 - **Impact:** Anyone can read an admin bearer token, the JWT signing secret
-  (allowing forged tokens for any role), the API secret, and DB credentials — full
-  data-tier compromise if these were live.
+  (allowing forged tokens for any role), the API secret, and DB credentials — potential access within the credential's effective permissions if live; network
+  reachability, expiry and server validation still constrain impact.
 - **Remediation:** Never place secrets in client bundles. Keep secrets server-side
   in a secrets manager / env vars; expose only publishable keys to the browser.
   **Rotate every value** — anything served is already compromised.
@@ -61,7 +60,7 @@ set and use permissive CORS.
 
 ### 3 — High: Server-side source, config & deploy files publicly reachable
 
-- **Location (confirmed real via size ≠ SPA fallback):** `/server/index.js`,
+- **Location (candidate paths; size differences require content validation):** `/server/index.js`,
   `/server/routes/{booking,payment,review,webhook}.routes.js`,
   `/src/config/app.config.js`, `/src/services/{payment,booking}.service.js`,
   `/docker-compose.yml`, `/Dockerfile`, `/public/assets/js/config.js`.
@@ -79,8 +78,8 @@ set and use permissive CORS.
 - **Location:** `<meta name="recaptcha-secret" content="6LcVo3kq…">` in `index.html`.
 - **Evidence:** The **secret** (server-verification) key is in page markup
   alongside the site key.
-- **Impact:** The reCAPTCHA secret is server-only; exposing it lets attackers
-  script verification and undermines bot protection.
+- **Impact:** The reCAPTCHA secret is server-only; exposure compromises the server credential but does not by itself create valid
+  challenge tokens or prove a complete bot-protection bypass.
 - **Remediation:** Remove the secret from all client output; keep only the site
   key client-side. Regenerate the reCAPTCHA keypair.
 
@@ -99,8 +98,8 @@ set and use permissive CORS.
 ### 6 — Medium: Permissive CORS
 
 - **Location:** Response header `Access-Control-Allow-Origin: *`.
-- **Impact:** Any origin can read responses; dangerous if any endpoint returns
-  user/authenticated data.
+- **Impact:** Wildcard CORS permits noncredentialed public reads. It is not a finding
+  without sensitive data exposure; browsers reject wildcard credentialed reads.
 - **Remediation:** Restrict `Access-Control-Allow-Origin` to trusted origins;
   never combine `*` with credentialed requests.
 

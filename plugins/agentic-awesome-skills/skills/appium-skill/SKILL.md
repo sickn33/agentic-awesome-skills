@@ -56,7 +56,7 @@ User says "test mobile app" / "automate app"
 | "Python", "pytest" | Python | `Appium-Python-Client` |
 | "JavaScript", "Node" | JavaScript | `webdriverio` with Appium |
 
-For non-Java languages → read `reference/<language>-patterns.md`
+For non-Java languages, obtain and inspect the upstream `reference/<language>-patterns.md`; the reference files listed below are not bundled in this catalog copy.
 
 ## Core Patterns — Java (Default)
 
@@ -115,7 +115,7 @@ driver.findElement(AppiumBy.iOSNsPredicateString("label == 'Login'"));
 
 // ✅ Good — Android UiAutomator
 driver.findElement(AppiumBy.androidUIAutomator(
-    "new UiSelector().text("Login")"
+    "new UiSelector().text(\"Login\")"
 ));
 
 // ❌ Avoid — slow, fragile
@@ -273,7 +273,7 @@ AndroidDriver driver = new AndroidDriver(new URL(hub), options);
 
 | Task | Code |
 |------|------|
-| Start Appium server | `appium` (CLI) or `appium --relaxed-security` |
+| Start Appium server | `appium` (CLI); do not enable broad relaxed security by default |
 | Install app | `driver.installApp("/path/to/app.apk")` |
 | Launch app | `driver.activateApp("com.example.app")` |
 | Background app | `driver.runAppInBackground(Duration.ofSeconds(5))` |
@@ -284,7 +284,9 @@ AndroidDriver driver = new AndroidDriver(new URL(hub), options);
 | Context switch | `driver.context("WEBVIEW_com.example")` |
 | Get contexts | `driver.getContextHandles()` |
 
-## Reference Files
+## Reference Files (Upstream Only)
+
+All paths in this section require a separately reviewed upstream installation. Do not claim to have read them from this single-file copy. Cloud app upload, screenshots, video and network logs disclose application/data to the provider and may bill; obtain scoped authorization, use test accounts and redact secrets. Prefer local emulators when sufficient. The cloud credentials embedded in a hub URL are sensitive: never log that URL or include it in reports. Pin Appium/client/driver versions, restrict server binding and enable only explicitly needed insecure features.
 
 | File | When to Read |
 |------|-------------|

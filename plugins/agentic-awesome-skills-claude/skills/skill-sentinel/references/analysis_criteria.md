@@ -1,5 +1,8 @@
 # Criterios de Analise - Skill Sentinel
 
+> Catalog review: exemplos e scores consultivos, nao prova de seguranca, cobertura total, conformidade ou autoridade de merge. Nomes e palavras-chave exigem confirmacao semantica; a ausencia de um sinal pode ser falso negativo. Estado privado fica fora da skill instalada.
+
+
 ## Scoring por Dimensao
 
 Cada dimensao inicia com score 100 e sofre deducoes por violacoes encontradas.
@@ -21,8 +24,8 @@ Score final: max(0, min(100, score)).
 
 | Criterio | Penalidade |
 |----------|-----------|
-| Secret hardcoded (critical) | -20 |
-| SQL injection (high) | -15 |
+| Possivel secret hardcoded (critical) | -20 |
+| Possivel interpolacao SQL (high) | -15 |
 | Token em log (high) | -10 |
 | URL HTTP insegura (medium) | -5 |
 | Input validation fraca (low) | -2 |

@@ -1,5 +1,7 @@
 # Guia Completo de Setup - WhatsApp Business Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 > Do zero absoluto ate o envio da primeira mensagem em producao.
 > Tempo estimado: 1-2 horas (sem verificacao de negocio) | 3-7 dias (com verificacao)
 
@@ -339,11 +341,7 @@ O numero de telefone que voce vai adicionar:
   - DEVE ser capaz de receber SMS ou chamada de voz
   - PODE ser fixo (verificacao por chamada) ou movel (SMS ou chamada)
 
-Se o numero esta no WhatsApp pessoal:
-  1. Abra o WhatsApp no celular
-  2. Va em Configuracoes > Conta > Excluir conta
-  3. Confirme a exclusao
-  4. Aguarde 5 minutos antes de prosseguir
+Se o numero ja esta em uso: verifique elegibilidade de coexistencia/migracao na documentacao oficial e preserve backups. Nao exclua a conta existente como passo automatico; obtenha um plano e autorizacao especifica para qualquer migracao.
 ```
 
 ### Procedimento
@@ -369,7 +367,7 @@ Se o numero esta no WhatsApp pessoal:
 
 | Erro | Solucao |
 |------|---------|
-| "Este numero ja esta registrado" | O numero ainda esta no WhatsApp pessoal. Exclua a conta conforme descrito acima e aguarde |
+| "Este numero ja esta registrado" | O numero ainda esta no WhatsApp pessoal. Verifique coexistencia/migracao suportada; nao exclua a conta automaticamente |
 | "Numero invalido" | Use formato internacional completo com codigo do pais |
 | "Nome de exibicao rejeitado" | Use o nome oficial da empresa. Evite abreviacoes excessivas |
 | "Limite de numeros atingido" | Contas nao verificadas podem ter apenas 2 numeros. Complete o Passo 10 |
@@ -461,7 +459,7 @@ O token temporario do Passo 5 expira rapidamente. Para producao, voce precisa de
 3. Clique em **"Adicionar"**
 4. Preencha:
    - **Nome**: Ex: `whatsapp-api-bot`
-   - **Funcao**: Selecione **"Admin"** (necessario para permissoes completas)
+   - **Funcao**: Selecione a funcao minima necessaria para os ativos e operacoes autorizados
 5. Clique em **"Criar usuario do sistema"**
 
 #### 9.2 - Atribuir Ativos ao System User
@@ -470,11 +468,11 @@ O token temporario do Passo 5 expira rapidamente. Para producao, voce precisa de
 2. Clique em **"Atribuir ativos"** (Assign Assets)
 3. Selecione **"Apps"** no menu lateral
 4. Encontre seu app (criado no Passo 2) e selecione-o
-5. Ative **"Controle total"** (Full Control)
+5. Conceda apenas as permissoes necessarias nos ativos autorizados (Full Control)
 6. Clique em **"Salvar alteracoes"**
 7. Repita para **"Contas do WhatsApp"**:
    - Selecione sua WABA
-   - Ative **"Controle total"**
+   - Conceda apenas as permissoes necessarias nos ativos autorizados
    - Salve
 
 #### 9.3 - Gerar Token Permanente
@@ -520,7 +518,7 @@ curl -X GET \
 
 Voce deve ter:
 - System User criado com nome descritivo
-- Ativos (App + WABA) atribuidos com controle total
+- Ativos (App + WABA) atribuidos com menor privilegio
 - **Token permanente** copiado e armazenado com seguranca
 - Token validado via chamada de API
 
@@ -629,21 +627,21 @@ META_BUSINESS_ID=          # ID da conta Business (15 digitos)
 
 # Passo 2 - App no Meta for Developers
 META_APP_ID=               # ID do aplicativo
-META_APP_SECRET=           # Segredo do app (em App Settings > Basic)
+APP_SECRET=           # Segredo do app (em App Settings > Basic)
 
 # Passo 4 - IDs do WhatsApp
-WHATSAPP_PHONE_NUMBER_ID=  # Phone Number ID (do numero real, nao do teste)
-WHATSAPP_WABA_ID=          # WhatsApp Business Account ID
+PHONE_NUMBER_ID=  # Phone Number ID (do numero real, nao do teste)
+WABA_ID=          # WhatsApp Business Account ID
 
 # Passo 9 - Token Permanente
-WHATSAPP_API_TOKEN=        # Token do System User (permanente)
+WHATSAPP_TOKEN=        # Token do System User (permanente)
 
 # Configuracoes da API
 WHATSAPP_API_VERSION=v21.0
 WHATSAPP_API_URL=https://graph.facebook.com
 
 # Webhook (configurar separadamente)
-WEBHOOK_VERIFY_TOKEN=      # Token que VOCE define para validar o webhook
+VERIFY_TOKEN=      # Token que VOCE define para validar o webhook
 WEBHOOK_URL=               # URL publica do seu servidor (HTTPS obrigatorio)
 ```
 
@@ -654,8 +652,8 @@ Execute este comando para validar que tudo esta funcionando:
 ```bash
 # Substitua as variaveis pelos seus valores reais
 curl -X POST \
-  "https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_NUMBER_ID}/messages" \
-  -H "Authorization: Bearer ${WHATSAPP_API_TOKEN}" \
+  "https://graph.facebook.com/v21.0/${PHONE_NUMBER_ID}/messages" \
+  -H "Authorization: Bearer ${WHATSAPP_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{
     "messaging_product": "whatsapp",

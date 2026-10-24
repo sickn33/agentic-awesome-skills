@@ -44,7 +44,7 @@ DETECT ──→ FETCH ──→ IMPLEMENT ──→ CITE
 
 ### Step 1: Detect Stack and Versions
 
-Read the project's dependency file to identify exact versions:
+Read dependency manifests plus lockfiles/installed metadata to identify resolved versions; version ranges alone do not establish exact installed versions:
 
 ```
 package.json    → Node/React/Vue/Angular/Svelte
@@ -106,7 +106,7 @@ When official sources conflict with each other (e.g. a migration guide contradic
 Write code that matches what the documentation shows:
 
 - Use the API signatures from the docs, not from memory
-- If the docs show a new way to do something, use the new way
+- Use documented patterns compatible with the installed version and local requirements; a newer API is not by itself a reason for an unrelated migration
 - If the docs deprecate a pattern, don't use the deprecated version
 - If the docs don't cover something, flag it as unverified
 
@@ -142,8 +142,8 @@ const [state, formAction, isPending] = useActionState(submitOrder, initialState)
 
 ```
 I'm using useActionState instead of manual useState for the
-form submission state. React 19 replaced the manual
-isPending/setIsPending pattern with this hook.
+form submission state. React 19 provides this hook for supported Action patterns; manual
+state remains valid where appropriate.
 
 Source: https://react.dev/blog/2024/12/05/react-19#actions
 "useTransition now supports async functions [...] to handle

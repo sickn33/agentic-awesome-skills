@@ -1,6 +1,6 @@
 # Scenario-Specific Assumption Mining Checklists / 场景专用假设挖掘清单
 
-This file provides structured mining checklists for 8 common scenario types (4 Chinese-native + 4 English-native). Each checklist contains **high-frequency hidden assumptions** that people in those situations almost never question, plus tailored probing questions to surface them.
+This file provides structured mining checklists for 8 common scenario types (4 Chinese-native + 4 English-native). Each checklist contains **candidate assumptions** to explore only when relevant; no prevalence study is supplied, plus tailored probing questions to surface them.
 
 When a user's question matches a scenario type, use the corresponding checklist to ensure your Phase 2 (Assumption Mining) is thorough and culturally relevant.
 
@@ -242,6 +242,6 @@ When a user's question matches a scenario type, use the corresponding checklist 
 
 1. **Identify the scenario type** from the user's question
 2. **Use the checklist as a mining guide** — not all assumptions will apply to every user, but scan through them systematically
-3. **Prioritize culturally-specific assumptions** — a Chinese user asking about career decisions will have very different hidden assumptions than an American user
+3. **Establish relevant context** — language does not determine nationality or beliefs; ask about the actual labor market, jurisdiction and personal goals
 4. **Combine with organic mining** — the checklist is a starting point, not a ceiling. Always mine for assumptions unique to the user's specific situation
 5. **Use the probing questions** to surface assumptions the user can't articulate directly

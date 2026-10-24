@@ -52,6 +52,13 @@ class ASOScorer:
         Returns:
             Overall score with detailed breakdown
         """
+        import math
+        for group in (metadata, ratings, keyword_performance, conversion):
+            for value in group.values():
+                if isinstance(value, (int, float)) and (not math.isfinite(value) or value < 0):
+                    raise ValueError("Metrics must be finite and nonnegative")
+        if not 0 <= ratings.get("average_rating", 0) <= 5 or not 0 <= conversion.get("impression_to_install", 0) <= 1 or not 0 <= metadata.get("description_quality", 0) <= 1:
+            raise ValueError("Rating, conversion or quality outside allowed range")
         # Calculate component scores
         metadata_score = self.score_metadata_quality(metadata)
         ratings_score = self.score_ratings_reviews(ratings)
@@ -103,6 +110,8 @@ class ASOScorer:
 
         return {
             'overall_score': round(overall_score, 1),
+            'interpretation': 'Uncalibrated editorial rubric over supplied inputs, not a store ranking, measured category benchmark or predicted lift',
+            'missing_inputs': [name for name, values in [('metadata', metadata), ('ratings', ratings), ('keyword_performance', keyword_performance), ('conversion', conversion)] if not values],
             'health_status': health_status,
             'score_breakdown': self.score_breakdown,
             'recommendations': recommendations,

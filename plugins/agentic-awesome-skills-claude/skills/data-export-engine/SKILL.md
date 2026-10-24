@@ -133,7 +133,7 @@ CREATE TABLE data_export_engine (
   purpose VARCHAR(255),
   format VARCHAR(255),
   date_requested DATE NOT NULL,
-  date_delivered DATE NOT NULL,
+  date_delivered DATE,
   contains_personal_data BOOLEAN NOT NULL,
   approved_by VARCHAR(255),
   status VARCHAR(100) NOT NULL,
@@ -158,7 +158,7 @@ CREATE INDEX idx_data_export_engine_status ON data_export_engine (status);
       "Purpose": { "type": "string" },
       "Format": { "type": "string" },
       "Date Requested": { "type": "string", "format": "date" },
-      "Date Delivered": { "type": "string", "format": "date" },
+      "Date Delivered": { "type": ["string", "null"], "format": "date" },
       "Contains Personal Data": { "type": "boolean" },
       "Approved By": { "type": "string" },
       "Status": { "type": "string" },
@@ -166,7 +166,7 @@ CREATE INDEX idx_data_export_engine_status ON data_export_engine (status);
   },
   "required": [
       "Date Requested",
-      "Date Delivered",
+      "Contains Personal Data",
       "Status"
   ]
 }
@@ -206,6 +206,8 @@ and anything pointing at another table stays `relation`.
 | 9 | Approved By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
 | 10 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Completed` |
 | 11 | Export ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+Date Delivered stays unknown/null before delivery; never invent a completed date for Requested/Approved/Failed records. The personal-data flag must be explicitly assessed, not inferred false from missing inputs.
 
 ## Select Options
 
@@ -293,7 +295,7 @@ We copy data out of two systems by hand every month.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

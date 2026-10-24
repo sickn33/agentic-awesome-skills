@@ -33,7 +33,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge trading --format json
+longbridge trading session --format json
 
 # See all options
 longbridge trading --help

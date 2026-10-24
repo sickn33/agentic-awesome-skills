@@ -25,7 +25,7 @@ lore history --json
 
 ### `--follow-superseded`
 
-When set on the entry form, prints not just the requested entry's git history, but the history of every entry in its `#superseded-by` chain (newest successor first). Stops when an entry has no `#superseded-by` tag or the chain reaches a non-existent ID. Output prepends a `## Chain` section listing each entry's ID and file path before the per-entry `git log` blocks.
+When set on the entry form, prints not just the requested entry's git history, but the history of every entry in its `#superseded-by` chain (starting entry first, then successive replacements). Stops when an entry has no `#superseded-by` tag or the chain reaches a non-existent ID. Output prepends a `## Chain` section listing each entry's ID and file path before the per-entry `git log` blocks.
 
 Example:
 
@@ -136,67 +136,10 @@ it shows the commits that introduced or modified the underlying code,
 letting the agent answer "why does this decision exist?" with a pointer
 to the original commit instead of an LLM-generated guess.
 
-## `--since` normalization (same-day commit safety)
+## Date normalization and bounds
 
-`git log --since=YYYY-MM-DD` interpretation is version-dependent.
-Older git versions parse a bare date as the user's local-timezone
-midnight; newer versions parse it as UTC midnight. A commit made early
-in the day can therefore be silently dropped when filtering by a
-same-day `#added` tag.
+Date-only inputs are validated and normalized to `YYYY-MM-DDT00:00:00+00:00` (UTC). Timestamp inputs must be valid ISO timestamps. This is deterministic across hosts; it does not recover the timezone of a historical #added date. For author-local dates near midnight, use an explicitly earlier --since and inspect commit timestamps.
 
-To avoid this, `lore history` normalizes date-only inputs to an explicit
-ISO-8601 timestamp before passing them to `git log`. The transformation
-is `YYYY-MM-DD` → `YYYY-MM-DD T 00:00:00`, applied at the entry-form
-extraction point and at the file-form `--since` argument. Strings that
-already contain a time component (a `T` or a space) are passed through
-unchanged.
+File and scope queries without --since, and entries without #added, omit the Git date filter. Metadata can retain the old epoch marker for compatibility; it is not a filter. Each query returns at most 200 commits, so an output at that cap may be incomplete. Supersede chains follow the starting entry forward, stop on cycles/missing IDs, and are capped at 20. Duplicate IDs fail inventory instead of selecting an arbitrary scope.
 
-This means the JSON output's `since` field will show e.g.
-`"2026-07-13T00:00:00"` for a date-only `#added`, not `"2026-07-13"`.
-The same-day commit you want to surface is now guaranteed to be in the
-result, regardless of the host's git version or the user's timezone.
-
-File and scope forms without an explicit `--since`, and entry forms
-without an `#added` tag, omit Git's `--since` option so they truly scan
-the full history. Their JSON metadata retains
-`"1970-01-01T00:00:00"` as the backward-compatible default marker;
-that marker is not passed to Git because the exact Unix epoch can be
-treated as a sentinel and incorrectly return no commits.
-
-## Known issues
-
-### Cross-timezone `#added` interpretation (unfixed)
-
-The normalization in the previous section only resolves the *git version*
-ambiguity. A second, deeper ambiguity remains: `#added` is a date-only
-string written by the **author** of the entry, but `git log --since=`
-interprets it in the **runner's** local timezone.
-
-**Scenario** (uncovered, not yet reproduced in a real project):
-
-1. Author in `+0800` commits at 2026-07-13 02:00 `+0800`
-   (= 2026-07-12 18:00 UTC) and adds an entry with
-   `#added: 2026-07-13` (their local date).
-2. Runner in `PST (UTC-8)` invokes `lore history DEC-…`.
-3. `git log --since=2026-07-13T00:00:00` is interpreted in the
-   runner's PST as 2026-07-13 00:00 PST (= 2026-07-13 08:00 UTC).
-4. The commit at 2026-07-12 18:00 UTC is **before** 2026-07-13 08:00
-   UTC, so the commit is **excluded** from history.
-5. From the runner's perspective, the commit looks "older than the
-   entry" even though both occurred on the same calendar day in the
-   author's timezone.
-
-This is a real bug, but it is **not fixed** in this release because:
-
-- No cross-timezone reproduction has been reported.
-- Fixing it would require either (a) subtracting one day from
-  `#added` before passing to `git log`, which occasionally over-includes
-  the previous day, or (b) capturing the exact UTC time of `#added` in
-  the entry format, which is a breaking change to the entry schema.
-
-**Workaround today**: pass `--since=<#added - 1 day>` explicitly when
-the runner is in a timezone west of the author's.
-
-**Trigger to fix**: any user report of "history missed a commit that I
-know is related" with cross-timezone evidence. Until then, the field
-remains a known issue rather than a known fix.
+History paths are literal and repository-relative; traversal, absolute paths and Git magic pathspecs are rejected. Scope names are a single validated directory segment. Git subprocesses have a 30-second timeout. The source-file inference is a heuristic association: a scope alias may not match its actual source directory. Use an explicit file query when that mapping is uncertain; zero matches do not prove absence of history.

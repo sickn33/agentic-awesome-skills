@@ -1,11 +1,14 @@
 # Rust Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Integer Overflow Behavior Differs by Build
 
 ```rust
 // In debug builds: panics
 // In release builds: wraps silently!
-let x: u8 = 255;
+let x: u8 = std::hint::black_box(255);  // runtime value, avoiding compile-time overflow lint
 let y = x + 1;  // Debug: panic! Release: y = 0
 
 fn calculate_size(count: usize, element_size: usize) -> usize {
@@ -33,7 +36,7 @@ let (y, overflowed) = x.overflowing_add(1);
 ## Unsafe Blocks
 
 ```rust
-// DANGEROUS: Unsafe disables Rust's safety guarantees
+// Unsafe permits specific operations whose safety invariants the programmer must uphold; normal borrow/type checks still apply
 unsafe {
     // Can dereference raw pointers
     let ptr: *const i32 = &42;
@@ -49,7 +52,7 @@ unsafe {
 }
 
 // Real vulnerabilities from unsafe:
-// - CVE-2019-15548: memory safety bug in slice::from_raw_parts
+// - Any claimed CVE association must be checked against its primary advisory; raw pointer invariants alone do not identify a particular CVE.
 // - Many FFI-related vulnerabilities
 ```
 
@@ -84,13 +87,13 @@ std::mem::forget(vec);  // Vec's memory leaked, but ptr still valid... maybe
 ## Panics and Unwinding
 
 ```rust
-// DANGEROUS: Panic in FFI boundary is UB
+// A Rust panic reaching a non-unwinding extern C boundary aborts under current Rust semantics
 #[no_mangle]
 pub extern "C" fn called_from_c() {
-    panic!("oops");  // Undefined behavior!
+    panic!("oops");  // Aborts if it reaches this non-unwinding ABI boundary
 }
 
-// SAFE: Catch panic at FFI boundary
+// With panic=unwind, catch Rust unwinds before returning across FFI; panic=abort cannot be caught.
 #[no_mangle]
 pub extern "C" fn called_from_c() -> i32 {
     match std::panic::catch_unwind(|| {
@@ -168,7 +171,7 @@ unsafe impl Sync for MyWrapper {}
 ## Lifetime Elision Surprises
 
 ```rust
-// The compiler infers lifetimes, but sometimes wrong
+// Elision follows specified rules; an unnecessarily narrow lifetime can restrict callers
 impl MyStruct {
     // Elided: fn get(&self) -> &str
     // Means:  fn get<'a>(&'a self) -> &'a str
@@ -179,7 +182,7 @@ impl MyStruct {
 
 // But what if you return something else?
 impl MyStruct {
-    // WRONG: Elision assumes output lifetime = self lifetime
+    // Valid but more restrictive than necessary: output is tied to self
     fn get_static(&self) -> &str {
         "static string"  // Actually 'static, not 'self
     }
@@ -220,14 +223,14 @@ w.len();  // Now calls Wrapper::len, not String::len
 ```rust
 // Fields dropped in declaration order
 struct S {
-    first: A,   // Dropped last
-    second: B,  // Dropped first
+    first: A,   // Dropped first
+    second: B,  // Dropped second
 }
 
 // Can cause issues if B depends on A
 struct Connection {
-    pool: Arc<Pool>,      // Dropped second
-    conn: PooledConn,     // Dropped first - needs pool!
+    pool: Arc<Pool>,      // This Arc field drops first; other strong owners may keep the pool alive
+    conn: PooledConn,     // Drops second; use explicit ownership, not an assumed reverse field order
 }
 
 // Fix: reorder fields, or use ManuallyDrop
@@ -246,15 +249,15 @@ macro_rules! make_var {
 make_var!(x);
 println!("{}", x);  // Works - x is in scope
 
-// But: macros can capture identifiers unexpectedly
+// Distinguish actual hygiene/namespace limits from an ordinary hygienic local binding
 macro_rules! double {
     ($e:expr) => {
-        { let x = $e; x + x }  // Shadows any x in $e!
+        { let x = $e; x + x }  // Local binding does not capture identifiers in the caller’s expression
     }
 }
 
 let x = 10;
-double!(x + 1)  // Doesn't do what you expect
+double!(x + 1)  // Evaluates to 22: macro hygiene preserves the outer x in the supplied expression.
 ```
 
 ## Detection Patterns
@@ -267,6 +270,6 @@ double!(x + 1)  // Doesn't do what you expect
 | `.unwrap()`, `.expect()` | Panic on None/Err |
 | `RefCell::borrow_mut()` | Runtime panic on double borrow |
 | `unsafe impl Send/Sync` | Potential data races |
-| `extern "C" fn` without catch_unwind | UB on panic |
+| `extern "C" fn` without catch_unwind | Process abort if a Rust panic crosses this boundary |
 | Drop impl with panic | Double panic = abort |
 | Complex deref chains | Method resolution confusion |

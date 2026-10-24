@@ -40,7 +40,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ### Technical Limitations
 - Modern kernels may have exploit mitigations (ASLR, SMEP, SMAP)
 - AppArmor/SELinux may restrict exploitation techniques
-- Container environments limit kernel-level exploits
+- Containers commonly share the host kernel; kernel exploit testing may affect the host and requires explicit host scope
 - Hardened systems may have restricted sudo configurations
 
 ### Legal and Ethical Requirements

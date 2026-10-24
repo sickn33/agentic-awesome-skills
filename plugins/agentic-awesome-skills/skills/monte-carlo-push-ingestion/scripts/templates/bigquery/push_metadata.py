@@ -3,7 +3,7 @@ BigQuery — Metadata Push (push only)
 =====================================
 Reads a manifest file produced by ``collect_metadata.py`` and pushes the assets
 to Monte Carlo using the pycarlo push ingestion API.  Large payloads are split
-into batches to stay under the 1 MB compressed limit.
+into batches with a separate serialized-byte guard.
 
 Can be run standalone via CLI or imported (use the ``push()`` function).
 
@@ -12,7 +12,7 @@ Substitution points (search for "← SUBSTITUTE"):
   - MCD_RESOURCE_UUID      : UUID of the BigQuery connection in Monte Carlo
 
 Prerequisites:
-  pip install pycarlo
+  python -m pip install pycarlo==0.15.491
 """
 
 from __future__ import annotations
@@ -21,7 +21,6 @@ import argparse
 import json
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from pycarlo.core import Client, Session
@@ -33,14 +32,14 @@ from pycarlo.features.ingestion.models import (
     AssetVolume,
     RelationalAsset,
 )
-from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
+from _safe_paths import validate_push, checked_send, safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
 RESOURCE_TYPE = "bigquery"
 
-# Maximum assets per batch — conservative default to keep compressed payload under 1 MB
+# Maximum assets per batch — conservative default for item-count batching; bytes are checked separately
 # ← SUBSTITUTE: tune based on average asset size (fields per table, description length, etc.)
 _BATCH_SIZE = 500
 
@@ -97,6 +96,7 @@ def push(
     Returns a result dict with invocation IDs for each batch.
     """
     manifest = read_json_file(input_file)
+    validate_push(manifest, resource_uuid, batch_size)
 
     asset_dicts = manifest.get("assets", [])
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
@@ -105,7 +105,7 @@ def push(
 
     # Split into batches
     batches = []
-    for i in range(0, max(len(assets), 1), batch_size):
+    for i in range(0, len(assets), batch_size):
         batches.append(assets[i : i + batch_size])
     total_batches = len(batches)
 
@@ -113,7 +113,7 @@ def push(
         """Push a single batch using a dedicated Session (thread-safe)."""
         client = Client(session=Session(mcd_id=key_id, mcd_token=key_token, scope="Ingestion"))
         service = IngestionService(mc_client=client)
-        result = service.send_metadata(
+        result = checked_send(service, "send_metadata",
             resource_uuid=resource_uuid,
             resource_type=resource_type,
             events=batch,
@@ -122,22 +122,13 @@ def push(
         log.info("Pushed batch %d/%d (%d assets) — invocation_id=%s", batch_num, total_batches, len(batch), invocation_id)
         return invocation_id
 
-    # Push batches in parallel (each thread gets its own pycarlo Session)
-    max_workers = min(4, total_batches)
+    # Deliver sequentially; preserve each accepted result before the next request.
+    max_workers = 1
     invocation_ids: list[str | None] = [None] * total_batches
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {
-            pool.submit(_push_batch, batch, i + 1): i
-            for i, batch in enumerate(batches)
-        }
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                invocation_ids[idx] = future.result()
-            except Exception as exc:
-                log.error("ERROR pushing batch %d: %s", idx + 1, exc)
-                raise
+    # Sequential delivery stops immediately after an ambiguous/failed batch.
+    for idx, batch in enumerate(batches):
+        invocation_ids[idx] = _push_batch(batch, idx + 1)
 
     log.info("All %d batches pushed (%d workers)", total_batches, max_workers)
 
@@ -162,7 +153,7 @@ def main() -> None:
     )
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--input-file", default="metadata_output.json")
     parser.add_argument("--output-file", default="metadata_push_result.json")
     parser.add_argument(

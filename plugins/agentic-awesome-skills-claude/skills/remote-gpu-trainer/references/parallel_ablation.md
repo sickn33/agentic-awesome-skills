@@ -82,8 +82,8 @@ Hold the predicate by routing every per-cell write to a name-scoped path:
 **Never fan out onto shared mutable output.** Two cells writing `latest.pth`, the same
 `checkpoint_dir`, or one tracker run id = the exact shared-state violation the predicate forbids —
 it produces silently interleaved checkpoints and unattributable metrics, which no amount of
-post-hoc reconciliation can untangle. The `<name>` derives 1:1 from the cfg, so distinct cfgs →
-distinct paths automatically; **two queue lines must never share a `<name>`.**
+post-hoc reconciliation can untangle. The `<name>` is only the config basename, so different directories can collide. Check basenames
+across every queue before launch; **two queue lines must never share a `<name>`.**
 
 What is read-shared (the immutable wrappers, the dataset, the base image) is fine — the predicate
 only forbids shared **mutable** state.
@@ -124,12 +124,12 @@ One ablation cell per line, whitespace-separated (`while IFS=' ' read -r cfg tas
 
 ```
 configs/experiments/ablation/recon/baseline.yaml      reconstruction 20
-configs/experiments/ablation/det/baseline.yaml        detection      50
+configs/experiments/ablation/det/det_baseline.yaml        detection      50
 configs/experiments/ablation/seg/no_aug.yaml          segmentation
 ```
 
 **Resume via `start_index`.** A queue killed at cell k (SSH drop, preemption, OOM) resumes with
-`bash run_queue.sh queue.txt <k>` — it skips the first k lines and continues. This is the queue-level
+`bash run_queue.sh queue.txt <k>` — it skips the first k−1 non-comment cells and starts cell k. This is the queue-level
 form of principle #8 (idempotent resume); combined with per-cell checkpoint-load-on-startup, a
 half-finished cell resumes mid-cell, not from scratch. Keep `start_index` aligned to the queue file:
 appending lines is safe, **reordering or deleting earlier lines shifts every index** — append only.
@@ -187,8 +187,8 @@ watcher's last status; re-launch missing cells with `start_index` on a live inst
 
 **`start_index` resumes the wrong cell after a queue edit.**
 Symptom: resume skips or re-runs the wrong rows. → Root cause: a line was inserted/deleted/reordered,
-shifting every subsequent index. → Fix: append-only to in-flight queue files; to drop a cell, comment
-it (don't delete) so indices stay stable, or start a fresh queue file for the remainder.
+shifting every subsequent index. → Fix: append-only to in-flight queue files; commenting a cell also shifts indices because the runner counts non-comment cells. Keep the
+active queue unchanged and start a fresh queue file for the remainder.
 
 > Universal gotchas (SSH drop on `pkill`, CRLF, cgroup OOM, silent sync, inode exhaustion on
 > many-small-files eval output across a shared FS) are **not** restated here — see

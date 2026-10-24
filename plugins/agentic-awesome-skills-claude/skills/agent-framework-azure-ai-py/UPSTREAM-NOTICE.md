@@ -8,7 +8,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `references/tools.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/tools.md` | `832a87b97c04d649e8dc3a8869a4e3c211a602ce` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/mcp.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/mcp.md` | `7dce0bcd2a9c144591bd56b8915751f503dadef5` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/threads.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/threads.md` | `610cd60477871bc2cfbee0f5cebe62fea34d99b7` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/advanced.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/advanced.md` | `13ac0fe8b0ec5dbf1eeeb17d64ad963f96a043f2` | text-only trailing whitespace and EOF blank lines normalized |
+| `references/tools.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/tools.md` | `832a87b97c04d649e8dc3a8869a4e3c211a602ce` | text normalized; local review adds SDK-generation/safety scope and targeted example corrections |
+| `references/mcp.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/mcp.md` | `7dce0bcd2a9c144591bd56b8915751f503dadef5` | text normalized; local review adds SDK-generation/safety scope and targeted example corrections |
+| `references/threads.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/threads.md` | `610cd60477871bc2cfbee0f5cebe62fea34d99b7` | text normalized; local review adds SDK-generation/safety scope and targeted example corrections |
+| `references/advanced.md` | `.github/plugins/azure-sdk-python/skills/agent-framework-azure-ai-py/references/advanced.md` | `13ac0fe8b0ec5dbf1eeeb17d64ad963f96a043f2` | text normalized; local review adds SDK-generation/safety scope and targeted example corrections |

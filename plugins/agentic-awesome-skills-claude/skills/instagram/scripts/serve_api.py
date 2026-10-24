@@ -16,7 +16,7 @@ Endpoints:
     GET /api/templates              → templates
     GET /api/actions                → audit log
     GET /dashboard                  → dashboard HTML
-    GET /webhook                    → stub para v2
+    GET /webhook                    → unavailable stub
 """
 from __future__ import annotations
 
@@ -111,7 +111,9 @@ def insights_summary():
                AVG(CASE WHEN i.metric_name='reach' THEN i.metric_value END) as avg_reach,
                AVG(CASE WHEN i.metric_name='impressions' THEN i.metric_value END) as avg_impressions
         FROM posts p
-        LEFT JOIN insights i ON i.ig_media_id = p.ig_media_id
+        LEFT JOIN insights i ON i.ig_media_id = p.ig_media_id AND i.account_id = p.account_id
+      AND i.id = (SELECT MAX(i2.id) FROM insights i2 WHERE i2.account_id = i.account_id
+                  AND i2.ig_media_id = i.ig_media_id AND i2.metric_name = i.metric_name AND i2.period = i.period)
         WHERE p.status = 'published'
         GROUP BY p.media_type
     """).fetchall()
@@ -129,9 +131,11 @@ def best_times():
             COUNT(DISTINCT p.id) as post_count,
             AVG(i.metric_value) as avg_engagement
         FROM posts p
-        JOIN insights i ON i.ig_media_id = p.ig_media_id
+        JOIN insights i ON i.ig_media_id = p.ig_media_id AND i.account_id = p.account_id
+      AND i.id = (SELECT MAX(i2.id) FROM insights i2 WHERE i2.account_id = i.account_id
+                  AND i2.ig_media_id = i.ig_media_id AND i2.metric_name = i.metric_name AND i2.period = i.period)
         WHERE p.status = 'published' AND p.published_at IS NOT NULL
-          AND i.metric_name IN ('engagement', 'reach')
+          AND i.metric_name = 'engagement'
         GROUP BY hour, weekday
         ORDER BY avg_engagement DESC
     """).fetchall()
@@ -168,7 +172,7 @@ def recent_actions(limit: int = Query(50, ge=1, le=500)):
 @app.get("/api/export/json", summary="Exportar posts em JSON")
 def export_json():
     account = db.get_active_account()
-    posts = db.get_posts(account_id=account["id"] if account else None, limit=5000)
+    posts = db.get_posts(account_id=account["id"] if account else None, limit=1000)
     return JSONResponse(
         content={"total": len(posts), "data": posts},
         headers={"Content-Disposition": "attachment; filename=instagram_posts.json"},
@@ -178,7 +182,7 @@ def export_json():
 @app.get("/api/export/csv", summary="Exportar posts em CSV")
 def export_csv():
     account = db.get_active_account()
-    posts = db.get_posts(account_id=account["id"] if account else None, limit=5000)
+    posts = db.get_posts(account_id=account["id"] if account else None, limit=1000)
     if not posts:
         return PlainTextResponse("Sem dados.")
     output = io.StringIO()
@@ -203,12 +207,12 @@ def dashboard():
 
 @app.get("/webhook", summary="Webhook stub (v2)")
 def webhook_stub():
-    return {"status": "ok", "message": "Webhook endpoint ready (v2)"}
+    return JSONResponse({"error": "Webhook not implemented"}, status_code=501)
 
 
 @app.post("/webhook", summary="Webhook receiver (v2)")
 def webhook_receive():
-    return {"status": "ok"}
+    return JSONResponse({"error": "Webhook not implemented; event not accepted"}, status_code=501)
 
 
 def main():
@@ -217,6 +221,9 @@ def main():
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--reload", action="store_true")
     args = parser.parse_args()
+
+    if args.host not in ("127.0.0.1", "::1", "localhost"):
+        parser.error("Unauthenticated dashboard is loopback-only")
 
     print(f"\nAPI: http://{args.host}:{args.port}")
     print(f"Dashboard: http://{args.host}:{args.port}/dashboard")

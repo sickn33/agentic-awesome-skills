@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Vendored unchanged (except this line) from agent-forge skills/geo-seo-audit/scripts/geo_audit.py v1.0 for launch-check; edit upstream, then re-copy.
+# Adapted from agent-forge geo-seo-audit v1.0: AAS scoped redirects, inert local reads, safe emitted drafts and honest audit boundaries.
 """geo-seo-audit: crawl a site (or a built static folder) and score its SEO + AI-search (GEO) readiness.
 
 Usage:
@@ -17,8 +17,7 @@ Claude-SearchBot, OAI-SearchBot, PerplexityBot, Google-Extended, CCBot ...), llm
 JSON-LD schema.org validity per type, Open Graph, answerability signals for AI search, page weight and
 render-blocking resources, image alt text, JavaScript-only content.
 
-Network is the feature in URL mode and is polite and contained: robots.txt read first and applied to every
-request (RFC 9309), only http(s) on the audited host (no file://, ftp://, UNC, off-site redirects or sitemaps),
+Network is the feature in URL mode and is polite and contained: robots.txt read first and applied to crawl requests using a limited parser, only http(s) on the audited host (no file://, ftp://, UNC, off-site redirects or sitemaps),
 Crawl-delay honoured, 1 request per --delay seconds, --timeout per request, same-site only, --max-pages cap,
 HTML bodies capped at 3 MB. --local needs no network at all.
 
@@ -32,6 +31,7 @@ import argparse
 import csv
 from html import escape as html_escape
 import gzip
+from launch_check import sanitize_report
 import io
 import json
 import math
@@ -385,7 +385,7 @@ def words(text: str) -> int:
 
 # ------------------------------------------------------------------------------------------------ robots
 class Robots:
-    """robots.txt per RFC 9309: groups, Allow/Disallow, * and $ wildcards, longest match wins."""
+    """robots.txt subset: groups, Allow/Disallow, * and $ wildcards, longest match wins; not full RFC conformance."""
 
     def __init__(self, text: str = "") -> None:
         self.groups: list[tuple[list[str], list[tuple[str, str]]]] = []
@@ -533,7 +533,7 @@ class HttpFetcher:
 
     def permitted(self, url: str) -> bool:
         parts = urlparse.urlsplit(url)
-        if parts.scheme not in ("http", "https") or not parts.hostname:
+        if parts.scheme not in ("http", "https") or not parts.hostname or parts.username or parts.password or "\\" in url:
             return False
         return self.allowed_hosts is None or host_of(url) in self.allowed_hosts
 
@@ -650,7 +650,8 @@ class LocalFetcher:
         target = self.path_for(url)
         if target is None:
             return Response(url, 404, {"content-type": "text/plain"}, b"not found")
-        body = target.read_bytes()[:MAX_BODY]
+        with target.open("rb") as handle:
+            body = handle.read(MAX_BODY)
         ctype = self.TYPES.get(target.suffix.lower(), "application/octet-stream")
         final = url
         parts = urlparse.urlsplit(url)
@@ -785,7 +786,7 @@ class Audit:
 
     def _robots_gate(self) -> None:
         self.load_robots()
-        if self.robots_resp is not None and self.robots_resp.status >= 500:
+        if self.robots_resp is not None and (self.robots_resp.status == 0 or self.robots_resp.status >= 500):
             raise SystemExit("error: robots.txt is unreachable (5xx); RFC 9309 says a crawler must stop. "
                              "Retry later or audit a local build with --local.")
         if not self.may_fetch(self.start):
@@ -797,6 +798,7 @@ class Audit:
         given = urlparse.urlsplit(self.start)
         self.origin = urlparse.urlunsplit((given.scheme, given.netloc, "/", "", ""))
         if self.fetcher.mode == "network":
+            self.fetcher.allowed_hosts = {host_of(self.start)}
             self._robots_gate()  # robots.txt before anything else
         first = self.fetcher.get(self.start)
         if first.status == 0:
@@ -819,7 +821,9 @@ class Audit:
         if self.fetcher.mode == "network":
             delay = self.robots.delay_for(ROBOTS_TOKEN)
             if delay > self.fetcher.delay:
-                self.fetcher.delay = min(delay, 30.0)
+                if not math.isfinite(delay) or delay > 30:
+                    raise SystemExit("error: robots crawl delay exceeds the bounded audit budget; use --local or retry with a suitable schedule")
+                self.fetcher.delay = delay
                 self.notes.append(f"robots.txt Crawl-delay {delay:g}s honoured")
         self.load_sitemaps()
         self.crawl(first)
@@ -870,6 +874,9 @@ class Audit:
                 self.notes.append(f"read {files} sitemap files (cap {cap}); sitemap-based checks limited")
                 break
             seen.add(url)
+            if not self.may_fetch(url):
+                self.robots_skipped.append(url)
+                continue
             resp = self.fetcher.get(url)
             files += 1
             if resp.status != 200:
@@ -1304,11 +1311,14 @@ def run_checks(audit: Audit) -> None:
         candidates = [u for u in audit.sitemap_urls if audit.in_scope(u)]
         if audit.local_root is not None:
             for path in sorted(audit.local_root.rglob("*.htm*")):
+                if path.is_symlink() or audit.local_root not in path.resolve().parents:
+                    continue
                 rel = path.relative_to(audit.local_root).as_posix()
                 if path.name.lower() in ("404.html", "404.htm") or rel.startswith((".", "_")):
                     continue
                 try:
-                    head = path.read_bytes()[:4096].lower()
+                    with path.open("rb") as handle:
+                        head = handle.read(4096).lower()
                 except OSError:
                     continue
                 if not re.search(rb"<(!doctype|html|body|head)\b", head):  # theme templates, partials
@@ -1701,6 +1711,9 @@ def emit_dir_ok(out_dir: Path) -> bool:
 
 
 def emit_fixes(audit: Audit, report: dict, out_dir: Path) -> list[str]:
+    if out_dir.is_symlink(): raise ValueError("Output directory must not be a symlink")
+    if out_dir.exists() and any(p.is_symlink() for p in out_dir.rglob("*")):
+        raise ValueError("Output tree contains symlinks; choose a new directory")
     out_dir.mkdir(parents=True, exist_ok=True)
     written: list[str] = []
     origin = audit.origin
@@ -1790,7 +1803,7 @@ def emit_fixes(audit: Audit, report: dict, out_dir: Path) -> list[str]:
         for url in audit.sitemap_urls:
             page = audit.pages.get(url)
             status = audit.status_of(url)
-            bad = (status is not None and (status == 0 or status >= 400)) or (page is not None and (
+            bad = (status in (404, 410)) or (page is not None and (
                 page.stub or page.noindex or (page.ok_html and page.final != url)))
             if bad:
                 removed.append(url)
@@ -1871,7 +1884,7 @@ def emit_fixes(audit: Audit, report: dict, out_dir: Path) -> list[str]:
                 n += 1
                 name = f"{base_name}-{n}.html"
             used_names.add(name.lower())
-            body = "\n".join('<script type="application/ld+json">\n' + json.dumps(b, indent=2, ensure_ascii=False)
+            body = "\n".join('<script type="application/ld+json">\n' + json.dumps(b, indent=2, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
                              + "\n</script>" for b in blocks)
             (jsonld_dir / name).write_text(body + "\n", encoding="utf-8")
             snippets.append({"url": page.url, "file": f"jsonld/{name}", "types": [b["@type"] for b in blocks]})
@@ -1902,7 +1915,7 @@ def emit_fixes(audit: Audit, report: dict, out_dir: Path) -> list[str]:
         with open(out_dir / "meta-fixes.csv", "w", newline="", encoding="utf-8") as handle:
             writer = csv.writer(handle)
             writer.writerow(["url", "issue", "current", "suggestion"])
-            writer.writerows(rows)
+            writer.writerows([["'" + cell if isinstance(cell, str) and cell.lstrip().startswith(("=", "+", "-", "@")) else cell for cell in row] for row in rows])
         written.append(f"meta-fixes.csv ({len(rows)} rows)")
 
     readme = [EMIT_MARKER, "",
@@ -1910,7 +1923,7 @@ def emit_fixes(audit: Audit, report: dict, out_dir: Path) -> list[str]:
               "Nothing here is applied automatically. Review each file, then copy it into your site.", ""]
     howto = {
         "llms.txt": "Put at the site root as /llms.txt (text/plain). Edit the summary and drop pages you do not want listed.",
-        "robots.txt": "Compare with your current robots.txt, then replace it. Answer/search bots are allowed; training bots keep your existing choice.",
+        "robots.txt": "Review policy before any replacement: this draft may allow answer/search bots your existing policy blocked; training groups are preserved where parsed.",
         "sitemap.xml": "Serve as /sitemap.xml after review.",
         "jsonld/": "Paste each file's <script> blocks into the <head> of the page listed in jsonld/manifest.json. Add author and datePublished to Article blocks when you know them.",
         "meta-fixes.csv": "Titles/descriptions to rewrite. Suggestions are trimmed drafts: rewrite them for people.",
@@ -2026,6 +2039,15 @@ def _color(value) -> str:
 def render_report(report: dict, baseline: dict | None = None) -> str:
     """One self-contained HTML page (no external files, all site text escaped) for a client or a PR."""
     esc = html_escape
+    if baseline is not None:
+        if not isinstance(baseline, dict): raise ValueError("Baseline must be an object")
+        for field in ("score", "high"):
+            value = baseline.get(field, 0)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value):
+                raise ValueError("Baseline numeric field invalid")
+        if not isinstance(baseline.get("categories", {}), dict): raise ValueError("Baseline categories invalid")
+        if any(v is not None and (not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or not 0 <= v <= 100) for v in baseline.get("categories", {}).values()):
+            raise ValueError("Baseline categories must be bounded numbers")
     score_value = report["score"]
     ring = 2 * math.pi * 52
     dial = (f'<svg width="150" height="150" viewBox="0 0 120 120" role="img" aria-label="score {score_value} of 100">'
@@ -2103,7 +2125,7 @@ def render_report(report: dict, baseline: dict | None = None) -> str:
 
 def guess_base(root: Path) -> tuple[str, bool]:
     index = root / "index.html"
-    if index.is_file():
+    if index.is_file() and not index.is_symlink() and root.resolve() in index.resolve().parents and index.stat().st_size <= MAX_BODY:
         parser = parse_page(index.read_text(encoding="utf-8", errors="replace"))
         for candidate in [tag.get("href", "") for tag in parser.link_tags
                           if "canonical" in tag.get("rel", "").lower().split()] + [meta_content(parser, "og:url") or ""]:
@@ -2153,7 +2175,7 @@ def main(argv: list[str] | None = None) -> int:
         ap.print_usage(sys.stderr)
         sys.stderr.write("error: give a URL or --local DIR (exactly one)\n")
         return 2
-    if args.max_pages < 1 or args.delay < 0 or args.timeout <= 0:
+    if not 1 <= args.max_pages <= 1000 or not 0 <= args.delay <= 30 or not 0 < args.timeout <= 120 or not 0 <= args.link_budget <= 1000:
         sys.stderr.write("error: --max-pages >= 1, --delay >= 0, --timeout > 0\n")
         return 2
     local_root = None
@@ -2217,6 +2239,7 @@ def main(argv: list[str] | None = None) -> int:
         report["refused_urls"] = audit.fetcher.refused
     if args.emit_fixes:
         report["emitted"] = emit_fixes(audit, report, Path(args.emit_fixes).expanduser())
+    report = sanitize_report(report)
     if args.report:
         try:
             Path(args.report).expanduser().write_text(render_report(report, baseline), encoding="utf-8")

@@ -87,30 +87,12 @@ def paginated_query(
     parameters: list | None = None
 ):
     """Paginate through query results using continuation tokens."""
-    continuation_token = None
-    page_number = 0
-
-    while True:
-        # Create query iterable with pagination
-        query_iterable = container.query_items(
-            query=query,
-            parameters=parameters or [],
-            partition_key=partition_key,
-            max_item_count=page_size,
-            continuation_token=continuation_token
-        )
-
-        # Get page of results
-        page = list(query_iterable.by_page().__next__())
-        page_number += 1
-
-        print(f"Page {page_number}: {len(page)} items")
-        yield page
-
-        # Get continuation token for next page
-        continuation_token = query_iterable.continuation_token
-        if not continuation_token:
-            break
+    if page_size < 1:
+        raise ValueError("page_size must be positive")
+    results = container.query_items(query=query, parameters=parameters or [],
+                                    partition_key=partition_key, max_item_count=page_size)
+    for page in results.by_page():
+        yield list(page)
 
 # Usage
 for page in paginated_query(
@@ -210,9 +192,9 @@ query = "SELECT * FROM c WHERE ARRAY_LENGTH(c.tags) > 3"
 # Case-insensitive search (expensive - no index)
 query = "SELECT * FROM c WHERE LOWER(c.name) = LOWER(@search_name)"
 
-# Contains (prefix search uses index, contains doesn't)
+# Index behavior depends on function and query plan; measure request charge
 query = "SELECT * FROM c WHERE STARTSWITH(c.name, @prefix)"  # Uses index
-query = "SELECT * FROM c WHERE CONTAINS(c.name, @substring)"  # Full scan
+query = "SELECT * FROM c WHERE CONTAINS(c.name, @substring)"  # May use an index scan; inspect metrics
 
 # String manipulation
 query = """
@@ -263,62 +245,39 @@ query = "SELECT TOP 10 * FROM c ORDER BY c.score DESC"
 Execute multiple operations atomically within a single partition:
 
 ```python
-from azure.cosmos import TransactionalBatch
-
-def transfer_funds(container, from_account_id: str, to_account_id: str, amount: float, partition_key: str):
-    """Transfer funds between accounts atomically."""
-
-    # Read current balances
-    from_account = container.read_item(item=from_account_id, partition_key=partition_key)
-    to_account = container.read_item(item=to_account_id, partition_key=partition_key)
-
-    if from_account["balance"] < amount:
+def transfer_funds(container, from_account_id, to_account_id, amount_minor, partition_key):
+    """Illustration only: amounts stored as integer minor units in one partition.
+    Caller must add a unique durable operation ID for ambiguous-response retries.
+    """
+    if not isinstance(amount_minor, int) or isinstance(amount_minor, bool) or amount_minor <= 0:
+        raise ValueError("positive integer minor units required")
+    if from_account_id == to_account_id:
+        raise ValueError("distinct accounts required")
+    source = container.read_item(item=from_account_id, partition_key=partition_key)
+    target = container.read_item(item=to_account_id, partition_key=partition_key)
+    if source["balance_minor"] < amount_minor:
         raise ValueError("Insufficient funds")
-
-    # Update balances
-    from_account["balance"] -= amount
-    to_account["balance"] += amount
-
-    # Execute as transaction
-    batch = TransactionalBatch(partition_key=partition_key)
-    batch.replace_item(item=from_account_id, body=from_account)
-    batch.replace_item(item=to_account_id, body=to_account)
-
-    results = container.execute_transactional_batch(batch=batch)
-
-    # Check results
-    for result in results:
-        if result["statusCode"] >= 400:
-            raise Exception(f"Transaction failed: {result}")
-
-    return results
+    source["balance_minor"] -= amount_minor
+    target["balance_minor"] += amount_minor
+    operations = [
+        ("replace", (source["id"], source), {"if_match_etag": source["_etag"]}),
+        ("replace", (target["id"], target), {"if_match_etag": target["_etag"]}),
+    ]
+    return container.execute_item_batch(batch_operations=operations, partition_key=partition_key)
 ```
 
 ### Batch Operations
 
 ```python
-from azure.cosmos import TransactionalBatch
-
-def batch_create_items(container, items: list[dict], partition_key: str):
-    """Create multiple items in a single batch (max 100 operations)."""
-    batch = TransactionalBatch(partition_key=partition_key)
-
-    for item in items[:100]:  # Max 100 operations per batch
-        batch.create_item(body=item)
-
-    results = container.execute_transactional_batch(batch=batch)
-
-    successful = sum(1 for r in results if r["statusCode"] < 400)
-    print(f"Created {successful}/{len(items)} items")
-
-    return results
-
-# Usage
-items = [
-    {"id": f"item-{i}", "pk": "batch-test", "value": i}
-    for i in range(50)
-]
-batch_create_items(container, items, partition_key="batch-test")
+def batch_create_items(container, items, partition_key):
+    # Do not silently discard items after the first hundred. Request-size/time
+    # limits also apply; one batch is atomic only inside one logical partition.
+    if not 1 <= len(items) <= 100:
+        raise ValueError("one batch requires 1..100 items")
+    return container.execute_item_batch(
+        batch_operations=[("create", (item,), {}) for item in items],
+        partition_key=partition_key,
+    )
 ```
 
 ## Change Feed
@@ -332,7 +291,7 @@ def process_change_feed(container, partition_key: str | None = None):
     # Start from beginning
     change_feed = container.query_items_change_feed(
         partition_key=partition_key,  # None for all partitions
-        start_time="Beginning"
+        is_start_from_beginning=True
     )
 
     for change in change_feed:
@@ -341,8 +300,7 @@ def process_change_feed(container, partition_key: str | None = None):
         process_document(change)
 
     # Get continuation token for next run
-    continuation = change_feed.continuation_token
-    return continuation
+    raise NotImplementedError("Add a reviewed page-iterator checkpoint implementation for the pinned SDK before using this worker")
 
 def process_change_feed_incremental(container, continuation_token: str):
     """Resume change feed from continuation token."""
@@ -353,7 +311,7 @@ def process_change_feed_incremental(container, continuation_token: str):
     for change in change_feed:
         process_document(change)
 
-    return change_feed.continuation_token
+    raise NotImplementedError("Persist a verified change-feed continuation token after processing; do not substitute an item ETag")
 ```
 
 ## Query Best Practices
@@ -375,21 +333,14 @@ def process_change_feed_incremental(container, continuation_token: str):
 def estimate_query_cost(container, query: str, partition_key: str, parameters: list | None = None):
     """Execute query and return RU cost."""
 
-    query_iterable = container.query_items(
-        query=query,
-        parameters=parameters or [],
-        partition_key=partition_key,
-        populate_query_metrics=True
-    )
-
-    items = list(query_iterable)
-
-    # Get request charge from response headers
-    request_charge = query_iterable.get_response_headers().get("x-ms-request-charge", 0)
-
-    print(f"Query returned {len(items)} items")
-    print(f"Total RU cost: {request_charge}")
-    print(f"RU per item: {float(request_charge) / len(items) if items else 0:.2f}")
-
-    return items, float(request_charge)
+    charges = []
+    def on_response(headers, _result):
+        if "x-ms-request-charge" in headers:
+            charges.append(float(headers["x-ms-request-charge"]))
+    results = container.query_items(query=query, parameters=parameters or [],
+        partition_key=partition_key, response_hook=on_response)
+    items = list(results)
+    total = sum(charges) if charges else None
+    print(f"Returned {len(items)} items; observed RU charge: {total}")
+    return items, total
 ```

@@ -133,12 +133,12 @@ All these formats work:
 
 ### Set Token
 ```bash
-export HF_TOKEN="your_token"
+hf auth login  # interactive, or inject HF_TOKEN from a protected secret store
 ```
 
 ### Or use .env file
 ```bash
-echo "HF_TOKEN=your_token" > .env
+# The helper does not load .env automatically; never write real tokens in shell history.
 ```
 
 ## Common Workflows

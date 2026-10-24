@@ -10,20 +10,15 @@
 4. Validate with build and tests
 
 
-## Angular Version Timeline
+## Version compatibility
 
-| Version        | Release | Key Features                                           |
-| -------------- | ------- | ------------------------------------------------------ |
-| **Angular 20** | Q2 2025 | Signals stable, Zoneless stable, Incremental hydration |
-| **Angular 21** | Q4 2025 | Signals-first default, Enhanced SSR                    |
-| **Angular 22** | Q2 2026 | Signal Forms, Selectorless components                  |
+Check installed Angular packages and their versioned documentation first. `provideZonelessChangeDetection` is stable from 20.2; zoneless is default in v21+. Incremental hydration requires `withIncrementalHydration()` with `provideClientHydration` in v20/v21; v22 enables it by default and deprecates that opt-in. Signal Forms appeared experimentally in v21; do not infer stability or selectorless-component support from a speculative release table.
 
 ---
 
-
 ## 1. Signals: The New Reactive Primitive
 
-Signals are Angular's fine-grained reactivity system, replacing zone.js-based change detection.
+Signals track reactive state; they can be used with zoned or zoneless change detection. Adopting signals alone does not remove Zone.js.
 
 ### Core Concepts
 
@@ -87,6 +82,7 @@ export class UserCardComponent {
 ```typescript
 import {
   Component,
+  ElementRef,
   viewChild,
   viewChildren,
   contentChild,
@@ -95,9 +91,10 @@ import {
 @Component({
   selector: "app-container",
   standalone: true,
+  imports: [ItemComponent],
   template: `
     <input #searchInput />
-    <app-item *ngFor="let item of items()" />
+    <app-item />
   `,
 })
 export class ContainerComponent {
@@ -218,7 +215,7 @@ import { Component, signal, ChangeDetectionStrategy } from "@angular/core";
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div>Count: {{ count() }}</div>
+    <div class="count">Count: {{ count() }}</div>
     <button (click)="increment()">+</button>
   `,
 })
@@ -328,7 +325,7 @@ export const authGuard: CanActivateFn = (route, state) => {
 export const routes: Routes = [
   {
     path: "dashboard",
-    loadComponent: () => import("./dashboard.component"),
+    loadComponent: () => import("./dashboard.component").then(m => m.DashboardComponent),
     canActivate: [authGuard],
   },
 ];
@@ -350,7 +347,7 @@ export const userResolver: ResolveFn<User> = (route) => {
 // In routes
 {
   path: 'user/:id',
-  loadComponent: () => import('./user.component'),
+  loadComponent: () => import('./user.component').then(m => m.UserComponent),
   resolve: { user: userResolver }
 }
 
@@ -401,6 +398,7 @@ bootstrapApplication(AppComponent, {
 @Injectable({ providedIn: "root" })
 export class ApiService {
   private baseUrl = inject(API_BASE_URL);
+  private http = inject(HttpClient);
 
   get(endpoint: string) {
     return this.http.get(`${this.baseUrl}/${endpoint}`);
@@ -558,7 +556,7 @@ export class ProductStore {
 ---
 
 
-## 9. Forms with Signals (Coming in v22+)
+## 9. Forms and signal-backed state
 
 ### Current Reactive Forms
 
@@ -597,8 +595,8 @@ export class UserFormComponent {
 ### Signal-Aware Form Patterns (Preview)
 
 ```typescript
-// Future Signal Forms API (experimental)
-import { Component, signal } from '@angular/core';
+// Custom signal-backed validation; not the Angular Signal Forms API
+import { Component, signal, computed } from '@angular/core';
 
 @Component({...})
 export class SignalFormComponent {
@@ -679,7 +677,7 @@ import { NgOptimizedImage } from '@angular/common';
       width="200"
       height="150"
       loading="lazy"
-      placeholder="blur"
+      placeholder="data:image/png;base64,REPLACE_WITH_VALID_SMALL_IMAGE"
     />
   `
 })
@@ -796,6 +794,6 @@ describe("UserCardComponent", () => {
 | ------------------------------ | --------------------------------------------------- |
 | Signal not updating UI         | Ensure `OnPush` + call signal as function `count()` |
 | Hydration mismatch             | Check server/client content consistency             |
-| Circular dependency            | Use `inject()` with `forwardRef`                    |
+| Circular dependency            | Refactor dependency cycles; forwardRef resolves declaration timing only |
 | Zoneless not detecting changes | Trigger via signal updates, not mutations           |
-| SSR fetch fails                | Use `TransferState` or `withFetch()`                |
+| SSR fetch fails                | Inspect URL, credentials, network and server error; TransferState is not a connectivity fix |

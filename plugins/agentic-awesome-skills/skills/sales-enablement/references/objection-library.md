@@ -10,7 +10,7 @@ For live calls. Find the objection, scan the response, reference the proof.
 |-----------|--------------------|-------------|
 | "Too expensive" | "Compared to what? Let's look at what the problem costs you today." | ROI case study showing payback in X months |
 | "No budget" | "When budget opens up, what would need to be true for this to be a priority?" | Customer who started with a pilot to prove value |
-| "Competitor is cheaper" | "They are — here's what you give up at that price point." | Feature comparison + customer who switched |
+| "Competitor is cheaper" | "Let’s verify equivalent scope, total cost and the capabilities you need." | Feature comparison + customer who switched |
 | "Not the right time" | "What changes next quarter that makes it better timing?" | Cost-of-delay calculation |
 | "Maybe next quarter" | "Happy to reconnect. What would a pilot look like before then?" | Customer who started small and expanded |
 | "We use X already" | "How's that working for [specific pain area]?" | Customer who switched from X |
@@ -83,7 +83,7 @@ For live calls. Find the objection, scan the response, reference the proof.
 
 **Proof point:** Customer who switched from the competitor, with specific reasons.
 
-**Follow-up question:** "What's most important to your team — the lowest price or the best fit for [their specific need]?"
+**Follow-up question:** "How do you weigh budget, requirements and switching costs together?"
 
 ---
 
@@ -263,7 +263,7 @@ For live calls. Find the objection, scan the response, reference the proof.
 4. Ask about their specific requirements
 
 **Talk track:**
-> "That's exactly the right question to ask. Here's our security overview — we're [SOC 2 Type II / ISO 27001 / etc.] certified, and I can share our full security documentation. We also have a security team that's happy to do a review call with your infosec team. What are your specific requirements?"
+> "That's exactly the right question to ask. Here's our security overview — our verified security evidence is [report or certification, scope and date], and I can share our full security documentation. We also have a security team that's happy to do a review call with your infosec team. What are your specific requirements?"
 
 **Proof point:** Security certifications, compliance documentation, customers in regulated industries.
 

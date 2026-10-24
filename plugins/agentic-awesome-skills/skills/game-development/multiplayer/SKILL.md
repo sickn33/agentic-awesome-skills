@@ -107,6 +107,8 @@ Server: Validate → did projectile actually hit?
 
 ---
 
+Validate authenticated player/session ownership, sequence numbers, payload size, rate and legal state transitions on the server. Inventory and purchase grants need atomic/idempotent transitions; merely storing inventory on a server does not prevent duplicate grants. Bound rewind history and timestamps, and test loss/reordering/reconnect as well as latency. Never embed server credentials in clients.
+
 ## 5. Matchmaking
 
 ### Considerations

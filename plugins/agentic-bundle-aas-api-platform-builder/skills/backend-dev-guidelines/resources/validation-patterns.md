@@ -1,5 +1,8 @@
 # Validation Patterns - Input Validation with Zod
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to input validation using Zod schemas for type-safe validation.
 
 ## Table of Contents
@@ -36,10 +39,10 @@ Complete guide to input validation using Zod schemas for type-safe validation.
 
 ### Migration from Joi
 
-Modern validation uses Zod instead of Joi:
+Choose the validator already used by the target repository; this is an example of an explicit migration, not evidence that Joi is obsolete:
 
 ```typescript
-// ❌ OLD - Joi (being phased out)
+// ❌ OLD - Joi (existing implementation)
 const schema = Joi.object({
     email: Joi.string().email().required(),
     name: Joi.string().min(3).required(),
@@ -324,7 +327,7 @@ router.post(
                     success: false,
                     error: {
                         message: 'Validation failed',
-                        details: error.errors,
+                        details: error.issues,
                     },
                 });
             }
@@ -356,14 +359,14 @@ import { z } from 'zod';
 export const createUserSchema = z.object({
     email: z.string().email(),
     name: z.string().min(2).max(100),
-    roles: z.array(z.enum(['admin', 'operations', 'user'])),
+    roles: z.array(z.literal('user')).default(['user']), // public creation cannot grant admin
     isActive: z.boolean().default(true),
 });
 
 export const updateUserSchema = z.object({
     email: z.string().email().optional(),
     name: z.string().min(2).max(100).optional(),
-    roles: z.array(z.enum(['admin', 'operations', 'user'])).optional(),
+    // Privileged role changes require a separate authorized admin DTO and endpoint.
     isActive: z.boolean().optional(),
 });
 
@@ -503,7 +506,7 @@ try {
     const validated = schema.parse(data);
 } catch (error) {
     if (error instanceof z.ZodError) {
-        console.log(error.errors);
+        console.log(error.issues);
         // [
         //   {
         //     code: 'invalid_type',
@@ -534,7 +537,7 @@ const userSchema = z.object({
 function formatZodError(error: z.ZodError) {
     return {
         message: 'Validation failed',
-        errors: error.errors.map((err) => ({
+        errors: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message,
             code: err.code,
@@ -600,13 +603,13 @@ const submissionSchema = z.object({
 // Transform strings to numbers
 const userSchema = z.object({
     name: z.string(),
-    age: z.string().transform((val) => parseInt(val, 10)),
+    age: z.string().regex(/^\d+$/).transform(Number).pipe(z.number().int().min(0).max(120)),
 });
 
 // Transform dates
 const eventSchema = z.object({
     name: z.string(),
-    date: z.string().transform((str) => new Date(str)),
+    date: z.string().datetime().transform((str) => new Date(str)),
 });
 ```
 
@@ -725,7 +728,7 @@ export function validateBody<T extends z.ZodType>(schema: T) {
                     success: false,
                     error: {
                         message: 'Validation failed',
-                        details: error.errors,
+                        details: error.issues,
                     },
                 });
             }
@@ -738,7 +741,7 @@ export function validateBody<T extends z.ZodType>(schema: T) {
 router.post('/users',
     validateBody(createUserSchema),
     async (req, res) => {
-        // req.body is validated and typed!
+        // Runtime validation does not narrow Express Request types across middleware; use a typed res.locals slot or explicit DTO.
         const user = await userService.createUser(req.body);
         res.json({ success: true, data: user });
     }

@@ -18,3 +18,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `assets/conftest_template.py` | `.github/plugins/azure-sdk-python/skills/azure-cosmos-db-py/assets/conftest_template.py` | `996c3025b3c83e756bc7e070777cb4550a4480dd` | content unchanged |
 
 The integration fixture in `assets/conftest_template.py` connects to the configured Cosmos endpoint; `cleanup_test_docs` deletes only IDs explicitly added to its tracking list. Copying the template does not connect to Cosmos. Use an isolated disposable test container and test-only records; never point it at production data. No live account was used during restoration.
+
+2026-10-23 adaptations: exact emulator URL detection, partition/document validation, async offload, unavailable-state distinction, mutable-field allowlist, disposable-test opt-in, cleanup visibility, and corrected starter/concurrency/transaction documentation. MIT attribution/license preserved; AST parsing only, no live integration executed.

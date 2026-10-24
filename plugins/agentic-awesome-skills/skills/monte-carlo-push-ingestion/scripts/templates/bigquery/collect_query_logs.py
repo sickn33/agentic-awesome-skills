@@ -75,6 +75,8 @@ def _collect_query_logs(
         max_creation_time=end_dt,
     ):
         # Only process query jobs that have SQL text
+        if getattr(job, "state", None) != "DONE" or not getattr(job, "ended", None):
+            continue
         sql: str = getattr(job, "query", None) or ""
         if not sql.strip():
             continue
@@ -115,6 +117,8 @@ def collect(
 
     Returns the manifest dict.
     """
+    if not 1 <= lookback_hours <= 744 or not 0 <= lookback_lag_hours <= 168 or not 1 <= MAX_JOBS <= 100000:
+        raise ValueError("Invalid query-log time window or job bound")
     bq_client = bigquery.Client(project=project_id)  # ← SUBSTITUTE: adjust auth if needed
 
     end_dt = datetime.now(timezone.utc) - timedelta(hours=lookback_lag_hours)

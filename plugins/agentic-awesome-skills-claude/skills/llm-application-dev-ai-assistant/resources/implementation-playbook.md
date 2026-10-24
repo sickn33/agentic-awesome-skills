@@ -227,7 +227,7 @@ class NLPPipeline:
             'all_scores': intent_scores
         }
     
-    def extract_entities(self, tokens, embeddings):
+    async def extract_entities(self, tokens, embeddings):
         """Extract and resolve entities"""
         # Named Entity Recognition
         entities = self.models['ner'].extract(tokens, embeddings)
@@ -405,7 +405,7 @@ class ResponseGenerator:
         """Build context-aware prompt for LLM"""
         return f"""
 You are a helpful AI assistant with the following characteristics:
-{self.personality.description}
+{self.personality.get('description', '')}
 
 Conversation history:
 {self.format_conversation_history(context.messages[-5:])}
@@ -460,7 +460,8 @@ Implement sophisticated context management:
 **Context Management System**
 ```python
 class ContextManager:
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.short_term_memory = ShortTermMemory()
         self.long_term_memory = LongTermMemory()
         self.working_memory = WorkingMemory()
@@ -657,7 +658,7 @@ class FunctionCallingInterface:
         )
         
         # Execute function
-        result = await self.functions[function_name]'function'
+        result = await self.functions[function_name]['function'](**validated_args)  # registered handlers must be async and authorized
         
         # Return result for LLM to process
         return {
@@ -695,7 +696,7 @@ class ConversationTest:
     async def test_multi_turn_conversation(self):
         """Test complete conversation flow"""
         assistant = AIAssistant()
-        context = ConversationContext(user_id="test_user")
+        context = ConversationContext(user_id="test_user", session_id="test_session", messages=[], user_profile={}, conversation_state={}, metadata={})
         
         # Conversation script
         conversation = [

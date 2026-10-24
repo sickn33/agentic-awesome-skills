@@ -68,7 +68,7 @@ Reference these guidelines when:
 ### 2. keyboard access (critical)
 
 - do not use div or span as buttons without full keyboard support
-- all interactive elements must be reachable by Tab
+- all controls must be keyboard reachable; composite widgets may use one Tab stop plus documented arrow-key navigation
 - focus must be visible for keyboard users
 - do not use tabindex greater than 0
 - Escape must close dialogs or overlays when applicable
@@ -136,7 +136,7 @@ Reference these guidelines when:
 
 <!-- form error: link with aria-describedby -->
 <!-- before --> <input id="email" /> <span>Invalid email</span>
-<!-- after -->  <input id="email" aria-describedby="email-err" aria-invalid="true" /> <span id="email-err">Invalid email</span>
+<!-- after -->  <label for="email">Email</label><input id="email" type="email" aria-describedby="email-err" aria-invalid="true" /> <span id="email-err">Invalid email</span>
 ```
 
 ## review guidance

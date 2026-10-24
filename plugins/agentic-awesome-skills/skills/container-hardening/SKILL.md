@@ -54,7 +54,7 @@ docker run -d \
   --security-opt=no-new-privileges:true \
   --cap-drop=ALL \
   --user 1001:1001 \
-  myapp@sha256:<reviewed-image-digest>
+  myapp@sha256:REPLACE_WITH_REVIEWED_DIGEST
 ```
 
 ## Kubernetes Security Context
@@ -71,7 +71,7 @@ spec:
     fsGroup: 1001
   containers:
   - name: app
-    image: myapp@sha256:<reviewed-image-digest>
+    image: myapp@sha256:REPLACE_WITH_REVIEWED_DIGEST
     resources:
       requests: {cpu: "100m", memory: "64Mi"}
       limits: {cpu: "500m", memory: "256Mi"}
@@ -86,7 +86,7 @@ spec:
 
 ```bash
 # Scan with Trivy
-trivy image --severity HIGH,CRITICAL myapp@sha256:<reviewed-image-digest>
+trivy image --exit-code 1 --severity HIGH,CRITICAL myapp@sha256:REPLACE_WITH_REVIEWED_DIGEST
 
 # Consider a maintained distroless image only when the actual application is compatible;
 # FROM belongs in a Dockerfile, not this shell scanning example.

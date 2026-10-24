@@ -7,12 +7,7 @@ builds CSV + SQL DDL + JSON Schema + Notion template only when asked.
 Route from `accounting-audit-system-builder`; do not load this file at runtime unless
 the user asks what is available.
 
-These 16 modules were promoted into the flat layout in 158fc1e and are listed in
-`../../references/catalog.md` with the rest; what stayed behind is the router and this
-catalog, so a request can still be placed on the accounting cycle stage by stage. Where a
-module exists in both views, use this pack when the question is about the entry, the
-reconciliation or the audit trail, and the flat catalog when the question is about the
-ongoing process.
+The module paths below are repository-root-relative. When installed independently, verify each selected module is available; this router does not bundle their implementations. Field counts describe the upstream design and are not a guarantee of the currently installed schema.
 
 ## Layer 1: Foundation
 

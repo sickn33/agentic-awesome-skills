@@ -24,7 +24,7 @@ SVG_EXTS = {".svg"}
 
 def run(cmd: list[str], cwd: Path | None = None) -> None:
     print("$ " + " ".join(cmd))
-    completed = subprocess.run(cmd, cwd=str(cwd) if cwd else None, text=True, capture_output=True)
+    completed = subprocess.run(cmd, cwd=str(cwd) if cwd else None, text=True, capture_output=True, timeout=60)
     if completed.stdout:
         print(completed.stdout, end="")
     if completed.stderr:
@@ -140,6 +140,12 @@ def main() -> int:
         print(f"input file not found: {src}", file=sys.stderr)
         return 2
     out = (args.out or src.with_suffix("." + args.format)).resolve()
+    if out == src or out.exists():
+        print("output must be a fresh path distinct from input", file=sys.stderr)
+        return 2
+    if out.suffix.lower() != "." + args.format:
+        print("output extension must match --format", file=sys.stderr)
+        return 2
     out.parent.mkdir(parents=True, exist_ok=True)
     kind = infer_kind(src) if args.kind == "auto" else args.kind
 

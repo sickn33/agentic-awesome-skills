@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/reviewer-verdict.schema.json",
+  "title": "Product Design Harness Reviewer Verdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reviewer",
+    "review_round",
+    "verdict",
+    "strongest_signal",
+    "weakest_assumption",
+    "missing_evidence",
+    "disconfirming_evidence",
+    "evidence_tier",
+    "confidence_level",
+    "stop_condition",
+    "next_smallest_action"
+  ],
+  "properties": {
+    "reviewer": {
+      "type": "string",
+      "enum": [
+        "user_flow",
+        "evidence_flow",
+        "business_flow"
+      ]
+    },
+    "review_round": {
+      "type": "string",
+      "enum": [
+        "independent",
+        "challenge"
+      ]
+    },
+    "verdict": {
+      "type": "string",
+      "enum": [
+        "continue",
+        "verify",
+        "stop_reframe"
+      ]
+    },
+    "strongest_signal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "weakest_assumption": {
+      "type": "string",
+      "minLength": 1
+    },
+    "missing_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "disconfirming_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_tier": {
+      "type": "string",
+      "enum": [
+        "t0",
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ]
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "very_low",
+        "low",
+        "medium",
+        "high",
+        "very_high"
+      ]
+    },
+    "objection_to": {
+      "type": "string",
+      "enum": [
+        "user_flow",
+        "evidence_flow",
+        "business_flow",
+        "none"
+      ]
+    },
+    "counter_evidence": {
+      "type": "string",
+      "minLength": 1
+    },
+    "position_change": {
+      "type": "string",
+      "enum": [
+        "unchanged",
+        "strengthened",
+        "weakened",
+        "reversed"
+      ]
+    },
+    "stop_condition": {
+      "type": "string",
+      "minLength": 1
+    },
+    "next_smallest_action": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stop_reason_class": {
+      "type": "string",
+      "enum": [
+        "actor",
+        "safety",
+        "core_evidence",
+        "irreversible_risk",
+        "business_viability",
+        "other"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "review_round": {
+            "const": "challenge"
+          }
+        },
+        "required": [
+          "review_round"
+        ]
+      },
+      "then": {
+        "required": [
+          "objection_to",
+          "counter_evidence",
+          "position_change"
+        ]
+      },
+      "else": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "objection_to"
+              ]
+            },
+            {
+              "required": [
+                "counter_evidence"
+              ]
+            },
+            {
+              "required": [
+                "position_change"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "verdict": {
+            "const": "stop_reframe"
+          }
+        },
+        "required": [
+          "verdict"
+        ]
+      },
+      "then": {
+        "required": [
+          "stop_reason_class"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "stop_reason_class"
+          ]
+        }
+      }
+    }
+  ]
+}

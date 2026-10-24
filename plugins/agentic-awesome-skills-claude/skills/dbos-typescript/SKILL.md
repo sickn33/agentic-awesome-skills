@@ -1,7 +1,7 @@
 ---
 name: dbos-typescript
 description: "Guide for building reliable, fault-tolerant TypeScript applications with DBOS durable workflows. Use when adding DBOS to existing TypeScript code, creating workflows and steps, or using queues for concurrency control."
-risk: safe
+risk: critical
 source: "https://docs.dbos.dev/"
 date_added: "2026-02-27"
 ---
@@ -38,10 +38,10 @@ Reference these guidelines when:
 
 ### Installation
 
-Always install the latest version of DBOS:
+Install a supported SDK version compatible with the existing application and pin it in the lockfile. For a new project, first verify the current official release:
 
 ```bash
-npm install @dbos-inc/dbos-sdk@latest
+npm install @dbos-inc/dbos-sdk@<verified-version>
 ```
 
 ### DBOS Configuration and Launch
@@ -60,7 +60,7 @@ async function main() {
   await myWorkflow();
 }
 
-main().catch(console.log);
+main().catch(error => { console.error(error); process.exitCode = 1; });
 ```
 
 ### Workflow and Step Structure
@@ -104,6 +104,9 @@ references/queue-concurrency.md
 - https://github.com/dbos-inc/dbos-transact-ts
 
 ## Limitations
+- Examples are version-specific sketches; verify signatures and migration guidance against the installed SDK. Register workflows/steps before launch. Keep database credentials private.
+- Step replay/retries can repeat external effects. Use stable provider-side idempotency keys and application transactions; a workflow ID alone does not guarantee a card is charged only once.
+- Database reset, cancellation, resume and fork examples require an explicit target and authorization; they may destroy data, bypass queue limits or repeat effects.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

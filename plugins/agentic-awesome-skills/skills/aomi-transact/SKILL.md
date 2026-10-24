@@ -26,7 +26,7 @@ tags:
 
 ## Overview
 
-`aomi-transact` is a procedure for driving the Aomi CLI ([`@aomi-labs/client`](https://www.npmjs.com/package/@aomi-labs/client)) from natural-language prompts. The user types something like *"swap 1 ETH for USDC on Uniswap"*; the agent picks the right protocol and contract, stages the approve+swap as a batch, simulates it on a forked chain, and returns a queued wallet request for the user to sign. The wallet only ever sees calldata that already passed simulation.
+`aomi-transact` is a procedure for driving the Aomi CLI ([`@aomi-labs/client`](https://www.npmjs.com/package/@aomi-labs/client)) from natural-language prompts. The user types something like *"swap 1 ETH for USDC on Uniswap"*; the agent picks the right protocol and contract, stages the approve+swap as a batch, simulates it on a forked chain, and returns a queued wallet request for the user to sign. Require an observed simulation for the exact queued bytes where supported; a provider claim or passed fork run is not proof of economic safety.
 
 The CLI is **account-abstraction-first**: by default it signs through a zero-config Alchemy proxy (no provider credentials needed), using EIP-7702 on Ethereum mainnet and ERC-4337 on L2s. Each `aomi <subcommand>` invocation starts, runs, and exits — there is no long-running process.
 
@@ -93,6 +93,10 @@ Stop after simulation and wait for the user to explicitly approve signing the na
 - **Drain vectors are guard-blocked.** The agent rejects calldata where `recipient`/`onBehalfOf`/`mintRecipient` ≠ `msg.sender`. This is a security feature, not a bug — surface the block to the user rather than reformulating the prompt.
 - **Network/RPC failures.** Public RPCs may rate-limit (`429`) or fail auth (`401`). The user must supply a reliable chain-matching RPC via `--rpc-url` for production signing.
 - **Slippage and deadlines on live transactions.** Quotes from deadline-bearing routes (Across, Khalani fillers) can expire while the user is reviewing; the agent self-heals by rebuilding with fresh deadlines, but the user should re-check `aomi tx list` for the latest passing batch.
+
+## Signing evidence boundaries
+
+Simulation cannot guarantee live execution, slippage, MEV protection or safe approvals. Independently inspect chain, token/contract addresses, recipient, amounts, approval limits, fees, deadlines and EIP-712 domain/message, including account-delegation effects. Any rebuilt quote/calldata after approval invalidates that approval and needs a fresh exact-request review. Do not put real provider secrets in `aomi secret add NAME=value` command arguments/history; use the installed version’s protected credential mechanism. This catalog does not attest the upstream security report or drain guard as a security guarantee.
 
 ## Best Practices
 

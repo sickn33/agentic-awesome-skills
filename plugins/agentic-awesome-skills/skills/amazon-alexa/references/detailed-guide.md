@@ -2,6 +2,18 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Integration limits
+
+This is a custom-skill architecture, not a way to replace Alexa's system assistant
+or obtain Alexa+ capabilities. AURI assets referenced below are not bundled.
+CLI commands, voice/locale support and SDK versions must be checked against the
+installed ASK/AWS releases. The interaction-model JSON is a fragment; custom
+slot types and Smart Home/Routines interfaces require supported regional APIs,
+account linking and certification, not merely adding an intent. Smart Home
+response/discovery examples omit required correlation/header fields and cannot
+be deployed unchanged. Authorization is required before cloud resources, costs,
+publication or real device control; use least-privilege IAM and test devices.
+
 ## Overview
 
 Integracao completa com Amazon Alexa para criar skills de voz inteligentes, transformar Alexa em assistente com Claude como cerebro (projeto Auri) e integrar com AWS ecosystem (Lambda, DynamoDB, Polly, Transcribe, Lex, Smart Home).
@@ -105,7 +117,6 @@ No arquivo `models/pt-BR.json`:
           "name": "ChatIntent",
           "slots": [{"name": "query", "type": "AMAZON.SearchQuery"}],
           "samples": [
-            "{query}",
             "me ajuda com {query}",
             "quero saber sobre {query}",
             "o que voce sabe sobre {query}",
@@ -163,72 +174,37 @@ No arquivo `models/pt-BR.json`:
 
 ## 4.1 Handler Principal Python
 
+O handler original estava truncado e não definia `sb`, constantes ou resposta.
+Este exemplo mínimo responde sem persistir voz nem chamar terceiros:
+
 ```python
-import os
-import time
-import anthropic
-import boto3
+from html import escape
 from ask_sdk_core.skill_builder import SkillBuilder
-from ask_sdk_core.handler_input import HandlerInput
-from ask_sdk_core.utils import is_intent_name, is_request_type
-from ask_sdk_model import Response
-from ask_sdk_dynamodb_persistence_adapter import DynamoDbPersistenceAdapter
+from ask_sdk_core.utils import is_intent_name
 
-
-## ============================================================
-
-@sb.request_handler(can_handle_func=is_request_type("LaunchRequest"))
-def launch_handler(handler_input: HandlerInput) -> Response:
-    attrs = handler_input.attributes_manager.persistent_attributes
-    name = attrs.get("name", "")
-    greeting = f"Oi{', ' + name if name else ''}! Eu sou a Auri. Como posso ajudar?"
-    return (handler_input.response_builder
-            .speak(greeting).ask("Em que posso ajudar?").response)
-
+sb = SkillBuilder()
 
 @sb.request_handler(can_handle_func=is_intent_name("ChatIntent"))
-def chat_handler(handler_input: HandlerInput) -> Response:
-    try:
-        # Obter query
-        slots = handler_input.request_envelope.request.intent.slots
-        query = slots["query"].value if slots.get("query") else None
-        if not query:
-            return (handler_input.response_builder
-                    .speak("Pode repetir? Nao entendi bem.").ask("Pode repetir?").response)
+def chat_handler(handler_input):
+    slots = handler_input.request_envelope.request.intent.slots or {}
+    query = slots.get("query")
+    text = query.value if query and query.value else "Pode repetir?"
+    return handler_input.response_builder.speak(escape(text[:500])).response
 
-        # Carregar historico
-        attrs = handler_input.attributes_manager.persistent_attributes
-        history = attrs.get("history", [])
+handler = sb.lambda_handler()
+```
 
-        # Montar mensagens para Claude
-        messages = history[-MAX_HISTORY:]
-        messages.append({"role": "user", "content": query})
-
-        # Chamar Claude
-        client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-        response = client.messages.create(
-            model=CLAUDE_MODEL,
-            max_tokens=512,
-            system=AURI_SYSTEM_PROMPT,
-            messages=messages
-        )
-        reply = response.content[0].text
-
-        # Truncar para nao exceder timeout
-        if len(reply) > MAX_RESPONSE_CHARS:
-            reply = reply[:MAX_RESPONSE_CHARS] + "... Quer que eu continue?"
-
-        # Salvar historico
-        history.append({"role": "user", "content": query})
-        history.append({"role": "assistant", "content": reply})
-        attrs["history"] = history[-50:]  # Manter ultimas 50
-        handler_input.attributes_manager.persistent_attributes = attrs
-        handler_input.attributes_manager.save_persist
+Antes de integrar Claude, defina timeout menor que o prazo Alexa, sem retries que
+excedam o prazo; trate todos os blocos de conteúdo e erros com resposta segura.
+Escape texto não confiável antes de SSML. Envio à Anthropic e memória persistente
+exigem consentimento e retenção mínima; não salve histórico por padrão. Inicialize
+um adaptador DynamoDB com chave compatível e invoque `save_persistent_attributes()`;
+uma referência a método sem parênteses não salva nada.
 
 ### 4.2 Variaveis De Ambiente Lambda
 
 ```
-ANTHROPIC_API_KEY=sk-...  (armazenar em Secrets Manager)
+ANTHROPIC_SECRET_ID=auri/anthropic-key  # Buscar segredo no servidor, não no modelo
 DYNAMODB_TABLE=auri-users
 AWS_REGION=us-east-1
 ```
@@ -284,7 +260,7 @@ aws dynamodb create-table \
 ```python
 import time
 
-## Adicionar Ttl De 180 Dias Ao Salvar
+## Prazo ilustrativo: habilite TTL no atributo da tabela e obtenha consentimento
 
 attrs["ttl"] = int(time.time()) + (180 * 24 * 3600)
 ```
@@ -434,14 +410,17 @@ def handle_smart_home_directive(event, context):
     name = event["directive"]["header"]["name"]
     endpoint_id = event["directive"]["endpoint"]["endpointId"]
 
-    if namespace == "Alexa.PowerController":
+    # Validar token de account linking, dono do endpoint, payload e mensagem primeiro.
+    if namespace == "Alexa.PowerController" and name in {"TurnOn", "TurnOff"}:
         state = "ON" if name == "TurnOn" else "OFF"
         # Chamar sua API de smart home
         control_device(endpoint_id, {"power": state})
         return build_smart_home_response(endpoint_id, "powerState", state)
 
-    elif namespace == "Alexa.BrightnessController":
+    elif namespace == "Alexa.BrightnessController" and name == "SetBrightness":
         brightness = event["directive"]["payload"]["brightness"]
+        if not isinstance(brightness, int) or not 0 <= brightness <= 100:
+            raise ValueError("Invalid brightness")
         control_device(endpoint_id, {"brightness": brightness})
         return build_smart_home_response(endpoint_id, "brightness", brightness)
 ```
@@ -535,7 +514,7 @@ aws lambda add-permission \
 
 aws secretsmanager create-secret \
   --name auri/anthropic-key \
-  --secret-string '{"ANTHROPIC_API_KEY": "sk-..."}'
+  --secret-string file://PRIVATE_UNTRACKED_SECRET_FILE.json
 
 
 ## Lambda Acessa Via Sdk:

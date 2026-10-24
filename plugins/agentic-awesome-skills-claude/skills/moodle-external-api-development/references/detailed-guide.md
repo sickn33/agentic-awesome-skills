@@ -28,6 +28,7 @@ use external_api;
 use external_function_parameters;
 use external_single_structure;
 use external_value;
+use external_multiple_structure;
 
 class your_api_name extends external_api {
 
@@ -52,7 +53,7 @@ public static function execute_parameters() {
         'options' => new external_single_structure([
             'includedetails' => new external_value(PARAM_BOOL, 'Include details', VALUE_DEFAULT, false),
             'limit' => new external_value(PARAM_INT, 'Result limit', VALUE_DEFAULT, 10)
-        ], 'Options', VALUE_OPTIONAL)
+        ], 'Options', VALUE_DEFAULT, [])
     ]);
 }
 ```
@@ -95,7 +96,8 @@ public static function execute($userid, $courseid, $options = []) {
 
     // 3. Verify user access
     if ($params['userid'] != $USER->id) {
-        require_capability('moodle/course:viewhiddenactivities', $context);
+        require_capability('local_yourplugin:viewotheruserdata', $context);
+        // Define this capability in db/access.php; do not substitute viewhiddenactivities.
     }
 
     // 4. Database operations
@@ -103,13 +105,12 @@ public static function execute($userid, $courseid, $options = []) {
             FROM {your_table}
             WHERE userid = :userid
               AND courseid = :courseid
-            LIMIT :limit";
+            ORDER BY id";
 
     $records = $DB->get_records_sql($sql, [
         'userid' => $params['userid'],
-        'courseid' => $params['courseid'],
-        'limit' => $params['options']['limit']
-    ]);
+        'courseid' => $params['courseid']
+    ], 0, max(1, min(100, $params['options']['limit'])));
 
     // 5. Process and return data
     $results = [];
@@ -184,8 +185,8 @@ $services = [
         'functions' => [
             'local_yourplugin_your_api_name'
         ],
-        'restrictedusers' => 0,
-        'enabled' => 1
+        'restrictedusers' => 1,
+        'enabled' => 0 // Enable only after assigning approved least-privilege users.
     ]
 ];
 ```
@@ -195,66 +196,27 @@ $services = [
 - `methodname` - Always 'execute'
 - `type` - 'read' (SELECT) or 'write' (INSERT/UPDATE/DELETE)
 - `ajax` - Set true for AJAX/REST access
-- `capabilities` - Required Moodle capabilities
+- `capabilities` - Administrative metadata only; execute() must enforce context-specific capability checks
 - `services` - Optional service bundles
 
 ### Step 6: Implement Error Handling & Logging
 
-```php
-private static function log_debug($message) {
-    global $CFG;
-    $logdir = $CFG->dataroot . '/local_yourplugin';
-    if (!file_exists($logdir)) {
-        mkdir($logdir, 0777, true);
-    }
-    $debuglog = $logdir . '/api_debug.log';
-    $timestamp = date('Y-m-d H:i:s');
-    file_put_contents($debuglog, "[$timestamp] $message\n", FILE_APPEND | LOCK_EX);
-}
-
-public static function execute($userid, $courseid) {
-    global $DB;
-
-    try {
-        self::log_debug("API called: userid=$userid, courseid=$courseid");
-
-        // Validate parameters
-        $params = self::validate_parameters(self::execute_parameters(), [
-            'userid' => $userid,
-            'courseid' => $courseid
-        ]);
-
-        // Your logic here
-
-        self::log_debug("API completed successfully");
-        return $result;
-
-    } catch (\invalid_parameter_exception $e) {
-        self::log_debug("Parameter validation failed: " . $e->getMessage());
-        throw $e;
-    } catch (\moodle_exception $e) {
-        self::log_debug("Moodle exception: " . $e->getMessage());
-        throw $e;
-    } catch (\Exception $e) {
-        // Log detailed error info
-        $lastsql = method_exists($DB, 'get_last_sql') ? $DB->get_last_sql() : '[N/A]';
-        self::log_debug("Fatal error: " . $e->getMessage());
-        self::log_debug("Last SQL: " . $lastsql);
-        self::log_debug("Stack trace: " . $e->getTraceAsString());
-        throw $e;
-    }
-}
-```
-
-**Error Handling Best Practices**:
-- Wrap logic in try-catch blocks
-- Log errors with timestamps and context
-- Capture SQL queries on database errors
-- Preserve stack traces for debugging
-- Re-throw exceptions after logging
-
+Use the configured Moodle logging/event API with a documented data-minimization
+policy. Do not create mode-0777 debug directories or log arbitrary SQL, raw
+exceptions, access tokens, learner identifiers or stack arguments. Return a
+sanitized error while preserving restricted diagnostic event IDs. Logging is not
+a substitute for authorization and the sample does not supply a logger backend.
 
 ## Advanced Patterns
+
+The course-module/group/question SQL below targets historical internals and omits
+cache rebuilds, events, current question-version visibility and some required
+fields. Use `add_moduleinfo` and supported groups/question-bank APIs for the chosen
+Moodle release; do not copy direct inserts into a live site. Bound requested limits
+and add schema-version/role/group visibility tests. Filtering by tag alone must
+not expose hidden/old question versions. [External API security](https://moodledev.io/docs/5.2/apis/subsystems/external/security)
+and [DML pagination](https://moodledev.io/docs/4.5/apis/core/dml) define the core boundaries.
+
 
 ### Complex Database Operations
 
@@ -385,23 +347,13 @@ private static function get_random_questions($categoryid, $tagname, $limit) {
 3. Create service: **Site administration > Server > Web services > External services**
 4. Test function: **Site administration > Development > Web service test client**
 
-### 2. Via curl
+### 2. Via a private REST client
 
-```bash
-# Get token first
-curl -X POST "https://yourmoodle.com/login/token.php" \
-  -d "username=admin" \
-  -d "password=yourpassword" \
-  -d "service=moodle_mobile_app"
-
-# Call your API
-curl -X POST "https://yourmoodle.com/webservice/rest/server.php" \
-  -d "wstoken=YOUR_TOKEN" \
-  -d "wsfunction=local_yourplugin_your_api_name" \
-  -d "moodlewsrestformat=json" \
-  -d "userid=2" \
-  -d "courseid=3"
-```
+Provision an approved least-privilege test-service token through Moodle's supported
+admin flow. Send it in the documented REST POST body from a secret-aware client,
+not in command-line arguments or URLs; never use a production admin password to
+mint mobile-service credentials. Disable redirects, validate TLS and bound time,
+input/output and request count. Inspect only redacted result fields.
 
 ### 3. Via JavaScript (AJAX)
 
@@ -453,7 +405,7 @@ require(['core/ajax'], function(ajax) {
 ### 5. Transaction Deadlocks
 **Solution**:
 - Keep transactions short
-- Always commit or rollback in finally blocks
+- Commit only on successful completion; rollback on exceptions using the delegated transaction API, never commit unconditionally in finally
 - Avoid nested transactions
 
 
@@ -462,8 +414,8 @@ require(['core/ajax'], function(ajax) {
 - [ ] Check Moodle debug mode: **Site administration > Development > Debugging**
 - [ ] Review web services logs: **Site administration > Reports > Logs**
 - [ ] Check custom log files in `$CFG->dataroot/local_yourplugin/`
-- [ ] Verify database queries using `$DB->set_debug(true)`
-- [ ] Test with admin user to rule out permission issues
+- [ ] Use redacted database diagnostics in isolated development only; raw SQL debugging may expose data
+- [ ] Test expected denial for guest/unenrolled/cross-user roles as well as intended permitted roles
 - [ ] Clear browser cache and Moodle caches
 - [ ] Check PHP error logs on server
 

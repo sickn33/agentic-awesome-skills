@@ -60,6 +60,8 @@ Prototype a short loop; 30 seconds is a heuristic, not a universal rule:
 
 ### Motivation Types
 
+This is a historical player-type heuristic, not an exhaustive taxonomy or a validated label for an individual. Confirm motivations through voluntary playtests.
+
 | Type | Driven By |
 |------|-----------|
 | **Achiever** | Goals, completion |
@@ -73,7 +75,7 @@ Prototype a short loop; 30 seconds is a heuristic, not a universal rule:
 |----------|--------|-----|
 | **Fixed** | Predictable | Milestone rewards |
 | **Variable** | Unpredictable outcomes | Optional rewards with transparent odds |
-| **Ratio** | Effort-based | Grind games |
+| **Ratio** | Reward after a number of responses | Can be fixed or variable; a separate dimension from predictability |
 
 ---
 

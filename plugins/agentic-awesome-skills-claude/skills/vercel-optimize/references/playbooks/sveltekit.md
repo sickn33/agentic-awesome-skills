@@ -32,7 +32,7 @@ Vercel image service Next.js uses).
    table — wrap them in `Promise.all` (or return promises directly
    from `load`, which SvelteKit streams). Cite
    `https://kit.svelte.dev/docs/load`.
-4. **Move per-request work to `+server.ts` action handlers and run
+4. **Move per-request work to `+server.ts` request handlers (`+page.server.ts` defines form actions) and run
    them via `fetch` from the client.** Reduces SSR cost when only a
    slice of the page actually needs server data on every request.
 5. **`hooks.server.ts` matcher hygiene.** Like Next.js middleware, the
@@ -41,7 +41,7 @@ Vercel image service Next.js uses).
    specific route's `load` when only that route needs it.
 6. **Adapter runtime + region config.** Single-region default; if the
    project's users skew to a different region, set `regions: [...]` on
-   the adapter to reduce TTFB by 100-300ms.
+   the adapter only after measuring user/data-source placement; no fixed latency saving follows from a region change.
 
 ## Frequent gotchas
 

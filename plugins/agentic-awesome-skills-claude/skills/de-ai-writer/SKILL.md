@@ -41,17 +41,17 @@ Scan the text, record which patterns hit *and where*, then compute the AI-smell 
 #### The AI-smell index (deterministic — the same formula must be used before and after)
 
 1. **Count hits per paragraph.** For each pattern, count one hit per paragraph — repeats inside the same paragraph do not inflate the score.
-2. **Weight by evidence strength.** 强模式 = **2 points**; patterns the catalog marks 弱证据 (破折号 / 限定词 / 被动与无主语 / "的"-字堆叠 / 引号不统一) = **1 point**.
+2. **Weight by evidence strength.** 强模式 = **2 points**; patterns in the rhythm group 8–14 plus pattern 28 (the catalog inconsistently repeated a narrower list; use these explicit IDs) = **1 point**.
 3. **Normalize by length.** `D = 加权总分 / max(1, 总字数 / 100)` — weighted hits per 100 characters.
 4. **Index.** `AI味指数 = min(100, round(D × 10))`.
-5. **Bands.** 0–20 基本像人写 · 21–45 轻度 AI 味 · 46–75 明显 AI 味 · 76–100 一眼假.
+5. **Bands.** 0–20 少量编辑线索 · 21–45 部分重复表达 · 46–75 较多模板表达 · 76–100 高密度编辑线索；不表示作者身份或造假.
 6. **Report three numbers, not one:** 命中处数 / 加权总分 / AI味指数. After rewriting, recompute with the same formula so the delta is comparable. If a hit cannot be attributed to a catalogued pattern, report only the observable hit count and say the index is not computed — never invent a number.
 
-Worked example (the sample below): 8 hits in 77 characters, 6 strong (6 × 2 = 12) + 2 weak (2 × 1 = 2) → 加权总分 14 → D = 14 / 0.77 ≈ 18.2 → 指数 = min(100, 182) = **100/100**.
+Worked example (the sample below): 8 hits in 77 characters, 6 strong (6 × 2 = 12) + 2 weak (2 × 1 = 2) → 加权总分 14 → D = 14 / max(1, 0.77) = 14 → 指数 = min(100, 140) = **100/100**.
 
 ```
 AI 味体检报告
-总字数 77 ｜ 命中 8 处 ｜ 加权 14 ｜ AI味指数 100/100（一眼假）
+总字数 77 ｜ 命中 8 处 ｜ 加权 14 ｜ 编辑线索指数 100/100（非作者身份判断）
 机械连接 ×3   官方黑话 ×2   空洞拔高 ×2   夸张词 ×1
 ```
 
@@ -65,6 +65,8 @@ Work through the hit list one pattern at a time. Correct each pattern by its own
 **The facts come from the source, never from the pattern list.** A rewrite may delete packaging, reorder, and rephrase; it must not introduce a fact the source does not contain. If the rewrite would be clearer with a number or a specification (rotational speed, battery life, materials), and the source has none, ask the user for it — never supply one.
 
 ### Step 3: Verify the rewrite
+
+Define paragraph splitting, character counting (including punctuation/whitespace policy) and a location ledger before computing. Manual pattern judgments are subjective: the formula is deterministic only given the same hit ledger and counting policy. Do not claim an engine ran or an authorship probability. Preserve logical negations, caveats, quotes and attribution even when they trigger a style pattern.
 
 Re-score the rewritten text with the same Step 1 formula. The index should drop and the semantic content must be preserved — report the before/after triple (命中处数 / 加权总分 / 指数), how many patterns were cleared, and confirm that no fact was added or lost. A rewrite that lowers the score by deleting facts is a failed edit; so is one that raises the count of facts in the text.
 
@@ -86,7 +88,7 @@ Before:
 它以用户为中心，赋能每一个家庭的智慧生活，具有里程碑意义。
 ```
 
-After — **deletion-only; every surviving phrase already appears in the source, and no specification was added**:
+After — **a paraphrase candidate, not a deletion-only edit; review whether “能融入” preserves the intended claim**:
 
 ```
 这款产品性能卓越，能融入家庭的智能生活。
@@ -100,7 +102,7 @@ Every change is tied to a catalogued pattern:
 - 以用户为中心 / 赋能 → **pattern 15** (高频 AI 词) and **pattern 23** (互联网黑话)
 - 彰显了品牌的匠心精神 / 具有里程碑意义 → **pattern 16** (拔高意义)
 
-Six patterns removed, zero facts added, zero facts lost: the rewrite keeps 性能卓越 and 智能生活, the only two claims present in the source. It does **not** gain a rotation speed, a battery life or a waterproof rating — those are not in the source, and inventing them is exactly the failure mode this skill exists to prevent.
+Six stylistic patterns targeted; semantic equivalence still requires review: the rewrite keeps 性能卓越 and 智能生活, the only two claims present in the source. It does **not** gain a rotation speed, a battery life or a waterproof rating — those are not in the source, and inventing them is exactly the failure mode this skill exists to prevent.
 
 ### Example 2: Assistant residue in generated output
 

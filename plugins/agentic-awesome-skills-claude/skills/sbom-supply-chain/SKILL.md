@@ -4,7 +4,7 @@ description: Generate, sign, and verify SBOMs and provenance attestations to sec
   the software supply chain. Use when implementing SLSA controls, artifact trust policies,
   or compliance evidence for releases.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -192,7 +192,11 @@ cosign verify-attestation \
 # Extract the SBOM from attestation
 cosign verify-attestation --type cyclonedx \
   --certificate-identity=... --certificate-oidc-issuer=... \
-  ghcr.io/acme/api@sha256:abc123... | jq -r '.payload' | base64 -d | jq '.predicate' <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
+  ghcr.io/acme/api@sha256:abc123... > verified-attestation.json
+jq -r '.payload' verified-attestation.json > payload.b64
+# Decode signed data for inspection, never execute it. Decode flags vary by OS.
+base64 --decode payload.b64 > statement.json
+jq '.predicate' statement.json
 ```
 
 ### In-toto Provenance Attestation
@@ -373,18 +377,19 @@ sbom_present if {
 }
 
 no_critical_vulns if {
+    is_array(input.vulnerability_report.matches)
+    input.vulnerability_report.scan_succeeded == true
     not any_critical
 }
 
 any_critical if {
     some vuln in input.vulnerability_report.matches
     vuln.vulnerability.severity == "Critical"
-    vuln.vulnerability.fix.state == "fixed"
 }
 
 signed_by_ci if {
     input.signature.issuer == "https://token.actions.githubusercontent.com"
-    startswith(input.signature.subject, "https://github.com/acme/")
+    input.signature.subject == "https://github.com/acme/api/.github/workflows/build.yml@refs/heads/main"
 }
 ```
 
@@ -432,3 +437,5 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+The OPA input must come from a trusted verifier bound to the same immutable artifact digest; caller-supplied signature fields are not signature verification. The added scan_succeeded field is an adapter contract, not raw Grype output: validate completion, freshness and report schema before evaluation. Do not ignore critical vulnerabilities merely because no fix exists. Attestation verification also requires predicate/subject/content-policy validation; signature existence does not establish safe dependencies or compliance. The provenance JSON is a historical schema sketch, not proof of SLSA level. Pin and verify actual tool flags/output formats; deep cdxgen analysis can invoke build tools/install dependencies, so isolate untrusted projects. Scope registry writes, signing identities, transparency-log disclosure and admission-policy rollout.

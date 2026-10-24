@@ -44,6 +44,10 @@ Provide comprehensive techniques for escalating privileges from a low-privileged
 
 ---
 
+## Demonstration boundaries
+
+The commands below include destructive overwrites, SUID/persistence changes, password resets and credential extraction. They are reference material for explicitly authorized disposable labs, not a default assessment sequence. Prefer harmless proof of the specific permission boundary, synthetic accounts and owner-agreed canaries; preserve originals and a cleanup/rollback record. Initial access does not authorize domain-wide credential access or persistence. Do not run historical drivers/tools without verifying exact affected versions and stability constraints.
+
 ## Core Techniques
 
 ### Linux Privilege Escalation
@@ -113,15 +117,9 @@ cp /bin/bash .
 chmod +s bash
 ```
 
-#### 5. MySQL Running as Root
+#### 5. MySQL Privilege Boundaries
 
-```bash
-# If MySQL runs as root
-mysql -u root -p
-\! chmod +s /bin/bash
-exit
-/bin/bash -p
-```
+The mysql client `\!` command executes locally as the client OS user; a root database account or root-running server does not make that shell root. Review server process identity, database grants and filesystem permissions separately; do not claim OS escalation from a client shell escape.
 
 ---
 
@@ -332,7 +330,7 @@ $ hashcat -m 13100 hashes.txt rockyou.txt
 | Issue | Solution |
 |-------|----------|
 | sudo -l requires password | Try other enumeration (SUID, cron, capabilities) |
-| Mimikatz blocked by AV | Use Invoke-Mimikatz or SafetyKatz |
+| Security tooling blocked | Stop and coordinate with the engagement owner; do not bypass controls outside the approved plan |
 | Kerberoasting returns no hashes | Check for service accounts with SPNs |
 | Token impersonation fails | Verify SeImpersonatePrivilege is present |
 | NFS mount fails | Check NFS version compatibility (vers=2,3,4) |

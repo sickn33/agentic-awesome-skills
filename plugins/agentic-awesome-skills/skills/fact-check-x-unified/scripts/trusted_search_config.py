@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified by AAS: see UPSTREAM-NOTICE.md for scope and validation limits.
 from __future__ import annotations
 
 import argparse
@@ -199,6 +200,13 @@ def validate_trusted_search_key(key: str) -> None:
     loopback_fixture = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "::1"}
     if (parsed.scheme != "https" and not loopback_fixture) or not parsed.hostname or parsed.username or parsed.password or parsed.fragment:
         raise ConfigurationError("可信搜索地址必须是无用户凭据的 HTTPS 地址；HTTP 仅供本机测试。")
+    if loopback_fixture:
+        if os.getenv("FACTCHECK_ALLOW_LOOPBACK_FIXTURE") != "1" or not normalized.startswith("fixture_"):
+            raise ConfigurationError("HTTP本机测试必须显式启用且只能使用fixture_测试Key。")
+    else:
+        approved_host = os.getenv("FACTCHECK_TRUSTED_SEARCH_ALLOWED_HOST", "open.dknowc.cn").strip().lower()
+        if parsed.hostname.lower() != approved_host or parsed.port not in (None, 443):
+            raise ConfigurationError("可信搜索地址不在明确批准的提供方主机内。")
     payload = {
         "query": "住房公积金管理条例",
         "segmentCount": 1,
@@ -324,6 +332,7 @@ def run_onboarding(*, force: bool = False) -> dict:
         capture_output=True,
         check=False,
         env=os.environ.copy(),
+        timeout=600,
     )
     lines = [line for line in process.stdout.splitlines() if line.strip()]
     result = {}
@@ -336,7 +345,7 @@ def run_onboarding(*, force: bool = False) -> dict:
         "configured",
         "already_configured",
     }:
-        message = str(result.get("error") or "").strip()
+        message = ""  # Never echo an external onboarding error that may contain credentials.
         if not message:
             message = "可信搜索自动配置未完成，请保持浏览器打开并完成登录。"
         raise ConfigurationError(message)
@@ -406,6 +415,9 @@ def main() -> int:
             "providerUrl": PROVIDER_URL,
         })
         return 0 if configured else 3
+    except subprocess.TimeoutExpired:
+        emit_public_json({"status": "failed", "error": "自动配置超时；请检查浏览器和账户状态后重试。"})
+        return 1
     except (ConfigurationError, OSError) as exc:
         emit_public_json({
             "status": "failed",

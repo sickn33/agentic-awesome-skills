@@ -38,7 +38,7 @@ Use this skill when:
 
 ## Production Patterns
 
-For production-ready widget patterns, see the `_base/` directory:
+The upstream `_base/` directory is not bundled. These pattern names are navigation suggestions, not production-certified code:
 
 | Pattern | Description |
 |---------|-------------|
@@ -351,8 +351,7 @@ pub enum LoadingState {
 
 impl LoadableContent {
     pub fn set_state(&mut self, cx: &mut Cx, state: LoadingState) {
-        self.state = state;
-        match &self.state {
+        match &state {
             LoadingState::Idle | LoadingState::Loaded => {
                 self.view(ids!(content)).set_visible(cx, true);
                 self.view(ids!(loading_overlay)).set_visible(cx, false);
@@ -370,6 +369,7 @@ impl LoadableContent {
                 self.label(ids!(error_view.error_label)).set_text(cx, msg);
             }
         }
+        self.state = state;
         self.redraw(cx);
     }
 }
@@ -441,3 +441,5 @@ impl Widget for ItemsList {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are incomplete historical Makepad fragments: supply missing types/helpers, defaults, event routing and registration and compile against a pinned framework revision. LoadingState needs an explicit default for #[rust] initialization where required. A wrapper returning Ok when no widget was borrowed means no operation occurred; do not interpret it as successful image loading. Visible overlays do not inherently block input; test keyboard focus, modal interaction, image errors and recycled virtual-item state.

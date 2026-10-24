@@ -22,6 +22,10 @@ Use this workflow when:
 - Resolving disk space issues
 - Debugging application errors
 
+## Scope and operational boundaries
+
+Start with read-only, bounded diagnostics on the named authorized host. Logs, process arguments and traces may expose credentials or personal data; collect only what is needed and redact before sharing. Attaching `strace` can affect timing and reveal payloads; obtain the applicable tracing authority and detach promptly. Restarting a service can interrupt users or lose in-flight work: inspect its configuration/dependencies, preserve evidence, and agree a recovery path before an authorized restart. Adapt commands to the distribution/init system and installed tools; do not install packages or elevate privileges just to run every phase.
+
 ## Workflow Phases
 
 ### Phase 1: Initial Assessment

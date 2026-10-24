@@ -8,7 +8,7 @@
 #     "trackio",
 # ]
 # ///
-"""Production-ready cross-encoder (reranker) training template.
+"""Adaptable example cross-encoder (reranker) training template.
 
 Demonstrates:
 - BinaryCrossEntropyLoss on (query, passage, label) pointwise data
@@ -32,13 +32,20 @@ Hugging Face Jobs: paste this file's contents as the `script` in hf_jobs(...).
 
 from __future__ import annotations
 
+# AAS adaptation: local-only explicit run gate; no automatic publication or telemetry.
+import os as _offline_env
+_offline_env.environ["HF_HUB_OFFLINE"] = "1"
+_offline_env.environ["HF_DATASETS_OFFLINE"] = "1"
+_offline_env.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+from training_safety import prepare_run, safe_model, load_dataset, group_split
+
 import argparse
 import logging
 import os
 from contextlib import nullcontext
 
 import torch
-from datasets import load_dataset, load_from_disk
+from datasets import load_from_disk
 from transformers import EarlyStoppingCallback
 
 from sentence_transformers import (
@@ -100,10 +107,11 @@ def setup_logging():
     for noisy in ("httpx", "httpcore", "huggingface_hub", "urllib3", "filelock", "fsspec"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
     if torch.cuda.is_available():
-        torch.set_float32_matmul_precision("high")  # TF32 on Ampere+, no quality loss
+        torch.set_float32_matmul_precision("high")  # TF32 changes numerical precision; benchmark on this task.
 
 
 def main() -> None:
+    prepare_run()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--eval-only", type=str, default=None, help="Skip training; load this saved model and run only the evaluator."
@@ -114,14 +122,14 @@ def main() -> None:
 
     if cli.eval_only:
         logging.info(f"Eval-only mode: loading model from {cli.eval_only}")
-        model = CrossEncoder(cli.eval_only)
+        model = safe_model(CrossEncoder, cli.eval_only)
         evaluator = CrossEncoderNanoBEIREvaluator(dataset_names=["msmarco", "nfcorpus", "nq"])
         with autocast_ctx():
             evaluator(model)
         return
 
     logging.info(f"Loading base model: {MODEL_NAME}")
-    model = CrossEncoder(
+    model = safe_model(CrossEncoder,
         MODEL_NAME,
         num_labels=1,
         model_card_data=CrossEncoderModelCardData(
@@ -133,17 +141,17 @@ def main() -> None:
 
     logging.info(f"Loading dataset: {DATASET_NAME}")
     train_size = 50 if SMOKE_TEST else TRAIN_SIZE
-    eval_size = 20 if SMOKE_TEST else EVAL_SIZE
+    eval_size = 20 if SMOKE_TEST else min(EVAL_SIZE, 40)
     if SMOKE_TEST:
         logging.info("SMOKE_TEST=1: trimmed dataset; will run max_steps=1 and skip Hub push")
-    pairs = load_dataset(DATASET_NAME, split="train").select(range(train_size + eval_size))
+    pairs = load_dataset(DATASET_NAME, split="train").select(range(min(train_size + eval_size, int(os.environ.get("ST_MAX_ROWS", "200")))))
 
     if os.path.isdir(HARD_NEG_CACHE):
         logging.info(f"Loading cached mined hard negatives from {HARD_NEG_CACHE}")
         labeled = load_from_disk(HARD_NEG_CACHE)
     else:
         logging.info(f"Mining hard negatives with {RETRIEVER_NAME}")
-        retriever = SentenceTransformer(RETRIEVER_NAME)
+        retriever = safe_model(SentenceTransformer, RETRIEVER_NAME)
         labeled = mine_hard_negatives(
             dataset=pairs,
             model=retriever,
@@ -161,7 +169,7 @@ def main() -> None:
     # EVAL_SIZE here counts labeled-pair rows, not distinct queries: each
     # query contributes 1 positive + NUM_NEGATIVES negatives, so e.g. 1000
     # rows is approximately 1000 / (1 + NUM_NEGATIVES) distinct queries.
-    split = labeled.train_test_split(test_size=eval_size, seed=12)
+    split = group_split(labeled, eval_size, seed=12)
     train_dataset = split["train"]
     eval_dataset = split["test"]
     logging.info(f"  train: {len(train_dataset):,} rows | eval: {len(eval_dataset):,} rows")
@@ -185,14 +193,14 @@ def main() -> None:
     args = CrossEncoderTrainingArguments(
         output_dir=OUTPUT_DIR,
         num_train_epochs=1,
-        max_steps=1 if SMOKE_TEST else -1,
+        max_steps=1 if SMOKE_TEST else int(os.environ["ST_MAX_STEPS"]),
         per_device_train_batch_size=64,
         per_device_eval_batch_size=64,
         learning_rate=2e-5,
         weight_decay=0.01,
-        warmup_steps=0.1,
+        warmup_steps=0,
         lr_scheduler_type="linear",
-        bf16=True,
+        bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         eval_strategy="steps",
         eval_steps=0.1,
         save_strategy="steps",
@@ -203,7 +211,7 @@ def main() -> None:
         load_best_model_at_end=True,
         metric_for_best_model=metric_key,
         greater_is_better=True,
-        report_to="none" if SMOKE_TEST else "trackio",
+        report_to="none",
         run_name=RUN_NAME,
         seed=12,
     )
@@ -221,32 +229,21 @@ def main() -> None:
         evaluator=evaluator,
         callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
     )
-    if not SMOKE_TEST:
-        log_trackio_dashboard()
+
     trainer.train()
 
     logging.info("Post-training evaluation:")
     with autocast_ctx():
         score = evaluator(model)[evaluator.primary_metric]
     delta = score - baseline_eval
-    verdict = "WIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
+    verdict = "SMOKE_ONLY" if SMOKE_TEST else "OBSERVED_GAIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
     logging.info(f"VERDICT: {verdict} | score={score:.4f} | baseline={baseline_eval:.4f} | delta={delta:+.4f}")
 
     final_dir = f"{OUTPUT_DIR}/final"
     model.save_pretrained(final_dir)
     logging.info(f"Saved final model to {final_dir}")
 
-    if SMOKE_TEST:
-        logging.info("SMOKE_TEST=1: skipping Hub push")
-        return
-
-    try:
-        commit_url = model.push_to_hub(RUN_NAME)
-        logging.info(f"Pushed model to {commit_url.rsplit('/commit/', 1)[0]}")
-    except Exception:
-        import traceback
-
-        logging.error(f"Hub push failed:\n{traceback.format_exc()}")
+    logging.info("Saved locally; publication is a separate explicitly authorized action.")
 
 
 if __name__ == "__main__":

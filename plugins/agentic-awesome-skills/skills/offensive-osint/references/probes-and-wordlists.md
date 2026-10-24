@@ -44,8 +44,8 @@ api/documentation
 ```
 
 **Severity:**
-- Reachable Swagger/OpenAPI spec without auth → **HIGH** `LEAKY_API_SPEC` (full endpoint enumeration leaks; often reveals undocumented internal APIs).
-- Behind auth but accessible to any authenticated user → MEDIUM (still discloses internal API surface).
+- Reachable Swagger/OpenAPI without auth → review intended publication and actual restricted information; public documentation alone is not a vulnerability.
+- Authenticated specification access → assess the intended audience and any demonstrated authorization failure.
 
 ### 16.2 GraphQL discovery — 13 paths
 
@@ -74,9 +74,9 @@ api/v1/graphql
 ```
 
 **Severity:**
-- Introspection returns schema without auth → **HIGH** `OPEN_GRAPHQL_API`.
-- Field-suggestion enumeration possible (server returns "did you mean" for typo'd field names) → **MEDIUM** (re-derive partial schema even when introspection is disabled).
-- `/graphql` accepts batched queries (`[...]` request body) → MEDIUM (rate-limit bypass surface; auth bypass via mixed batches).
+- Introspection without auth → schema-discovery observation; assess intended disclosure.
+- Field suggestions → schema-discovery lead; no automatic severity.
+- Batched-query support → capability observation; no rate-limit or authorization bypass without an approved demonstration.
 
 UI markers (lower severity but still discoverable):
 - HTML response contains `graphiql`, `playground`, `apollo studio`, `altair` → GraphiQL UI exposed (often shipped accidentally on prod).
@@ -181,7 +181,7 @@ Plus parse `/robots.txt` for `Disallow:` paths — those become the next-tier wo
 /auth/saml2/metadata
 ```
 
-Reachable SAML metadata XML reveals: `EntityID`, signing certs (often pinned → cert-reuse pivot), `SingleSignOnService` URL, `NameIDFormat`. Mark as `MISCONFIG` (LOW severity unless metadata leaks internal hostnames or non-public certs, then MEDIUM).
+Public SAML metadata can be intentionally published for federation. Reachable metadata reveals: `EntityID`, signing certs (often pinned → cert-reuse pivot), `SingleSignOnService` URL, `NameIDFormat`. Record intended-public metadata as informational. Signing certificates contain public keys; they are not private-key exposure. Assign severity only for demonstrated unintended sensitive information.
 
 ### 16.7 SSO subdomain prefixes — 8 prefixes
 
@@ -322,7 +322,7 @@ Run on every JS body + sourcesContent + APK strings + manifest:
 \b[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+\.svc(?:\.cluster\.local)?\b
 ```
 
-Each match → MEDIUM `INFO_DISCLOSURE`. Aggregate per host: if many matches share the same internal subdomain, that's a recon seed for any future internal phase.
+Each match → candidate internal-reference disclosure; verify sensitivity, context and intended publication before severity. Aggregate per host: if many matches share the same internal subdomain, that's a recon seed for any future internal phase.
 
 ### 16.12 Subdomain-takeover provider fingerprints (summary, 27 providers)
 
@@ -358,7 +358,7 @@ Watch for these CNAME targets + the corresponding "available for claim" response
 | Brightcove | `*.brightcovegallery.com` | Not found |
 | Smugmug | various | Not found |
 
-For full per-provider detection signatures + edge cases, use SubdomainX or Subzy/Subjack against a freshly-fetched fingerprint database.
+For provider-specific detection signatures, review and pin an exact fingerprint-database revision. Error signatures are leads; current domain-verification controls may prevent takeover. Do not claim resources during reconnaissance.
 
 ---
 
@@ -378,7 +378,7 @@ curl -sS -m 10 "$T/.git/config" | grep -E '\[core\]|\[remote|repositoryformatver
 curl -sS -m 10 "$T/.git/HEAD" | grep -E '^ref:'
 
 # .env (CRITICAL)
-curl -sS -m 10 "$T/.env" | grep -E '^[[:space:]]*[A-Z_][A-Z0-9_]*[[:space:]]*='
+curl -sS -m 10 --max-filesize 1048576 "$T/.env" | grep -qE '^[[:space:]]*[A-Z_][A-Z0-9_]*[[:space:]]*='
 
 # Apache /server-status (MEDIUM)
 curl -sS -m 10 "$T/server-status" | grep -i 'Apache Server Status'
@@ -452,8 +452,8 @@ B="candidate-bucket-name"
 
 # S3 (us-east-1 first)
 curl -sS -m 10 -I "https://${B}.s3.amazonaws.com/" -w 'STATUS:%{http_code}\n' | head -20
-# If 200/301: list objects
-curl -sS -m 10 "https://${B}.s3.amazonaws.com/?list-type=2" | head -50
+# A status is not ownership or permission. Only after separate approved listing scope:
+curl -sS -m 10 "https://${B}.s3.amazonaws.com/?list-type=2&max-keys=1" | head -50
 
 # S3 region-specific
 for r in us-east-1 us-west-2 eu-west-1 ap-southeast-1; do
@@ -510,8 +510,8 @@ curl -sS -m 10 -H "Authorization: Bearer npm_..." https://registry.npmjs.org/-/w
 # Atlassian (account)
 curl -sS -m 10 -u "email:ATATT3xFfGF0_..." https://your-domain.atlassian.net/rest/api/3/myself | jq .
 
-# DataDog (API + APP key both required)
-curl -sS -m 10 -H "DD-API-KEY: ..." -H "DD-APPLICATION-KEY: ..." https://api.datadoghq.com/api/v1/validate | jq .
+# DataDog (API-key validator; does not validate the application key)
+curl -sS -m 10 -H "DD-API-KEY: ..." https://api.datadoghq.com/api/v1/validate | jq .
 ```
 
 **Bulk webapp triage (httpx, faster than curl loop):**
@@ -551,9 +551,9 @@ dig +short TXT "$D" | grep -i 'v=spf1'
 ```
 
 **Common SPF parsing checklist:**
-- Ends in `-all` (hardfail) → strict; major providers reject spoofs.
-- Ends in `~all` (softfail) → spam folder for spoofs.
-- Ends in `?all` or no `all` → permissive; spoofs likely deliver.
+- `-all` requests an SPF fail for unmatched senders; receivers still apply their own policy and DMARC alignment.
+- `~all` requests softfail; it does not guarantee spam-folder delivery.
+- `?all` requests neutral; no matching mechanism normally yields neutral. Neither predicts accepted impersonation.
 - Includes (`include:`) reveal SaaS tenants:
   - `include:_spf.google.com` → Google Workspace.
   - `include:spf.protection.outlook.com` → Microsoft 365.
@@ -762,7 +762,7 @@ shodan search "ssl.jarm:<jarm-hash>" --fields ip_str,port
 
 ```bash
 CANDIDATE_IP="203.0.113.42"
-curl -sS -m 10 -H "Host: target.example.com" "https://${CANDIDATE_IP}/" -o "${PRIVATE_CASE_DIR}/candidate.html"
+curl -sS -m 10 --resolve "target.example.com:443:${CANDIDATE_IP}" "https://target.example.com/" -o "${PRIVATE_CASE_DIR}/candidate.html"
 diff <(curl -sS -m 10 https://target.example.com/) "${PRIVATE_CASE_DIR}/candidate.html" | head -50
 ```
 
@@ -821,7 +821,7 @@ Common edge appliances / products on the target's perimeter, with fingerprint pa
 | **GitLab self-hosted** | `/users/sign_in`, `/-/oauth/applications`, `/help` | Version in HTML footer; CVE-2021-22205 (RCE, KEV). |
 | **Telerik UI** | `/Telerik.Web.UI.WebResource.axd?type=rau` | CVE-2017-9248, CVE-2019-18935 — old but still found. |
 | **ConnectWise ScreenConnect** | `/SetupWizard.aspx`, `/Bin/SetupWizard.aspx` | CVE-2024-1709 (auth bypass, KEV). |
-| **SolarWinds Orion** | `/Orion/Login.aspx` | SUNBURST supply-chain (CVE-2020-10148). |
+| **SolarWinds Orion** | `/Orion/Login.aspx` | CVE-2020-10148 authentication bypass; distinct from the SUNBURST supply-chain incident. |
 | **Kaseya VSA** | `/dl.asp`, `/userFilterTableRpt.asp` | CVE-2021-30116 (REvil supply-chain). |
 | **Microsoft IIS / OWA misc** | `Server: Microsoft-IIS/<version>` | Old versions = old CVEs; check. |
 | **Cisco Smart Install** | port 4786 open | CVE-2018-0171 (smart install client mode RCE). |
@@ -843,7 +843,8 @@ grep -iE 'BIG-IP|version' "${PRIVATE_CASE_DIR}/c2"
 
 ```bash
 nuclei -u "$T" -t http/technologies/ -severity info,low,medium,high,critical
-nuclei -u "$T" -t http/cves/ -severity high,critical -etags fuzz
+# CVE templates can exploit or alter state: review each exact template and obtain separate authorization.
+# No automatic broad CVE-template sweep in reconnaissance.
 ```
 
 ### 16.17 Cloud-Native Service Fingerprints
@@ -1054,7 +1055,7 @@ for rtype in A AAAA MX TXT NS SOA CAA SRV CNAME PTR; do
 done
 ```
 
-**TXT record verification token catalog** (each token reveals a SaaS tenancy):
+**Historical TXT verification-marker catalog** (candidate service association; stale or unrelated records do not prove a current tenancy):
 
 | TXT pattern | SaaS / service | Implication |
 |---|---|---|
@@ -1073,7 +1074,7 @@ done
 | `slack-domain-verification=<token>` | Slack Enterprise Grid | Slack EG. |
 | `asana-domain-verification=<token>` | Asana Enterprise | Asana customer. |
 | `mongodb-site-verification=<token>` | MongoDB Atlas | DB tenant. |
-| `_dnsauth.<token>` | Many ACME / Let's Encrypt CAs | DNS-01 challenge in progress. |
+| `_acme-challenge.<domain>` TXT record name | ACME DNS-01 validation | Candidate challenge record; stale values do not prove an active issuance. |
 | `pinterest-site-verification=<token>` | Pinterest Business | Marketing surface. |
 | `cisco-ci-domain-verification=<token>` | Cisco Spark / Webex | Cisco. |
 | `_globalsign-domain-verification=<token>` | GlobalSign cert authority | Cert provider. |
@@ -1098,7 +1099,7 @@ done
 | `miro-site-verification=<token>` | Miro | Whiteboard tenancy. |
 | `gitlab-domain-verification=<token>` | GitLab | Self-hosted or cloud verification. |
 
-Each discovered tenancy is a separate attack surface (own credentials, own MFA posture, own data).
+Corroborate each service association with current organization-controlled evidence before calling it a tenancy or adding it to scope.
 
 **Autodiscover-as-confirmation pattern:**
 
@@ -1108,7 +1109,7 @@ Each discovered tenancy is a separate attack surface (own credentials, own MFA p
 Resolve-DnsName "autodiscover.$D" -Type A | Select Name,IPAddress
 ```
 
-If IPs are in Microsoft ranges, corroborate with current tenant metadata and organization-controlled records; do not emit `M365_CONFIRMED` from IP space alone. Cross-reference with `getuserrealm.srf` (§22.1) for tenant GUID extraction.
+If IPs are in Microsoft ranges, corroborate with current tenant metadata and organization-controlled records; do not emit `M365_CONFIRMED` from IP space alone. Use the approved OIDC metadata issuer (§22.1) to corroborate a tenant GUID; getuserrealm routing is a separate signal.
 
 **CAA records:**
 ```bash
@@ -1120,7 +1121,7 @@ Lists which CAs are allowed to issue certs. Absence is not a vulnerability verdi
 ```bash
 dig +short SOA "${D}"
 ```
-Serial format `YYYYMMDDNN` reveals last-edit date. Pattern across multiple zones can correlate ownership.
+An SOA serial is a sequence number. A date-like `YYYYMMDDNN` value may follow an operator convention, but does not prove a last-edit date or common ownership.
 
 ### 16.23 Wayback CDX Deep Usage
 
@@ -1157,11 +1158,10 @@ ARCHIVED=$(curl -sS -m 10 "https://web.archive.org/web/${TS}/${URL}")
 diff <(echo "$LIVE") <(echo "$ARCHIVED") | head -100
 ```
 
-**Save current page:**
+**Public archive submission requires explicit publication approval:**
 ```bash
-curl -sS -m 15 -X POST "https://pragma.archivelab.org/" \
-  -H 'Content-Type: application/json' \
-  -d '{"url":"https://target.example/admin"}'
+# Do not submit private or token-bearing URLs to an external archiver.
+# Verify a currently supported official archive API and approved visibility before submission.
 ```
 
 **Find every archived JS:**

@@ -217,13 +217,13 @@ SELECT current_setting('is_production', true) = 'true' AS is_prod \gset
 
 ```sql
 -- Generate and execute ANALYZE for all tables
-SELECT 'ANALYZE ' || schemaname || '.' || tablename
+SELECT format('ANALYZE %I.%I', schemaname, tablename)
 FROM pg_tables
 WHERE schemaname NOT IN ('pg_catalog', 'information_schema');
 \gexec
 
 -- Generate GRANT statements
-SELECT 'GRANT SELECT ON ' || tablename || ' TO readonly;'
+SELECT format('GRANT SELECT ON %I.%I TO readonly', schemaname, tablename)
 FROM pg_tables
 WHERE schemaname = 'public';
 \gexec

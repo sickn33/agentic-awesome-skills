@@ -1,5 +1,7 @@
 # longbridge-thesis-tracker
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Checks whether an investment thesis for a given stock is intact by pulling the latest financial data, analyst revisions, news, and regulatory filings, then rendering a structured verdict.
 
 ## Workflow
@@ -51,7 +53,7 @@ Structure the tracker output as follows:
 
 **Overall verdict**:
 
-> **Thesis confidence: Medium** — 2 of 4 pillars intact. Core AI-driven revenue growth on track; margin expansion lagging. No thesis-breaking events in filings. Suggest hold and monitor next earnings.
+> **Thesis confidence: Medium** — 2 of 4 pillars intact. Core AI-driven revenue growth on track; margin expansion lagging. No thesis-breaking events in filings. Next review trigger: the next earnings release; no trade instruction follows from this evidence alone.
 
 ## Error handling
 
@@ -61,4 +63,4 @@ Structure the tracker output as follows:
 | `not logged in` / `unauthorized` | 请运行 `longbridge auth login`               | 請運行 `longbridge auth login` / Run `longbridge auth login`   |
 | No thesis pillars provided       | 请告知您的核心买入逻辑（2–5条）              | 請提供核心買入邏輯 / Please state 2–5 thesis pillars           |
 | `filing` subcommand unavailable  | 跳过监管文件检索，标注缺失                   | 跳過文件檢索，標注缺失 / Skip filing fetch, flag as missing    |
-| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface verbatim, no silent retry           |
+| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface a redacted error summary, no silent retry           |

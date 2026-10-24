@@ -2,7 +2,7 @@
 Registro de todos os 27 scrapers das Juntas Comerciais do Brasil.
 Cada entrada define estado, junta, URL e scraper a ser usado.
 
-URLs verificadas e atualizadas em 2026-02-25.
+Historical source URLs from upstream; current reachability was not certified.
 Scrapers customizados têm lógica específica para cada site.
 """
 from __future__ import annotations
@@ -41,13 +41,13 @@ def _make(estado: str, junta: str, url: str, municipio_default: str = None) -> T
         "estado": estado,
         "junta": junta,
         "url": url,
-        "municipio_default": municipio_default,
+        "municipio_default": None,
     }
     return type(f"{junta}Scraper", (GenericJuntaScraper,), attrs)
 
 
 # Mapeamento completo: UF -> Classe de Scraper
-# Todos os 27 estados com URLs verificadas e atualizadas em 2026-02-25
+# All 27 state routes; current extraction completeness is unverified
 SCRAPERS: dict[str, Type[AbstractJuntaScraper]] = {
     # Região Sudeste
     "SP": JucespScraper,    # JUCESP - https://www.institucional.jucesp.sp.gov.br/tradutores-leiloeiros.html

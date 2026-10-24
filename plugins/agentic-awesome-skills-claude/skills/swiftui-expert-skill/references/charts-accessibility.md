@@ -15,7 +15,7 @@
 
 ## Accessibility
 
-Swift Charts provides built-in accessibility support. VoiceOver users get three rotor actions automatically:
+Swift Charts provides built-in accessibility support. Depending on chart/platform/data and accessibility configuration, VoiceOver can expose chart descriptions, audio graphs and detailed navigation. Verify availability and behavior; do not promise exactly three actions:
 
 - **Describe Chart** — overview of axes and data series
 - **Audio Graph** — sonification where pitch represents data values
@@ -55,16 +55,17 @@ struct StepsChart: View, AXChartDescriptorRepresentable {
     }
 
     func makeChartDescriptor() -> AXChartDescriptor {
-        guard let first = steps.first, let last = steps.last else {
+        let orderedSteps = steps.sorted { $0.date < $1.date }
+        guard let first = orderedSteps.first, let last = orderedSteps.last else {
             return AXChartDescriptor(title: "Daily Step Count", summary: nil,
                 xAxis: AXNumericDataAxisDescriptor(title: "Date", range: 0...1, gridlinePositions: []) { "\($0)" },
                 yAxis: AXNumericDataAxisDescriptor(title: "Steps", range: 0...1, gridlinePositions: []) { "\($0)" },
                 additionalAxes: [], series: [])
         }
         let xAxis = AXDateDataAxisDescriptor(
-            title: "Date", range: first.date...last.date, gridlinePositions: [])
+            title: "Date", range: first.date...max(last.date, first.date.addingTimeInterval(1)), gridlinePositions: [])
         let yAxis = AXNumericDataAxisDescriptor(
-            title: "Steps", range: 0...Double(steps.map(\.count).max() ?? 0),
+            title: "Steps", range: 0...max(1, Double(steps.map(\.count).max() ?? 0)),
             gridlinePositions: []) { "\(Int($0)) steps" }
         let series = AXDataSeriesDescriptor(
             name: "Daily Steps", isContinuous: true,
@@ -90,16 +91,16 @@ Chart(weeklyRevenue) { week in
 .chartXVisibleDomain(length: 8)
 .chartXSelection(range: $selectedRange)
 .chartXAxis {
-    AxisMarks(values: .stride(by: 1)) {
+    AxisMarks(values: .stride(by: 1)) { value in
         AxisGridLine()
-        AxisValueLabel { Text("W\($0.as(Int.self) ?? 0)") }
+        AxisValueLabel { Text("W\(value.as(Int.self) ?? 0)") }
     }
 }
 ```
 
 ## Fallback Strategies
 
-Gate advanced APIs with `#available` and provide a fallback chart without the gated features. Because chart modifiers like `.chartXSelection` change the return type, you must duplicate the entire `Chart` — you cannot conditionally apply the modifier:
+Gate advanced APIs with `#available` and provide a fallback chart without the gated features. Because chart modifiers like `.chartXSelection` change the return type, you can branch in a ViewBuilder or a typed helper that returns a supported chart for each availability branch; the data/mark content can be factored to avoid duplicating it:
 
 ### Version Breakdown
 

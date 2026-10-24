@@ -1,5 +1,6 @@
 # AARRR Framework — Primer for Plan Sequencing
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 AARRR (Dave McClure's "pirate metrics") is the spine of every plan produced by this skill. This doc is the primer + the decision rules for when each stage gets prioritized.
 
 ## The five stages
@@ -86,7 +87,7 @@ For every client, one or two AARRR stages will be the binding constraint. The pl
 - Hardware / commerce surface (Shopify SEO + Amazon for hybrid businesses)
 - B2B sales support (case studies, partner pages, vertical content)
 
-**Sequencing principle:** Build the organic compound first (SEO + founder-led + content + PR amplification + ambassadors). Only layer paid on top of a working organic baseline. Premature paid amplifies what's broken.
+**Sequencing principle:** Build the organic compound first (SEO + founder-led + content + PR amplification + ambassadors). A bounded paid learning experiment can precede an organic baseline when approved; gate scaling on demonstrated value, tracking and unit economics. Premature paid amplifies what's broken.
 
 ### Activation
 
@@ -100,7 +101,7 @@ For every client, one or two AARRR stages will be the binding constraint. The pl
 - Paywall structure + trial length
 - Free → paid bridge (in-app upsells, soft paywalls)
 
-**Sequencing principle:** Get to first felt value as fast as possible. Everything that adds friction between "user opens app" and "user has the experience that converts them" is a candidate to cut.
+**Sequencing principle:** Get to first felt value as fast as possible. Review friction for user value; preserve consent, accessibility, eligibility, safety and fraud protections.
 
 ### Retention
 
@@ -178,3 +179,5 @@ Always present AARRR in order (Acquisition → Activation → Retention → Refe
 This is for the reader's mental model. Founders expect the funnel to flow top-to-bottom. If Retention is the most-leveraged stage but you lead with Retention, the reader has to context-switch.
 
 To signal priority, use the executive summary (Section 1) — name the biggest bets there. The AARRR breakdown then walks the funnel in order, with the most leverage-positive section being the longest and most-detailed.
+
+These are diagnostic hypotheses. Cohort age, acquisition source and paid-conversion accumulation can explainDay1/Day30 differences without an onboarding effect. NPS is not observed referral behavior. Test the binding constraint against evidence; do not force unequal section sizes or always defer onboarding emails until every screen is stable.

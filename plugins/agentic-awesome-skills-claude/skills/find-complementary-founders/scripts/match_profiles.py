@@ -172,6 +172,8 @@ def score_match(owner: dict, candidate: dict) -> dict:
             "evidence_quality": round(evidence, 3),
         },
         "review_required": [
+            "verify source submission in the canonical thread; this file-only ranker does not establish admission",
+            "check explicit alignment and counter-reasons; scores are uncalibrated",
             "verify public evidence",
             "discuss commitment and decision rights",
             "obtain both humans' consent before direct contact",
@@ -195,11 +197,16 @@ def exclude_owner_source(owner: dict, candidates: list[dict]) -> list[dict]:
     owner_source = owner.get("_source_path")
     if not isinstance(owner_source, str):
         raise MatchError("Owner profile lacks source identity")
-    return [
-        candidate
-        for candidate in candidates
-        if candidate.get("_source_path") != owner_source
-    ]
+    def identity(profile):
+        return json.dumps({k:v for k,v in profile.items() if not k.startswith("_")},sort_keys=True,separators=(",",":"),ensure_ascii=False)
+    seen = {identity(owner)}
+    output = []
+    for candidate in candidates:
+        key = identity(candidate)
+        if candidate.get("_source_path") == owner_source or key in seen: continue
+        seen.add(key)
+        output.append(candidate)
+    return output
 
 
 def parse_args() -> argparse.Namespace:

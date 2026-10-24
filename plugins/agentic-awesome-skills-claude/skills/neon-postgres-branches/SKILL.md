@@ -17,7 +17,7 @@ Use this skill when you need choose and create the right Neon branch type for te
 
 
 The outcome of this skill should be a created Neon branch (or a clear, actionable next step if creation cannot proceed).
-Choose the correct branch type, then execute branch creation via MCP or CLI.
+For a creation request, choose the correct branch type and execute within the authorized project/data/cost scope. Advice-only questions do not authorize provisioning.
 
 - **Normal branch** for realistic migration and query testing with real data.
 - **Schema-only branch (Beta)** for sensitive data workflows where structure is needed without copying rows.
@@ -199,7 +199,7 @@ After branch creation, ask whether the user wants to update local environment cr
 
 - Ask: "Do you want me to update your `.env` `DATABASE_URL` to this new branch connection string?"
 - If yes, write the new branch connection string to the requested env file/key.
-- If no, leave credentials unchanged and share the connection string for manual use.
+- If no, leave credentials unchanged; share retrieval instructions rather than exposing the credential-bearing connection string in chat.
 - Never overwrite an existing env key without explicit confirmation.
 
 ## Neon Infrastructure as Code (`neon.ts`)
@@ -224,7 +224,7 @@ export default defineConfig({
         ttl: "7d", // ephemeral: auto-expire 7 days after creation (max 30d)
         postgres: {
           computeSettings: {
-            autoscalingLimitMinCu: 0.25, // scale to zero
+            autoscalingLimitMinCu: 0.25, // minimum while active; suspension is configured separately
             autoscalingLimitMaxCu: 1, // keep throwaway branches cheap
             suspendTimeout: "5m",
           },
@@ -238,7 +238,7 @@ export default defineConfig({
 
 The closure receives a read-only descriptor of the target branch — `name`, `exists`, `isDefault`, `parentId`, and more — and returns the tuning to apply: `parent`, `ttl` (auto-expiry), `protected`, and `postgres.computeSettings`. This is the declarative complement to the **Ephemeral lifecycle hygiene** and per-PR / per-test patterns above: instead of remembering `--expires-at` on every `neon branches create`, the TTL and compute profile live in version control and apply to every matching branch.
 
-Because `neon checkout` applies this policy when it **creates** a branch, a fresh `preview/*` or `dev-*` branch comes up already expiring and scaled-to-zero. Checking out an _existing_ branch doesn't reconcile it — run `neon deploy` (alias for `neon config apply`) to apply changes to a branch that already exists.
+Because `neon checkout` applies this policy when it **creates** a branch, a fresh `preview/*` or `dev-*` branch comes up configured for expiry and idle suspension, subject to supported settings. Checking out an _existing_ branch doesn't reconcile it — run `neon deploy` (alias for `neon config apply`) to apply changes to a branch that already exists.
 
 ## Branching in CI/CD
 
@@ -290,3 +290,5 @@ Common CI/CD use cases for Neon branches:
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Treat dated expiry values, Beta labels, CLI flags and neon.ts APIs as historical examples; verify the installed version and current official docs. Choose an actual future expiration within current service limits and the user's retention budget. Normal branches can expose production rows to test credentials: access approval and minimization apply even without a physical copy. Schema-only copies can still contain sensitive schema/default/function text. Verify branch/project IDs and connection endpoint before migrations; branch isolation does not isolate external triggers or network side effects. Never reset/delete branches merely to clear blockers without explicit destructive scope. Protect credentials in ignored private files and redact output.

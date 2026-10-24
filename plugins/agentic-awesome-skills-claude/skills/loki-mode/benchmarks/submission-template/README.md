@@ -9,7 +9,7 @@
 | Metric | Value |
 |--------|-------|
 | **Patch Generation Rate** | **99.67%** (299/300) |
-| Problems Solved | 299 |
+| Problems Solved | Not evaluated |
 | Total Problems | 300 |
 | Fixed by RARV Retry | 0 |
 | Average Attempts | 1.0 |
@@ -109,3 +109,5 @@ evaluation/lite/20260105_loki_mode/
 ## Contact
 
 - GitHub: [@asklokesh](https://github.com/asklokesh)
+
+Historical generation artifacts do not establish resolved issue accuracy or official leaderboard acceptance. Evaluate patches against the exact dataset/base commits with the official isolated harness before submission; redact and authorize publication of logs and source data.

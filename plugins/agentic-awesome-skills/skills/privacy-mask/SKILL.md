@@ -17,7 +17,7 @@ Detect and mask sensitive information in images locally before they leave your m
 ## Prerequisites
 
 This skill requires the `privacy-mask` CLI to be pre-installed on the system.
-If it is not available, inform the user that they need to install it first:
+If unavailable, report that prerequisite. The commands below illustrate package names, not authorization to install: select a reviewed version, inspect dependencies and obtain the requested installation scope before changing the environment. Confirm installed help before use:
 
 1. Install via pip: `pip install privacy-mask`
 2. Ensure Tesseract OCR is installed: `brew install tesseract` (macOS) or `apt install tesseract-ocr` (Linux)
@@ -82,12 +82,14 @@ Output is JSON:
 - **Don't assume images are safe** — always run detection even if the image "looks clean"
 - **Don't use `--in-place` by default** — preserve the original unless the user asks otherwise
 - **Don't ignore dry-run results** — if `--dry-run` finds PII, the image must be masked before use
-- **Don't hardcode config paths** — use the bundled default or let the user specify `--config`
+- **Don't hardcode config paths** — inspect the installed CLI default or let the user specify `--config`
 
 ## Important
 
-- All processing is **local and offline** — no data leaves the machine
-- Configure rules in the bundled `config.json` or pass `--config` for custom rules
+- Verify the installed version and selected detection engine before using sensitive files; do not infer offline behavior from the tool name. Optional models may require downloads.
+- OCR and pattern matching can miss secrets, handwriting, small text, QR codes or unusual formats. Inspect the exported image manually before sharing; zero detections does not establish anonymization.
+- Treat dry-run output as sensitive: detection logs may include recognized text. Do not publish them or send them to external services unredacted.
+- No `config.json` or CLI is bundled with this AAS entrypoint. Locate defaults in the reviewed CLI installation or pass a user-supplied `--config` path.
 
 ## Limitations
 

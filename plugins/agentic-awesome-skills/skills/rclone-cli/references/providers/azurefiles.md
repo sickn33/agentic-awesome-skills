@@ -237,22 +237,22 @@ for ensuring the configured authority is valid and trustworthy.
 
 Credentials created with the `az` tool can be picked up using `env_auth`.
 
-For example if you were to login with a service principal like this:
+For interactive Azure CLI authentication without putting a secret in arguments:
 
 ```console
-az login --service-principal -u XXX -p XXX --tenant XXX
+az login
 ```
 
 Then you could access rclone resources like this:
 
 ```console
-rclone lsf :azurefiles,env_auth,account=ACCOUNT:
+rclone lsf :azurefiles,env_auth,account=ACCOUNT,share_name=SHARE:
 ```
 
 Or
 
 ```console
-rclone lsf --azurefiles-env-auth --azurefiles-account=ACCOUNT :azurefiles:
+rclone lsf --azurefiles-env-auth --azurefiles-account=ACCOUNT --azurefiles-share-name=SHARE :azurefiles:
 ```
 
 #### Account and Shared Key
@@ -377,7 +377,7 @@ Properties:
 
 Read credentials from runtime (environment variables, CLI or MSI).
 
-See the [authentication docs](/azureblob#authentication) for full info.
+See the [authentication docs](/azurefiles#authentication) for full info.
 
 Properties:
 
@@ -584,12 +584,12 @@ Path to file containing credentials for use with a service principal.
 
 Leave blank normally. Needed only if you want to use a service principal instead of interactive login.
 
-    $ az ad sp create-for-rbac --name "<name>" \
-      --role "Storage Blob Data Owner" \
-      --scopes "/subscriptions/<subscription>/resourceGroups/<resource-group>/providers/Microsoft.Storage/storageAccounts/<storage-account>/blobServices/default/containers/<container>" \
-      > azure-principal.json
-
-See ["Create an Azure service principal"](https://docs.microsoft.com/en-us/cli/azure/create-an-azure-service-principal-azure-cli) and ["Assign an Azure role for access to blob data"](https://docs.microsoft.com/en-us/azure/storage/common/storage-auth-aad-rbac-cli) pages for more details.
+Do not use a Blob Data role or a `blobServices/.../containers/...` scope for
+Azure Files. Configure the service principal with the minimum Azure Files REST
+permissions required by the workload, using the
+[Azure Files OAuth authorization guidance](https://learn.microsoft.com/en-us/azure/storage/files/authorize-oauth-rest).
+Privileged file-data roles can bypass file/directory permissions; review the
+scope before granting them. Store the credential file with owner-only access.
 
 It may be more convenient to put the credentials directly into the
 rclone config file under the `client_id`, `tenant` and `client_secret`
@@ -660,7 +660,7 @@ Properties:
 
 #### --azurefiles-msi-client-id
 
-Object ID of the user-assigned MSI to use, if any.
+Client ID of the user-assigned MSI to use, if any.
 
 Leave blank if msi_object_id or msi_mi_res_id specified.
 
@@ -735,7 +735,7 @@ Properties:
 Upload chunk size.
 
 Note that this is stored in memory and there may be up to
-"--transfers" * "--azurefile-upload-concurrency" chunks stored at once
+"--transfers" * "--azurefiles-upload-concurrency" chunks stored at once
 in memory.
 
 Properties:
@@ -757,7 +757,7 @@ links and these uploads do not fully utilize your bandwidth, then
 increasing this may help to speed up the transfers.
 
 Note that chunks are stored in memory and there may be up to
-"--transfers" * "--azurefile-upload-concurrency" chunks stored at once
+"--transfers" * "--azurefiles-upload-concurrency" chunks stored at once
 in memory.
 
 Properties:

@@ -2,7 +2,15 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing production scheduling communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and purpose. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and purpose. Select the template matching your scenario, substitute variables and prepare a draft for the authorised sender.
+
+These are synthetic drafts, not issued production instructions or action records.
+Resolve every variable, approval and factual claim. Use site-specific calendars,
+qualifications, safety/quality controls and labour rules. Replace example rows
+with an entirely recalculated feasible schedule before publication; do not assume
+all shown changes, purchases or isolations occurred. Sending and ERP/MES changes
+require task-specific authority. Safety stops and quality holds override any
+frozen-zone/stability wording.
 
 ---
 
@@ -121,9 +129,9 @@ Common variables used across templates:
 | WO-04824 start time | 08:45 | 11:30 |
 | Changeover | Tooling → Fixture (15 min) | Fixture → Tooling (20 min) |
 
-**Why:** {{detailed_reason}} — e.g., "WO-04826 material (bracket raw stock) arrived early. WO-04826 due date is 1 day earlier than WO-04824. Swapping sequence saves 5 minutes of changeover time and improves on-time delivery for both orders."
+**Why:** {{detailed_reason}} — e.g., "WO-04826 material (bracket raw stock) arrived early. WO-04826 due date is 1 day earlier than WO-04824. The illustrated transition increases from15 to20minutes, adding5minutes. Recalculate the entire sequence, setup state, durations and downstream effects before claiming a benefit."
 
-**Impact on other work centres:** None — downstream operations unaffected.
+**Impact on other work centres:** {{verified_downstream_impact_or_unresolved_assessment}}
 
 **Action required:**
 - Material handler: Re-stage WO-04826 material at {{line_id}} by 08:30.
@@ -162,10 +170,10 @@ Example: "Hydraulic pump failure on CNC Horizontal Boring Mill (WC 420) at 09:15
 - **Current buffer status:** {{buffer_status}} (e.g., "Buffer was GREEN, will reach RED in 4 hours if not resolved")
 
 **Immediate actions taken:**
-1. Machine isolated. Maintenance on-site.
-2. Replacement pump ordered from OEM distributor — ETA {{pump_eta}}.
-3. In-machine part assessed: datum offsets preserved, part likely salvageable on restart.
-4. Queued jobs reviewed for alternate routing — 3 of 14 can run on vertical CNC.
+1. {{verified_isolation_status_and_authorised_maintenance_owner}}
+2. {{verified_parts_order_status}} — ETA {{pump_eta}}.
+3. {{engineering_assessment_of_part_and_safe_restart_status}}
+4. {{verified_eligible_alternate_routing_count_and_approval}}
 
 **Decision needed from management:**
 - Authorise Saturday overtime (8 hours, estimated cost ${{overtime_cost}}) to recover lost capacity? Y/N
@@ -207,10 +215,10 @@ Example: "Constraint work centre (CNC Boring, WC 420) lost 20 hours due to unpla
 | Personnel required | {{personnel_count}} (e.g., 2 CNC operators + 1 setup tech) |
 | Personnel names | {{personnel_names}} (voluntary — confirmed availability) |
 | Estimated cost | ${{overtime_cost}} ({{hours}} hrs × ${{rate}}/hr × {{multiplier}} OT premium) |
-| Union compliance | ✅ Voluntary. Offered by seniority per CBA Article 14.3. 8-hour rest observed. |
+| Union compliance | {{verified_consent_assignment_notice_rest_and_fatigue_requirements_with_evidence}} |
 
 **Revenue at risk without overtime:** ${{revenue_at_risk}}
-**Cost-to-benefit ratio:** {{ratio}} (e.g., "$1,200 OT cost to protect $220,000 revenue = 183:1 ROI")
+**Incremental economics:** {{expected_contribution_and_avoided_penalties_less_total_incremental_costs}}. Revenue at risk is reported separately and is not overtime ROI.
 
 **Orders recovered with overtime:**
 
@@ -318,7 +326,7 @@ Regards,
 Example: "Saturday window avoids impacting the Week 39 production plan, which is loaded at 94% Mon–Fri. Vibration readings on SP-602 are trending into the caution zone (0.28 in/s, threshold is 0.30). Deferring beyond Saturday increases the risk of an unplanned breakdown during the peak Monday–Wednesday production window."
 
 **Impact if deferred:**
-- Probability of unplanned failure in next 2 weeks: {{failure_probability}} (e.g., "estimated 35% based on vibration trend and historical MTBF data")
+- Probability of unplanned failure in next 2 weeks: {{failure_probability}} (e.g., "qualified reliability assessment attached; probability unknown if unsupported")
 - Cost of unplanned failure: {{failure_cost}} (e.g., "$16,000 lost throughput + $5,000 emergency repair + potential die damage")
 - Production orders at risk: {{at_risk_orders}}
 
@@ -414,10 +422,10 @@ MRP-generated load for {{constraint_wc}} in Week {{week_number}} exceeds availab
 
 | Option | Capacity Recovered | Cost | Risk | Recommendation |
 |---|---|---|---|---|
-| Saturday overtime (1 shift) | {{ot_hours}} hrs | ${{ot_cost}} | Low — voluntary OT available | ✅ Recommended |
-| Defer {{defer_count}} lower-priority orders to Week {{week_number + 1}} | {{defer_hours}} hrs | $0 | Medium — delivery impact on deferred orders | Acceptable if customers agree |
+| Saturday overtime (1 shift) | {{verified_machine_hours_with_full_crew}} hrs | ${{ot_cost}} | {{verified_staffing_fatigue_and_support_risk}} | ✅ Recommended |
+| Defer {{defer_count}} lower-priority orders to Week {{next_week_number}} | {{defer_hours}} hrs | {{verified_deferral_cost}} | Delivery impact requires agreement | Acceptable if customers agree |
 | Subcontract {{subcontract_ops}} | {{subcontract_hours}} hrs | ${{subcontract_cost}} | Medium — quality and lead time | Last resort |
-| Reduce constraint changeovers (campaign scheduling) | {{co_hours}} hrs | $0 | Low — requires schedule restructuring | ✅ Recommended in combination |
+| Reduce constraint changeovers (campaign scheduling) | {{co_hours}} hrs | {{verified_changeover_plan_cost}} | Check inventory, cleaning, capacity and due-date impacts | ✅ Recommended in combination |
 
 **Recommended plan:** Combine overtime ({{ot_hours}} hrs) + changeover reduction ({{co_hours}} hrs) to close the gap. Total gap closed: {{total_recovered}} hrs. Remaining gap: {{remaining_gap}} hrs — address by deferring {{defer_count}} Tier-3 orders with customer agreement.
 
@@ -496,7 +504,7 @@ The current production plan contains conflicting priorities that cannot be resol
 2. Written confirmation (email or meeting minutes) that the decision is endorsed by all affected departments
 3. Decision by {{decision_deadline}} so the schedule can be locked for the week
 
-**Scheduling will execute whatever priority is agreed. We are not requesting a specific outcome — we are requesting clarity so the schedule can be built without ambiguity.**
+**Scheduling requests an authorised priority decision within the verified safety, quality, labour and physical constraints; record any remaining infeasibility before release.**
 
 ---
 

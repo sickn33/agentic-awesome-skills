@@ -1,14 +1,13 @@
 # Output Templates Reference
 
-Complete formatting templates for all supported output formats.
+Illustrative formatting templates, not observed extraction results. Escape untrusted Markdown cells/links and keep a complete lossless export if the display is truncated. For spreadsheet CSV exports, neutralize text cells that could be interpreted as formulas (`=`, `+`, `-`, `@`, tab/control prefixes); quoting alone is insufficient. Preserve raw values separately and disclose any safe-export prefix.
 Every output must be wrapped in a delivery envelope with metadata.
 
 ---
 
 ## Delivery Envelope (Required)
 
-Every extraction result MUST include this metadata wrapper,
-regardless of output format:
+Include relevant metadata within JSON, alongside a Markdown result or in a CSV sidecar; do not wrap raw machine-readable files in Markdown.
 
 ```markdown
 ## Extraction Results
@@ -230,9 +229,6 @@ For values exceeding 60 characters:
 ### Standard CSV
 
 ```csv
-# Source: https://example.com/products
-# Extracted: 2026-02-25 14:30 UTC
-# Items: 3 | Confidence: HIGH
 name,price,currency,rating,availability
 "Product Alpha",29.99,USD,4.5,"In Stock"
 "Product Beta",49.99,USD,4.2,"In Stock"
@@ -249,14 +245,12 @@ name,price,currency,rating,availability
 | Quote fields with newlines           | `"Line 1\nLine 2"`            |
 | UTF-8 encoding with BOM             | `\xEF\xBB\xBF` prefix         |
 | Comma delimiter (standard)           | `,`                            |
-| Metadata as comments (# prefix)      | `# Source: URL`                |
+| Metadata in a separate sidecar file | No nonstandard comment rows in CSV |
 | null/missing as empty field          | `field1,,field3`               |
 
 ### Multi-URL CSV
 
 ```csv
-# Sources: store-a.com, store-b.com
-# Extracted: 2026-02-25 14:30 UTC
 source,name,price,currency,rating
 "store-a.com","Laptop X",999,USD,4.3
 "store-b.com","Laptop X",949,USD,4.5

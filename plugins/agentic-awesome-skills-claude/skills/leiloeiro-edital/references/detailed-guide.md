@@ -26,7 +26,7 @@ Ao receber um edital (ou informações dele), execute SEMPRE os 8 blocos abaixo:
 
 **Extrair do edital:**
 - Número do processo (se judicial)
-- Nome do leiloeiro e habilitação (CRC/Junta Comercial)
+- Nome do leiloeiro e matrícula/habilitação na Junta Comercial e credenciamento aplicável
 - Plataforma de leilão (presencial / online — qual portal)
 - Data, hora e local do 1º leilão
 - Data, hora e local do 2º leilão
@@ -69,8 +69,8 @@ Data/Hora: ___________
 **Extrair e calcular:**
 ```
 Valor de Avaliação (VAN):          R$ _____________
-Lance Mínimo 1º Leilão:            R$ _____________  (= VAN em judicial / VAN em extraJ)
-Lance Mínimo 2º Leilão:            R$ _____________  (50% VAN em judicial / dívida em extraJ)
+Lance Mínimo 1º Leilão:            R$ _____________  (conforme edital, modalidade e decisão; não presumir)
+Lance Mínimo 2º Leilão:            R$ _____________  (conforme mínimo judicial/legal e regime fiduciário aplicável)
 Data da Avaliação:                 _______________
 Avaliador responsável:             _______________
 ```
@@ -84,7 +84,7 @@ Avaliador responsável:             _______________
 - ⚠️ Avaliação com mais de 12 meses → risco de defasagem — pedir reavaliação possível (Art. 873 CPC)
 - ⚠️ VAN muito abaixo do mercado → investigar laudos ou favorecimento
 - ⚠️ VAN muito acima do mercado → leilão não vai arrematar no 1º; aguardar 2º
-- ⚠️ Leilão extrajudicial 2º: lance mínimo = dívida → pode ser MUITO abaixo do valor de mercado (ótima oportunidade)
+- ⚠️ Leilão extrajudicial: conferir arts. 26-A/27 após Lei 14.711/2023; dívida, encargos e hipóteses de mínimo diferem, sem oportunidade garantida
 
 ---
 
@@ -129,9 +129,9 @@ Avaliador responsável:             _______________
 | Redação no Edital | Interpretação | Risco |
 |-------------------|---------------|-------|
 | "O imóvel é vendido no estado em que se encontra" | Débitos podem acompanhar | Alto |
-| "Livre de ônus" | Arrematante não responde | Baixo |
-| "Débitos a cargo do arrematante" | Você paga tudo | Alto — quantificar |
-| "Edital silente sobre débitos" | Regra propter rem se aplica | Médio |
+| "Livre de ônus" | Conferir alcance, matrícula, modalidade e decisão; não é garantia absoluta | Pendente de conferência |
+| "Débitos a cargo do arrematante" | Verificar validade legal e quais débitos, sem prevalência automática sobre norma obrigatória | Alto — revisar |
+| "Edital silente sobre débitos" | Distinguir CTN art. 130 parágrafo único/CPC art. 908 §1º e modalidade | Pendente |
 | "Débitos a serem pagos com o produto da arrematação" | Juiz reserva verba | Baixo |
 
 **QUANTIFICAR SEMPRE:**
@@ -166,7 +166,7 @@ Antes de arrematar, obter:
 - Prazo para pagamento à vista
 - Possibilidade de parcelamento — Art. 895 CPC:
   - 25% à vista no ato da arrematação
-  - Saldo em até 30 dias (ou conforme determinado)
+  - Saldo em até 30 meses na proposta do art. 895, observadas garantias e aceitação judicial
 - Financiamento bancário aceito? Qual banco?
 - Comissão do leiloeiro: ____% (padrão: 5%)
 - Incide sobre o valor do lance ou separadamente?
@@ -214,7 +214,7 @@ Lance arrematado:                  R$ _____________
 - [ ] Credenciado no juízo (se judicial)
 - [ ] Leilão extrajudicial: leiloeiro nomeado pelo credor fiduciário
 
-**d) Edital completo (Art. 887, §1º CPC):**
+**d) Conteúdo do edital (Art. 886 CPC):**
 - [ ] Descrição do bem
 - [ ] Valor de avaliação
 - [ ] Ônus existentes
@@ -282,17 +282,9 @@ AÇÃO RECOMENDADA:
 ---
 
 
-## Prazos Importantes
+## Prazos a confirmar no regime aplicável
 
-| Prazo | Evento | Base Legal |
-|-------|--------|-----------|
-| 5 dias | Antecedência mínima de publicação do edital | Art. 887 CPC |
-| 15 dias | Purga da mora (extrajudicial) | Art. 26, §1º Lei 9.514/97 |
-| 10 dias | Prazo para anular arrematação por vício | Art. 903 CPC |
-| 30 dias | 1º ao 2º leilão extrajudicial | Art. 27 Lei 9.514/97 |
-| 60 dias | Prazo para imissão na posse (judicial) | Art. 894 CPC |
-| 15 dias | Pagamento do saldo após arrematação | Art. 890 CPC |
-
+CPC art. 887: publicação do edital judicial com antecedência mínima de cinco dias. Art. 892: pagamento imediato salvo decisão diversa; art. 895: condições próprias de parcelamento. Art. 903 §2º: provocação em dez dias do aperfeiçoamento, sem excluir ação autônoma do §4º. Na Lei 9.514/1997, conferir purga, consolidação e regime residencial especial: art. 27 prevê leilão em 60 dias da consolidação e segundo nos 15 dias seguintes; art. 30 trata da reintegração e não de prazo judicial universal de imissão. Não aplicar uma única tabela a todas as modalidades.
 
 ## Custos Típicos Por Estado (Itbi)
 
@@ -319,7 +311,7 @@ AÇÃO RECOMENDADA:
 Os editais de venda direta bancária têm formato diferente dos judiciais. Pontos específicos:
 
 
-## Venda Online Caixa (Caixavbr.Com.Br)
+## Venda Online CAIXA (portal oficial caixa.gov.br)
 
 **Estrutura do edital CEF:**
 ```
@@ -327,17 +319,17 @@ Os editais de venda direta bancária têm formato diferente dos judiciais. Ponto
 2. Valor mínimo de venda (VMAV — Valor Mínimo de Aquisição e Venda)
 3. Forma de pagamento aceita:
    - À vista (desconto de 5-10%)
-   - Financiamento pela própria CEF (até 80% do VMAV)
+   - Financiamento apenas quando disponível no lote e após aprovação de crédito
    - FGTS: pode ser usado para parte do pagamento
 4. Estado do imóvel: "no estado em que se encontra"
 5. Responsabilidade por débitos: geralmente a cargo do arrematante
-6. Comissão do leiloeiro/intermediário: 5%
+6. Distinguir comissão de leiloeiro em leilão/licitação da corretagem na Venda Online/Compra Direta, paga pela CAIXA
 7. Prazo para desocupação (se ocupado): responsabilidade do comprador
 ```
 
 **Diferenciais CEF:**
 - Possibilidade de usar FGTS (desde que atenda requisitos SFH)
-- Financiamento até 360 meses pelo próprio banco
+- Prazo e condições de financiamento conforme aprovação e regras atuais
 - Desconto adicional para pagamento à vista
 - Imóveis do PMCMV/MCMV: valores populares, alta demanda
 - Edital não precisa cumprir CPC (não é leilão judicial)
@@ -351,7 +343,7 @@ Os editais de venda direta bancária têm formato diferente dos judiciais. Ponto
 - Comissão de intermediação: 5-6%
 - Financiamento pelo próprio banco pode ser oferecido
 - Imóvel vendido "no estado em que se encontra e ônus"
-- **ATENÇÃO:** "e ônus" = arrematante assume TUDO (IPTU, condomínio, obras, ocupação)
+- **ATENÇÃO:** "e ônus" exige identificar responsabilidades específicas e sua validade legal, não assumir automaticamente todos os débitos
 
 
 ## Checklist Específico Para Venda Direta
@@ -405,55 +397,13 @@ Preencher para cada lote analisado:
 ║  MARGEM DE SEGURANÇA:                R$ ______________   ║
 ║  MARGEM (%):                         _____%             ║
 ║                                                          ║
-║  VERED
-
-## Instalação
-
-Skill baseada em conhecimento (knowledge-only). Não requer instalação de dependências.
-
-```bash
-
-### Verificar Se A Skill Está Registrada:
-
-python C:\Users\renat\skills\agent-orchestrator\scripts\scan_registry.py
+║  Decisão pendente de diligência e revisão profissional.
+╚══════════════════════════════════════════════════════════╝
 ```
 
----
+## Disponibilidade e governança
 
-## Comandos E Uso
-
-Como usar esta skill:
-
-```bash
-
-### Uso Via Orchestrator (Automático):
-
-python agent-orchestrator/scripts/match_skills.py "analisar edital leilao"
-
-
-## "O Que Verificar Nesse Edital Da Caixa?"
-
-```
-
----
-
-## Governança
-
-Esta skill implementa as seguintes políticas de governança:
-
-- **action_log**: Cada análise de edital é registrada pelo log_action para rastreabilidade
-- **rate_limit**: Controle via check_rate integrado ao ecossistema
-- **requires_confirmation**: Veredicto "NÃO ARREMATAR" gera confirmation_request ao usuário
-- **warning_threshold**: Score de risco >10/14 dispara warning_threshold com alerta automático
-
-Políticas adicionais:
-- **Responsável:** Ecossistema Leiloeiro IA
-- **Escopo:** Análise pericial de editais de leilão judicial e extrajudicial
-- **Limitações:** Análise baseada em informações fornecidas. Não acessa processos judiciais.
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensíveis:** Não armazena dados de editais analisados
-
----
+Orquestrador, scan_registry.py, match_skills.py e skill-sentinel não estão incluídos. scripts/governance.py contém helpers manuais sem integração automática, confirmação humana efetiva ou controle atômico de taxa. Não alegar auditoria skill-sentinel ou ausência de retenção pelo cliente/serviço. Nenhum alerta ou aprovação decorre apenas de calcular o score.
 
 ## Armadilhas Comuns Em Editais — Top 10
 

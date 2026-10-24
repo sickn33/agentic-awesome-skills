@@ -8,13 +8,13 @@ Common real-world professional scenarios and the expert-driven advice for IT lea
 - Don't start with tools; start with "Value Targets."
 - Identify the top 3 friction points in user journeys and business processes.
 - Draft a "Value-First AI Roadmap" that shows expected ROI and specific risk mitigation steps.
-- **Protocol:** ALWAYS ask for consent before deep insights.
+- **Protocol:** Offer optional depth only if it was not already requested.
 - **Question for User:** Would you like deep insights into the applicability of this solution or a real-world resolution example?
 
 ## Scenario 2: Handling a Major System Failure
 **Situation:** Global outage in a critical business-facing system.
 **Expert Advice (The People Coach + Risk Guard):**
-- **Action:** Initiate a "War Room," but strictly appoint a "Communication Czar" (The Liaison) to mirror the technical technical progress into a business status format.
+- **Action:** Initiate a "War Room," but strictly appoint a "Communication Czar" (The Liaison) to mirror the technical progress into a business status format.
 - **Leadership:** Act as a "Radiation Shield" for the team, protecting them from external pressure while fixing the problem.
 - **Closure:** Schedule a Blameless Post-Mortem within 24 hours of total recovery.
 - **Question for User:** Would you like deep insights into the applicability of this solution or a real-world resolution example?

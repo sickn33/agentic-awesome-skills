@@ -119,7 +119,10 @@ struct VibrantMaximalismView: View {
                     .padding(40)
                     .background(Color.white.opacity(0.9))
                     .border(.black, width: 5)
-                    .cornerRadius(40, corners: [.topRight, .bottomLeft]) // Custom corner radius extension needed
+                    .clipShape(UnevenRoundedRectangle(
+                        topLeadingRadius: 0, bottomLeadingRadius: 40,
+                        bottomTrailingRadius: 0, topTrailingRadius: 40
+                    )) // iOS 17+; use a tested custom Shape on older targets
                     .shadow(color: Color(hex: "0000FF"), radius: 0, x: 10, y: 10)
                 }
             }
@@ -201,7 +204,7 @@ const VibrantMaximalismScreen = () => {
     <ScrollView style={{ flex: 1, backgroundColor: '#FFFF00' }}>
       
       {/* Emulating radial blobs in RN usually requires SVG or ImageBackground. For simplicity, we use absolute views here */}
-      <View style={{ position: 'absolute', top: -50, left: -50, width: 300, height: 300, borderRadius: 150, backgroundColor: '#FF00FF', opacity: 0.5, filter: 'blur(50px)' }} />
+      <View style={{ position: 'absolute', top: -50, left: -50, width: 300, height: 300, borderRadius: 150, backgroundColor: '#FF00FF', opacity: 0.5 /* Solid blob fallback; blur support depends on RN architecture and OS. */ }} />
 
       <View style={{ padding: 40, alignItems: 'center', marginTop: 100 }}>
         
@@ -284,7 +287,7 @@ fun VibrantMaximalismScreen() {
 
 ## Do's and Don'ts
 - **DO**: Break the grid. Let elements overlap awkwardly.
-- **DON'T**: Use whitespace. If there is an empty area, fill it with a pattern, a marquee, or a giant emoji.
+- **DON'T**: Let decoration obscure essential copy, focus or actions. Use calm reading surfaces where needed and keep optional motion pausable with reduced-motion support.
 
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.

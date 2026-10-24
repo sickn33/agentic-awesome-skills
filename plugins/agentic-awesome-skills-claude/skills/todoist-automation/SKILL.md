@@ -18,12 +18,14 @@ Automate Todoist operations including task creation and management, project orga
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube MCP connection. If absent, follow the host's supported setup and authentication flow only within the user's requested scope; adding an endpoint alone does not establish authenticated Todoist access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `todoist`
 3. If connection is not ACTIVE, follow the returned auth link to complete Todoist OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Tool slugs and parameter examples below are historical guidance. The discovered schema and authenticated account are authoritative. Fetch IDs exactly as returned; do not convert opaque identifiers or try a different ID type to bypass an error. Execute only requested operations, inspect bulk targets before mutation, and reconcile uncertain write outcomes before retrying.
 
 ## Core Workflows
 
@@ -84,7 +86,7 @@ Automate Todoist operations including task creation and management, project orga
 - Projects with similar names can lead to selecting the wrong project_id; always verify
 - `CREATE_PROJECT` uses `favorite` while `UPDATE_PROJECT` uses `is_favorite` -- different field names
 - Use the project `id` returned by API, not the `v2_id`, for downstream operations
-- Alphanumeric/URL-style project IDs may cause HTTP 400 in some tools; use numeric ID if available
+- For HTTP 400, inspect the current tool schema and target; do not replace a returned opaque ID with a guessed numeric one
 
 ### 3. Manage Sections
 
@@ -105,7 +107,7 @@ Automate Todoist operations including task creation and management, project orga
 
 **Pitfalls**:
 - `CREATE_SECTION` requires `project_id` and `name` -- omitting project_id causes a 400 error
-- HTTP 400 "project_id is invalid" can occur if alphanumeric ID is used; prefer numeric ID
+- On an invalid project ID, re-resolve the target using the current API and preserve the returned ID verbatim
 - Deleting a section may move or regroup its tasks in non-obvious ways
 - Response may include both `id` and `v2_id`; store and reuse the correct identifier consistently
 - Always check existing sections first to avoid creating duplicates
@@ -172,9 +174,9 @@ Always resolve human-readable names to IDs before operations:
 - **Task content -> Task ID**: `TODOIST_GET_ALL_TASKS` with `filter` or `search: keyword`
 
 ### Pagination
-- `TODOIST_GET_ALL_TASKS`: Returns all matching incomplete tasks (no pagination needed)
+- `TODOIST_GET_ALL_TASKS`: Inspect response pagination; follow the current schema's cursor until exhausted before claiming a complete inventory
 - `TODOIST_GET_COMPLETED_TASKS_BY_COMPLETION_DATE`: Uses cursor-based pagination; follow `cursor` from response until no more results
-- `TODOIST_GET_ALL_PROJECTS` and `TODOIST_GET_ALL_SECTIONS`: Return all results (no pagination)
+- `TODOIST_GET_ALL_PROJECTS` and `TODOIST_GET_ALL_SECTIONS`: Inspect cursors too; the [current Todoist API](https://developer.todoist.com/api/v1/) paginates tasks, projects and sections even if a connector aggregates pages
 
 ### Due Date Handling
 - Natural language: Use `due_string` (e.g., `"tomorrow at 3pm"`, `"every Monday"`)
@@ -188,7 +190,7 @@ Always resolve human-readable names to IDs before operations:
 ### ID Formats
 - Task IDs can be numeric (`"2995104339"`) or alphanumeric (`"6X4Vw2Hfmg73Q2XR"`)
 - Project IDs similarly vary; prefer the format returned by the API
-- Some tools accept only numeric IDs; if 400 error occurs, try fetching the numeric `id` via GET_PROJECT
+- On an ID error, inspect API/tool version compatibility; do not convert opaque IDs
 - Response objects may contain both `id` and `v2_id`; use `id` for API operations
 
 ### Priority Inversion

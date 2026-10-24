@@ -34,7 +34,7 @@ For each failure mode you get:
 
 **Pattern.** Wrapping operations in broad catch-all handlers or returning null/empty success on any caught error, hiding real bugs.
 
-**Source.** Karpathy directly observed that LLMs are unusually afraid of exceptions. Reinforced by field reports on LLM error suppression. Root cause is the reward signal during training — propagating exceptions penalizes the model, so the model learns to suppress them.
+**Source.** Karpathy directly observed that LLMs are unusually afraid of exceptions. Reinforced by field reports on LLM error suppression. Reward shaping is one possible explanation, not a causal conclusion established by the cited field observation.
 
 **Bad:**
 ```text
@@ -62,7 +62,7 @@ getEmail(userId):
 
 **Pattern.** Adding null checks, runtime type checks, or truthiness checks for conditions the type system or call graph already prevents.
 
-**Source.** arXiv 2409.19182, "AI-Generated Code Considered Harmful"; HN discussion of defensive code overuse. Same reward-shaping mechanism as #1.
+**Source.** arXiv 2409.19182, "AI-Generated Code Considered Harmful"; HN discussion of defensive code overuse. A reward-shaping explanation remains a hypothesis.
 
 **Bad:**
 ```text
@@ -146,7 +146,10 @@ if counter > daily_limit:
 
 **Pattern.** Inline copies of logic that already exists in a helper, instead of importing it.
 
-**Source.** GitClear, AI Copilot Code Quality 2025 — 211M-LoC longitudinal analysis. Copy-pasted 5+ line blocks increased **8x** between 2021 and 2024. Copy/pasted lines rose from 8.3% to 12.3%. Refactoring share dropped from 25% to under 10%. This is the strongest quantitative result on LLM code quality available.
+**Source.** GitClear's observational 2020–2024 dataset reports copy/pasted
+lines rising from 8.3% to 12.3%. These are dataset-specific trends, not a
+universal defect rate or proof of AI causation.
+
 
 **Rule.** Before writing a function, search the codebase for a similar existing one. If a block of ≥5 lines matches existing code in the repo, extract or call the existing function.
 
@@ -156,7 +159,7 @@ if counter > daily_limit:
 
 **Pattern.** Imports, method names, or signatures that don't exist in the version of the library actually installed.
 
-**Source.** Spracklen et al., USENIX Security '25, "Package Hallucinations" — 16 models tested; average hallucination rate 19.6% (commercial ~5%, open source ~21%). arXiv 2409.20550 "LLM Hallucinations in Practical Code Generation" gives a taxonomy. arXiv 2407.09726, "Mitigating Code LLM Hallucinations with API Documentation".
+**Source.** Spracklen et al., USENIX Security '25, "Package Hallucinations" — 16 models tested; reported at least 5.2% for commercial and 21.7% for open-source models in the tested setting. arXiv 2409.20550 "LLM Hallucinations in Practical Code Generation" gives a taxonomy. arXiv 2407.09726, "Mitigating Code LLM Hallucinations with API Documentation".
 
 **Rule.** Every import and external API call must be verified against the actual installed version — read the package, check the lockfile, or import and inspect. Do not call a method based on what "should exist."
 
@@ -192,7 +195,7 @@ doublePrices(orders):
 
 **Pattern.** A single function mixing I/O, business logic, formatting, and side effects — often because the prompt asked for several things in one breath.
 
-**Source.** arXiv 2512.11922, "Vibe Coding in Practice" — documents how AI-assisted "vibe coding" accumulates technical debt through architectural inconsistencies; the canonical symptom is a single function hundreds of lines long handling several unrelated concerns, assembled from multiple AI-generated fragments. GitClear 2025 — file size 142→267 LoC, cyclomatic complexity 4.2→8.1 in AI-assisted commits. arXiv 2304.10778 compares Copilot/CodeWhisperer/ChatGPT quality.
+**Source.** arXiv 2512.11922, "Vibe Coding in Practice" — documents how AI-assisted "vibe coding" accumulates technical debt through architectural inconsistencies; the canonical symptom is a single function hundreds of lines long handling several unrelated concerns, assembled from multiple AI-generated fragments. Do not treat unverified file/function-size or complexity figures as established by GitClear. arXiv 2304.10778 compares Copilot/CodeWhisperer/ChatGPT quality.
 
 **Rule.** A function does one thing. If the prompt asks for N things, produce N functions and a small composer. Refactor ceiling: ~50 lines (target ≤20), ≤4 parameters, cyclomatic complexity ≤10 — refactor before exceeding.
 

@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # LTX reference
 
 The LTX family covers `LTX-Video` (0.9.x series), `LTX-2`, and `LTX-2.3`. All target text-to-video, image-to-video, and video-to-video.
@@ -38,13 +40,13 @@ LTX pipelines need extras beyond the standard diffusers/transformers/peft set, b
 For LTX-2 and LTX-2.3, the latest diffusers from git is often required since pipeline classes (`LTX2Pipeline`, conditioning APIs) land before pip releases:
 
 ```
-git+https://github.com/huggingface/diffusers
+git+https://github.com/huggingface/diffusers@<reviewed-full-commit-sha>
 ```
 
 For LTX-2.3 native path:
 
 ```
-git+https://github.com/Lightricks/LTX-Video.git
+git+https://github.com/Lightricks/LTX-Video.git@<reviewed-full-commit-sha>
 ```
 
 If `from_pretrained` fails with class-not-found errors for a recent LTX variant, switch to git diffusers.
@@ -118,7 +120,9 @@ LTX-2 supports a two-stage pipeline (base + latent upsample) for production qual
 ```python
 def num_frames_for_duration(seconds, fps=24, base=8):
     raw = seconds * fps
-    return ((int(raw) - 1) // base) * base + 1
+    if not isinstance(base, int) or base <= 0 or seconds <= 0 or fps <= 0:
+        raise ValueError("Positive duration, frame rate and alignment required")
+    return max(1, ((int(raw) - 1) // base) * base + 1)
 ```
 
 ## Native pipeline path (LTX-2.3 fallback)
@@ -136,7 +140,7 @@ For the 0.9.x series the pattern looks like:
 
 ```bash
 # in requirements.txt
-git+https://github.com/Lightricks/LTX-Video.git
+git+https://github.com/Lightricks/LTX-Video.git@<reviewed-full-commit-sha>
 ```
 
 ```python
@@ -146,11 +150,11 @@ from ltx_video.pipelines import LTXPipeline as NativeLTXPipeline
 
 The native path doesn't use `load_lora_weights`. Instead, LoRAs are usually wired in at pipeline construction time, often via a list of LoRA configurations or by pointing at a fused checkpoint.
 
-When the LoRA's model card has a Python snippet using the native repo, copy its construction pattern verbatim. The native API changes more often than diffusers' does, so don't paraphrase.
+When the LoRA's model card has a Python snippet using the native repo, inspect its construction pattern against the pinned native API; do not execute a model card verbatim. The native API changes more often than diffusers' does, so don't paraphrase.
 
 ### LTX-2.x native path on ZeroGPU — gotchas
 
-For `LTX-2` / `LTX-2.3` (the `ltx-core` + `ltx-pipelines` repo), clone + `pip install -e packages/ltx-core packages/ltx-pipelines` at runtime in `app.py` and pin a commit. Three things bite on ZeroGPU:
+For `LTX-2` / `LTX-2.3` (the `ltx-core` + `ltx-pipelines` repo), prepare a reviewed commit and install its required packages at build time. Do not clone or install dependencies from `app.py` at module load or during requests. Three things bite on ZeroGPU:
 
 - **Native loader bypasses ZeroGPU virtualization → "No CUDA GPUs available" at startup.** The native safetensors loader does `safe_open(path, device="cuda")` and copies host→device inside safetensors' own C++ (`cudaMemcpy`), **bypassing `torch.Tensor.to`** — the call ZeroGPU patches to virtualize + pack module-scope weights. Nothing packs and module-scope placement raises *"No CUDA GPUs are available."* Fix: monkeypatch the loader to open on CPU then move with `.to`:
   ```python
@@ -183,7 +187,7 @@ Two workarounds when the user hits this on the native path:
 - **Skip quantization for the LoRA-fusion stage.** LTX-2.3 has a two-stage pipeline; apply quantization only to the second (non-LoRA) stage. Set `stage_1_quantization=None`.
 - **Pre-fuse the LoRA into a standalone checkpoint.** Download base + LoRA, fuse on a dev GPU, push the fused checkpoint to the Hub under the user's namespace, and have the Space load the fused checkpoint with no LoRA.
 
-The second option is preferable when the user plans to demo the same LoRA repeatedly — Space startup is much faster.
+The second option is a separate resource-consuming publication action requiring model-license checks and explicit authorization — Space startup is much faster.
 
 ## ZeroGPU duration guidance for LTX
 
@@ -203,3 +207,4 @@ Set `@spaces.GPU(duration=...)` to comfortably exceed expected generation time.
 - **`enable_vae_tiling()` for higher resolutions.** LTX VAE memory grows with resolution; enable tiling for outputs above 768px on either axis.
 - **Negative prompts matter more than for image models.** Don't ship with an empty negative_prompt unless the LoRA's model card says so.
 - **Frame-rate mismatch can produce glitches.** If the LoRA was trained at 24 fps and the demo passes 30, motion looks wrong. Use the LoRA's recommended fps.
+All timing, pipeline availability, memory figures and PR history above are historical recipe context. Verify the exact installed implementation and pinned model revision; do not certify the numbers as current service guarantees. Do not substitute a distilled recipe for a non-distilled LoRA silently.

@@ -5,7 +5,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 ## Core Defensive Principles
 
 ### 1. Strict Mode
-Enable bash strict mode at the start of every script to catch errors early.
+Consider strict mode and test its exceptions in the target Bash version. It does not replace explicit error handling.
 
 ```bash
 #!/bin/bash
@@ -14,7 +14,7 @@ set -Eeuo pipefail  # Exit on error, unset variables, pipe failures
 
 **Key flags:**
 - `set -E`: Inherit ERR trap in functions
-- `set -e`: Exit on any error (command returns non-zero)
+- `set -e`: Exit on many unhandled failures; conditional/function contexts have exceptions
 - `set -u`: Exit on undefined variable reference
 - `set -o pipefail`: Pipe fails if any command fails (not just last)
 
@@ -26,9 +26,8 @@ Implement proper cleanup on script exit or error.
 set -Eeuo pipefail
 
 trap 'echo "Error on line $LINENO"' ERR
-trap 'echo "Cleaning up..."; rm -rf "$TMPDIR"' EXIT
-
-TMPDIR=$(mktemp -d)
+task_tmp=$(mktemp -d) || exit 1
+trap 'rm -rf -- "$task_tmp"' EXIT
 # Script code here
 ```
 
@@ -143,19 +142,17 @@ process_files() {
 #!/bin/bash
 set -Eeuo pipefail
 
-trap 'rm -rf -- "$TMPDIR"' EXIT
-
-# Create temporary directory
-TMPDIR=$(mktemp -d) || { echo "ERROR: Failed to create temp directory" >&2; exit 1; }
+task_tmp=$(mktemp -d) || { echo "ERROR: Failed to create temp directory" >&2; exit 1; }
+trap 'rm -rf -- "$task_tmp"' EXIT
 
 # Create temporary files in directory
-TMPFILE1="$TMPDIR/temp1.txt"
-TMPFILE2="$TMPDIR/temp2.txt"
+TMPFILE1="$task_tmp/temp1.txt"
+TMPFILE2="$task_tmp/temp2.txt"
 
 # Use temporary files
 touch "$TMPFILE1" "$TMPFILE2"
 
-echo "Temp files created in: $TMPDIR"
+echo "Temp files created in: $task_tmp"
 ```
 
 ### Pattern 4: Robust Argument Parsing
@@ -312,7 +309,7 @@ safe_move() {
         return 1
     fi
 
-    mv "$source" "$dest"
+    mv -i -- "$source" "$dest"
 }
 
 # Safe directory cleanup
@@ -324,21 +321,21 @@ safe_rmdir() {
         return 1
     fi
 
-    # Use -I flag to prompt before rm (BSD/GNU compatible)
-    rm -rI -- "$dir"
+    # Interactive confirmation; verify platform options and authorized path first
+    rm -ri -- "$dir"
 }
 
 # Atomic file writes
 atomic_write() {
     local -r target="$1"
-    local -r tmpfile
-    tmpfile=$(mktemp) || return 1
+    local tmpfile
+    tmpfile=$(mktemp "${target}.tmp.XXXXXX") || return 1
 
     # Write to temp file first
-    cat > "$tmpfile"
+    cat > "$tmpfile" || { rm -f -- "$tmpfile"; return 1; }
 
     # Atomic rename
-    mv "$tmpfile" "$target"
+    mv -- "$tmpfile" "$target" || { rm -f -- "$tmpfile"; return 1; }
 }
 ```
 
@@ -495,7 +492,7 @@ check_dependencies
 
 ## Best Practices Summary
 
-1. **Always use strict mode** - `set -Eeuo pipefail`
+1. **Evaluate strict mode** - `set -Eeuo pipefail`
 2. **Quote all variables** - `"$variable"` prevents word splitting
 3. **Use [[ ]] conditionals** - More robust than [ ]
 4. **Implement error trapping** - Catch and handle errors gracefully
@@ -515,3 +512,5 @@ check_dependencies
 - **Bash Strict Mode**: http://redsymbol.net/articles/unofficial-bash-strict-mode/
 - **Google Shell Style Guide**: https://google.github.io/styleguide/shellguide.html
 - **Defensive BASH Programming**: https://www.lifepipe.net/
+
+These are teaching fragments. File existence checks can race with other writers; `mv -i` is interactive, not an atomic no-clobber guarantee. Atomic rename requires the temporary file and target on the same filesystem; preserving original permissions, ownership and durability needs additional handling. Process substitutions do not propagate producer failures to the parent loop; check producers explicitly when required. `mapfile`/`readarray` require Bash 4+, unlike the Bash 3.2 bundled on older macOS environments.

@@ -52,7 +52,7 @@ SELECT
 FROM system.query.history
 WHERE start_time >= DATEADD(HOUR, -{lookback_hours}, NOW())
   AND start_time <  DATEADD(HOUR, -{lag_hours}, NOW())
-  AND status = 'FINISHED'
+  AND execution_status = 'FINISHED'
 ORDER BY start_time
 LIMIT {max_rows}
 """  # ← SUBSTITUTE: adjust status filter or add warehouse_id filter as needed
@@ -104,6 +104,8 @@ def _query(cursor: Any, sql_text: str) -> list[dict[str, Any]]:
         if not chunk:
             break
         rows.extend(dict(zip(cols, row)) for row in chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
@@ -127,7 +129,7 @@ def collect_query_logs(
     entries: list[dict[str, Any]] = []
     for row in rows:
         query_text: str = row.get("query_text") or ""
-        if not query_text.strip():
+        if not query_text.strip() or query_text == "<REDACTED>":
             continue  # ← SUBSTITUTE: decide whether to skip empty-text rows
 
         entry = {
@@ -190,7 +192,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Databricks query logs to a manifest file")
     parser.add_argument("--host", default=os.getenv("DATABRICKS_HOST"))           # ← SUBSTITUTE
     parser.add_argument("--http-path", default=os.getenv("DATABRICKS_HTTP_PATH")) # ← SUBSTITUTE
-    parser.add_argument("--token", default=os.getenv("DATABRICKS_TOKEN"))         # ← SUBSTITUTE
+    parser.add_argument("--token", choices=[], default=os.getenv("DATABRICKS_TOKEN"))         # ← SUBSTITUTE
     parser.add_argument("--lookback-hours", type=int, default=LOOKBACK_HOURS)
     parser.add_argument("--lookback-lag-hours", type=int, default=LOOKBACK_LAG_HOURS)
     parser.add_argument("--max-rows", type=int, default=MAX_ROWS)

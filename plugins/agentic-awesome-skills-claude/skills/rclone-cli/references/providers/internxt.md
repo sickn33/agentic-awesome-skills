@@ -70,7 +70,7 @@ If you have two-factor authentication enabled on your Internxt account, you will
 The authentication process stores your password and mnemonic in the rclone configuration file. It is **strongly recommended** to encrypt your rclone config to protect these sensitive credentials:
 
 ```
-rclone config password
+rclone config encryption set
 ```
 
 This will prompt you to set a password that encrypts your entire configuration file.
@@ -85,7 +85,7 @@ rclone ls internxt:
 rclone copy /local/path internxt:remote/path
 
 # Sync local directory to Internxt
-rclone sync /local/path internxt:remote/path
+rclone sync --interactive /local/path internxt:remote/path
 
 # Mount Internxt Drive as a local filesystem
 rclone mount internxt: /path/to/mountpoint

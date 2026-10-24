@@ -1,8 +1,12 @@
 ---
 title: "Mac Catalyst | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/mac-catalyst
+---
 
 # Mac Catalyst
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 When you use Mac Catalyst to create a Mac version of your iPad app, you give people the opportunity to enjoy the experience in a new environment.
 
@@ -36,7 +40,7 @@ Creating a Mac version of your iPad app with Mac Catalyst gives the app automati
 
   * Menu bar menus
 
-  * App-specific settings in the system-provided Settings app
+  * Support for presenting app-specific settings in the Mac app’s Settings window; verify and implement the appropriate menu and scene integration rather than assuming entries appear in macOS System Settings
 
 
 
@@ -107,7 +111,7 @@ Typically, iPad apps use the following components to organize their content and 
 
   * [Split views](https://developer.apple.com/design/human-interface-guidelines/split-views). A split view supports hierarchical navigation, which consists of a two- or three-column interface that shows a primary column, an optional supplementary column, and a secondary pane of content. Frequently, apps use the primary column to create a sidebar-based interface where changes in the sidebar drive changes in the optional supplementary column, which then affect the content in the content pane.
 
-  * [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars). A tab bar supports flat navigation by displaying top-level categories in a persistent bar at the bottom of the screen.
+  * [Tab bars](https://developer.apple.com/design/human-interface-guidelines/tab-bars). A tab bar supports flat navigation among top-level categories. Placement and sidebar adaptation depend on the iPadOS version, configuration, and window size; do not hard-code a bottom position.
 
   * [Page controls](https://developer.apple.com/design/human-interface-guidelines/page-controls). A page control displays dots at the bottom of the screen that indicate the position of the current page in a flat list of pages.
 

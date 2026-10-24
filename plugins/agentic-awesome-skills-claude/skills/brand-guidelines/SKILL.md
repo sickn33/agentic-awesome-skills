@@ -116,8 +116,8 @@ Sentry Voice adds personality in appropriate moments. It's empathetic, self-awar
 | Type | Use | Example |
 |------|-----|---------|
 | Hyphen (-) | Compound words, ranges | "real-time", "1-10" |
-| En-dash (--) | Ranges, relationships | "2023--2024", "parent--child" |
-| Em-dash (---) | Interruption, emphasis | "Errors---even small ones---matter" |
+| En dash (–) | Ranges, relationships | "2023–2024", "parent–child" |
+| Em dash (—) | Interruption, emphasis | "Errors—even small ones—matter" |
 
 In most UI contexts, use hyphens. Reserve en-dashes for date ranges and em-dashes for longer prose.
 
@@ -166,7 +166,7 @@ Avoid these common mistakes:
 - **Robot speak:** "Item has been successfully deleted" -> "Deleted"
 - **Passive voice:** "Changes were saved" -> "Changes saved"
 - **Unnecessary words:** "In order to" -> "To"
-- **Hedging:** "This might cause..." -> "This will cause..."
+- **Empty hedging:** Remove filler only when evidence supports certainty. Preserve "might" when the consequence is uncertain; never change a possibility into a guarantee.
 - **Double negatives:** "Not unlike..." -> "Similar to..."
 - **Marketing speak in UI:** "Supercharge your workflow" -> "Speed up your workflow"
 

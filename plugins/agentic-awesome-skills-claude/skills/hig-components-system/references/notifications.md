@@ -1,8 +1,11 @@
 ---
 title: "Notifications | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/notifications
+---
 
 # Notifications
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 A notification gives people timely, high-value information they can understand at a glance.
 
@@ -35,7 +38,7 @@ In addition, a notification related to direct communication — like a phone cal
 
 **Use an alert — not a notification — to display an error message.** People are familiar with both alerts and notifications, so you don’t want to cause confusion by using the wrong component. For guidance, see [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts).
 
-**Handle notifications gracefully when your app is in the foreground.** Your app’s notifications don’t appear when your app is in the front, but your app still receives the information. In this scenario, present the information in a way that’s discoverable but not distracting or invasive, such as incrementing a badge or subtly inserting new data into the current view. For example, when a new message arrives in a mailbox that people are currently viewing, Mail simply adds it to the list of unread messages because sending a notification about it would be unnecessary and distracting.
+**Handle notifications gracefully when your app is in the foreground.** Foreground notification presentation is controlled by the notification-center delegate and presentation options; it is not categorically unavailable. Your app can process the information without showing an additional banner. In this scenario, present the information in a way that’s discoverable but not distracting or invasive, such as incrementing a badge or subtly inserting new data into the current view. For example, when a new message arrives in a mailbox that people are currently viewing, Mail simply adds it to the list of unread messages because sending a notification about it would be unnecessary and distracting.
 
 **Avoid including sensitive, personal, or confidential information in a notification.** You can’t predict what people will be doing when they receive a notification, so it’s essential to avoid including private information that could be visible to others.
 
@@ -73,7 +76,7 @@ A badge is a small, filled oval containing a number that can appear on an app ic
 
 **Make sure badging isn’t the only method you use to communicate essential information.** People can turn off badging for your app, so if you rely on it to show people when there’s important information, people can miss the message. Always make sure that you make important information easy for people to find as soon as they open your app.
 
-**Keep badges up to date.** Update your app’s badge as soon as people open the corresponding notifications. You don’t want people to think there are new notifications available, only to find that they’ve already viewed them all. Note that reducing a badge’s count to zero removes all related notifications from Notification Center.
+**Keep badges up to date.** Update your app’s badge as soon as people open the corresponding notifications. You don’t want people to think there are new notifications available, only to find that they’ve already viewed them all. Setting the badge count to zero clears the icon badge; do not treat that operation as delivered-notification cleanup. Explicitly remove the intended delivered notifications through UNUserNotificationCenter when the product requires it.
 
 **Avoid creating a custom image or component that mimics the appearance or behavior of a badge.** People can turn off notification badges if they choose, and will become frustrated if they have done so and then see what appears to be a badge.
 

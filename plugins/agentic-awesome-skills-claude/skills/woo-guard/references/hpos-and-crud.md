@@ -27,12 +27,15 @@ $total  = $order ? $order->get_total() : 0;
 $orders = wc_get_orders( array( 'status' => 'wc-processing', 'limit' => 20 ) );
 ```
 
-`wc_get_orders()` takes its own argument schema (not `WP_Query` args): `limit`, `status`, `customer_id`, `date_created`, `meta_query` equivalents via `field_query`. Never run an unbounded order query — always set a `limit` (wp-guard covers query discipline in depth when installed).
+`wc_get_orders()` takes its own argument schema (not `WP_Query` args): `limit`, `status`, `customer_id`, `date_created`, version-dependent `meta_query` for metadata and `field_query` for order properties (distinct APIs; check storage support). Never run an unbounded order query — always set a `limit` (wp-guard covers query discipline in depth when installed).
 
 ## Order meta done right
 
 ```php
 $order = wc_get_order( $order_id );
+if ( ! $order ) {
+    throw new \InvalidArgumentException( 'Order not found' );
+}
 $order->update_meta_data( '_ncs_sync_status', 'queued' );
 $order->save(); // persists to whichever storage backend is active
 
@@ -47,12 +50,15 @@ Product meta writes through `update_post_meta()` skip `wc_product_meta_lookup` s
 
 ```php
 $product = wc_get_product( $product_id );
-$product->set_stock_quantity( $new_qty );
+if ( ! $product ) {
+    throw new \InvalidArgumentException( 'Product not found' );
+}
+$product->set_stock_quantity( $new_qty ); // Absolute set only; not a concurrent decrement.
 $product->set_regular_price( wc_format_decimal( $price ) );
 $product->save();
 ```
 
-Stock specifically: `wc_update_product_stock()` and the CRUD setters handle backorders, stock status flips, and concurrency better than any hand-rolled meta math. Direct increments via meta are race-prone on busy stores.
+Stock specifically: use the supported stock API for atomic increments/decrements; a read-modify-set CRUD quantity is still racy. Test backorders and stock status rather than assuming every setter handles them automatically. Direct increments via meta are race-prone on busy stores.
 
 ## Status transitions
 
@@ -73,7 +79,7 @@ add_action( 'before_woocommerce_init', function () {
 } );
 ```
 
-Declare only what is true — a false `custom_order_tables` declaration on postmeta-reading code converts a visible warning into an invisible data bug.
+Use the main plugin file path in declarations; __FILE__ in an included helper can identify the wrong plugin. Declare only what is true — a false `custom_order_tables` declaration on postmeta-reading code converts a visible warning into an invisible data bug.
 
 ## Violation table for review
 

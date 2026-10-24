@@ -54,8 +54,8 @@ for activations and optimizer state:
 | :--- | :--- | :--- | :--- |
 | `load_in_4bit` (QLoRA) | ~0.55 GB per 1B params | ~4.5 GB | Default. Under 16 GB VRAM. |
 | `load_in_8bit` | ~1.1 GB per 1B params | ~9 GB | Quality-sensitive, 16-24 GB. |
-| `load_in_16bit` | ~2 GB per 1B params | ~16 GB | LoRA at full precision, 24 GB+. |
-| `full_finetuning=True` | ~2 GB weights + ~12 GB optimizer | ~112 GB | Rarely justified. Prefer LoRA. |
+| `load_in_16bit` | ~2 GB per 1B params | ~16 GB | LoRA with 16-bit base weights, 24 GB+. |
+| `full_finetuning=True` | ~14 GB per 1B parameters before activations (illustrative mixed-precision training budget) | ~112 GB | Rarely justified. Prefer LoRA. |
 
 Add roughly 2-6 GB for activations, scaling with `max_seq_length` and batch size. Treat these
 as planning figures and confirm against `nvidia-smi` on the first run — they vary by
@@ -68,7 +68,7 @@ size. Cutting rank before sequence length usually costs more quality than it sav
 ### Step 2: Load the model
 
 `import unsloth` must come **before** `transformers`, `trl` or `peft`. Unsloth patches those
-libraries at import time; importing them first silently disables the optimizations.
+libraries at import time; importing them first may prevent expected patches or emit warnings; check the installed version’s startup output.
 
 ```python
 import unsloth  # must be first
@@ -96,7 +96,7 @@ Pick the loader that matches the modality: `FastLanguageModel` for text-only cau
 `FastVisionModel` for vision-language models, `FastModel` when the modality is decided at runtime.
 
 The `unsloth/` Hub namespace holds pre-quantized copies that download faster and skip a local
-quantization pass. Upstream repos such as `Qwen/` or `meta-llama/` work identically.
+quantization pass. Upstream repositories may require different architecture support, access permissions, quantization and templates; they do not all behave identically.
 Before setting `UNSLOTH_MODEL_REVISION`, inspect that exact Hub commit and obtain approval for the
 download. Record the repository and full revision with the run; never substitute a branch, tag,
 range, or moving default.
@@ -165,7 +165,7 @@ from trl import SFTTrainer, SFTConfig
 
 trainer = SFTTrainer(
     model = model,
-    tokenizer = tokenizer,
+    processing_class = tokenizer,
     train_dataset = dataset,
     args = SFTConfig(
         per_device_train_batch_size = 2,
@@ -210,7 +210,7 @@ import unsloth
 import os
 import re
 from unsloth import FastLanguageModel
-from unsloth.chat_templates import get_chat_template, train_on_responses_only
+from unsloth.chat_templates import get_chat_template, train_on_responses_only, standardize_data_formats
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
 
@@ -236,11 +236,21 @@ dataset = load_dataset(
     revision = dataset_revision,
     split = "train[:5000]",
 )
+dataset = standardize_data_formats(dataset)
+# Inspect the pinned dataset columns first; this example requires conversations.
+if "conversations" not in dataset.column_names:
+    raise ValueError("Expected normalized conversations; adapt the pinned dataset schema")
+def render_batch(batch):
+    return {"text": [tokenizer.apply_chat_template(c, tokenize=False, add_generation_prompt=False)
+                     for c in batch["conversations"]]}
+dataset = dataset.map(render_batch, batched=True)
+split = dataset.train_test_split(test_size=0.05, seed=3407)
 
 trainer = SFTTrainer(
     model = model,
-    tokenizer = tokenizer,
-    train_dataset = dataset,
+    processing_class = tokenizer,
+    train_dataset = split["train"],
+    eval_dataset = split["test"],
     args = SFTConfig(
         per_device_train_batch_size = 2,
         gradient_accumulation_steps = 8,
@@ -248,6 +258,11 @@ trainer = SFTTrainer(
         learning_rate = 2e-4,
         optim = "adamw_8bit",
         output_dir = "outputs",
+        dataset_text_field = "text",
+        max_length = 2048,
+        eval_strategy = "steps",
+        eval_steps = 50,
+        report_to = "none",
     ),
 )
 trainer = train_on_responses_only(
@@ -290,9 +305,12 @@ model, tokenizer = FastLanguageModel.from_pretrained(
 )
 model = FastLanguageModel.get_peft_model(model, r = 32, lora_alpha = 32)
 
+# Define an approved dataset with a prompt column before this illustrative trainer.
+# Reward length is a plumbing demonstration, not a useful task objective.
 def reward_length(completions, **kwargs):
-    """Placeholder. Replace with a task-specific verifier."""
-    return [min(len(c) / 200.0, 1.0) for c in completions]
+    texts = [c if isinstance(c, str) else "".join(m.get("content", "") for m in c)
+             for c in completions]
+    return [min(len(text) / 200.0, 1.0) for text in texts]
 
 trainer = GRPOTrainer(
     model = model,
@@ -300,7 +318,12 @@ trainer = GRPOTrainer(
     reward_funcs = [reward_length],
     train_dataset = dataset,
     args = GRPOConfig(
+        per_device_train_batch_size = 1,
+        gradient_accumulation_steps = 8,
         num_generations = 8,
+        use_vllm = True,
+        vllm_mode = "colocate",
+        report_to = "none",
         max_prompt_length = 256,
         max_completion_length = 512,
         learning_rate = 5e-6,
@@ -316,6 +339,8 @@ and must be at least the `r` passed later, or adapter loading fails.
 
 GRPO learning rates sit roughly two orders of magnitude below SFT. Reward functions receive
 `completions` plus any dataset columns as keyword arguments, and return one float per completion.
+
+Examples use current TRL `processing_class`/SFTConfig conventions; pin a mutually compatible Unsloth, TRL, Transformers, PEFT, PyTorch/CUDA environment and verify signatures before use. In the step-by-step fragments, `dataset` and then `trainer` must already exist; apply response-only masking after constructing the trainer and before training. In Example 1, inspect one tokenized batch: labels must mask user/system text and retain at least one assistant token; truncation and Qwen thinking delimiters can change that result. Keep a separate held-out test set beyond the training/evaluation split, and test exported inference with the same chat template and EOS rules. The GRPO fragment is not standalone: provide a prompt dataset and a verified task reward before launching; length alone encourages reward hacking.
 
 ## Best Practices
 
@@ -342,7 +367,7 @@ GRPO learning rates sit roughly two orders of magnitude below SFT. Reward functi
 - `push_to_hub_gguf` and `push_to_hub_merged` publish weights to a public Hub repo by default.
   Confirm intent and pass `private=True` when the model is not meant to be public.
 - Read Hugging Face tokens from the environment (`HF_TOKEN`), never inline in a script. A
-  committed token grants write access to every model the account owns.
+  leaked token exposes whatever scope was granted; prefer a fine-grained token restricted to the intended repository.
 - Fine-tuning reproduces the training data's content and biases in the weights. Confirm the
   dataset is licensed for training and free of secrets before starting.
 - Pin every Hub model and dataset to a reviewed full commit SHA, obtain approval before changing
@@ -352,8 +377,7 @@ GRPO learning rates sit roughly two orders of magnitude below SFT. Reward functi
   requiring network access. Before the first export, identify and review the exact llama.cpp
   revision that will be built; do not permit an unattended moving-revision fetch. Prefer a
   user-approved, full-commit-pinned local toolchain and cache.
-- Unsloth is dual-licensed: the core package is Apache-2.0, while optional components such as
-  the Studio UI are AGPL-3.0. Check a component's license before redistributing it.
+- Check the license of the exact core package, optional components, base model and dataset before redistribution; the source_repo attribution is not a license audit of every component.
 
 ## Common Pitfalls
 

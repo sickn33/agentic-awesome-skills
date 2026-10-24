@@ -21,6 +21,8 @@ async function handleClick(userId: string) {
 **Correct (with deduplication):**
 
 ```typescript
+import { DBOS, WorkflowQueue, Error as DBOSErrors } from "@dbos-inc/dbos-sdk";
+
 const queue = new WorkflowQueue("task_queue");
 
 async function processTaskFn(task: string) {
@@ -35,7 +37,8 @@ async function handleClick(userId: string) {
       enqueueOptions: { deduplicationID: userId },
     })("task");
   } catch (e) {
-    // DBOSQueueDuplicatedError - workflow already active for this user
+    if (!(e instanceof DBOSErrors.DBOSQueueDuplicatedError)) throw e;
+    // Only the duplicate-queue error is handled here
     console.log("Task already in progress for user:", userId);
   }
 }
@@ -46,6 +49,6 @@ Deduplication is per-queue. The deduplication ID is active while the workflow ha
 This is useful for:
 - Ensuring one active task per user
 - Preventing duplicate form submissions
-- Idempotent event processing
+- Suppressing concurrent duplicate processing; durable event idempotency still needs a workflow/provider key
 
 Reference: [Deduplication](https://docs.dbos.dev/typescript/tutorials/queue-tutorial#deduplication)

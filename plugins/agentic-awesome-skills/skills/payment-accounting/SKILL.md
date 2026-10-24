@@ -43,11 +43,11 @@ Also use it when the user says "money paid out, with TDS applied where applicabl
 spreadsheet, a document or someone inboxes.
 
 Do not use it for: payroll calculation, tax filing, or legal advice. This skill produces
-empty templates only - it never holds or processes real employee or customer data.
+empty templates only - it does not require real employee or customer data to generate templates.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Follow these local instructions; any unbundled shared execution contract is optional context, not an available runtime. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -125,7 +125,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Payment Number,Payment Date,Paid To,Purpose,Payment Mode,Cash/Bank Account,Reference (Cheque/UTR/ID),Gross Amount,TDS Rate %,TDS Deducted,Net Amount Paid,TDS Payable Ledger,Purchase Invoice Allocated,Advance Adjusted,Voucher Number,Voucher Type,Recipient Acknowledgement Ref,Approved By,Ledger Account,Source Document,Reconciliation Status,Entry Verified,Notes,Payment ID
-PAY-2026-0288,2026-08-20,Bluepeak Supplies,Settlement of INV-8841,Bank Transfer,HDFC Current ****0042,UTR-2026-0912,97597.50,2.5,2112.50,95485.00,TDS Payable - Contractors,PUR-2026-0041,12000.00,VCH-2026-1031,Payment Voucher,ACK-BPS-8841,Vikram Singh,Bank - HDFC Current,DOC-2026-0442,Reconciled,Done,"TDS deducted at 2.5% and carried to the TDS register; 12000.00 of the settlement adjusts the earlier advance.",
+PAY-2026-0288,2026-08-20,Bluepeak Supplies,Settlement of INV-8841,Bank Transfer,HDFC Current ****0042,UTR-2026-0912,97597.50,2.5,2439.94,95157.56,TDS Payable - Contractors,PUR-2026-0041,12000.00,VCH-2026-1031,Payment Voucher,ACK-BPS-8841,Vikram Singh,Bank - HDFC Current,DOC-2026-0442,Reconciled,Done,"TDS deducted at 2.5% of the illustrative gross base and carried to the TDS register; 12000.00 of the settlement adjusts the earlier advance.",
 ```
 
 ```sql
@@ -250,8 +250,8 @@ The rows above are documentation examples only. Emit empty templates unless the 
 | 7 | Reference (Cheque/UTR/ID) | `text` | `VARCHAR(255)` | `string` | Text | `UTR-2026-0912` |
 | 8 | Gross Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `97597.50` |
 | 9 | TDS Rate % | `number` | `NUMERIC` | `number` | Number | `2.5` |
-| 10 | TDS Deducted | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `2112.50` |
-| 11 | Net Amount Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `95485.00` |
+| 10 | TDS Deducted | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `2439.94` |
+| 11 | Net Amount Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `95157.56` |
 | 12 | TDS Payable Ledger | `text` | `VARCHAR(255)` | `string` | Text | `TDS Payable - Contractors` |
 | 13 | Purchase Invoice Allocated | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `PUR-2026-0041` |
 | 14 | Advance Adjusted | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `12000.00` |
@@ -263,7 +263,7 @@ The rows above are documentation examples only. Emit empty templates unless the 
 | 20 | Source Document | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DOC-2026-0442` |
 | 21 | Reconciliation Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Reconciled` |
 | 22 | Entry Verified | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Done` |
-| 23 | Notes | `long_text` | `TEXT` | `string` | Text | `TDS deducted at 2.5% and carried to the TDS register; 12000.00 of the settlement adjusts the earlier advance.` |
+| 23 | Notes | `long_text` | `TEXT` | `string` | Text | `TDS deducted at 2.5% of the illustrative gross base and carried to the TDS register; 12000.00 of the settlement adjusts the earlier advance.` |
 | 24 | Payment ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
 ## Select Options
@@ -337,7 +337,7 @@ We pay suppliers on the last day of the month and nobody can show the TDS we ded
 - Set `Voucher Type` on every payment. `None Available` is a legitimate answer; a blank is
   not. If it is an acknowledgement, put its reference in
   `Recipient Acknowledgement Ref`.
-- Deduct TDS before the money leaves, not at filing time. Carry it to a named payable
+- Have a qualified accountant confirm the jurisdiction-specific withholding event and timing, which can precede payment; do not defer recognition until filing. Carry it to a named payable
   ledger so the TDS return can be built from the register.
 - Record the payment mode and the bank reference on every row. That pair is what
   reconciliation is run on.
@@ -387,7 +387,7 @@ We pay suppliers on the last day of the month and nobody can show the TDS we ded
   **Solution:** that is not evidence of payment. Capture the recipient's acknowledgement
   as its own `Voucher Type` with its own reference.
 - **Problem:** TDS is worked out at filing time, so the payable never ties to the register.
-  **Solution:** deduct at the payment, name the payable ledger, reconcile monthly.
+  **Solution:** apply the accountant-confirmed legal withholding event, name the payable ledger, and reconcile on the agreed schedule.
 - **Problem:** net paid does not equal gross less TDS.
   **Solution:** the payment is unreconciled. Fix it before the row is marked `Done`.
 - **Problem:** all four artifacts drift apart.
@@ -419,3 +419,7 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Reconciliation assumptions
+
+The synthetic row now uses 97,597.50 × 2.5% = 2,439.94 after rounding, and 97,597.50 − 2,439.94 = 95,157.56. This is illustrative arithmetic, not a verified tax rate or taxable base. Confirm currency, rounding, tax base, adjustments, advance treatment and whether “gross” means this disbursement or the invoice settlement before using the equation; advances may change actual cash paid. A single invoice field cannot represent split allocations without a separate allocation table. Voucher labels and acknowledgements do not prove authorization or legal evidentiary sufficiency. SQL defaults do not maintain updated_at on update, relation strings are not foreign keys, and `Done`/nonnegative amounts/rounding rules require explicit constraints or application validation. JSON date formats need format-assertion support. Use the field list as a manually validated mapping, not a claim of bundled generation or drift prevention; prevent spreadsheet formula execution in free-text CSV fields for the selected importer.

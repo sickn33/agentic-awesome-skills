@@ -35,6 +35,15 @@ Use this skill when the user asks about:
 
 ---
 
+## Execution and version boundaries
+
+Pin the CLI/API version. Examples are scaffolding sketches, not tested deployed
+apps. App deployment, theme uploads, fulfillment, billing and data exports require
+the authorized store, scope and intended effect. Do not retry an ambiguous mutation.
+The initializer emits partial configuration only, refuses existing project folders,
+and loads .env files only with `SHOPIFY_LOAD_ENV_FILES=1`. Prefer CLI-generated
+projects. Development tunnels expose endpoints externally; use test data.
+
 ## Shopify CLI Commands
 
 Install CLI:
@@ -91,7 +100,7 @@ Common scopes:
 
 ---
 
-## GraphQL Patterns (Validated against API 2026-01)
+## GraphQL patterns (example API 2026-01)
 
 ### Query Products
 
@@ -183,9 +192,17 @@ Variables example:
 
 ---
 
-## Checkout Extension Example
+## Checkout extension example (legacy React API)
+
+This React example targets an older extension API, not 2026-01. Generate a Preact
+extension with the pinned CLI for current APIs; do not mix React hooks/components
+with 2026-01 web components. Clear the gift attribute when unchecked and handle
+change failures before using this sketch.
+
+
 
 ```tsx
+import {useState, useEffect} from "react";
 import {
   reactExtension,
   BlockStack,
@@ -204,11 +221,11 @@ function GiftMessage() {
   const applyAttributeChange = useApplyAttributeChange();
 
   useEffect(() => {
-    if (isGift && message) {
+    if (true) { // Also clear a previously saved message when gift is unchecked
       applyAttributeChange({
         type: "updateAttribute",
         key: "gift_message",
-        value: message,
+        value: isGift ? message : "",
       });
     }
   }, [isGift, message]);
@@ -274,10 +291,9 @@ topics = ["products/update"]
 uri = "/webhooks/products"
 
 # GDPR mandatory webhooks (required for app approval)
-[webhooks.privacy_compliance]
-customer_data_request_url = "/webhooks/gdpr/data-request"
-customer_deletion_url = "/webhooks/gdpr/customer-deletion"
-shop_deletion_url = "/webhooks/gdpr/shop-deletion"
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+uri = "/webhooks/privacy"
 ```
 
 ---
@@ -305,7 +321,7 @@ shop_deletion_url = "/webhooks/gdpr/shop-deletion"
 - Cache API responses when data doesn't change frequently
 - Use lazy loading in extensions
 - Optimize images in themes using `img_url` filter
-- Monitor GraphQL query costs via response headers
+- Monitor GraphQL query costs in the response extensions.cost object
 
 ---
 
@@ -314,7 +330,7 @@ shop_deletion_url = "/webhooks/gdpr/shop-deletion"
 **IF you see rate limit errors:**
 → Implement exponential backoff retry logic
 → Switch to bulk operations for large datasets
-→ Monitor `X-Shopify-Shop-Api-Call-Limit` header
+→ Inspect GraphQL extensions.cost.throttleStatus; the call-limit header is for REST
 
 **IF authentication fails:**
 → Verify the access token is still valid

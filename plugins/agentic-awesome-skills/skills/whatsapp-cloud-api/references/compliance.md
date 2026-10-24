@@ -1,5 +1,7 @@
 # Compliance e Boas Praticas - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 Guia completo de compliance para integracoes WhatsApp Business, cobrindo LGPD, GDPR, politicas do WhatsApp, opt-in/opt-out, quality rating e tier system.
 
 ---
@@ -80,13 +82,13 @@ Se voce atende clientes na UE, o GDPR (Regulamento 2016/679) se aplica.
 
 ### Requisitos Especificos
 
-1. **Opt-in Duplo (Double Opt-in)**
+1. **Opt-in Duplo (Double Opt-in) — opcao de comprovacao, nao obrigacao universal do GDPR**
    - Primeiro opt-in: cliente fornece numero (site, formulario, QR code)
    - Segundo opt-in: enviar mensagem de confirmacao via WhatsApp
    - Cliente responde com keyword (ex: "SIM") para confirmar
 
 2. **BSP Certificado EU**
-   - Use apenas Business Solution Providers com servidores na EU
+   - Avalie DPA, transferencias internacionais e salvaguardas aplicaveis; residencia na UE nao e obrigacao universal
    - A WhatsApp Cloud API da Meta e hospedada nos EUA — verifique se ha adequacao para seu caso
 
 3. **DPA (Data Processing Agreement)**
@@ -151,7 +153,7 @@ O WhatsApp proibe mensagens contendo:
 
 ### Regras de Frequencia
 
-- Nao envie mais de 1 mensagem de marketing por semana para o mesmo usuario
+- Defina frequencia consentida e apropriada; 1 mensagem por semana e apenas exemplo editorial para o mesmo usuario
 - Respeite preferencias de frequencia do usuario
 - Mensagens transacionais podem ser mais frequentes (conforme necessidade)
 - Nunca envie mensagens em massa sem segmentacao
@@ -291,7 +293,7 @@ O WhatsApp faz upgrade automatico quando:
 
 ### Regra Importante
 
-Uma vez que voce alcanca um tier, **nao perde** mesmo se a qualidade cair. O rating afeta apenas a capacidade de subir para tiers maiores.
+Uma vez que voce alcanca um tier, pode sofrer restricoes; nao assuma permanencia do tier. O rating afeta apenas a capacidade de subir para tiers maiores.
 
 Se um numero no Business Portfolio ja esta em Unlimited, **todos** os novos numeros adicionados iniciam em Unlimited.
 
@@ -402,3 +404,5 @@ Use esta checklist antes de colocar sua integracao em producao:
 - [ ] Politica de privacidade atualizada mencionando WhatsApp
 - [ ] Termos de uso incluem uso do canal WhatsApp
 - [ ] DPA assinado com a Meta (para GDPR)
+
+Retention periods above are illustrative policy choices, not statutory defaults. Deletion must verify requester identity and tenant ownership, cover backups/logs/processors, honor legal holds, and minimize suppression-list data. A QR click or number alone does not establish consent to unrelated marketing. Opt-out must cancel queued marketing and block future sends deterministically.

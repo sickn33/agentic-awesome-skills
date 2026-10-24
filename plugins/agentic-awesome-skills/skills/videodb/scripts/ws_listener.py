@@ -10,14 +10,16 @@ Arguments:
 
 Options:
   --clear     Clear the events file before starting (use when starting a new session)
+  --max-seconds SECONDS   Maximum listener duration (default 3600)
+  --max-bytes BYTES       Maximum event file bytes (default 52428800)
 
 Output files:
   <output_dir>/videodb_events.jsonl  - All WebSocket events (JSONL format)
   <output_dir>/videodb_ws_id         - WebSocket connection ID
   <output_dir>/videodb_ws_pid        - Process ID for easy termination
 
-Output (first line, for parsing):
-  WS_ID=<connection_id>
+Output (after first connection):
+  WS_ID_FILE=<private_file_path>
 
 Examples:
   python scripts/ws_listener.py &                             # Run in background
@@ -30,6 +32,10 @@ import sys
 import json
 import stat
 import signal
+import argparse
+import time
+import fcntl
+import logging
 import asyncio
 from datetime import datetime, timezone
 from pathlib import Path
@@ -43,6 +49,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import videodb
+# The SDK may otherwise log credential-bearing URLs or raw non-JSON events.
+logging.getLogger("videodb.websocket_client").disabled = True
 
 # Retry config
 MAX_RETRIES = 10
@@ -53,23 +61,21 @@ DIR_MODE = 0o700
 
 # Parse arguments
 def parse_args():
-    clear = False
-    output_dir = None
-    
-    args = sys.argv[1:]
-    for arg in args:
-        if arg == "--clear":
-            clear = True
-        elif not arg.startswith("-"):
-            output_dir = arg
-    
-    if output_dir is None:
-        output_dir = os.environ.get("VIDEODB_EVENTS_DIR")
+    parser = argparse.ArgumentParser(description="Persist authorized VideoDB events privately; does not start capture.")
+    parser.add_argument("--clear", action="store_true")
+    parser.add_argument("--max-seconds", type=int, default=3600)
+    parser.add_argument("--max-bytes", type=int, default=50 * 1024 * 1024)
+    parser.add_argument("output_dir", nargs="?")
+    options = parser.parse_args()
+    if options.max_seconds <= 0 or options.max_bytes <= 0:
+        parser.error("limits must be positive")
+    global MAX_SECONDS, MAX_BYTES
+    MAX_SECONDS, MAX_BYTES = options.max_seconds, options.max_bytes
+    output_dir = options.output_dir or os.environ.get("VIDEODB_EVENTS_DIR")
     if output_dir is None:
         state_root = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
         output_dir = str(state_root / "videodb-events")
-    
-    return clear, normalize_output_dir(output_dir)
+    return options.clear, normalize_output_dir(output_dir)
 
 CLEAR_EVENTS, OUTPUT_DIR = parse_args()
 EVENTS_FILE = OUTPUT_DIR / "videodb_events.jsonl"
@@ -88,14 +94,16 @@ def log(msg: str):
 
 def ensure_output_dir():
     """Create the output directory if needed and reject symlinked paths."""
-    if OUTPUT_DIR.exists():
-        if OUTPUT_DIR.is_symlink():
-            raise OSError(f"Refusing to use symlinked output directory: {OUTPUT_DIR}")
-        if not OUTPUT_DIR.is_dir():
-            raise OSError(f"Output path is not a directory: {OUTPUT_DIR}")
-        return
-
+    # Only standard OS aliases are accepted; reject user-controlled symlink parents.
+    for parent in reversed((OUTPUT_DIR, *OUTPUT_DIR.parents)):
+        if parent.is_symlink() and str(parent) not in {"/var", "/tmp", "/etc"}:
+            raise OSError("Refusing symlinked output directory or ancestor")
     OUTPUT_DIR.mkdir(parents=True, mode=DIR_MODE, exist_ok=True)
+    info = OUTPUT_DIR.stat()
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid():
+        raise OSError("Output directory must be owned by this user")
+    if stat.S_IMODE(info.st_mode) & 0o077:
+        raise OSError("Output directory must be private (mode 0700)")
 
 
 def safe_output_path(path_value):
@@ -163,9 +171,19 @@ def secure_append_text(path: Path, content: str):
 
 def append_event(event: dict):
     """Append event to JSONL file with timestamps."""
+    if not isinstance(event, dict):
+        raise ValueError("Expected an event object")
+    event = dict(event)
     event["ts"] = datetime.now(timezone.utc).isoformat()
     event["unix_ts"] = datetime.now(timezone.utc).timestamp()
-    secure_append_text(EVENTS_FILE, json.dumps(event) + "\n")
+    line = json.dumps(event, allow_nan=False) + "\n"
+    if len(line.encode("utf-8")) > 1024 * 1024:
+        raise ValueError("Event exceeds the 1 MiB per-event limit")
+    fd = secure_open(EVENTS_FILE, append=True)
+    with os.fdopen(fd, "a", encoding="utf-8") as handle:
+        if os.fstat(handle.fileno()).st_size + len(line.encode("utf-8")) > MAX_BYTES:
+            raise OverflowError("Event byte limit reached; stopping listener")
+        handle.write(line)
 
 
 def write_pid():
@@ -189,11 +207,14 @@ async def listen_with_retry():
     backoff = INITIAL_BACKOFF
     
     while retry_count < MAX_RETRIES:
+        ws_wrapper = None
         try:
             conn = videodb.connect()
             ws_wrapper = conn.connect_websocket()
             ws = await ws_wrapper.connect()
             ws_id = ws.connection_id
+            if not isinstance(ws_id, str) or not ws_id or len(ws_id) > 1024:
+                raise ValueError("Invalid WebSocket connection identifier")
             
             # Ensure output directory exists
             ensure_output_dir()
@@ -209,38 +230,42 @@ async def listen_with_retry():
             
             # Print ws_id (parseable format for LLM)
             if retry_count == 0:
-                print(f"WS_ID={ws_id}", flush=True)
-            log(f"Connected (ws_id={ws_id})")
+                print("WS_ID_FILE=" + str(WS_ID_FILE), flush=True)
+            log("Connected; identifier stored privately")
             
-            # Reset retry state on successful connection
-            retry_count = 0
-            backoff = INITIAL_BACKOFF
+            # Retry budget is total, including repeated successful handshakes then disconnects.
             
             # Listen for messages
             async for msg in ws.receive():
                 append_event(msg)
-                channel = msg.get("channel", msg.get("event", "unknown"))
-                text = msg.get("data", {}).get("text", "")
-                if text:
-                    print(f"[{channel}] {text[:80]}", flush=True)
+                # Event content stays in the private file, not terminal logs.
             
             # If we exit the loop normally, connection was closed
-            log("Connection closed by server")
+            raise ConnectionError("Connection closed by server")
             
         except asyncio.CancelledError:
             log("Shutdown requested")
             raise
-        except Exception as e:
+        except (OverflowError, ValueError, OSError) as exc:
+            if not isinstance(exc, ConnectionError):
+                raise
             retry_count += 1
-            log(f"Connection error: {e}")
-            
-            if retry_count >= MAX_RETRIES:
-                log(f"Max retries ({MAX_RETRIES}) exceeded, exiting")
-                break
-            
-            log(f"Reconnecting in {backoff}s (attempt {retry_count}/{MAX_RETRIES})...")
-            await asyncio.sleep(backoff)
-            backoff = min(backoff * 2, MAX_BACKOFF)
+            log("Connection ended; retrying within the bounded budget")
+        except Exception:
+            retry_count += 1
+            log("Connection failed; details omitted to protect credentials and event content")
+        finally:
+            if ws_wrapper is not None:
+                try:
+                    await asyncio.wait_for(ws_wrapper.close(), timeout=5)
+                except Exception:
+                    log("WebSocket cleanup incomplete; details omitted")
+
+        if retry_count >= MAX_RETRIES:
+            raise ConnectionError("WebSocket retry budget exhausted")
+        await asyncio.sleep(backoff)
+        backoff = min(backoff * 2, MAX_BACKOFF)
+
 
 
 async def main_async():
@@ -260,8 +285,9 @@ async def main_async():
     listen_task = asyncio.create_task(listen_with_retry())
     shutdown_task = asyncio.create_task(shutdown_event.wait())
     
+    deadline_task = asyncio.create_task(asyncio.sleep(MAX_SECONDS))
     done, pending = await asyncio.wait(
-        [listen_task, shutdown_task],
+        [listen_task, shutdown_task, deadline_task],
         return_when=asyncio.FIRST_COMPLETED,
     )
     
@@ -273,15 +299,25 @@ async def main_async():
         except asyncio.CancelledError:
             pass
     
-    log("Shutdown complete")
+    for task in done:
+        task.result()
+    log("Listener stopped; separately stop any capture and AI pipelines")
 
 
 def main():
+    ensure_output_dir()
+    lock_fd = secure_open(OUTPUT_DIR / "listener.lock", append=True)
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        os.close(lock_fd)
+        raise RuntimeError("A listener already owns this output directory") from None
     write_pid()
     try:
         asyncio.run(main_async())
     finally:
         cleanup_pid()
+        os.close(lock_fd)
 
 
 if __name__ == "__main__":

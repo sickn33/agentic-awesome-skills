@@ -107,7 +107,7 @@ Give a second opinion on the approach below. Do not change any files.
 For each contested point, defend or concede, and say which evidence moved you.
 ```
 
-Then verify the result: `touchedFiles` is `[]` and `readOnlyViolation` is `false`. Plan mode's
+Then verify the result: `readOnlyViolation` is `false` and `touchedFiles` matches the pre-run baseline (empty only for an initially clean tree). Plan mode's
 refusal is measured by the relay's Git tripwire, not guaranteed by a sandbox, and
 `readOnlyViolation` is tri-state — `true` means Git-visible changes were detected, `false` means
 none were, and `null` means the tripwire could not tell, which calls for inspecting the tree

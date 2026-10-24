@@ -13,6 +13,10 @@ license_source: https://github.com/czlonkowski/n8n-skills/blob/main/LICENSE
 
 # n8n Error Handling
 
+## Operational boundaries
+
+Discover actual n8n tool schemas and node versions: this tree bundles documents, not an MCP server. Drafting does not authorize changing or activating production workflows, sending alerts or replaying writes. Retry only operations proven idempotent or protected by durable deduplication; ambiguous timeouts may have committed. An Error Trigger is not a process-crash/OOM availability guarantee: use independent platform monitoring. It does not fire for manual editor executions. Node error output positions depend on node output layout; verify rather than assuming index 1 for multi-output nodes. Use structured error codes rather than regex matches on untrusted text to decide status or retries.
+
 ## When to Use
 
 Use this skill for unattended workflows, webhook/API response contracts, retry design, error outputs, Error Trigger workflows, alerting, or any path where failure must be visible and recoverable.
@@ -35,7 +39,7 @@ The two ideas that prevent most silent failures:
 | Workflow shape | Error handling posture |
 |---|---|
 | Webhook / API (anything with `Respond to Webhook`) | **Required.** Every fallible node's error output wired; status code matches cause. |
-| Scheduled / cron / queue worker / agent tool (unattended) | **Required.** A workflow-level error workflow, plus `retryOnFail` on network nodes. |
+| Scheduled / cron / queue worker / agent tool (unattended) | **Required.** A workflow-level error workflow, plus bounded retries on retry-safe nodes. |
 | Internal one-off you run and watch yourself | **Optional.** Default `onError: "stopWorkflow"` is fine — you'll see the red node and re-run. |
 
 The dividing line: **if anyone other than you sees the output** — a downstream system, an end user, an on-call engineer — the failure has to be handled, not swallowed. If you're the only watcher and the cost of failure is "I notice and re-run", looser is fine.
@@ -92,7 +96,7 @@ Full failure-mode catalog, fan-in/fan-out shapes, and verification: **references
 
 ## Self-healing first: `retryOnFail` before you wire error paths
 
-Before you build error branches, absorb the transient failures so they never reach those branches. On **any node that calls a network service** — HTTP Request, comms (Gmail/Slack/Discord), databases, AI nodes, third-party integrations — set node-level retry:
+Before you build error branches, absorb the transient failures so they never reach those branches. On a network node **only after verifying its retry safety** — HTTP Request, comms (Gmail/Slack/Discord), databases, AI nodes, third-party integrations — set node-level retry:
 
 ```javascript
 { type: "updateNode", nodeName: "HTTP Request",
@@ -118,7 +122,7 @@ Webhook (responseMode: "responseNode")
   ├── validate input → process → Respond (200, body)
   └── (any fallible node's error output → sourceIndex 1)
             → Respond (4xx/5xx, structured error body)
-            → optional: log full error privately / notify
+            → optional: log redacted diagnostics privately / notify
 ```
 
 Three things make this work:
@@ -129,7 +133,7 @@ Three things make this work:
 
 ### Input validation: the Set-node schema validator
 
-For any endpoint doing structured input validation, run the check as an IIFE inside a single **Set** node rather than a chain of IF/Switch nodes per field. One node validates the whole payload, returns `{ valid, validationError, details, requiredSchema }`, and an IF branches on `valid` → your logic (200) or a 400 Respond that echoes the schema back so the caller can self-correct. It's also dramatically faster than a recursive validator in a Code node + sub-workflow. The full pattern, the constraint cookbook, and the expression-escaping gotchas live in **references/API_WORKFLOWS.md**.
+For any endpoint doing structured input validation, run the check as an IIFE inside a single **Set** node rather than a chain of IF/Switch nodes per field. One node validates the whole payload, returns `{ valid, validationError, details, requiredSchema }`, and an IF branches on `valid` → your logic (200) or a 400 Respond that echoes the schema back so the caller can self-correct. Choose a validator that enforces the stated schema; no performance comparison is established here. The full pattern, the constraint cookbook, and the expression-escaping gotchas live in **references/API_WORKFLOWS.md**.
 
 ---
 
@@ -201,7 +205,7 @@ Two traps worth flagging up front:
 - **The recursion trap.** If the error workflow notifies Slack and Slack is what's down, the error workflow fails too — and the original error vanishes. Notify on a *different* channel than your monitored workflows use (most workflows alert Slack → error workflow uses email), and add a fallback (write to a Data Table) so a failed notification still leaves a trace.
 - **A "handled" error won't bubble up.** If a node's error output is wired to a no-op that drops the data, n8n considers the error *handled* and the error workflow does **not** fire. Only catch per-node when you're actually doing something with the error.
 
-> **What the community MCP can't do:** assigning the error workflow (instance default or per-workflow override) is an n8n **UI setting** — Workflow Settings → Error Workflow. There is no MCP tool to set it. Build the error workflow with the MCP, then tell the user the exact UI step to wire it up, and to repeat it (or set the instance default) for every unattended workflow.
+> **What the community MCP can't do:** assigning the error workflow (instance default or per-workflow override) is an n8n **setting available through the UI and, on supported versions/connectors, an API** — Workflow Settings → Error Workflow. Inspect the actual connector schema before claiming it is unsupported. Build the error workflow with the MCP, then tell the user the exact UI step to wire it up, and to repeat it (or set the instance default) for every unattended workflow.
 
 ---
 
@@ -209,8 +213,8 @@ Two traps worth flagging up front:
 
 | Want to do | Reality |
 |---|---|
-| Set a workflow's **Error Workflow** setting | UI only (Workflow Settings → Error Workflow). No MCP tool. Build the workflow, then hand the user the UI step. |
-| Toggle other **workflow settings** (Save Execution Data, timezone, timeout, caller policy) | UI only. `n8n_update_partial_workflow` has `updateSettings`, but the error-workflow assignment is not reliably exposed — confirm in the UI. |
+| Set a workflow's **Error Workflow** setting | Connector/version dependent; UI fallback (Workflow Settings → Error Workflow). No MCP tool. Build the workflow, then hand the user the UI step. |
+| Toggle other **workflow settings** (Save Execution Data, timezone, timeout, caller policy) | Connector/version dependent; UI fallback. `n8n_update_partial_workflow` has `updateSettings`, but the error-workflow assignment is not reliably exposed — confirm in the UI. |
 | Enable instance-wide error logging (Sentry, server logs) | Instance config, outside n8n workflows entirely. |
 
 What the MCP **can** do: build the error workflow, set `onError`/`retryOnFail` on nodes (`updateNode`/`patchNodeField`), wire error outputs (`addConnection` with `sourceIndex: 1`), validate (`validate_workflow`, `n8n_validate_workflow`), auto-fix common issues (`n8n_autofix_workflow`), test (`n8n_test_workflow`), and inspect failures (`n8n_executions`).
@@ -276,7 +280,7 @@ For an **unattended** (scheduled/cron/queue) workflow:
 - [ ] Network nodes have `retryOnFail` configured
 - [ ] An Error Trigger workflow exists (capture → notify, optional retry)
 - [ ] The error workflow notifies on a different channel + has a fallback (recursion trap)
-- [ ] The error-workflow setting is assigned in the n8n UI (MCP can't do it — remind the user)
+- [ ] The error-workflow setting is assigned in the n8n UI (verify the connected tool or use the UI)
 
 ---
 

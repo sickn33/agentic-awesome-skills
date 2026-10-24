@@ -18,7 +18,7 @@ JOB_ID_RE = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
 def validate_job_id(job_id: str) -> str:
-    if not JOB_ID_RE.match(job_id or ""):
+    if not JOB_ID_RE.fullmatch(job_id or ""):
         raise ValueError("Job ID contains unsupported characters")
     return job_id
 
@@ -67,7 +67,7 @@ def get_job_status(
     url = validate_api_url(f"{API_BASE_URL}/jobs/{job_id}")
 
     print(f"Checking job status: {job_id}...", file=sys.stderr)
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers, timeout=(10, 30), allow_redirects=False)
     response.raise_for_status()
 
     result = response.json()

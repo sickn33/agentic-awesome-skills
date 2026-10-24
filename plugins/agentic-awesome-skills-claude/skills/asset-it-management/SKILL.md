@@ -130,7 +130,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Asset Name,Asset ID,Asset Type,Assigned Date,Assigned To,Linked Accounts,Brand/Model,Condition,Current Value,Department,Location,Notes,Purchase Date,Purchase Value,Currency,Return Date,Serial Number,Status,Warranty Expiry
-Example Laptop 14,,Laptop,2026-01-15,Example Employee,"Workspace, VPN",Example Laptop 14 (2023),New,800.00,Delivery,Example City,"Warranty runs to December 2027, so the finance depreciation schedule needs to match.",2026-01-15,1000.00,INR,2026-01-15,SN-EXAMPLE-001,In Use,2027-11-14
+Example Laptop 14,,Laptop,2026-01-15,Example Employee,"Workspace, VPN",Example Laptop 14 (2023),New,800.00,Delivery,Example City,"Warranty expiry is recorded separately from finance valuation and depreciation policy.",2026-01-15,1000.00,INR,,SN-EXAMPLE-001,In Use,2027-11-14
 ```
 
 ```sql
@@ -138,7 +138,7 @@ CREATE TABLE asset_it_management (
   asset_name VARCHAR(255),
   asset_id SERIAL PRIMARY KEY,
   asset_type VARCHAR(100) NOT NULL,
-  assigned_date DATE NOT NULL,
+  assigned_date DATE,
   assigned_to VARCHAR(255),
   linked_accounts VARCHAR(255),  -- relation -> target record
   brand_model VARCHAR(255),
@@ -153,7 +153,7 @@ CREATE TABLE asset_it_management (
   return_date DATE,
   serial_number VARCHAR(255),
   status VARCHAR(100) NOT NULL,
-  warranty_expiry DATE NOT NULL,
+  warranty_expiry DATE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -232,13 +232,12 @@ CREATE INDEX idx_asset_it_management_status ON asset_it_management (status);
   },
   "required": [
     "Asset Type",
-    "Assigned Date",
     "Condition",
     "Current Value",
     "Purchase Date",
     "Purchase Value",
     "Status",
-    "Warranty Expiry"
+    "Currency"
   ]
 }
 ```
@@ -270,6 +269,8 @@ CREATE INDEX idx_asset_it_management_status ON asset_it_management (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+Unassigned stock may omit Assigned Date/Assigned To; unknown or nonexistent warranty may omit Warranty Expiry. A return date remains blank while the example is In Use. Warranty duration does not determine accounting depreciation or Current Value: record valuation method/date and have finance review it. Track each assignment/return in a separate history if auditability across holders matters; a single current-holder row loses that history. Linked Accounts stores account-record IDs/relations only, never passwords or tokens.
+
 ## Field Reference
 
 `Return Date` may be absent before the relevant lifecycle stage or when no verified source exists. Do not invent values to satisfy a schema.
@@ -287,7 +288,7 @@ and anything pointing at another table stays `relation`.
 | 9 | Current Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `800.00` |
 | 10 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 11 | Location | `text` | `VARCHAR(255)` | `string` | Text | `Example City` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Warranty runs to December 2027, so the finance depreciation schedule needs to match.` |
+| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Warranty expiry is recorded separately from finance valuation and depreciation policy.` |
 | 13 | Purchase Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 14 | Purchase Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1000.00` |
 | 15 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |

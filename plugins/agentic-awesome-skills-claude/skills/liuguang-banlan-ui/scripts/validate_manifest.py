@@ -60,6 +60,14 @@ def validate(config: dict) -> list[str]:
         return errors
 
     require(config["mode"] in ("opal", "obsidian"), "mode must be opal or obsidian", errors)
+    require(config["schemaVersion"] == "1.1", "schemaVersion must be 1.1", errors)
+    for key in ("label", "preset"):
+        require(isinstance(config[key], str) and 0 < len(config[key]) <= 200,
+                f"{key} must be a nonempty string of at most 200 characters", errors)
+    output = config["output"]
+    require(isinstance(output, dict) and output.get("colorSpace") == "srgb"
+            and output.get("reducedMotion") == "frozen-calibrated-frame",
+            "output must declare srgb and frozen-calibrated-frame", errors)
     check_finite(config["seed"], "seed must be a finite number", errors)
     check_range(config["overallColorIntensity"], 0, 1, "overallColorIntensity must be in [0, 1]", errors)
 
@@ -94,6 +102,8 @@ def validate(config: dict) -> list[str]:
             if isinstance(color["id"], str):
                 require(color["id"] not in ids, f"duplicate color id: {color['id']}", errors)
                 ids.add(color["id"])
+        require(isinstance(color.get("label"), str) and 0 < len(color["label"]) <= 200,
+                f"{prefix}.label must be a nonempty string of at most 200 characters", errors)
         oklch = color.get("oklch", {})
         if not isinstance(oklch, dict):
             errors.append(f"{prefix}.oklch must be an object")

@@ -1,5 +1,7 @@
 # Configuracao de Webhooks - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 > Guia completo para configurar, validar e proteger webhooks da WhatsApp Cloud API.
 
 ---
@@ -83,7 +85,7 @@ Meta                            Seu Servidor
 ```javascript
 // GET /webhook - Verification endpoint
 app.get('/webhook', (req, res) => {
-  const VERIFY_TOKEN = process.env.WEBHOOK_VERIFY_TOKEN;
+  const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
@@ -105,7 +107,7 @@ app.get('/webhook', (req, res) => {
 # GET /webhook - Verification endpoint
 @app.route('/webhook', methods=['GET'])
 def verify_webhook():
-    verify_token = os.environ.get('WEBHOOK_VERIFY_TOKEN')
+    verify_token = os.environ.get('VERIFY_TOKEN')
 
     mode = request.args.get('hub.mode')
     token = request.args.get('hub.verify_token')
@@ -300,9 +302,7 @@ enviar payloads falsos. Isso permite:
 - **Execucao de comandos** - Se o webhook dispara acoes (pagamentos, envios), atacantes controlam
 - **Exfiltracao de dados** - Payloads maliciosos podem explorar falhas de parsing
 
-> **Incidente real documentado:** Uma empresa de e-commerce sofreu prejuizo de US$ 847 mil
-> apos atacantes enviarem payloads falsos de "confirmacao de pagamento" para o webhook
-> que nao validava assinatura, disparando envios de mercadoria sem pagamento real.
+> Sem fonte verificavel, nao atribua valores de perdas a incidentes. A ausencia de assinatura permite falsificacao de eventos.
 
 ### Como funciona
 
@@ -330,7 +330,7 @@ O HMAC e calculado usando o **App Secret** como chave e o **raw body** como mens
 const crypto = require('crypto');
 
 function validateWebhookSignature(req, res, next) {
-  const APP_SECRET = process.env.META_APP_SECRET;
+  const APP_SECRET = process.env.APP_SECRET;
 
   // CRITICO: raw body deve ser capturado ANTES do json parser
   // Configure o Express assim:
@@ -376,7 +376,7 @@ from functools import wraps
 def validate_webhook_signature(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        app_secret = os.environ.get('META_APP_SECRET')
+        app_secret = os.environ.get('APP_SECRET')
 
         # CRITICO: raw body ANTES do JSON parsing
         raw_body = request.get_data()
@@ -475,8 +475,8 @@ Forwarding       https://a1b2c3d4.ngrok-free.app -> http://localhost:3000
 
 # Alternativa: log detalhado no servidor
 app.post('/webhook', (req, res) => {
-  console.log('Headers:', JSON.stringify(req.headers, null, 2));
-  console.log('Body:', JSON.stringify(req.body, null, 2));
+  console.log('Webhook headers received (values omitted)');
+  console.log('Webhook payload received (personal content omitted)');
   res.sendStatus(200);
 });
 ```
@@ -601,3 +601,5 @@ app.get('/health', (req, res) => {
 - [ ] Monitoramento e alertas configurados
 - [ ] APP_SECRET e VERIFY_TOKEN em variaveis de ambiente (nunca no codigo)
 - [ ] Logs estruturados para debugging em producao
+
+Security correction: example POST handlers require the HMAC middleware before handling. Persist a bounded, validated event to a durable queue before 200; if enqueue fails return retryable failure. In-memory Set/timeouts are demo-only, cannot coordinate workers and must not mark failed processing complete. A valid signature may be replayed: key dedup by account/event/message with sufficient retention, and process status transitions independently without regressing read/delivered state. Do not assume a universal seven-day automatic deactivation rule.

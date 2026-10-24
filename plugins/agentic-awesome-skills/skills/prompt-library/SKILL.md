@@ -87,7 +87,7 @@ Debug the following code. Your analysis should include:
 3. **Fix**: Provide corrected code
 4. **Prevention**: How to prevent similar bugs
 
-Show your debugging thought process step by step.
+Provide a concise explanation of the diagnosis, key evidence and verification steps.
 ```
 
 #### Explain Like I'm 5 (ELI5)
@@ -328,3 +328,5 @@ When crafting prompts, ensure:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Role prompts such as “15 years of experience” describe a desired perspective, not real credentials. Do not claim employment, certifications or executed checks from the role. Ask for concise reasoning summaries/evidence rather than hidden internal thought, and mark placeholder citations, statistics and confidence scores as illustrative until verified.

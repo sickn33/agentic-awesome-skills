@@ -15,7 +15,7 @@ Complete guide to caching strategies for Transformers.js models across different
 Transformers.js models can be large (from a few MB to several GB), so caching is critical for performance. The caching strategy differs based on the environment:
 
 - **Browser**: Uses the Cache API (browser cache storage)
-- **Node.js**: Uses filesystem cache in `~/.cache/huggingface/`
+- **Node.js**: Uses the filesystem path configured by `env.cacheDir`; inspect it in the installed version
 - **Custom**: Implement your own cache (database, cloud storage, etc.)
 
 ### Default Behavior
@@ -77,11 +77,7 @@ env.useBrowserCache = false;
 
 ### Browser Storage Limits
 
-Browsers impose storage quotas:
-
-- **Chrome**: ~60% of available disk space (but can evict data)
-- **Firefox**: ~50% of available disk space
-- **Safari**: ~1GB per origin (prompt for more)
+Browser quotas, persistence and eviction vary by browser, device and mode; do not rely on fixed per-origin capacities. Request persistence when appropriate and handle quota errors.
 
 **Tip:** Monitor storage usage with the [Storage API](https://developer.mozilla.org/en-US/docs/Web/API/Storage_API):
 
@@ -104,7 +100,7 @@ In Node.js, models are cached to the filesystem:
 import { env, pipeline } from '@huggingface/transformers';
 
 // Default cache directory (Node.js)
-console.log(env.cacheDir); // './.cache' (relative to current directory)
+console.log(env.cacheDir); // Inspect the resolved default for this installed build
 
 // Filesystem cache is enabled by default
 console.log(env.useFSCache); // true
@@ -115,11 +111,7 @@ const classifier = await pipeline('sentiment-analysis');
 
 ### Default Cache Location
 
-**Default behavior:**
-- Cache directory: `./.cache` (relative to where Node.js process runs)
-- Full default path: `~/.cache/huggingface/` when using Hugging Face tools
-
-**Note:** The statement "Models are cached automatically in `~/.cache/huggingface/`" from performance tips is specific to Hugging Face's Python tooling convention. In Transformers.js for Node.js, the default is `./.cache` unless configured otherwise.
+**Default behavior:** inspect `env.cacheDir`; the resolved default is version/build dependent and need not be the process working directory. Explicitly configure an application-owned writable cache for predictable deployment. Python Hugging Face cache layouts are not interchangeable with Transformers.js.
 
 ### Custom Cache Directory
 
@@ -130,14 +122,14 @@ import { env, pipeline } from '@huggingface/transformers';
 env.cacheDir = '/var/cache/transformers';
 
 // Or use environment variable (Node.js convention)
-env.cacheDir = process.env.HF_HOME || '~/.cache/huggingface';
+env.cacheDir = process.env.MODEL_CACHE_DIR || './model-cache'; // '~' is not expanded by Node fs
 
 // Now load model
 const classifier = await pipeline('sentiment-analysis');
-// Cached to: /var/cache/transformers/models--Xenova--distilbert-base-uncased-finetuned-sst-2-english/
+// Inspect actual files under env.cacheDir; layout is library-version dependent.
 ```
 
-**Pattern:** `models--{organization}--{model-name}/`
+Do not assume the Python Hub `models--organization--name` cache layout.
 
 ### Disable Filesystem Cache
 
@@ -174,10 +166,12 @@ interface CacheInterface {
 
 ### Example: Cloud Storage Cache (S3)
 
+This buffered example is for public model assets in a private, access-controlled bucket. It has no eviction, size cap, streaming, credential partitioning or integrity verification. Enforce object/download limits before production use; private assets require per-principal namespaces and must never be shared across users. A cache hit does not prove offline runtime readiness. Browser caches can be evicted; quota and persistence depend on the browser/device.
+
 ```javascript
 import { env, pipeline } from '@huggingface/transformers';
 import { S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { Readable } from 'stream';
+import { createHash } from 'node:crypto';
 
 class S3Cache {
   constructor(bucket, region = 'us-east-1') {
@@ -204,7 +198,7 @@ class S3Cache {
       
       return new Response(body, {
         status: 200,
-        headers: JSON.parse(response.Metadata.headers || '{}')
+        headers: JSON.parse(response.Metadata?.headers || '{}')
       });
     } catch (error) {
       if (error.name === 'NoSuchKey') return undefined;
@@ -216,7 +210,7 @@ class S3Cache {
     const key = this.urlToKey(url);
     const clonedResponse = response.clone();
     const body = Buffer.from(await clonedResponse.arrayBuffer());
-    const headers = JSON.stringify(Object.fromEntries(response.headers.entries()));
+    const headers = JSON.stringify({ 'content-type': response.headers.get('content-type') || 'application/octet-stream' });
 
     const command = new PutObjectCommand({
       Bucket: this.bucket,
@@ -229,8 +223,8 @@ class S3Cache {
   }
 
   urlToKey(url) {
-    // Convert URL to S3 key (remove protocol, replace slashes)
-    return url.replace(/^https?:\/\//, '').replace(/\//g, '_');
+    // Public assets only: avoid slash/underscore collisions and exposing signed URLs in keys.
+    return createHash('sha256').update(String(url)).digest('hex');
   }
 }
 

@@ -35,17 +35,17 @@ function UserList() {
 **For immutable data:**
 
 ```tsx
-import { useImmutableSWR } from '@/lib/swr'
+import useSWRImmutable from 'swr/immutable'
 
 function StaticContent() {
-  const { data } = useImmutableSWR('/api/config', fetcher)
+  const { data } = useSWRImmutable('/api/config', fetcher)
 }
 ```
 
 **For mutations:**
 
 ```tsx
-import { useSWRMutation } from 'swr/mutation'
+import useSWRMutation from 'swr/mutation'
 
 function UpdateButton() {
   const { trigger } = useSWRMutation('/api/user', updateUser)
@@ -54,3 +54,5 @@ function UpdateButton() {
 ```
 
 Reference: [https://swr.vercel.app](https://swr.vercel.app)
+
+Use default imports: import useSWRMutation from 'swr/mutation' and import useSWRImmutable from 'swr/immutable'. Provide a fetcher that checks response status, handle errors/loading, and scope/reset caches on account or tenant changes.

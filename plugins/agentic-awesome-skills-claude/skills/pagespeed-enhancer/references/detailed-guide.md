@@ -50,7 +50,7 @@ Audit these in order (highest Lighthouse weight first):
 |-------|--------------|---------------|
 | LCP breakdown | LCP | Is the LCP element lazily loaded? Is TTFB > 600ms? Is element render delay > 1s? |
 | Render-blocking resources | FCP, LCP | Which CSS/JS files block the critical path? Can they be deferred or inlined? |
-| CSS `@import` rules | FCP, LCP | Are external stylesheets loaded via `@import url()` in CSS? This is **2x render-blocking** — browser must fetch CSS, parse it, then fetch imported CSS. Use `<link>` instead. |
+| CSS `@import` rules | FCP, LCP | Are external stylesheets loaded via `@import url()` in CSS? This can add a sequential discovery dependency — browser must fetch CSS, parse it, then fetch imported CSS. Use `<link>` instead. |
 | Unused JavaScript | FCP, LCP, TBT | What % of the main bundle is unused? Is code-splitting possible? |
 | Network dependency tree | LCP | What is the critical path chain? Max latency? |
 | Forced reflows | TBT | Which JS functions query geometry after DOM mutation? |
@@ -73,12 +73,12 @@ Focus on any failed audits. For a 100-score page, still check:
 | Check | What to Verify |
 |-------|---------------|
 | ARIA attribute correctness | All `aria-*` attributes match element roles |
-| Colour contrast | All text meets WCAG AA (4.5:1 normal, 3:1 large) |
+| Colour contrast | Applicable text meets WCAG AA (4.5:1 normal, 3:1 large) |
 | Image alt text quality | Alt text is descriptive, not filename-style |
 | Keyboard navigation | All interactive elements reachable by Tab |
 | Skip links | Present and focusable |
 | Heading hierarchy | No skipped levels (h1 → h2 → h3) |
-| Touch target size | Min 44×44px on mobile |
+| Touch target size | WCAG 2.2 AA 24×24 CSS px or applicable exception; 44×44 is the enhanced target |
 | Form labels | Every input has an associated label |
 | `lang` attribute | `<html lang="en">` present and valid BCP 47 |
 | `font-display` | Set to `swap` or `optional` to prevent FOIT |
@@ -113,7 +113,7 @@ When both `netlify.toml` and `vercel.json` exist, check BOTH. Each has a differe
 | hreflang | Present if multilingual; correct language codes |
 | robots.txt | Valid, not blocking key resources |
 | Structured data | JSON-LD present; run Schema validator |
-| Image alt attributes | Every `<img>` has meaningful alt |
+| Image alt attributes | Informative images have useful alt; decorative images have empty alt |
 | Link descriptiveness | No "click here" / "read more" link text |
 | Crawlability | No `noindex` on important pages |
 | HTTP status | 200 on main page and critical resources |
@@ -138,7 +138,7 @@ After completing all four batch scans, output a consolidated **Risk vs Impact Ma
 ```
 
 **Risk Level Definitions:**
-- 🟢 Low: Config/header change, no code change. Rollback in < 5 min.
+- 🟢 Low: Assess the actual blast radius; headers can break auth, embedding or subdomains and may not roll back quickly.
 - 🟡 Medium: Build config or asset pipeline change. Test in staging first.
 - 🔴 High: JavaScript refactor, architectural change. Requires full QA cycle.
 
@@ -154,16 +154,16 @@ Apply fixes in risk order. For each fix, provide:
 1. **What to change** — file, line, specific change
 2. **Before** (code snippet)
 3. **After** (code snippet)
-4. **Expected metric improvement** — estimated delta
+4. **Expected effect** — hypothesis unless measured
 5. **How to verify** — what to check after deploying
 
-### Fix Batch 1 — Quick Wins (Low Risk, deploy immediately)
+### Fix Batch 1 — Candidate quick wins (verify before authorized deployment)
 
 Examples from common audits:
 
 **F1.1 — Move CSS `@import` to `<link>` tag**
 
-CSS `@import url()` is 2x render-blocking. Move to `<link>` in `<head>`:
+CSS @import can delay stylesheet discovery; the effect is not a fixed multiplier. Move to `<link>` in `<head>`:
 
 ```css
 /* Before: in index.css */
@@ -206,7 +206,7 @@ cwebp -q 80 input.jpeg -o output.webp
 sharp('image.jpeg').webp({ quality: 80 }).toFile('image.webp')
 
 # macOS fallback (sips built-in)
-sips -s format webp input.jpeg --out output.webp
+# Check sips --help for supported encoders on this macOS version; do not assume WebP output exists.
 
 # Python Pillow fallback
 python3 -c "
@@ -232,10 +232,10 @@ Image.open('input.jpg').save('output.webp', 'WebP', quality=80)
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Strict-Transport-Security = "max-age=300"
     Cross-Origin-Opener-Policy = "same-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com"
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com"
 ```
 
 **F1.7 — Add security headers (vercel.json)**
@@ -248,10 +248,10 @@ Image.open('input.jpg').save('output.webp', 'WebP', quality=80)
         { "key": "X-Frame-Options", "value": "DENY" },
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
+        { "key": "Strict-Transport-Security", "value": "max-age=300" },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com" }
+        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.rss2json.com" }
       ]
     }
   ]
@@ -303,11 +303,11 @@ public/fonts/
 body { font-family: 'Inter', sans-serif; }
 ```
 
-**Result:** Zero external CSS requests, faster FCP/LCP, no FOIT risk, and works offline.
+**Expected effect to measure:** removes the external font CSS request. Font availability, fallback behavior, layout shift and offline caching still require validation.
 
 **F1.9 — Resize oversized icons**
 
-Icons (favicon, apple-touch-icon, OG image) should never be > 50KB. Check and resize:
+Choose budgets per asset role; an OG social image is not a small favicon and has different dimensions/quality requirements. Check and resize:
 ```bash
 python3 -c "
 from PIL import Image
@@ -333,7 +333,7 @@ The LCP element must NEVER be lazy-loaded:
 
 **F2.2 — Preload LCP image**
 
-⚠️ Only works for files in `public/` or with stable URLs. If using Vite/Webpack (content-hashed filenames), use `<picture>` + `fetchPriority="high"` instead:
+⚠️ Preload must reference the exact emitted URL and responsive candidate. Bundlers can inject hashed asset URLs into preload links; picture/fetchPriority does not replace correct discovery in every case:
 ```html
 <!-- For stable URLs (public/ directory): -->
 <link rel="preload" as="image" href="/hero.webp" fetchpriority="high">
@@ -369,7 +369,9 @@ element.addEventListener('scroll', () => {
 });
 
 // After: cache geometry reads outside event handlers
-const h = element.offsetHeight; // read once
+let h = element.offsetHeight;
+const resizeObserver = new ResizeObserver(() => { h = element.offsetHeight; });
+resizeObserver.observe(element); // disconnect during teardown
 element.addEventListener('scroll', () => {
   doSomething(h);
 });
@@ -426,8 +428,7 @@ Build:
    - Code-splitting created separate vendor chunks
 
 Asset verification:
-□ For Vite/Rollup/Webpack: preload <link> in index.html won't match hashed filenames.
-  Use fetchPriority="high" + <picture> on the component instead.
+□ Confirm preload URLs match emitted assets and responsive selection; use the bundler's supported asset pipeline.
 □ Favicons and icons are < 50KB each (not multi-MB source images used as icons)
 □ WebP/AVIF versions exist alongside originals
 
@@ -479,7 +480,7 @@ SEO:
 - Always label outputs: **[SCAN]**, **[RISK]**, **[FIX]**, **[VERIFY]**
 - Use emoji severity indicators: 🔴 Critical / 🟡 Warning / 🟢 Pass / ℹ️ Info
 - Always show "Before" and "After" code for every fix
-- Always include estimated metric delta (e.g. "Est. LCP improvement: -0.8s")
+- Report metric deltas only from measured evidence; otherwise state improvement not yet measured
 - Never suggest fixes that conflict with each other — sequence matters
 
 ---
@@ -527,7 +528,7 @@ If **Build Pass?** is **No**, run `npm run build` to see the exact error, revert
 
 ## References
 
-See `references/` for deep-dives:
+The following upstream deep-dives are not bundled in this tree; do not claim they were read:
 - `references/performance-deep-dive.md` — LCP, CLS, TBT root cause trees
 - `references/security-headers.md` — Complete CSP/HSTS/COOP reference
 - `references/image-optimization.md` — WebP/AVIF conversion pipelines

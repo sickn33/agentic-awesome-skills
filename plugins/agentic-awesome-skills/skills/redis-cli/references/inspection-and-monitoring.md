@@ -119,7 +119,7 @@ Fields: `timestamp [db client_addr] "command" "arg1" "arg2" ...`
 
 **Warning:** MONITOR adds significant overhead (each command is also sent to MONITOR clients). Avoid running it for extended periods on busy production servers.
 
-Useful for debugging — pipe through grep to filter:
+Filtering does not prevent MONITOR from receiving sensitive commands or reduce the server overhead. Use a short authorized capture; for example:
 ```bash
 redis-cli MONITOR | grep "SET"
 redis-cli MONITOR | grep "user:"
@@ -175,7 +175,7 @@ Max latency so far: 739 microseconds.
 Worst run took 9671x longer than the average latency.
 ```
 
-This tells you the minimum achievable latency on this system. Redis cannot outperform this baseline.
+This measures scheduler pauses under the test conditions; it is not a universal lower bound for every Redis request latency.
 
 ### LATENCY Command (Redis Internal)
 
@@ -212,7 +212,7 @@ echo $?    # 0 = success, non-zero = error
 redis-cli --functions-rdb /tmp/functions.rdb
 ```
 
-Useful for automated backup scripts and cron jobs. The RDB file can be loaded by any Redis instance.
+Useful for automated backup scripts and cron jobs. Restore requires a compatible Redis/RDB version and any required modules; test it in an isolated instance.
 
 ## Replica Mode
 
@@ -254,7 +254,7 @@ Output shows hit/miss rates:
 153750 Gets/sec | Hits: 12906 (8.39%) | Misses: 140844 (91.61%)
 ```
 
-Use this to find the right `maxmemory` value for your key count and access pattern (80-20 power law distribution). A miss rate >10% usually means more memory is needed.
+Use this to find the right `maxmemory` value for your key count and access pattern (80-20 power law distribution). This synthetic workload does not establish a universal miss-rate threshold; compare representative workload traces and latency/memory constraints.
 
 ## Slow Log
 

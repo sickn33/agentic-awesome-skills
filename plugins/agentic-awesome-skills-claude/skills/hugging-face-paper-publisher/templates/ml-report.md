@@ -6,6 +6,11 @@ type: ml-experiment-report
 tags: [machine-learning, experiment-report]
 ---
 
+> Draft template: all sample numbers, benchmark claims, citations and submission
+> dates below are illustrative. Replace them with verified research evidence
+> before sharing or publishing; generation does not submit to arXiv.
+
+
 # {{TITLE}}
 
 **Machine Learning Experiment Report**
@@ -138,10 +143,12 @@ What are we comparing against?
 
 ```python
 # Training pseudocode
+best_loss = float("inf")
 for epoch in range(num_epochs):
     train_loss = train_one_epoch(model, train_loader)
     val_loss = validate(model, val_loader)
     if val_loss < best_loss:
+        best_loss = val_loss
         save_checkpoint(model)
 ```
 

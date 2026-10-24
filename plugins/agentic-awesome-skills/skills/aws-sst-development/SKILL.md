@@ -24,9 +24,8 @@ resources in TypeScript and SST/Pulumi reconciles them into your account. It
 gives you high-level `sst.aws.*` components (Function, Bucket, Dynamo, Cron,
 Service, …) that expand into many underlying resources, plus an escape hatch to
 *any* raw Pulumi `aws.*` resource for the long tail. This skill encodes a
-production-proven way to author, link, test, deploy, and troubleshoot SST
-stacks on AWS — distilled from real multi-stack projects that have paid for
-each lesson with a prod incident.
+set of project-derived patterns to author, link, test, deploy, and troubleshoot SST
+stacks on AWS . The catalog review does not establish those incident or production-validation claims.
 
 **SST and Pulumi are third-party — verify current syntax with Context7**
 (`resolve-library-id` → `query-docs` for `sst` or `pulumi-aws`) when you're
@@ -69,8 +68,7 @@ map so your change matches the house style instead of fighting it:
    and the `sst`/`pulumi` versions actually installed.
 
 Run `npx sst version` to confirm you're on v4/Ion (the `$config` + `.sst/platform/`
-signature). v2/v3 ("SST Classic", CDK-based) is a different framework — these
-patterns don't apply there.
+signature). v2 (Classic) is CDK-based; v3 also introduced the Pulumi-backed Ion architecture. Verify v3-to-v4 breaking changes rather than classifying v3 as CDK-based.
 
 ## The conventions, and which are universal vs tunable
 
@@ -96,13 +94,7 @@ consistency, but recognize a project may differ).
   and produces a broken ARN that only fails at deploy time (it type-checks and
   `sst dev` runs fine). The fix is `$interpolate`​`` `${bucket.arn}/*` ``. This
   has caused prod deploy outages. See `references/authoring.md` § Outputs.
-- **Migrating a resource between Pulumi *types* should default to two PRs** —
-  Pulumi creates-before-destroys, so for a uniqueness-constrained AWS name
-  (bucket, IAM role, gateway) the old resource still owns it and the create
-  fails with `ConflictException`. Two sequential deploys (teardown, then
-  recreate) is the conservative default; `aliases:` / `pulumi import` / state
-  surgery can bridge identity in some cases but only with a reviewed plan. See
-  `references/deploy-and-troubleshoot.md` § Migrations.
+- **Plan stateful migrations before replacement.** Inspect type/URN/physical identity and provider-supported import/alias/state-move options. Never default to destroying a database/bucket just to free its name. A reviewed export/restore, parallel migration or preserved-resource adoption may avoid loss; any destructive recreate needs explicit downtime/data-loss acceptance and a tested recovery plan. See the migration reference.
 - **Prefer typed `sst.aws.*` / `aws.*` resources over the
   `aws.cloudcontrol.Resource` escape hatch.** CloudControl outputs are
   stringly-typed and `oneOf` fields don't patch cleanly. Use it only when no
@@ -139,6 +131,8 @@ When you introduce a convention, say which bucket it's in ("this is universal"
 vs "matching this repo's house style") so the user can override the
 project-specific ones deliberately.
 
+CLI and config evaluation can run arbitrary project code, including during diff/preview, and dev/deploy can create billable resources. Use the locked local CLI (do not let npx fetch an unreviewed package), verify account/role/region/stage and authorization before cloud operations. Context7/AWS MCP are optional documentation routes; use official web docs if unavailable.
+
 ## Working rhythm
 
 1. **Orient** (above) — map config, modules, tests, tooling.
@@ -168,8 +162,7 @@ project-specific ones deliberately.
 - You confirmed AWS-side facts via the docs MCP and SST/Pulumi syntax via
   Context7 rather than relying on recall.
 - Anything irreversible (deploy, `sst remove`, a resource-type migration) was
-  flagged to the user with the account it targets, and migrations were planned
-  as two PRs, not one.
+  flagged to the user with the account it targets, and stateful migrations had a reviewed preservation/rollback plan.
 
 ## Example
 

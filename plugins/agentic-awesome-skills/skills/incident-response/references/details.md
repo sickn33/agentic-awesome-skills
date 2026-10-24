@@ -8,7 +8,7 @@ Dear [Customer/Partner],
 
 We are writing to inform you of a security incident that we detected on
 [date]. Upon discovery, we immediately activated our incident response
-procedures and engaged external cybersecurity experts.
+procedures and [insert only verified response actions; do not claim external experts were engaged unless true].
 
 ### What Happened
 [Brief, factual description]
@@ -27,7 +27,6 @@ For questions, please contact: [dedicated contact/hotline]
 
 [Company Name]
 [Date]
-```
 
 
 ## IR Playbook: Compromised Credentials
@@ -48,10 +47,10 @@ steps:
     - Rotate API keys and service account credentials
     - Block source IP if identified
     commands:
-      - "aws iam update-login-profile --user-name USER --password-reset-required"
-      - "aws iam delete-access-key --user-name USER --access-key-id AKIAXXXX"
-      - "aws iam deactivate-mfa-device --user-name USER --serial-number ARN"
-      - "kubectl delete secret compromised-secret -n NAMESPACE"
+      - "Owner-approved action: deactivate the confirmed exposed access key, preserve metadata and rotate dependent workloads"
+      - "Revoke sessions through the identity system; password-reset-required alone does not revoke sessions"
+      - "Preserve MFA; remove/replace a device only if its compromise is established"
+      - "Rotate the backing credential and roll consumers safely; deleting a Kubernetes Secret alone does not revoke already copied credentials"
 
   3_investigate:
     - Review CloudTrail/audit logs for the compromised identity
@@ -94,7 +93,7 @@ steps:
 
 - Pre-define and practice playbooks with tabletop exercises quarterly
 - Maintain separate, secure communication channels for IR (not email or Slack on corporate infra)
-- Always preserve evidence before making changes to compromised systems
+- Preserve evidence where feasible; prioritize urgent containment of ongoing harm when the incident commander authorizes and records the tradeoff
 - Establish chain of custody for all collected evidence
 - Engage legal counsel early in any potential data breach
 - Conduct blameless post-incident reviews within 72 hours

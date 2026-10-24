@@ -31,6 +31,12 @@ Production patterns for Unity's Data-Oriented Technology Stack (DOTS) including 
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
 
+## Example
+
+```text
+Implement Speed plus a MovementSystem using the pinned Entities package. Profile a fixed entity cohort before/after; verify movement once per frame and job dependencies before enabling parallel execution.
+```
+
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed patterns and examples.

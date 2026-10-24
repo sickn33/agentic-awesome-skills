@@ -26,9 +26,13 @@ you can track UI quality like you track test coverage.
 - For a full prose audit with fixes → use `/ss-review`
 - For non-UI files (logic, config) — scoring is meaningless
 
+## Reference availability
+
+DESIGN-LANGUAGE, VISUAL-CRAFT and engine/motion are not bundled here. Use the inline rubric against the actual project design system and label unsupported reference checks unverified. Gate mode does not authorize edits beyond the user’s requested scope.
+
 ## What to score
 
-Score the file (or each file in a directory) on **six weighted categories** that
+Score the file (or each file in a directory) on **seven weighted categories** that
 map to the design language. Total = 100.
 
 | Category | Weight | Reads from |
@@ -46,7 +50,7 @@ map to the design language. Total = 100.
 For each category, start at full marks and **subtract** for violations you find by
 reading the code. Be specific and evidence-based — cite the line.
 
-**Color discipline (20)** — deduct for: any `#000`/`text-black` (−4 each, cap −8);
+**Color discipline (18)** — deduct for: any `#000`/`text-black` (−4 each, cap −8);
 more than one accent hue used decoratively (−5); **emoji used as UI icons** (multi-color,
 breaks single accent) (−5); **a normal/OK/"보통" state shown in a status color** instead of
 neutral grey (−4); **status color on most/every row** (no severity hierarchy) (−4);
@@ -54,19 +58,19 @@ neutral grey (−4); **status color on most/every row** (no severity hierarchy) 
 hardcoded hex where a semantic token exists (−2 each, cap −6); status conveyed by color
 alone (−4).
 
-**Hierarchy & typography (20)** — deduct for: number/unit not ~2:1 (−4); font
+**Hierarchy & typography (18)** — deduct for: number/unit not ~2:1 (−4); font
 sizes off the Font Size table / `text-[var(--…)]` for size (−5); everything the
 same weight, no clear primary (−5); cramped or wrong line-height on body (−3).
 
-**Layout & rhythm (15)** — deduct for: content on bare background, not in cards
+**Layout & rhythm (14)** — deduct for: content on bare background, not in cards
 (−6); `px-4`/`px-8`/`mx-4` instead of `px-6`/`mx-6` (−3); same section type
 repeated in a row (−4); no `space-y-6` rhythm (−3).
 
-**Cards & elevation (15)** — deduct for: 1px borders doing separation work that
+**Cards & elevation (12)** — deduct for: 1px borders doing separation work that
 tone+shadow should (−4); shadows over ~8% opacity / visibly heavy (−4); no
 card/background tone separation (−5).
 
-**States & a11y (20)** — deduct for: missing empty/loading/error state on a data
+**States & a11y (18)** — deduct for: missing empty/loading/error state on a data
 surface (−5 each, cap −10); contrast below 4.5:1 body / 3:1 large (−6); touch
 target < 44px (−4); no visible focus / `outline:none` (−5); icon-only control
 without `aria-label` (−3).
@@ -129,8 +133,7 @@ exact tells the gate exists to catch.
 ## Rules
 
 - **Read the file** — score from real evidence (line numbers), never guess.
-- Order the "fix first" list by **score gain**, not by severity alone — the goal
-  is the fastest path to a better number.
+- Prioritize accessibility and task-blocking defects before cosmetic score gain. The number is an aesthetic heuristic, not validated quality, authorship detection or permission to ship.
 - For a directory, print a one-line score per file, then the lowest-scoring file's
   full breakdown.
 - Don't auto-edit in plain scoring. `/ss-score` measures; `/ss-review` and `/ss-motion` fix.

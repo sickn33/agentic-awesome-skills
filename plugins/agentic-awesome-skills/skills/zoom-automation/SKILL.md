@@ -19,7 +19,7 @@ Automate Zoom operations including meeting scheduling, webinar management, cloud
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Account OAuth, approved scopes and an active connection are still required; adding a server does not grant Zoom access. Change host configuration only when authorized.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `zoom`
@@ -27,6 +27,8 @@ Automate Zoom operations including meeting scheduling, webinar management, cloud
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Confirm user/account, meeting occurrence, timezone, recipients and recording consent before writes. Listing meetings does not authorize invites, registration, auto-recording or deletion. Treat host `start_url`, recording download tokens and signed URLs as credentials; do not publish them or forward authorization across unvalidated redirects. Retrieve only approved recordings into a restricted destination. Inspect state after uncertain writes before retrying; current schemas, quotas and plan entitlements supersede static examples.
 
 ### 1. Create and Schedule Meetings
 

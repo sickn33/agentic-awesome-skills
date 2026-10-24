@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="640" viewBox="0 0 1400 640" role="img" aria-labelledby="title desc">
+  <title id="title">Harness operating sequence</title>
+  <desc id="desc">The sequence from product framing to UX3 review, context pack, execution harness, verified change, and learning.</desc>
+  <rect width="1400" height="640" fill="#fbfaf7"/>
+  <text x="72" y="78" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="800" fill="#1f2933">Operating Sequence</text>
+  <text x="72" y="116" font-family="Inter, Arial, sans-serif" font-size="19" fill="#66727a">Judgment comes before execution; learning returns to the next review.</text>
+  <text x="1242" y="82" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#8b5f2a">PLATE 03</text>
+
+  <line x1="150" y1="318" x2="1250" y2="318" stroke="#cfc6b6" stroke-width="3"/>
+  <g font-family="Inter, Arial, sans-serif">
+    <g transform="translate(150 318)">
+      <circle cx="0" cy="0" r="24" fill="#fbfaf7" stroke="#1f2933" stroke-width="3"/>
+      <text x="0" y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#1f2933">1</text>
+      <text x="-54" y="72" font-size="24" font-weight="800" fill="#1f2933">Framing</text>
+      <text x="-54" y="104" font-size="17" fill="#66727a">goal, user, constraint</text>
+    </g>
+    <g transform="translate(425 318)">
+      <circle cx="0" cy="0" r="24" fill="#fbfaf7" stroke="#253b58" stroke-width="3"/>
+      <text x="0" y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#253b58">2</text>
+      <text x="-76" y="-72" font-size="24" font-weight="800" fill="#253b58">UX3 Review</text>
+      <text x="-76" y="-40" font-size="17" fill="#66727a">user, evidence, business</text>
+    </g>
+    <g transform="translate(700 318)">
+      <circle cx="0" cy="0" r="24" fill="#fbfaf7" stroke="#2f5d59" stroke-width="3"/>
+      <text x="0" y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#2f5d59">3</text>
+      <text x="-78" y="72" font-size="24" font-weight="800" fill="#2f5d59">Context Pack</text>
+      <text x="-78" y="104" font-size="17" fill="#66727a">scope, non-goals, criteria</text>
+    </g>
+    <g transform="translate(975 318)">
+      <circle cx="0" cy="0" r="24" fill="#fbfaf7" stroke="#5f6b73" stroke-width="3"/>
+      <text x="0" y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#5f6b73">4</text>
+      <text x="-92" y="-72" font-size="24" font-weight="800" fill="#5f6b73">Execution Harness</text>
+      <text x="-92" y="-40" font-size="17" fill="#66727a">build, test, release</text>
+    </g>
+    <g transform="translate(1250 318)">
+      <circle cx="0" cy="0" r="24" fill="#fbfaf7" stroke="#7a4d22" stroke-width="3"/>
+      <text x="0" y="7" text-anchor="middle" font-size="19" font-weight="800" fill="#7a4d22">5</text>
+      <text x="-86" y="72" font-size="24" font-weight="800" fill="#7a4d22">Verified Change</text>
+      <text x="-86" y="104" font-size="17" fill="#66727a">result, evidence, drift</text>
+    </g>
+  </g>
+
+  <path d="M1215 384 C1052 512 486 512 330 384" fill="none" stroke="#b7aa98" stroke-width="2" stroke-dasharray="8 10"/>
+  <text x="710" y="552" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="18" fill="#66727a">Evidence from the change updates the next product judgment.</text>
+</svg>

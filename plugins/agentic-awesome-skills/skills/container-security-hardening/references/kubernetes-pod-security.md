@@ -16,6 +16,8 @@ Full reference for hardening workloads in Kubernetes — NetworkPolicy, RBAC, Po
 
 ## Pod Security Admission
 
+Policies and CRD schemas are version-specific. Review changes in staging before applying cluster-wide enforcement; these examples are not complete install manifests. See [Pod Security Standards](https://kubernetes.io/docs/concepts/security/pod-security-standards/). External Secrets normally creates Kubernetes Secret objects: [operator overview](https://external-secrets.io/latest/introduction/overview/).
+
 Built-in K8s 1.25+ policy engine (replaces deprecated PodSecurityPolicy).
 
 ### Three Built-In Policy Levels
@@ -24,7 +26,7 @@ Built-in K8s 1.25+ policy engine (replaces deprecated PodSecurityPolicy).
 |---|---|
 | `privileged` | No restrictions (cluster default) |
 | `baseline` | Blocks hostNetwork, hostPID, hostIPC, privileged containers, dangerous volume types, hostPath |
-| `restricted` | Everything in baseline + requires non-root, read-only FS, drops capabilities, requires seccomp |
+| `restricted` | Everything in baseline + requires non-root, restricted capabilities and seccomp; read-only FS is additional hardening |
 
 ### Three Modes Per Level
 
@@ -56,7 +58,7 @@ kubectl label namespace production \
 
 ```bash
 # Dry-run check against a namespace
-kubectl --dry-run=server apply -f manifests/ --namespace production
+kubectl apply --dry-run=server -f manifests/ --namespace production
 
 # Check a specific pod spec
 kubectl run test-pod --image=nginx --dry-run=server -n production
@@ -80,7 +82,7 @@ spec:
         readOnlyRootFilesystem: true
         capabilities:
           drop: ["ALL"]
-      # Resource limits are required for restricted PSA
+      # Resource limits are separate hardening, not a restricted PSA requirement
       resources:
         requests:
           memory: "64Mi"
@@ -173,7 +175,7 @@ spec:
 egress:
   - to:
       - ipBlock:
-          cidr: 0.0.0.0/0        # All external IPs
+          cidr: 0.0.0.0/0        # Broad IPv4 egress; not an external-service identity allowlist
           except:
             - 10.0.0.0/8         # But not internal cluster ranges
             - 172.16.0.0/12
@@ -190,7 +192,7 @@ egress:
 cilium connectivity test
 
 # Calico — list effective policies
-kubectl exec -it deploy/myapp -- calicoctl get networkpolicy -n production
+calicoctl get networkpolicy -n production  # Run from an authorized admin environment
 ```
 
 ---
@@ -225,7 +227,7 @@ rules:
   - apiGroups: [""]
     resources: ["configmaps"]
     resourceNames: ["myapp-config"]    # Lock to specific named resources
-    verbs: ["get", "list"]             # Never ["*"]
+    verbs: ["get"]                     # Named GET only; list requires a matching field selector
   - apiGroups: [""]
     resources: ["secrets"]
     resourceNames: ["myapp-db-creds"]
@@ -410,6 +412,7 @@ spec:
         kind: K8sRequiredLabels
       validation:
         openAPIV3Schema:
+          type: object
           properties:
             labels:
               type: array
@@ -497,7 +500,7 @@ helm install falco falcosecurity/falco \
   condition: >
     spawned_process and container
     and shell_procs and proc.tty != 0
-    and container_entrypoint
+
   output: >
     Shell spawned in a container (user=%user.name container=%container.name
     shell=%proc.name parent=%proc.pname)
@@ -508,7 +511,7 @@ helm install falco falcosecurity/falco \
   desc: An attempt to read a sensitive file by a non-trusted program
   condition: >
     open_read and sensitive_files
-    and not proc.name in (trusted_programs)
+    and not proc.name in (trusted_programs)  # Define this local list before loading
   output: >
     Sensitive file opened for reading (file=%fd.name user=%user.name
     container=%container.name)
@@ -523,7 +526,7 @@ helm install falco falcosecurity/falco \
 
 | Solution | Mechanism | Best For |
 |---|---|---|
-| **External Secrets Operator** | Sync from AWS Secrets Manager / GCP Secret Manager / Vault | Production — secrets never live in etcd |
+| **External Secrets Operator** | Sync from AWS Secrets Manager / GCP Secret Manager / Vault | Production — synchronizes Kubernetes Secrets, which are normally stored in etcd |
 | **Sealed Secrets (Bitnami)** | Asymmetric encryption of secrets in Git | GitOps workflows |
 | **HashiCorp Vault** | Dynamic secrets, PKI, lease management | Complex multi-cloud setups |
 | **SOPS + Age/GPG** | Encrypted secret files in Git | Small teams, simple workflows |
@@ -550,7 +553,7 @@ spec:
         property: password
 ```
 
-```bash
+```yaml
 # Enable etcd encryption at rest (K8s)
 # In kube-apiserver: --encryption-provider-config=encryption-config.yaml
 # encryption-config.yaml:

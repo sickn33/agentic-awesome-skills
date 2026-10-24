@@ -16,7 +16,7 @@ Azure Functions extension for handling Microsoft Entra ID custom authentication 
 dotnet add package Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents
 ```
 
-**Current Version**: v1.1.0 (stable)
+Pin a reviewed package version compatible with the chosen Functions host. The Microsoft setup guide describes this NuGet integration as preview; do not infer stability from this example.
 
 ## Supported Events
 
@@ -27,6 +27,12 @@ dotnet add package Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents
 | `OnAttributeCollectionSubmit` | Validate/modify attributes after user submission |
 | `OnOtpSend` | Custom OTP delivery (SMS, email, etc.) |
 
+## Authentication and response prerequisites
+
+Configure AuthenticationEvents__AudienceAppId, AuthenticationEvents__AuthorityUrl and AuthenticationEvents__AuthorizedPartyAppId from the actual tenant/extension using the official setup. Validate the request authentication/status before accessing data or returning claims; do not assume trigger invocation implies successful token/schema validation. Reject invalid requests using the SDK’s documented response/error pattern. Graph User.Read is not a substitute for authenticating Entra callbacks.
+
+Examples are independent fragments needing package-version-specific namespaces, request types, System/Collections/Tasks imports and required SDK action collection initialization. Verify supported event names/types in the installed SDK; no build is established here. Claims and roles must come from an authorized tenant-bound source; sample Engineering/roles are synthetic, not user entitlements. Do not log OTP, phone numbers, tokens or raw exception payloads. Apply tenant/user/version-aware caching and bounded authenticated external calls. Missing/invalid required claims must fail closed at the relying application, not silently grant access.
+
 ## Core Workflows
 
 ### 1. Token Enrichment (Add Custom Claims)
@@ -34,335 +40,53 @@ dotnet add package Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents
 Add custom claims to access or ID tokens during sign-in.
 
 ```csharp
+using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents;
 using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents.TokenIssuanceStart;
-using Microsoft.Extensions.Logging;
 
 public static class TokenEnrichmentFunction
 {
     [FunctionName("OnTokenIssuanceStart")]
     public static WebJobsAuthenticationEventResponse Run(
-        [WebJobsAuthenticationEventsTrigger] WebJobsTokenIssuanceStartRequest request,
-        ILogger log)
+        [WebJobsAuthenticationEventsTrigger] WebJobsTokenIssuanceStartRequest request)
     {
-        log.LogInformation("Token issuance event for user: {UserId}", 
-            request.Data?.AuthenticationContext?.User?.Id);
-
-        // Create response with custom claims
-        var response = new WebJobsTokenIssuanceStartResponse();
-        
-        // Add claims to the token
-        response.Actions.Add(new WebJobsProvideClaimsForToken
+        try
         {
-            Claims = new Dictionary<string, string>
-            {
-                { "customClaim1", "customValue1" },
-                { "department", "Engineering" },
-                { "costCenter", "CC-12345" },
-                { "apiVersion", "v2" }
-            }
-        });
-
-        return response;
+            if (request.RequestStatus != WebJobsAuthenticationEventsRequestStatusType.Successful)
+                return request.Completed(); // SDK preserves validation failure; do not add claims.
+            request.Response.Actions.Add(new WebJobsProvideClaimsForToken(
+                new WebJobsAuthenticationEventsTokenClaim("apiVersion", "v2")));
+            return request.Completed();
+        }
+        catch (Exception ex)
+        {
+            return request.Failed(ex);
+        }
     }
 }
 ```
+
+The apiVersion value is a synthetic non-entitlement example. Required claims must be mapped in the Entra extension/application and enforced by the relying application. No raw user/exception logging is needed.
 
 ### 2. Token Enrichment with External Data
 
 Fetch claims from external systems (databases, APIs).
 
-```csharp
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents.TokenIssuanceStart;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using System.Text.Json;
+Use the authenticated request gate above before reading user context. Resolve the tenant and user ID from the validated event; query an authorized tenant-bound profile adapter with a timeout within the callback budget, bounded response and validated schema. Add each approved value with WebJobsAuthenticationEventsTokenClaim and request.Response.Actions, then return request.Completed(). On missing/invalid required profile data return request.Failed(exception) and require the relying app to deny absent claims. Do not concatenate role strings from untrusted input or return a new empty success response. The profile adapter, authentication and role mapping are application code, not supplied here.
 
-public static class TokenEnrichmentWithExternalData
-{
-    private static readonly HttpClient _httpClient = new();
+### 3. Attribute collection and OTP delivery
 
-    [FunctionName("OnTokenIssuanceStartExternal")]
-    public static async Task<WebJobsAuthenticationEventResponse> Run(
-        [WebJobsAuthenticationEventsTrigger] WebJobsTokenIssuanceStartRequest request,
-        ILogger log)
-    {
-        string? userId = request.Data?.AuthenticationContext?.User?.Id;
-        
-        if (string.IsNullOrEmpty(userId))
-        {
-            log.LogWarning("No user ID in request");
-            return new WebJobsTokenIssuanceStartResponse();
-        }
+These events are tenant/product/version dependent. The previous examples assumed unverified request/action constructors and a no-op SMS adapter; they must not be copied as compiled SDK integrations. For the installed package, use its official event-specific samples and verify the request authentication/status gate before accessing attributes or OTP context.
 
-        // Fetch user data from external API
-        var userProfile = await GetUserProfileAsync(userId);
-        
-        var response = new WebJobsTokenIssuanceStartResponse();
-        response.Actions.Add(new WebJobsProvideClaimsForToken
-        {
-            Claims = new Dictionary<string, string>
-            {
-                { "employeeId", userProfile.EmployeeId },
-                { "department", userProfile.Department },
-                { "roles", string.Join(",", userProfile.Roles) }
-            }
-        });
-
-        return response;
-    }
-
-    private static async Task<UserProfile> GetUserProfileAsync(string userId)
-    {
-        var response = await _httpClient.GetAsync($"https://api.example.com/users/{userId}");
-        response.EnsureSuccessStatusCode();
-        var json = await response.Content.ReadAsStringAsync();
-        return JsonSerializer.Deserialize<UserProfile>(json)!;
-    }
-}
-
-public record UserProfile(string EmployeeId, string Department, string[] Roles);
-```
-
-### 3. Attribute Collection - Customize UI (Start Event)
-
-Customize the attribute collection page before it's displayed.
-
-```csharp
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents.Framework;
-using Microsoft.Extensions.Logging;
-
-public static class AttributeCollectionStartFunction
-{
-    [FunctionName("OnAttributeCollectionStart")]
-    public static WebJobsAuthenticationEventResponse Run(
-        [WebJobsAuthenticationEventsTrigger] WebJobsAttributeCollectionStartRequest request,
-        ILogger log)
-    {
-        log.LogInformation("Attribute collection start for correlation: {CorrelationId}",
-            request.Data?.AuthenticationContext?.CorrelationId);
-
-        var response = new WebJobsAttributeCollectionStartResponse();
-
-        // Option 1: Continue with default behavior
-        response.Actions.Add(new WebJobsContinueWithDefaultBehavior());
-
-        // Option 2: Prefill attributes
-        // response.Actions.Add(new WebJobsSetPrefillValues
-        // {
-        //     Attributes = new Dictionary<string, string>
-        //     {
-        //         { "city", "Seattle" },
-        //         { "country", "USA" }
-        //     }
-        // });
-
-        // Option 3: Show blocking page (prevent sign-up)
-        // response.Actions.Add(new WebJobsShowBlockPage
-        // {
-        //     Message = "Sign-up is currently disabled."
-        // });
-
-        return response;
-    }
-}
-```
-
-### 4. Attribute Collection - Validate Submission (Submit Event)
-
-Validate and modify attributes after user submission.
-
-```csharp
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents.Framework;
-using Microsoft.Extensions.Logging;
-
-public static class AttributeCollectionSubmitFunction
-{
-    [FunctionName("OnAttributeCollectionSubmit")]
-    public static WebJobsAuthenticationEventResponse Run(
-        [WebJobsAuthenticationEventsTrigger] WebJobsAttributeCollectionSubmitRequest request,
-        ILogger log)
-    {
-        var response = new WebJobsAttributeCollectionSubmitResponse();
-
-        // Access submitted attributes
-        var attributes = request.Data?.UserSignUpInfo?.Attributes;
-        
-        string? email = attributes?["email"]?.ToString();
-        string? displayName = attributes?["displayName"]?.ToString();
-
-        // Validation example: block certain email domains
-        if (email?.EndsWith("@blocked.com") == true)
-        {
-            response.Actions.Add(new WebJobsShowBlockPage
-            {
-                Message = "Sign-up from this email domain is not allowed."
-            });
-            return response;
-        }
-
-        // Validation example: show validation error
-        if (string.IsNullOrEmpty(displayName) || displayName.Length < 3)
-        {
-            response.Actions.Add(new WebJobsShowValidationError
-            {
-                Message = "Display name must be at least 3 characters.",
-                AttributeErrors = new Dictionary<string, string>
-                {
-                    { "displayName", "Name is too short" }
-                }
-            });
-            return response;
-        }
-
-        // Modify attributes before saving
-        response.Actions.Add(new WebJobsModifyAttributeValues
-        {
-            Attributes = new Dictionary<string, string>
-            {
-                { "displayName", displayName.Trim() },
-                { "city", attributes?["city"]?.ToString()?.ToUpperInvariant() ?? "" }
-            }
-        });
-
-        return response;
-    }
-}
-```
-
-### 5. Custom OTP Delivery
-
-Send one-time passwords via custom channels (SMS, email, push notification).
-
-```csharp
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents;
-using Microsoft.Azure.WebJobs.Extensions.AuthenticationEvents.Framework;
-using Microsoft.Extensions.Logging;
-
-public static class CustomOtpFunction
-{
-    [FunctionName("OnOtpSend")]
-    public static async Task<WebJobsAuthenticationEventResponse> Run(
-        [WebJobsAuthenticationEventsTrigger] WebJobsOnOtpSendRequest request,
-        ILogger log)
-    {
-        var response = new WebJobsOnOtpSendResponse();
-
-        string? phoneNumber = request.Data?.OtpContext?.Identifier;
-        string? otp = request.Data?.OtpContext?.OneTimeCode;
-
-        if (string.IsNullOrEmpty(phoneNumber) || string.IsNullOrEmpty(otp))
-        {
-            log.LogError("Missing phone number or OTP");
-            response.Actions.Add(new WebJobsOnOtpSendFailed
-            {
-                Error = "Missing required data"
-            });
-            return response;
-        }
-
-        try
-        {
-            // Send OTP via your SMS provider
-            await SendSmsAsync(phoneNumber, $"Your verification code is: {otp}");
-            
-            response.Actions.Add(new WebJobsOnOtpSendSuccess());
-            log.LogInformation("OTP sent successfully to {PhoneNumber}", phoneNumber);
-        }
-        catch (Exception ex)
-        {
-            log.LogError(ex, "Failed to send OTP");
-            response.Actions.Add(new WebJobsOnOtpSendFailed
-            {
-                Error = "Failed to send verification code"
-            });
-        }
-
-        return response;
-    }
-
-    private static async Task SendSmsAsync(string phoneNumber, string message)
-    {
-        // Implement your SMS provider integration (Twilio, Azure Communication Services, etc.)
-        await Task.CompletedTask;
-    }
-}
-```
-
-### 6. Function App Configuration
-
-Configure the Function App for authentication events.
-
-```csharp
-// Program.cs (Isolated worker model)
-using Microsoft.Extensions.Hosting;
-
-var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
-    .Build();
-
-host.Run();
-```
-
-```json
-// host.json
-{
-  "version": "2.0",
-  "logging": {
-    "applicationInsights": {
-      "samplingSettings": {
-        "isEnabled": true
-      }
-    }
-  },
-  "extensions": {
-    "http": {
-      "routePrefix": ""
-    }
-  }
-}
-```
-
-```json
-// local.settings.json
-{
-  "IsEncrypted": false,
-  "Values": {
-    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet"
-  }
-}
-```
+- Start: only prefill approved attributes; do not trust a client-supplied identity or turn prefill into an authorization decision.
+- Submit: validate the complete event schema and allowed attribute fields, return the event’s documented validation/block action, and preserve the user’s ability to correct input. A display message alone does not enforce a policy.
+- OTP: deliver only through an authenticated configured provider, validate the destination and challenge context, bound attempts and timeouts, and report success only after provider acceptance. Never log or persist OTP values or silently claim delivery from Task.CompletedTask.
+- Use synthetic local fixtures. Keep AuthenticationEvents__BypassTokenValidation disabled in every deployed environment; local bypass tests do not verify production authentication.
 
 ## Key Types Reference
 
-| Type | Purpose |
-|------|---------|
-| `WebJobsAuthenticationEventsTriggerAttribute` | Function trigger attribute |
-| `WebJobsTokenIssuanceStartRequest` | Token issuance event request |
-| `WebJobsTokenIssuanceStartResponse` | Token issuance event response |
-| `WebJobsProvideClaimsForToken` | Action to add claims |
-| `WebJobsAttributeCollectionStartRequest` | Attribute collection start request |
-| `WebJobsAttributeCollectionStartResponse` | Attribute collection start response |
-| `WebJobsAttributeCollectionSubmitRequest` | Attribute submission request |
-| `WebJobsAttributeCollectionSubmitResponse` | Attribute submission response |
-| `WebJobsSetPrefillValues` | Prefill form values |
-| `WebJobsShowBlockPage` | Block user with message |
-| `WebJobsShowValidationError` | Show validation errors |
-| `WebJobsModifyAttributeValues` | Modify submitted values |
-| `WebJobsOnOtpSendRequest` | OTP send event request |
-| `WebJobsOnOtpSendResponse` | OTP send event response |
-| `WebJobsOnOtpSendSuccess` | OTP sent successfully |
-| `WebJobsOnOtpSendFailed` | OTP send failed |
-| `WebJobsContinueWithDefaultBehavior` | Continue with default flow |
+The verified token-issuance pattern uses WebJobsTokenIssuanceStartRequest, WebJobsAuthenticationEventsRequestStatusType, WebJobsProvideClaimsForToken and WebJobsAuthenticationEventsTokenClaim through request.Response, request.Completed() and request.Failed(exception). Confirm all other event-specific names in the installed package rather than infer them from event labels.
 
 ## Entra ID Configuration
 
@@ -396,32 +120,7 @@ API Permissions:
 
 ## Error Handling
 
-```csharp
-[FunctionName("OnTokenIssuanceStart")]
-public static WebJobsAuthenticationEventResponse Run(
-    [WebJobsAuthenticationEventsTrigger] WebJobsTokenIssuanceStartRequest request,
-    ILogger log)
-{
-    try
-    {
-        // Your logic here
-        var response = new WebJobsTokenIssuanceStartResponse();
-        response.Actions.Add(new WebJobsProvideClaimsForToken
-        {
-            Claims = new Dictionary<string, string> { { "claim", "value" } }
-        });
-        return response;
-    }
-    catch (Exception ex)
-    {
-        log.LogError(ex, "Error processing token issuance event");
-        
-        // Return empty response - authentication continues without custom claims
-        // Do NOT throw - this would fail the authentication
-        return new WebJobsTokenIssuanceStartResponse();
-    }
-}
-```
+Use the guarded token-issuance function above: preserve SDK validation status, populate request.Response only for Successful requests, and use request.Failed(exception) for processing failures. Do not replace failures with new WebJobsTokenIssuanceStartResponse() or log raw callback/exception payloads.
 
 ## Related SDKs
 
@@ -448,3 +147,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Verified token-issuance API shape: [Microsoft setup guide](https://learn.microsoft.com/en-us/entra/identity-platform/custom-extension-tokenissuancestart-setup). Other event workflows remain procedural integration requirements, not a compiled implementation.

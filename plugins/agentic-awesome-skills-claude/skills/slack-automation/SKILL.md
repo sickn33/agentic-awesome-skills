@@ -18,12 +18,16 @@ Automate Slack workspace operations including messaging, search, channel managem
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The target account must still authenticate through the returned connection flow and grant the required scopes.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `slack`
 3. If connection is not ACTIVE, follow the returned auth link to complete Slack OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Workspace and communication boundaries
+
+Resolve the exact workspace/channel/user and current discovered tool schema. Reading/searching does not authorize posts, DMs, mentions, reactions, edits or schedules; perform them only under the matching user instruction and visibility scope. Preview mass mentions and cross-workspace/shared-channel exposure. Keep timestamps as strings, paginate within a bounded window, redact private content and reconcile message history after uncertain sends before retrying. Wrapper-specific `markdown_text` support does not deprecate Slack's `text`/`blocks`; include accessible fallback text for block content. See [chat.postMessage](https://api.slack.com/methods/chat.postMessage).
 
 ## Core Workflows
 
@@ -42,9 +46,9 @@ Automate Slack workspace operations including messaging, search, channel managem
 **Key parameters**:
 - `channel`: Channel ID or name (without '#' prefix)
 - `markdown_text`: Preferred field for formatted messages (supports headers, bold, italic, code blocks)
-- `text`: Raw text fallback (deprecated in favor of markdown_text)
+- `text`: Slack fallback/accessibility text; verify the adapter schema rather than assuming deprecation
 - `thread_ts`: Timestamp of parent message to reply in a thread
-- `blocks`: Block Kit layout blocks (deprecated, use markdown_text)
+- `blocks`: Block Kit layout blocks where supported; not generally deprecated by Slack
 
 **Pitfalls**:
 - `SLACK_FIND_CHANNELS` requires `query` param; missing it errors with "Invalid request data provided"

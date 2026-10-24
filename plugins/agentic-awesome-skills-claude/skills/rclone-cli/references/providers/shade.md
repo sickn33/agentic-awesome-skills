@@ -16,7 +16,7 @@ This is a backend for the [Shade](https://shade.inc/) platform
 
 ## Accounts & Pricing
 
-To use this backend, you need to [create a free account](https://app.shade.inc/) on Shade. You can start with a free account and get 20GB of storage for free.
+To use this backend, you need to [create a free account](https://app.shade.inc/) on Shade. Check the current plan, quota and pricing in the provider account before use.
 
 
 ## Usage
@@ -30,7 +30,7 @@ Paths may be as deep as required, e.g. `remote:directory/subdirectory`.
 
 Here is an example of making a Shade configuration.
 
-First, create a [create a free account](https://app.shade.inc/) account and choose a plan.
+First, [create an account](https://app.shade.inc/) and choose a plan.
 
 You will need to log in and get the `API Key` and `Drive ID` for your account from the settings section of your account and created drive respectively.
 
@@ -61,7 +61,7 @@ Choose a number from below, or type in your own value.
 xx / Shade FS
    \ (shade)
 [OTHER OPTIONS]
-Storage> xx
+Storage> shade
 
 Option drive_id.
 The ID of your drive, see this in the drive settings. Individual rclone configs must be made per drive.
@@ -97,7 +97,7 @@ Shade does not support hashes and writing mod times.
 
 ### Transfers
 
-Shade uses multipart uploads by default. This means that files will be chunked and sent up to Shade concurrently. In order to configure how many simultaneous uploads you want to use, upload the 'concurrency' option in the advanced config section. Note that this uses more memory and initiates more http requests.
+Shade uses multipart uploads by default. This means that files will be chunked and sent up to Shade concurrently. In order to configure how many simultaneous uploads you want to use, set the 'upload_concurrency' option in the advanced config section. Note that this uses more memory and initiates more http requests.
 
 ### Deleting files
 

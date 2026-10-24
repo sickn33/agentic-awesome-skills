@@ -1,7 +1,7 @@
 ---
 name: azure-communication-sms-java
 description: "Send SMS messages with Azure Communication Services SMS Java SDK. Use when implementing SMS notifications, alerts, OTP delivery, bulk messaging, or delivery reports."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -282,3 +282,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+SMS sends contact real recipients and can incur charges. Confirm sender, recipient list, content, consent/opt-outs and budget before sending; use test numbers for examples. The literal OTP above is illustrative only: generate a secure expiring single-use code server-side. Per-recipient acceptance is not delivery; correlate verified Event Grid reports, deduplicate and reconcile unknown send outcomes before retrying. Await async completion and avoid logging phone numbers, bodies, tokens or full response headers.

@@ -1,3 +1,4 @@
+# Modified in the local catalog review: credential, bounded execution and data-quality corrections.
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
@@ -7,6 +8,7 @@
 #     "hf-xet>= 1.1.7",
 #     "torch",
 #     "transformers",
+#     "tqdm",
 #     "vllm>=0.8.5",
 # ]
 #
@@ -39,6 +41,7 @@ Example usage:
 """
 
 import argparse
+import math
 import logging
 import os
 import sys
@@ -46,14 +49,14 @@ from datetime import datetime
 from typing import Optional
 
 from datasets import load_dataset
-from huggingface_hub import DatasetCard, get_token, login
+from huggingface_hub import DatasetCard, HfApi, get_token
 from torch import cuda
 from tqdm.auto import tqdm
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 
 # Enable HF Transfer for faster downloads
-os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
+os.environ["HF_XET_HIGH_PERFORMANCE"] = "1"
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -142,7 +145,7 @@ This dataset contains generated responses for prompts from [{source_dataset}](ht
 
 ## Dataset Structure
 
-The dataset contains all columns from the source dataset plus:
+The dataset contains only the selected source prompt/messages column plus:
 - `response`: The generated response from the model
 
 ## Generation Script
@@ -152,7 +155,7 @@ Generated using the vLLM inference script from [uv-scripts/vllm](https://hugging
 To reproduce this generation:
 
 ```bash
-uv run https://huggingface.co/datasets/uv-scripts/vllm/raw/main/generate-responses.py \\
+uv run https://huggingface.co/datasets/uv-scripts/vllm/raw/<reviewed-full-commit-sha>/generate-responses.py \\
     {source_dataset} \\
     <output-dataset> \\
     --model-id {model_id} \\
@@ -184,6 +187,9 @@ def main(
     skip_long_prompts: bool = True,
     max_samples: Optional[int] = None,
     hf_token: Optional[str] = None,
+    allow_publish: bool = False,
+    model_revision: Optional[str] = None,
+    dataset_revision: Optional[str] = None,
 ):
     """
     Main generation pipeline.
@@ -208,6 +214,12 @@ def main(
         max_samples: Maximum number of samples to process (None for all)
         hf_token: Hugging Face authentication token
     """
+    if not allow_publish:
+        raise ValueError("Explicit allow_publish/--allow-publish required for the named output dataset")
+    if max_samples is not None and max_samples <= 0: raise ValueError("max_samples must be positive")
+    if max_tokens <= 0: raise ValueError("max_tokens must be positive")
+    if not math.isfinite(gpu_memory_utilization) or not 0 < gpu_memory_utilization <= 1: raise ValueError("Invalid GPU memory fraction")
+    if src_dataset_hub_id == output_dataset_hub_id: raise ValueError("Output must not overwrite the input dataset")
     generation_start_time = datetime.now().isoformat()
 
     # GPU check and configuration
@@ -220,22 +232,23 @@ def main(
     else:
         logger.info(f"Using specified tensor_parallel_size={tensor_parallel_size}")
         if tensor_parallel_size > num_gpus:
-            logger.warning(
-                f"Requested {tensor_parallel_size} GPUs but only {num_gpus} available"
-            )
+            raise ValueError("Requested tensor parallel size exceeds available GPUs")
 
     # Authentication - try multiple methods
     HF_TOKEN = hf_token or os.environ.get("HF_TOKEN") or get_token()
 
     if not HF_TOKEN:
         logger.error("No HuggingFace token found. Please provide token via:")
-        logger.error("  1. --hf-token argument")
+        logger.error("Use an approved HF_TOKEN environment secret or existing local authentication")
         logger.error("  2. HF_TOKEN environment variable")
         logger.error("  3. Run 'hf auth login' or use login() in Python")
         sys.exit(1)
 
     logger.info("HuggingFace token found, authenticating...")
-    login(token=HF_TOKEN)
+    os.environ["HF_TOKEN"] = HF_TOKEN
+
+    if tensor_parallel_size <= 0: raise ValueError("tensor_parallel_size must be positive")
+    HfApi(token=HF_TOKEN).create_repo(output_dataset_hub_id, repo_type="dataset", private=True, exist_ok=False)
 
     # Initialize vLLM
     logger.info(f"Loading model: {model_id}")
@@ -243,6 +256,7 @@ def main(
         "model": model_id,
         "tensor_parallel_size": tensor_parallel_size,
         "gpu_memory_utilization": gpu_memory_utilization,
+        "revision": model_revision,
     }
     if max_model_len is not None:
         vllm_kwargs["max_model_len"] = max_model_len
@@ -252,7 +266,7 @@ def main(
 
     # Load tokenizer for chat template
     logger.info("Loading tokenizer...")
-    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=model_revision)
 
     # Create sampling parameters
     sampling_params = SamplingParams(
@@ -266,13 +280,17 @@ def main(
 
     # Load dataset
     logger.info(f"Loading dataset: {src_dataset_hub_id}")
-    dataset = load_dataset(src_dataset_hub_id, split="train")
+    dataset = load_dataset(src_dataset_hub_id, split="train", revision=dataset_revision)
 
     # Apply max_samples if specified
     if max_samples is not None and max_samples < len(dataset):
         logger.info(f"Limiting dataset to {max_samples} samples")
         dataset = dataset.select(range(max_samples))
 
+    source_column = prompt_column or messages_column
+    if output_column in dataset.column_names: raise ValueError("Output column already exists")
+    if source_column not in dataset.column_names: raise ValueError("Input column missing")
+    dataset = dataset.select_columns([source_column])
     total_examples = len(dataset)
     logger.info(f"Dataset loaded with {total_examples:,} examples")
 
@@ -332,8 +350,8 @@ def main(
 
         # Count tokens if filtering is enabled
         if skip_long_prompts:
-            tokens = tokenizer.encode(prompt)
-            if len(tokens) <= effective_max_len:
+            tokens = tokenizer.encode(prompt, add_special_tokens=False)
+            if len(tokens) + max_tokens <= effective_max_len:
                 valid_prompts.append(prompt)
                 valid_indices.append(i)
             else:
@@ -368,6 +386,7 @@ def main(
     logger.info("vLLM will handle batching and scheduling automatically")
 
     outputs = llm.generate(valid_prompts, sampling_params)
+    if len(outputs) != len(valid_indices): raise ValueError("Generation result count mismatch")
 
     # Extract generated text and create full response list
     logger.info("Extracting generated responses...")
@@ -381,6 +400,8 @@ def main(
     # Add responses to dataset
     logger.info("Adding responses to dataset...")
     dataset = dataset.add_column(output_column, responses)
+    valid_set = set(valid_indices)
+    dataset = dataset.add_column("generation_status", ["generated" if i in valid_set else "skipped_context" for i in range(total_examples)])
 
     # Create dataset card
     logger.info("Creating dataset card...")
@@ -397,9 +418,11 @@ def main(
         max_model_len_used=effective_max_len if skip_long_prompts else None,
     )
 
+    card_content += f"\nSource revision: {dataset_revision or 'unrecorded'}\nModel revision: {model_revision or 'unrecorded'}\n"
+
     # Push dataset to hub
     logger.info(f"Pushing dataset to: {output_dataset_hub_id}")
-    dataset.push_to_hub(output_dataset_hub_id, token=HF_TOKEN)
+    dataset.push_to_hub(output_dataset_hub_id, token=HF_TOKEN, private=True)
 
     # Push dataset card
     card = DatasetCard(card_content)
@@ -433,7 +456,7 @@ Examples:
     --gpu-memory-utilization 0.95
   
   # Using environment variable for token
-  HF_TOKEN=hf_xxx uv run generate-responses.py input-dataset output-dataset
+  uv run generate-responses.py input-dataset output-dataset
             """,
         )
 
@@ -525,11 +548,6 @@ Examples:
             help="Number of GPUs to use (default: auto-detect)",
         )
         parser.add_argument(
-            "--hf-token",
-            type=str,
-            help="Hugging Face token (can also use HF_TOKEN env var)",
-        )
-        parser.add_argument(
             "--skip-long-prompts",
             action="store_true",
             default=True,
@@ -542,6 +560,9 @@ Examples:
             help="Fail on prompts that exceed max_model_len",
         )
 
+        parser.add_argument("--allow-publish", action="store_true", help="Approve creation of the named private output dataset")
+        parser.add_argument("--model-revision", help="Reviewed model commit/revision")
+        parser.add_argument("--dataset-revision", help="Reviewed source dataset commit/revision")
         args = parser.parse_args()
 
         main(
@@ -562,7 +583,10 @@ Examples:
             tensor_parallel_size=args.tensor_parallel_size,
             skip_long_prompts=args.skip_long_prompts,
             max_samples=args.max_samples,
-            hf_token=args.hf_token,
+            hf_token=None,
+            allow_publish=args.allow_publish,
+            model_revision=args.model_revision,
+            dataset_revision=args.dataset_revision,
         )
     else:
         # Show HF Jobs example when run without arguments
@@ -577,7 +601,7 @@ Example HF Jobs command with multi-GPU:
     # If you're logged in with hf auth, token will be auto-detected
     hf jobs uv run \\
         --flavor l4x4 \\
-        https://huggingface.co/datasets/uv-scripts/vllm/raw/main/generate-responses.py \\
+        https://huggingface.co/datasets/uv-scripts/vllm/raw/<reviewed-full-commit-sha>/generate-responses.py \\
         username/input-dataset \\
         username/output-dataset \\
         --messages-column messages \\

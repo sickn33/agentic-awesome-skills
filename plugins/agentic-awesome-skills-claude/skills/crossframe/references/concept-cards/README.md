@@ -20,7 +20,6 @@
 | 锚点组 / 多层锚 / 跨域互操作 | `anchor-group.md` | 判断关键支撑、保护变量、重锚定和跨域迁移 |
 | 动力组 / 转译 / 支撑通道 | `dynamics-group.md` | 判断行动能否启动、职责是否被让渡、条件场是否足够 |
 | 结构组与过程组 / 结构负荷 | `structure-process-group.md` | 判断行动承接、中层耗竭、反武器化边界和维护债 |
-
 | 框架治理 / 证伪 / 良性消亡 | `framework-governance-falsification.md` | 判断框架是否失效、是否需要暂停、降级、转接或退场 |
 | 程序与判断责任 / 开放断言退场 | `procedural-judgment-responsibility.md` | 共识程序、强判断、开放断言被实际处置化 |
 | 可见性 / 不透明 / 弱信号 | `visibility-opacity-weak-signals.md` | 沉默、缺席、匿名反馈、不透明材料、弱信号安全 |

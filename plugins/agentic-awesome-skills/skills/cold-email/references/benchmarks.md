@@ -1,5 +1,8 @@
 # Benchmarks, Data & Expert Methods
 
+The percentages and vendor-attributed findings below are imported historical claims without linked study methods, denominators or controlled comparisons. They are unverified hypotheses for testing, not forecasts or universal causal effects. Open tracking is distorted by privacy protections, image blocking and scanners; compare delivered-mail positive replies/meetings and complaints, with cohort and time window.
+
+
 ## Core Performance Metrics (2024–2025)
 
 | Metric                     | Average | Good   | Excellent | Source                   |
@@ -68,7 +71,7 @@ Reply rates dropped from 7–8% (2020–2022) to 4–5.8% (2024–2025), ~15% Yo
 | Length       | Shorter, blunt  | Longer, insight-led      | Detail-oriented      | Concise but substantive |
 | Social proof | Outcome numbers | Research-led credibility | Technical precision  | Shared values           |
 
-North America: 4.1% response. Europe: 3.1%. Asia-Pacific: 2.8%. Shorter, more direct sequences work better in US. UK needs more insight/personality. GDPR affects European tone.
+North America: 4.1% response. Europe: 3.1%. Asia-Pacific: 2.8%. Shorter, more direct sequences work better in US. UK needs more insight/personality. Privacy and marketing rules affect eligibility, data use and opt-out handling, not merely tone.
 
 ## Expert Quick Reference
 

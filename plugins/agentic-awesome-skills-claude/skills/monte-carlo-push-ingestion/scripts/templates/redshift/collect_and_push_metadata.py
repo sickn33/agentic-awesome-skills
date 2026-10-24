@@ -40,11 +40,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect and push Redshift metadata to Monte Carlo")
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
-    parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
+    parser.add_argument("--password", choices=[], default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
     parser.add_argument("--port", type=int, default=int(os.getenv("REDSHIFT_PORT", "5439")))
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
     parser.add_argument("--manifest", default="manifest_metadata.json")
     args = parser.parse_args()

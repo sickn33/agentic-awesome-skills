@@ -34,7 +34,7 @@ metadata:
 
 # Supply Chain Attack Response
 
-Software supply chain attacks target the dependencies, build systems, and distribution channels that developers trust implicitly. When a package on PyPI, npm, or crates.io is compromised, every downstream consumer inherits the malicious payload. This skill provides detection techniques, emergency response playbooks, and hardening strategies to protect your software supply chain end to end.
+Software supply chain attacks target the dependencies, build systems, and distribution channels that developers trust implicitly. When a package on PyPI, npm, or crates.io is compromised, downstream consumers may receive malicious content; execution and exposure depend on installation/build/runtime paths. This skill provides detection techniques, emergency response playbooks, and hardening strategies to protect your software supply chain end to end.
 
 ---
 
@@ -49,11 +49,10 @@ npm audit
 # JSON output for programmatic processing
 npm audit --json | jq '.vulnerabilities | to_entries[] | select(.value.severity == "critical")'
 
-# Fix automatically where possible
-npm audit fix
+# Review a repair proposal in an isolated trusted copy; do not auto-fix an incident host.
+npm audit fix --dry-run --ignore-scripts
 
-# Check for known malicious packages via Socket.dev CLI
-npx socket scan --package-lock package-lock.json
+# Check the current reviewed Socket CLI documentation and data-transfer policy before installing/running it.
 ```
 
 ### 2.2 pip Audit
@@ -62,14 +61,13 @@ npx socket scan --package-lock package-lock.json
 # Install pip-audit (maintained by Google/OSSF)
 pip install pip-audit
 
-# Audit current environment against OSV.dev
+# Audit known advisories for the current environment (select OSV explicitly when required)
 pip-audit
 
 # Audit a requirements file directly
-pip-audit -r requirements.txt --output json
+pip-audit --no-deps --disable-pip -r requirements.txt --format json
 
-# Check for typosquatting with bandersnatch or custom script
-pip-audit --strict --desc on
+# pip-audit detects known vulnerability advisories, not typosquatting; --strict affects dependency-audit failures.
 ```
 
 ### 2.3 Cargo Audit
@@ -95,7 +93,7 @@ cargo audit --deny yanked
 cosign verify \
   --certificate-identity "https://github.com/myorg/myrepo/.github/workflows/build.yml@refs/heads/main" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  ghcr.io/myorg/myimage:latest
+  ghcr.io/myorg/myimage@sha256:<full-reviewed-digest>
 
 # Verify an artifact with sigstore-python
 pip install sigstore
@@ -128,10 +126,12 @@ When a dependency is confirmed compromised, execute these steps in order.
 
 ```bash
 # Pin the last known-good version immediately in package.json
-npm install <package>@<safe-version> --save-exact
+npm install <package>@<safe-version> --save-exact --ignore-scripts
+# Only in a clean isolated repair copy, after preserving incident evidence.
 
 # For pip, pin with hash verification
-pip download <package>==<safe-version> --require-hashes -d ./vendor/
+python -m pip download --only-binary=:all: --require-hashes -r reviewed-requirements.txt -d ./vendor/
+# reviewed-requirements.txt must pin all dependencies and verified artifact hashes.
 
 # For cargo, pin in Cargo.toml
 # Replace: some_crate = "^1.2" with:
@@ -160,14 +160,13 @@ git log --all -p -- package-lock.json | grep -A2 -B2 "<compromised-package>"
 ```bash
 # Search for known IOCs from the advisory
 grep -r "suspicious-domain.com" ./node_modules/<compromised-package>/
-grep -r "eval(atob" ./node_modules/<compromised-package>/ <!-- security-allowlist: documented payload technique reference, do not execute outside authorized scope -->
+rg --fixed-strings -- "atob" ./node_modules/<compromised-package>/
 
 # Check for unexpected post-install scripts
 cat node_modules/<compromised-package>/package.json | jq '.scripts'
 
 # For Python packages, inspect setup.py and __init__.py
-find ~/.local/lib/python*/site-packages/<compromised-package>/ -name "*.py" \
-  | xargs grep -l "subprocess\|os.system\|exec(\|eval(" <!-- security-allowlist: documented payload technique reference, do not execute outside authorized scope -->
+rg -l --glob "*.py" -- "subprocess|os[.]system|exec|eval" ./reviewed-package-copy/
 ```
 
 ### Step 4: Notify Stakeholders
@@ -214,10 +213,10 @@ Lockfiles are your first line of defense. Tampered or inconsistent lockfiles ind
 
 ```bash
 # npm: ensure lockfile matches package.json (fails CI if out of sync)
-npm ci
+npm ci --ignore-scripts
 
 # Yarn: check lockfile integrity
-yarn install --frozen-lockfile
+YARN_ENABLE_SCRIPTS=false yarn install --immutable  # modern Yarn; verify installed version
 
 # pip: generate a hash-locked requirements file
 pip-compile --generate-hashes requirements.in -o requirements.txt
@@ -229,14 +228,13 @@ git diff --name-only origin/main...HEAD | grep -E "(package-lock|yarn.lock|Cargo
 ### 4.2 Detect Typosquatting
 
 ```bash
-# Use the socket CLI to check for typosquatting risk
-npx socket scan --package-lock package-lock.json
+# Use separately reviewed package-risk tooling; do not fetch an unverified npx tool during containment.
 
 # Python: check package names against popular packages
-pip-audit -r requirements.txt 2>&1 | grep -i "typosquat"
+# pip-audit is not a typosquatting detector.
 
 # Custom check: compare package names to known popular packages
-# Flag anything with edit distance <= 2 from a top-1000 package
+# Illustrative SequenceMatcher similarity against a tiny list; this is not edit distance or a malware verdict.
 python3 -c "
 import json, sys
 from difflib import SequenceMatcher
@@ -287,9 +285,8 @@ jobs:
 
 ```text
 # requirements.txt with hashes (generated by pip-compile --generate-hashes)
-requests==2.31.0 \
-    --hash=sha256:58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003eb \
-    --hash=sha256:942c5a758f98d790eaed1a29cb6eefc7f0edf3fcb0fce8afe0f44546e1
+<package>==<reviewed-version> \
+    --hash=sha256:<full-verified-artifact-hash>
 ```
 
 ```bash
@@ -328,8 +325,9 @@ cargo vet init
 cargo vet certify serde 1.0.193
 
 # Import audit results from trusted organizations
-cargo vet trust --all mozilla
-cargo vet trust --all google
+cargo vet import mozilla
+cargo vet import google
+# Inspect peer criteria/sources before accepting imported review evidence; import is not blanket publisher trust.
 
 # Run verification in CI
 cargo vet check
@@ -349,14 +347,14 @@ cosign sign ghcr.io/myorg/myimage@sha256:abc123...
 cosign verify \
   --certificate-identity-regexp "https://github.com/myorg/.*" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  ghcr.io/myorg/myimage:latest
+  ghcr.io/myorg/myimage@sha256:<full-reviewed-digest>
 
 # Verify and extract attestations
 cosign verify-attestation \
   --type slsaprovenance \
   --certificate-identity-regexp "https://github.com/myorg/.*" \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  ghcr.io/myorg/myimage:latest | jq '.payload' | base64 -d | jq . <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
+  ghcr.io/myorg/myimage@sha256:<full-reviewed-digest> | jq '.payload' | base64 -d | jq . <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
 ```
 
 ### 6.2 Kyverno Policy -- Require Signed Images
@@ -437,3 +435,9 @@ which <tool> && <tool> --help | head -n 20
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+### Incident-analysis boundaries
+
+Preserve package bytes, logs and snapshots before changing dependencies or caches. Rebuild from a clean trusted environment; pinning alone does not remove persistence or revoke stolen credentials. Do not execute suspect setup/import/build/lifecycle code. pip-audit requirements resolution can execute dependency code unless constrained to reviewed fully pinned/hash inputs with pip disabled; scans may disclose package inventories to external services. Advisory absence, verified signatures and lockfile hashes do not certify benign code: hashes only bind bytes, signatures bind identity and provenance binds build claims. Confirm exact identity/ref/digest and review those trust policies.
+
+Command/tool versions, signatures and image digests above are templates, not tested current endorsements. An accepted CI audit cannot guarantee malicious-package detection. Sending notifications, rotating secrets, applying policies and publishing forks require authorized targets; preserve evidence and use an incident owner's coordinated rollout/recovery plan. No tools or packages in this skill were run during this review.

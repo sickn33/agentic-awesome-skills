@@ -1,6 +1,6 @@
 # Workflow Details
 
-Detailed step-by-step instructions for each Monte Carlo Prevent workflow.
+Detailed upstream examples: discover actual tool schemas before use, including mcons/direction versus mcon fields. Missing/error/partial responses mean unknown health or coverage, not healthy/unmonitored. Generated monitor calls can validate live SQL and incur warehouse costs; confirm tenant and authority first.
 These are referenced from the main SKILL.md — consult the relevant section when
 executing a workflow.
 
@@ -40,7 +40,7 @@ IF change intent has been expressed AND any of the following are true:
   dependents / importance score 0.989]. Do you want me to run a full
   change impact assessment before proceeding? (yes/no)"
 → Wait for confirmation. If yes → run Workflow 4.
-  If no → proceed but note: "Skipping impact assessment at your request."
+  If no → note the skipped assessment and apply the root skill's explicit user override rule.
 
 IF risk signals exist but NO change intent has been expressed:
 → Surface the health summary and note the risk signals only:
@@ -63,7 +63,7 @@ When the user is creating a new .sql dbt model file (not editing an existing one
    "⚠️ <table_name> has <N> active alerts — your new model will inherit this data quality issue"
 
 Skip getAssetLineage for new models — they have no downstream dependents yet.
-Skip Workflow 4 for new models — there is no existing blast radius to assess.
+For new models, adapt Workflow 4 to upstream dependencies and existing consumers/contracts; do not invent a production baseline.
 
 ---
 
@@ -104,10 +104,10 @@ Then run the appropriate sequence:
    - createComparisonMonitorMac(source_table, target_table, metric) → returns YAML
    - createCustomSqlMonitorMac(mcon, description, sql) → returns YAML
    ⚠ If createValidationMonitorMac fails (e.g. column doesn't exist yet in the live table),
-     fall back to createCustomSqlMonitorMac with an explicit SQL query instead.
+     do not bypass live validation blindly: confirm whether the fallback validates/executes SQL and whether the schema is deployed before selecting it.
 3. Save the YAML to <project>/monitors/<table_name>.yml
 4. Run: montecarlo monitors apply --dry-run (to preview)
-5. Run: montecarlo monitors apply --auto-yes (to apply)
+5. Apply only after the user authorizes the reviewed monitor diff, intended tenant and live SQL/cost effects; do not use --auto-yes as implicit approval.
 ```
 
 **Important — YAML format for `monitors apply`:**
@@ -154,6 +154,8 @@ Do NOT put `version:`, `namespace:`, or `default_resource:` inside monitor defin
 3. getAssetLineage(mcon="<mcon>") → identify upstream cause or downstream blast radius
 4. getQueriesForTable(mcon="<mcon>") → recent queries that might explain the anomaly
 ```
+
+Alert updates, ownership changes and comments are external writes. Obtain authorization for the specific action and text before calling these tools.
 
 To respond to an alert:
 - `updateAlert(alert_id="<id>", status="ACKNOWLEDGED")` — acknowledge it
@@ -210,7 +212,7 @@ When the user is about to rename or drop a column, change a join condition, alte
    - If any local models reference this table but are NOT in MC's lineage results:
      "⚠️ Found N local model(s) referencing this table not yet in MC's lineage: [list]"
    - If no models/ directory exists in the current project, skip silently
-   - MC lineage remains the authoritative source — local grep is supplementary only
+   - Reconcile MC lineage with the dbt manifest/local sources: MC may be stale or incomplete. Missing MC edges are not proof that no dependencies exist.
 
 6. getMonitors(mcon="<mcon>")
    → which monitors are watching columns or metrics affected by the change
@@ -378,7 +380,7 @@ Use the correct SQL dialect for the warehouse type. Key differences:
 | Warehouse | Date diff | Current timestamp | Notes |
 |---|---|---|---|
 | Snowflake | `DATEDIFF('day', a, b)` | `CURRENT_TIMESTAMP()` | `QUALIFY` supported |
-| BigQuery | `DATE_DIFF(a, b, DAY)` | `CURRENT_TIMESTAMP()` | Use subquery instead of `QUALIFY` |
+| BigQuery | `DATE_DIFF(a, b, DAY)` | `CURRENT_TIMESTAMP()` | QUALIFY is supported; use the appropriate DATE_DIFF(end_date, start_date, DAY) order |
 | Redshift | `DATEDIFF('day', a, b)` | `GETDATE()` | |
 | Databricks | `DATEDIFF(a, b)` | `CURRENT_TIMESTAMP()` | |
 
@@ -393,13 +395,13 @@ These rules are not negotiable — violating them produces queries that will fai
 - **Columns or logic that only exist post-change** → dev database only. Never query production for a column that doesn't exist there yet.
 - **Comparison queries (before vs after)** → both production and dev databases
 - **New model (no production baseline)** → dev database only for all queries
-- **Row count comparison** → always include, always query both databases
+- **Row count comparison** → compare production/dev only when a production baseline exists; new models get dev-only plausibility checks
 
 ---
 
 ### Step 4 — Generate targeted validation queries
 
-Always include a row count comparison regardless of change type — it's the baseline signal that something unexpected happened.
+Include a row count comparison when a production baseline exists; for new models, include a dev-only count and expected-range check — it's the baseline signal that something unexpected happened.
 
 Then generate change-specific queries based on what needs to be validated for this change type. Use the exact conditions, column names, and business logic from the diff and Workflow 4 findings — not generic placeholders. The goal for each change type:
 

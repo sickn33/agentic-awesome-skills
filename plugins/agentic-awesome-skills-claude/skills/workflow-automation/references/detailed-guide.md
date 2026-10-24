@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Example boundaries
+
+Fragments mix SDK generations and omit clients/types/handlers; select the installed SDK reference before copying. Inngest examples use the older three-argument createFunction shape, not the v4 trigger-in-config signature. Validate AI plans against an allowlisted schema and permission/budget boundary before dispatch. Authenticate webhooks, deduplicate events, redact failures, and use test payment accounts. Do not send messages or provision schedules from examples without authorization.
+
 ## Principles
 
 - Durable execution is non-negotiable for money or state-critical workflows
@@ -53,15 +57,15 @@ Steps execute in order, each output becomes next input
 
 # SEQUENTIAL WORKFLOW:
 
-"""
+```
 Step 1 → Step 2 → Step 3 → Output
   ↓         ↓         ↓
 (checkpoint at each step)
-"""
+```
 
 
 ## n8n Pattern
-"""
+```
 [Webhook: order.created]
     ↓
 [HTTP Request: Validate Order]
@@ -72,9 +76,9 @@ Step 1 → Step 2 → Step 3 → Output
     ↓
 [Send Email: Confirmation]
 
-Configure each node with retry on failure.
-Use Error Trigger for dead letter handling.
-"""
+Retry only retryable failures with bounded backoff and provider idempotency.
+An Error Trigger routes failure notifications; persist failed-job state explicitly for a dead-letter/recovery process.
+```
 
 ### Parallel Workflow Pattern
 
@@ -84,15 +88,15 @@ Independent steps run simultaneously, aggregate results
 
 # PARALLEL WORKFLOW:
 
-"""
+```
         ┌→ Step A ─┐
 Input ──┼→ Step B ─┼→ Aggregate → Output
         └→ Step C ─┘
-"""
+```
 
 
 ## AWS Step Functions (Amazon States Language)
-"""
+```
 {
   "Type": "Parallel",
   "Branches": [
@@ -119,7 +123,7 @@ Input ──┼→ Step B ─┼→ Aggregate → Output
   ],
   "Next": "AggregateResults"
 }
-"""
+```
 
 ### Orchestrator-Worker Pattern
 
@@ -129,7 +133,7 @@ Central coordinator dispatches work to specialized workers
 
 # ORCHESTRATOR-WORKER PATTERN:
 
-"""
+```
 ┌─────────────────────────────────────┐
 │          ORCHESTRATOR               │
 │  - Analyzes task                    │
@@ -144,11 +148,11 @@ Central coordinator dispatches work to specialized workers
 │Worker1│  │Worker2│  │Worker3│
 │Create │  │Modify │  │Delete │
 └───────┘  └───────┘  └───────┘
-"""
+```
 
 
 ## Inngest with AI Orchestration
-"""
+```
 export const aiOrchestrator = inngest.createFunction(
   { id: "ai-orchestrator" },
   { event: "task/complex" },
@@ -178,7 +182,7 @@ export const aiOrchestrator = inngest.createFunction(
     });
   }
 );
-"""
+```
 
 ### Event-Driven Trigger Pattern
 
@@ -190,7 +194,7 @@ Workflows triggered by events, not schedules
 
 
 ## Inngest Event-Based
-"""
+```
 // Define events with TypeScript types
 type Events = {
   "user/signed.up": {
@@ -233,11 +237,11 @@ await inngest.send({
   name: "user/signed.up",
   data: { userId: "123", email: "user@example.com" }
 });
-"""
+```
 
 
 ## n8n Webhook Trigger
-"""
+```
 [Webhook: POST /api/webhooks/order]
     ↓
 [Switch: event.type]
@@ -245,7 +249,7 @@ await inngest.send({
 [Process New Order Subworkflow]
     ↓ order.cancelled
 [Handle Cancellation Subworkflow]
-"""
+```
 
 ### Retry and Recovery Pattern
 
@@ -257,7 +261,7 @@ Automatic retry with backoff, dead letter handling
 
 
 ## Temporal Retry Configuration
-"""
+```
 const activities = proxyActivities<typeof activitiesType>({
   startToCloseTimeout: '30 seconds',
   retry: {
@@ -271,11 +275,11 @@ const activities = proxyActivities<typeof activitiesType>({
     ]
   }
 });
-"""
+```
 
 
 ## Inngest Retry Configuration
-"""
+```
 export const processPayment = inngest.createFunction(
   {
     id: "process-payment",
@@ -300,11 +304,11 @@ export const processPayment = inngest.createFunction(
     return result;
   }
 );
-"""
+```
 
 
 ## Dead Letter Handling
-"""
+```
 // n8n: Use Error Trigger node
 [Error Trigger]
     ↓
@@ -330,7 +334,7 @@ export const myFunction = inngest.createFunction(
   { event: "..." },
   async ({ step }) => { ... }
 );
-"""
+```
 
 ### Scheduled Workflow Pattern
 
@@ -342,7 +346,7 @@ Time-based triggers for recurring tasks
 
 
 ## Inngest Cron
-"""
+```
 export const dailyReport = inngest.createFunction(
   { id: "daily-report" },
   { cron: "0 9 * * *" },  // Every day at 9 AM
@@ -366,22 +370,22 @@ export const syncInventory = inngest.createFunction(
     });
   }
 );
-"""
+```
 
 
 ## Temporal Cron Workflow
-"""
+```
 // Schedule workflow to run on cron
 const handle = await client.workflow.start(dailyReportWorkflow, {
   taskQueue: 'reports',
   workflowId: 'daily-report',
   cronSchedule: '0 9 * * *',  // 9 AM daily
 });
-"""
+```
 
 
 ## n8n Schedule Trigger
-"""
+```
 [Schedule Trigger: Every day at 9:00 AM]
     ↓
 [HTTP Request: Get Metrics]
@@ -389,7 +393,7 @@ const handle = await client.workflow.start(dailyReportWorkflow, {
 [Code Node: Generate Report]
     ↓
 [Send Email: Report]
-"""
+```
 
 
 ## Sharp Edges
@@ -406,7 +410,7 @@ created multiple times. Workflow retries cause duplicate side effects.
 
 Why this breaks:
 Durable execution replays workflows from the beginning on restart.
-If step 3 crashes and the workflow resumes, steps 1 and 2 run again.
+Completed durable steps normally replay recorded results rather than redoing their side effects. An activity can still run more than once if its side effect succeeds before completion is recorded.
 Without idempotency keys, external services don't know these are retries.
 
 Recommended fix:
@@ -417,11 +421,12 @@ Recommended fix:
 await stripe.paymentIntents.create({
   amount: 1000,
   currency: 'usd',
-  idempotency_key: `order-${orderId}-payment`  # Critical!
-});
+}, { idempotencyKey: `order-${orderId}-payment` });
 
 ### Email example:
 await step.run("send-confirmation", async () => {
+  // Check-then-send alone races and cannot atomically cover the provider call.
+  // Use a unique transactional outbox and provider deduplication where available.
   const alreadySent = await checkEmailSent(orderId);
   if (alreadySent) return { skipped: true };
   return sendEmail(customer, orderId);
@@ -512,8 +517,10 @@ const activities = proxyActivities<typeof activitiesType>({
 });
 
 ### Inngest:
-await step.run("call-api", { timeout: "30s" }, async () => {
-  return fetch(url, { signal: AbortSignal.timeout(25000) });
+await step.run("call-api", async () => {
+  const response = await fetch(url, { signal: AbortSignal.timeout(25000) });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
 });
 
 
@@ -558,11 +565,9 @@ export async function orderWorkflow(order) {
   await activities.process(orderId, now);
 }
 
-# Also CORRECT - Temporal workflow.now() and sideEffect:
-import { sideEffect } from '@temporalio/workflow';
-
-const orderId = await sideEffect(() => uuid());
-const now = workflow.now();  # Deterministic replay-safe time
+# Temporal TypeScript supplies deterministic Date.now()/new Date() in its workflow sandbox.
+# For workflow IDs use documented workflow UUID APIs or activity results.
+# Do not import Java/Go-style sideEffect APIs into TypeScript.
 
 # Side effects that are safe in workflow code:
 # - Reading function arguments
@@ -781,10 +786,8 @@ export async function processLargeFile(fileUrl: string): Promise<void> {
 
   for (let i = 0; i < chunks.length; i++) {
     // Check for cancellation
-    const { cancelled } = activityInfo();
-    if (cancelled) {
-      throw new CancelledFailure('Activity cancelled');
-    }
+    // Observe Context.current().cancellationSignal using the installed SDK;
+    // heartbeat cancellation and checkpoint progress, then resume from heartbeat details.
 
     await processChunk(chunks[i]);
 
@@ -842,7 +845,7 @@ Severity: ERROR
 
 Random values break determinism on replay
 
-Message: Random value in workflow code. Move to activity/step or use sideEffect.
+Message: Uncontrolled randomness must use the installed SDK's replay-safe API or an activity result.
 
 ### Date.now() in Workflow Code
 
@@ -850,7 +853,7 @@ Severity: ERROR
 
 Current time breaks determinism on replay
 
-Message: Current time in workflow code. Use workflow.now() or move to activity/step.
+Message: Check SDK-specific semantics; Temporal TypeScript virtualizes Date.now() in workflow code.
 
 ### Inngest Function Without onFailure Handler
 

@@ -89,7 +89,7 @@ Where argent is weaker than agent-device Mode C — so it's **capable, not as fa
 - **No Metro bind on launch.** No `--metro-host` / `--bundle-url` seed; point the client at Metro with the `open-url` deep link above, then `debugger-connect` / `debugger-reload-metro`.
 - **Whole-string text entry:** use `keyboard --text "<string>"` — it types the entire string in one call. Never type character by character.
 
-**System dialogs on argent (e.g. the first-time deep-link "Open in '<app>'?").** argent's UI queries (`describe` / `await-ui-element`) may not see system dialogs / native modals — a screenshot shows the dialog, but element lookups time out. When that happens, argent surfaces a hint with the fix (today that's a `boot-device --force` to switch its AX backend); follow the hint, then locate and tap "Open". There's no single press-with-timeout — you wait for the element, then tap it. Use argent's own command help for the exact tools and flags.
+**System dialogs on argent (e.g. the first-time deep-link "Open in '<app>'?").** argent's UI queries (`describe` / `await-ui-element`) may not see system dialogs / native modals — a screenshot shows the dialog, but element lookups time out. When that happens, argent surfaces a hint with the fix (today that's a `boot-device --force` to switch its AX backend); inspect whether the suggested reset targets the owned disposable session before applying it, then locate and tap "Open". There's no single press-with-timeout — you wait for the element, then tap it. Use argent's own command help for the exact tools and flags.
 
 **Recording video on argent (`screen-recording-start`/`stop`).** The gotcha to know: argent **trims static stretches by default**, which drops the very frames you're measuring — turn that off when you care about cadence or timing (see argent's help for the flag). Recordings also carry a burned-in "Argent" watermark that can't be disabled on a hosted session — fine for diagnosis, mind it before sharing publicly. The stop call returns a video already downloaded locally; extract frames with `ffmpeg` (may need installing) to inspect motion frame by frame. The capture samples at ~30fps, so it shows visible jank but can't prove or disprove sub-frame hitches on 60/120Hz content.
 
@@ -106,7 +106,8 @@ npm install -g @swmansion/argent
 Then run `argent init --yes` to register the Argent MCP server. Link the session credentials with `argent link` — the recommended path:
 
 ```bash
-argent link '<ARGENT_TOOLS_URL>' --token '<ARGENT_AUTH_TOKEN>' --yes
+# Prefer simulator:exec env forwarding below; do not paste session tokens into shell history.
+# If linking is necessary, use the installed CLI's documented private-input mechanism.
 ```
 
 Reload the agent after linking so its `argent mcp` process picks up the remote session.
@@ -128,7 +129,7 @@ Reload the agent after linking so its `argent mcp` process picks up the remote s
 }
 ```
 
-MCP config file location: `.cursor/mcp.json` (Cursor), `.claude/mcp.json` (Claude Code), `mcp.json` in the Codex project root. It carries a session token — **add it to `.gitignore`**.
+MCP configuration is host-specific: verify the current documented format/location. Codex uses its supported TOML configuration or connector flow rather than assuming a root `mcp.json`; Claude Code commonly uses `.mcp.json`. Prefer environment/secret references over embedding session tokens. Any credential file must be private and ignored; preserve existing server entries.
 
 **Known issues:**
 - `argent init --help` launches an interactive wizard regardless of the flag — use `--yes` to skip it, or read the package source for non-interactive flags.

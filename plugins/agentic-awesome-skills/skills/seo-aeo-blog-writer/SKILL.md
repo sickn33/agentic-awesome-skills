@@ -137,7 +137,7 @@ Every blog post produced by this skill MUST contain:
 ## SEO Requirements
 
 - H1: appears exactly once, contains primary keyword
-- H2s: 4–6 per article, no keyword stuffing
+- H2s: fit the article and optional sections; avoid keyword stuffing
 - H3s: used only inside H2 sections, not standalone
 - Word count: stay within the range specified in input; default 1500 words
 - Keyword use: natural and intent-aligned; do not force a density percentage
@@ -155,7 +155,7 @@ Every blog post produced by this skill MUST contain:
 5. Write the definition block in the "What Is" section as a single sentence
 6. Write the FAQ section using long-tail and secondary keywords as questions
 7. Insert internal links at natural transition points, including a foundational page and product CTA where appropriate
-8. Add external-source suggestions only when they are authoritative and relevant
+8. Verify factual claims against authoritative sources; label unavailable links as suggestions, never invent quotations, statistics, testimonials or URLs. Mark internal-link placeholders for replacement before publication.
 9. Do a final keyword placement check against the SEO Requirements checklist
 10. Do a final AEO, conversion, and claim-verification pass before outputting
 
@@ -171,4 +171,5 @@ Use when creating or revising a long-form article intended to capture a specific
 
 ## Limitations
 
+- Answer-first formatting cannot guarantee AI extraction or citation. Drafting does not authorize publication or external distribution.
 - Search performance depends on the actual site, competition, content quality, and indexing; this skill cannot guarantee rankings or traffic.

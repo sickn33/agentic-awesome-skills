@@ -2,7 +2,7 @@
 name: test-fixing
 description: Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass"), reports test failures ("tests are failing", "test suite is broken"), or completes implementation and wants tests passing.
 metadata:
-  aas-risk: safe
+  aas-risk: critical
   aas-source: community
   aas-date-added: '2026-02-27'
 ---
@@ -21,7 +21,7 @@ Systematically identify and fix all failing tests using smart grouping strategie
 
 ### 1. Initial Test Run
 
-Run `make test` to identify all failing tests.
+Read project instructions, dependency manifests and CI configuration to identify the existing test command. Use `make test` only if that target exists and is the project contract. Inspect fixture/service requirements before running it; do not invoke production operations to obtain a baseline. Preserve pre-existing changes.
 
 Analyze output for:
 
@@ -54,8 +54,8 @@ For each group (starting with highest impact):
 
 2. **Implement fix**
 
-   - Use Edit tool for code changes
-   - Follow project conventions (see CLAUDE.md)
+   - Use the host's available file-editing tool for code changes
+   - Follow applicable project instructions and conventions
    - Make minimal, focused changes
 
 3. **Verify fix**
@@ -94,7 +94,7 @@ For each group (starting with highest impact):
 
 After all groups fixed:
 
-- Run complete test suite: `make test`
+- Run the project's verified complete test command
 - Verify no regressions
 - Check test coverage remains intact
 
@@ -106,12 +106,13 @@ After all groups fixed:
 - Look for patterns in failures
 - Don't move to next group until current passes
 - Keep changes minimal and focused
+- Do not delete assertions, skip failing cases, lower coverage thresholds or change expected behavior merely to obtain green tests. A test update requires evidence that the product contract changed. Report unavailable dependencies, flaky failures and unexecuted checks explicitly.
 
 ## Example Workflow
 
 User: "The tests are failing after my refactor"
 
-1. Run `make test` → 15 failures identified
+1. In a repository with a verified `make test` target, run it → 15 failures identified
 2. Group errors:
    - 8 ImportErrors (module renamed)
    - 5 AttributeErrors (function signature changed)

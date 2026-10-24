@@ -77,7 +77,7 @@ struct FeedView: View {
 }
 ```
 
-**Why**: `ScrollViewReader` provides programmatic scroll control with stable anchors. Always use stable IDs and explicit animations.
+**Why**: `ScrollViewReader` provides programmatic scroll control with stable anchors. Use stable IDs and animate only when appropriate; respect Reduce Motion and avoid forcing a chat scroll while the user reads older messages.
 
 ## Scroll Position Tracking
 
@@ -133,11 +133,8 @@ struct ContentView: View {
         }
         .coordinateSpace(name: "scroll")
         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-            if value < -100 {
-                startAnimation = true
-            } else {
-                startAnimation = false
-            }
+            let next = value < -100
+            if startAnimation != next { startAnimation = next }
         }
     }
 }
@@ -177,10 +174,11 @@ struct ContentView: View {
             }
             .coordinateSpace(name: "scroll")
             .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                if offset < -50 { // Scrolling down
-                   withAnimation { showHeader = false }
-                } else if offset > 50 { // Scrolling up
-                  withAnimation { showHeader = true }
+                // Position thresholds relative to the top, not scroll direction.
+                if offset < -50 && showHeader {
+                    withAnimation { showHeader = false }
+                } else if offset > -20 && !showHeader {
+                    withAnimation { showHeader = true }
                 }
             }
         }
@@ -205,7 +203,7 @@ struct ParallaxView: View {
                             let frame = geometry.frame(in: .scrollView)
                             let distance = min(0, frame.minY)
                             return content
-                                .opacity(1 + distance / 200)
+                                .opacity(max(0, min(1, 1 + distance / 200)))
                         }
                 }
             }
@@ -285,7 +283,7 @@ struct SnapScrollView: View {
 ## Summary Checklist
 
 - [ ] Use `ScrollViewReader` with stable IDs for programmatic scrolling
-- [ ] Always use explicit animations with `scrollTo()`
+- [ ] Use an appropriate animation or immediate scroll, respecting user position and Reduce Motion
 - [ ] Use `.visualEffect` for scroll-based visual changes
 - [ ] Use `.scrollTargetBehavior(.paging)` for paging behavior
 - [ ] Use `.scrollTargetBehavior(.viewAligned)` for snap-to-item behavior

@@ -108,6 +108,8 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Workflow:** Role list → System inventory → Access rows → Quarterly review → Removal
 
+Role columns contain permission scopes, not names. Use explicit no-access/unknown markers and deny by default; executive titles do not imply unrestricted access. In an actual review, compare intended grants with observed system grants and record reviewer, approval, evidence date and next review. Quarterly is a starting cadence; handle joiner/mover/leaver changes promptly.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -132,7 +134,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Module,Module ID,Layer,SME Tier,Owner / CEO,Board,Finance,Tax,HR,IT & Admin,Department Head,Line Manager,Employee,Intern,Client,Confidential
-Invoices & Billing,,Layer 8: Operate,Small,Full - all modules,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Full - people and compliance modules,"Read, add, edit - assets and access",Example Reviewer,"Read, add, edit - own team",Read - own records,Read - onboarding only,Example Customer,Internal
+Invoices & Billing,,Layer 8: Operate,Small,Only explicitly approved modules and actions,Read - board pack only,"Read, add, edit - payroll and invoices","Read, add, edit - tax register",Read, add, edit - approved people modules,"Read, add, edit - assets and access",Read - approved departmental invoice summary,"Read, add, edit - own team",Read - own records,Read - onboarding only,Read - own issued invoices,Internal
 ```
 
 ```sql
@@ -220,17 +222,17 @@ The shown schema is illustrative. Derive required fields from confirmed record i
 | 2 | Module ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 3 | Layer | `text` | `VARCHAR(255)` | `string` | Text | `Layer 8: Operate` |
 | 4 | SME Tier | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Small` |
-| 5 | Owner / CEO | `text` | `VARCHAR(255)` | `string` | Text | `Full - all modules` |
+| 5 | Owner / CEO | `text` | `VARCHAR(255)` | `string` | Text | `Only explicitly approved modules and actions` |
 | 6 | Board | `text` | `VARCHAR(255)` | `string` | Text | `Read - board pack only` |
 | 7 | Finance | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - payroll and invoices` |
 | 8 | Tax | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - tax register` |
-| 9 | HR | `text` | `VARCHAR(255)` | `string` | Text | `Full - people and compliance modules` |
+| 9 | HR | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - approved people modules` |
 | 10 | IT & Admin | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - assets and access` |
-| 11 | Department Head | `text` | `VARCHAR(255)` | `string` | Text | `Example Reviewer` |
+| 11 | Department Head | `text` | `VARCHAR(255)` | `string` | Text | `Read - approved departmental invoice summary` |
 | 12 | Line Manager | `text` | `VARCHAR(255)` | `string` | Text | `Read, add, edit - own team` |
 | 13 | Employee | `text` | `VARCHAR(255)` | `string` | Text | `Read - own records` |
 | 14 | Intern | `text` | `VARCHAR(255)` | `string` | Text | `Read - onboarding only` |
-| 15 | Client | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer` |
+| 15 | Client | `text` | `VARCHAR(255)` | `string` | Text | `Read - own issued invoices` |
 | 16 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
 
 ## Select Options

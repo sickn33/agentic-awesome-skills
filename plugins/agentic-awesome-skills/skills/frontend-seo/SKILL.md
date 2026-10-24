@@ -39,3 +39,9 @@ feed, and typed JSON-LD** derived from the same content the app already renders.
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Rendering and metadata limits
+
+The fragments need application loaders, route encoding, a supported framework adapter and actual serialization tests; they are not a complete portable package. Canonicalization does not prove two URLs have identical content or redirect them. The supplied route builder accepts local pathnames; use a separate validated HTTPS resolver for external images, and preserve the deployment's actual base-path/trailing-slash policy. Exclude unpublished, private and noindex records from every discovery surface. Supply real content modification timestamps rather than build time.
+
+The RSS fragment remains illustrative until an XML serializer handles every field and CDATA terminator. JSON-LD must escape less-than signs before insertion into HTML, and its values must match visible content and real author/image facts. The index-signature JsonLd type does not validate per-schema properties. SearchAction requires an actual search endpoint, and valid FAQ schema does not guarantee a rich result. Canonical tags, robots and self-assessed checklists do not guarantee indexing, rankings or privacy. Confirm rendered per-route Open Graph/Twitter values and HTTP responses, not only builder objects.

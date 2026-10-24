@@ -122,14 +122,14 @@ that need a number, date or currency format applied.
 
 ```csv
 Time Entry,Approver,Billable,Billable Rate (per hour),Currency,Billable Amount,Invoice,Date,Department,Employee Name,Hours Logged,Month,Notes,Project,Client,Status,Task Description,Time ID,Type,Week Number
-2026-01-12 Client call - 2.5h,Sneha Iyer,TRUE,4500.00,INR,5625.00,INV-1041,2026-01-15,Delivery,Aarav Sharma,38.5,2026-03,"Timesheets for February were submitted late by two people, which skewed the billable ratio.",Website Redesign,Northwind Traders,Approved,Client call and follow-up notes,,Billable,7
+2026-01-15 Client call - 2.5h,Sneha Iyer,TRUE,4500.00,INR,11250.00,INV-1041,2026-01-15,Delivery,Aarav Sharma,2.5,2026-01,"Synthetic single-entry example.",Website Redesign,Northwind Traders,Approved,Client call and follow-up notes,,Billable,3
 ```
 
 ```sql
 CREATE TABLE time_tracking (
   time_entry VARCHAR(255),
   approver VARCHAR(255),
-  billable VARCHAR(255),  -- relation -> target record
+  billable BOOLEAN NOT NULL,
   billable_rate_per_hour NUMERIC(14,2) NOT NULL,
   currency VARCHAR(255),
   billable_amount NUMERIC(14,2) NOT NULL,
@@ -163,7 +163,7 @@ CREATE INDEX idx_time_tracking_status ON time_tracking (status);
   "properties": {
       "Time Entry": { "type": "string" },
       "Approver": { "type": "string" },
-      "Billable": { "type": "string" },
+      "Billable": { "type": "boolean" },
       "Billable Rate (per hour)": { "type": "number" },
       "Currency": { "type": "string" },
       "Billable Amount": { "type": "number" },
@@ -183,6 +183,7 @@ CREATE INDEX idx_time_tracking_status ON time_tracking (status);
       "Week Number": { "type": "number" }
   },
   "required": [
+      "Billable",
       "Billable Rate (per hour)",
       "Billable Amount",
       "Date",
@@ -199,7 +200,7 @@ CREATE INDEX idx_time_tracking_status ON time_tracking (status);
 |---|---|---|
 | Time Entry | Title | Use as the database title |
 | Approver | Text | Leave as Text |
-| Billable | Relation (link to the target database) | Convert to Relation, link to the target database |
+| Billable | Checkbox | Convert to Checkbox |
 | Billable Rate (per hour) | Number (format: currency) | Convert to Number, set format to Currency |
 | Currency | Text | Leave as Text |
 | Billable Amount | Number (format: currency) | Convert to Number, set format to Currency |
@@ -226,26 +227,26 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Time Entry | `text` | `VARCHAR(255)` | `string` | Text | `2026-01-12 Client call - 2.5h` |
+| 1 | Time Entry | `text` | `VARCHAR(255)` | `string` | Text | `2026-01-15 Client call - 2.5h` |
 | 2 | Approver | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
-| 3 | Billable | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `TRUE` |
+| 3 | Billable | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
 | 4 | Billable Rate (per hour) | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `4500.00` |
 | 5 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
-| 6 | Billable Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `5625.00` |
+| 6 | Billable Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `11250.00` |
 | 7 | Invoice | `text` | `VARCHAR(255)` | `string` | Text | `INV-1041` |
 | 8 | Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 9 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 10 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
-| 11 | Hours Logged | `number` | `NUMERIC` | `number` | Number | `38.5` |
-| 12 | Month | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
-| 13 | Notes | `long_text` | `TEXT` | `string` | Text | `Timesheets for February were submitted late by two people, which skewed the billable ratio.` |
+| 11 | Hours Logged | `number` | `NUMERIC` | `number` | Number | `2.5` |
+| 12 | Month | `text` | `VARCHAR(255)` | `string` | Text | `2026-01` |
+| 13 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic single-entry example.` |
 | 14 | Project | `text` | `VARCHAR(255)` | `string` | Text | `Website Redesign` |
 | 15 | Client | `text` | `VARCHAR(255)` | `string` | Text | `Northwind Traders` |
 | 16 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Approved` |
 | 17 | Task Description | `long_text` | `TEXT` | `string` | Text | `Client call and follow-up notes` |
 | 18 | Time ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 19 | Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Billable` |
-| 20 | Week Number | `number` | `NUMERIC` | `number` | Number | `7` |
+| 20 | Week Number | `number` | `NUMERIC` | `number` | Number | `3` |
 
 ## Select Options
 
@@ -262,7 +263,7 @@ Billable | Internal | Training | Leave | Admin
 
 ## Relations
 
-Link fields: `Billable`
+Link fields: none
 
 ## Examples
 
@@ -306,7 +307,7 @@ We bill clients by the hour but nobody logs time.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not send invoices, pay people or monitor anyone continuously.
+- Does not send invoices, pay people or monitor anyone continuously. For this synthetic entry, amount = 2.5 hours × INR 4500 = INR 11250; month and ISO week derive from 2026-01-15 (2026-01, week 3). Confirm rounding, nonbillable-rate handling and week convention before implementing formulas. These templates do not enforce locks, approvals or recompute amounts.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes

@@ -10,6 +10,10 @@ date_added: '2026-02-27'
 
 Management plane SDK for provisioning and managing Azure Bot Service resources via Azure Resource Manager.
 
+## Provisioning and lifecycle scope
+
+These are historical SDK fragments. Verify current package/service lifecycle, supported app identity types and the target tenant before creating resources; do not assume every channel or multi-tenant configuration is available for new bots. Select the exact subscription/resource group instead of relying on an unintended default. Pin packages, validate signatures/imports and use approved test resources. Creating channels exposes messaging surfaces; deleting bots and regenerating DirectLine keys can interrupt clients. Require corresponding user authority, stage rotation and protect returned keys from logs. Credential-chain choice must be deliberate in production.
+
 ## Installation
 
 ```bash
@@ -17,7 +21,7 @@ dotnet add package Azure.ResourceManager.BotService
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**: Stable v1.1.1, Preview v1.1.0-beta.1
+**Historical example versions**: v1.1.1 / v1.1.0-beta.1; check supported versions and migration guidance before use.
 
 ## Environment Variables
 

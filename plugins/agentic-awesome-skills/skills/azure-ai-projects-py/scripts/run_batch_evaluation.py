@@ -13,7 +13,7 @@ Usage:
 
 Environment Variables:
     AZURE_AI_PROJECT_ENDPOINT     - Azure AI project endpoint (required)
-    AZURE_AI_MODEL_DEPLOYMENT_NAME - Model deployment name (default: gpt-4o-mini)
+    AZURE_AI_MODEL_DEPLOYMENT_NAME - Explicit authorized model deployment name (no default)
 """
 
 import argparse
@@ -21,18 +21,13 @@ import json
 import os
 import sys
 import time
+import math
+import re
+import stat
+from urllib.parse import urlsplit
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
-
-from azure.ai.projects import AIProjectClient
-from azure.identity import DefaultAzureCredential
-from openai.types.evals.create_eval_jsonl_run_data_source_param import (
-    CreateEvalJSONLRunDataSourceParam,
-    SourceFileContent,
-    SourceFileContentContent,
-)
-from openai.types.eval_create_params import DataSourceConfigCustom
-
 
 # Built-in evaluators by category
 QUALITY_EVALUATORS = [
@@ -56,24 +51,63 @@ AGENT_EVALUATORS = [
 NLP_EVALUATORS = ["f1", "rouge", "bleu", "gleu", "meteor"]
 
 
-def load_jsonl(path: str) -> list[dict]:
-    """Load JSONL file into list of dicts."""
+def load_jsonl(path: str, max_rows: int = 1000, max_bytes: int = 10 * 1024 * 1024) -> list[dict]:
+    """Validate a bounded regular JSONL input before creating any remote resource."""
+    if max_rows <= 0 or max_bytes <= 0:
+        raise ValueError("Input limits must be positive")
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    fd = os.open(path, flags)
+    with os.fdopen(fd, "rb") as handle:
+        info = os.fstat(handle.fileno())
+        if not stat.S_ISREG(info.st_mode) or info.st_size > max_bytes:
+            raise ValueError("Input must be a regular file within the byte limit")
+        raw = handle.read(max_bytes + 1)
+    if len(raw) > max_bytes:
+        raise ValueError("Input exceeds byte limit")
+    def pairs(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError("Duplicate JSON key")
+            result[key] = value
+        return result
+    def invalid_constant(value):
+        raise ValueError("Non-finite JSON constant")
     data = []
-    with open(path, "r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                data.append(json.loads(line))
+    for line_number, line in enumerate(raw.decode("utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            item = json.loads(line, object_pairs_hook=pairs, parse_constant=invalid_constant)
+        except (ValueError, RecursionError):
+            raise ValueError(f"Invalid JSON on line {line_number}; content omitted") from None
+        if not isinstance(item, dict) or not item:
+            raise ValueError(f"Expected a non-empty object on line {line_number}")
+        data.append(item)
+        if len(data) > max_rows:
+            raise ValueError("Input exceeds row limit")
+    if not data:
+        raise ValueError("Dataset is empty")
     return data
+
+
+def validate_endpoint(endpoint: str):
+    url = urlsplit(endpoint)
+    if (url.scheme != "https" or not url.hostname or
+        not url.hostname.endswith(".services.ai.azure.com") or url.username or
+        url.password or url.port not in (None, 443) or url.query or url.fragment or
+        not re.fullmatch(r"/api/projects/[A-Za-z0-9_.-]+/?", url.path)):
+        raise ValueError("Expected the authorized Azure AI project HTTPS endpoint")
 
 
 def build_data_source(
     data: list[dict],
     is_agent: bool = False,
-) -> CreateEvalJSONLRunDataSourceParam:
+) -> dict:
     """Build data source from loaded data."""
     content = []
-    for item in data:
+    for original in data:
+        item = deepcopy(original)
         if is_agent:
             # Agent data: extract sample fields from item
             sample = {
@@ -81,43 +115,49 @@ def build_data_source(
             }
             if "output_items" in item:
                 sample["output_items"] = item.pop("output_items")
-            content.append(SourceFileContentContent(item=item, sample=sample))
+            content.append(dict(item=item, sample=sample))
         else:
-            content.append(SourceFileContentContent(item=item, sample={}))
+            content.append(dict(item=item, sample={}))
 
-    return CreateEvalJSONLRunDataSourceParam(
+    return dict(
         type="jsonl",
-        source=SourceFileContent(type="file_content", content=content),
+        source=dict(type="file_content", content=content),
     )
 
 
 def build_data_source_config(
     data: list[dict],
     is_agent: bool = False,
-) -> DataSourceConfigCustom:
+) -> dict:
     """Build data source config based on data schema."""
-    # Infer schema from first item
-    if not data:
-        raise ValueError("Data is empty")
-
-    first_item = data[0]
-    properties = {}
-    required = []
-
-    for key in first_item:
-        if key not in ["output_text", "output_items"]:  # Agent fields go in sample
-            properties[key] = {"type": "string"}
-            required.append(key)
-
-    return DataSourceConfigCustom(
-        type="custom",
-        item_schema={
-            "type": "object",
-            "properties": properties,
-            "required": required,
-        },
-        include_sample_schema=is_agent,
-    )
+    source = build_data_source(data, is_agent=is_agent)
+    items = [row["item"] for row in source["source"]["content"]]
+    def schema(value, depth=0):
+        if depth > 20:
+            raise ValueError("Input nesting exceeds supported depth")
+        if value is None: return {"type": "null"}
+        if isinstance(value, bool): return {"type": "boolean"}
+        if isinstance(value, int): return {"type": "integer"}
+        if isinstance(value, float):
+            if not math.isfinite(value): raise ValueError("Non-finite input")
+            return {"type": "number"}
+        if isinstance(value, str): return {"type": "string"}
+        if isinstance(value, list):
+            choices = []
+            for item in value:
+                option = schema(item, depth + 1)
+                if option not in choices: choices.append(option)
+            return {"type": "array", "items": {"anyOf": choices} if choices else {}}
+        if isinstance(value, dict):
+            return {"type": "object", "properties": {k: schema(v, depth + 1) for k, v in value.items()},
+                    "required": sorted(value), "additionalProperties": False}
+        raise ValueError("Unsupported input type")
+    if not items: raise ValueError("Data is empty")
+    item_schema = schema(items[0])
+    for item in items[1:]:
+        if schema(item) != item_schema:
+            raise ValueError("All rows must share one consistent item schema; normalize explicitly")
+    return dict(type="custom", item_schema=item_schema, include_sample_schema=is_agent)
 
 
 def build_testing_criteria(
@@ -131,7 +171,7 @@ def build_testing_criteria(
     for name in evaluator_names:
         # Determine data mapping based on evaluator type
         if name in QUALITY_EVALUATORS:
-            if name == "groundedness":
+            if name in {"groundedness", "relevance"}:
                 data_mapping = {
                     "query": "{{item.query}}",
                     "context": "{{item.context}}",
@@ -178,13 +218,15 @@ def build_testing_criteria(
             needs_model = False
 
         else:
-            print(f"Warning: Unknown evaluator '{name}', skipping")
-            continue
+            raise ValueError("Unknown evaluator; no remote evaluation created")
+
+        if is_agent and name not in NLP_EVALUATORS:
+            data_mapping["response"] = "{{sample.output_items}}" if name in {"task_adherence", "tool_call_accuracy"} else "{{sample.output_text}}"
 
         criterion = {
             "type": "azure_ai_evaluator",
             "name": name,
-            "evaluator_name": f"builtin.{name}",
+            "evaluator_name": "builtin." + ({"f1": "f1_score", "bleu": "bleu_score", "rouge": "rouge_score", "gleu": "gleu_score", "meteor": "meteor_score"}.get(name, name)),
             "data_mapping": data_mapping,
         }
 
@@ -202,10 +244,16 @@ def run_evaluation(
     evaluator_names: list[str],
     deployment_name: str,
     is_agent: bool = False,
+    *, allow_paid: bool = False, timeout_seconds: int = 600, max_rows: int = 1000, max_bytes: int = 10485760,
 ) -> dict[str, Any]:
     """Run batch evaluation using Azure AI Projects SDK."""
-    # Load data
-    data = load_jsonl(data_path)
+    if not allow_paid:
+        raise PermissionError("Remote upload and paid evaluation require --allow-paid")
+    if timeout_seconds <= 0:
+        raise ValueError("Timeout must be positive")
+    validate_endpoint(endpoint)
+    # Load and validate the whole selected dataset before remote work.
+    data = load_jsonl(data_path, max_rows=max_rows, max_bytes=max_bytes)
     print(f"Loaded {len(data)} items from {data_path}")
 
     # Build data source and config
@@ -224,12 +272,27 @@ def run_evaluation(
 
     print(f"Configured {len(testing_criteria)} evaluators")
 
+    # Validate mappings before uploading. Schema discovery is still required for the installed service version.
+    for row in data_source["source"]["content"]:
+        for criterion in testing_criteria:
+            for mapping in criterion["data_mapping"].values():
+                namespace, field = mapping.strip("{}").split(".", 1)
+                if field not in row[namespace]:
+                    raise ValueError("Dataset lacks an evaluator input; no remote resources created")
+    if any("initialization_parameters" in c for c in testing_criteria) and not deployment_name:
+        raise ValueError("An explicit model deployment is required")
+    if os.environ.get("AZURE_AI_PROJECTS_CONSOLE_LOGGING", "false").lower() == "true":
+        raise ValueError("Disable verbose SDK logging before uploading sensitive evaluation data")
+    from azure.ai.projects import AIProjectClient
+    from azure.identity import DefaultAzureCredential
+
     # Create client and run evaluation
     with (
         DefaultAzureCredential() as credential,
         AIProjectClient(endpoint=endpoint, credential=credential) as project_client,
+        project_client.get_openai_client(timeout=60, max_retries=0) as openai_client,
     ):
-        openai_client = project_client.get_openai_client()
+        # Disable automatic request retries: a timed-out creation has an unknown outcome.
 
         # Create evaluation definition
         eval_object = openai_client.evals.create(
@@ -248,7 +311,10 @@ def run_evaluation(
         print(f"Started run: {run.id}")
 
         # Poll for completion
-        while run.status not in ["completed", "failed", "cancelled"]:
+        deadline = time.monotonic() + timeout_seconds
+        while run.status not in ["completed", "failed", "cancelled", "canceled", "expired"]:
+            if time.monotonic() >= deadline:
+                raise TimeoutError(f"Polling deadline reached; run {run.id} may still be active. Inspect/cancel it explicitly; do not recreate.")
             print(f"Status: {run.status}...")
             time.sleep(5)
             run = openai_client.evals.runs.retrieve(
@@ -257,7 +323,7 @@ def run_evaluation(
             )
 
         if run.status != "completed":
-            raise RuntimeError(f"Evaluation run {run.status}: {getattr(run, 'error', 'Unknown error')}")
+            raise RuntimeError("Evaluation failed; inspect the protected run in Azure")
 
         print(f"Run completed: {run.status}")
 
@@ -276,7 +342,7 @@ def run_evaluation(
         for output_item in output_items:
             row_results = {}
             for result in output_item.results:
-                if result.score is not None:
+                if isinstance(result.score, (int, float)) and not isinstance(result.score, bool) and math.isfinite(result.score):
                     if result.name not in metrics:
                         metrics[result.name] = []
                     metrics[result.name].append(result.score)
@@ -295,6 +361,9 @@ def run_evaluation(
             "metrics": avg_metrics,
             "rows": rows,
             "total_items": len(output_items),
+            "input_items": len(data),
+            "scored_counts": {name: len(values) for name, values in metrics.items()},
+            "complete_row_count": len(output_items) == len(data),
         }
 
 
@@ -335,7 +404,13 @@ def main():
         help="Model deployment name (overrides AZURE_AI_MODEL_DEPLOYMENT_NAME)",
     )
 
+    parser.add_argument("--allow-paid", action="store_true", help="Authorize upload of this exact file and cloud/model charges")
+    parser.add_argument("--timeout-seconds", type=int, default=600)
+    parser.add_argument("--max-rows", type=int, default=1000)
+    parser.add_argument("--max-bytes", type=int, default=10485760)
     args = parser.parse_args()
+    if not args.allow_paid:
+        parser.error("Review data/endpoint/deployment/evaluators/cost, then use --allow-paid for remote execution")
 
     # Validate environment
     endpoint = os.environ.get("AZURE_AI_PROJECT_ENDPOINT")
@@ -343,7 +418,7 @@ def main():
         print("Error: AZURE_AI_PROJECT_ENDPOINT environment variable required")
         sys.exit(1)
 
-    deployment = args.deployment or os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gpt-4o-mini")
+    deployment = args.deployment or os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME")
 
     # Validate data file
     data_path = Path(args.data)
@@ -372,6 +447,14 @@ def main():
     print(f"Deployment: {deployment}")
     print(f"Agent mode: {args.agent}")
 
+    # Fail before paid work when the requested result path cannot be safely created.
+    if args.output:
+        output_candidate = Path(args.output)
+        if output_candidate.exists() or output_candidate.is_symlink():
+            parser.error("Output must be a new file")
+        if not output_candidate.parent.is_dir() or any(parent.is_symlink() for parent in output_candidate.parents):
+            parser.error("Output parent must exist and not be symlinked")
+
     # Run evaluation
     try:
         result = run_evaluation(
@@ -380,9 +463,11 @@ def main():
             evaluator_names=evaluator_names,
             deployment_name=deployment,
             is_agent=args.agent,
+            allow_paid=args.allow_paid, timeout_seconds=args.timeout_seconds,
+            max_rows=args.max_rows, max_bytes=args.max_bytes,
         )
-    except Exception as e:
-        print(f"Error during evaluation: {e}")
+    except Exception:
+        print("Evaluation did not complete. Inspect any printed remote run ID; details omitted to protect dataset and credentials.")
         sys.exit(1)
 
     # Output results
@@ -398,8 +483,11 @@ def main():
     # Save to file if requested
     if args.output:
         output_path = Path(args.output)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(result, f, indent=2, default=str)
+        if output_path.is_symlink() or any(parent.is_symlink() for parent in output_path.parents):
+            raise OSError("Refusing symlinked output path")
+        fd = os.open(output_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0), 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(result, f, indent=2, allow_nan=False)
         print(f"\nResults saved to: {args.output}")
 
     print("\nEvaluation complete!")

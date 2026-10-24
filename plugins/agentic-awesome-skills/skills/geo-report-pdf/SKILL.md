@@ -37,7 +37,7 @@ No Python dependencies. No ReportLab. No JSON data wrangling.
 
 1. Read `GEO-AUDIT-REPORT.md` in the current directory (created by `/geo audit`)
 2. Extract cover metadata from the report (brand name, domain, GEO score, date, locations)
-3. Run `pandoc` with the bundled CSS + HTML template to produce a self-contained `GEO-REPORT.html`
+3. Run `pandoc` with separately provided reviewed CSS + HTML template to produce a self-contained `GEO-REPORT.html`
 4. Run Chrome headless to print the HTML to `GEO-REPORT.pdf`
 
 The pandoc template (`references/` templates in this skill or user-provided HTML) injects:
@@ -93,6 +93,8 @@ subprocess.run(args + ["-o", "GEO-REPORT.html"], check=True, shell=False)
 Render with network access disabled and the browser sandbox enabled; do not embed remote resources or run untrusted template JavaScript.
 
 ### Step 4: Run Chrome headless
+
+The command below does not itself disable network access. Enforce that separately using the host’s supported sandbox/network policy, choose an isolated temporary browser profile and a new output destination, and inspect the generated HTML for remote resources or active content before rendering.
 
 ```bash
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \

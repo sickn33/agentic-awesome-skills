@@ -35,11 +35,11 @@ sources: portswigger_research, ssl_labs_research, hstspreload_org
 
 Most findings in this class are **Info/Low and routinely rejected** as "best-practice" / "missing-hardening" by triage. This skill exists to stop you wasting a submission. Two questions before you report anything here:
 
-1. **Is there a real victim and a real action?** "Missing HSTS" is not a vulnerability — *demonstrated session-cookie capture from a victim you MitM'd* is. "Missing CAA" is never a vulnerability you can demonstrate.
+1. **Is there a real victim and a real action?** Missing HSTS is a hardening observation; a demonstrated downgrade chain requires separate authorization and a controlled test account, never a real victim. "Missing CAA" is never a vulnerability you can demonstrate.
 2. **Does the program accept it?** Many programs explicitly list missing SPF/DMARC, missing security headers, weak ciphers without exploit, and CAA as **out of scope**. Read scope first; quote the in-scope line in your report.
 
 **What actually pays in this class (in order):**
-- **Dangling-CNAME / dangling-A subdomain takeover** — you control content on `target.com` subdomain. Real impact, real bounty. (Owned in depth by `hunt-subdomain`; covered here for the TLS/DNS recon angle.)
+- **Dangling-CNAME / dangling-A subdomain takeover** — you control content on `target.com` subdomain. Impact and eligibility require program-specific review. (Owned in depth by `hunt-subdomain`; covered here for the TLS/DNS recon angle.)
 - **Spoofable DMARC, proven by delivered-to-inbox email** — not "p=none exists" but an actual mail from `ceo@target.com` landing in a real inbox with a passing/none DMARC verdict in the headers.
 - **DNS AXFR returning internal hosts** — full internal hostname/IP map. Concrete recon value, often Medium.
 - **mTLS / client-cert bypass on an internal service** — reaching authenticated-only functionality without the cert. Real auth bypass = High.
@@ -65,7 +65,7 @@ cat /tmp/sslyze_$TARGET.json | python3 -m json.tool | grep -i "vulnerability\|in
 echo | openssl s_client -connect $TARGET:443 -servername $TARGET 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer 2>/dev/null
 
-# Check for weak ciphers manually (a successful handshake = the cipher is OFFERED, not exploitable)
+# Check for weak ciphers manually (a successful handshake = the cipher was negotiated by this client, not exploitable)
 openssl s_client -connect $TARGET:443 -cipher RC4-SHA 2>/dev/null | grep -i "cipher\|handshake"
 openssl s_client -connect $TARGET:443 -cipher DES-CBC3-SHA 2>/dev/null | grep -i "cipher\|handshake"
 
@@ -79,8 +79,8 @@ openssl s_client -connect $TARGET:443 -tls1_1 2>/dev/null | grep -E "Protocol|Ci
 - **Offered ≠ exploitable.** testssl/sslyze flagging RC4, 3DES, or TLS 1.0 means the server *negotiates* it. That is a hardening finding, **not** a demonstrated decrypt. Without a PoC it is Info/Low and frequently OOS.
 - **SWEET32 (CVE-2016-2183)** — 3DES birthday attack. Requires a long-lived TLS session, an on-path attacker, and ~hundreds of GB / hours of same-key traffic. Realistically un-demonstrable in a bug bounty; report only the *support* of 3DES, expect Low/Info.
 - **POODLE (CVE-2014-3566)** — SSLv3 CBC padding oracle. Needs **SSLv3 actually enabled**; almost no modern stack offers it. Confirm with `testssl.sh --poodle` (or `nmap --script ssl-poodle`) — modern OpenSSL 3.x dropped the `-ssl3` flag. If SSLv3 won't negotiate, there is no POODLE.
-- **FREAK (CVE-2015-0204)** and **DROWN (CVE-2016-0800)** — require export-grade RSA / a shared SSLv2 endpoint respectively. Both are pre-conditions you must *prove present*, not assume. DROWN needs SSLv2 reachable on *some* host sharing the cert/key — scan for SSLv2 with `testssl.sh --drown` (or `nmap --script sslv2-drown`) across the cert's SAN list before claiming it; modern OpenSSL has no `-ssl2` flag.
-- **Heartbleed (CVE-2014-0160)** — if you genuinely find an unpatched OpenSSL 1.0.1 leaking memory, that *is* High/Critical with a real PoC (dump containing keys/cookies). Verify with `testssl.sh --heartbleed` and capture leaked bytes; this is the rare TLS bug worth a full report.
+- **FREAK (CVE-2015-0204)** and **DROWN (CVE-2016-0800)** — require export-grade RSA / a shared SSLv2 endpoint respectively. Both are pre-conditions you must *prove present*, not assume. DROWN needs SSLv2 reachable on *some* host sharing the cert/key — only within explicit authorized host scope, check SSLv2 with `testssl.sh --drown` (or `nmap --script sslv2-drown`) on separately authorized SAN hosts before claiming it; modern OpenSSL has no `-ssl2` flag.
+- **Heartbleed (CVE-2014-0160)** — if you genuinely find an unpatched OpenSSL 1.0.1 leaking memory, that *is* High/Critical with a real PoC (dump containing keys/cookies). Verify with `testssl.sh --heartbleed` and use an owner-approved minimal canary or validation mechanism; do not collect live memory secrets; this is the rare TLS bug worth a full report.
 
 ---
 
@@ -127,7 +127,7 @@ done
 host -t AXFR $TARGET $(dig NS $TARGET +short | head -1) 2>/dev/null | head -30
 nmap -sn --script dns-zone-transfer $TARGET 2>/dev/null | head -30
 
-# If AXFR succeeds → full internal hostname map
+# If AXFR succeeds, review the returned zone records; it need not include internal hosts or split-horizon data
 # Look for: internal IPs, staging servers, admin hostnames, CI/CD servers
 ```
 
@@ -188,7 +188,7 @@ swaks --to your-tester@gmail.com \
 
 **Confirmation gate — a spoof PoC is only valid if you can show:**
 1. The message landed in **Inbox** (not Spam/Junk), screenshot the folder.
-2. The raw headers: `Authentication-Results:` showing `dmarc=none|fail` AND the mail was still **delivered** (not bounced). A bounce or a Spam-folder landing is NOT a finding — note it and move on.
+2. The raw headers: `Authentication-Results:` showing `dmarc=none|fail` AND the mail was still **delivered** (not bounced). A bounce or spam placement bounds the demonstrated delivery effect; report only what the program accepts.
 3. The visible `From:` shows `@$TARGET` to the recipient (header-from spoof, the one that matters for phishing), not just an `envelope-from` trick.
 
 Severity is **Medium at best**, and only if delivered-to-inbox. Many programs mark email-auth findings OOS outright — check scope first.
@@ -233,7 +233,7 @@ echo "[+] CT subdomains found: $(wc -l < recon/$TARGET/ct-subdomains.txt)"
 # Compare with existing subdomain list
 comm -23 <(sort recon/$TARGET/ct-subdomains.txt) \
          <(sort recon/$TARGET/subdomains.txt 2>/dev/null) | head -20
-# New entries = recently issued certs = new services to investigate
+# New-to-this-file entries may be historical, stale or wildcard names; issuance does not prove a live service
 ```
 
 ---
@@ -256,10 +256,10 @@ done < recon/$TARGET/ct-subdomains.txt | tee recon/$TARGET/cname-map.txt
 # "Fastly error: unknown domain", "The specified bucket does not exist", Azure "Web App - Unavailable").
 ```
 
-**Validation gate — a takeover claim requires you to actually claim it:**
+**Validation gate — resource registration is optional and requires explicit authorization:**
 1. Confirm the dangling target is **unregistered/claimable** (the S3 bucket name is free, the Heroku app does not exist, etc.) — the provider error fingerprint alone is necessary but NOT sufficient.
-2. **Register the resource yourself** and serve a unique canary file, e.g. `https://$sub/<random>.txt` returning a string only you know. Screenshot it served over the victim subdomain with valid TLS.
-3. Tear it down immediately after PoC; never leave attacker-controlled content live on the target's domain.
+2. Only if the owner and provider explicitly authorize a controlled registration, register the exact resource and serve a unique canary file, e.g. `https://$sub/<random>.txt` returning a string only you know. Screenshot it served over the victim subdomain with valid TLS.
+3. Coordinate cleanup or ownership transfer with the owner; deleting a claimed resource while DNS still points to it can reopen takeover risk. Never leave unauthorized content live.
 
 Impact: cookie scope theft (cookies set for `.target.com`), OAuth `redirect_uri`/CORS-trust abuse, phishing on a trusted origin. Typically **High** (Critical if it sits at an OAuth/SSO redirect or shares session cookies).
 
@@ -287,14 +287,14 @@ dig CAA "*.$TARGET" +short
 
 ```bash
 # Check if endpoint requires client certificate
-curl -sk "https://$TARGET/internal/" 2>&1 | grep -i "ssl\|certificate\|403\|401"
+curl -sS "https://$TARGET/internal/" 2>&1 | grep -i "ssl\|certificate\|403\|401"
 
 # Try without client cert (should fail)
-curl -sk --cert "" "https://$TARGET/internal/api" | head -5
+curl -sS "https://$TARGET/internal/api" | head -5
 
 # Try common bypass paths (some apps skip mTLS on health checks)
 for path in /health /ping /status /metrics /api/health; do
-  STATUS=$(curl -sk -o /dev/null -w "%{http_code}" "https://$TARGET$path")
+  STATUS=$(curl -sS -o /dev/null -w "%{http_code}" "https://$TARGET$path")
   echo "$path: $STATUS"
 done
 
@@ -309,13 +309,13 @@ for combo in \
   "X-Forwarded-Client-Cert: By=spiffe://x;Hash=0;Subject=\"CN=admin\""; do
   H1="${combo%%|*}"; H2="${combo##*|}"
   echo "== $H1 / $H2 =="
-  curl -sk "https://$TARGET/internal/api" -H "$H1" -H "$H2" -o /dev/null -w "%{http_code}\n"
+  curl -sS "https://$TARGET/internal/api" -H "$H1" -H "$H2" -o /dev/null -w "%{http_code}\n"
 done
 ```
 
 **mTLS-bypass validation — this is a real auth bypass, so prove access, not just a status code:**
 - A `200` could be a generic page. Confirm you reached **authenticated-only functionality**: show data/an action that is impossible without the client cert (e.g. an admin-only object, an internal-only response body).
-- Distinguish *server policy* from *server state*: a `403` flipping to `200` with the spoofed header is meaningful; a `200` for both with and without the header means the path was never protected (no finding).
+- Distinguish *server policy* from *server state*: a `403` flipping to `200` with the spoofed header is meaningful; a `200` for both requires checking whether sensitive data is independently exposed; it does not prove a header bypass.
 - For the bypass-path angle (`/health`, `/metrics`): only a finding if that endpoint exposes **sensitive data** (internal IPs, build secrets, Prometheus metrics revealing internal topology) — an empty `200 OK` health probe is not.
 - Capture the request/response pair in Burp Repeater so the spoofed header → privileged response is unambiguous.
 
@@ -361,11 +361,11 @@ curl -s "https://dmarcian.com/dmarc-inspector/?domain=$TARGET" 2>/dev/null
 
 Each finding ships only with the proof listed — never the `dig`/header output alone.
 
-- **Subdomain takeover:** you registered the dangling resource and served a unique canary over `https://sub.target.com/` with valid TLS. Screenshot + canary string. (Tear down after.)
+- **Subdomain takeover:** an owner-authorized controlled claim served a unique canary, or report the claimability evidence and limits without provisioning over `https://sub.target.com/` with valid TLS. Screenshot + canary string. (Tear down after.)
 - **mTLS bypass:** spoofed client-verify header returns *privileged* data/action that the cert-required path otherwise denies. Burp request/response pair.
 - **AXFR:** zone transfer returns internal hostnames/IPs from an authoritative NS. Full transcript.
-- **DMARC spoof:** swaks-sent mail with `From: @target.com` **delivered to a real Inbox** (not Spam), raw `Authentication-Results` headers attached. A bounce or Spam landing = no finding.
-- **HSTS missing:** only reportable with a working downgrade PoC capturing a victim cookie over plaintext — otherwise it is best-practice noise.
+- **DMARC spoof:** swaks-sent mail with `From: @target.com` **delivered to a real Inbox** (not Spam), raw `Authentication-Results` headers attached. A bounce or Spam landing does not demonstrate inbox delivery.
+- **HSTS missing:** report missing hardening according to the engagement policy; do not capture third-party cookies to strengthen a report.
 
 **Severity (conservative — matches the Chain Table):**
 - Subdomain takeover (claimed): High (Critical at OAuth/SSO redirect or shared session cookie)
@@ -397,3 +397,7 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Probe and reporting boundaries
+
+Keep the existing authorization gate. DNS/certificate discoveries do not expand scope, and third-party scanner APIs disclose the target hostname and may initiate their own scans; use them only when authorized. Pin/review scanner dependencies, isolate installation, validate the target as an approved hostname, quote shell variables and use private unique report paths with bounded request timeouts. Do not use live memory dumps, real victim sessions, unsolicited spoofed mail, CA social engineering or resource registration as implicit proof steps. Spoof tests need an owner-approved sender identity, controlled relay and consenting recipient; a passing DMARC result is not proof of a spoof and visible From must be set explicitly, distinct from SMTP envelope sender. Check inherited/organizational DMARC policy and receiver behavior before claiming absence. AXFR may reveal only public zone data; error/timeout and empty command output do not prove a missing header or protection. HSTS includeSubDomains/preload changes need whole-domain readiness review and can break dependent sites; missing preload is not itself exploitation. Local OpenSSL disabled algorithms can cause handshake failure before a server test, and unavailable flags/tool versions need validation. Severity and eligibility tables are illustrative rather than payout guarantees; preserve uncertainty and report minimum necessary evidence.

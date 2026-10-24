@@ -27,7 +27,7 @@
 | `@Binding` | Child view needs to modify parent's state | Don't use for read-only |
 | `@Bindable` | iOS 17+: View receives `@Observable` object and needs bindings | For injected observables |
 | `let` | Read-only value passed from parent | Simplest option |
-| `var` | Read-only value that child observes via `.onChange()` | For reactive reads |
+| `var` | Stored input that must be locally mutable during value construction | Not required for `.onChange`; `let` inputs also receive parent updates |
 
 **Legacy (Pre-iOS 17):**
 | Wrapper | Use When | Notes |
@@ -49,11 +49,11 @@ Always mark `@State` properties as `private`. Use for internal view state that t
 
 ### iOS 17+ with @Observable (Preferred)
 
-**Always prefer `@Observable` over `ObservableObject`.** With iOS 17's `@Observable` macro, use `@State` instead of `@StateObject`:
+**Prefer Observation for compatible new code; ObservableObject remains supported.** With iOS 17's `@Observable` macro, use `@State` instead of `@StateObject`:
 
 ```swift
 @Observable
-@MainActor  // Always mark @Observable classes with @MainActor
+@MainActor  // Appropriate for this UI-owned mutable model; not required for every observable type
 final class DataModel {
     var name = "Some Name"
     var count = 0
@@ -88,7 +88,7 @@ final class SettingsModel {
     // WRONG - compiler error: property wrappers conflict with @Observable
     // @AppStorage("username") var username = ""
 
-    // CORRECT - @ObservationIgnored prevents the conflict
+    // Syntactic conflict avoidance only; this is not an Observation persistence bridge
     @ObservationIgnored @AppStorage("username") var username = ""
     @ObservationIgnored @AppStorage("isDarkMode") var isDarkMode = false
 
@@ -102,7 +102,7 @@ This applies to **any** property wrapper used inside an `@Observable` class, inc
 - `@SceneStorage`
 - `@Query` (SwiftData)
 
-**Note**: Since `@ObservationIgnored` disables observation tracking for that property, SwiftUI won't detect changes through the Observation framework. However, property wrappers like `@AppStorage` already notify SwiftUI of changes through their own mechanisms (e.g., UserDefaults KVO), so views still update correctly.
+**Note**: Since `@ObservationIgnored` disables observation tracking for that property, SwiftUI won't detect changes through the Observation framework. DynamicProperty wrappers update only in supported SwiftUI-managed contexts. Nesting AppStorage inside an observable class does not automatically forward changes to readers; SceneStorage and Query are not general-purpose model storage. Keep these wrappers in views or implement/test an explicit persistence/observation bridge. ObservationIgnored only avoids macro expansion conflicts.
 
 **Never remove `@ObservationIgnored`** from property-wrapper properties in `@Observable` classes — doing so causes a compiler error.
 
@@ -112,13 +112,13 @@ The `@Observable` macro generates a setter that **skips invalidation when the ne
 
 ```swift
 // AVOID: not Equatable — every assignment invalidates, even no-op writes
-enum DeliveryStatus { case placed, preparing, shipped, delivered }
+struct DeliveryStatus { var code: String }
 
 // PREFER: Equatable lets the generated setter short-circuit redundant writes
-enum DeliveryStatus: Equatable { case placed, preparing, shipped, delivered }
+struct DeliveryStatus: Equatable { var code: String }
 ```
 
-This applies to collection properties too: an `Array`/`Set`/`Dictionary` is only `Equatable` when its element type is, so a non-`Equatable` element defeats the short-circuit for the whole collection. (The check is emitted into the generated setter as user code, so it applies on every OS that supports `@Observable` when built with current Xcode.)
+For collections, Array requires Equatable elements and Dictionary requires Equatable values. Set elements are already Hashable (therefore Equatable); a Set is not an example of missing element equality. (The check is emitted into the generated setter as user code, so it applies on every OS that supports `@Observable` when built with current Xcode.)
 
 This is distinct from `Equatable` *views* (see `references/performance-patterns.md`): that conformance lets SwiftUI skip a view's body; this one lets the model skip notifying observers in the first place.
 
@@ -233,7 +233,7 @@ _viewModel = StateObject(wrappedValue: MovieDetailsViewModel(movie: movie))
 
 ## Don't Pass Values as @State
 
-**Critical**: Never declare passed values as `@State` or `@StateObject`. They only accept an initial value and ignore subsequent updates from the parent.
+Do not use owned state for an input that must track every parent replacement. Initializing an intentionally independent editing draft or owned model from an input is valid; later input changes do not automatically replace that state.
 
 ```swift
 // WRONG - child ignores parent updates
@@ -300,11 +300,11 @@ struct ProfileHeader: View {
 }
 ```
 
-### Use `var` when reacting to changes with `.onChange()`
+### `let` inputs also work with `.onChange()`
 
 ```swift
 struct ReactiveView: View {
-    var externalValue: Int  // Watch with .onChange()
+    let externalValue: Int  // A new parent-created view value supplies updated input
     @State private var displayText = ""
 
     var body: some View {
@@ -355,9 +355,9 @@ struct ThemedView: View {
 
 The `@Entry` macro replaces the manual `EnvironmentKey` conformance pattern. It also works with `Transaction`, `ContainerValues`, and `FocusedValues`.
 
-#### Never store closures in custom environment keys
+#### Measure frequently recreated environment action closures
 
-SwiftUI can't reliably compare function values, so a view that reads an environment key holding a closure invalidates on every environment write, even when nothing it cares about changed. Wrapping the closure in a struct doesn't help — the struct still contains an uncomparable closure. The fix is to eliminate the closure: store the data it would have captured as properties and expose the behavior via `callAsFunction` or a method.
+Action closures in custom environment values are valid SwiftUI. Frequently recreated captures can broaden invalidation, so profile identity and lifetime before redesigning them. A method/struct is useful only when it preserves behavior, including the captured dependencies; wrapping alone is not a comparison guarantee.
 
 ```swift
 // AVOID: closure in a custom environment key
@@ -372,11 +372,11 @@ extension EnvironmentValues {
 }
 ```
 
-This rule is for **custom** keys. Framework action types designed to wrap a closure — `\.openURL`, `\.dismiss`, `\.refresh`, and similar — are the intended API and are fine.
+Framework action types designed to wrap a closure — `\.openURL`, `\.dismiss`, `\.refresh`, and similar — are the intended API and are fine.
 
 #### Keep @Entry default values stable
 
-`@Entry` wraps its default expression in a computed getter, so the default is re-evaluated on every read that falls back to it. If the expression returns a different result each time — a fresh reference like `Model()`, or a runtime value like `Date()` / `UUID()` — readers that use the default invalidate on every unrelated environment write.
+`@Entry` wraps its default expression in a computed getter, so default construction behavior depends on the macro expansion/toolchain. If the expression returns a different result each time — a fresh reference like `Model()`, or a runtime value like `Date()` / `UUID()` — it can create surprising lifetime/identity behavior; measure invalidation rather than assuming every unrelated write re-runs all readers.
 
 ```swift
 // AVOID: re-allocates Model() on every fallback read
@@ -409,8 +409,9 @@ final class AppState {
 }
 
 // Inject
+// Preserve AppState in an appropriate owner, e.g. @State private var appState = AppState().
 ContentView()
-    .environment(AppState())
+    .environment(appState)
 
 // Access
 struct ChildView: View {
@@ -438,7 +439,7 @@ Is this value owned by this view?
     │   └─ NO: Does child need BINDINGS to its properties?
     │       ├─ YES (@Observable) → @Bindable var
     │       └─ NO: Does child react to changes?
-    │           ├─ YES → var + .onChange()
+    │           ├─ YES → let (or var when needed) + .onChange()
     │           └─ NO → let
     │
     └─ Is it a legacy ObservableObject from parent?
@@ -484,9 +485,9 @@ SwiftUI can't track changes through nested `ObservableObject` properties. Workar
 3. Use `@State` with `@Observable` classes (not `@StateObject`)
 4. Use `@Bindable` for injected `@Observable` objects that need bindings
 5. **Always mark `@State` and `@StateObject` as `private`**
-6. **Never declare passed values as `@State` or `@StateObject`**
+6. Do not store read-through inputs in owned state; explicitly initialized independent drafts are valid
 7. With `@Observable`, nested objects work fine; with `ObservableObject`, pass nested objects directly to child views
 8. **Always add `@ObservationIgnored` to property wrappers** (e.g., `@AppStorage`, `@SceneStorage`, `@Query`) inside `@Observable` classes — they conflict with the macro's property transformation
 9. **Prefer `Equatable` types for frequently-written `@Observable` properties** so the generated setter skips redundant invalidations
-10. **Never store closures in custom environment keys; keep `@Entry` defaults stable** (no `Model()`/`Date()` expressions)
+10. Review action closure identity and keep environment defaults intentional; avoid shared mutable model defaults without isolation/lifetime design
 11. **Prefer KeyPath/subscript bindings over closure bindings**

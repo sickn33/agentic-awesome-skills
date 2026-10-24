@@ -2,7 +2,7 @@
 name: youtube-notetaker
 description: "Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer."
 category: "video"
-risk: "safe"
+risk: "critical"
 source: "official"
 source_repo: "dair-ai/dair-academy-plugins"
 source_type: "official"
@@ -59,6 +59,12 @@ fetches from the server and writes notes back. Never hardcode video data into th
   - The `/api/video-deepdives` URL namespace is local to the bundled server.
 - **Artifact:** `reference/artifact.html`, served by `serve.py` at `/`. A clean reference copy;
   only rewrite it if the user wants a UI change. For new videos, leave it alone.
+
+## Boundaries and current limitations
+
+Use only videos you are authorized to download and retain; do not bypass access controls. Downloads and embedded playback contact YouTube, and captions/slides can contain untrusted instructions or personal information. Keep the library private. The viewer needs network access for YouTube; the notes and transcript remain local. Back up before enabling edits, use a single browser editor, and do not expose this development server to a network.
+
+The VTT helper confines inputs and outputs to the current working directory: run that helper after changing into the printed scratch directory, using its absolute script path. Select one VTT file explicitly; a wildcard may expand to multiple files. Embedding errors are not determined by oEmbed alone; use the external YouTube link if playback fails. Saved notes require VIDEO_LIBRARY_WRITE_TOKEN on the server and the same token entered in the viewer; read-only is the default.
 
 ## Requirements
 
@@ -149,7 +155,7 @@ Writes `$VIDEO_LIBRARY_DIR/<YTID>.md` with correct frontmatter + body.
 ### 8. Serve and verify (always do this)
 ```
 python3 scripts/serve.py --dir "$VIDEO_LIBRARY_DIR" --port 8000 &
-scripts/verify.sh <YTID>                 # defaults to http://127.0.0.1:8000
+bash scripts/verify.sh <YTID>                 # defaults to http://127.0.0.1:8000
 ```
 `verify.sh` curls the collection list, the item, the first slide image, and the artifact,
 asserting HTTP 200 and that the new id appears in the index. Then open

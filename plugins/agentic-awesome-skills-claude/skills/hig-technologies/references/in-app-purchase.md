@@ -1,8 +1,14 @@
 ---
 title: "In-app purchase | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/in-app-purchase
+---
 
 # In-app purchase
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** The Apple Pay/StoreKit distinction describes common use cases, not a universal payment-policy ruling. Verify current App Review rules and regional entitlements for the actual product; club membership and donation eligibility also depend on context. Verify transactions before granting entitlements and handle revocation, refund, pending purchase, and restoration.
+
 
 People can use in-app purchase to pay for virtual goods — like premium content, digital goods, and subscriptions — securely within your app.
 

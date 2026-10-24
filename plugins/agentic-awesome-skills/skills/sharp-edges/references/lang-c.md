@@ -1,5 +1,8 @@
 # C/C++ Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Integer Overflow is Undefined Behavior
 
 ```c
@@ -81,7 +84,7 @@ explicit_bzero(password, sizeof(password));
 // Option 2: SecureZeroMemory (Windows)
 SecureZeroMemory(password, sizeof(password));
 
-// Option 3: Volatile function pointer trick
+// Historical fallback: compiler-specific behavior, not a portable secure-erasure guarantee
 static void *(*const volatile memset_ptr)(void *, int, size_t) = memset;
 memset_ptr(password, 0, sizeof(password));
 
@@ -110,7 +113,7 @@ s.b = 42;
 send(sock, &s, sizeof(s), 0);  // Leaks 3 bytes of stack
 ```
 
-**Fix**: Use `= {0}` initialization or `memset`.
+**Fix**: Initialize members and serialize fields explicitly into a defined wire format. Struct padding is not a portable serialization contract; do not send sizeof(struct) bytes merely because members were initialized.
 
 ## Double Free and Use-After-Free
 
@@ -132,7 +135,7 @@ char *get_greeting() {
 ```
 
 **Mitigations**:
-- Set pointer to NULL after free: `free(ptr); ptr = NULL;`
+- Set the owning pointer to NULL after free where appropriate; other aliases can still dangle.
 - Use static analysis (Coverity, cppcheck)
 - Use AddressSanitizer in testing
 
@@ -180,7 +183,7 @@ execl("/bin/ls", "ls", "-l");        // Missing NULL = UB
 // DANGEROUS: Macro arguments evaluated multiple times
 #define SQUARE(x) ((x) * (x))
 int a = 5;
-SQUARE(a++);  // Expands to ((a++) * (a++)) - increments twice!
+SQUARE(a++);  // Expands to two unsequenced modifications: undefined behavior, not a reliable numeric result.
 
 // DANGEROUS: Operator precedence
 #define ADD(a, b) a + b

@@ -40,7 +40,7 @@ if #available(iOS 26, *) {
 The primary modifier for applying glass effects to views:
 
 ```swift
-.glassEffect(_ glass: Glass = .regular, in shape: some Shape = .rect, isEnabled: Bool = true)
+.glassEffect(.regular, in: Capsule()) // Usage: glassEffect(_:in:); default shape is a capsule
 ```
 
 #### Basic Usage
@@ -48,7 +48,7 @@ The primary modifier for applying glass effects to views:
 ```swift
 Text("Hello")
     .padding()
-    .glassEffect()  // Default regular style, rect shape
+    .glassEffect()  // Default regular style, capsule shape
 ```
 
 #### With Shape
@@ -136,7 +136,7 @@ GlassEffectContainer(spacing: 24) {
 }
 ```
 
-**Note**: The container's `spacing` parameter should match the actual spacing in your layout for proper glass effect rendering.
+**Note**: Container spacing is a blending/proximity threshold, not required to equal layout spacing. A larger threshold can merge nearby shapes even at rest; choose it intentionally.
 
 > Source: "Build a SwiftUI app with the new design" (WWDC25, session 323)
 
@@ -245,6 +245,7 @@ struct GlassToolbar: View {
     }
 }
 
+@available(iOS 26.0, macOS 26.0, *)
 struct ToolbarButton: View {
     let icon: String
     let action: () -> Void
@@ -360,12 +361,11 @@ if #available(iOS 26, *) {
 extension View {
     @ViewBuilder
     func glassEffectWithFallback(
-        _ glass: Glass = .regular,
-        in shape: some Shape = .rect,
+        in shape: some Shape = Capsule(),
         fallbackMaterial: Material = .ultraThinMaterial
     ) -> some View {
         if #available(iOS 26, *) {
-            self.glassEffect(glass, in: shape)
+            self.glassEffect(.regular, in: shape)
         } else {
             self.background(fallbackMaterial, in: shape)
         }
@@ -381,7 +381,7 @@ In the new design, toolbar icons use **monochrome rendering** by default. The mo
 
 ### Sheet Presentations
 
-Partial-height sheets use a Liquid Glass background by default. If you previously used `presentationBackground(_:)` with a custom background, consider removing it to let the new material shine. Sheets can morph out of the glass controls that present them using `navigationZoomTransition`.
+Partial-height sheets use a Liquid Glass background by default. If you previously used `presentationBackground(_:)` with a custom background, consider removing it to let the new material shine. Sheets can morph out of the glass controls that present them using matchedTransitionSource and navigationTransition(.zoom(sourceID:in:)) on supported platforms.
 
 ### Scroll Edge Effects
 
@@ -396,7 +396,7 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 - Use `GlassEffectContainer` for grouped glass elements (glass cannot sample other glass)
 - Apply glass after layout modifiers
 - Use `.interactive()` only on tappable elements
-- Match container spacing with layout spacing
+- Choose container spacing as an intentional blending threshold
 - Provide material-based fallbacks for older iOS
 - Keep glass shapes consistent within a feature
 - Remove custom `presentationBackground(_:)` on sheets to use the default glass material
@@ -419,5 +419,7 @@ An automatic scroll edge effect blurs and fades content under system toolbars to
 - [ ] `.interactive()` only on user-interactable elements
 - [ ] `glassEffectID` with `@Namespace` for morphing
 - [ ] Consistent shapes and spacing across feature
-- [ ] Container spacing matches layout spacing
+- [ ] Container blending threshold is intentional and tested
 - [ ] Tint opacity used instead of non-existent `.prominent` for emphasis
+
+The fallback helper deliberately keeps the newer Glass type out of its public signature; an if-available inside a function cannot make an unavailable parameter type safe for older targets. Add availability for every supported platform (including macOS/visionOS where applicable), and test Reduce Transparency, increased contrast, Reduce Motion and legibility over real backgrounds. System toolbar/sheet material adoption depends on SDK, platform and presentation; removing a custom background is an optional design migration, not a universal fix.

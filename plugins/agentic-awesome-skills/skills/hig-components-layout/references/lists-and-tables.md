@@ -1,6 +1,7 @@
 ---
 title: "Lists and tables | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/lists-and-tables
+---
 
 # Lists and tables
 
@@ -16,7 +17,7 @@ Sometimes, people need to work with complex data in a multicolumn table or a spr
 
 **Prefer displaying text in a list or table.** A table can include any type of content, but the row-based format is especially well suited to making text easy to scan and read. If you have items that vary widely in size — or you need to display a large number of images — consider using a [collection](https://developer.apple.com/design/human-interface-guidelines/collections) instead.
 
-**Let people edit a table when it makes sense.** People appreciate being able to reorder a list, even if they can’t add or remove items. In iOS and iPadOS, people must enter an edit mode before they can select table items.
+**Let people edit a table when it makes sense.** People appreciate being able to reorder a list, even if they can’t add or remove items. Selection, multiple selection and editing mode are distinct. Configure and test the supported UIKit/SwiftUI selection behavior for the target OS and input method; ordinary row navigation does not require edit mode.
 
 **Provide appropriate feedback when people select a list item.** The feedback can vary depending on whether selecting the item reveals a new view or toggles the item’s state. In general, a table that helps people navigate through a hierarchy persistently highlights the selected row to clarify the path people are taking. In contrast, a table that lists options often highlights a row only briefly before adding an image — such as a checkmark — indicating that the item is selected.
 
@@ -64,7 +65,7 @@ Sometimes, people need to work with complex data in a multicolumn table or a spr
 
 **When possible, limit the number of rows.** Short lists are easier for people to scan, but sometimes people expect a long list of items. For example, if people subscribe to a large number of podcasts, they might think something’s wrong if they can’t view all their items. You can help make a long list more manageable by listing the most relevant items and providing a way for people to view more.
 
-**Constrain the length of detail views if you want to support vertical page-based navigation.** People use vertical page-based navigation to swipe vertically among the detail items of different list rows. Navigating in this way saves time because people don’t need to return to the list to tap a new detail item, but it works only when detail views are short. If your detail views scroll, people won’t be able to use vertical page-based navigation to swipe among them.
+**Constrain the length of detail views if you want to support vertical page-based navigation.** People use vertical page-based navigation to swipe vertically among the detail items of different list rows. Navigating in this way saves time because people don’t need to return to the list to tap a new detail item, but it works only when detail views are short. Long detail pages can complicate the gesture distinction between scrolling within a page and paging among details. Verify the target watchOS container behavior, including Digital Crown navigation; do not infer that all scrollable pages disable paging.
 
 ## [Resources](https://developer.apple.com/design/human-interface-guidelines/lists-and-tables#Resources)
 

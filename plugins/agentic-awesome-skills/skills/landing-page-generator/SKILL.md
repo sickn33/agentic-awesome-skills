@@ -2,7 +2,7 @@
 name: "landing-page-generator"
 description: "Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, Pricing). Focuses on Core Web Vitals/SEO."
 category: "front-end"
-risk: "safe"
+risk: "critical"
 source: "community"
 date_added: "2026-03-18"
 author: "alirezarezvani"
@@ -14,13 +14,17 @@ tools: ["claude", "cursor", "gemini"]
 
 Generate high-converting landing pages from a product description. Output complete Next.js/React components with multiple section variants, proven copy frameworks, SEO optimization, and performance-first patterns. Not lorem ipsum — actual copy that converts.
 
-**Target:** LCP < 1s · CLS < 0.1 · FID < 100ms  
+**Target:** LCP < 1s · CLS < 0.1 · INP < 200ms
 **Output:** TSX components + Tailwind styles + SEO meta + copy variants
 
 ## When to Use
 - You need to generate a marketing landing page in Next.js or React.
 - The task involves conversion-focused page structure, section variants, Tailwind styling, or SEO-aware copy.
 - You want complete landing-page output from a product description rather than isolated UI fragments.
+
+## Evidence and implementation limits
+
+No conversion outcome is guaranteed. Framework examples use fictional numbers/customer claims; publish only substantiated metrics, authorized logos/testimonials, actual guarantees and verified pricing. The referenced brand analyzer/UI-system/teardown paths are not bundled; use available reviewed tools or manual analysis. The scaffold is a partial starting point: it does not implement all hero variants, FAQ schema, billing toggles, integrations or a measured performance audit. Verify imports (Button/Image/Accordion/Check), accessibility, routing and actual build/render behavior. Never claim Core Web Vitals passed from source inspection alone.
 
 ## Core Capabilities
 
@@ -151,7 +155,7 @@ Map over a `plans` array with `{ name, price, description, features[], cta, high
 
 ### FAQ with Schema Markup
 
-Inject `FAQPage` JSON-LD via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />` inside the section. Map FAQs with `{ q, a }` into shadcn `<Accordion>` with `type="single" collapsible`. Container: `max-w-3xl`.
+Inject `FAQPage` JSON-LD via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />` inside the section. Map FAQs with `{ q, a }` into shadcn `<Accordion>` with `type="single" collapsible`. Container: `max-w-3xl`.
 
 ### Testimonials, CTA, Footer
 
@@ -185,7 +189,7 @@ Inject `FAQPage` JSON-LD via `<script type="application/ld+json" dangerouslySetI
 |---|---|---|
 | LCP | < 1s | Preload hero image, use `priority` on Next/Image |
 | CLS | < 0.1 | Set explicit width/height on all images |
-| FID/INP | < 100ms | Defer non-critical JS, use `loading="lazy"` |
+| INP | < 200ms | Defer non-critical JS, use `loading="lazy"` |
 | TTFB | < 200ms | Use ISR or static generation for landing pages |
 | Bundle | < 100KB JS | Audit with `@next/bundle-analyzer` |
 

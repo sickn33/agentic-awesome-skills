@@ -50,7 +50,7 @@ Adjustments for optical centering are typically very small, but they can have a 
 
 **If you create a custom interface icon, use a vector format like PDF or SVG.** The system automatically scales a vector-based interface icon for high-resolution displays, so you don’t need to provide high-resolution versions of it. In contrast, PNG — used for app icons and other images that include effects like shading, textures, and highlighting — doesn’t support scaling, so you have to supply multiple versions for each PNG-based interface icon. Alternatively, you can create a custom SF Symbol and specify a scale that ensures the symbol’s emphasis matches adjacent text. For guidance, see [SF Symbols](https://developer.apple.com/design/human-interface-guidelines/sf-symbols).
 
-**Provide alternative text labels for custom interface icons.** Alternative text labels — or accessibility descriptions — aren’t visible, but they let VoiceOver audibly describe what’s onscreen, simplifying navigation for people with visual disabilities. For guidance, see [VoiceOver](https://developer.apple.com/design/human-interface-guidelines/voiceover).
+**Provide alternative text labels for custom interface icons.** Accessible names for meaningful icon-only controls — or accessibility descriptions for informative images — aren’t visible, but they let VoiceOver audibly describe what’s onscreen, simplifying navigation for people with visual disabilities. For guidance, see [VoiceOver](https://developer.apple.com/design/human-interface-guidelines/voiceover).
 
 **Avoid using replicas of Apple hardware products.** Hardware designs tend to change frequently and can make your interface icons and other content appear dated. If you must display Apple hardware, use only the images available in [Apple Design Resources](https://developer.apple.com/design/resources/) or the SF Symbols that represent various Apple products.
 
@@ -65,7 +65,7 @@ Action| Icon| Symbol name
 Cut| ![An icon showing a pair of scissors.](https://docs-assets.developer.apple.com/published/16c5fe84ae743e06cf2d388fc64e0cf4/icons-symbols-meaning-cut%402x.png)| `scissors`  
 Copy| ![An icon showing two copies of a document.](https://docs-assets.developer.apple.com/published/a88919c55265efbadeac0df5e16ffd05/icons-symbols-meaning-copy%402x.png)| `document.on.document`  
 Paste| ![An icon showing a document in front of a clipboard.](https://docs-assets.developer.apple.com/published/20e32bbb2a3a94eb35d01ddfa9c630e0/icons-symbols-meaning-paste%402x.png)| `document.on.clipboard`  
-Done| ![An icon showing a checkmark.](https://docs-assets.developer.apple.com/published/833bd3b8ccdf0e2fee0893b3858ddae5/icons-symbols-meaning-done-save%402x.png)| `checkmark `  
+Done| ![An icon showing a checkmark.](https://docs-assets.developer.apple.com/published/833bd3b8ccdf0e2fee0893b3858ddae5/icons-symbols-meaning-done-save%402x.png)| `checkmark`
 Save  
 Cancel| ![An icon showing an X.](https://docs-assets.developer.apple.com/published/b834206c8d155bc1b0d9d17c206c6da3/icons-symbols-meaning-close-cancel%402x.png)| `xmark`  
 Close  

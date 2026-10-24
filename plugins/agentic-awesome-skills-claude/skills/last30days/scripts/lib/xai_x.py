@@ -5,7 +5,8 @@ import re
 import sys
 from typing import Any, Dict, List, Optional
 
-from . import http
+from . import http, dates
+from urllib.parse import urlparse
 
 
 def _log_error(msg: str):
@@ -182,7 +183,10 @@ def parse_x_response(response: Dict[str, Any]) -> List[Dict[str, Any]]:
             continue
 
         url = item.get("url", "")
-        if not url:
+        if not isinstance(url, str):
+            continue
+        parsed_url = urlparse(url)
+        if parsed_url.scheme != "https" or parsed_url.netloc.lower() not in {"x.com", "www.x.com", "twitter.com", "www.twitter.com"} or not re.fullmatch(r"/[^/]+/status/\d+/?", parsed_url.path):
             continue
 
         # Parse engagement
@@ -209,7 +213,7 @@ def parse_x_response(response: Dict[str, Any]) -> List[Dict[str, Any]]:
 
         # Validate date format
         if clean_item["date"]:
-            if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(clean_item["date"])):
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(clean_item["date"])) or dates.parse_date(str(clean_item["date"])) is None:
                 clean_item["date"] = None
 
         clean_items.append(clean_item)

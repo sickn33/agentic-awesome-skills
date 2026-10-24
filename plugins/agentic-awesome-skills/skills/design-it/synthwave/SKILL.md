@@ -177,7 +177,7 @@ const NeonText = ({ text }) => {
   };
 
   return (
-    <View style={{ alignItems: 'center', height: 80 }}>
+    <View accessible accessibilityLabel={text} style={{ alignItems: 'center', minHeight: 80 }}>
       {/* Outer Glow */}
       <Text style={[baseStyle, { textShadowColor: '#FF00FF', textShadowRadius: 30 }]}>{text}</Text>
       {/* Mid Glow */}
@@ -229,12 +229,12 @@ fun NeonText(text: String) {
 @Composable
 fun AdvancedNeonText(text: String) {
     Box(contentAlignment = Alignment.Center) {
-        // Render layers of text to build the glow
+        // Render decorative layers; expose the phrase once via semantics.
         val blurs = listOf(30f, 15f, 5f)
         blurs.forEach { blur ->
             Text(
                 text = text,
-                color = Color.Transparent,
+                color = Color(0xFFFF00FF),
                 style = TextStyle(
                     shadow = Shadow(Color(0xFFFF00FF), Offset.Zero, blur)
                 )
@@ -246,7 +246,7 @@ fun AdvancedNeonText(text: String) {
 }
 ```
 - **Compose Limitation**: Like React Native, `TextStyle` only accepts a single `Shadow`.
-- **Workaround**: Stack multiple transparent `Text` composables inside a `Box`, each casting a shadow of varying size, topped by the solid white core text.
+- **Workaround**: Stack multiple colored `Text` composables inside a `Box`, each casting a shadow of varying size, topped by the solid white core text.
 
 ## Do's and Don'ts
 - **DO**: Italicize fonts to give a sense of speed and forward momentum.
@@ -255,3 +255,5 @@ fun AdvancedNeonText(text: String) {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+Duplicate glow layers should be hidden from assistive technology while exposing the text once. The AdvancedNeonText example uses default text sizes; apply identical font, size and line-height to all layers before treating it as the 64sp variant. Assets and custom fonts are project inputs, not bundled here.

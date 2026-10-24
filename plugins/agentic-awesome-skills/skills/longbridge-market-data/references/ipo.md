@@ -41,7 +41,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge ipo --format json
+longbridge ipo calendar --format json
 
 # See all options
 longbridge ipo --help

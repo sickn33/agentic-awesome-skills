@@ -54,6 +54,8 @@ def analyze(
         if not xml_utils.in_window(sample_time_ns, window):
             continue
         weight_ns = xml_utils.int_text(stream.resolve(weight_el)) or 0
+        if weight_ns < 0 or sample_time_ns is None:
+            continue
         frames = xml_utils.extract_backtrace(stack_el, stream, max_frames=20)
         if not frames:
             continue

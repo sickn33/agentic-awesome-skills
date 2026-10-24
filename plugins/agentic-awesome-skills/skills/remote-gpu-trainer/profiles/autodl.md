@@ -1,5 +1,7 @@
 # Profile: AutoDL
 
+Provider behavior here is historical guidance, not a current account guarantee. Verify current billing/retention in official provider docs before acting. Third-party mirrors require informed approval, public-artifact use and a credential-free environment (see references/china-network.md). Never bypass host safety or environment guards.
+
 The deepest, battle-tested profile — a Chinese cgroup-isolated SSH-rental with a 3-tier storage model
 and the *one* rental where the meter-stop action is non-destructive. Fills all 8 schema sections
 (`profiles/_schema.md`) at full depth. Read this **before Phase 0**; it owns every path, proxy, billing
@@ -72,7 +74,7 @@ interpreter `/root/miniconda3/bin/python`; in remote polls use that path or pure
 `requirements.txt` does not downgrade the image's torch build (AD9).
 
 > The "no DL in conda base" discipline applies to the *persistent local* machine only — on an ephemeral
-> rental, base IS the expected place to run. A local env-guard hook must exempt remote-ssh + instance base.
+> rental, base IS the expected place to run. If a host guard blocks the command, explain the measured remote environment and follow its approved exception process; do not bypass or silently disable it.
 
 ---
 
@@ -160,8 +162,7 @@ transfer); `rsync -avz --partial` is preferred. Transport patterns → `referenc
 
 ## 4. SPOT / INTERRUPTION + RESUME  *(principle #7/#8)*
 
-**No spot/bid/preemption model — AutoDL is on-demand.** There is no mid-run eviction, no SIGTERM grace
-window to handle (`spot_grace: n/a`). The real loss vectors are: (a) **forgot to release/关机** → idle
+**No spot tier was documented in the historical snapshot.** Hardware faults, maintenance or provider incidents can still interrupt jobs without a usable signal grace period. Other loss vectors are: (a) **forgot to release/关机** → idle
 billing (principle #1); (b) an instance **reboot** that ends a non-detached process (a vanished process is
 not always OOM — enumerate reboot / OOM / SSH-HUP / manual-kill before concluding, see
 `references/gotchas_universal.md`); (c) availability — the GPU plan being sold out at create-time (build
@@ -253,7 +254,7 @@ probe.
 enforces a **hard ~200K inode cap independent of bytes**; per-sample eval visualization (many tiny files)
 exhausts it. *Fix:* monitor `df -i`; cap per-sample eval vis on large test sets (sizing → verifying-dl-
 experiments); once a results dir is verified locally, prune its per-sample image subdir from FS; recover by
-`find /root/autodl-fs -type d -name '<vis-dir>' -exec rm -rf {} +` to free inodes fast.
+listing only the explicit project-owned directory with `find /root/autodl-fs/<project>/ -type d -name '<vis-dir>' -print`, then approving exact redundant targets. Never recursively delete matches across the shared FS.
 
 **AD5 — data disk full; HF cache is the hidden hog; agent `rm` auto-denied.** *Symptom:*
 `/root/autodl-tmp` at 100% though `runs/` looks small; an agent `rm -rf` of "obvious junk" is auto-denied.
@@ -267,8 +268,7 @@ confirmation; offer "clean vs expand the disk".
 run DL in conda base" guard fires on `ssh autodl 'python train.py'`, but `conda env list` shows nothing and
 `/root/miniconda3/envs/` is empty; poll scripts calling `python3` exit 127. *Root cause:* the image installs
 the whole DL stack into **base** — base IS the single-tenant project env (no `/envs/`), and the image often
-ships only `python` (no `python3`). *Fix:* train with `/root/miniconda3/bin/python`; exempt remote-ssh +
-instance base from the local guard (never `conda create --clone base`); in remote scripts use the explicit
+ships only `python` (no `python3`). *Fix:* train with `/root/miniconda3/bin/python`; follow the host guard's approved process for the verified remote environment (never `conda create --clone base`); in remote scripts use the explicit
 interpreter or pure shell, never bare `python3`.
 
 **AD7 — platform TensorBoard pinned to `/root/tf-logs`; events elsewhere invisible.** *Symptom:* the
@@ -307,7 +307,7 @@ DATA_DIR=/root/autodl-tmp             # fast NVMe data disk — live checkpoints
 DURABLE_DIR=/root/autodl-fs           # region-locked shared FS — the only tier surviving 释放
 PROXY_HOOK='source /etc/network_turbo 2>/dev/null || true'   # MANDATORY before any external call (AD1)
 CRED_FILE=/root/.wandb_key            # per-instance ONLY — the FS security classifier blocks wandb keys
-SCRATCH='latest.pth'                  # prune on success; keep best.pth (the keepable artifact)
+SCRATCH='latest.pth'                  # retain resume state until separately approved verified cleanup
 HF_HOME=/root/autodl-tmp/huggingface_cache   # redirect off the symlinked ~/.cache hog (AD5)
 HF_ENDPOINT=https://hf-mirror.com     # + HF_HUB_DISABLE_XET=1 (AD2)
 DETACH=tmux                           # nohup fallback when tmux is absent (§6)
@@ -321,7 +321,7 @@ credential block via stdin so the secret never appears in a command; the wrapper
 into `WANDB_API_KEY` before launch. Secrets-via-stdin pattern → `references/ssh_transport.md`.
 
 **Checked-sync (the gated success line).** `run_one.sh` writes live checkpoints to
-`$DATA_DIR/checkpoints/<name>`, prunes `latest.pth` on success, then syncs `best.pth` to
+`$DATA_DIR/checkpoints/<name>`, preserves `latest.pth` for resuming and syncs `best.pth` to
 `$DURABLE_DIR/final_ckpts/<name>` **gating the success echo on the actual copy result** — an unconditional
 "synced" lies when the FS inode cap (AD4) silently fails the `mkdir`/`cp` (universal silent-sync gotcha).
 Until a download is verified locally, the **data disk** copy is source-of-truth.

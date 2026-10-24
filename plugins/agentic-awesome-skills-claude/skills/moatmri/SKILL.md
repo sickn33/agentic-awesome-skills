@@ -56,9 +56,9 @@ Score AI disruption pressure across exactly these 10 vectors (0–10):
 | 9 | **regulatory_compliance_exposure** | Does AI alter the regulatory or liability landscape |
 | 10 | **decision_speed_gap** | Does AI accelerate decisions in ways that disadvantage this entity |
 
-For each vector produce: **score**, **headline**, **near_term** (12 months), **far_term** (3 years).
+Use a consistent direction: 0 = little evidenced disruption pressure; 10 = high pressure. For data_moat and trust_relationship_moat, score weakness or erosion of protection, not moat strength. For each vector produce: **score**, **headline**, **near_term** (12 months), **far_term** (3 years), evidence and confidence. Mark unavailable evidence unknown instead of fabricating a score.
 
-**Aggregate risk score:** mean of all 10 vectors. Flag any vector ≥ 7 as critical.
+**Aggregate planning score:** mean of all 10 vectors only when all have evidence-backed scores; otherwise report missing coverage. This equal-weight heuristic is not a calibrated probability or valuation. Flag any vector ≥ 7 for priority review.
 
 ### Step 3 — AI Front-Door Takeover Storyboard
 

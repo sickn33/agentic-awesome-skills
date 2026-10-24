@@ -16,6 +16,8 @@ local_nvme: host-dependent
 
 # Profile: generic-SSH — the DEFAULT (bare box) + Slurm / Kubernetes / Colab-Kaggle diffs
 
+Scheduler, notebook and provider details below are historical examples, not current service guarantees. Confirm current official limits and site policy before an authorized run. SSH alone establishes neither disk persistence nor a billing lifecycle.
+
 One-line purpose: the lowest-common-denominator profile for a box where **SSH is the only control
 channel and teardown is manual** — every other platform profile is a *diff* against this baseline.
 
@@ -59,8 +61,7 @@ swappable plug.
 
 ## 2. STORAGE MODEL  *(the survival matrix — principle #4)*
 
-The box gives **one persistent disk that is yours to manage** — no shared FS, no platform quota
-service, no automatic reclamation. *Measure, never assume:* run `df -h && df -i <mount>` live on the
+Inspect the actual disk lifecycle and quota: SSH access does not establish whether storage is persistent, shared, ephemeral or automatically reclaimed. *Measure, never assume:* run `df -h && df -i <mount>` live on the
 box. Caps are host-dependent — do **not** carry over an AutoDL ~200K-inode or ~200 GB constant.
 
 | Tier | Path | Survives STOP? | Survives DESTROY? | Cap |
@@ -87,8 +88,7 @@ actual mount with `du`, clean by value (keep tiny eval JSONs, prune large period
 
 ## 4. SPOT / INTERRUPTION + RESUME  *(principle #7/#8)*
 
-A bare on-demand box has **no spot/preemption model by default** — it runs until manually stopped, so
-the interruption to design against is an **SSH drop**, not an eviction. Without a detach primitive an
+An SSH-only connection supplies no interruption guarantee. Design for SSH drops, reboot, hardware failure and the actual provider eviction policy. Without a detach primitive an
 SSH drop sends SIGHUP and kills the job; `tmux` (§6) is what severs the job from the connection.
 
 Resume is **self-built**: checkpoint full state (model + optimizer + scheduler + epoch/step + RNG +
@@ -185,7 +185,7 @@ DATA_DIR=$HOME/proj    (working dir / data disk on the box)
 DURABLE_DIR=$HOME/proj (durable mount = the measured persistent disk; pull to local before teardown)
 PROXY_HOOK=        (none by default; set HF_ENDPOINT=https://hf-mirror.com only if behind the GFW)
 CRED_FILE=~/.netrc on the box's local disk, streamed in via stdin — never onto a shared/durable FS
-SCRATCH=*.latest.pth and periodic checkpoints  (prune on success; keep best + tiny eval JSONs)
+SCRATCH=periodic checkpoints (retain a verified full-state latest resume checkpoint, best + tiny eval JSONs)
 HF_HOME=$HOME/proj/.hf  (redirect off the default ~/.cache so it lands on the data disk)
 DETACH=tmux            (the swappable plug — replaced by sbatch / Job / commit in the diffs below)
 ```
@@ -214,7 +214,7 @@ wrap `srun` *inside* an `sbatch` script for long runs.
   SIGTERM→KillWait→SIGKILL sequence applies. Arm `#SBATCH --signal=B:SIGTERM@360` for a ~6-minute warning
   (the `B:` prefix signals the **batch shell**, not the steps; **Slurm may fire it up to 60 s EARLY** —
   size the warning with that slack, verified slurm.schedmd.com/sbatch.html 2026-06), trap it to set a flag,
-  and `#SBATCH --requeue` to auto-return to the queue (the script restarts **from its beginning with the
+  and enable `#SBATCH --requeue` for site-supported requeue cases (the script restarts **from its beginning with the
   same job ID**) and resume from the last checkpoint. Cadence formula → `references/spot-resilience.md`.
 - **Native orchestration replaces hand-rolled fan-out:** `--array=0-15` (rate-limit with `%4`) fans out
   ablation cells, `--dependency=afterok:<jobid>` chains stages (runs only on exit-code-0).
@@ -235,10 +235,10 @@ wrap `srun` *inside* an `sbatch` script for long runs.
   mid-backward-pass — so checkpointing directly in the handler races with training (verified
   github.com/Lightning-AI/pytorch-lightning#21406 2026-06). → Fix: the handler does the **minimum** —
   set a flag; poll the flag in the training loop and checkpoint at a **safe point** (end of step), then
-  `scontrol requeue $SLURM_JOB_ID` or exit so `--requeue` returns it.
+  `scontrol requeue $SLURM_JOB_ID` then explicitly request requeue if allowed by site policy; ordinary process exit does not automatically requeue a job.
 - **SLURM2 — Warning signal arrives too late; the SIGKILL lands mid-write.** Symptom: the
   `--signal@360` trap fires but the checkpoint is half-written when SIGKILL hits. → Root cause: two
-  slacks compound — Slurm may send the warning **up to 60 s early OR late**, and at the actual wall the
+  slacks compound — Slurm may send the warning **up to 60 s early**, and at the actual wall the
   `KillWait` grace is only ~30 s (verified slurm.schedmd.com 2026-06). → Fix: budget the warning so a
   full checkpoint fits *before* the wall even with the 60 s jitter; checkpoint *periodically* too (never
   rely on the one signal); make the write atomic (`tmp`→`fsync`→`rename`, U6) so a truncated file is
@@ -283,8 +283,8 @@ wrap `srun` *inside* an `sbatch` script for long runs.
 `kind: kubernetes` · detach = a `Job` manifest (no shell) · persistence = a **PVC, non-optional**.
 
 The unit of work is a **manifest**, not a session: `kubectl apply -f job.yaml`; the control plane
-schedules a pod and a `Job` controller **replaces it on failure** up to `backoffLimit` (**default 4** —
-each failure creates a *new* pod, it does not restart the old one; verified kubernetes.io Jobs doc
+schedules a pod and a `Job` controller **replaces it on failure** up to `backoffLimit` (**default 6** —
+with `restartPolicy: Never`, failures create new pods; `OnFailure` can restart a container in the same pod; verified kubernetes.io Jobs doc
 2026-06). The "detach from my connection" problem vanishes — the pod never had a connection to the shell.
 
 - **GPUs:** `resources.limits: nvidia.com/gpu: 1`. Quirk (verified kubernetes.io scheduling-gpus 2026-06):
@@ -336,7 +336,7 @@ each failure creates a *new* pod, it does not restart the old one; verified kube
   hasn't released, and two distributed-training pods on different nodes can never share an RWO volume
   (verified discuss.kubernetes.io / bobcares.com 2026-06). → Fix: for multi-node training use
   **ReadWriteMany** (NFS/EFS/CephFS) for the shared checkpoint dir, or pin co-dependent pods to one node
-  with affinity; on a stuck failover, force-detach via the cloud console or delete the old `VolumeAttachment`.
+  with affinity; on a stuck failover, ask the storage operator to establish that the old writer is fenced before any detach; forcing attachment without fencing risks data corruption.
 - **K8S5 — Pod `Evicted` mid-training under node disk pressure.** Symptom: a long run dies with
   `status: Evicted, reason: The node was low on resource: ephemeral-storage`. → Root cause: container
   logs, the writable layer, and `emptyDir` count as **ephemeral storage**; checkpoints/caches written
@@ -356,8 +356,7 @@ each failure creates a *new* pod, it does not restart the old one; verified kube
   directly (Insufficient GPU ⇒ K8S1; FailedScheduling taint; ImagePullBackOff ⇒ K8S3; FailedMount ⇒ K8S4).
 - **Why did it die?** `kubectl get pod <p> -o jsonpath='{.status.containerStatuses[0].lastState.terminated}'`
   — `reason: OOMKilled` ⇒ raise `resources.limits.memory` (cgroup-RAM, U9); `Error` + exit code ⇒ read logs.
-- **Logs of a crashed/previous attempt:** `kubectl logs <p> --previous` (the current pod may be a fresh
-  retry with an empty log); `kubectl get events --sort-by=.lastTimestamp` for the cluster-wide timeline.
+- **Logs of a crashed/previous attempt:** `kubectl logs <p> --previous` for a restarted container in that same pod; for a replacement pod, inspect the old pod logs or centralized logging; `kubectl get events --sort-by=.lastTimestamp` for the cluster-wide timeline.
 - **Did the node even offer GPUs?** `kubectl describe node <n> | grep -A4 Allocatable` — `nvidia.com/gpu: 0`
   ⇒ device plugin down (K8S1).
 - **Is the PVC bound and mounted?** `kubectl get pvc` (`Bound`?) and `kubectl describe pod <p>` Volumes
@@ -378,11 +377,11 @@ core's central primitive ("detach + survive the session") cannot be satisfied di
 the baseline — the work cannot be kept alive long enough.
 
 **Colab (free tier):**
-- **Idle timeout ~90 min** (no cell activity) and a hard **~12 h max VM lifetime**; on disconnect all
+- **Runtime and idle limits vary by account and availability**; historical examples are not reliable scheduling ceilings; on disconnect all
   RAM, variables, models, and the local `/content` filesystem are **lost**. Limits are **dynamic and
   unpublished** — GPU type/availability and the exact ceilings "vary over time" and GPU is best-effort,
   can be denied or downgraded (verified research.google.com/colaboratory/faq.html 2026-06).
-- **Free tier requires the browser tab to STAY OPEN** — *(verified — corrects the draft's "anti-idle
+- **Free tier does not guarantee unattended background execution** — *(verified — corrects the draft's "anti-idle
   tricks are unreliable" framing)*: **background execution is a Pro+ paid feature**; on free tier closing
   the tab stops the runtime shortly after (verified github.com/googlecolab/colabtools#4151 + community
   reports 2026-06). So keep-alive hacks aren't merely *unreliable* — there is **no supported headless
@@ -407,9 +406,7 @@ the baseline — the work cannot be kept alive long enough.
   `saved best.pth to /content/drive/...`, the runtime disconnects an hour later, and the file is **0 bytes
   or absent** in Drive. → Root cause: writes to mounted Drive are **buffered and sync asynchronously** —
   large files can take up to ~30 min to actually land, and an unmount/disconnect before the flush loses
-  them (verified github.com/googlecolab/colabtools#2607 + #4426 2026-06). → Fix: call
-  `drive.flush_and_unmount()` (or `os.fsync`) right after each checkpoint, keep checkpoints small, and
-  treat a checkpoint as durable **only after** it is visible in Drive — re-list it before trusting resume.
+  them (verified github.com/googlecolab/colabtools#2607 + #4426 2026-06). → Fix: save an atomic local checkpoint, copy it to Drive, and verify the remote artifact by checksum and load. `os.fsync` alone does not establish remote Drive durability; `drive.flush_and_unmount()` is an end-of-session operation and requires remounting before more writes.
 - **NB2 — Kaggle commit fails if any cell errors → the whole output is lost.** Symptom: "Save & Run All"
   shows `committing…` forever or fails with a non-zero/`Code 0` error, and **nothing** in `/kaggle/working`
   is saved. → Root cause: a commit re-runs the notebook **top-to-bottom on a fresh machine**; one failing
@@ -437,8 +434,7 @@ the baseline — the work cannot be kept alive long enough.
 
 - **What am I actually on?** First cell: `import torch; print(torch.cuda.is_available(), torch.cuda.get_device_name(0))`
   and `!nvidia-smi` — catches a CPU-only Colab assignment or a CPU Kaggle commit (NB3) before wasting the session.
-- **Is the checkpoint really in Drive?** `!ls -la /content/drive/MyDrive/proj/*.pth` *after* a
-  `drive.flush_and_unmount()` — a 0-byte or missing file ⇒ sync lag (NB1), do not teardown trusting it.
+- **Is the checkpoint really in Drive?** verify the checkpoint from Drive independently or after remounting following `drive.flush_and_unmount()`; do not inspect an unmounted local path as if it were Drive. Check size, checksum and loadability (NB1).
 - **Did the Kaggle commit succeed?** Open the Version's **Logs** tab (the only post-mortem for a committed
   run) — a failed cell shows there; the committed `/kaggle/working` is the artifact, not the editor state.
 - **Disk full inside the notebook?** `!df -h` — `/kaggle/working` caps at 20 GB; HF cache and intermediate

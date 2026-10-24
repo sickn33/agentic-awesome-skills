@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Integration boundary
+
+These are independent fragments, not one deployable/tested project. Choose a supported runtime from current AWS documentation rather than copying historical nodejs20.x. API response envelopes belong to API Gateway handlers: SQS/stream failures must propagate or use the event source's supported batch-failure contract, never return an HTTP 200/500 object as a retry signal. Add authentication and per-record authorization before exposing sample reads/writes; CORS is not access control. Parameterized IDs alone do not provide tenant isolation. Budget provisioning, retention and recursion controls explicitly; concurrency limits are not hard spending caps. Local SAM containers can use real credentials/downstream resources.
+
 ## Principles
 
 - Right-size memory and timeout (measure before optimizing)
@@ -44,7 +48,10 @@ exports.handler = async (event, context) => {
       ? JSON.parse(event.body)
       : event.body;
 
-    // Business logic
+    if (!body || typeof body.id !== 'string' || body.id.length > 256) {
+      return { statusCode: 400, body: JSON.stringify({ error: 'Invalid id' }) };
+    }
+    // Authenticate and authorize this caller for body.id before the lookup.
     const result = await processRequest(body);
 
     // Return API Gateway compatible response
@@ -67,7 +74,7 @@ exports.handler = async (event, context) => {
       statusCode: error.statusCode || 500,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        error: error.message || 'Internal server error'
+        error: error.statusCode === 400 ? 'Invalid request' : 'Internal server error'
       })
     };
   }
@@ -114,7 +121,7 @@ def handler(event, context):
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            'body': json.dumps(result)
+            'body': json.dumps(result, default=serialize_dynamodb_decimal)
         }
 
     except ClientError as e:
@@ -127,6 +134,12 @@ def handler(event, context):
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}", exc_info=True)
         return error_response(500, 'Internal server error')
+
+def serialize_dynamodb_decimal(value):
+    from decimal import Decimal
+    if isinstance(value, Decimal):
+        return str(value)  # preserve precision; define the API money/number contract
+    raise TypeError("Unsupported JSON value")
 
 def process_request(data):
     response = table.get_item(Key={'id': data['id']})
@@ -348,7 +361,7 @@ exports.handler = async (event) => {
 
 async function processMessage(message) {
   // Your processing logic
-  console.log('Processing:', message);
+  console.log('Processing event'); // do not log message bodies
 
   // Simulate work
   await saveToDatabase(message);
@@ -380,7 +393,7 @@ def handler(event, context):
 
 ### Best_practices
 
-- Set VisibilityTimeout to 6x Lambda timeout
+- Set visibility timeout to at least six times the function timeout plus the batching window; verify current event-source guidance
 - Use ReportBatchItemFailures for partial batch failure
 - Always configure a DLQ for poison messages
 - Process messages idempotently
@@ -442,7 +455,7 @@ exports.handler = async (event) => {
       ? unmarshall(record.dynamodb.OldImage)
       : null;
 
-    console.log(`${eventName}: `, { newImage, oldImage });
+    console.log(JSON.stringify({ eventName, eventId: record.eventID })); // no record bodies
 
     switch (eventName) {
       case 'INSERT':
@@ -513,7 +526,7 @@ Resources:
   FastFunction:
     Type: AWS::Serverless::Function
     Properties:
-      MemorySize: 1024  # 1GB gets full vCPU
+      MemorySize: 1769  # equivalent of one vCPU; benchmark memory/cost for this workload
       Timeout: 30
 ```
 
@@ -528,12 +541,8 @@ Resources:
       Handler: src/handlers/critical.handler
       AutoPublishAlias: live
 
-  ProvisionedConcurrency:
-    Type: AWS::Lambda::ProvisionedConcurrencyConfig
-    Properties:
-      FunctionName: !Ref CriticalFunction
-      Qualifier: live
-      ProvisionedConcurrentExecutions: 5
+      ProvisionedConcurrencyConfig:
+        ProvisionedConcurrentExecutions: 5
 ```
 
 
@@ -652,7 +661,7 @@ export class ApiStack extends cdk.Stack {
     const table = new dynamodb.Table(this, 'ItemsTable', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
-      removalPolicy: cdk.RemovalPolicy.DESTROY, // For dev only
+      removalPolicy: cdk.RemovalPolicy.RETAIN, // deliberate separate cleanup for disposable dev data
     });
 
     // Lambda Function
@@ -1092,7 +1101,7 @@ Why this breaks:
 API Gateway has hard payload limits:
 - REST API: 10 MB request/response
 - HTTP API: 10 MB request/response
-- Lambda itself: 6 MB sync response, 256 KB async
+- Lambda itself: 6 MB sync response, 1 MB async (verify current invocation/service quotas for the chosen integration)
 
 Exceeding these causes failures that may not be obvious.
 
@@ -1196,7 +1205,7 @@ Events:
 ```
 
 
-## Add idempotency checks
+## Separate output paths (not an idempotency guarantee)
 
 ```javascript
 exports.handler = async (event) => {
@@ -1210,8 +1219,9 @@ exports.handler = async (event) => {
     }
 
     // Process and write to different location
-    await processFile(key);
-    await writeToS3(`processed/${key}`, result);
+    const decodedKey = decodeURIComponent(key.replace(/\+/g, ' '));
+    const result = await processFile(decodedKey);
+    await writeToS3(`processed/${decodedKey}`, result);
   }
 };
 ```
@@ -1283,9 +1293,9 @@ Message: Lambda handler without error handling. Add try/catch.
 
 Severity: INFO
 
-Node.js handlers should set callbackWaitsForEmptyEventLoop
+callbackWaitsForEmptyEventLoop is relevant to callback-style behavior; it is not a universal async-handler requirement
 
-Message: Consider setting context.callbackWaitsForEmptyEventLoop = false
+Message: Await required work and inspect runtime/invocation behavior; this flag does not complete background work or fix unawaited promises.
 
 ### Default Memory Configuration
 

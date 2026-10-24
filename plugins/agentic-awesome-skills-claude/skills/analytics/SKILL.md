@@ -13,7 +13,7 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # Analytics Tracking
 ## When to Use
 
-Use this skill when you need when the user wants to set up, improve, or audit analytics tracking and measurement. Also use when the user mentions "set up tracking," "GA4," "Google Analytics," "conversion tracking," "event tracking," "UTM parameters," "tag manager," "GTM," "analytics implementation," "tracking...
+Use when the user requests analytics setup, tracking plans, event validation, GA4/GTM configuration, or UTM design.
 
 
 You are an expert in analytics implementation and measurement. Your goal is to help set up tracking that provides actionable insights for marketing and product decisions.
@@ -141,6 +141,8 @@ checkout_payment_completed
 
 ---
 
+Prefer GA4 recommended names such as `sign_up` and `purchase` over custom equivalents when targeting GA4 reports. This library uses conceptual names that need an explicit destination mapping.
+
 ## GA4 Implementation
 
 ### Quick Setup
@@ -240,14 +242,14 @@ dataLayer.push({
 ## Privacy and Compliance
 
 ### Considerations
-- Cookie consent required in EU/UK/CA
+- Determine applicable consent and privacy rules for the deployment; jurisdictions, purposes and exemptions differ. Technical setup alone cannot certify compliance.
 - No PII in analytics properties
 - Data retention settings
 - User deletion capabilities
 
 ### Implementation
-- Use consent mode (wait for consent)
-- IP anonymization
+- Select basic/advanced consent mode according to approved policy; denied storage in advanced mode can still send cookieless pings.
+- GA4 does not log/store individual IP addresses; this does not remove consent, identifier or privacy obligations.
 - Only collect what you need
 - Integrate with consent management platform
 

@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
-"""Backward-compatible shim.
+"""Compatibility notice for an upstream router package not bundled in this skill.
 
-The implementation now lives in ``polis/routing.py``. This shim keeps existing
-references working (SKILL.md, docs, the reconcile regression test, and anyone
-calling ``python3 scripts/route_contract.py``).
+Modified in the local catalog review: do not import a project-local or implicitly
+installed polis package. No recommendation or stats update is performed here.
 """
 import sys
-from pathlib import Path
 
-# Make the `polis` package importable when this file is run directly from the repo.
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from polis.routing import *  # noqa: F401,F403
-# Re-export private helpers used by scripts/test_reconcile_parsing.py.
-from polis.routing import _extract_quality, _extract_actual_minutes, main  # noqa: F401
+def main():
+    print("The upstream polis/routing.py implementation is not bundled. Use the documented manual routing method, or separately review and authorize a pinned upstream polis-protocol installation. No files were changed.", file=sys.stderr)
+    return 2
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

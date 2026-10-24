@@ -1,6 +1,6 @@
 {
   "version": "2026-10-18",
-  "about": "Правила стран, которые скилл применяет в расчете: законный срок выплаты вывода, запрещенные способы оплаты, законные лимиты депозитов, блокировки гемблинга в банках, требование платить со счета на имя игрока. Только факты из официальных источников (законы, регуляторы, центральные банки), описание и ссылки в references/geo_rules.md. Конверсий второго депозита здесь нет: надежных публичных данных по ним нет ни по одной стране.",
+  "about": "Непроверенный upstream-снимок правил, не текущая юридическая консультация и не подтверждение соответствия. Некоторые ссылки вторичные. Правила по умолчанию отключены; оператор проверяет первичные источники и применимость для лицензии/территории перед --verified-country-rules. Правила стран, которые скилл применяет в расчете: законный срок выплаты вывода, запрещенные способы оплаты, законные лимиты депозитов, блокировки гемблинга в банках, требование платить со счета на имя игрока. Только факты из официальных источников (законы, регуляторы, центральные банки), описание и ссылки в references/geo_rules.md. Конверсий второго депозита здесь нет: надежных публичных данных по ним нет ни по одной стране.",
   "types": {
     "card": "дебетовая или любая карта, если тип не уточнен",
     "credit_card": "кредитная карта",
@@ -12,116 +12,364 @@
     "crypto": "криптовалюта"
   },
   "aliases": {
-    "BRA": "BR", "BRAZIL": "BR", "BRASIL": "BR", "БРАЗИЛИЯ": "BR", "БРАЗИЛІЯ": "BR",
-    "COL": "CO", "COLOMBIA": "CO", "КОЛУМБИЯ": "CO", "КОЛУМБІЯ": "CO",
-    "PER": "PE", "PERU": "PE", "PERÚ": "PE", "ПЕРУ": "PE",
-    "GBR": "GB", "UK": "GB", "UNITED KINGDOM": "GB", "GREAT BRITAIN": "GB", "ENGLAND": "GB", "SCOTLAND": "GB", "WALES": "GB",
-    "ВЕЛИКОБРИТАНИЯ": "GB", "ВЕЛИКОБРИТАНІЯ": "GB",
-    "IRL": "IE", "IRELAND": "IE", "ИРЛАНДИЯ": "IE", "ІРЛАНДІЯ": "IE",
-    "ITA": "IT", "ITALY": "IT", "ITALIA": "IT", "ИТАЛИЯ": "IT", "ІТАЛІЯ": "IT",
-    "ESP": "ES", "SPAIN": "ES", "ESPAÑA": "ES", "ESPANA": "ES", "ИСПАНИЯ": "ES", "ІСПАНІЯ": "ES",
-    "PRT": "PT", "PORTUGAL": "PT", "ПОРТУГАЛИЯ": "PT", "ПОРТУГАЛІЯ": "PT",
-    "DEU": "DE", "GERMANY": "DE", "DEUTSCHLAND": "DE", "ГЕРМАНИЯ": "DE", "НІМЕЧЧИНА": "DE",
-    "NLD": "NL", "NETHERLANDS": "NL", "THE NETHERLANDS": "NL", "NEDERLAND": "NL", "HOLLAND": "NL", "НИДЕРЛАНДЫ": "NL", "НІДЕРЛАНДИ": "NL",
-    "KEN": "KE", "KENYA": "KE", "КЕНИЯ": "KE", "КЕНІЯ": "KE"
+    "BRA": "BR",
+    "BRAZIL": "BR",
+    "BRASIL": "BR",
+    "БРАЗИЛИЯ": "BR",
+    "БРАЗИЛІЯ": "BR",
+    "COL": "CO",
+    "COLOMBIA": "CO",
+    "КОЛУМБИЯ": "CO",
+    "КОЛУМБІЯ": "CO",
+    "PER": "PE",
+    "PERU": "PE",
+    "PERÚ": "PE",
+    "ПЕРУ": "PE",
+    "GBR": "GB",
+    "UK": "GB",
+    "UNITED KINGDOM": "GB",
+    "GREAT BRITAIN": "GB",
+    "ENGLAND": "GB",
+    "SCOTLAND": "GB",
+    "WALES": "GB",
+    "ВЕЛИКОБРИТАНИЯ": "GB",
+    "ВЕЛИКОБРИТАНІЯ": "GB",
+    "IRL": "IE",
+    "IRELAND": "IE",
+    "ИРЛАНДИЯ": "IE",
+    "ІРЛАНДІЯ": "IE",
+    "ITA": "IT",
+    "ITALY": "IT",
+    "ITALIA": "IT",
+    "ИТАЛИЯ": "IT",
+    "ІТАЛІЯ": "IT",
+    "ESP": "ES",
+    "SPAIN": "ES",
+    "ESPAÑA": "ES",
+    "ESPANA": "ES",
+    "ИСПАНИЯ": "ES",
+    "ІСПАНІЯ": "ES",
+    "PRT": "PT",
+    "PORTUGAL": "PT",
+    "ПОРТУГАЛИЯ": "PT",
+    "ПОРТУГАЛІЯ": "PT",
+    "DEU": "DE",
+    "GERMANY": "DE",
+    "DEUTSCHLAND": "DE",
+    "ГЕРМАНИЯ": "DE",
+    "НІМЕЧЧИНА": "DE",
+    "NLD": "NL",
+    "NETHERLANDS": "NL",
+    "THE NETHERLANDS": "NL",
+    "NEDERLAND": "NL",
+    "HOLLAND": "NL",
+    "НИДЕРЛАНДЫ": "NL",
+    "НІДЕРЛАНДИ": "NL",
+    "KEN": "KE",
+    "KENYA": "KE",
+    "КЕНИЯ": "KE",
+    "КЕНІЯ": "KE"
   },
   "countries": {
     "BR": {
       "payout_hours": 2,
-      "allowed": ["instant_bank", "online_banking", "card"],
-      "banned": ["credit_card", "voucher_cash", "crypto"],
+      "allowed": [
+        "instant_bank",
+        "online_banking",
+        "card"
+      ],
+      "banned": [
+        "credit_card",
+        "voucher_cash",
+        "crypto"
+      ],
       "own_name": true,
-      "preferred": ["instant_bank"],
-      "src": ["BR1", "BR2", "BR3"]
+      "preferred": [
+        "instant_bank"
+      ],
+      "src": [
+        "BR1",
+        "BR2",
+        "BR3"
+      ]
     },
     "CO": {
       "payout_hours": 12,
-      "banned": ["crypto"],
-      "withdraw_conditions": {"per_day": 3, "wager_share": 0.5, "kyc": true},
-      "src": ["CO1", "CO2"]
+      "banned": [
+        "crypto"
+      ],
+      "withdraw_conditions": {
+        "per_day": 3,
+        "wager_share": 0.5,
+        "kyc": true
+      },
+      "src": [
+        "CO1",
+        "CO2"
+      ]
     },
     "PE": {
-      "banned": ["crypto"],
+      "banned": [
+        "crypto"
+      ],
       "own_name": true,
       "single_method": true,
-      "src": ["PE1", "PE2", "PE3", "PE4"]
+      "src": [
+        "PE1",
+        "PE2",
+        "PE3",
+        "PE4"
+      ]
     },
     "GB": {
-      "banned": ["credit_card"],
+      "banned": [
+        "credit_card"
+      ],
       "bank_blocks": true,
-      "src": ["GB1", "GB2", "GB3"]
+      "src": [
+        "GB1",
+        "GB2",
+        "GB3"
+      ]
     },
     "IE": {
-      "banned": ["credit_card"],
-      "src": ["IE1", "IE2"]
+      "banned": [
+        "credit_card"
+      ],
+      "src": [
+        "IE1",
+        "IE2"
+      ]
     },
     "IT": {
       "payout_hours": 168,
-      "limits": [{"kind": "cap", "period": "week", "eur": 100, "types": ["voucher_cash"], "scope": "operator"}],
-      "src": ["IT1", "IT2"]
+      "limits": [
+        {
+          "kind": "cap",
+          "period": "week",
+          "eur": 100,
+          "types": [
+            "voucher_cash"
+          ],
+          "scope": "operator"
+        }
+      ],
+      "src": [
+        "IT1",
+        "IT2"
+      ]
     },
     "ES": {
       "payout_hours": 24,
       "limits": [
-        {"kind": "mandatory"},
-        {"kind": "cap", "period": "day", "eur": 700, "from": "2027-03-25", "scope": "all_operators"},
-        {"kind": "cap", "period": "week", "eur": 1750, "from": "2027-03-25", "scope": "all_operators"},
-        {"kind": "cap", "period": "days28", "eur": 3300, "from": "2027-03-25", "scope": "all_operators"}
+        {
+          "kind": "mandatory"
+        },
+        {
+          "kind": "cap",
+          "period": "day",
+          "eur": 700,
+          "from": "2027-03-25",
+          "scope": "all_operators"
+        },
+        {
+          "kind": "cap",
+          "period": "week",
+          "eur": 1750,
+          "from": "2027-03-25",
+          "scope": "all_operators"
+        },
+        {
+          "kind": "cap",
+          "period": "days28",
+          "eur": 3300,
+          "from": "2027-03-25",
+          "scope": "all_operators"
+        }
       ],
-      "src": ["ES1", "ES2", "ES3"]
+      "src": [
+        "ES1",
+        "ES2",
+        "ES3"
+      ]
     },
     "PT": {
       "payout_hours": 48,
       "own_name": true,
-      "src": ["PT1", "PT2"]
+      "src": [
+        "PT1",
+        "PT2"
+      ]
     },
     "DE": {
-      "banned": ["crypto"],
+      "banned": [
+        "crypto"
+      ],
       "own_name": true,
-      "limits": [{"kind": "cap", "period": "month", "eur": 1000, "scope": "all_operators"}],
-      "src": ["DE1", "DE2", "DE3"]
+      "limits": [
+        {
+          "kind": "cap",
+          "period": "month",
+          "eur": 1000,
+          "scope": "all_operators"
+        }
+      ],
+      "src": [
+        "DE1",
+        "DE2",
+        "DE3"
+      ]
     },
     "NL": {
-      "banned": ["crypto"],
+      "banned": [
+        "crypto"
+      ],
       "own_name": true,
-      "limits": [{"kind": "net_block", "period": "month", "eur": 700, "young_eur": 300}],
-      "src": ["NL1", "NL2", "NL3", "NL4"]
+      "limits": [
+        {
+          "kind": "net_block",
+          "period": "month",
+          "eur": 700,
+          "young_eur": 300
+        }
+      ],
+      "src": [
+        "NL1",
+        "NL2",
+        "NL3",
+        "NL4"
+      ]
     },
     "KE": {
-      "preferred": ["mobile_money"],
-      "src": ["KE1", "KE2"]
+      "preferred": [
+        "mobile_money"
+      ],
+      "src": [
+        "KE1",
+        "KE2"
+      ]
     }
   },
   "sources": {
-    "BR1": {"title": "Portaria Normativa SPA/MF nº 615, de 16.04.2024 (DOU 18.04.2024), ст. 2, 3, 6", "url": "https://www.legisweb.com.br/legislacao/?id=457906"},
-    "BR2": {"title": "Министерство финансов Бразилии (SPA/MF), доклад в Палате депутатов 27.05.2025", "url": "https://www2.camara.leg.br/atividade-legislativa/comissoes/comissoes-permanentes/cffc/apresentacoes-em-eventos/2025-1/ApresentaoAndr.pdf"},
-    "BR3": {"title": "Центральный банк Бразилии, Estudo Especial nº 119/2024", "url": "https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf"},
-    "CO1": {"title": "Регулятор Колумбии, Acuerdo 5 de 2018, ст. 28, 33, 37", "url": "https://www.coljuegos.gov.co/loader.php?lServicio=Tools2&lTipo=descargas&lFuncion=descargar&idFile=238020"},
-    "CO2": {"title": "Регулятор Колумбии, Acuerdo 4 de 2016, ст. 30, 36", "url": "https://www.coljuegos.gov.co/loader.php?lServicio=Tools2&lTipo=descargas&lFuncion=descargar&idFile=224721"},
-    "PE1": {"title": "Ley Nº 31557 (13.08.2022), ст. 15, 26", "url": "https://consultasenlinea.mincetur.gob.pe/casinos/archivos/2022LEY31557.pdf"},
-    "PE2": {"title": "Ley Nº 31806 (28.06.2023), ст. 15", "url": "https://consultasenlinea.mincetur.gob.pe/casinos/archivos/2023LEY31806.pdf"},
-    "PE3": {"title": "Decreto Supremo Nº 005-2023-MINCETUR, ст. 37, 38", "url": "https://apuestasdeportivas.mincetur.gob.pe/PDF/DS_N005_2023_MINCETUR.pdf"},
-    "PE4": {"title": "Министерство торговли и туризма Перу, вопросы и ответы по Ley 31557, версия 2 (2024), вопрос 34", "url": "https://apuestasdeportivas.mincetur.gob.pe/PDF/PREGUNTAS_FRECUENTES_v2.pdf"},
-    "GB1": {"title": "Gambling Commission, запрет кредитных карт с 14.04.2020", "url": "https://www.gamblingcommission.gov.uk/news/article/protecting-consumer-safety-is-at-the-heart-of-credit-card-gambling-ban"},
-    "GB2": {"title": "Правительство Великобритании, White Paper \"High stakes: gambling reform for the digital age\", 27.04.2023", "url": "https://www.gov.uk/government/publications/high-stakes-gambling-reform-for-the-digital-age/high-stakes-gambling-reform-for-the-digital-age"},
-    "GB3": {"title": "Gambling Commission, \"I can't withdraw my winnings\"", "url": "https://www.gamblingcommission.gov.uk/public-and-players/page/i-can't-withdraw-my-winnings"},
-    "IE1": {"title": "Gambling Regulation Act 2024, s.165", "url": "https://revisedacts.lawreform.ie/eli/2024/act/35/section/165/revised/en/html"},
-    "IE2": {"title": "Gambling Regulation Act 2024, вступление s.165 в силу 05.02.2026 (S.I. No. 31 of 2026)", "url": "https://revisedacts.lawreform.ie/eli/2024/act/35/revised/en/html"},
-    "IT1": {"title": "D.Lgs. 25 marzo 2024 n. 41, ст. 6 п. 8", "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2024-03-25;41~art6"},
-    "IT2": {"title": "D.Lgs. 25 marzo 2024 n. 41, ст. 13 п. 5", "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2024-03-25;41~art13"},
-    "ES1": {"title": "Real Decreto 1614/2011, ст. 35, 36", "url": "https://www.boe.es/eli/es/rd/2011/11/14/1614/con"},
-    "ES2": {"title": "Real Decreto 176/2023, ст. 21, 30", "url": "https://www.boe.es/eli/es/rd/2023/03/14/176/con"},
-    "ES3": {"title": "Real Decreto 520/2026 (BOE 25.06.2026), общие лимиты депозитов", "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-13762"},
-    "PT1": {"title": "Decreto-Lei 66/2015 (RJO), ст. 40, 42", "url": "http://www.srij.turismodeportugal.pt/sites/default/files/2022-04/Consolidacao_Decreto_Lei_n_66_2015_Di%C3%A1rio%20da%20Rep%C3%BAblica_n_83_2015_0.pdf"},
-    "PT2": {"title": "Регулятор Португалии, Orientação n.º 4/2017/SRIJ/JO", "url": "http://www.srij.turismodeportugal.pt/sites/default/files/2022-08/Orienta%C3%A7ao_n_4_2017_SRIJ_JO_Comprovativo_da_titularidade_da_conta_de_pagamento.pdf"},
-    "DE1": {"title": "GlüStV 2021, § 6b", "url": "https://www.gesetze-bayern.de/Content/Document/StVGlueStV2021-6b"},
-    "DE2": {"title": "GlüStV 2021, § 6c", "url": "https://www.gesetze-bayern.de/Content/Document/StVGlueStV2021-6c"},
-    "DE3": {"title": "Регулятор Германии, отчет о деятельности за 2024 год", "url": "https://www.gluecksspiel-behoerde.de/images/pdf/jahresberichte/GGL_Tatigkeitsbericht_2024.pdf"},
-    "NL1": {"title": "Besluit kansspelen op afstand, ст. 4.14, 4.25, 4.30", "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0044773"},
-    "NL2": {"title": "Regeling kansspelen op afstand, ст. 3.19d", "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0044767"},
-    "NL3": {"title": "Beleidsregel verantwoord spelen 2024, ст. 3.1.12, 3.1.13", "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0049768"},
-    "NL4": {"title": "Регулятор Нидерландов, \"Uitbetaling van spelerstegoeden\"", "url": "https://kansspelautoriteit.nl/uitbetaling-van-spelerstegoeden"},
-    "KE1": {"title": "Налоговая служба Кении, уведомление об акцизах по Finance Act 2025, 12.07.2025", "url": "https://www.kra.go.ke/news-center/public-notices/2237-adjustment-of-excise-duty-rates-for-excisable-goods-and-services-by-the-finance-act%2C-2025"},
-    "KE2": {"title": "Регулятор связи Кении, статистика за 4-й квартал 2025/2026 (по 30.06.2026)", "url": "https://ca.go.ke/sites/default/files/2026-09/Sector%20Statistics%20Report%20Q4%202025-2026_0.pdf"}
+    "BR1": {
+      "title": "Portaria Normativa SPA/MF nº 615, de 16.04.2024 (DOU 18.04.2024), ст. 2, 3, 6",
+      "url": "https://www.legisweb.com.br/legislacao/?id=457906"
+    },
+    "BR2": {
+      "title": "Министерство финансов Бразилии (SPA/MF), доклад в Палате депутатов 27.05.2025",
+      "url": "https://www2.camara.leg.br/atividade-legislativa/comissoes/comissoes-permanentes/cffc/apresentacoes-em-eventos/2025-1/ApresentaoAndr.pdf"
+    },
+    "BR3": {
+      "title": "Центральный банк Бразилии, Estudo Especial nº 119/2024",
+      "url": "https://www.bcb.gov.br/conteudo/relatorioinflacao/EstudosEspeciais/EE119_Analise_tecnica_sobre_o_mercado_de_apostas_online_no_Brasil_e_o_perfil_dos_apostadores.pdf"
+    },
+    "CO1": {
+      "title": "Регулятор Колумбии, Acuerdo 5 de 2018, ст. 28, 33, 37",
+      "url": "https://www.coljuegos.gov.co/loader.php?lServicio=Tools2&lTipo=descargas&lFuncion=descargar&idFile=238020"
+    },
+    "CO2": {
+      "title": "Регулятор Колумбии, Acuerdo 4 de 2016, ст. 30, 36",
+      "url": "https://www.coljuegos.gov.co/loader.php?lServicio=Tools2&lTipo=descargas&lFuncion=descargar&idFile=224721"
+    },
+    "PE1": {
+      "title": "Ley Nº 31557 (13.08.2022), ст. 15, 26",
+      "url": "https://consultasenlinea.mincetur.gob.pe/casinos/archivos/2022LEY31557.pdf"
+    },
+    "PE2": {
+      "title": "Ley Nº 31806 (28.06.2023), ст. 15",
+      "url": "https://consultasenlinea.mincetur.gob.pe/casinos/archivos/2023LEY31806.pdf"
+    },
+    "PE3": {
+      "title": "Decreto Supremo Nº 005-2023-MINCETUR, ст. 37, 38",
+      "url": "https://apuestasdeportivas.mincetur.gob.pe/PDF/DS_N005_2023_MINCETUR.pdf"
+    },
+    "PE4": {
+      "title": "Министерство торговли и туризма Перу, вопросы и ответы по Ley 31557, версия 2 (2024), вопрос 34",
+      "url": "https://apuestasdeportivas.mincetur.gob.pe/PDF/PREGUNTAS_FRECUENTES_v2.pdf"
+    },
+    "GB1": {
+      "title": "Gambling Commission, запрет кредитных карт с 14.04.2020",
+      "url": "https://www.gamblingcommission.gov.uk/news/article/protecting-consumer-safety-is-at-the-heart-of-credit-card-gambling-ban"
+    },
+    "GB2": {
+      "title": "Правительство Великобритании, White Paper \"High stakes: gambling reform for the digital age\", 27.04.2023",
+      "url": "https://www.gov.uk/government/publications/high-stakes-gambling-reform-for-the-digital-age/high-stakes-gambling-reform-for-the-digital-age"
+    },
+    "GB3": {
+      "title": "Gambling Commission, \"I can't withdraw my winnings\"",
+      "url": "https://www.gamblingcommission.gov.uk/public-and-players/page/i-can't-withdraw-my-winnings"
+    },
+    "IE1": {
+      "title": "Gambling Regulation Act 2024, s.165",
+      "url": "https://revisedacts.lawreform.ie/eli/2024/act/35/section/165/revised/en/html"
+    },
+    "IE2": {
+      "title": "Gambling Regulation Act 2024, вступление s.165 в силу 05.02.2026 (S.I. No. 31 of 2026)",
+      "url": "https://revisedacts.lawreform.ie/eli/2024/act/35/revised/en/html"
+    },
+    "IT1": {
+      "title": "D.Lgs. 25 marzo 2024 n. 41, ст. 6 п. 8",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2024-03-25;41~art6"
+    },
+    "IT2": {
+      "title": "D.Lgs. 25 marzo 2024 n. 41, ст. 13 п. 5",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2024-03-25;41~art13"
+    },
+    "ES1": {
+      "title": "Real Decreto 1614/2011, ст. 35, 36",
+      "url": "https://www.boe.es/eli/es/rd/2011/11/14/1614/con"
+    },
+    "ES2": {
+      "title": "Real Decreto 176/2023, ст. 21, 30",
+      "url": "https://www.boe.es/eli/es/rd/2023/03/14/176/con"
+    },
+    "ES3": {
+      "title": "Real Decreto 520/2026 (BOE 25.06.2026), общие лимиты депозитов",
+      "url": "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2026-13762"
+    },
+    "PT1": {
+      "title": "Decreto-Lei 66/2015 (RJO), ст. 40, 42",
+      "url": "http://www.srij.turismodeportugal.pt/sites/default/files/2022-04/Consolidacao_Decreto_Lei_n_66_2015_Di%C3%A1rio%20da%20Rep%C3%BAblica_n_83_2015_0.pdf"
+    },
+    "PT2": {
+      "title": "Регулятор Португалии, Orientação n.º 4/2017/SRIJ/JO",
+      "url": "http://www.srij.turismodeportugal.pt/sites/default/files/2022-08/Orienta%C3%A7ao_n_4_2017_SRIJ_JO_Comprovativo_da_titularidade_da_conta_de_pagamento.pdf"
+    },
+    "DE1": {
+      "title": "GlüStV 2021, § 6b",
+      "url": "https://www.gesetze-bayern.de/Content/Document/StVGlueStV2021-6b"
+    },
+    "DE2": {
+      "title": "GlüStV 2021, § 6c",
+      "url": "https://www.gesetze-bayern.de/Content/Document/StVGlueStV2021-6c"
+    },
+    "DE3": {
+      "title": "Регулятор Германии, отчет о деятельности за 2024 год",
+      "url": "https://www.gluecksspiel-behoerde.de/images/pdf/jahresberichte/GGL_Tatigkeitsbericht_2024.pdf"
+    },
+    "NL1": {
+      "title": "Besluit kansspelen op afstand, ст. 4.14, 4.25, 4.30",
+      "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0044773"
+    },
+    "NL2": {
+      "title": "Regeling kansspelen op afstand, ст. 3.19d",
+      "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0044767"
+    },
+    "NL3": {
+      "title": "Beleidsregel verantwoord spelen 2024, ст. 3.1.12, 3.1.13",
+      "url": "https://wetten.overheid.nl/jci1.3:c:BWBR0049768"
+    },
+    "NL4": {
+      "title": "Регулятор Нидерландов, \"Uitbetaling van spelerstegoeden\"",
+      "url": "https://kansspelautoriteit.nl/uitbetaling-van-spelerstegoeden"
+    },
+    "KE1": {
+      "title": "Налоговая служба Кении, уведомление об акцизах по Finance Act 2025, 12.07.2025",
+      "url": "https://www.kra.go.ke/news-center/public-notices/2237-adjustment-of-excise-duty-rates-for-excisable-goods-and-services-by-the-finance-act%2C-2025"
+    },
+    "KE2": {
+      "title": "Регулятор связи Кении, статистика за 4-й квартал 2025/2026 (по 30.06.2026)",
+      "url": "https://ca.go.ke/sites/default/files/2026-09/Sector%20Statistics%20Report%20Q4%202025-2026_0.pdf"
+    }
   }
 }

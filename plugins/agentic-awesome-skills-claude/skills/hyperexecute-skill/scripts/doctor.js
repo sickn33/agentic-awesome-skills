@@ -68,9 +68,10 @@ if (hasFlag('--validate-cli')) {
     const result = spawnSync(cliPath, ['--user', process.env.LT_USERNAME, '--key', process.env.LT_ACCESS_KEY, '--config', config, '--validate'], {
       stdio: 'inherit',
       shell: false,
+      timeout: 120000,
     });
     if (result.status === 0) ok('Official HyperExecute validation passed');
-    else fail(`Official HyperExecute validation failed with exit code ${result.status}`);
+    else fail(`Official validation incomplete/failed (exit ${result.status ?? "unknown"}); inspect timeout/process status locally before retrying.`);
   }
 }
 

@@ -1,5 +1,8 @@
 # Testing Guide - Backend Testing Strategies
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to testing backend services with Jest and best practices.
 
 ## Table of Contents
@@ -34,8 +37,7 @@ describe('UserService', () => {
             create: jest.fn(),
         } as any;
 
-        service = new UserService();
-        (service as any).userRepository = mockRepository;
+        service = new UserService(mockRepository);
     });
 
     afterEach(() => {
@@ -76,7 +78,9 @@ describe('UserService', () => {
 
 ## Integration Testing
 
-### Test with Real Database
+### Test with an Isolated Test Database
+
+Before any create/delete fixture, assert the exact test database identity, least-privilege credentials and isolated schema. Never run these examples on production. Use unique fixture IDs and finally cleanup only owned rows.
 
 ```typescript
 import { PrismaService } from '@project-lifecycle-portal/database';
@@ -184,15 +188,9 @@ describe('PermissionService', () => {
 
 ## Testing Authenticated Routes
 
-### Using test-auth-route.js
+### Authenticated endpoint checks
 
-```bash
-# Test authenticated endpoint
-node scripts/test-auth-route.js http://localhost:3002/form/api/users
-
-# Test with POST data
-node scripts/test-auth-route.js http://localhost:3002/form/api/users POST '{"email":"test@test.com"}'
-```
+No test-auth-route script is supplied by this bundle. Use the target repository’s existing HTTP test harness against an isolated test app. Mocking identity tests downstream logic only: add independent tests for expired/wrong-issuer/wrong-audience tokens, forbidden object access, tenant boundaries and CSRF.
 
 ### Mock Authentication in Tests
 

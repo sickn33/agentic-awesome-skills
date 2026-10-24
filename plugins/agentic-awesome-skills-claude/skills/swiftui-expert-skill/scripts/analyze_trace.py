@@ -14,6 +14,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import os
 import sys
 from pathlib import Path
 
@@ -127,8 +129,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: trace not found: {trace}", file=sys.stderr)
         return 2
 
-    info = xctrace.toc(trace)
+    if args.top < 1 or args.top_hitches < 0 or (args.log_limit is not None and args.log_limit < 1):
+        parser.error("--top and --log-limit must be positive; --top-hitches must be nonnegative")
     window_ns = _parse_window(args.window)
+    info = xctrace.toc(trace)
 
     if args.list_runs:
         sys.stdout.write(json.dumps({
@@ -231,8 +235,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.output:
         json_path = args.output.with_suffix(".json")
         md_path = args.output.with_suffix(".md")
-        json_path.write_text(json.dumps(result, indent=2))
-        md_path.write_text(md)
+        if any(p.exists() or p.is_symlink() for p in (json_path, md_path)):
+            raise FileExistsError("report destinations must both be fresh paths")
+        for report_path, content in ((json_path, json.dumps(result, indent=2, allow_nan=False)), (md_path, md)):
+            with os.fdopen(os.open(report_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w", encoding="utf-8") as report:
+                report.write(content)
         print(f"wrote {json_path}")
         print(f"wrote {md_path}")
         return 0
@@ -288,6 +295,8 @@ def _parse_window(spec: str | None) -> tuple[int, int] | None:
         end_ms = float(end_s)
     except ValueError as e:
         raise SystemExit(f"--window: {e}")
+    if not all(math.isfinite(v) and 0 <= v <= (2**63 - 1) / 1_000_000 for v in (start_ms, end_ms)):
+        raise SystemExit("--window: bounds must be finite and nonnegative")
     if end_ms < start_ms:
         raise SystemExit("--window: end_ms must be >= start_ms")
     return (int(start_ms * 1_000_000), int(end_ms * 1_000_000))

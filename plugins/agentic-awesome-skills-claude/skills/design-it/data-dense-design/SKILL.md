@@ -21,8 +21,8 @@ Use this sub-style when the user's request matches the aesthetic described above
 3. **High Utility**: Every pixel serves a functional purpose. Minimal purely decorative elements.
 
 ## Visual DNA
-- **Colors**: **Industrial Chic** (high contrast) or **Minimalist Slate**. Avoid bright backgrounds. Dark themes are heavily preferred to reduce eye strain over 8-hour sessions.
-- **Typography**: Small base sizes (`11px` - `13px`). Strict use of monospace fonts (`Fira Code`, `JetBrains Mono`) for data.
+- **Colors**: **Industrial Chic** (high contrast) or **Minimalist Slate**. Avoid bright backgrounds. Offer theme choice; dark colors do not establish lower eye strain for every user.
+- **Typography**: Use readable, scalable text. Compact examples below are visual studies, not minimum-accessibility recommendations; tabular numerals can align data without forcing monospace throughout.
 - **Borders**: Thin `1px` borders (`#333` or `#e0e0e0`) are used extensively to separate tiny cells of data.
 
 ## Web Implementation
@@ -200,8 +200,8 @@ class DataDenseScreen extends StatelessWidget {
   }
 }
 ```
-- Flutter's `DataTable` is perfect, but you must manually crush the `headingRowHeight` and `dataRowHeight` down from their Material defaults (which are huge).
-- Wrap in dual `SingleChildScrollView` to allow panning around large data sets.
+- The compact row heights below suit a limited static demo; allow rows to grow for text scaling and preserve adequate interactive target sizes.
+- Nested scroll views permit two-axis panning but eagerly lay out this table; paginate or virtualize genuinely large data sets.
 
 ### React Native
 ```jsx

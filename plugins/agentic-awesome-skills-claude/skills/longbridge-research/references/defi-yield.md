@@ -1,5 +1,7 @@
 # longbridge-defi-yield
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 DeFi yield analysis framework — covers lending rates (AAVE / Compound), liquidity provision (LP) returns, staking yields, yield farming strategies, and risk-adjusted return comparison across DeFi protocols.
 
 > **Data scope notice**: Longbridge provides real-time spot prices for major cryptocurrencies (`.HAS` suffix, e.g. `BTCUSD.HAS`, `ETHUSD.HAS`). DeFi protocol metrics (APY, TVL, utilisation rates) are **not available** via the Longbridge CLI — they must be sourced via WebSearch (DefiLlama, CoinGecko, protocol dashboards).
@@ -19,7 +21,7 @@ DeFi yield analysis framework — covers lending rates (AAVE / Compound), liquid
    - Nominal APY vs. inflation-adjusted real yield.
    - IL (impermanent loss) risk for LP positions.
    - Smart contract risk / audit status (note qualitatively).
-5. **Present comparison table** across protocols/strategies, ranked by risk-adjusted return.
+5. **Present comparison table** across protocols/strategies, with separate yield and risk dimensions; no scalar risk-adjusted ranking without a defined, supported model.
 
 ## CLI
 
@@ -57,4 +59,4 @@ Always include a risk disclaimer: _"DeFi 投资存在智能合约风险、无常
 | `command not found: longbridge` | 请先安装 longbridge-terminal（仅用于现货价格） | 請先安裝 longbridge-terminal（僅用於現貨價格） | Install longbridge-terminal (for spot prices only) |
 | `.HAS` symbol not found         | 提示该加密货币暂不支持，尝试标准格式           | 提示該加密貨幣暫不支援                         | Crypto symbol not supported; check `.HAS` format   |
 | DeFi APY data unavailable       | 提示需通过 WebSearch 获取协议数据              | 提示需透過 WebSearch 取得協議數據              | DeFi APY requires WebSearch (DefiLlama/CoinGecko)  |
-| Other stderr                    | 原样展示，不重试                               | 原樣展示，不重試                               | Surface verbatim, do not retry                     |
+| Other stderr                    | 原样展示，不重试                               | 原樣展示，不重試                               | Surface a redacted error summary, do not retry                     |

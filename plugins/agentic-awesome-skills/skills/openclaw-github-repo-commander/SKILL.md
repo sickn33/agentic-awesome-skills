@@ -29,7 +29,7 @@ A structured 7-stage super workflow for comprehensive GitHub repository manageme
 Clone the target repository, define success criteria, and establish baseline metrics.
 
 ### Stage 2: Execution
-Run `scripts/repo-audit.sh <repo-path>` from this skill directory — automated read-only checks for:
+Run `bash scripts/repo-audit.sh <repo-path>` from this skill directory — automated read-only checks for:
 - Hardcoded secrets (`ghp_`, `sk-`, `AKIA`, etc.)
 - Tracked `node_modules/` or build artifacts
 - Empty directories
@@ -50,7 +50,7 @@ Consolidate all findings into a prioritized action plan (P0 critical / P1 import
 Execute the plan: delete low-value files, fix security issues, upgrade documentation, add CI workflows, update changelogs.
 
 ### Stage 7: Validation
-Re-run the audit script (target: 7/7 PASS), verify all changes, push to GitHub, and deliver a full report.
+Re-run applicable checks and report exact coverage/warnings. The bundled helper has six broad checks, excludes workflows and distinguishes neither all tracked/local files nor every secret format; a clean result is not security certification. Push or PR only through the actual repository workflow and user-authorized scope.
 
 ## Examples
 
@@ -83,6 +83,8 @@ Compare my skill repo with the top 5 similar repos on GitHub
 - ❌ Don't commit `node_modules/` or `.env` files
 
 ## Security & Safety Notes
+
+The helper distinguishes a clean no-match from scanner failure and reports failure as unavailable. It still uses limited heuristic patterns and exclusions; do not execute it on untrusted targets as a review shortcut or treat its output as complete secret coverage.
 
 - The audit script scans for common secret patterns but excludes `.github/workflows/` to avoid false positives
 - The bundled script is read-only: it reports findings and never deletes, rewrites, stages, commits, or pushes files

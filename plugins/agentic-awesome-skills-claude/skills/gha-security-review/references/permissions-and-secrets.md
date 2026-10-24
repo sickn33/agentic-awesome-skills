@@ -98,7 +98,7 @@ steps:
     echo "Encoded key: $ENCODED"  # GitHub only masks the original secret value
 ```
 
-GitHub Actions automatically masks secret values in logs, but **derived values** (base64-encoded, truncated, transformed) are NOT masked.
+GitHub Actions automatically masks secret values in logs, but **derived values** (base64-encoded, truncated, transformed) are not reliably masked unless registered.
 
 #### Via Artifacts
 
@@ -125,10 +125,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: ./build.sh  # Fork code can read all secrets via ${{ secrets.* }}
+      - run: ./build.sh  # Fork code can read secrets/credentials actually passed to this job, not all secret names automatically
 ```
 
-**Important:** Secrets are available to `pull_request_target` workflows. Combined with fork checkout, this exposes every secret to attacker code.
+**Important:** Secrets are available to `pull_request_target` workflows. Combined with fork checkout, this exposes secrets actually materialized into the job, action inputs, files or credentials. Untrusted shell code cannot automatically enumerate the entire GitHub secrets store.
 
 ---
 
@@ -178,7 +178,7 @@ GitHub OIDC tokens include a `sub` (subject) claim that cloud providers use to a
   }
 }
 
-# SAFE: Restrict to specific branch and environment
+# SAFE: Restrict to an environment subject; separately protect that environment's allowed branches and reviewers
 {
   "Condition": {
     "StringEquals": {
@@ -234,7 +234,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: production  # Secrets only available in this environment
     steps:
-      - run: deploy --key ${{ secrets.DEPLOY_KEY }}
+      - env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: ./deploy-from-env.sh  # trusted script reads env; keep credentials out of argv/logs
 ```
 
 Environment protection rules add:

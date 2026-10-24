@@ -32,7 +32,7 @@ Response: JSON with `NameSpaceType` field (`Managed` / `Federated` / `Unknown`).
 POST https://autodiscover-s.outlook.com/autodiscover/metadata/json/1
 Body: {"Email": "<probe-user>@<domain>"}
 ```
-Returns the protocol endpoint for the user; presence indicates tenant membership. Detectability: low.
+A response may reflect domain routing or generic service behavior; it does not establish user existence or tenant membership. Detectability: low.
 
 **Autodiscover IP correlation (passive M365 confirmation):**
 
@@ -91,12 +91,12 @@ Body: {"username": "<email>", "password": "invalid_password_for_enum"}
 ```
 Authentication failures and HTTP status codes do not provide a universal account-existence oracle. The historical examples below depend on engine, tenant policy and actual response schema; invalid-password attempts can lock accounts. Only use an approved test account and explicit attempt budget:
 - `400/401` with an authentication failure → ambiguous; do not infer existence.
-- `Authentication transaction states can be JSON `status` values with different HTTP responses; evaluate the current documented engine and an owner-provided test fixture.
+- Authentication transaction states can be JSON `status` values with different HTTP responses; evaluate the current documented engine and an owner-provided test fixture.
 Detectability: medium (audit-log per attempt). Cap at 20 attempts per tenant.
 
 ### 22.3 ADFS
 
-**Passive fingerprint:**
+**Active fingerprint (requires the target-request gate):**
 ```
 GET https://{domain}/adfs/idpinitiatedsignon.aspx
 ```
@@ -191,7 +191,7 @@ done
 **Reading the result correctly:** `HTTP 200` from these probes is **not sufficient to prove the tenant exists** (Microsoft serves a generic redirect-to-auth page) — it does **NOT** mean anonymous access is granted to the tenant's content. Distinguish:
 - 200 → service response only; corroborate tenant identity and intended content access (INFO).
 - An anonymous-share URL is a candidate; prove unintended sensitive content access using minimum approved evidence, without exposing the share token.
-- 401/403 → tenant exists but auth required (INFO).
+- 401/403 → rejected request only; tenant identity and resource existence remain unconfirmed.
 - 404 / NXDOMAIN → tenant not provisioned at this stem (or vanity-named — check known stems from cert transparency).
 
 PowerShell:
@@ -200,7 +200,7 @@ $STEM = ($D -split '\.')[0]
 foreach ($s in @("","-my","-admin")) {
   try {
     $r = Invoke-WebRequest -Uri "https://${STEM}${s}.sharepoint.com/" -Method Head -UseBasicParsing -TimeoutSec 10
-    "${STEM}${s}.sharepoint.com -> HTTP $($r.StatusCode) (tenant exists)"
+    "${STEM}${s}.sharepoint.com -> HTTP $($r.StatusCode) (service response; tenant unconfirmed)"
   } catch {
     $code = $_.Exception.Response.StatusCode.value__
     if ($code) { "${STEM}${s}.sharepoint.com -> HTTP $code" } else { "${STEM}${s}.sharepoint.com -> no host" }
@@ -213,7 +213,7 @@ foreach ($s in @("","-my","-admin")) {
 USER_TOKEN=$(echo "alice@acme.com" | tr '@.' '__')
 STEM="acme"
 curl -sS -m 10 -I "https://${STEM}-my.sharepoint.com/personal/${USER_TOKEN}/Documents/" -w '%{http_code}\n'
-# 401 = exists; 404 = not provisioned
+# Status alone does not prove a personal site exists or is absent.
 ```
 
 **M365 OAuth client_id discovery in JS:**
@@ -236,7 +236,7 @@ The discovery field advertises protocol capability; it does not establish tenant
 
 **Severity:**
 - Discovered SharePoint/OneDrive tenants → INFO (asset only).
-- Anonymous SharePoint anonymous-share link → HIGH (data exposure).
+- Anonymous SharePoint share link → review intended sharing and minimum approved data access; a public link alone does not establish unintended exposure.
 - `device_authorization_endpoint` advertised → INFO protocol metadata; investigate effective policy only with approval.
 - Multi-tenant OAuth app requesting broad Graph scopes → review lead; requested scopes are not granted permissions or compromise.
 
@@ -286,12 +286,14 @@ Iterate over a candidate-field wordlist (use SecLists `Discovery/Web-Content/gra
   ```
   Use a controlled lab for depth/DoS testing. A single accepted nested query does not demonstrate arbitrary depth, DoS or introspection bypass.
 
-- **Subscription enumeration via WebSocket:**
+- **Query operation over the legacy graphql-ws WebSocket transport:**
   ```bash
   wscat -c "wss://target.example/graphql" -s graphql-ws
   > {"type":"connection_init"}
-  > {"id":"1","type":"start","payload":{"query":"subscription { __schema { types { name } } }"}}
+  > {"id":"1","type":"start","payload":{"query":"query { __schema { types { name } } }"}}
   ```
+
+Use this only if the server supports the legacy transport and acknowledges initialization. Introspection is a query operation, not a subscription; actual subscription discovery requires an approved subscription field and bounded event collection.
 
 - **Batched query bypass** (some servers process all queries in batch even if first fails):
   ```json

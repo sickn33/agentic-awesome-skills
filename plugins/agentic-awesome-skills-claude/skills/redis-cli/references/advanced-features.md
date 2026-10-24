@@ -229,7 +229,7 @@ redis-cli GETRANGE net_services 0 50
 ### Read Tagged Argument from stdin (-X)
 
 ```bash
-# Dump and restore a key atomically
+# Separate dump/restore operations, not atomic together; restore may overwrite the target
 redis-cli -D "" --raw dump mykey > /tmp/mykey.dump
 redis-cli -X dump_tag restore mykey2 0 dump_tag replace < /tmp/mykey.dump
 ```
@@ -251,9 +251,10 @@ cat /tmp/commands.txt | redis-cli
 
 ```bash
 # Generate keys continuously
-while true; do
-  echo "SET timestamp:$(date +%s) $(date -Iseconds)"
-done | redis-cli --pipe
+for sample in 1 2 3; do
+  printf 'SET demo:sample:%s %s\n' "$sample" "$sample"
+done | redis-cli -e
+# Plain text commands go to ordinary stdin mode; --pipe requires RESP bytes.
 ```
 
 ## Cluster Management
@@ -314,7 +315,7 @@ redis-cli CLUSTER SHARDS                      # Shard/node mapping (O(N), Redis 
 redis-cli CLUSTER KEYSLOT key                 # Hash slot for a key (O(1))
 redis-cli CLUSTER ADDSLOTS slot [slot ...]    # Assign slots to node (O(N))
 redis-cli CLUSTER DELSLOTS slot [slot ...]    # Unbind slots (O(N))
-redis-cli CLUSTER SETSLOT slot IMPORTING|node-id|MIGRATING|STABLE  # Slot migration (O(1))
+redis-cli CLUSTER SETSLOT slot IMPORTING node-id | MIGRATING node-id | NODE node-id | STABLE  # Slot migration (O(1))
 
 # Node management
 redis-cli CLUSTER MEET ip port [bus-port]     # Join cluster (O(1))

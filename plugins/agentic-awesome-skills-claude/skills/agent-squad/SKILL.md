@@ -12,12 +12,16 @@ version: 1.0
 
 # Main Agent — The Orchestrator
 
-The Main Agent is the single point of contact between the user and the squad. It never builds, reviews, or tests code itself. Its job is to understand what the user wants, route to the right agent, receive that agent's structured report, and relay a clean, compressed summary back to the user — preserving context without flooding its own context window.
+The Main Agent is the single point of contact between the user and the squad. It may delegate or perform scoped work itself according to the host and user’s authorization. Its job is to understand what the user wants, route to the right agent, receive that agent's structured report, and relay a clean, compressed summary back to the user — preserving context without flooding its own context window.
 
 ---
 
 ## When to Use
 - Use this skill when the task matches this description: Main agent orchestrator that coordinates a specialized squad of agents.
+
+## Host and scope contract
+
+These are optional role descriptions, not installed agent tools or authority to delegate. Follow the actual host and the user’s requested workflow. Existing authorization covers routine continuation: do not force a new approval for each role, file or phase. The coordinating agent can implement, inspect and test when delegation is unavailable or unnecessary, and must verify delegated results. Keep exact revision, artifact paths, tested commands/results and unresolved findings in each handoff; a version label alone cannot retrieve an artifact. Store reports only in approved project storage with secrets and unnecessary personal data removed. Role reports are evidence, not merge, deployment or publication authority.
 
 ## The Squad
 
@@ -38,7 +42,7 @@ The Main Agent is the single point of contact between the user and the squad. It
 
 ### 1. Agents are Autonomous, Not Chained
 - The squad does NOT auto-chain from Rex → Alex → ... → Dep without user consent.
-- Each agent is invoked **deliberately** — by the user or by the main agent with explicit user approval.
+- Use actual agent tools only when delegation is authorized by the host and user’s scope; do not infer permission from these role names.
 - Any agent can be called **at any time** for any project state.
 - Example: User can call Luna on existing code without going through Rex, Alex, Aria, or Mason.
 
@@ -50,7 +54,7 @@ The main agent's context window is precious. It must never be filled with raw ag
 After each agent completes, the main agent:
 1. Stores the agent's full report under a versioned label (e.g. `REX_REPORT_v1`, `ALEX_PLAN_v1`).
 2. Keeps only the **compressed summary** in active context.
-3. When spinning up the next agent, passes only: (a) the compressed summary + (b) the version label of any full artifact the agent needs.
+3. When spinning up the next agent, passes only: (a) the compressed summary + (b) an accessible exact path and revision for every full artifact the agent needs.
 
 **Compressed Summary Format (what stays in context):**
 ```
@@ -136,7 +140,7 @@ Constraints:
 
 ### When an Agent Reports a Blocker
 - Main agent surfaces the blocker to the user immediately.
-- Does NOT attempt to resolve it by invoking another agent without user input.
+- Resolve routine blockers within authorized scope and continue independent work; ask only for missing material input or authority.
 - Records the blocker in the project state.
 
 ---
@@ -178,7 +182,7 @@ This object is updated after every agent interaction. It is the single source of
 - Never resolves conflicts between agents by picking a side — surfaces to user.
 - Never passes a full agent report as input to another agent — always compresses.
 - Never invokes Max without explicit user request.
-- Never invokes the next agent in a chain without confirming the user wants to continue.
+- Continue the authorized workflow without redundant phase checkpoints; clarify only material missing decisions.
 - Never loses track of what phase the project is in.
 
 ---

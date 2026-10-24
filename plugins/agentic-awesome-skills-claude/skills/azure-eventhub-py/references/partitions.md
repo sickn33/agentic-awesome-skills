@@ -53,7 +53,7 @@ producer.send_batch(batch)
 ### By Partition Key (Consistent Hashing)
 
 ```python
-# Same key always goes to same partition
+# Same key maps consistently while partition topology remains unchanged
 batch = producer.create_batch(partition_key="user-123")
 batch.add(EventData("All user-123 events in same partition"))
 producer.send_batch(batch)
@@ -65,10 +65,10 @@ for user_id in ["user-1", "user-2", "user-3"]:
     producer.send_batch(batch)
 ```
 
-### Round-Robin (Default)
+### Automatic routing (default)
 
 ```python
-# No partition_id or partition_key = round-robin distribution
+# No explicit targeting: service/SDK chooses routing; do not assume strict per-event round-robin
 batch = producer.create_batch()
 batch.add(EventData("Distributed across partitions"))
 producer.send_batch(batch)
@@ -87,8 +87,9 @@ producer.send_batch(batch)
 ### All Partitions (Load Balanced)
 
 ```python
-from azure.eventhub import EventHubConsumerClient
-from azure.eventhub.extensions.checkpointstoreblob import BlobCheckpointStore
+from azure.eventhub.aio import EventHubConsumerClient
+from azure.eventhub.extensions.checkpointstoreblob.aio import BlobCheckpointStore
+from azure.identity.aio import DefaultAzureCredential
 
 checkpoint_store = BlobCheckpointStore(...)
 
@@ -170,9 +171,9 @@ async def on_event(partition_context, event):
     # Last enqueued event (if tracking enabled)
     if partition_context.last_enqueued_event_properties:
         props = partition_context.last_enqueued_event_properties
-        print(f"Last sequence: {props.sequence_number}")
-        print(f"Last offset: {props.offset}")
-        print(f"Last enqueued: {props.enqueued_time}")
+        print(f"Last sequence: {props['sequence_number']}")
+        print(f"Last offset: {props['offset']}")
+        print(f"Last enqueued: {props['enqueued_time']}")
 ```
 
 ## Track Partition Health
@@ -184,7 +185,7 @@ async def on_event(partition_context, event):
     if props:
         # Calculate lag
         current_seq = event.sequence_number
-        last_seq = props.sequence_number
+        last_seq = props['sequence_number']
         lag = last_seq - current_seq
 
         if lag > 1000:
@@ -228,7 +229,7 @@ async def parallel_consume():
 
 ```python
 class PartitionBatcher:
-    """Batch events by partition for efficient sending."""
+    """Batch by key; bound key cardinality/bytes and serialize add/flush externally."""
 
     def __init__(self, producer):
         self.producer = producer
@@ -334,9 +335,11 @@ class PartitionMonitor:
 5. **Handle ownership changes** — design for partitions moving between consumers
 6. **Use checkpoint stores** for automatic load balancing
 7. **Start from checkpoint** — let checkpoint store manage starting position
-8. **Partition count is fixed** — plan capacity upfront (cannot change after creation)
+8. **Partition count depends on tier** — Premium/Dedicated can increase but not decrease; repartitioning changes key mapping and may affect ordering
 
 ## Partition Limits
+
+Historical planning figures only; verify [current tier limits and partition guidance](https://learn.microsoft.com/en-us/azure/event-hubs/event-hubs-features) before provisioning. Do not treat these figures as a throughput guarantee.
 
 | Limit | Value |
 |-------|-------|

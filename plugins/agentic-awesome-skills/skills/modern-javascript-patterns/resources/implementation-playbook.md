@@ -62,7 +62,7 @@ class Counter {
   // Traditional function loses 'this' in callbacks
   incrementTraditional() {
     setTimeout(function() {
-      this.count++;  // 'this' is undefined
+      this.count++;  // callback receiver is host-dependent, not this Counter
     }, 1000);
   }
 
@@ -208,7 +208,8 @@ const total = `Total: $${(price * 1.2).toFixed(2)}`;
 // Tagged template literals
 function highlight(strings, ...values) {
   return strings.reduce((result, str, i) => {
-    const value = values[i] || '';
+    if (i === values.length) return result + str;
+    const value = String(values[i] ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     return result + str + `<mark>${value}</mark>`;
   }, '');
 }
@@ -387,7 +388,9 @@ async function processUsers(userIds) {
 const config = await fetch('/config.json').then(r => r.json());
 
 // Retry logic
+// GET-only example; do not retry writes without an idempotency contract.
 async function fetchWithRetry(url, retries = 3) {
+  if (!Number.isInteger(retries) || retries < 1) throw new RangeError("retries must be positive");
   for (let i = 0; i < retries; i++) {
     try {
       return await fetch(url);
@@ -400,10 +403,12 @@ async function fetchWithRetry(url, retries = 3) {
 
 // Timeout wrapper
 async function withTimeout(promise, ms) {
-  const timeout = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Timeout')), ms)
-  );
-  return Promise.race([promise, timeout]);
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error('Timeout')), ms);
+  });
+  try { return await Promise.race([promise, timeout]); }
+  finally { clearTimeout(timer); } // does not cancel the underlying operation
 }
 ```
 
@@ -652,7 +657,7 @@ class User {
   constructor(id, name, password) {
     this.id = id;
     this.name = name;
-    this.#password = password;
+    this.#password = this.#hashPassword(password);
     User.count++;
   }
 
@@ -663,7 +668,7 @@ class User {
 
   // Private method
   #hashPassword(password) {
-    return `hashed_${password}`;
+    throw new Error("Credential hashing is not implemented; use a reviewed authentication library");
   }
 
   // Getter

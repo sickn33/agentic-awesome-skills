@@ -1,5 +1,8 @@
 # Telephony toolset
 
+**Operation boundary.** Verification may place real calls or submit personal identity documents. Require the explicit target number/account and action, speaker/recording consent where applicable, and a secure evidence-upload flow. Diagnostics that auto-repair are mutations; do not run them for a read-only investigation.
+
+
 Phone numbers, SIP trunks, caller IDs, carrier connections, and verification. Connect only this group with `https://app.famulor.io/mcp?toolsets=telephony`.
 
 This 2026-08-23 snapshot covers all 27 tools assigned to `telephony` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.

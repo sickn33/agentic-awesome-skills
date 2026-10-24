@@ -78,7 +78,7 @@ Go 二进制中最重要的结构，包含：
 
 ```text
 定位方法：
-1. 搜索 magic bytes: 0xFFFFFFF0 (Go 1.16+) 或 0xFFFFFFFB (Go 1.18+)
+1. 搜索 magic bytes: 0xFFFFFFFB (Go 1.2)、0xFFFFFFFA (Go 1.16)、0xFFFFFFF0 (Go 1.18)、0xFFFFFFF1 (Go 1.20)；字节序及完整表结构必须匹配
 2. 用 GoReSym 自动定位
 3. 用 go_parser IDA 插件自动解析
 ```
@@ -105,7 +105,7 @@ Go 字符串:  struct { ptr *byte; len int } → ptr 指向 "hello"（无 \0）
 **解决方案**：
 - 用 `go_parser` 自动识别 Go 字符串
 - 用 GoReSym 导出字符串列表
-- 手动：找到 `runtime.stringtable` 或通过交叉引用定位
+- 手动：通过实际版本字符串引用及长度字段定位；不假定存在 runtime.stringtable 符号
 
 ---
 
@@ -172,7 +172,7 @@ Garble 会：
 ```bash
 # GoReSym：导出符号
 GoReSym -t -d -p binary > symbols.json
-GoReSym -t -d -p binary -o ida_script.py  # 生成 IDA 脚本
+GoReSym -strings binary > recovered-strings.json  # 支持此选项的版本；另用官方 IDA 导入脚本读取 JSON
 
 # redress：分析 stripped 二进制
 redress -src binary          # 源文件路径
@@ -185,7 +185,7 @@ redress -filepath binary     # 完整文件路径
 GoResolver -binary binary -output resolved.json
 
 # GoStringUngarbler：解密 Garble 字符串
-GoStringUngarbler -i binary -o deobfuscated_binary
+python GoStringUngarbler -i binary -o deobfuscated_binary
 
 # 快速判断 Go 版本
 strings binary | grep "go1\."
@@ -238,3 +238,7 @@ GoReSym -p binary | grep "Version"
 | 动态 Hook | Frida（Hook runtime 函数）或 dlv（Go 原生调试器） |
 | 跨版本对比 | `binary-diff/` — 旧版有符号迁移到新版 |
 | Garble 去混淆 | GoResolver + GoStringUngarbler |
+
+## Verified references and limits
+
+[Go pclntab parser](https://go.googlesource.com/go/+/refs/heads/release-branch.go1.24/src/debug/gosym/pclntab.go), [GoReSym flags](https://github.com/mandiant/GoReSym/blob/master/README.md), [GoStringUngarbler](https://github.com/mandiant/gostringungarbler). Recovery is version dependent; the last tool documents particular Garble/Go ranges and is not an officially supported Google product. Check the selected release; no universal recovery guarantee.

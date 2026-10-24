@@ -41,3 +41,9 @@ Comprehensive guidance for mastering TypeScript's advanced type system including
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+Use `Expect<AssertEqual<Result, Expected>>` for a positive type assertion and
+`@ts-expect-error` for an intentional rejected call. Also validate API JSON at
+runtime; a generic response type does not inspect the returned object.

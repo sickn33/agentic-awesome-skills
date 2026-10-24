@@ -28,7 +28,7 @@ for (const task of tasks) {
 ```typescript
 import { DBOS, WorkflowQueue } from "@dbos-inc/dbos-sdk";
 
-const queue = new WorkflowQueue("task_queue");
+const queue = new WorkflowQueue("task_queue", { workerConcurrency: 5 });
 
 async function processTaskFn(task: string) {
   // ...
@@ -54,6 +54,6 @@ async function processAllTasksFn(tasks: string[]) {
 const processAllTasks = DBOS.registerWorkflow(processAllTasksFn);
 ```
 
-Queues process workflows in FIFO order. All queues should be created before `DBOS.launch()`.
+Without priority overrides, queues dequeue in FIFO order; concurrent completion order is not guaranteed. All queues should be created before `DBOS.launch()`.
 
 Reference: [DBOS Queues](https://docs.dbos.dev/typescript/tutorials/queue-tutorial)

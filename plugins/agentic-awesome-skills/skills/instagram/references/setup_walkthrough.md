@@ -1,9 +1,12 @@
 # Setup Walkthrough — Meta App e OAuth
 
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
 ## Pré-requisitos
 
 1. Conta Instagram Business ou Creator
-2. Facebook Page vinculada à conta IG (obrigatório para Business, recomendado para Creator)
+2. Facebook Page vinculada à conta IG (exigida por este fluxo para Business e Creator)
 3. Conta de desenvolvedor Meta (developers.facebook.com)
 
 ## Passo 1: Criar Meta App
@@ -66,7 +69,7 @@ Em modo de desenvolvimento, apenas testers podem usar o app:
 Com App ID e App Secret em mãos:
 
 ```bash
-python C:\Users\renat\skills\instagram\scripts\auth.py --setup
+python scripts\auth.py --setup
 ```
 
 O script vai:
@@ -95,13 +98,13 @@ O script vai:
 
 ```bash
 # Verificar token e conta
-python C:\Users\renat\skills\instagram\scripts\auth.py --status
+python scripts\auth.py --status
 
 # Testar leitura de perfil
-python C:\Users\renat\skills\instagram\scripts\profile.py --view
+python scripts\profile.py --view
 
 # Testar listagem de mídia
-python C:\Users\renat\skills\instagram\scripts\media.py --list --limit 3
+python scripts\media.py --list --limit 3
 ```
 
 ## Troubleshooting
@@ -121,7 +124,7 @@ python C:\Users\renat\skills\instagram\scripts\media.py --list --limit 3
 
 ### Token expirado
 ```bash
-python C:\Users\renat\skills\instagram\scripts\auth.py --refresh
+python scripts\auth.py --refresh
 ```
 O token longo dura 60 dias e é renovado automaticamente quando faltam 7 dias.
 

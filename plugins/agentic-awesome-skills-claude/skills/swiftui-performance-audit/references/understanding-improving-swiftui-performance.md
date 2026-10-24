@@ -18,7 +18,7 @@ Context: Apple guidance on diagnosing SwiftUI performance with Instruments and a
 ## SwiftUI timeline lanes
 
 - Update Groups: overview of time SwiftUI spends calculating updates.
-- Long View Body Updates: orange >500us, red >1000us.
+- Long View Body Updates: inspect the tool-version legend and configured thresholds; color alone is not a device-independent frame-budget verdict.
 - Long Platform View Updates: AppKit/UIKit hosting in SwiftUI.
 - Other Long Updates: geometry/text/layout and other SwiftUI work.
 - Hitches: frame misses where UI wasn’t ready in time.
@@ -41,7 +41,7 @@ Context: Apple guidance on diagnosing SwiftUI performance with Instruments and a
 ## Remediation patterns
 
 - Move expensive work out of `body` and cache results.
-- Use `Observable()` macro to scope dependencies to properties actually read.
+- Use `@Observable` macro to scope dependencies to properties actually read.
 - Avoid broad dependencies that fan out updates to many views.
 - Reduce layout churn; isolate state-dependent subtrees from layout readers.
 - Avoid storing closures that capture parent state; precompute child views.

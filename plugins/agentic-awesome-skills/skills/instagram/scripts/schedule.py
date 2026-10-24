@@ -28,6 +28,7 @@ gov = GovernanceManager(db)
 
 async def process_pending() -> None:
     """Processa todos os posts approved/scheduled prontos para publicar."""
+    raise RuntimeError("Scheduler publication disabled: requires durable approval, atomic worker claim and reconciliation of ambiguous outcomes")
     await auto_refresh_if_needed()
     api = InstagramAPI()
     account = db.get_active_account()

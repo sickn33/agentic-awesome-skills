@@ -16,6 +16,10 @@ Covers Block Kit for rich UIs, interactive components, slash commands,
 event handling, OAuth installation flows, and Workflow Builder integration.
 Focus on best practices for production-ready Slack apps.
 
+## Application boundary
+
+The bundled guide is a set of partial Python sketches, not a runnable app across all three advertised languages. Supply missing business functions/stores/imports and verify the pinned Bolt SDK APIs. Authenticate and authorize the acting workspace/user/object before approvals, ticket creation or incident changes; removing a button does not prevent duplicate/concurrent processing. Use durable idempotency and tenant-scoped installation storage. Escape untrusted mrkdwn/mentions and redact tokens, response URLs and private channel data. Sending real messages and enabling OAuth/production integrations require explicit authorization. Socket Mode can support production and multiple connections; choose transport from verified platform/distribution requirements, not the guide's development-only claim. Legacy WorkflowStep examples are historical and need migration to supported custom steps.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.

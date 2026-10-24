@@ -1,8 +1,11 @@
 ---
 title: "Playing audio | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/playing-audio
+---
 
 # Playing audio
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 People expect rich audio experiences that automatically adjust when the context changes on the device.
 
@@ -48,7 +51,7 @@ Although most apps and games rely on the system’s default interruption behavio
 
 **Determine how to respond to audio-session interruptions.** For example, if your app supports recording or other audio-related tasks that people don’t want interrupted, you can tell the system to avoid interrupting the currently playing audio for an incoming call unless people choose to accept it. Another example is a VoIP app, which must end a call when people close the Smart Folio of their iPad while they’re using the built-in microphone. Closing the Smart Folio automatically mutes the iPad microphone and by default interrupts the audio session associated with it. If a VoIP app restarts the audio session when people reopen their Smart Folio, it risks invading people’s privacy by unmuting the microphone without their knowledge. You can inspect an audio-session interruption to help determine the right way to respond; for developer guidance, see [Handling audio interruptions](https://developer.apple.com/documentation/AVFAudio/handling-audio-interruptions).
 
-**When an interruption ends, determine whether to resume audio playback automatically.** Sometimes, audio from a different app can interrupt the audio your app is playing. An interruption can be _resumable_ , like an incoming phone call, or _nonresumable_ , like when people start a new music playlist. Use the interruption type and your app’s type to decide whether to resume playback automatically. For example, a media playback app that’s actively playing audio when an interruption occurs can check to be sure the type is resumable before continuing playback when the interruption ends. On the other hand, a game doesn’t need to check the interruption type before automatically resuming playback, because a game plays audio without an explicit user choice. For developer guidance, see [`shouldResume`](https://developer.apple.com/documentation/AVFAudio/AVAudioSession/InterruptionOptions/shouldResume).
+**When an interruption ends, determine whether to resume audio playback automatically.** Sometimes, audio from a different app can interrupt the audio your app is playing. An interruption can be _resumable_ , like an incoming phone call, or _nonresumable_ , like when people start a new music playlist. Use the interruption type and your app’s type to decide whether to resume playback automatically. For example, a media playback app that’s actively playing audio when an interruption occurs can check to be sure the type is resumable before continuing playback when the interruption ends. Games also need to inspect current session/interruption state and the person’s latest pause/mute choices rather than resuming blindly. For developer guidance, see [`shouldResume`](https://developer.apple.com/documentation/AVFAudio/AVAudioSession/InterruptionOptions/shouldResume).
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/playing-audio#Platform-considerations)
 
@@ -122,3 +125,7 @@ Date| Changes
 ---|---  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+An audio category alone does not grant background execution or microphone access. Configure supported capabilities, obtain recording permission when needed, respond to route changes and interruptions, and reactivate only when appropriate. Never unmute a recording merely because a cover opens or an interruption ends. Provide non-audio feedback and respect the selected output route and volume.

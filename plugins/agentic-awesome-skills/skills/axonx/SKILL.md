@@ -35,28 +35,30 @@ This skill is labeled `critical` because it documents package installation, task
 
 ## Prepare the Environment and Service
 
-Use Python 3.12+ on macOS or Linux for local Task execution. In your chosen working directory, create and activate a virtual environment, then install the core:
+Use an already reviewed Python 3.12+ runtime on macOS or Linux for local Task execution. Confirm the selected environment and installed version before operations.
 
 The runtime must already be installed and reviewed. Report a missing runtime instead of installing it.
 
-For the prebuilt Studio UI, install `axonx[studio]` instead. Research plugins are installed separately. For source development, clone the project, enter its root, and install it in an activated virtual environment:
+Studio and research plugins are separate optional dependencies; this guide does not authorize their installation. Source development requires the user-selected reviewed checkout.
 
 The runtime must already be installed and reviewed. Report a missing runtime instead of installing it.
 
 Configure credentials through environment variables or a `.env` file discovered from the process working directory or its parents. Before starting a local service, replace the token placeholder with your own value:
 
 ```bash
-export AXONX_SERVICE_TOKEN='replace-with-your-local-service-token'
+# Supply a strong unique token through a private environment/secret mechanism.
+# Do not use this placeholder value as a real token.
+export AXONX_SERVICE_TOKEN='<strong-unique-token>'
 axonx start --service.host 127.0.0.1
 ```
 
-Keep that process running. In another terminal, activate the same environment and configure the same token, then run `axonx version` to verify the connection. The default port is `1024`; the default workspace is `.axonx` under the startup directory. If using an existing service, obtain its address and authentication configuration before making calls. Keep one execution target for plugin queries, submissions, status, logs, and artifact inspection.
+Keep that process running. In another terminal, activate the same environment and configure the same token, then run `axonx version` to verify the connection. The default port is `1024`; the default workspace is `.axonx` under the startup directory. If using an existing service, obtain its address and authentication configuration before making calls. Keep one execution target for plugin queries, submissions, status, logs, and artifact inspection. Remote bearer tokens and data require authenticated TLS or a trusted encrypted tunnel; plain HTTP is only appropriate on a controlled loopback/tunneled hop. Verify target allowlists and do not expose the shell-capable service publicly.
 
 For MCP clients, connect to `http://127.0.0.1:1024/mcp` using Streamable HTTP and the header `Authorization: Bearer <service-token>`; replace the address and token with those of your service. Discover tools from the connected service rather than assuming a fixed tool catalog. The CLI examples below describe the same operations; use the discovered MCP input schemas when calling tools.
 
 The built-in `demo` Task can verify submission and tracking without market-data or model credentials; the Alpha158 workflow requires its research plugin and prepared input data. Market-data downloads require `AXONX_TUSHARE_TOKEN`; model-backed Agents require separate model configuration. See [Quick start](https://flowllm-ai.github.io/AxonX/en/getting-started/quickstart), [Research workflow](https://flowllm-ai.github.io/AxonX/en/research/workflow), and [MCP integration](https://flowllm-ai.github.io/AxonX/en/agent/mcp-integration) for complete setup examples.
 
-When using this document as a skill, perform only the operations required by the user's request. Documentation examples do not authorize installation, task execution, deletion, or remote changes by themselves. For changes to the source checkout, follow its `AGENTS.md` and [contribution guide](https://github.com/FlowLLM-AI/AxonX/blob/main/CONTRIBUTING.md).
+When using this document as a skill, perform only the operations required by the user's request. Documentation examples do not authorize installation, task execution, deletion, or remote changes by themselves. For changes to the source checkout, follow its `AGENTS.md` and [contribution guide](https://github.com/FlowLLM-AI/AxonX/blob/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/CONTRIBUTING.md).
 
 ## Background
 
@@ -80,18 +82,20 @@ paths, class names, registered names, and dependency chain here are illustrative
 
 ### Required authoring contracts
 
+Source/API contracts in this guide are bound to the provenance commit, not arbitrary newer releases. Verify the installed CLI help and service version before relying on parameter/response details. Do not infer a successful full dependency/security review from this source citation alone.
+
 Every plugin Task must directly or indirectly inherit `BaseTask` and follow the public authoring contract in
-[`axonx/task/core/task.py`](https://github.com/FlowLLM-AI/AxonX/blob/main/axonx/task/core/task.py). Registration alone does not replace this contract:
+[`axonx/task/core/task.py`](https://github.com/FlowLLM-AI/AxonX/blob/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/axonx/task/core/task.py). Registration alone does not replace this contract:
 
 - Declare a fixed `task_type`, `input_cls`, `output_cls`, and a detailed class docstring. Input and output models must
-  inherit `BaseInputParams` and `BaseOutputParams` from [`core/params.py`](https://github.com/FlowLLM-AI/AxonX/blob/main/axonx/task/core/params.py).
+  inherit `BaseInputParams` and `BaseOutputParams` from [`core/params.py`](https://github.com/FlowLLM-AI/AxonX/blob/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/axonx/task/core/params.py).
 - Implement `build_task_steps()` to yield synchronous callables in execution order, and `build_output_params()` to
   return a validated instance of the declared `output_cls`; returning a plain dictionary does not satisfy the contract.
 - Preserve framework-managed Task identity, context, lifecycle, and metadata persistence. Use `self.task_dir`,
   `source_task_dir()`, and `resolve_workspace_path()` for task artifacts and workspace paths; leave execution and
   status recording to the framework runtime.
 
-[`axonx/task/contracts/`](https://github.com/FlowLLM-AI/AxonX/tree/main/axonx/task/contracts) provides optional standard research Task and parameter classes
+[`axonx/task/contracts/`](https://github.com/FlowLLM-AI/AxonX/tree/862b90da9c49c3bdee4c2ab9ef896c415aee9f45/axonx/task/contracts) provides optional standard research Task and parameter classes
 for ETL, Analysis, Train, Predict, and Backtest. For these research stages, prefer the corresponding `Base*Task`,
 `Base*InputParams`, and `Base*OutputParams` classes. Once adopted, their required fields, types, and validators are part
 of the plugin's contract: preserve them and declare additional fields in subclasses. A custom Task may inherit
@@ -183,9 +187,9 @@ alpha158 = "axonx_alpha158"
 axonx_alpha158 = ["plugin.yaml"]
 ```
 
-#### 2. Install the Plugin
+#### 2. Install the Plugin (separately authorized activation only)
 
-Build a wheel from source and install it into the current Python environment:
+Source wheel builds and metadata inspection can execute build-backend code. Review source/hooks/dependencies first and use an isolated build environment; `plugin inspect` of source is not inert analysis. After the installation prerequisite and activation authorization are satisfied, the documented operation is:
 
 ```bash
 axonx plugin install plugins/a158
@@ -362,9 +366,9 @@ For a request to add a factor, inspect the existing plugin and Task definition, 
 - An AxonX service and its configured credentials are required for HTTP/MCP operations. This file alone does not deploy a service.
 - Research plugins, market data, and model configuration are separate dependencies. Example IDs and addresses are placeholders.
 - The ETL code above is structural pseudocode and needs a real transform and complete output fields before execution.
-- Backtest results do not establish future investment performance; compare costs and data assumptions before interpreting them.
+- Backtest results do not establish future investment performance. Use point-in-time data/universe, leakage-free time splits, transaction costs/slippage/liquidity and corporate-action handling; tune on development windows and reserve a final untouched holdout. Reusing artifacts is valid only when their input hashes/config/time windows match. Record seeds, versions, lineage and sensitivity; distinguish research execution from any separately authorized live trading.
 - Source development requires an AxonX checkout; paths inside examples refer to that checkout or the selected service workspace as stated above.
 
 ## Source and License
 
-Copyright 2026 FlowLLM-AI. Adapted from the AxonX development guide and Skill at commit `862b90da9c49c3bdee4c2ab9ef896c415aee9f45`, licensed under Apache-2.0; the license is included at `references/LICENSE.md`. This contribution adds catalog metadata, trigger guidance, safety notes, examples, and limitations. Source attribution does not imply endorsement by this catalog.
+Copyright 2026 FlowLLM-AI. Adapted from the AxonX development guide and Skill at commit `862b90da9c49c3bdee4c2ab9ef896c415aee9f45`, licensed under Apache-2.0; the license is included at `references/LICENSE.md`. This contribution adds catalog metadata, trigger guidance, safety notes, examples, and limitations. Local individual review additionally pins source-contract links and clarifies build activation, transport and backtest-validation limits. Source attribution does not imply endorsement by this catalog.

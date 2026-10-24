@@ -2,7 +2,7 @@
 name: pipecat-friday-agent
 description: "Build a low-latency, Iron Man-inspired tactical voice assistant (F.R.I.D.A.Y.) using Pipecat, Gemini, and OpenAI."
 category: voice-agents
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-10"
 tags: [pipecat, voice, gemini, openai, python]
@@ -42,6 +42,8 @@ Create a `.env` file with your API keys:
 OPENAI_API_KEY=your_openai_key
 GOOGLE_API_KEY=your_google_key
 ```
+
+The bundled script is an unpinned illustrative prototype, not a verified runnable setup. Inspect the entire script before starting: it immediately enables the microphone and sends speech/transcripts to external providers, incurring charges. Obtain participants' consent, confirm retention settings and keep keys in an ignored protected environment file. Select a real output device instead of the author's index 6; test_audio_output.py is not bundled. Validate Pipecat version/imports and its supported provider context/aggregators; the hand-written Google shim does not demonstrate correct system/assistant roles or tool calls. Use the framework's supported provider context rather than relying on the shim unchanged. VAD reduces silence processing but cannot prevent all background activation. This is not a safety-critical tactical/status system: the prompt's nominal status is fictional, not measured evidence.
 
 ### Step 3: Run the Agent
 

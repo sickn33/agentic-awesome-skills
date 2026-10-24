@@ -151,7 +151,9 @@ emu.run(functionEntryAddress);
 byte[] decrypted = emu.readMemory(outputAddress, length);
 ```
 
-### MCP Commands
+### MCP Commands (server dependent)
+These names are illustrative; discover the installed server schema before calling.
+
 - Recon: `list_functions`, `list_imports`, `list_strings`
 - Analysis: `decompile_function`, `get_xrefs_to`
 - Annotation: `rename_function`, `rename_variable`
@@ -281,7 +283,8 @@ Notes:
 ### Decompile to C
 ```bash
 wasm2c checker.wasm -o checker.c
-gcc -O3 checker.c wasm-rt-impl.c -o checker
+# A wasm2c module also needs generated headers, matching WABT runtime and an entry harness.
+# Build according to the selected WABT version; this is not recovered original C.
 ```
 
 ### Common Patterns
@@ -364,13 +367,13 @@ Notes:
 
 ### Two-Stage XOR + AES-CBC Decode Pattern (Codegate 2013)
 
-**Pattern:** .NET binary stores an encrypted byte array that undergoes XOR decoding followed by AES-256-CBC decryption. The same key value serves as both the AES key and IV.
+**Pattern:** .NET binary stores an encrypted byte array that undergoes XOR decoding followed by AES-256-CBC decryption. Recover the actual key and IV separately; AES key length and IV length are different constraints.
 
 **Steps:**
 1. Extract hardcoded byte array and key string from binary (dnSpy/ILSpy)
 2. XOR each byte (may be multi-pass, e.g., `0x25` then `0x58`, equivalent to single `0x7D`)
 3. Base64-decode the XOR result
-4. AES-256-CBC decrypt with `RijndaelManaged` using the extracted key as both Key and IV
+4. AES-256-CBC decrypt with `RijndaelManaged` using the recovered key and 16-byte IV
 
 ```python
 from Crypto.Cipher import AES
@@ -384,9 +387,11 @@ for i in range(len(data)):
 # Step 2: Base64 decode
 ct = b64decode(bytes(data))
 
-# Step 3: AES-256-CBC decrypt (same value for key and IV)
-key = b"9e2ea73295c7201c5ccd044477228527"  # Padded to 32 bytes
-cipher = AES.new(key, AES.MODE_CBC, iv=key)
+# Step 3: AES-256-CBC decrypt; reproduce the target derivation exactly
+key = extracted_key  # Recover actual encoding/padding from the target; AES-256 needs 32 bytes
+iv = extracted_iv    # AES block size is 16 bytes; do not pass a 32-byte key as IV
+assert len(key) == 32 and len(iv) == 16 and len(ct) % 16 == 0
+cipher = AES.new(key, AES.MODE_CBC, iv=iv)
 plaintext = cipher.decrypt(ct)
 ```
 
@@ -441,8 +446,10 @@ md = Cs(CS_ARCH_RISCV, CS_MODE_RISCVC | CS_MODE_RISCV64)
 md.detail = True
 
 # Disassemble from entry point (check ELF header for e_entry)
-TEXT_OFFSET = 0x10000  # typical for static RISC-V
-for insn in md.disasm(code[TEXT_OFFSET:], TEXT_OFFSET):
+TEXT_OFFSET = verified_file_offset  # Derive from ELF section/program headers
+TEXT_VADDR = verified_virtual_address  # File offset is not the load virtual address
+TEXT_SIZE = verified_region_size
+for insn in md.disasm(code[TEXT_OFFSET:TEXT_OFFSET + TEXT_SIZE], TEXT_VADDR):
     print(f"0x{insn.address:x}:\t{insn.mnemonic}\t{insn.op_str}")
 ```
 
@@ -544,3 +551,7 @@ readelf -s binary
 objdump -d binary
 objdump -M intel -d binary
 ```
+
+## Safety and reproducibility
+
+Apply the root SKILL authorization/isolation rules to every command. Debug/run/emulation execute targets. Python marshal is not safe for untrusted input; parse only in a disposable offline VM with a matching Python version/header, never import or execute recovered code on the host. Online decompilers disclose uploaded files: obtain data-sharing authorization first. Code blocks using extracted values or missing helpers are case-specific sketches, not standalone executables. API signatures and tool availability must be checked against a pinned release.

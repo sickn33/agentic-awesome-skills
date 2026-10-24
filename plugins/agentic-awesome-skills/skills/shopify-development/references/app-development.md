@@ -22,6 +22,9 @@ https://{shop}.myshopify.com/admin/oauth/authorize?
 app.get("/auth/callback", async (req, res) => {
   const { code, shop, state } = req.query;
 
+  // Incomplete pseudocode: validate a strict myshopify.com host, callback HMAC,
+  // timestamp and a single-use session-bound state with Shopify's official SDK.
+  // Do not exchange a code from this sketch until all checks pass.
   // Verify state to prevent CSRF
   if (state !== storedState) {
     return res.status(403).send("Invalid state");
@@ -148,10 +151,7 @@ Variables:
     "title": "New Product",
     "productType": "Apparel",
     "vendor": "Brand",
-    "status": "ACTIVE",
-    "variants": [
-      { "price": "29.99", "sku": "SKU-001", "inventoryQuantity": 100 }
-    ]
+    "status": "DRAFT"
   }
 }
 ```
@@ -276,10 +276,9 @@ topics = ["app/uninstalled"]
 uri = "/webhooks/app/uninstalled"
 
 # GDPR mandatory webhooks
-[webhooks.privacy_compliance]
-customer_data_request_url = "/webhooks/gdpr/data-request"
-customer_deletion_url = "/webhooks/gdpr/customer-deletion"
-shop_deletion_url = "/webhooks/gdpr/shop-deletion"
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+uri = "/webhooks/privacy"
 ```
 
 ### Webhook Handler
@@ -296,7 +295,10 @@ function verifyWebhook(req) {
     .update(body, "utf8")
     .digest("base64");
 
-  return hmac === hash;
+  if (typeof hmac !== 'string' || !Buffer.isBuffer(body)) return false;
+  const supplied = Buffer.from(hmac, 'base64');
+  const expected = Buffer.from(hash, 'base64');
+  return supplied.length === expected.length && crypto.timingSafeEqual(supplied, expected);
 }
 
 app.post("/webhooks/orders/create", async (req, res) => {
@@ -307,7 +309,8 @@ app.post("/webhooks/orders/create", async (req, res) => {
   const order = req.body;
   console.log("New order:", order.id, order.name);
 
-  // Process order...
+  // Durably enqueue using the webhook ID for idempotency before acknowledging.
+  // Never log customer payloads; authenticate the raw body before JSON parsing.
 
   res.status(200).send("OK");
 });
@@ -340,39 +343,12 @@ app.post("/webhooks/orders/create", async (req, res) => {
 
 ### App Charges
 
-**One-time Charge:**
+**One-time charges:**
 
-```graphql
-mutation CreateCharge($input: AppPurchaseOneTimeInput!) {
-  appPurchaseOneTimeCreate(input: $input) {
-    appPurchaseOneTime {
-      id
-      name
-      price {
-        amount
-      }
-      status
-      confirmationUrl
-    }
-    userErrors {
-      field
-      message
-    }
-  }
-}
-```
-
-Variables:
-
-```json
-{
-  "input": {
-    "name": "Premium Feature",
-    "price": { "amount": 49.99, "currencyCode": "USD" },
-    "returnUrl": "https://your-app.com/billing/callback"
-  }
-}
-```
+Use the versioned `appPurchaseOneTimeCreate` schema's name, price, returnUrl and
+test arguments directly; it does not accept a generic AppPurchaseOneTimeInput.
+Read confirmationUrl from the mutation payload, inspect userErrors, obtain merchant
+approval and verify charge status server-side. A redirect alone is not payment.
 
 **Recurring Charge (Subscription):**
 
@@ -511,17 +487,14 @@ Variables:
 
 ### GraphQL Cost-Based Limits
 
-**Limits:**
-
-- Available points: 2000
-- Restore rate: 100 points/second
-- Max query cost: 2000
+**Limits:** Plan-dependent; use extensions.cost.throttleStatus returned by the API. Do not assume a fixed bucket or restore rate.
 
 **Check Cost:**
 
 ```javascript
 const response = await graphqlRequest(shop, token, query);
-const cost = response.extensions?.cost;
+// graphqlRequest above returns data only; preserve the raw envelope to read extensions.
+const cost = rawResponse.extensions?.cost;
 
 console.log(
   `Cost: ${cost.actualQueryCost}/${cost.throttleStatus.maximumAvailable}`,

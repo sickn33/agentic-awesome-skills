@@ -190,7 +190,7 @@ For assets the operator owns or has written authorization to assess. The mandato
 
 - **TENTATIVE** — plausible based on indirect evidence (snippet-only dork match, single-source asset, inferred email pattern).
 - **FIRM** — directly observed (subdomain resolves, HEAD-confirmed bucket exists, banner returned).
-- **CONFIRMED** — verified via independent corroboration OR direct verification (live PMAK validation, multiple sources agree, listable bucket with object retrieval).
+- **CONFIRMED** — a precisely stated observation verified by independent corroboration or approved direct evidence. Credential identity acceptance, multiple agreeing sources and one object read do not prove unrestricted permissions, independent sourcing or unintended disclosure.
 
 ---
 
@@ -270,20 +270,20 @@ This skill is a **lean operational index**. Most concrete data (wordlists, regex
 
 ---
 
-## 20. Endpoint Interest Score — 0–100 rubric
+## 20. Endpoint Interest Score — capped 0–100 rubric
 
-For every classified endpoint (§22 in methodology skill), apply this advisory prioritization rubric, only to observations already authorized and collected. It is not CVSS, a vulnerability verdict or permission to perform a write:
+For every classified endpoint (§22 in methodology skill), apply this advisory prioritization rubric (sum applicable signals and cap the total at 100), only to observations already authorized and collected. It is not CVSS, a vulnerability verdict or permission to perform a write:
 
 | Signal | Points | Conditions |
 |---|---|---|
 | **Unauth write** | +40 | An approved disposable fixture demonstrates an unintended state change without required authorization; a 2xx response alone is insufficient. Do not issue writes merely to calculate this score. |
-| **Open GraphQL introspection** | +35 | `__schema` query returns full type list anonymously. |
+| **Open GraphQL introspection** | +35 | Public schema discovery alone is not an adverse security signal; review intended disclosure first. |
 | **Verb tampering bypass** | +30 | An approved fixture demonstrates a method-specific authorization failure. OPTIONS/Allow and method reachability alone are leads. |
 | **Reflected CORS + credentials** | +25 | `Access-Control-Allow-Origin` reflects request `Origin` AND `Access-Control-Allow-Credentials: true`. |
 | **Sensitive keyword in path** | +20 | Path matches one of: `admin`, `internal`, `debug`, `user`, `password`, `token`, `key`, `export`, `upload`, `backup`, `config`, `secret`, `private`, `delete`, `purge`, `wipe`. |
 | **Schema leak in error** | +20 | Response body contains stack trace, ORM error class, framework signature (e.g., `ActiveRecord::RecordNotFound`, `org.hibernate.exception.*`, `django.db.utils.IntegrityError`). |
 | **API key in URL** | +15 | Path or query string contains `api_key=`, `apikey=`, `token=`, `access_token=`. |
-| **Wildcard CORS** | +10 | `Access-Control-Allow-Origin: *`. |
+| **Wildcard CORS** | +10 | `Access-Control-Allow-Origin: *` is valid for public resources; actual unintended disclosure requires separate evidence. |
 | **Missing rate-limit headers** | +10 | Observed absence of rate-limit headers is a hardening lead only; assign no points without an independently demonstrated limit failure. Do not send rapid requests to generate evidence. |
 
 **Thresholds:**

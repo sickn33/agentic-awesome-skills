@@ -18,12 +18,16 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## When to Use
 
-Use this skill when you need when the user wants to understand, reduce, or recover from developer churn. Trigger phrases include "why developers leave," "churn rate," "win-back campaign," "at-risk users," "developer retention," "preventing churn," or "competitor switching.".
+Use this skill when the user wants to understand, reduce, or recover from developer churn. Trigger phrases include "why developers leave," "churn rate," "win-back campaign," "at-risk users," "developer retention," "preventing churn," or "competitor switching.".
 
 
 This skill helps you understand why developers leave, identify at-risk users before they churn, and win back those who've already left. No guilt trips or desperate discounts — just honest understanding and genuine value.
 
 ---
+
+## Data and action boundaries
+
+Use only authorized, minimized customer data. Keep identifiers out of reports, honor retention and opt-outs, and do not infer a person's intent from a health score. Draft campaigns locally; sending outreach, enrolling users, offering credits or changing billing needs explicit user authority and actual offer terms. Named vendors are examples, not verified current capabilities.
 
 ## Limitations
 

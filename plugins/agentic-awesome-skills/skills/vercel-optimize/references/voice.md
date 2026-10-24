@@ -10,7 +10,7 @@ Write for a user deciding what to fix next. Lead with the observed signal, the s
 - Be direct. No apologetic preambles, no marketing language, no "For context" wrap-up paragraphs.
 - Keep every recommendation tied to a route, file, metric, or project setting.
 - Use observed numbers only. Never invent savings, traffic, latency, or percentages.
-- Use cost magnitude language, not precise savings: "hundreds of dollars per month at current traffic," not "$340/mo."
+- State savings as unmeasured unless before-and-after evidence supports them. Billed spend and an impact tier do not establish savings or a monthly rate.
 - Use precise performance language when measured: "95th percentile duration is 1,240ms."
 - Frame prerequisites as engineering constraints, not upsells. Explain the decision impact: what the missing data prevents, what the limited fallback can still do, and what the user should choose next.
 - Use short bullets and tables. Avoid long paragraphs in reports and final chat messages.

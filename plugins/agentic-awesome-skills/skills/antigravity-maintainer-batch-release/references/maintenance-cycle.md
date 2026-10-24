@@ -139,7 +139,7 @@ npm run maintenance:cycle -- hosts --state-dir /absolute/private/state --version
 ```
 
 This command needs an existing source-cycle state and belongs before its final
-verification. For a release-only task, use `npm run release:verify -- --version X.Y.Z --hosts /absolute/private/hosts.json` instead. The JSON array is the complete
+verification. For a release-only task, complete an explicit empty source cycle first, then use `npm run release:verify -- --version X.Y.Z --hosts /absolute/private/hosts.json` instead. The JSON array is the complete
 host inventory, replacing defaults; include every known configured host. Atlas
 uses `{ "host": "codex", "config": "/absolute/home/.codex-atlas/config.toml" }`.
 Use actual absolute paths and existing configurations only.
@@ -147,3 +147,30 @@ Use actual absolute paths and existing configurations only.
 The source-cycle probe reuses `release_inspect` runtime integrity and MCP initialize/initialized/
 tools-list checks. Never write an ad-hoc handshake or mistake it for native-client
 reconnection. Host configuration updates remain separately authorized.
+
+
+## Mandatory release cycle barrier
+
+A release must never proceed with an unresolved PR in the recorded batch. Every
+batch PR must be merged into protected main or closed without merge with an
+owner rationale posted **before** closure and bound to its exact head. A policy
+blocker is not completion and never authorizes bypassing merge protection or
+closing an otherwise valid contribution merely to unlock publication.
+
+Use `npm run maintenance:cycle -- close --state-dir /absolute/private/state --prs 123 --expected-head FULL_40_CHARACTER_SHA --reason 'Substantive reason, including the replacement PR when applicable'`.
+This posts the required comment before closing; uncertain writes stop without a
+retry. Plain undocumented closure does not satisfy verification. Merged PRs use
+the existing protected merge path.
+
+Run `maintenance:cycle verify` successfully on exact current main before
+`npm run release:prepare -- X.Y.Z --state-dir /absolute/private/state`.
+Preparation fails before branch creation or version changes without completed
+cycle evidence. The release PR carries `data/release-cycle.json`; publication
+and the npm workflow independently re-read live PR states, closure comments,
+protected-main ancestry and successful CI/CodeQL for the verified source commit.
+Reopened PRs, absent proof or failed checks block publication. Reverify if main
+moves before preparation. Never shrink the recorded scope to hide blockers.
+
+For a genuinely release-only task with no source PR batch, explicitly start a
+cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
+The original batch inventory must include every PR in the authorized scope.

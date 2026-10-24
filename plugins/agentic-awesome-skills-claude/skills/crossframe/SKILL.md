@@ -38,6 +38,7 @@ This AAS-ready copy preserves the original CrossFrame skill body below. Chinese 
 
 - The skill body is intentionally Chinese-canonical; English metadata is for discovery and does not replace the original Chinese terms.
 - Use only after explicit CrossFrame invocation or `crossframe-suite` routing; do not apply it as a generic default reasoning layer.
+- It is an author-defined analytical framework, not an empirically validated diagnostic instrument. Terms such as trauma, healing and diagnosis must not be presented as clinical assessments of a person.
 - It structures analysis, drafting, and review, but does not replace source verification, domain expertise, or legal, medical, or financial judgment.
 
 如果用户任务需要多个 CrossFrame 平行 skill 连续协作，先读取 `../crossframe-suite/SKILL.md` 做总调度；本 skill 负责其中的结构诊断、事实边界、尺度窗口、机制候选、七闸复核和判断档位。
@@ -102,7 +103,7 @@ CrossFrame 不是“把 v5.0 文本塞进上下文”的提示词包，而是一
 - 推理提纲必须包含：诊断对象、事实边界、尺度窗口、七闸复核、机制候选、判断档位、本次读取的概念或保真检查、本次 v5 连续联读包、读态胶囊摘要、下一步观察或行动。
 - 深度、审计、高责任、公共制度、亲密关系、长期演化和文章输出场景，推理提纲必须显示“本次连续联读包”；普通轻量问题可以写“未触发”。
 - 推理提纲只能写提纲，不写冗长内心推理；它用于让用户看见推理路径，也用于约束后续输出不跳步。
-- 只有用户要求“完整推理过程”“内部映射”“工作表”“审计”时，才展开完整工作表。
+- 用户要求解释、工作表或审计时，可提供事实、来源、假设、方法和简洁判断依据；不披露隐藏的内部推理链。工作表只呈现可供核验的证据摘要。
 - 默认先说人话，不堆术语。第一段必须让没有读过框架的人也能明白“发生了什么、为什么卡住、下一步看什么”。
 - 永远区分：来源、事实、证据、解释、机制候选、判断档位、行动上限。
 - 术语只能作为附加映射，不得作为结论本身。不要用“这是典型的 X，所以 Y”替代推理。

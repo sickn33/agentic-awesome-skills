@@ -15,11 +15,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const sanitizeFilename = require('sanitize-filename');
 
 const rawProjectPath = process.argv[2];
 const projectPath = rawProjectPath
-  ? path.resolve(process.cwd(), sanitizeFilename(path.basename(rawProjectPath)))
+  ? path.resolve(rawProjectPath)
   : null;
 const withDocs = process.argv.includes('--docs');
 
@@ -67,7 +66,7 @@ function extractComponents(indexFile) {
       for (const part of n[1].split(',')) {
         // Skip `type Foo` re-exports
         if (/^\s*type\s/.test(part)) continue;
-        const id = part.trim().split(/\s+as\s+/)[0].trim();
+        const id = part.trim().split(/\s+as\s+/).pop().trim();
         if (id && /^[A-Z]/.test(id) && !TYPE_SUFFIX.test(id)) names.push(id);
       }
     }

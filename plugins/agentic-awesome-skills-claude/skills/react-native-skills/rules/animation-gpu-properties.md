@@ -14,7 +14,7 @@ Avoid animating `width`, `height`, `top`, `left`, `margin`, or `padding`. These 
 ```tsx
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
-function CollapsiblePanel({ expanded }: { expanded: boolean }) {
+function CollapsiblePanel({ expanded, children }: { expanded: boolean; children: React.ReactNode }) {
   const animatedStyle = useAnimatedStyle(() => ({
     height: withTiming(expanded ? 200 : 0), // triggers layout on every frame
     overflow: 'hidden',
@@ -29,7 +29,7 @@ function CollapsiblePanel({ expanded }: { expanded: boolean }) {
 ```tsx
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
-function CollapsiblePanel({ expanded }: { expanded: boolean }) {
+function CollapsiblePanel({ expanded, children }: { expanded: boolean; children: React.ReactNode }) {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       { scaleY: withTiming(expanded ? 1 : 0) },
@@ -50,7 +50,7 @@ function CollapsiblePanel({ expanded }: { expanded: boolean }) {
 ```tsx
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 
-function SlideIn({ visible }: { visible: boolean }) {
+function SlideIn({ visible, children }: { visible: boolean; children: React.ReactNode }) {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       { translateY: withTiming(visible ? 0 : 100) },
@@ -62,4 +62,4 @@ function SlideIn({ visible }: { visible: boolean }) {
 }
 ```
 
-GPU-accelerated properties: `transform` (translate, scale, rotate), `opacity`. Everything else triggers layout.
+GPU-accelerated properties: `transform` (translate, scale, rotate), `opacity`. Other properties vary; color changes, for example, are not layout changes. A scaled panel still reserves its full layout height and can remain interactive/accessibility-visible; use actual layout animation when surrounding content must collapse.

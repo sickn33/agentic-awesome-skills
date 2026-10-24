@@ -1,5 +1,6 @@
 # Client Types — Variations by Business Model
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 The 13-section plan structure stays consistent across client types. What changes is the **content emphasis** within each section. This doc names the dominant patterns by client archetype.
 
 ## Archetype 1 — B2B SaaS
@@ -40,9 +41,9 @@ The 13-section plan structure stays consistent across client types. What changes
 - Tier upgrades, seat expansion, usage-based add-ons
 
 ### Skills emphasis
-- `cold-email`, `programmatic-seo`, `competitors`, `seo-audit`, `ai-seo`
-- `ads` weighted toward LinkedIn + Google
-- `emails` for trial nurture + lifecycle
+- `cold-email`, `programmatic-seo`, `competitor-alternatives`, `seo-audit`, `ai-seo`
+- `paid-ads` weighted toward LinkedIn + Google
+- `email-sequence` for trial nurture + lifecycle
 - `pricing` for tier optimization
 
 ### Tier-1 budget priority
@@ -88,14 +89,14 @@ The 13-section plan structure stays consistent across client types. What changes
 - Influencer / creator ambassadors
 
 **Revenue:**
-- Annual plan default is the biggest single move (compresses MRR but improves LTV)
+- Annual-plan presentation is a testable option; normalized MRR depends on annualized price, not prepayment alone, and LTV effects require cohort evidence
 - Tier optimization (Free → Premium → Premium+)
 - In-app upsells
 
 ### Skills emphasis
-- `onboarding`, `paywalls`, `emails`
-- `ads`, `ad-creative` (heavy creative iteration)
-- `referrals`
+- `onboarding`, `paywall-upgrade-cro`, `email-sequence`
+- `paid-ads`, `ad-creative` (heavy creative iteration)
+- `referral-program`
 - `pricing` for annual default + tier consolidation
 
 ### Tier-1 budget priority
@@ -144,10 +145,10 @@ The 13-section plan structure stays consistent across client types. What changes
 
 ### Skills emphasis
 - `seo-audit` for Shopify product pages
-- `emails` for both hardware post-purchase and software lifecycle
-- `referrals` with gifting layer
+- `email-sequence` for both hardware post-purchase and software lifecycle
+- `referral-program` with gifting layer
 - `pricing` for blended-bundle math
-- `ads` with creative-heavy Meta presence
+- `paid-ads` with creative-heavy Meta presence
 
 ### Tier-1 budget priority
 - Shopify product page optimization
@@ -196,7 +197,7 @@ The 13-section plan structure stays consistent across client types. What changes
 ### Skills emphasis
 - `programmatic-seo` for city pages, vertical pages
 - `cold-email` for supply-side recruitment
-- `referrals` for both sides
+- `referral-program` for both sides
 - `pricing` for take-rate decisions
 
 ### Tier-1 budget priority
@@ -244,7 +245,7 @@ The 13-section plan structure stays consistent across client types. What changes
 
 ### Skills emphasis
 - `programmatic-seo` for docs
-- Less emphasis on traditional `ads`
+- Less emphasis on traditional `paid-ads`
 - Heavy `content-strategy` + technical content
 - `cold-email` to engineering leads at target companies
 
@@ -342,9 +343,9 @@ The 13-section plan structure stays consistent across client types. What changes
 - Subscription option for repeat purchases
 
 ### Skills emphasis
-- `ads` + `ad-creative` (heavy weight)
-- `emails` for post-purchase + abandoned cart
-- `referrals` with gifting
+- `paid-ads` + `ad-creative` (heavy weight)
+- `email-sequence` for post-purchase + abandoned cart
+- `referral-program` with gifting
 - `pricing` for bundles + subscription option
 
 ### Tier-1 budget priority
@@ -371,3 +372,5 @@ Some clients defy archetype:
 - **Real estate / events** — physical + service model
 
 For these, identify the closest archetype and adjust. Don't force-fit — name the deviation in the plan's Strategic Frame.
+
+Archetypes are starting hypotheses, not universal channel rankings or statistical benchmarks. Validate with customer evidence, margin, actual capacity and approved budgets. Clinical/scientific marketing requires substantiation and appropriate review of each health claim; peer review alone does not prove product efficacy. Avoid sensitive-trait targeting, pressure-based annual defaults, hidden cancellation friction and undisclosed endorsements.

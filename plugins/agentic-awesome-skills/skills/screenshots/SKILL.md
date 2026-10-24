@@ -1,7 +1,7 @@
 ---
 name: screenshots
 description: "Generate marketing screenshots of your app using Playwright. Use when the user wants to create screenshots for Product Hunt, social media, landing pages, or documentation."
-risk: safe
+risk: critical
 source: "https://github.com/Shpigford/skills/tree/main/screenshots"
 date_added: "2026-02-27"
 ---
@@ -23,7 +23,7 @@ Use this skill when:
 
 Playwright must be available. Check for it:
 ```bash
-npx playwright --version 2>/dev/null || npm ls playwright 2>/dev/null | grep playwright
+npm ls playwright @playwright/test --depth=0
 ```
 
 If not found, inform the user:
@@ -74,7 +74,7 @@ Use `AskUserQuestion` with the following questions:
 If user selects "Yes, I'll provide credentials", ask follow-up questions:
 - "What is the login page URL?" (e.g., `/login`, `/sign-in`)
 - "What is the email/username?"
-- "What is the password?"
+- Use an existing authenticated browser session or private environment/secret manager; do not ask for passwords in chat.
 
 The script will automatically detect login form fields using Playwright's smart locators.
 
@@ -181,10 +181,10 @@ const SCREENSHOTS_DIR = './screenshots';
 
 // Authentication config (if needed)
 const AUTH = {
-  needed: [true|false],
+  needed: false, // set true only for an authorized test account
   loginUrl: '[LOGIN_URL]',
-  email: '[EMAIL]',
-  password: '[PASSWORD]',
+  email: process.env.SCREENSHOT_EMAIL,
+  password: process.env.SCREENSHOT_PASSWORD,
 };
 
 // Screenshots to capture
@@ -208,7 +208,7 @@ async function main() {
   // Handle authentication if needed
   if (AUTH.needed) {
     console.log('Logging in...');
-    await page.goto(AUTH.loginUrl);
+    await page.goto(new URL(AUTH.loginUrl, BASE_URL).href);
 
     // Smart login: try multiple common patterns for email/username field
     const emailField = page.locator([
@@ -241,8 +241,8 @@ async function main() {
     ].join(', ')).first();
     await submitButton.click();
 
-    await page.waitForLoadState('networkidle');
-    console.log('Login complete');
+    await page.waitForURL('[EXPECTED_AUTHENTICATED_URL]'); // replace with verified app route
+    console.log('Authenticated route reached');
   }
 
   // Capture each screenshot
@@ -276,7 +276,7 @@ async function main() {
   console.log('Done!');
 }
 
-main().catch(console.error);
+main().catch(error => { console.error(error); process.exitCode = 1; });
 ```
 
 ### Running the Script
@@ -397,7 +397,7 @@ All screenshots are true retina-quality (2x deviceScaleFactor) and ready for mar
 
 1. **Clean UI state**: Use demo/seed data for realistic content
 2. **Consistent sizing**: Use the same viewport for all screenshots
-3. **Wait for content**: Use `waitForLoadState('networkidle')` to ensure all content loads
+3. **Wait for content**: Use app-specific readiness selectors; network idle does not prove content is ready
 4. **Hide dev tools**: Ensure no browser extensions or dev overlays are visible
 5. **Dark mode variants**: Consider capturing both light and dark mode if supported
 
@@ -405,3 +405,5 @@ All screenshots are true retina-quality (2x deviceScaleFactor) and ready for mar
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The script is a customizable sketch. Confirm locators before submitting credentials; generic first-match selectors can select the wrong form. Screenshot permission does not authorize account mutations, publishing images, or capturing private third-party data. Use demo data and inspect/redact every image. Validate shot filenames within the output directory and avoid overwriting existing artifacts. Full-page/element dimensions differ from the viewport example; verify actual pixels. Close the browser in a `finally` block in production tooling.

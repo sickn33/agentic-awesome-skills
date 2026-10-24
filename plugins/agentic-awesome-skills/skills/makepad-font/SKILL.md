@@ -41,7 +41,7 @@ Refer to the local files for detailed documentation:
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
    - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
-   - Still answer based on SKILL.md patterns + built-in knowledge
+   - Use inline examples as historical version-dependent sketches; label uncertain API details and do not claim missing reference verification
 3. If reference file exists, incorporate its content into the answer
 
 ## Text Module Structure
@@ -166,6 +166,8 @@ pub struct LayoutOptions {
 ```
 
 ## Rasterizer Settings
+
+The structs below mix API signatures and illustrative default values and are not compilable Rust declarations. Verify actual types/defaults against the project’s pinned Makepad source before emitting code.
 
 ```rust
 pub struct Settings {

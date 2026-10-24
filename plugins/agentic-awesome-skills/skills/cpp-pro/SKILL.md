@@ -50,7 +50,7 @@ You are a C++ programming expert specializing in modern C++ and high-performance
 - CMakeLists.txt with appropriate C++ standard
 - Header files with proper include guards or #pragma once
 - Unit tests using Google Test or Catch2
-- AddressSanitizer/ThreadSanitizer clean output
+- Sanitizer commands and actual results when executed; label checks not run
 - Performance benchmarks using Google Benchmark
 - Clear documentation of template interfaces
 

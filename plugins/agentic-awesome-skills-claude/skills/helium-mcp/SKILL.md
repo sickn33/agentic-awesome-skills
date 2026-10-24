@@ -44,6 +44,8 @@ Add the Helium MCP server to your client configuration. The endpoint uses stream
 
 No API key or authentication is required.
 
+Treat coverage/tool counts and no-auth availability as upstream descriptions to verify via the current connected schema. Queries/URLs leave the client; do not submit private URLs or personal information without authorization. Bias labels/synthesized balance are model/provider assessments, not objective truth or equal evidentiary weight: trace claims to original dated sources. Market/option outputs need timestamp, exchange/currency/delay and methodology; model fair values/probabilities/strategy ranks are uncertain estimates, not executable quotes or personalized trade instructions. This skill never authorizes trading.
+
 ## Available Tools
 
 ### News & Media Bias
@@ -147,7 +149,7 @@ The assistant will call `get_bias_from_url` to return source-level and article-l
 
 - **Start broad, then narrow:** Use `search_news` for discovery, then `get_bias_from_url` for deep analysis on specific articles
 - **Cross-reference perspectives:** Combine `search_balanced_news` with `get_source_bias` to understand why sources frame topics differently
-- **Pair market tools:** Use `get_ticker` for the fundamental view, then `get_option_price` or `get_top_trading_strategies` for actionable trades
+- **Pair market tools:** Use `get_ticker` for the fundamental view, then `get_option_price` or `get_top_trading_strategies` for research scenarios, with actual market and risk validation before any decision
 - **No auth needed:** The endpoint works immediately with no API keys or setup beyond adding the MCP config
 
 ## Common Pitfalls

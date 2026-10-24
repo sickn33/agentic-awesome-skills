@@ -7,7 +7,7 @@ tags: workflow, background, handle, async
 
 ## Start Workflows in Background
 
-Use `DBOS.startWorkflow` to start a workflow in the background and get a handle to track it. The workflow is guaranteed to run to completion even if the app is interrupted.
+Use `DBOS.startWorkflow` to start a workflow in the background and get a handle to track it. The workflow can recover after interruption when the database and compatible workers are available; failures, cancellation and exhausted retries can still stop it.
 
 **Incorrect (no way to track background work):**
 

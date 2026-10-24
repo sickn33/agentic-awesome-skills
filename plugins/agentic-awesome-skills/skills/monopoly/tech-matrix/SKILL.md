@@ -12,6 +12,8 @@ reports-to: monopoly
 ## When to Use
 - Use this skill when the task matches this description: Reference document for monopoly tech-matrix.
 
+Use this as a qualitative candidate list. Verify exact editions, versions, service quotas and pricing with current primary docs; fixed throughput, memory, storage, edge counts and prices are not established capacity evidence. Decide from measured workload, operations and failure tests rather than user/team counts.
+
 ## Table of Contents
 1. Database Selection
 2. Cache Selection
@@ -35,15 +37,15 @@ reports-to: monopoly
 | **PostgreSQL** | Complex queries, JSONB, GIS, strong consistency, most default use cases | Ultra-high write throughput (>100K writes/s) | ~10TB single node; use Citus for horizontal |
 | **MySQL / MariaDB** | Read-heavy apps, legacy systems, WordPress/Drupal ecosystem | Complex queries, full ACID at scale | ~10TB; use Vitess for sharding |
 | **CockroachDB** | Global distributed SQL, geo-partitioning, multi-region | Simple single-region apps (overkill) | Petabyte-scale |
-| **PlanetScale** | MySQL-compatible, serverless, branch-based workflow | Complex JOINs (foreign keys removed by design) | Very high — Vitess based |
+| **PlanetScale** | MySQL-compatible, serverless, branch-based workflow | Check current product/engine support for required joins and foreign keys | Very high — Vitess based |
 | **Amazon Aurora** | AWS-native apps, managed PostgreSQL/MySQL, high availability | Non-AWS environments | Up to 128TB, 15 replicas |
 
 ### NoSQL
 
 | Database | Best For | Avoid When | Scale Ceiling |
 |----------|----------|------------|---------------|
-| **MongoDB** | Flexible schema, document model, prototyping | Financial transactions requiring ACID | Petabyte-scale with sharding |
-| **DynamoDB** | Key-value at massive scale, AWS-native, serverless, predictable latency | Complex queries, ad-hoc analytics, JOINs | Unlimited (AWS-managed) |
+| **MongoDB** | Flexible schema, document model, prototyping | Requires validating transaction/isolation and distributed-operation costs; MongoDB supports transactions | Petabyte-scale with sharding |
+| **DynamoDB** | Key-value at massive scale, AWS-native, serverless, predictable latency | Complex queries, ad-hoc analytics, JOINs | Subject to account/table/partition quotas |
 | **Cassandra** | Write-heavy, time-series, wide-column, geographically distributed | Read-heavy with complex queries | Petabyte-scale; used at Apple, Netflix |
 | **Redis** | Cache, sessions, leaderboards, pub/sub, rate limiting | Primary data store for complex models | ~1TB per node; cluster for more |
 | **Elasticsearch** | Full-text search, log aggregation, analytics | Primary database (durability risk) | Petabyte-scale with clusters |
@@ -80,7 +82,7 @@ Is it search?
 
 | Technology | Best For | Max Single Node | Cluster Support |
 |------------|----------|----------------|----------------|
-| **Redis** | Sessions, leaderboards, pub/sub, complex data structures, Lua scripting | ~1TB RAM | Yes (Redis Cluster, Redis Sentinel) |
+| **Redis** | Sessions, leaderboards, pub/sub, complex data structures, Lua scripting | ~1TB RAM | Cluster sharding; Sentinel provides non-cluster failover |
 | **Memcached** | Simple key-value, multi-threaded, large object cache | ~64GB RAM | Yes (client-side sharding) |
 | **Varnish** | HTTP reverse proxy cache, full-page caching | RAM bound | Limited |
 | **CloudFront / CDN** | Static assets, edge caching globally | N/A (distributed) | Built-in global distribution |
@@ -99,7 +101,7 @@ Use **Memcached** only when: you need multi-threading for CPU-bound caching work
 | **RabbitMQ** | AMQP message broker | Task queues, RPC, routing, fanout | 50K–100K msg/s | Until consumed |
 | **AWS SQS** | Managed queue | AWS-native, simple task queue, serverless | Very high (managed) | Up to 14 days |
 | **AWS SNS** | Pub/sub notification | Fan-out to many subscribers (email, SMS, Lambda, SQS) | Very high (managed) | No retention |
-| **Google Pub/Sub** | Managed streaming | GCP-native, global, serverless | Very high (managed) | Up to 7 days |
+| **Google Pub/Sub** | Managed streaming | GCP-native, global, serverless | Very high (managed) | Configurable; verify current topic/subscription retention limits |
 | **Redis Pub/Sub** | In-memory pub/sub | Real-time notifications, low latency, fire-and-forget | Very high | None (no retention) |
 | **NATS** | Lightweight messaging | IoT, microservices, low latency | Very high | JetStream adds retention |
 
@@ -119,7 +121,7 @@ Need real-time pub/sub with no persistence?
 Need fan-out to multiple consumers?
   Kafka (consumer groups) or SNS → SQS fan-out
 
-Need < 5 minutes guaranteed delivery, AWS-native, zero ops?
+Need a managed AWS-native task queue with explicit retry/latency objectives?
   SQS
 
 Volume > 1 million messages/second?
@@ -157,22 +159,13 @@ Volume > 1 million messages/second?
 | **Meilisearch** | Self-hosted, developer-friendly, fast relevancy | Enterprise-scale analytics |
 | **PostgreSQL FTS** | Basic full-text search, already using PostgreSQL | High relevancy requirements or large datasets |
 
-**Rule of thumb:** Use PostgreSQL FTS under 1M documents. Move to Typesense or Elasticsearch above that.
+**Selection:** Benchmark relevance, query mix, indexes, language support, data size and update latency. Document count alone does not determine when to leave PostgreSQL FTS.
 
 ---
 
 ## 6. Object Storage
 
-| Service | Best For | Egress Cost |
-|---------|----------|------------|
-| **AWS S3** | AWS-native apps, de facto standard, massive ecosystem | $0.09/GB (expensive) |
-| **Cloudflare R2** | S3-compatible, **zero egress cost**, global | $0.00 egress |
-| **GCS** | GCP-native | $0.12/GB |
-| **Azure Blob** | Azure-native | $0.087/GB |
-| **Backblaze B2** | Cost-sensitive, S3-compatible | Free with Cloudflare |
-| **MinIO** | Self-hosted S3-compatible | Self-managed |
-
-**Cost optimization tip:** Use **Cloudflare R2** for user-facing media delivery (zero egress). Use **S3** for internal/AWS-integrated storage.
+Compare AWS S3, Cloudflare R2, GCS, Azure Blob, Backblaze B2 and self-hosted S3-compatible systems against region/residency, consistency/API compatibility, operations, availability, replication and object lifecycle needs. Build a dated cost model including storage, requests, retrieval, inter-region transfer, internet egress and connected compute. Zero egress for one service does not make the full delivery path free. Use current calculators; this reference supplies no price quote.
 
 ---
 
@@ -188,7 +181,7 @@ Volume > 1 million messages/second?
 | **Nomad** | HashiCorp ecosystem, simpler than K8s, multi-workload | K8s ecosystem tools required |
 
 **Startup default:** ECS + Fargate (zero cluster management).
-**Scale default:** EKS or GKE once team > 5 engineers or services > 10.
+**Scale decision:** Choose orchestration from operational requirements and team capacity, not fixed engineer/service counts.
 
 ---
 
@@ -253,21 +246,9 @@ Volume > 1 million messages/second?
 
 ---
 
-## Scale Benchmarks Quick Reference
+## Capacity evidence
 
-| Technology | Write Throughput | Read Throughput | Notes |
-|------------|-----------------|----------------|-------|
-| PostgreSQL (single) | ~10K writes/s | ~50K reads/s | With connection pooling |
-| PostgreSQL (replicas) | ~10K writes/s | ~200K reads/s | 4 replicas |
-| MySQL (single) | ~15K writes/s | ~60K reads/s | |
-| Cassandra | ~1M writes/s | ~500K reads/s | 10-node cluster |
-| Redis | ~1M ops/s | ~1M ops/s | Single node in-memory |
-| Kafka | ~1M msgs/s | ~1M msgs/s | Per partition |
-| Elasticsearch | ~50K docs/s | ~10K queries/s | Per node |
-| MongoDB | ~50K writes/s | ~100K reads/s | Per replica set |
-
-*All benchmarks are approximate and depend heavily on hardware, payload size, and query complexity.*
-
+Use the bundled capacity planning reference at `skills/monopoly/scale-benchmarks/SKILL.md` to define workload measurements. No fixed product throughput benchmark is established here.
 
 ## Limitations
 - This is a reference document and may not cover all edge cases. Always verify architectures before production.

@@ -7,9 +7,11 @@
 Comprehensive WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security. This bundle orchestrates skills for building production-ready WordPress sites and applications.
 
 
-## WordPress 7.0 Features (Backward Compatible)
+Select phases and installed skills for the actual request; deployment, payments, active security testing and external AI calls require authorized targets. Work on staging with backup/rollback and explicit versions of core/PHP/plugins/themes. Feature availability and compatibility below are release-dependent; verify the selected release's official dev notes and test actual integrations. No feature list proves blanket backward compatibility.
 
-WordPress 7.0 (April 9, 2026) introduces significant features while maintaining backward compatibility:
+## WordPress 7.0 Feature Considerations
+
+The following summarizes areas to verify for WordPress7.0; do not infer a release date or unconditional compatibility from this guide.
 
 ### Real-Time Collaboration (RTC)
 - Multiple users can edit simultaneously using Yjs CRDT
@@ -34,6 +36,8 @@ WordPress 7.0 (April 9, 2026) introduces significant features while maintaining 
 - New layouts: table, grid, list, activity
 - Client-side validation (pattern, minLength, maxLength, min, max)
 - **Backward Compatibility**: Plugins using old hooks still work
+
+The dynamic block below is a basic server-render callback, not proof of automatic editor Inspector controls or complete editor-side registration. Validate the selected release's block metadata/registration API and escape dynamic output.
 
 ### PHP-Only Block Registration
 - Register blocks entirely via PHP without JavaScript
@@ -183,14 +187,14 @@ register_post_meta('post', 'custom_field', [
 $response = wp_ai_client_prompt('Summarize this content.')
     ->generate_text();
 
-// With temperature for deterministic output
+// Temperature affects sampling; it does not guarantee deterministic output
 $response = wp_ai_client_prompt('Summarize this content.')
     ->using_temperature(0.2)
     ->generate_text();
 
 // With model preference (tries first available in list)
 $response = wp_ai_client_prompt('Summarize this content.')
-    ->using_model_preference('gpt-4', 'claude-3-opus', 'gemini-2-pro')
+    // Omit model preferences unless verified supported by the configured provider
     ->generate_text();
 
 // For JSON structured output
@@ -292,7 +296,7 @@ Use @billing-automation to create subscription products in WooCommerce
 - [ ] Time to First Byte < 200ms
 - [ ] Largest Contentful Paint < 2.5s
 - [ ] Cumulative Layout Shift < 0.1
-- [ ] First Input Delay < 100ms
+- [ ] Interaction to Next Paint ≤200ms (field75th percentile; FID is superseded)
 
 #### Copy-Paste Prompts
 ```
@@ -330,7 +334,7 @@ Use @web-performance-optimization to audit and improve WordPress performance
 - [ ] Security headers configured
 - [ ] XML-RPC disabled or protected
 - [ ] File editing disabled
-- [ ] Database prefix changed
+- [ ] Least-privilege database credentials and backups verified; prefix changes are not an access-control boundary
 - [ ] Regular backups configured
 
 #### Copy-Paste Prompts
@@ -398,10 +402,10 @@ Use @deployment-engineer to set up WordPress deployment pipeline
 ### Custom Post Type Development (RTC-Compatible)
 ```php
 register_post_type('book', [
-    'labels' => [...],
+    'labels' => ['name' => 'Books', 'singular_name' => 'Book'],
     'public' => true,
     'has_archive' => true,
-    'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+    'supports' => ['title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'],
     'menu_icon' => 'dashicons-book',
     'show_in_rest' => true,  // Enable for RTC
 ]);
@@ -415,6 +419,8 @@ register_post_meta('book', 'isbn', [
 ]);
 ```
 
+The public REST example below is suitable only for deliberately public published data. Implement `get_books` with explicit status/field allowlists, pagination and validated parameters; use authentication/capability checks for private/admin data. `__return_true` is not appropriate for write or private-content endpoints.
+
 ### Custom REST API Endpoint
 ```php
 add_action('rest_api_init', function() {
@@ -427,49 +433,8 @@ add_action('rest_api_init', function() {
 ```
 
 ### WordPress 7.0 AI Connector Usage
-```php
-// Auto-generate post excerpt with AI
-add_action('save_post', function($post_id, $post) {
-    if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) {
-        return;
-    }
+Generate summaries only through an explicitly invoked, authorized feature. Do not call a paid provider automatically from `save_post`: autosaves, recursion and imports can repeat calls or transmit private drafts. Check the user's per-post capability, approved provider/data scope, budget and idempotency before a queued request. Keep output a draft for review; do not automatically publish generated text. Treat post content as untrusted data, not instructions. Use the ability handler below as an integration outline and enforce these same boundaries at every entry point.
 
-    // Skip if excerpt already exists
-    if (!empty($post->post_excerpt)) {
-        return;
-    }
-
-    $content = strip_tags($post->post_content);
-    if (empty($content)) {
-        return;
-    }
-
-    // Check if AI client is available
-    if (!function_exists('wp_ai_client_prompt')) {
-        return;
-    }
-
-    // Build prompt with input
-    $result = wp_ai_client_prompt(
-        'Create a brief 2-sentence summary of this content: ' . substr($content, 0, 1000)
-    );
-
-    if (is_wp_error($result)) {
-        return; // Silently fail - don't block post saving
-    }
-
-    // Use temperature for consistent output
-    $result->using_temperature(0.3);
-    $summary = $result->generate_text();
-
-    if ($summary && !is_wp_error($summary)) {
-        wp_update_post([
-            'ID' => $post_id,
-            'post_excerpt' => sanitize_textarea_field($summary)
-        ]);
-    }
-}, 10, 2);
-```
 
 ### PHP-Only Block Registration (WordPress 7.0)
 ```php
@@ -514,8 +479,8 @@ add_action('wp_abilities_api_init', function() {
             ]
         ],
         'execute_callback' => 'my_plugin_generate_summary_handler',
-        'permission_callback' => function() {
-            return current_user_can('edit_posts');
+        'permission_callback' => function($input) {
+            return isset($input['post_id']) && current_user_can('edit_post', absint($input['post_id']));
         }
     ]);
 });
@@ -523,6 +488,9 @@ add_action('wp_abilities_api_init', function() {
 // Handler function for the ability
 function my_plugin_generate_summary_handler($input) {
     $post_id = isset($input['post_id']) ? absint($input['post_id']) : 0;
+    if (!$post_id || !current_user_can('edit_post', $post_id)) {
+        return new WP_Error('forbidden', 'Not authorized');
+    }
     $post = get_post($post_id);
 
     if (!$post) {

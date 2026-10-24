@@ -6,8 +6,8 @@ Scans the skills ecosystem for SKILL.md files, parses metadata,
 and maintains a centralized registry (registry.json).
 
 Features:
-- Runs automatically on every request (called by CLAUDE.md)
-- Ultra-fast via MD5 hash caching (~<100ms when nothing changed)
+- Runs only when explicitly invoked
+- Uses SHA-256 metadata caching; timing depends on tree size
 - Auto-includes new skills, auto-removes deleted skills
 - Zero manual intervention required
 
@@ -37,8 +37,8 @@ _data_directory = os.environ.get("AGENT_ORCHESTRATOR_DATA_DIR")
 if not _data_directory or not Path(_data_directory).is_absolute():
     raise ValueError("Set AGENT_ORCHESTRATOR_DATA_DIR to an authorized absolute storage directory")
 DATA_DIR = Path(_data_directory)
-if DATA_DIR.is_symlink():
-    raise ValueError("Storage directory must not be a symlink")
+if any(path.is_symlink() for path in [DATA_DIR, *DATA_DIR.parents]):
+    raise ValueError("Storage directory and ancestors must not be symlinks")
 REGISTRY_PATH = DATA_DIR / "registry.json"
 HASHES_PATH = DATA_DIR / "registry_hashes.json"
 
@@ -179,7 +179,8 @@ def find_skill_files() -> list[Path]:
                 continue
 
             # Skip the orchestrator itself
-            if "agent-orchestrator" in Path(root).parts:
+            if Path(root).resolve() == ORCHESTRATOR_DIR:
+                dirs.clear()
                 continue
 
             if "SKILL.md" in files:
@@ -208,7 +209,7 @@ def detect_language(skill_dir: Path) -> str:
 
     if ".py" in extensions:
         return "python"
-    if ".ts" in extensions or ".js" in extensions:
+    if extensions & {".ts", ".js", ".mjs", ".cjs", ".tsx", ".jsx"}:
         return "nodejs"
     if ".sh" in extensions:
         return "bash"
@@ -395,7 +396,7 @@ def scan(force: bool = False) -> dict:
 
     With hash caching:
     1. Find all SKILL.md files
-    2. Compare MD5 hashes with stored values
+    2. Compare SHA-256 hashes with stored values
     3. Only re-parse files that changed, were added, or removed
     4. Update registry incrementally
     """
@@ -421,7 +422,7 @@ def scan(force: bool = False) -> dict:
         current_hash = sha256_file(path_obj)
         new_hashes[path_str] = current_hash
 
-        if force or path_str not in stored_hashes or stored_hashes[path_str] != current_hash:
+        if force or path_str not in existing_by_path or path_str not in stored_hashes or stored_hashes[path_str] != current_hash:
             # New or modified - rebuild entry
             entry = build_skill_entry(path_obj)
             existing_by_path[path_str] = entry

@@ -17,7 +17,7 @@ Animate between UI states using the browser's native `document.startViewTransiti
 
 Every `<ViewTransition>` should communicate a spatial relationship or continuity. If you can't articulate what it communicates, don't add it.
 
-Implement **all** applicable patterns from this list, in this order:
+Evaluate applicable patterns in this order; implement only those needed for the user's intended interaction:
 
 | Priority | Pattern | What it communicates |
 |----------|---------|---------------------|
@@ -27,7 +27,7 @@ Implement **all** applicable patterns from this list, in this order:
 | 4 | **State change** (`enter`/`exit`) | "Something appeared/disappeared" |
 | 5 | **Route change** (layout-level) | "Going to a new place" |
 
-This is an implementation order, not a "pick one" list. Implement every pattern that fits the app. Only skip a pattern if the app has no use case for it.
+Keep the change scoped. Animation is optional, and continuity, focus and reduced-motion behavior take precedence over adding every pattern.
 
 ### Choosing Animation Style
 
@@ -44,10 +44,7 @@ Reserve directional slides for hierarchical navigation (list → detail) and ord
 
 ## Availability
 
-- **Next.js:** Do **not** install `react@canary` — the App Router already bundles React canary internally. `ViewTransition` works out of the box. `npm ls react` may show a stable-looking version; this is expected.
-- **Without Next.js:** Install `react@canary react-dom@canary` (`ViewTransition` is not in stable React).
-- Browser support: Chromium 111+, Firefox 144+, Safari 18.2+. Graceful degradation on unsupported browsers.
-
+Verify the installed React/React DOM/Next.js versions and their documented ViewTransition support before implementation. Do not assume every App Router version bundles the required API or install a moving canary as a blanket prerequisite. Inspect browser support for the specific features used (same-document transitions, classes and types differ), then test unsupported-browser and reduced-motion behavior. See the [React API reference](https://react.dev/reference/react/ViewTransition).
 ---
 
 ## Implementation Workflow
@@ -83,7 +80,7 @@ Only `startTransition`, `useDeferredValue`, or `Suspense` activate VTs. Regular 
 
 ### Critical Placement Rule
 
-`<ViewTransition>` only activates enter/exit if it appears **before any DOM nodes**:
+Enter/exit depends on the inserted/deleted subtree boundary, not a blanket prohibition on any ancestor DOM node. The examples compare inserting/removing the wrapper versus inserting/removing the VT itself:
 
 ```jsx
 // Works
@@ -179,7 +176,7 @@ export function DirectionalTransition({ children }: { children: React.ReactNode 
 
 ### `router.back()` and Browser Back Button
 
-`router.back()` and the browser's back/forward buttons do **not** trigger view transitions (`popstate` is synchronous, incompatible with `startViewTransition`). Use `router.push()` with an explicit URL instead.
+`router.back()` and the browser's back/forward buttons do **not** trigger view transitions (`popstate` is synchronous, incompatible with `startViewTransition`). Preserve actual back/history semantics; do not replace browser Back with push merely to force an animation. Accept a nonanimated fallback when the router cannot coordinate it.
 
 ### Types and Suspense
 
@@ -319,7 +316,7 @@ Always add the reduced motion CSS from `references/css-recipes.md` to your globa
 
 ## Full Compiled Document
 
-For the complete guide with all reference files expanded: `AGENTS.md`
+The upstream compiled `AGENTS.md` is not bundled; the four reference files above are the available local material.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

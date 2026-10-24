@@ -61,12 +61,13 @@ load test_helper
 
 # Setup runs before each test
 setup() {
-    export TMPDIR=$(mktemp -d)
+    TEST_TMP=$(mktemp -d) || return 1
+    export TEST_TMP
 }
 
 # Teardown runs after each test
 teardown() {
-    rm -rf "$TMPDIR"
+    rm -rf -- "$TEST_TMP"
 }
 
 # Test: simple assertion
@@ -158,30 +159,30 @@ line3" ]
 #!/usr/bin/env bats
 
 @test "File is created" {
-    [ ! -f "$TMPDIR/output.txt" ]
-    my_function > "$TMPDIR/output.txt"
-    [ -f "$TMPDIR/output.txt" ]
+    [ ! -f "$BATS_TEST_TMPDIR/output.txt" ]
+    my_function > "$BATS_TEST_TMPDIR/output.txt"
+    [ -f "$BATS_TEST_TMPDIR/output.txt" ]
 }
 
 @test "File contents match expected" {
-    my_function > "$TMPDIR/output.txt"
-    [ "$(cat "$TMPDIR/output.txt")" = "expected content" ]
+    my_function > "$BATS_TEST_TMPDIR/output.txt"
+    [ "$(cat "$BATS_TEST_TMPDIR/output.txt")" = "expected content" ]
 }
 
 @test "File is readable" {
-    touch "$TMPDIR/test.txt"
-    [ -r "$TMPDIR/test.txt" ]
+    touch "$BATS_TEST_TMPDIR/test.txt"
+    [ -r "$BATS_TEST_TMPDIR/test.txt" ]
 }
 
 @test "File has correct permissions" {
-    touch "$TMPDIR/test.txt"
-    chmod 644 "$TMPDIR/test.txt"
-    [ "$(stat -f %OLp "$TMPDIR/test.txt")" = "644" ]
+    touch "$BATS_TEST_TMPDIR/test.txt"
+    chmod 644 "$BATS_TEST_TMPDIR/test.txt"
+    [ "$(stat -f %OLp "$BATS_TEST_TMPDIR/test.txt")" = "644" ]
 }
 
 @test "File size is correct" {
-    echo -n "12345" > "$TMPDIR/test.txt"
-    [ "$(wc -c < "$TMPDIR/test.txt")" -eq 5 ]
+    echo -n "12345" > "$BATS_TEST_TMPDIR/test.txt"
+    [ "$(wc -c < "$BATS_TEST_TMPDIR/test.txt")" -eq 5 ]
 }
 ```
 
@@ -219,21 +220,21 @@ teardown() {
 
 setup() {
     # Create directory structure
-    mkdir -p "$TMPDIR/data/input"
-    mkdir -p "$TMPDIR/data/output"
+    mkdir -p "$BATS_TEST_TMPDIR/data/input"
+    mkdir -p "$BATS_TEST_TMPDIR/data/output"
 
     # Create test fixtures
-    echo "line1" > "$TMPDIR/data/input/file1.txt"
-    echo "line2" > "$TMPDIR/data/input/file2.txt"
+    echo "line1" > "$BATS_TEST_TMPDIR/data/input/file1.txt"
+    echo "line2" > "$BATS_TEST_TMPDIR/data/input/file2.txt"
 
     # Initialize environment
-    export DATA_DIR="$TMPDIR/data"
+    export DATA_DIR="$BATS_TEST_TMPDIR/data"
     export INPUT_DIR="$DATA_DIR/input"
     export OUTPUT_DIR="$DATA_DIR/output"
 }
 
 teardown() {
-    rm -rf "$TMPDIR/data"
+    rm -rf "$BATS_TEST_TMPDIR/data"
 }
 
 @test "Processes input files" {
@@ -298,7 +299,7 @@ my_external_tool() {
 
 setup() {
     # Create stub directory
-    STUBS_DIR="$TMPDIR/stubs"
+    STUBS_DIR="$BATS_TEST_TMPDIR/stubs"
     mkdir -p "$STUBS_DIR"
 
     # Add to PATH
@@ -370,6 +371,7 @@ teardown() {
 
     # Run function
     run my_process_function "$WORK_DIR/input.txt"
+    [ "$status" -eq 0 ]
 
     # Compare output
     diff "$WORK_DIR/output.txt" "$FIXTURES_DIR/expected_output.txt"
@@ -391,10 +393,10 @@ generate_fixture() {
 }
 
 @test "Handle large input file" {
-    generate_fixture 1000 "$TMPDIR/large.txt"
-    run my_function "$TMPDIR/large.txt"
+    generate_fixture 1000 "$BATS_TEST_TMPDIR/large.txt"
+    run my_function "$BATS_TEST_TMPDIR/large.txt"
     [ "$status" -eq 0 ]
-    [ "$(wc -l < "$TMPDIR/large.txt")" -eq 1000 ]
+    [ "$(wc -l < "$BATS_TEST_TMPDIR/large.txt")" -eq 1000 ]
 }
 ```
 
@@ -417,11 +419,11 @@ generate_fixture() {
 }
 
 @test "Function fails with permission denied" {
-    touch "$TMPDIR/readonly.txt"
-    chmod 000 "$TMPDIR/readonly.txt"
-    run my_function "$TMPDIR/readonly.txt"
+    touch "$BATS_TEST_TMPDIR/readonly.txt"
+    chmod 000 "$BATS_TEST_TMPDIR/readonly.txt"
+    run my_function "$BATS_TEST_TMPDIR/readonly.txt"
     [ "$status" -ne 0 ]
-    chmod 644 "$TMPDIR/readonly.txt"  # Cleanup
+    chmod 644 "$BATS_TEST_TMPDIR/readonly.txt"  # Cleanup
 }
 
 @test "Function provides helpful error message" {
@@ -446,7 +448,7 @@ setup() {
 }
 
 @test "JSON parsing works" {
-    skip_if ! command -v jq &>/dev/null
+    command -v jq >/dev/null || skip "jq is not installed"
     run my_json_parser '{"key": "value"}'
     [ "$status" -eq 0 ]
 }
@@ -489,11 +491,11 @@ setup() {
 
 @test "Concurrent file operations" {
     for i in {1..5}; do
-        my_function "$TMPDIR/file$i" &
+        my_function "$BATS_TEST_TMPDIR/file$i" &
     done
     wait
-    [ -f "$TMPDIR/file1" ]
-    [ -f "$TMPDIR/file5" ]
+    [ -f "$BATS_TEST_TMPDIR/file1" ]
+    [ -f "$BATS_TEST_TMPDIR/file5" ]
 }
 ```
 
@@ -581,13 +583,13 @@ test:
 	bats tests/*.bats
 
 test-verbose:
-	bats tests/*.bats --verbose
+	bats --verbose-run tests/*.bats
 
 test-tap:
 	bats tests/*.bats --tap
 
 test-parallel:
-	bats tests/*.bats --parallel 4
+	bats --jobs 4 tests/*.bats
 
 coverage: test
 	# Optional: Generate coverage reports
@@ -612,3 +614,5 @@ coverage: test
 - **Bats Documentation**: https://bats-core.readthedocs.io/
 - **TAP Protocol**: https://testanything.org/
 - **Test-Driven Development**: https://en.wikipedia.org/wiki/Test-driven_development
+
+Use the Bats-managed BATS_TEST_TMPDIR where possible; do not remove an inherited system TMPDIR. Each code block is a separate fragment with helpers omitted, not a complete suite. Source only reviewed library code; sourcing executable entrypoints can trigger real side effects. The stat example is BSD-specific; GNU stat uses different flags. Permission-denial tests need a non-root identity. Bare wait does not reliably expose every background failure: capture PIDs and assert each wait status. Dynamic stub interpolation is trusted fixture data only; arbitrary output can inject shell code. Pin reviewed Bats/actions and inspect install scripts before execution. Parallel jobs require the installed Bats version and dependencies to support them.

@@ -137,6 +137,10 @@ Agent: ✅ Primary Skill: @brainstorming
 
 ---
 
+## Verify the recommendation
+
+Treat the names below as candidates. Check the live installed catalog and read the chosen skill before recommending it; do not claim a skill/tool is installed from this static table. Use the host’s actual invocation syntax when it differs from `@name`. An autonomy preference does not authorize spending, external messaging, production changes or unrelated parallel agents.
+
 ## Skill Routing Reference
 
 ### Building a full product or app from scratch
@@ -212,7 +216,7 @@ Agent: ✅ Primary Skill: @brainstorming
 - UI: `@frontend-design`
 - Data viz: `@claude-d3js-skill`
 - Generative art: `@algorithmic-art`
-- Presentations: `@pptx-official`
+- Presentations: `@impress`
 
 ### Fully autonomous / parallel execution
 - Full startup mode: `@loki-mode`
@@ -220,10 +224,9 @@ Agent: ✅ Primary Skill: @brainstorming
 - Plan then execute: `@subagent-driven-development`
 
 ### Document creation
-- Word doc: `@docx-official`
-- PDF: `@pdf-official`
-- Spreadsheet: `@xlsx-official`
-- Presentation: `@pptx-official`
+- Word doc: `@writer`
+- Spreadsheet: `@calc` (verify XLSX export compatibility)
+- Presentation: `@impress`
 
 ---
 

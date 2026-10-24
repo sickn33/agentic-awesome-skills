@@ -9,6 +9,7 @@ import pathlib
 import sys
 
 from manifest_parser import ManifestSyntaxError, load_manifest
+from validate_manifest import validate
 
 try:
     import numpy as np
@@ -73,7 +74,16 @@ def block_average(linear: np.ndarray, block: int) -> np.ndarray:
 
 
 def measure(image_path: pathlib.Path, config: dict, block: int = 8) -> dict:
+    if isinstance(block, bool) or not isinstance(block, int) or block < 1:
+        raise ValueError("block size must be a positive integer")
     with Image.open(image_path) as source:
+        if source.format != "PNG" or source.width * source.height > 16_000_000:
+            raise ValueError("use an opaque PNG screenshot of at most 16 million pixels")
+        if source.mode not in {"RGB", "RGBA"}:
+            raise ValueError("screenshot must be RGB/RGBA")
+        if source.mode == "RGBA" and source.getchannel("A").getextrema() != (255, 255):
+            raise ValueError("transparent screenshots need explicit compositing before measurement")
+        block = min(block, source.width, source.height)
         image = source.convert("RGB")
     linear = srgb_to_linear(np.asarray(image, dtype=np.float64) / 255.0)
     luminance = 0.2126 * linear[..., 0] + 0.7152 * linear[..., 1] + 0.0722 * linear[..., 2]
@@ -154,8 +164,11 @@ def main() -> None:
     parser.add_argument("--block", type=int, default=8, help="pixel block size used to average out dither")
     args = parser.parse_args()
     try:
-        config = load_config(args.config.resolve())
-    except (ManifestSyntaxError, OSError) as error:
+        config = load_config(args.config)
+        errors = validate(config)
+        if errors:
+            raise ValueError("invalid measurement manifest: " + "; ".join(errors))
+    except (ManifestSyntaxError, OSError, ValueError) as error:
         print(json.dumps({"status": "invalid", "errors": [str(error)]}, ensure_ascii=False, indent=2), file=sys.stderr)
         raise SystemExit(1) from error
     payload = {

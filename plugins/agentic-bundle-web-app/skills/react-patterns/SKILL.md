@@ -46,7 +46,7 @@ metadata:
 
 ### Hook Rules
 
-- Hooks at top level only
+- Hooks at top level only; React’s `use` API is an exception that can be called in loops/conditions inside a component or Hook (not in try/catch); see [use](https://react.dev/reference/react/use)
 - Same order every render
 - Custom hooks start with "use"
 - Clean up effects on unmount
@@ -84,6 +84,8 @@ metadata:
 | **use** | Read resources in render |
 
 ### Compiler Benefits
+
+These apply when React Compiler is installed and enabled in the build, not automatically on upgrading to React 19; see [installation](https://react.dev/learn/react-compiler/installation).
 
 - Automatic memoization
 - Less manual useMemo/useCallback
@@ -192,7 +194,7 @@ metadata:
 |----------|-------|
 | Prop drilling deep | Use context |
 | Giant components | Split smaller |
-| useEffect for everything | Server components |
+| useEffect for everything | Derive values during render; reserve effects for external synchronization and use server components only in a supporting framework |
 | Premature optimization | Profile first |
 | Index as key | Stable unique ID |
 

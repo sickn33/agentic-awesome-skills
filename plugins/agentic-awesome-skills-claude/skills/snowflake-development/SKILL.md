@@ -52,7 +52,7 @@ END;
 
 - VARIANT, OBJECT, ARRAY for JSON/Avro/Parquet/ORC.
 - Access nested fields: `src:customer.name::STRING`. Always cast: `src:price::NUMBER(10,2)`.
-- VARIANT null vs SQL NULL: JSON `null` is stored as `"null"`. Use `STRIP_NULL_VALUE = TRUE` on load.
+- VARIANT null vs SQL NULL: JSON null is a distinct VARIANT null value, not the string `"null"` or SQL NULL. Use `IS_NULL_VALUE` to distinguish it. The JSON load option is `STRIP_NULL_VALUES = TRUE`; removing null-valued elements changes data semantics and must be intentional.
 - Flatten arrays: `SELECT f.value:name::STRING FROM my_table, LATERAL FLATTEN(input => src:items) f;`
 
 ### MERGE for Upserts
@@ -235,3 +235,5 @@ Snowflake-specific configs (combine with any materialization):
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+`CREATE OR REPLACE` can replace existing objects and their data/configuration; it is not a harmless repeatable migration. Review the exact target, preserve grants/backups as needed and use a planned migration. Function support, deprecation and dynamic-table restrictions depend on the current account/version; verify the cited function in official Snowflake documentation rather than treating broad deprecated-function lists as authority.

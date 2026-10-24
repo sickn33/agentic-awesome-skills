@@ -1,5 +1,7 @@
 # Deployment Reference
 
+> Deployment examples are incomplete templates. Confirm account, region, resources, budget, secrets, backup and rollback with the user before applying. Provider choice alone does not establish compliance, security or cost. Pin image digests and secret versions; render placeholders before use. [Terraform backend constraints](https://developer.hashicorp.com/terraform/language/backend), [AWS rule actions](https://docs.aws.amazon.com/cli/latest/reference/elbv2/modify-rule.html).
+
 Infrastructure provisioning and deployment instructions for all supported platforms.
 
 ## Deployment Decision Matrix
@@ -116,7 +118,7 @@ terraform {
     }
   }
   backend "s3" {
-    bucket = "terraform-state-${var.project_name}"
+    bucket = "REPLACE_WITH_EXISTING_STATE_BUCKET" # backend blocks cannot reference variables
     key    = "state.tfstate"
     region = "us-east-1"
   }
@@ -288,7 +290,7 @@ gcloud run deploy app \
   --image gcr.io/PROJECT_ID/app \
   --platform managed \
   --region us-central1 \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --set-env-vars="NODE_ENV=production" \
   --set-secrets="DATABASE_URL=db-url:latest"
 ```
@@ -535,9 +537,11 @@ aws ecs wait services-stable --cluster app --services app-green
 curl -f https://green.app.example.com/health
 
 # Switch traffic (update target group weights)
-aws elbv2 modify-listener-rule \
-  --rule-arn $RULE_ARN \
-  --actions '[{"Type":"forward","TargetGroupArn":"'$GREEN_TG'","Weight":100}]'
+# Prepare reviewed actions.json with the complete desired action list:
+# [{"Type":"forward","ForwardConfig":{"TargetGroups":[{"TargetGroupArn":"REPLACE_GREEN_TG","Weight":100}]}}]
+aws elbv2 modify-rule \
+  --rule-arn "$RULE_ARN" \
+  --actions file://actions.json
 ```
 
 ---

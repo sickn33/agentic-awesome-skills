@@ -107,7 +107,7 @@ class PromptABTest:
                 'improvement': (np.mean(b_values) - np.mean(a_values)) / np.mean(a_values),
                 'statistically_significant': p_value < 0.05,
                 'p_value': p_value,
-                'winner': 'B' if np.mean(b_values) > np.mean(a_values) else 'A'
+                'winner': ('B' if np.mean(b_values) < np.mean(a_values) else 'A') if metric == 'latency' else ('B' if np.mean(b_values) > np.mean(a_values) else 'A')
             }
 
         return analysis
@@ -252,9 +252,9 @@ def evaluate_prompt_comprehensively(prompt, test_suite):
             results['latency'].append(latency)
             results['tokens'].append(count_tokens(prompt) + count_tokens(response))
 
-        # Accuracy (best of 3 runs)
+        # Average accuracy across all runs; do not cherry-pick the best response
         accuracies = [evaluate_accuracy(r, test_case['expected']) for r in runs]
-        results['accuracy'].append(max(accuracies))
+        results['accuracy'].append(np.mean(accuracies))
 
         # Consistency (how similar are the 3 runs?)
         results['consistency'].append(calculate_similarity(runs))
@@ -359,7 +359,7 @@ class PromptVersionControl:
             'metrics_comparison': {
                 metric: {
                     'v1': v1['metrics'].get(metric),
-                    'v2': v2['metrics'].get(metric'),
+                    'v2': v2['metrics'].get(metric),
                     'change': v2['metrics'].get(metric, 0) - v1['metrics'].get(metric, 0)
                 }
                 for metric in set(v1['metrics'].keys()) | set(v2['metrics'].keys())

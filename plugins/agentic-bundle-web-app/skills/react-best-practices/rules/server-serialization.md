@@ -36,3 +36,5 @@ function Profile({ name }: { name: string }) {
   return <div>{name}</div>
 }
 ```
+
+Never pass secret or unauthorized fields across the server/client boundary. The snippets illustrate separate files: put the use client directive at the top of the Profile module, not midway through a server module. Serialization supports more types than strings; minimize the authorized projection.

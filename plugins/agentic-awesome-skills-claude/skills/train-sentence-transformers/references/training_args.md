@@ -1,5 +1,6 @@
 # Training Arguments
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 `SentenceTransformerTrainingArguments`, `CrossEncoderTrainingArguments`, and `SparseEncoderTrainingArguments` all inherit from Hugging Face's `TrainingArguments`, so 95% of the arguments are the same.
 
 This reference covers the arguments that actually matter for embedding-model training.
@@ -38,7 +39,7 @@ args = SentenceTransformerTrainingArguments(
 
     # Eval + checkpointing
     eval_strategy="steps",
-    eval_steps=0.1,                        # fraction: 10 evals/epoch, scales with dataset size
+    eval_steps=0.1,                        # fraction: approximately 10 evaluations over the total training steps, scales with dataset size
     save_strategy="steps",
     save_steps=0.1,                        # keep aligned with eval_steps for load_best_model_at_end
     save_total_limit=2,
@@ -47,10 +48,10 @@ args = SentenceTransformerTrainingArguments(
     greater_is_better=True,
 
     # Logging
-    logging_steps=0.01,                    # fraction: ~100 log lines/epoch
+    logging_steps=0.01,                    # fraction: ~approximately 100 logs over the total training steps
     logging_first_step=True,
     run_name="my-model",
-    report_to="trackio",                   # or "wandb", "tensorboard", "mlflow", "none"
+    report_to="none",                   # or "wandb", "tensorboard", "mlflow", "none"
 )
 ```
 
@@ -134,7 +135,7 @@ metric_for_best_model="eval_<EvaluatorName>_<metric>",
 greater_is_better=True,
 ```
 
-**Prefer fractional values over absolute step counts.** `eval_steps=0.1` / `save_steps=0.1` / `logging_steps=0.01` are interpreted as fractions of total training steps (10 evals per epoch, 100 log lines per epoch) and auto-scale when the dataset size or epoch count changes. The HF Trainer converts a `float < 1` to `int(total_steps * fraction)` at init time, so the same config works whether you're training on 10k or 10M rows — no need to recompute absolute step counts each time.
+**Prefer fractional values over absolute step counts.** `eval_steps=0.1` / `save_steps=0.1` / `logging_steps=0.01` are interpreted as fractions of total training steps (approximately 10 evaluations over total training steps, approximately 100 logs over total training steps) and auto-scale when the dataset size or epoch count changes. The HF Trainer converts a `float < 1` to `ceil(total_steps * fraction)` at init time, so the same config works whether you're training on 10k or 10M rows — no need to recompute absolute step counts each time.
 
 Use an absolute integer (e.g. `eval_steps=500`) only when you have a specific reason: comparing runs at known step counts, or when `max_steps` is set to an unusual value that makes fractions awkward.
 
@@ -180,10 +181,10 @@ State that persists across resumption: optimizer, scheduler, random seeds, train
 ## Logging
 
 ```python
-logging_steps=0.01,             # fraction: ~100 log lines per epoch (use an int for a fixed cadence)
+logging_steps=0.01,             # fraction: ~approximately 100 logs over total training steps (use an int for a fixed cadence)
 logging_first_step=True,        # log before any training; useful sanity check
 logging_dir=None,               # defaults to output_dir/runs
-report_to="trackio",            # or ["trackio", "tensorboard"] for multiple; "none" disables all
+report_to="none",            # or ["trackio", "tensorboard"] for multiple; "none" disables all
 run_name="meaningful-name",     # shown in the tracker UI
 ```
 

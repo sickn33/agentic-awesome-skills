@@ -1,5 +1,8 @@
 # BLAST Operations with Bio.Blast
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.Blast provides tools for running BLAST searches (both locally and via NCBI web services) and parsing BLAST results in various formats. The module handles the complexity of submitting queries and parsing outputs.
@@ -166,49 +169,27 @@ Local BLAST requires:
 1. BLAST+ command-line tools installed
 2. BLAST databases downloaded locally
 
-### Using Command-Line Wrappers
+### Use trusted BLAST+ executables directly
 
 ```python
-from Bio.Blast.Applications import NcbiblastnCommandline
-
-# Setup BLAST command
-blastn_cline = NcbiblastnCommandline(
-    query="input.fasta",
-    db="local_database",
-    evalue=0.001,
-    outfmt=5,                    # XML format
-    out="results.xml"
-)
-
-# Run BLAST
-stdout, stderr = blastn_cline()
-
-# Parse results
+import subprocess
+subprocess.run(["blastn", "-query", "input.fasta", "-db", "local_database",
+                "-evalue", "0.001", "-outfmt", "5", "-out", "results.xml"], check=True)
 from Bio.Blast import NCBIXML
-with open("results.xml") as result_handle:
-    blast_record = NCBIXML.read(result_handle)
+with open("results.xml") as handle:
+    for result in NCBIXML.parse(handle):
+        print(result.query)
 ```
 
-### Available Command-Line Wrappers
+Bio.Blast.Applications wrappers are not available in current Biopython. Install and
+verify the external BLAST+ binary separately, with authorized input/output paths.
 
-- `NcbiblastnCommandline` - BLASTN wrapper
-- `NcbiblastpCommandline` - BLASTP wrapper
-- `NcbiblastxCommandline` - BLASTX wrapper
-- `NcbitblastnCommandline` - TBLASTN wrapper
-- `NcbitblastxCommandline` - TBLASTX wrapper
-
-### Creating BLAST Databases
+### Creating a local BLAST database
 
 ```python
-from Bio.Blast.Applications import NcbimakeblastdbCommandline
-
-# Create nucleotide database
-makedb_cline = NcbimakeblastdbCommandline(
-    input_file="sequences.fasta",
-    dbtype="nucl",
-    out="my_database"
-)
-stdout, stderr = makedb_cline()
+import subprocess
+subprocess.run(["makeblastdb", "-in", "sequences.fasta", "-dbtype", "nucl",
+                "-out", "my_database"], check=True)
 ```
 
 ## Analyzing BLAST Results
@@ -289,12 +270,9 @@ def fetch_hit_sequences(blast_record, num_sequences=5):
 
 ```python
 # Run BLAST with tabular output
-blastn_cline = NcbiblastnCommandline(
-    query="input.fasta",
-    db="database",
-    outfmt=6,
-    out="results.txt"
-)
+import subprocess
+subprocess.run(["blastn", "-query", "input.fasta", "-db", "database",
+                "-outfmt", "6", "-out", "results.txt"], check=True)
 
 # Parse tabular results
 with open("results.txt") as f:
@@ -314,12 +292,9 @@ with open("results.txt") as f:
 
 ```python
 # Specify custom columns (outfmt 6 with custom fields)
-blastn_cline = NcbiblastnCommandline(
-    query="input.fasta",
-    db="database",
-    outfmt="6 qseqid sseqid pident length evalue bitscore qseq sseq",
-    out="results.txt"
-)
+import subprocess
+subprocess.run(["blastn", "-query", "input.fasta", "-db", "database",
+                "-outfmt", "6 qseqid sseqid pident length evalue bitscore qseq sseq", "-out", "results.txt"], check=True)
 ```
 
 ## Best Practices
@@ -396,22 +371,16 @@ if blast_record.alignments:
 from Bio.Blast import NCBIWWW, NCBIXML
 from Bio import SeqIO
 
-# Read multiple sequences
-sequences = list(SeqIO.parse("queries.fasta", "fasta"))
-
-# Create batch results file
-with open("batch_results.xml", "w") as out_file:
-    for seq_record in sequences:
-        print(f"Searching for {seq_record.id}...")
-
-        result_handle = NCBIWWW.qblast("blastn", "nt", str(seq_record.seq))
-        out_file.write(result_handle.read())
-        result_handle.close()
-
-# Parse batch results
-with open("batch_results.xml") as result_handle:
-    for blast_record in NCBIXML.parse(result_handle):
-        print(f"\n{blast_record.query}: {len(blast_record.alignments)} hits")
+# Keep each response as its own XML document, or submit a supported multi-query job.
+from pathlib import Path
+for index, seq_record in enumerate(SeqIO.parse("queries.fasta", "fasta")):
+    # Coordinate application-wide NCBI BLAST request/poll limits; not Entrez limits.
+    with NCBIWWW.qblast("blastn", "nt", str(seq_record.seq)) as result_handle:
+        text = result_handle.read()
+    Path(f"batch_result_{index}.xml").write_text(text, encoding="utf-8")
+    with open(f"batch_result_{index}.xml") as handle:
+        for result in NCBIXML.parse(handle):
+            print(result.query)
 ```
 
 ### Reciprocal Best Hits
@@ -453,3 +422,7 @@ except HTTPError as e:
 except Exception as e:
     print(f"Error running BLAST: {e}")
 ```
+
+## Remote service boundary
+
+Online BLAST transmits the query sequence to NCBI. Use local BLAST for private or large workloads unless remote submission is authorized. Follow [NCBI BLAST usage guidance](https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html): separate BLAST request/poll timing from Entrez quotas, coordinate callers, cache results and identify the tool/contact. Reciprocal best hits are a heuristic requiring organism-specific search spaces and accession normalization, not proof of orthology.

@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Pin the Angular/CDK major versions and inspect the app’s existing change-detection and SSR setup first. Snippets are focused fragments with host services/imports assumed, not a complete runnable application. Measure bundle sizes and rendering profiles before/after; priority labels below are triage heuristics, not guaranteed gains.
+
 ## Rule Categories by Priority
 
 | Priority | Category              | Impact     | Focus                           |
@@ -32,7 +34,7 @@ export class CounterComponent {
   count = signal(0);
 }
 
-// WRONG - Default change detection
+// Alternative - default strategy may be appropriate; profile before migration
 @Component({
   template: `<div>{{ count }}</div>`, // Checked every cycle
 })
@@ -56,7 +58,7 @@ export class DashboardComponent {
   count = signal(0);
 }
 
-// WRONG - Mutable properties require zone.js checks
+// Plain properties can update through notified events; async updates need notification
 @Component({
   template: `
     <h1>{{ title }}</h1>
@@ -72,7 +74,7 @@ export class DashboardComponent {
 ### Enable Zoneless for New Projects
 
 ```typescript
-// main.ts - Zoneless Angular (v20+)
+// main.ts - opt-in for supported v20; zoneless is the default in v21+
 bootstrapApplication(AppComponent, {
   providers: [provideZonelessChangeDetection()],
 });
@@ -81,7 +83,7 @@ bootstrapApplication(AppComponent, {
 **Benefits:**
 
 - No zone.js patches on async APIs
-- Smaller bundle (~15KB savings)
+- Potentially smaller bundle; measure the actual build
 - Clean stack traces for debugging
 - Better micro-frontend compatibility
 
@@ -127,14 +129,14 @@ this.route.params
 // CORRECT - Use resolvers or blocking hydration for critical data
 export const route: Route = {
   path: "profile/:id",
-  resolve: { data: profileResolver }, // Fetched on server before navigation
+  resolve: { data: profileResolver }, // Resolves during navigation; runs server-side only when SSR is actually used
   component: ProfileComponent,
 };
 
 // WRONG - Component fetches data on init
 class ProfileComponent implements OnInit {
   ngOnInit() {
-    // Starts ONLY after JS loads and component renders
+    // May run on the server under SSR; avoid duplicate client requests with transfer caching
     this.http.get("/api/profile").subscribe();
   }
 }
@@ -188,7 +190,7 @@ export const routes: Routes = [
 ### Avoid Barrel File Re-exports
 
 ```typescript
-// WRONG - Imports entire barrel, breaks tree-shaking
+// Inspect side effects and package exports; a barrel does not inherently break tree-shaking
 import { Button, Modal, Table } from "@shared/components";
 
 // CORRECT - Direct imports
@@ -214,7 +216,7 @@ import { Chart } from 'chart.js';
 
 ## 4. Rendering Performance (HIGH)
 
-### Always Use trackBy with @for
+### Use Stable Identity with @for
 
 ```html
 <!-- CORRECT - Efficient DOM updates -->
@@ -222,7 +224,7 @@ import { Chart } from 'chart.js';
 <app-item-card [item]="item" />
 }
 
-<!-- WRONG - Entire list re-renders on any change -->
+<!-- For static never-reordered lists, $index can be suitable; avoid for mutable ordering -->
 @for (item of items(); track $index) {
 <app-item-card [item]="item" />
 }
@@ -231,13 +233,13 @@ import { Chart } from 'chart.js';
 ### Use Virtual Scrolling for Large Lists
 
 ```typescript
-import { CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll } from '@angular/cdk/scrolling';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
-  imports: [CdkVirtualScrollViewport, CdkFixedSizeVirtualScroll],
+  imports: [ScrollingModule],
   template: `
-    <cdk-virtual-scroll-viewport itemSize="50" class="viewport">
-      <div *cdkVirtualFor="let item of items" class="item">
+    <cdk-virtual-scroll-viewport [itemSize]="50" class="viewport" style="height: 300px">
+      <div *cdkVirtualFor="let item of items" class="item" style="height: 50px">
         {{ item.name }}
       </div>
     </cdk-virtual-scroll-viewport>
@@ -294,6 +296,8 @@ get filteredProducts() {
 
 ### Configure Incremental Hydration
 
+For versions using an explicit withIncrementalHydration feature, event replay is already enabled by that feature. In current versions where provideClientHydration enables incremental hydration by default, use the documented default instead; do not mix version-specific APIs.
+
 ```typescript
 // app.config.ts
 import {
@@ -303,7 +307,7 @@ import {
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideClientHydration(withIncrementalHydration(), withEventReplay()),
+    provideClientHydration(withIncrementalHydration()),
   ],
 };
 ```
@@ -318,7 +322,8 @@ export const appConfig: ApplicationConfig = {
 <!-- Below-fold deferred with hydration triggers -->
 @defer (hydrate on viewport) {
 <app-product-grid />
-} @defer (hydrate on interaction) {
+}
+@defer (hydrate on interaction) {
 <app-chat-widget />
 }
 ```
@@ -336,14 +341,14 @@ export class DataService {
     const stateKey = makeStateKey<Data>(key);
 
     if (isPlatformBrowser(this.platformId)) {
-      const cached = this.transferState.get(stateKey, null);
-      if (cached) {
+      const cached = this.transferState.get<Data | null>(stateKey, null);
+      if (cached !== null) {
         this.transferState.remove(stateKey);
         return of(cached);
       }
     }
 
-    return this.http.get<Data>(`/api/${key}`).pipe(
+    return this.http.get<Data>(`/api/${encodeURIComponent(key)}`).pipe(
       tap((data) => {
         if (isPlatformServer(this.platformId)) {
           this.transferState.set(stateKey, data);
@@ -486,7 +491,7 @@ export class DataComponent implements OnDestroy {
 ```typescript
 // CORRECT - No subscription needed
 @Component({
-  template: `<div>{{ data().name }}</div>`,
+  template: `<div>{{ data()?.name }}</div>`,
 })
 export class Component {
   data = toSignal(this.service.data$, { initialValue: null });
@@ -519,7 +524,7 @@ export class Component implements OnInit, OnDestroy {
 
 - [ ] `changeDetection: ChangeDetectionStrategy.OnPush`
 - [ ] `standalone: true`
-- [ ] Signals for state (`signal()`, `input()`, `output()`)
+- [ ] Signals for reactive state (`signal()`, `input()`); `output()` emits events and is not a signal
 - [ ] `inject()` for dependencies
 - [ ] `@for` with `track` expression
 
@@ -541,9 +546,11 @@ export class Component implements OnInit, OnDestroy {
 ---
 
 
+Pure pipes cache based on input identity; in-place array mutation can leave derived output stale. Use immutable updates or explicit signals, and avoid calling every template method “wrong”: pure inexpensive methods may be fine. Use forkJoin for independent completing requests, not endless streams; preserve dependent request order and cancellation. SSR transfer state is serialized to the client: never include secrets or cross-user cached data. Ensure per-request SSR services and user-specific cache keys, and check built-in HTTP transfer caching before adding manual state.
+
 ## Resources
 
 - [Angular Performance Guide](https://angular.dev/best-practices/performance)
-- [Zoneless Angular](https://angular.dev/guide/experimental/zoneless)
+- [Zoneless Angular](https://angular.dev/guide/zoneless)
 - [Angular SSR Guide](https://angular.dev/guide/ssr)
 - [Change Detection Deep Dive](https://angular.dev/guide/change-detection)

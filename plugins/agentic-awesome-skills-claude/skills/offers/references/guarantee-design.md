@@ -68,7 +68,7 @@ Decision tree:
 
 ### High-ticket info product (community, mastermind)
 
-**Strong (premium audience):** "No refunds. The application process is rigorous because the value is real. If you're not sure, don't apply yet." Anti-guarantee works here.
+**Policy option requiring review:** a clearly disclosed final-sale policy may be considered only where permitted and consistent with mandatory rights. Buyer sophistication does not establish legality or effectiveness.
 
 **Weak (premium audience):** Generic 30-day refund. Reads cheap.
 
@@ -86,7 +86,7 @@ Decision tree:
 
 ### Direct response / paid traffic
 
-**Strong:** Double-your-money-back or comparable risk inversion. Direct-response buyers expect risk-reversal-heavy offers.
+**Possible experiment:** a clear sustainable refund policy supported by unit economics; do not assume buyers require double refunds or make unsubstantiated performance promises.
 
 **Weak:** Vanilla 30-day refund. Doesn't differentiate from every other ad on the platform.
 
@@ -167,6 +167,6 @@ When auditing an offer with no guarantee (or a weak one), ask:
 1. **What's the buyer's actual risk?** Make it concrete. ("$2K and I might not get more clients.")
 2. **What guarantee structure reverses that specific risk?** Match it to one of the eight types.
 3. **What's your honest refund tolerance?** Calculate refund rate × refund cost; can you sustain it?
-4. **Does the guarantee match your audience sophistication?** Premium buyers want anti-guarantee; first-time buyers want unconditional.
+4. **Does the guarantee match your audience sophistication?** Test preferences rather than inferring them from price or buyer labels.
 
-Most offers don't have the wrong guarantee — they have *no* guarantee at all. Adding any guarantee is almost always a lift. Adding the right one is the lever.
+Most offers don't have the wrong guarantee — they have *no* guarantee at all. Guarantees can help or hurt; test a sustainable, clearly stated policy against actual customer evidence.

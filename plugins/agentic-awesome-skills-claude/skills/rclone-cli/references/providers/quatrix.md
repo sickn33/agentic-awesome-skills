@@ -165,7 +165,8 @@ equal `minimal_chunk_size`.
 
 ### Deleting files
 
-Files you delete with rclone will end up in Trash and be stored there for 30 days.
+By default, files deleted with rclone go to Trash, subject to the account
+retention policy. `--quatrix-hard-delete` permanently deletes them instead.
 Quatrix also provides an API to permanently delete files and an API to empty the
 Trash so that you can remove files permanently from your account.
 

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-22T13:59:33.000Z",
+  "generatedAt": "2026-10-24T08:21:30.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -142,6 +142,10 @@
     "fda-medtech-auditor": "fda-medtech-compliance-auditor",
     "finishing-a-branch": "finishing-a-development-branch",
     "folder-specific-md": "folder-specific-claude-and-agents-md",
+    "footval-follow-tables": "footval-follow-matches-and-tables",
+    "footval-scout-players": "footval-scout-and-rank-players",
+    "footval-stats-news": "footval-stats-and-transfer-news",
+    "footval-value-players": "footval-value-and-compare-players",
     "framework-migration-migrate": "framework-migration-code-migrate",
     "framework-migration-upgrade": "framework-migration-deps-upgrade",
     "framework-migration-modernize": "framework-migration-legacy-modernize",

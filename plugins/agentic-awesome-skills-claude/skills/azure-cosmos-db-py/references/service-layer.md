@@ -1,5 +1,9 @@
 # Service Layer Pattern
 
+
+Review corrections (2026-10-23): these snippets are incomplete application starters. Initialize the synchronous client during startup outside the event loop, serialize initialization and close client/credential on shutdown. A cached failed initialization needs an explicit bounded recovery path. `azure.cosmos.aio` is also available; the SDK is not synchronous-only. Enforce tenant authorization independently of partition routing; the bundled client assumes `/workspaceId`. Never accept caller SQL fragments. Distinguish unavailable storage (503) from not-found (404) and empty data; the older graceful-default examples below illustrate a policy to avoid for authoritative reads. Use ETag conditional writes to prevent lost updates, enforce uniqueness atomically, and implement cross-partition moves with conflict-aware compensation; read-then-upsert/delete is not atomic. No live Cosmos behavior is verified by these templates.
+
+
 ## Table of Contents
 
 1. [Service Class Structure](#service-class-structure)
@@ -302,4 +306,4 @@ async def get_by_id(self, project_id: str, workspace_id: str) -> Optional[Projec
 
 ## Complete Example
 
-See [assets/service_template.py](../assets/service_template.py) for a production-ready service implementation.
+See [assets/service_template.py](../assets/service_template.py) for a application-specific starter service implementation.

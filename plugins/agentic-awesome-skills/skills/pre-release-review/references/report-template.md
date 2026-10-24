@@ -35,7 +35,7 @@ keep the same sections, priority labels, conclusion values, and finding fields.
 
 ## Owner inference
 
-- Prefer `git blame` on changed lines for the file and line that caused the finding.
+- Prefer current CODEOWNERS/service responsibility; blame authorship is only a possible contact, not proof of responsibility. Use `git blame` as a labeled fallback.
 - If blame is unavailable or misleading, use `git log --format="%h %an %s" -- <path>`.
 - If several commits contributed to the same release risk, list all relevant author names.
 - Mark owners as "inferred" and do not expose email addresses.

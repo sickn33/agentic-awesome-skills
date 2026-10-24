@@ -1,5 +1,6 @@
 # Evaluators (Cross-Encoder)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All cross-encoder evaluators live in `sentence_transformers.cross_encoder.evaluation`.
 
 ## Choosing the right evaluator
@@ -110,7 +111,7 @@ Pattern: `f"eval_{evaluator.primary_metric}"`. Inspect after construction: `prin
 
 ## Gotchas
 
-- **Always run `evaluator(model)` once before training** — pre-training baseline. Tiny post-training delta means the loss/data/base is wrong.
+- **Always run `evaluator(model)` once before training** — pre-training baseline. A tiny delta may reflect uncertainty, a strong baseline, insufficient compute or task mismatch; investigate rather than declaring failure.
 - `CrossEncoderClassificationEvaluator` accepts both `num_labels=1` (binary, primary `average_precision`) and `num_labels>=2` (multi-class, primary `f1_macro`); `CrossEncoderCorrelationEvaluator` requires `num_labels=1`.
 - The default `dataset_names=None` excludes `arguana` and `touche2020` (Argument-Retrieval task differs from the rest); pass `dataset_names=list(DATASET_NAME_TO_HUMAN_READABLE)` from `sentence_transformers.cross_encoder.evaluation.nano_beir` to actually run all 13.
 - Subset NanoBEIR datasets during training (3–4) to keep eval cheap; run the broader set post-training.

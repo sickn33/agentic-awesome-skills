@@ -74,7 +74,7 @@ Multiple files → Import SDK → Build mini-app
 
 ### Principle 3: Real API, Real Results
 
-Never fake the results. Use your actual API with sandbox credentials.
+Clearly label simulated/cached/live results. Live API calls require an explicit Run action, synthetic input, scoped short-lived credentials and server-enforced spend limits; do not auto-execute paid calls on page load.
 
 **Why real matters:**
 - Builds trust (not a demo, but actual product)
@@ -102,7 +102,7 @@ No signup required for basic playground. No installation. No configuration.
 Enable developers to share their playground state:
 
 ```
-https://playground.example.com/?code=BASE64_ENCODED_CODE
+https://playground.example.com/?example=public-fixture-id # avoid secrets/code in query logs/history
 https://playground.example.com/share/abc123 (stored state)
 ```
 
@@ -122,6 +122,9 @@ Let developers embed playgrounds in their own content:
   src="https://playground.example.com/embed/quickstart"
   width="100%"
   height="400px"
+  sandbox="allow-scripts"
+  referrerpolicy="no-referrer"
+  title="Isolated quickstart playground"
 ></iframe>
 
 <!-- Or via script tag -->
@@ -271,7 +274,7 @@ Signs Up (Conversion)
 
 **Preserve context:**
 - After signup, return to the same playground state
-- Pre-populate API key in their code
+- Preserve nonsensitive context; inject only short-lived scoped demo capabilities, never a privileged/persistent key into shared code
 - Show "Next steps" relevant to what they were doing
 
 **Measure the funnel:**
@@ -339,6 +342,10 @@ analytics.track('playground_signup_completed');
 ### Security Considerations
 
 **Sandbox isolation:**
+- Ordinary containers are not by themselves a sufficient hostile multi-tenant code boundary; use a reviewed isolation architecture, patched kernel/runtime and threat model
+- Separate origin with no parent cookies/storage; avoid combining allow-scripts and allow-same-origin for same-origin untrusted content
+- Deny network egress by default, including metadata/private IPs and DNS rebinding paths; allow only explicit demo services
+- No host mounts/Docker socket/cloud credentials; drop privileges/capabilities and enforce wall-time, process, disk/output and spend limits
 - Execute user code in containers
 - Limit CPU, memory, network
 - No filesystem access to host
@@ -412,7 +419,7 @@ analytics.track('playground_signup_completed');
 
 ### Embedding
 - **iframes**: Simple but limited
-- **Web Components**: Better isolation
+- **Web Components**: UI/style encapsulation, not a security boundary for arbitrary code
 - **Script embeds**: Most flexible
 
 
@@ -423,3 +430,20 @@ analytics.track('playground_signup_completed');
 - **sdk-dx**: SDK design that works in playground context
 - **developer-metrics**: Measuring playground effectiveness
 - **developer-audience-context**: Understanding what to demo
+
+## Sharing and privacy validation
+
+Base64 is not encryption. Before creating a share link, preview/redact code, inputs
+and output; default private, require explicit publication, enforce access checks and
+expiry/revocation. No secrets in URLs, analytics, copied cURL or request logs.
+Validate postMessage origin AND source with a bounded message schema. Render outputs
+with textContent, not unsanitized HTML; a content scanner is no isolation guarantee.
+Embedded third-party scripts execute with host-page authority; require approved pinned
+provenance and CSP. A sandboxed iframe may restrict storage/auth; add capabilities
+only after reviewing their effect, never weakening isolation to make a demo work.
+
+For example, a synthetic text-analysis demo may allow at most 10 requests/session,
+1KB input and a 5-second worker lifetime with no arbitrary network; verify the server
+rejects an 11th request and a metadata-IP fetch. These are proposed test cases, not
+results. Example quotas/timing/conversion targets here are design hypotheses.
+No sandbox, API, conversion funnel or embedding behavior has been tested.

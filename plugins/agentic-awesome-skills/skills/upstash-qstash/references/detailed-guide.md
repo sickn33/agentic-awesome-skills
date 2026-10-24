@@ -9,9 +9,9 @@
 - Verify signatures always - never trust unverified webhooks
 - Schedules are fire-and-forget - QStash handles the cron
 - Retries are built-in - but configure them for your use case
-- Delays are free - schedule seconds to days in the future
+- Delays and scheduling have plan-specific limits and costs; verify current pricing.
 - Callbacks complete the loop - know when delivery succeeds or fails
-- Deduplication prevents double-processing - use message IDs
+- Publishing deduplication is time-bounded; consumers still need durable idempotency.
 
 
 ## Capabilities
@@ -149,11 +149,13 @@ export async function POST(req: NextRequest) {
   const body = await req.text();
 
   // ALWAYS verify signature
-  const isValid = await receiver.verify({
-    signature: signature!,
-    body,
-    url: req.url,
-  });
+  if (!signature) return NextResponse.json({ error: "Missing signature" }, { status: 401 });
+  let isValid = false;
+  try {
+    isValid = await receiver.verify({ signature, body, url: req.url });
+  } catch {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
 
   if (!isValid) {
     return NextResponse.json(
@@ -162,7 +164,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Safe to process
+  // Authentic transport is established; still validate schema, tenant and idempotency.
   const data = JSON.parse(body);
   await processMessage(data);
 
@@ -192,8 +194,7 @@ await qstash.publishJSON({
 // Callback endpoint receives delivery status
 // app/api/qstash-callback/route.ts
 export async function POST(req: NextRequest) {
-  // Verify signature first!
-  const data = await req.json();
+  const data = await verifyAndParseCallback(req); // application-supplied: raw-body Receiver verification, then schema validation
 
   // data contains:
   // - sourceMessageId: original message ID
@@ -300,17 +301,19 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get('upstash-signature');
   const body = await req.text();  // Raw body required
 
-  const isValid = await receiver.verify({
-    signature: signature!,
-    body,
-    url: req.url,
-  });
+  if (!signature) return NextResponse.json({ error: "Missing signature" }, { status: 401 });
+  let isValid = false;
+  try {
+    isValid = await receiver.verify({ signature, body, url: req.url });
+  } catch {
+    return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
 
   if (!isValid) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
   }
 
-  // Safe to process
+  // Authentic transport is established; still validate schema, tenant and idempotency.
 }
 ```
 
@@ -332,7 +335,7 @@ Symptoms:
 - Duplicate processing of same message
 
 Why this breaks:
-QStash has a 30-second timeout for callbacks. If your endpoint doesn't respond
+Timeouts depend on current plan/request settings; verify the configured delivery deadline. If your endpoint doesn't respond
 in time, QStash considers it failed and retries. Long-running handlers create
 duplicate message processing and wasted retries.
 
@@ -383,14 +386,13 @@ Symptoms:
 - Sudden drop in processing during peak times
 
 Why this breaks:
-QStash has plan-based rate limits. Free tier: 500 messages/day. Pro: higher
-but still limited. Bursts can exhaust limits quickly. Without monitoring,
+QStash has plan-based rate limits. Daily and per-second quotas depend on the plan. Bursts can exhaust limits quickly. Without monitoring,
 you won't know until users complain.
 
 Recommended fix:
 
 # Check your plan limits:
-- Free: 500 messages/day
+- Free: verify current dashboard limits
 - Pay as you go: Check dashboard
 - Pro: Higher limits, check dashboard
 
@@ -410,12 +412,13 @@ try {
 # Batch messages when possible:
 ```typescript
 // Instead of 100 individual publishes
-await qstash.batchJSON({
-  messages: items.map(item => ({
+const results = await qstash.batchJSON(
+  items.map(item => ({
     url: 'https://myapp.com/api/process',
     body: { itemId: item.id },
-  })),
-});
+  }))
+);
+// Inspect each result: batch publication can partially fail.
 ```
 
 # Monitor in dashboard:
@@ -458,12 +461,12 @@ await qstash.publishJSON({
 ```
 
 # Deduplication window:
-- Default: 60 seconds
+- Current documented publication window: 10 minutes; verify current service contract
 - Messages with same ID in window are deduplicated
 - Plan for this in your retry logic
 
 # Also make endpoints idempotent:
-Check if operation already completed before processing
+Use a durable unique business-operation key and atomic claim/transaction. A separate check then side effect is racy; use provider idempotency keys and reconciliation for external effects.
 
 ### Expecting QStash to reach private/localhost endpoints
 
@@ -486,7 +489,7 @@ Recommended fix:
 
 # Production requirements:
 - URL must be publicly accessible
-- HTTPS required (HTTP will fail)
+- HTTPS required by this production policy; not an assertion that the API rejects every HTTP destination
 - No localhost, 127.0.0.1, or private IPs
 
 # Local development options:
@@ -540,7 +543,7 @@ await qstash.publishJSON({
   url: 'https://myapp.com/api/payment-webhook',
   body: { paymentId: '123' },
   retries: 5,
-  // Backoff: 10s, 30s, 1m, 5m, 30m
+  // retries alone does not configure a custom backoff sequence.
 });
 
 // Non-critical notifications: fewer retries
@@ -578,7 +581,7 @@ Symptoms:
 - High bandwidth costs
 
 Why this breaks:
-QStash has message size limits (around 500KB body). Large payloads slow
+QStash has plan-specific message size limits; check the current limit. Large payloads slow
 delivery, increase costs, and can fail entirely. Messages should be
 lightweight triggers, not data carriers.
 
@@ -602,7 +605,7 @@ await qstash.publishJSON({
 # In your handler:
 ```typescript
 export async function POST(req: NextRequest) {
-  const { documentId } = await req.json();
+  const { documentId } = await verifyAndParseCallback(req); // validate schema and authorized document ownership
   const document = await storage.get(documentId);  // Fetch actual data
   await processDocument(document);
 }
@@ -646,8 +649,7 @@ await qstash.publishJSON({
 ```typescript
 // app/api/email-callback/route.ts
 export async function POST(req: NextRequest) {
-  // Verify signature first!
-  const data = await req.json();
+  const data = await verifyAndParseCallback(req); // application-supplied: raw-body Receiver verification, then schema validation
 
   // data.sourceMessageId - original message
   // data.status - HTTP status code
@@ -666,7 +668,7 @@ export async function POST(req: NextRequest) {
 ```typescript
 // app/api/email-failed/route.ts
 export async function POST(req: NextRequest) {
-  const data = await req.json();
+  const data = await verifyAndParseCallback(req); // same required verification as success callback
   await alerting.notify(`Email failed: ${data.sourceMessageId}`);
   await db.emailLogs.update({
     where: { messageId: data.sourceMessageId },
@@ -688,7 +690,7 @@ Symptoms:
 - User complaints about report timing
 
 Why this breaks:
-QStash cron schedules run in UTC. If you think in local time but configure
+Cron defaults to UTC, and current QStash supports timezone-prefixed expressions. If you think in local time but configure
 in UTC, schedules will run at unexpected times. This is especially tricky
 with daylight saving time changes.
 
@@ -719,8 +721,8 @@ await qstash.schedules.create({
 });
 ```
 
-# Handle DST programmatically if needed:
-Update schedules when DST changes, or accept UTC timing
+# Handle DST intentionally:
+Use the documented timezone prefix for the pinned SDK/service, or choose a fixed UTC schedule. A timezone field in the JSON body does not change scheduling.
 
 ### URL groups with dead or outdated endpoints
 
@@ -749,8 +751,8 @@ for (const group of groups) {
   for (const endpoint of group.endpoints) {
     // Check if endpoint is still valid
     try {
-      await fetch(endpoint.url, { method: 'HEAD' });
-      console.log(`  OK: ${endpoint.url}`);
+      const response = await fetch(endpoint.url, { method: 'HEAD', redirect: 'manual', signal: AbortSignal.timeout(5000) });
+      console.log(`  HEAD status: ${response.status}`); // 405/auth responses do not prove a dead delivery endpoint
     } catch {
       console.log(`  DEAD: ${endpoint.url}`);
     }
@@ -817,7 +819,7 @@ Fix action: Use a public URL (e.g., your deployed domain or ngrok for testing)
 
 Severity: ERROR
 
-Message: QStash requires HTTPS URLs for security
+Message: Use HTTPS for production data; the API can accept HTTP, which is not appropriate for sensitive delivery.
 
 Fix action: Change http:// to https://
 
@@ -930,3 +932,9 @@ Workflow:
 ## Related Skills
 
 Works well with: `upstash-redis`, `upstash-ratelimit`, `vercel-deployment`, `nextjs-app-router`, `redis-specialist`, `email-systems`, `supabase-backend`, `cloudflare-workers`
+
+## Application requirements
+
+Snippets omit imports, database schema, processMessage, parseMessage and verifyAndParseCallback. They are not standalone handlers. Implement signature verification for every callback before reading trusted fields; handle missing headers, verifier exceptions, bounded raw bodies and malformed JSON. Derive the verification URL from trusted deployment configuration behind proxies. Validate destinations against authorized HTTPS hosts and restrict redirect/SSRF behavior. Do not expose local/preview services through tunnels without authorization and authentication. Payloads and callback bodies pass through Upstash; minimize private data, protect signing keys and redact logs.
+
+A signature does not authorize a requested business operation or prevent replay. Persist business idempotency atomically before acknowledging; only acknowledge a durable job, and never rely on unawaited serverless background work. A successful HTTP delivery or email-provider acceptance does not prove an email reached its recipient or the business operation completed. Reconcile ambiguous publishes instead of blindly retrying, and bound retries using typed/status errors rather than message substrings. Creating/deleting schedules and changing URL groups are external writes requiring target authorization. No service/runtime execution was performed.

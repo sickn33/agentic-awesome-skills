@@ -1,11 +1,11 @@
 #!/bin/bash
 # Loki Mode Wrapper Script
-# Provides true autonomy by auto-resuming on rate limits or interruptions
+# Legacy bounded retry wrapper; completion markers are local claims, not verification.
 #
 # How it works:
 # 1. Launches Claude Code with Loki Mode prompt
 # 2. Monitors the process - when Claude exits, checks exit code
-# 3. On rate limit (exit code != 0), waits with exponential backoff
+# 3. Stops on errors; a nonzero exit does not establish a rate limit
 # 4. Restarts automatically, telling Claude to resume from checkpoint
 # 5. Continues until successful completion or max retries exceeded
 #
@@ -44,6 +44,19 @@ log_warn() { log "${YELLOW}WARN${NC}" "$*"; }
 log_error() { log "${RED}ERROR${NC}" "$*"; }
 log_success() { log "${GREEN}SUCCESS${NC}" "$*"; }
 
+# Bound arithmetic inputs before creating state or launching a model.
+for setting in MAX_RETRIES BASE_WAIT MAX_WAIT; do
+    value=${!setting}
+    if [[ ! "$value" =~ ^[0-9]{1,6}$ ]] || (( 10#$value < 1 || 10#$value > 100000 )); then
+        echo "Invalid $setting: expected integer 1..100000" >&2
+        exit 2
+    fi
+    printf -v "$setting" '%d' "$((10#$value))"
+done
+command -v python3 >/dev/null || { echo "Python 3 required" >&2; exit 2; }
+RETRY_COUNT=0
+mkdir -p "$(dirname "$LOG_FILE")" "$(dirname "$STATE_FILE")"
+
 # Ensure .loki directory exists
 mkdir -p .loki
 
@@ -68,23 +81,36 @@ save_state() {
     local status="$2"
     local last_exit_code="$3"
 
-    cat > "$STATE_FILE" << EOF
-{
-    "retryCount": $retry_count,
-    "status": "$status",
-    "lastExitCode": $last_exit_code,
-    "lastRun": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-    "prdPath": "$PRD_PATH",
-    "pid": $$
-}
-EOF
+    python3 - "$STATE_FILE" "$retry_count" "$status" "$last_exit_code" "$PRD_PATH" "$$" <<'PYWRAPPER'
+import datetime, json, os, pathlib, sys, tempfile
+path, retry, status, code, prd, pid = sys.argv[1:]
+parent = pathlib.Path(path).parent
+parent.mkdir(parents=True, exist_ok=True)
+fd, temporary = tempfile.mkstemp(dir=parent)
+try:
+    with os.fdopen(fd, 'w', encoding='utf-8') as stream:
+        json.dump(dict(retryCount=int(retry), status=status, lastExitCode=int(code),
+                       lastRun=datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                       prdPath=prd, pid=int(pid)), stream)
+    os.replace(temporary, path)
+finally:
+    if os.path.exists(temporary): os.unlink(temporary)
+PYWRAPPER
 }
 
 # Load wrapper state if resuming
 load_state() {
     if [ -f "$STATE_FILE" ]; then
         if command -v python3 &> /dev/null; then
-            RETRY_COUNT=$(python3 -c "import json; print(json.load(open('$STATE_FILE')).get('retryCount', 0))" 2>/dev/null || echo "0")
+            RETRY_COUNT=$(python3 - "$STATE_FILE" <<'PYWRAPPER'
+import json, sys
+try:
+    with open(sys.argv[1], encoding='utf-8') as stream: state = json.load(stream)
+    retry = state.get('retryCount', 0) if isinstance(state, dict) else 0
+    print(retry if type(retry) is int and 0 <= retry <= 100000 else 0)
+except (OSError, ValueError, TypeError): print(0)
+PYWRAPPER
+)
         else
             RETRY_COUNT=0
         fi
@@ -96,7 +122,16 @@ load_state() {
 # Calculate wait time with exponential backoff and jitter
 calculate_wait() {
     local retry="$1"
-    local wait_time=$((BASE_WAIT * (2 ** retry)))
+    local wait_time=$BASE_WAIT
+    local step=0
+    while [ "$step" -lt "$retry" ] && [ "$wait_time" -lt "$MAX_WAIT" ]; do
+        if [ "$wait_time" -gt "$((MAX_WAIT / 2))" ]; then
+            wait_time=$MAX_WAIT
+        else
+            wait_time=$((wait_time * 2))
+        fi
+        step=$((step + 1))
+    done
 
     # Add jitter (0-30 seconds)
     local jitter=$((RANDOM % 30))
@@ -108,24 +143,6 @@ calculate_wait() {
     fi
 
     echo $wait_time
-}
-
-# Check if this looks like a rate limit error
-is_rate_limit() {
-    local exit_code="$1"
-
-    # Exit code 1 with rate limit indicators in log
-    if [ $exit_code -ne 0 ]; then
-        # Check recent .loki logs for rate limit indicators
-        if [ -d ".loki/logs" ]; then
-            if grep -r -l "rate.limit\|429\|too.many.requests\|quota.exceeded" .loki/logs/*.log 2>/dev/null | head -1 | grep -q .; then
-                return 0
-            fi
-        fi
-        # Assume rate limit on non-zero exit (conservative approach)
-        return 0
-    fi
-    return 1
 }
 
 # Check if Loki Mode completed successfully
@@ -157,9 +174,9 @@ build_resume_prompt() {
     else
         # Resume from checkpoint
         if [ -n "$PRD_PATH" ]; then
-            echo "Loki Mode - Resume from checkpoint. PRD at $PRD_PATH. This is retry #$retry after rate limit. Check .loki/state/ for current progress and continue from where we left off."
+            echo "Loki Mode - Resume from checkpoint. PRD at $PRD_PATH. This is retry #$retry after the previous session. Check .loki/state/ for current progress and continue from where we left off."
         else
-            echo "Loki Mode - Resume from checkpoint. This is retry #$retry after rate limit. Check .loki/state/ for current progress and continue from where we left off."
+            echo "Loki Mode - Resume from checkpoint. This is retry #$retry after the previous session. Check .loki/state/ for current progress and continue from where we left off."
         fi
     fi
 }
@@ -176,13 +193,19 @@ main() {
 
     load_state
     local retry=$RETRY_COUNT
+    # Completion markers must belong to this invocation, not an older run.
+    if is_completed; then
+        log_error "Existing completion markers require manual review before starting this legacy wrapper"
+        return 2
+    fi
 
     while [ $retry -lt $MAX_RETRIES ]; do
         local prompt=$(build_resume_prompt $retry)
 
         log_info "Attempt $((retry + 1))/$MAX_RETRIES"
         log_info "Prompt: $prompt"
-        save_state $retry "running" 0
+        RETRY_COUNT=$retry
+        save_state $retry "running" 0 || return 1
 
         # Launch Claude Code
         # The process exits when:
@@ -197,14 +220,16 @@ main() {
         # Using -p for non-interactive prompt mode
         set +e
         claude -p "$prompt" 2>&1 | tee -a "$LOG_FILE"
-        local exit_code=${PIPESTATUS[0]}
+        local pipeline_status=("${PIPESTATUS[@]}")
+        local exit_code=${pipeline_status[0]}
+        if [ "${pipeline_status[1]}" -ne 0 ]; then exit_code=${pipeline_status[1]}; fi
         set -e
 
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
 
         log_info "Claude exited with code $exit_code after ${duration}s"
-        save_state $retry "exited" $exit_code
+        save_state $retry "exited" $exit_code || return 1
 
         # Check for successful completion
         if [ $exit_code -eq 0 ]; then
@@ -231,31 +256,12 @@ main() {
             fi
         fi
 
-        # Handle non-zero exit (likely rate limit)
-        if is_rate_limit $exit_code; then
-            local wait_time=$(calculate_wait $retry)
-            log_warn "Rate limit detected. Waiting ${wait_time}s before retry..."
-
-            # Show countdown
-            local remaining=$wait_time
-            while [ $remaining -gt 0 ]; do
-                printf "\r${YELLOW}Resuming in ${remaining}s...${NC}  "
-                sleep 10
-                remaining=$((remaining - 10))
-            done
-            echo ""
-
-            ((retry++))
-        else
-            # Non-rate-limit error
-            log_error "Non-rate-limit error (exit code: $exit_code)"
-
-            # Still retry, but with shorter wait
-            local wait_time=$((BASE_WAIT / 2))
-            log_info "Retrying in ${wait_time}s..."
-            sleep $wait_time
-            ((retry++))
+        if [ "$exit_code" -ne 0 ]; then
+            log_error "Claude failed; inspect this invocation before resuming (exit $exit_code)"
+            return "$exit_code"
         fi
+        retry=$((retry + 1))
+        sleep "$BASE_WAIT"
     done
 
     log_error "Max retries ($MAX_RETRIES) exceeded. Giving up."

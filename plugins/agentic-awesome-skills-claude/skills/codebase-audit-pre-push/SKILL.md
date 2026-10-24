@@ -29,7 +29,7 @@ Review the entire codebase file by file. Read the code carefully. Fix issues rig
 
 Start by looking for files that shouldn't be on GitHub:  
 
-**Delete these immediately:**  
+**Inspect these candidates; delete only confirmed disposable files within the authorized scope:**
 - OS files: `.DS_Store`, `Thumbs.db`, `desktop.ini`  
 - Logs: `*.log`, `npm-debug.log*`, `yarn-error.log*`  
 - Temp files: `*.tmp`, `*.temp`, `*.cache`, `*.swp`  
@@ -55,7 +55,7 @@ Check if the `.gitignore` file exists and is thorough. If it’s missing or not 
 
 Look through each code file and check:  
 
-**Dead Code (remove immediately):**  
+**Potential dead code (verify consumers/build/runtime conventions before removing):**
 - Commented-out code blocks  
 - Unused imports/requires  
 - Unused variables (declared but never used)  
@@ -67,7 +67,7 @@ Look through each code file and check:
 - Vague names: `data`, `info`, `temp`, `thing` → rename to be descriptive  
 - Magic numbers: `if (status === 3)` → extract to named constant  
 - Debug statements: remove `console.log`, `print()`, `debugger`  
-- TODO/FIXME comments: either resolve them or delete them  
+- TODO/FIXME comments: preserve unresolved requirements; resolve only with evidence and scope
 - TypeScript `any`: add proper types or explain why `any` is used  
 - Use `===` instead of `==` in JavaScript  
 - Functions longer than 50 lines: consider splitting  
@@ -215,13 +215,13 @@ SCALABILITY:
 ⚡ Added index on users.email column  
 
 FINAL STATUS:  
-✅ CLEAN - Ready to push to GitHub  
+Status: report passed checks, unresolved findings and untested environments; no universal production-readiness certification
 
 Scores:  
-Security: 9/10 (one minor header missing)  
-Code Quality: 10/10  
-Scalability: 9/10  
-Overall: 9/10  
+Security: list concrete findings and evidence
+Code quality: list scoped findings
+Scalability: state measured evidence or untested
+Overall: state remaining blockers
 ```  
 
 ## Key Principles  
@@ -243,3 +243,5 @@ Overall: 9/10
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Tracked build outputs, vendored dependencies, fixtures, backups and notes may be intentional project sources. Read the repository contract and ownership before deletion; do not remove local `.env` merely to prepare a push. If a credential was exposed, redact the report, rotate/revoke it and assess history/artifacts; moving it to an environment variable does not undo exposure. Report exact files actually read and checks actually executed; do not call a sampled audit complete for the whole codebase.

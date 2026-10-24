@@ -35,7 +35,7 @@ date_added: "2026-02-27"
 
 | Engine | Citation Style | Opportunity |
 |--------|----------------|-------------|
-| **Perplexity** | Numbered [1][2] | Highest citation rate |
+| **Perplexity** | Numbered [1][2] | Citation behavior varies by query/product |
 | **ChatGPT** | Inline/footnotes | Custom GPTs |
 | **Claude** | Contextual | Long-form content |
 | **Gemini** | Sources section | SEO crossover |
@@ -44,15 +44,7 @@ date_added: "2026-02-27"
 
 ## 3. RAG Retrieval Factors
 
-How AI engines select content to cite:
-
-| Factor | Weight |
-|--------|--------|
-| Semantic relevance | ~40% |
-| Keyword match | ~20% |
-| Authority signals | ~15% |
-| Freshness | ~10% |
-| Source diversity | ~15% |
+Potential retrieval considerations include relevance, source quality, freshness and diversity. The platforms do not publish a universal weighting formula; do not assign invented percentages or infer citation probability from this checklist.
 
 ---
 
@@ -109,16 +101,16 @@ How AI engines select content to cite:
 
 | Crawler | Engine |
 |---------|--------|
-| GPTBot | ChatGPT/OpenAI |
-| Claude-Web | Claude |
+| GPTBot | OpenAI training crawler; search/user agents are separate |
+| ClaudeBot / Claude-SearchBot / Claude-User | Distinct purposes; verify current official crawler docs |
 | PerplexityBot | Perplexity |
-| Googlebot | Gemini (shared) |
+| Googlebot | Google Search; verify separate product controls |
 
 ### Access Decision
 
 | Strategy | When |
 |----------|------|
-| Allow all | Want AI citations |
+| Selective access | Match owner policy to documented training/search/user crawler purposes |
 | Block GPTBot | Don't want OpenAI training |
 | Selective | Allow some, block others |
 
@@ -169,3 +161,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The bundled checker scans at most30 selected source files; it does not crawl/render pages, validate schema, verify original data or measure AI citation probability. Public Markdown/docs can be relevant but are excluded by this heuristic. Missing files mean not assessed, not passed. FAQ markup and crawler access do not guarantee citations; verify current platform eligibility and measure dated, reproducible query samples.

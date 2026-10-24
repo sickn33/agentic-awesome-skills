@@ -366,7 +366,7 @@ arjun -u https://target.com/page
 **Step 0**
 > 发现POST请求的隐藏参数
 ```
-arjun -u https://target.com/api -m POST --include="Content-Type: application/json"
+arjun -u https://target.com/api -m JSON
 ```
 
 **Step 0**
@@ -557,9 +557,9 @@ python3 smuggler.py -u https://target.com
 - `smuggler.py` — HTTP走私检测脚本 _command_
 
 **Step 0**
-> 测试CL.TE类型的请求走私
+> 设置套接字超时（-t 不是 CL.TE 类型选择器）
 ```
-python3 smuggler.py -u https://target.com -t CL.TE
+python3 smuggler.py -u https://target.com -t 5
 ```
 
 **Step 0**

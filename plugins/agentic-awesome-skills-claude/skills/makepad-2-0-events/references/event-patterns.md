@@ -1,6 +1,6 @@
 # Makepad 2.0 Event Patterns -- Working Examples
 
-This reference contains complete working patterns extracted from the Makepad 2.0 codebase.
+This reference contains imported event-pattern sketches attributed to Makepad source paths. No exact upstream revision or build result is supplied; helpers, templates and runtime APIs must be reconciled with the target Cargo.lock before use.
 All Splash code uses Makepad 2.0 syntax (no commas, no semicolons, colon properties).
 All Rust code uses `makepad_widgets::*` imports.
 
@@ -236,6 +236,8 @@ clear_done := ButtonFlatter{
 ---
 
 ## 3. Form Validation Pattern
+
+This is local feedback, not email validation or a submitted network operation. The example does not implement a backend; show success and clear fields only after an acknowledged durable submission in a real app. Support Unicode names and business-specific requirements rather than enforcing a universal two-character minimum.
 
 A pattern for input validation before submission, using Splash-only event handlers.
 
@@ -498,6 +500,8 @@ impl Widget for MyEditor {
 
 ## 6. Timer and Animation Events
 
+Stop owned timers/animations on the appropriate lifecycle event and widget teardown; do not rely solely on Shutdown (platforms may omit it). Avoid concurrent polling when an earlier request remains in flight; add a bounded deadline and recovery.
+
 ### Polling timer (from Git example)
 
 **Source**: `examples/git/src/app.rs`
@@ -574,6 +578,8 @@ pub struct App {
     animating: bool,
     #[rust]
     animation_progress: f64,
+    #[rust]
+    last_frame_time: Option<f64>,
 }
 
 impl MatchEvent for App {
@@ -581,13 +587,17 @@ impl MatchEvent for App {
         if self.ui.button(cx, ids!(animate_button)).clicked(actions) {
             self.animating = true;
             self.animation_progress = 0.0;
+            self.last_frame_time = None;
             cx.request_next_frame();
         }
     }
 
-    fn handle_next_frame(&mut self, cx: &mut Cx, _event: &NextFrameEvent) {
+    fn handle_next_frame(&mut self, cx: &mut Cx, event: &NextFrameEvent) {
         if self.animating {
-            self.animation_progress += 0.016; // ~60fps
+            let dt = self.last_frame_time.replace(event.time)
+                .map(|previous| (event.time - previous).clamp(0.0, 0.1))
+                .unwrap_or(0.0);
+            self.animation_progress = (self.animation_progress + dt).min(1.0);
             if self.animation_progress >= 1.0 {
                 self.animation_progress = 1.0;
                 self.animating = false;
@@ -609,7 +619,7 @@ impl MatchEvent for App {
 
 ## 7. Network Response Handling (Full Pattern)
 
-Complete pattern showing HTTP requests initiated from Rust, with response handling
+Illustrative pattern showing HTTP requests initiated from Rust, with response handling
 that updates Splash UI state.
 
 **Source**: adapted from `examples/git/src/app.rs`
@@ -684,6 +694,7 @@ pub struct App {
 impl MatchEvent for App {
     fn handle_actions(&mut self, cx: &mut Cx, actions: &Actions) {
         if self.ui.button(cx, ids!(fetch_button)).clicked(actions) {
+            if self.active_request.is_some() { return; } // one in-flight request for this fixed ID
             // Show loading state
             script_eval!(cx, {
                 mod.state.loading = true
@@ -789,14 +800,6 @@ impl AppMain for App {
    - `self.match_event(cx, event)` -- dispatches to MatchEvent handlers
    - `self.ui.handle_event(cx, event, &mut Scope::empty())` -- propagates to widgets
 
-8. **`fn tick()` auto-timer**: Define `fn tick()` in Splash code and the Splash widget
-   automatically starts a 1-second interval timer that calls it. No setup needed.
+8. **Embedding-specific callbacks**: `tick()`, `on_audio()`, `POST /splash` and `GET /event` describe a particular host integration, not a universal Makepad application API. Verify that host’s version and lifecycle before relying on them. Do not expose a script-evaluation bridge publicly or send it untrusted source.
 
-9. **`fn on_audio()` callback**: Canvas injects audio state globals (`_playing`, `_pos`,
-   `_dur`, `_amp`, `_b0`–`_b15`) and calls `fn on_audio()` ~10Hz during playback.
-   Use this for real-time audio-reactive UI updates.
-
-10. **Splash button events don't reach `handle_actions`**: Dynamically created Splash
-    buttons (via `POST /splash`) have unstable UIDs. The `uid_map` may not rebuild
-    in time. Always use `on_click:` handlers inside Splash for button interactions.
-    The HTTP `GET /event` bridge is unreliable for this reason.
+9. **HTTP data safety**: a transport response is not necessarily success. Before displaying or parsing it, inspect the version-specific status/body API, cap bytes, validate encoding/schema and handle non-success responses. Use a request deadline and clear the active state on timeout. For concurrent requests, use distinct IDs/generation tags; a shared fixed ID cannot distinguish old responses. Keep secrets in an appropriate backend/credential store and redact diagnostics.

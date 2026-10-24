@@ -29,7 +29,7 @@ This queue starts at most 50 workflows per 30 seconds.
 **Combining rate limiting with concurrency:**
 
 ```typescript
-// At most 5 concurrent and 50 per 30 seconds
+// At most 5 concurrent per worker and 50 starts per 30 seconds globally
 const queue = new WorkflowQueue("api_tasks", {
   workerConcurrency: 5,
   rateLimit: { limitPerPeriod: 50, periodSec: 30 },
@@ -42,3 +42,5 @@ Common use cases:
 - Preventing database overload
 
 Reference: [Rate Limiting](https://docs.dbos.dev/typescript/tutorials/queue-tutorial#rate-limiting)
+
+Queue rate limits count workflow starts, not every API call inside a workflow. Budget retries and multiple calls separately.

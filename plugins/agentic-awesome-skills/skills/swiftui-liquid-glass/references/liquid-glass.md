@@ -201,29 +201,16 @@ Button("Important Action") {
 
 ### Background Extension Effect
 
-To stretch content behind a sidebar or inspector with the background extension effect:
+For an iOS 26+ view, extend decorative content under split-view chrome using the documented modifier:
 
 ```swift
-NavigationSplitView {
-    // Sidebar content
-} detail: {
-    // Detail content
-        .background {
-            // Background content that extends under the sidebar
-        }
-}
+Image("hero")
+    .resizable()
+    .scaledToFill()
+    .backgroundExtensionEffect()
 ```
 
-### Extending Horizontal Scrolling Under Sidebar
-
-To extend horizontal scroll views under a sidebar or inspector:
-
-```swift
-ScrollView(.horizontal) {
-    // Scrollable content
-}
-.scrollExtensionMode(.underSidebar)
-```
+Apply the effect to background imagery, keeping text and controls outside the mirrored content. This is a visual extension, not permission to scroll content under a sidebar. Do not use the unverified `scrollExtensionMode(.underSidebar)` API. See [Apple's background extension reference](https://developer.apple.com/documentation/SwiftUI/View/backgroundExtensionEffect()). All snippets in this guide require an iOS 26+ deployment target or an availability guard and an older-system fallback.
 
 ## Best Practices
 

@@ -257,7 +257,7 @@ Our product [statement of primary differentiation]
 For e-commerce companies
 Who struggle with email marketing automation
 Our product is an AI-powered email platform
-That increases conversion rates by 40%
+That aims to improve conversion (quantify only with verified customer evidence)
 Unlike Klaviyo and Mailchimp
 Our product uses AI to personalize at scale
 ```
@@ -427,7 +427,7 @@ Ask:
 - Do we execute this better than anyone?
 - Is this advantage durable?
 
-If "no" to any, it's not a sustainable advantage.
+If competitors can copy it quickly, or if any of the other answers is "no", durability is not established.
 
 ## Competitive Monitoring
 
@@ -468,27 +468,16 @@ If "no" to any, it's not a sustainable advantage.
 - Major strategy reassessment
 - Market trends analysis
 
+Record source URLs, observation dates and confidence for competitor facts; distinguish inference from reported evidence. Do not misrepresent identity to obtain confidential information.
+
 ## Additional Resources
 
-### Reference Files
-- **`references/frameworks-deep-dive.md`** - Detailed application of each framework with worksheets
-- **`references/intel-sources.md`** - Comprehensive list of competitive intelligence sources
-
-### Example Files
-- **`examples/competitor-analysis.md`** - Complete competitive analysis for a SaaS startup
-- **`examples/positioning-workshop.md`** - Step-by-step positioning development process
+This bundled playbook contains the available framework examples. The upstream `references/` and `examples/` directories are not bundled; do not claim to have read them.
 
 ## Quick Start
 
-To analyze competitive landscape:
-
-1. **Identify competitors** - Direct, indirect, and future threats
-2. **Apply Porter's Five Forces** - Assess industry attractiveness
-3. **Create positioning map** - Visualize competitive space
-4. **Profile top 3-5 competitors** - Deep dive on key rivals
-5. **Identify differentiation** - What makes you unique
-6. **Analyze pricing** - Where do you fit?
-7. **Assess advantages** - What's defensible?
-8. **Develop strategy** - How to win
-
-For detailed frameworks and examples, see `references/` and `examples/`.
+1. Define the customer segment and purchase decision.
+2. Identify direct, indirect and substitute alternatives.
+3. Collect dated, attributable evidence on the same comparison dimensions.
+4. Apply the frameworks above and validate any apparent white space with customers.
+5. Separate facts, assumptions and experiments in the recommended positioning.

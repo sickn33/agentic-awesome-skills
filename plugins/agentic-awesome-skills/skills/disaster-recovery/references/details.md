@@ -49,7 +49,7 @@ dr_test_types:
         - Check monitoring and alerting in DR region
         - Confirm external integrations work
       4_failback:
-        - Restore primary region
+        - Keep old writer fenced; restore primary into a controlled resynchronization state
         - Re-establish replication
         - Execute failback to primary
         - Verify data consistency post-failback
@@ -91,6 +91,15 @@ dr_test_checklist:
 
 ## Terraform DR Infrastructure
 
+This is an incomplete cross-region example: provider versions, primary resources,
+DR subnet/security groups, KMS policies and aws_lb.dr's DR provider placement are
+not defined. Do not apply to existing infrastructure without a reviewed plan.
+Set a unique final_snapshot_identifier with skip_final_snapshot=false before any
+approved destruction. Use a primary-specific DNS health name with a matching TLS
+certificate/SNI, not a raw ALB name or the failover service name. Health/replication
+checks and a write-fencing strategy are required in addition to these resources.
+
+
 ```hcl
 # DR region infrastructure
 provider "aws" {
@@ -116,7 +125,7 @@ resource "aws_db_instance" "dr_replica" {
 }
 
 resource "aws_route53_health_check" "primary" {
-  fqdn              = "primary-alb.us-east-1.elb.amazonaws.com"
+  fqdn              = "primary-health.example.com"
   port               = 443
   type               = "HTTPS"
   resource_path      = "/health"

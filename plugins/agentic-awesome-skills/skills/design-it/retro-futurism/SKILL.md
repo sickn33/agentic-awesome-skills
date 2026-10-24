@@ -49,7 +49,7 @@ body {
 
 .atompunk-card {
   background-color: #fff;
-  border: 4px solid #Silver;
+  border: 4px solid silver;
   border-radius: 40px 10px 40px 10px; /* Sweeping, aerodynamic corners */
   padding: 32px;
   box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
@@ -98,8 +98,10 @@ struct RetroFutureCard: View {
         .padding(32)
         .background(Color.white)
         // Asymmetric corners: large top-left/bottom-right, small top-right/bottom-left
-        .cornerRadius(40, corners: [.topLeft, .bottomRight])
-        .cornerRadius(10, corners: [.topRight, .bottomLeft])
+        .clipShape(UnevenRoundedRectangle(
+            topLeadingRadius: 40, bottomLeadingRadius: 10,
+            bottomTrailingRadius: 40, topTrailingRadius: 10
+        )) // iOS 17+; use a tested custom Shape for older targets
         .overlay(
             // Chrome-like border
             RoundedRectangle(cornerRadius: 10) // Simplified overlay for demo
@@ -111,7 +113,7 @@ struct RetroFutureCard: View {
         .shadow(color: .black.opacity(0.1), radius: 0, x: 15, y: 15)
     }
 }
-// Note: Asymmetric corners require a custom ViewModifier in SwiftUI.
+// UnevenRoundedRectangle supplies asymmetric corners on supported SwiftUI targets.
 ```
 - Rely on asymmetrical corner radii to create the aerodynamic, teardrop aesthetic.
 - Metallic/Chrome borders are faked by using a `LinearGradient` of grays and whites.

@@ -22,7 +22,7 @@ fails with `status: "failed"` (exit 1).
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 ```
 
-`<skill-dir>` is the installed folder containing this skill's `SKILL.md`.
+`<skill-dir>` must point to a separately obtained, reviewed upstream runtime checkout containing `scripts/relay.mjs`; this catalog copy contains documentation only. Verify the pinned runtime and its current `--help` before using these historical examples.
 
 | Flag | Effect |
 | --- | --- |
@@ -86,7 +86,7 @@ A pre-run usage error exits 2 and writes no result. A missing `copilot` exits 12
   and re-dispatch.
 - **`status: "failed"` with a denial error:** copilot auto-denied a tool call in headless mode.
   The error message includes the CLI's own denial text and a hint to pass `--allow-all-tools`.
-  Re-dispatch with `--allow-all-tools` to grant full tool permissions.
+  Do not automatically escalate after denial. Re-dispatch with `--allow-all-tools` only with explicit authorization for that run, or reduce the task to permitted operations.
 - **`status: "failed"`:** read `stderrTail`, `stderrPath`, and the tail of `events.jsonl`. Common
   causes: an unknown `--model`, expired credentials, or a provider error.
 - **`status: "failed"` with an `error` mentioning `version preflight`:** the bounded

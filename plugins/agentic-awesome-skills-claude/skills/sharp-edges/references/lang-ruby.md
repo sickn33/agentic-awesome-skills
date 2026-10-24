@@ -1,5 +1,8 @@
 # Ruby Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Dynamic Code Execution
 
 ```ruby
@@ -32,8 +35,8 @@ object.send(user_input)
 ## YAML.load RCE
 
 ```ruby
-# DANGEROUS: Like pickle, instantiates arbitrary objects
-YAML.load(user_input)
+# Historical/unsafe Psych loaders can instantiate objects; modern Psych defaults differ.
+YAML.load(user_input)  # Verify version; use explicitly configured safe_load for untrusted data.
 
 # Attacker payload:
 # --- !ruby/object:Gem::Installer
@@ -94,7 +97,8 @@ User.order(params[:sort])  # Can inject: "name; DROP TABLE users--"
 ```ruby
 User.where(name: params[:name])
 User.where("name = ?", params[:name])
-User.order(Arel.sql(sanitize(params[:sort])))  # With validation
+allowed_sort = {"name" => :name, "created" => :created_at}
+User.order(allowed_sort.fetch(params[:sort]))  # Fixed identifiers; Arel.sql is not sanitization
 ```
 
 ## Command Injection
@@ -111,8 +115,8 @@ exec("ls #{params[:dir]}")
 
 **Fix**: Use array form:
 ```ruby
-system("ls", params[:dir])  # Argument passed safely
-Open3.capture3("ls", params[:dir])
+system("ls", "--", approved_directory)  # Argument passed safely
+Open3.capture3("ls", "--", approved_directory)
 ```
 
 ## Regex Injection
@@ -162,20 +166,20 @@ obj.send(:sensitive_data)  # Works!
 obj.sensitive_data         # NoMethodError (as expected)
 ```
 
-## Default Mutable Arguments
+## Mutable Arguments and Default Evaluation
 
 ```ruby
-# DANGEROUS: Same pattern as Python
+# Ruby evaluates default argument expressions on each call, unlike Python.
 def add_item(item, list = [])
     list << item
     list
 end
 
 add_item(1)  # [1]
-add_item(2)  # [1, 2] - same array!
+add_item(2)  # [2] - a fresh default array
 ```
 
-**Fix**: Use nil default:
+**Alternative**: a nil default also works; a caller-supplied array is still mutated:
 ```ruby
 def add_item(item, list = nil)
     list ||= []
@@ -206,16 +210,19 @@ File.read("uploads/#{params[:filename]}")
 # Attacker: filename=../../../etc/passwd
 
 # DANGEROUS: File.open with pipe
-File.open("|#{params[:cmd]}")  # Executes command!
+Kernel.open("|#{params[:cmd]}")  # Interprets a leading pipe as a command
 
 # The | prefix runs a command and opens pipe to it
-File.read("|whoami")  # Returns output of whoami
+IO.popen(user_command)  # Starts a process; never pass untrusted command text
 ```
 
 **Fix**: Validate and sanitize paths:
 ```ruby
 path = File.expand_path(params[:filename], uploads_dir)
-raise unless path.start_with?(uploads_dir)
+root = File.realpath(uploads_dir)
+path = File.realpath(path)
+raise unless path == root || path.start_with?(root + File::SEPARATOR)
+# For missing files, validate the existing parent and open safely; recheck symlinks/races.
 ```
 
 ## Comparison Gotchas
@@ -269,5 +276,5 @@ mutex.synchronize { @counter += 1 }
 | `Regexp.new(user_input)` | ReDoS |
 | `params[:x].to_sym` | Symbol DoS (old Ruby) |
 | `ERB.new(user_input)` | Template injection |
-| `File.read("|...` or `File.open("|...` | Command execution |
+| `Kernel.open("|...` or `IO.popen(` | Command execution |
 | `File.read(params[` without path validation | Path traversal |

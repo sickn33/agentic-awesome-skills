@@ -1,8 +1,9 @@
 # 自动成文协议
 
+用户明确指定的格式、篇幅、只要正文、自动或互动模式及 voice_mode 优先于以下默认模板；自动模式采用合理推荐继续，只有互动选择才等待。只提供简明证据与理由，不公开内部逐步推理。
 用于用户希望一次性得到一篇中文批判性洞察文章的场景。
 
-默认输出档位是 `full-visible-v5-longform`：完整可见底稿 + 完整长文正文。它保留 v5.0 源连续性、保真检查和概念风险，但不允许这些后台检查把正文压缩成短答。
+默认输出档位是 `full-visible-v5-longform`：简明可核验底稿 + 完整长文正文。它保留 v5.0 源连续性、保真检查和概念风险，但不允许这些后台检查把正文压缩成短答。
 
 ## 1. 识别文章对象
 
@@ -22,10 +23,10 @@
 
 必须先读取：
 
-- `../crossframe/SKILL.md`
-- `../crossframe/references/runtime-read-policy.md`
-- `../crossframe/references/read-routing-map.md`
-- `../crossframe/references/continuity-closure-map.md`
+- `../../crossframe/SKILL.md`
+- `../../crossframe/references/runtime-read-policy.md`
+- `../../crossframe/references/read-routing-map.md`
+- `../../crossframe/references/continuity-closure-map.md`
 
 再按主题进入对应 protocol。常见路由：
 
@@ -38,22 +39,22 @@
 - 疗愈、退出、转移：`healing-transfer-protocol.md`
 - 长期演化、文明尺度、超大规模判断：`large-scale-stress-test-protocol.md` 与 `theory-backend-index.md`
 
-文章任务默认至少触发 `v5-seven-gates-diagnosis-pack` 与 `v5-domain-translation-normative-source-pack`，并用 `continuity-closure-map.md` 展开它们的必须同读闭包。公共议题追加 `v5-public-power-institution-pack`；关系/照护/爱追加 `v5-love-trapped-trauma-pack`；长期演化追加 `v5-state-coordinate-lifecycle-pack` 与 `v5-long-evolution-progression-field-pack`；强判断和高责任追加 `v5-strong-judgment-eight-pack`、`v5-low-power-protection-pack` 与 `v5-evidence-downgrade-action-ceiling-pack`。所有追加包都必须展开闭包；若闭包无法读完，文章判断降档。若主题需要深度、用户担心 v5 拆包失真、源锚点失败或高责任核验需要具体源范围，才定向读取 `../crossframe/references/v5-source-spine.md`、`../crossframe/references/v5-section-digest-index.md`、`../crossframe/references/v5-material-selection-map.md` 和 `../crossframe/references/v5-term-fidelity.md` 的相关局部；不全量打开大索引。
+文章任务默认至少触发 `v5-seven-gates-diagnosis-pack` 与 `v5-domain-translation-normative-source-pack`，并用 `continuity-closure-map.md` 展开它们的必须同读闭包。公共议题追加 `v5-public-power-institution-pack`；关系/照护/爱追加 `v5-love-trapped-trauma-pack`；长期演化追加 `v5-state-coordinate-lifecycle-pack` 与 `v5-long-evolution-progression-field-pack`；强判断和高责任追加 `v5-strong-judgment-eight-pack`、`v5-low-power-protection-pack` 与 `v5-evidence-downgrade-action-ceiling-pack`。所有追加包都必须展开闭包；若闭包无法读完，文章判断降档。若主题需要深度、用户担心 v5 拆包失真、源锚点失败或高责任核验需要具体源范围，才定向读取 `../../crossframe/references/v5-source-spine.md`、`../../crossframe/references/v5-section-digest-index.md`、`../../crossframe/references/v5-material-selection-map.md` 和 `../../crossframe/references/v5-term-fidelity.md` 的相关局部；不全量打开大索引。
 
 ## 2.1 复用读态胶囊与源锚点
 
-进入成文前，必须复用 `crossframe` 生成的 `v5-read-state-capsule`。若上游没有胶囊，回到 `../crossframe/SKILL.md` 补齐；不要在 essay 内重新整块读取源索引或重新发明连读包路由。
+进入成文前，必须复用 `crossframe` 生成的 `v5-read-state-capsule`。若上游没有胶囊，回到 `../../crossframe/SKILL.md` 补齐；不要在 essay 内重新整块读取源索引或重新发明连读包路由。
 
-读取 `../crossframe/worksheets/source-anchor-integrity-check.md`，检查中心命题、机制候选、高风险概念、行动边界、文章类型转译和写作技法是否能回指胶囊源锚点。无法回指的内容只能写为“本文推断 / 表达转译 / 外部思想映射”，不得冒充 CrossFrame v5 原义。
+读取 `../../crossframe/worksheets/source-anchor-integrity-check.md`，检查中心命题、机制候选、高风险概念、行动边界、文章类型转译和写作技法是否能回指胶囊源锚点。无法回指的内容只能写为“本文推断 / 表达转译 / 外部思想映射”，不得冒充 CrossFrame v5 原义。
 
 ## 3. 判断是否查源
 
-读取 `references/evidence-and-search-rules.md` 与 `../crossframe/references/source-ledger-workflow.md`。
+读取 `../references/evidence-and-search-rules.md` 与 `../../crossframe/references/source-ledger-workflow.md`。
 
 - 真实公共对象、最新事实、政策、公司、平台、法律、数据和技术能力：必须查源。
 - 私人关系、哲学概念、泛论随笔：默认不查源，除非用户要求或文章需要事实锚点。
 
-查源后的材料只能作为佐证、反例、边界或现实案例，不得接管文章命题。
+查源后的可靠证据可以推翻初始命题；先修订结论，再决定文章表达。
 
 查源后必须在底稿中写成来源台账摘要，至少记录来源、时间、来源类型、支持的命题、不能证明什么、证据档位、使用位置、降档理由和仍需补证处。公共议题、真实机构、平台、政策、人物、公司、最新事实和 AI/过程性产物不得只写“已查源”；必须说明是否只是低成本声明、热度信号、弱信号、解释判断或已核验事实。
 
@@ -63,7 +64,7 @@
 
 ## 4. 判断是否概念上升
 
-如果满足以下任一条件，读取 `protocols/concept-elevation-protocol.md`、`references/reference-and-allusion-rules.md` 与 `references/concept-reference-map.md`：
+如果满足以下任一条件，读取 `./concept-elevation-protocol.md`、`../references/reference-and-allusion-rules.md` 与 `../references/concept-reference-map.md`：
 
 - 用户要求思想文章、深度文章、引经据典、概念上升、理论味或文学性。
 - 主题涉及生命、意义、爱、制度、治理、正义、主体、承认、异化、权力、共同体或公共理性。
@@ -73,9 +74,11 @@
 
 ## 5. 判断正文声口
 
-自动成文按 `crossframe-suite` 传入的 `voice_mode` 决定正文声口。`neutral-analysis` 和 `neutral-decisive` 不默认启用现代编辑底色；`editorial-reply` 和 `editorial-commentary` 必须读取 `protocols/editorial-comrade-voice-protocol.md` 与 `references/editorial-voice-principles.md`。用户显式要求“亲切/编辑口吻/答复体”时，覆盖角色默认声口并启用现代编辑底色。
+自动成文按 `crossframe-suite` 传入的 `voice_mode` 决定正文声口。`neutral-analysis` 和 `neutral-decisive` 保持中性，不启用现代编辑底色；`editorial-reply` 和 `editorial-commentary` 必须读取 `./editorial-comrade-voice-protocol.md` 与 `../references/editorial-voice-principles.md`。用户显式要求“亲切/编辑口吻/答复体”时，覆盖角色默认声口并启用现代编辑底色。
 
-只有满足以下任一条件，才关闭现代编辑底色：
+以下情况关闭现代编辑底色：
+
+- voice_mode 是 `neutral-analysis` / `neutral-decisive`，或没有指定编辑声口。
 
 - 用户明确要求中性报告、备忘录、表格、清单、纯诊断、学术摘要或内部审计清单。
 - 用户明确说不要文章感、不要编辑口吻、只要诊断结论。
@@ -92,7 +95,7 @@
 
 ## 6. 形成结构洞察底稿
 
-底稿不是草稿注释，也不是正文替代品，而是文章的判断底座。结构洞察底稿必须先于文章类型选择器生成。`full-visible-v5-longform` 下底稿必须完整可见，至少填写：
+底稿不是草稿注释，也不是正文替代品，而是文章的判断底座。结构洞察底稿必须先于文章类型选择器生成。`full-visible-v5-longform` 下底稿只展示简明结论、证据和限制，不展示内部逐步推理，至少填写：
 
 1. 分析对象与事实边界
 2. 表面现象与高成本信号
@@ -112,7 +115,7 @@
 16. 文章类型推荐与待选择：推荐文章类型、推荐理由、回复“默认”采用什么
 17. 文章转译方案：标题方向、开头入口、递进顺序、现实回落、边界段和结尾余味
 
-若用户已经显式指定文章类型，底稿可直接记录“文章类型已指定”。若用户未指定，底稿必须只给推荐，不读取写作技法文件，不提前决定正文组织。
+若用户已经显式指定文章类型，底稿可直接记录“文章类型已指定”。若用户未指定，自动模式记录合理推荐并继续；互动模式才等待选择。确认类型后按需读取技法。
 
 机制候选至少两个，除非证据足以说明只有一个。机制候选必须竞争，而不是同义复述。
 
@@ -120,7 +123,7 @@
 
 文章类型只在结构洞察底稿之后、文章正文之前确认，不参与 suite 开头的模式/角色选择，也不参与前置问题拆解。
 
-若用户或 suite 已显式指定 `article_type`，在底稿中记录并直接采用；若文章层开启但未指定，必须基于上方结构洞察底稿完整渲染 `templates/article-type-selection-dialog.md` 的九个选项，并在顶部写出一个推荐项、推荐理由和“回复默认将采用”的结果，然后等待用户回复。不得只写“已展示文章类型选择器（1-9）”。若用户回复“默认/自动/都行”，采用选择器中的推荐项。
+若用户或 suite 已指定 article_type，记录并采用。自动成文未指定时说明合理推荐并继续；只有用户要求互动选择时才完整展示九项选择器并等待。回复“默认/自动/都行”即采用推荐项。
 
 可用文章类型固定为：
 
@@ -138,9 +141,9 @@
 
 ## 6.2 正文前写作技法读取
 
-用户选择文章类型后，才读取 `references/article-technique-routing-map.md`，按 `article_type` 选择写作技法。默认最多读取 3 个核心技法 + 2 个辅助技法；不得全量读取 `references/writing-techniques/` 下 50 个技法文件。技法只改变表达组织，不能新增胶囊外事实、不能把表达转译写成框架原义、不能绕过源锚点完整性检查。
+文章类型确认后，才读取 `../references/article-technique-routing-map.md`，按 `article_type` 选择写作技法。默认最多读取 3 个核心技法 + 2 个辅助技法；不得全量读取 `../references/writing-techniques/` 下 50 个技法文件。技法只改变表达组织，不能新增胶囊外事实、不能把表达转译写成框架原义、不能绕过源锚点完整性检查。
 
-用户选择后补全底稿中的“文章类型与写作技法选择”：
+类型确认后补全底稿中的“文章类型与写作技法选择”：
 
 - 文章类型
 - 文章类型来源
@@ -183,9 +186,9 @@
 
 - 是否先有底稿再有正文。
 - 是否先生成结构洞察底稿，再展示文章类型选择器。
-- 是否执行 `full-visible-v5-longform`：完整可见底稿 + 1200-2200 中文字完整正文。
+- 是否执行 `full-visible-v5-longform`：简明可核验底稿 + 1200-2200 中文字完整正文。
 - 第一段是否没有术语也能读懂。
-- 文章命题是否来自 CrossFrame 底稿，而不是搜索结果或情绪。
+- 文章命题是否经过证据检验，能否因可靠反证而修订，而非固定服从框架或情绪。
 - 若查源，来源台账是否写出来源、时间、来源类型、支持命题、不能证明什么、证据档位、使用位置、降档理由和仍需补证处。
 - 是否区分事实、解释、机制候选和判断档位。
 - 是否写出连续联读包，避免只读孤立概念卡。
@@ -193,8 +196,8 @@
 - 是否把批判写成结构判断，而不是人格审判。
 - 若启用概念上升，是否写出上位概念、思想参照、引用方式、回落现实和引用风险。
 - 是否避免伪造引用、堆名词、用经典权威替代现实证据。
-- 是否按默认启用了现代编辑底色；若关闭，是否有用户明确要求；正文是否先接住问题；亲切是否没有变成和稀泥；严厉是否没有变成人格审判。
-- 是否确认文章类型；是否只在用户选择文章类型后按 `article-technique-routing-map.md` 读取技法；读取技法文件是否不超过 5 个。
+- 是否尊重已选 voice_mode，未指定时采用中性分析体；正文是否先接住问题；亲切是否没有变成和稀泥；严厉是否没有变成人格审判。
+- 是否确认文章类型；是否只在文章类型确认后按 `article-technique-routing-map.md` 读取技法；读取技法文件是否不超过 5 个。
 - 是否为每个技法留下正文短摘或段落编号；是否能说明该技法负责入口、递进、批判、边界或结尾中的哪个动作。
 - 是否回扫正文 3-5 个承担判断作用的句子，检查中心命题、机制候选、高风险概念、行动建议、概率排序和点睛句能否回指胶囊、来源台账或明确标为本文推断/表达转译。
 - 高责任、公共、事故、监管、AI 合规、未完成调查或单一来源族任务，是否写出 `internal-only / publish-boundary / 需补证` 用途边界。

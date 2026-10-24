@@ -52,7 +52,7 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
 - `name` (string, required) - Actor identifier (lowercase, hyphens allowed)
 - `title` (string, required) - Human-readable title displayed in UI
 - `description` (string, optional) - Actor description for marketplace
-- `version` (string, required) - Semantic version number
+- `version` (string, required) - Actor version string; follow the platform’s accepted major.minor format for the selected CLI/platform
 - `meta` (object, optional) - Metadata about actor generation
   - `templateId` (string) - ID of template used to create the actor
   - `generatedBy` (string) - Tool and model name that generated/modified the actor (e.g., "Claude Code with Claude Sonnet 4.5")
@@ -63,4 +63,4 @@ The `.actor/actor.json` file contains the Actor's configuration including metada
   - `keyValueStore` (string) - Path to key-value store schema file
 - `dockerfile` (string, optional) - Path to Dockerfile
 
-**Important:** Always fill in the `generatedBy` property with the tool and model you're currently using (e.g., "Claude Code with Claude Sonnet 4.5") to help Apify improve documentation.
+**Attribution:** Preserve existing generation history; when the user wants generation metadata, record only a known actual tool/model and do not guess. The following is an optional upstream convention, not permission for unrelated metadata edits: fill in the `generatedBy` property with the tool and model you're currently using (e.g., "Claude Code with Claude Sonnet 4.5") to help Apify improve documentation.

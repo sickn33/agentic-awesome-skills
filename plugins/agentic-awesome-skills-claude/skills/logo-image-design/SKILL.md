@@ -48,7 +48,7 @@ for ads.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Follow these local instructions; the shared execution runtime is not bundled. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -114,8 +114,7 @@ framings, with the consent record kept next to the images.
 
 **Why this one:** The variants are what stop the business from stretching a logo. One mark
 that has a defined small-size version does not need four more that nobody approved. And the
-search comes first because a mark that is already registered cannot be re-designed, only
-re-named.
+search comes first because a potential conflict needs jurisdiction/class/use analysis before deciding whether to redesign, rename or obtain permission.
 
 **Workflow:** Name and mark searched → Direction chosen → Master mark drawn → Required
 variants derived → Clear space and minimum size set → Digital and print masters exported →
@@ -140,7 +139,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Asset ID,Asset Name,Asset Type,Format,Dimensions,Aspect Ratio,Colour Mode,Background Variant,Minimum Size,Clear Space,Placement,Usage Approved,Usage Not Approved,Source,Rights Owner,Licence,Trademark Status,Version,Status,Notes
-,Example Retail primary mark,Logo,SVG and PNG,512x512 and 2400x1200,1:1 and 2:1,CMYK and RGB,Light and dark,24 px digital,Mark height on all sides,Lockup left of text,"Website, social avatar, invoice header","Dark backgrounds, embroidery under 25 mm",Unsplash internal shoot,Example Retail,Example Retainers (transfer in writing),Not searched,1.0,Draft,Example row - replace every value before use.
+,Example Retail primary mark,Logo,SVG and PNG,512x512 and 2400x1200,1:1 and 2:1,CMYK and RGB,Light and dark,24 px digital,Mark height on all sides,Lockup left of text,"Website, social avatar, invoice header","Dark backgrounds, embroidery under 25 mm",Synthetic internal-design example; rights unverified,Example Retail,Unknown - verify effective assignment or license,Not searched,1.0,Draft,Example row - replace every value before use.
 ```
 
 ```sql
@@ -169,7 +168,7 @@ CREATE TABLE brand_asset (
   notes TEXT,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT asset_trademark_status CHECK (trademark_status IN ('Not searched','Searched - clear','Application filed','Registered','Conflicting mark found','Unknown')),
+  CONSTRAINT asset_trademark_status CHECK (trademark_status IN ('Not searched','Searched - no conflict identified in stated scope','Application filed','Registered','Conflicting mark found','Unknown')),
   CONSTRAINT asset_status CHECK (status IN ('Draft','In review','Approved','Retired'))
 );
 
@@ -200,9 +199,9 @@ CREATE INDEX idx_brand_asset_type ON brand_asset (asset_type);
       "Source": { "type": "string" },
       "Rights Owner": { "type": "string" },
       "Licence": { "type": "string" },
-      "Trademark Status": { "type": "string" },
+      "Trademark Status": { "type": "string", "enum": ["Not searched", "Searched - no conflict identified in stated scope", "Application filed", "Registered", "Conflicting mark found", "Unknown"] },
       "Version": { "type": "string" },
-      "Status": { "type": "string" },
+      "Status": { "type": "string", "enum": ["Draft", "In review", "Approved", "Retired"] },
       "Notes": { "type": "string" }
   },
   "required": [
@@ -237,7 +236,7 @@ CREATE INDEX idx_brand_asset_type ON brand_asset (asset_type);
 | Source | Text | Leave as Text. Where the file or the licence came from |
 | Rights Owner | Text | Leave as Text. Not the designer - the copyright holder |
 | Licence | Text | Leave as Text. Name it: Unsplash licence, OFL, CC BY 4.0, owned outright |
-| Trademark Status | Select (add options after import) | Convert to Select, add options: "Not searched", "Searched - clear", "Application filed", "Registered", "Conflicting mark found", "Unknown" |
+| Trademark Status | Select (add options after import) | Convert to Select, add options: "Not searched", "Searched - no conflict identified in stated scope", "Application filed", "Registered", "Conflicting mark found", "Unknown" |
 | Version | Text | Leave as Text |
 | Status | Select (add options after import) | Convert to Select, add options: "Draft", "In review", "Approved", "Retired" |
 | Notes | Text | Leave as Text |
@@ -303,7 +302,7 @@ Light | Dark | Transparent | Coloured | Photographic
 knows, the second means nobody looked. Both are honest answers.
 
 ```
-Not searched | Searched - clear | Application filed | Registered | Conflicting mark found | Unknown
+Not searched | Searched - no conflict identified in stated scope | Application filed | Registered | Conflicting mark found | Unknown
 ```
 
 **Status**
@@ -365,11 +364,10 @@ is on the shopfront, and we are now printing visiting cards.
 - Set a minimum size and record it. Below that, the small-size variant is used instead of
   the master.
 - Keep an editable master. The Canva-file problem is the normal outcome, not the exception.
-- Rights in writing. If a designer made it, the transfer of copyright must be a document,
-  not an email thread. In many countries copyright does not transfer by implication.
+- Rights in writing. If a designer made it, record a legally effective assignment or license covering the intended use; formalities, signatures and electronic communications vary by jurisdiction, so do not assume payment or an email establishes ownership.
 - Photograph the real premises and the real people. Stock beats nothing, but it never beats
-  the actual shopfront, and a phone photo with good light is a legitimate brand image.
-- Get written consent for any identifiable person, and keep the consent record next to the
+  the actual shopfront, and a phone photo with good light can be suitable when rights, privacy and quality requirements are met.
+- Assess the applicable lawful basis and likeness/model-release requirements for identifiable people; record the actual permission where required, and keep the consent record next to the
   image reference. A face on a website is a data-protection question as well as a
   permissions one.
 - Export SVG as the master for anything that scales, PNG at 1x/2x/3x for the web, and CMYK
@@ -418,7 +416,7 @@ is on the shopfront, and we are now printing visiting cards.
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** a logo was designed before the name was checked, and the name is taken.
-  **Solution:** the mark is redone. A search is cheaper than a rebrand and takes a day.
+  **Solution:** the mark is redone. A search may reduce risk but its duration, cost and scope vary; obtain qualified review before relying on clearance.
 - **Problem:** the mark is stretched on a banner and blurred on a business card.
   **Solution:** that is a missing clear-space and minimum-size rule. Both are columns here.
 - **Problem:** the same logo exists in six files with six different blues.
@@ -428,7 +426,7 @@ is on the shopfront, and we are now printing visiting cards.
   for a business website.
 - **Problem:** the register has assets but no owner and no review date, so it is never
   updated.
-  **Solution:** `Last Reviewed` and `Status` are what make it a register and not a list.
+  **Solution:** `Last Reviewed` is not in the displayed schema; add explicit review-date/owner fields consistently to all requested formats if required, or maintain an external review log.
 - **Problem:** all four artifacts drift apart.
   **Solution:** derive all four from the field list in this file, never by hand.
 - **Problem:** Notion import shows every column as Text.
@@ -457,3 +455,7 @@ smallest asset set that fits, including a trademark search before any drawing, a
 for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Rights and asset-model boundaries
+
+A search result is limited evidence, not worldwide clearance or ownership: record jurisdiction, goods/services classes, sources, date, search terms, unregistered/common-law scope and reviewer. Registration and similar marks can coexist depending on context; never infer infringement or automatic renaming from a name match. An asset license does not automatically clear trademarks, people’s likenesses or depicted property. Keep the actual license/assignment evidence and restrictions, attribution, allowed media/territory/duration and expiry; designer authorship and current copyright ownership are distinct. The example combines multiple formats/modes/backgrounds that the Select fields cannot represent as single values: use one row per concrete rendition or explicitly change the model to multi-select in every format. `Approved` alone must not bypass unknown rights. Integer IDs need supplied values/generation, SQL defaults do not maintain updated_at, and manual mappings are not a bundled generator. File dimensions/format names do not prove valid SVG, transparent background, CMYK profile or print suitability: inspect actual output and preserve original authorship/license notices.

@@ -48,7 +48,7 @@ Scan the repository for build files to determine the primary language for code e
 - Every claim backed by `(file_path:line_number)` citation
 - Minimum 3 Mermaid diagrams (architecture, data flow, dependency graph)
 - All Mermaid diagrams use dark-mode colors (see wiki-vitepress skill)
-- Focus on WHY decisions were made, not just WHAT exists
+- Focus on WHY only when commit history, ADRs or owner evidence supports the rationale. Mark inferred rationale and unknown performance/security properties explicitly; source structure alone cannot establish intent or measured limits.
 
 ## Guide 2: Zero-to-Hero Contributor Guide
 

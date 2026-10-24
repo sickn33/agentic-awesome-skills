@@ -7,9 +7,7 @@ tags: lists, performance, flatlist, virtualization
 
 ## Optimize List Performance with Stable Object References
 
-Don't map or filter data before passing to virtualized lists. Virtualization
-relies on object reference stability to know what changed—new references cause
-full re-renders of all visible items. Attempt to prevent frequent renders at the
+Memoize expensive derived data when appropriate. Mapping/filtering is valid; avoid recreating unchanged item objects unnecessarily. New array references may invalidate shallow comparisons but do not inherently remount or reparent every item. Attempt to prevent frequent renders at the
 list-parent level.
 
 Where needed, use context selectors within list items.
@@ -21,7 +19,7 @@ function DomainSearch() {
   const { keyword, setKeyword } = useKeywordZustandState()
   const { data: tlds } = useTlds()
 
-  // Bad: creates new objects on every render, reparenting the entire list on every keystroke
+  // Bad: creates new objects on every render, invalidating shallow item comparisons on every keystroke
   const domains = tlds.map((tld) => ({
     domain: `${keyword}.${tld.name}`,
     tld: tld.name,
@@ -128,5 +126,4 @@ function DomainItemFavoriteButton({ tld }: { tld: Tld }) {
 ```
 
 Note: if you're using the React Compiler, you can read React Context values
-directly within list items. Although this is slightly slower than using a
-Zustand selector in most cases, the effect may be negligible.
+directly within list items. Compiler memoization does not make a broad context subscription selective; measure actual context/store behavior.

@@ -6,7 +6,8 @@
  * structured event stream, and write a result the orchestrator can review.
  * The relay uses Node built-ins only and shells out only to `qodercli`, `git`,
  * and the platform process-termination utility when needed. It makes no
- * network calls, reads no credentials, sends no telemetry, and never commits.
+ * network calls, does not explicitly parse credentials or send telemetry, and never directly commits.
+ * The child inherits the environment and can use credentials/network and git.
  *
  * The brief is passed as a command-line argument. Keep secrets out of the
  * brief on shared hosts; point Qoder at workspace files or environment
@@ -44,6 +45,7 @@ import {
   appendFileSync,
   existsSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   renameSync,
   rmSync,
@@ -142,7 +144,7 @@ function applyFleetLane(opts, flagged) {
   const r = spawnSync(
     process.execPath,
     [script, "resolve", "--cwd", opts.cd, "--lane", opts.lane, "--implementer", IMPLEMENTER_KEY],
-    { encoding: "utf8", env: process.env },
+    { encoding: "utf8", env: process.env, timeout: VERSION_TIMEOUT_MS, maxBuffer: 1024 * 1024 },
   );
   if (r.error) fail(`lane resolve failed: ${r.error.message}`);
   if (r.status !== 0) {
@@ -256,6 +258,9 @@ function parseArgs(argv) {
   }
 
   opts.addDirs = opts.addDirs.map((dir) => resolve(opts.cd, dir));
+  for (const dir of opts.addDirs) {
+    if (!existsSync(dir) || !statSync(dir).isDirectory()) fail(`additional directory not found: ${dir}`);
+  }
   return opts;
 }
 
@@ -355,8 +360,9 @@ function buildArgv(opts, brief) {
 
 function prepareRunDir(opts, brief) {
   const startedAt = new Date().toISOString();
-  const outDir = opts.outDir || join(tmpdir(), "delegate-relay", `${basename(opts.cd) || "repo"}-${timestamp()}`);
-  mkdirSync(outDir, { recursive: true });
+  // Fresh private directory: never erase artifacts or follow pre-existing links.
+  const outDir = opts.outDir || mkdtempSync(join(tmpdir(), "qoder-relay-"));
+  if (opts.outDir) mkdirSync(outDir, { mode: 0o700 });
   const run = {
     startedAt,
     briefPath: join(outDir, "brief.txt"),
@@ -365,11 +371,9 @@ function prepareRunDir(opts, brief) {
     stderrPath: join(outDir, "stderr.txt"),
     resultPath: join(outDir, "result.json"),
   };
-  rmSync(run.finalPath, { force: true });
-  rmSync(run.resultPath, { force: true });
-  writeFileSync(run.briefPath, brief, "utf8");
-  writeFileSync(run.eventsPath, "", "utf8");
-  writeFileSync(run.stderrPath, "", "utf8");
+  writeFileSync(run.briefPath, brief, { encoding: "utf8", mode: 0o600, flag: "wx" });
+  writeFileSync(run.eventsPath, "", { encoding: "utf8", mode: 0o600, flag: "wx" });
+  writeFileSync(run.stderrPath, "", { encoding: "utf8", mode: 0o600, flag: "wx" });
   return run;
 }
 

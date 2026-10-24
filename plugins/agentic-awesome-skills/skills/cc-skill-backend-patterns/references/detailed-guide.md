@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples are separate architectural fragments, not a complete implementation. Supply typed DTOs/clients/imports and all interface methods. Authenticate and enforce tenant/resource authorization before every data/cache/job path; cache keys must include access scope when data is not public. Validate cached JSON. Redact logs and errors; never log credentials, bodies or raw database exceptions. Retry only transient failures with bounded backoff/jitter and idempotent effects; this generic helper does not classify retryability. The in-memory queue is nondurable and may lose work on crash/serverless shutdown.
+
 ## API Design Patterns
 
 ### RESTful API Structure
@@ -26,6 +28,7 @@ GET /api/markets?status=active&sort=volume&limit=20&offset=0
 interface MarketRepository {
   findAll(filters?: MarketFilters): Promise<Market[]>
   findById(id: string): Promise<Market | null>
+  findByIds(ids: string[]): Promise<Market[]>
   create(data: CreateMarketDto): Promise<Market>
   update(id: string, data: UpdateMarketDto): Promise<Market>
   delete(id: string): Promise<void>
@@ -72,12 +75,13 @@ class MarketService {
     return markets.sort((a, b) => {
       const scoreA = results.find(r => r.id === a.id)?.score || 0
       const scoreB = results.find(r => r.id === b.id)?.score || 0
-      return scoreA - scoreB
+      return scoreB - scoreA // larger similarity scores rank first
     })
   }
 
   private async vectorSearch(embedding: number[], limit: number) {
-    // Vector search implementation
+    // Application-owned adapter; define its typed result before use
+    throw new Error("Implement vector search before use")
   }
 }
 ```
@@ -97,7 +101,7 @@ export function withAuth(handler: NextApiHandler): NextApiHandler {
     try {
       const user = await verifyToken(token)
       req.user = user
-      return handler(req, res)
+      return await handler(req, res)
     } catch (error) {
       return res.status(401).json({ error: 'Invalid token' })
     }
@@ -167,23 +171,21 @@ async function createMarketWithPosition(
   return data
 }
 
-// SQL function in Supabase
-CREATE OR REPLACE FUNCTION create_market_with_position(
-  market_data jsonb,
-  position_data jsonb
-)
-RETURNS jsonb
-LANGUAGE plpgsql
-AS $$
+// SQL belongs in a separate database migration, not this TypeScript module.
+```
+
+The SQL below assumes markets(id, name) and positions(market_id, amount); adapt explicit columns to the actual schema and validate business constraints. Keep caller-scoped RLS/invoker rights; do not introduce SECURITY DEFINER without a separate privilege review.
+
+```sql
+CREATE OR REPLACE FUNCTION create_market_with_position(market_data jsonb, position_data jsonb)
+RETURNS jsonb LANGUAGE plpgsql AS $$
+DECLARE new_market_id markets.id%TYPE;
 BEGIN
-  -- Start transaction automatically
-  INSERT INTO markets VALUES (market_data);
-  INSERT INTO positions VALUES (position_data);
-  RETURN jsonb_build_object('success', true);
-EXCEPTION
-  WHEN OTHERS THEN
-    -- Rollback happens automatically
-    RETURN jsonb_build_object('success', false, 'error', SQLERRM);
+  INSERT INTO markets (name) VALUES (market_data->>'name') RETURNING id INTO new_market_id;
+  INSERT INTO positions (market_id, amount)
+    VALUES (new_market_id, (position_data->>'amount')::numeric);
+  RETURN jsonb_build_object('success', true, 'market_id', new_market_id);
+  -- Let failures propagate so the transaction rolls back and the SDK receives an error.
 END;
 $$;
 ```
@@ -276,7 +278,7 @@ export function errorHandler(error: unknown, req: Request): Response {
     return NextResponse.json({
       success: false,
       error: 'Validation failed',
-      details: error.errors
+      details: error.issues.map(({ path, message }) => ({ path, message }))
     }, { status: 400 })
   }
 
@@ -307,7 +309,8 @@ async function fetchWithRetry<T>(
   fn: () => Promise<T>,
   maxRetries = 3
 ): Promise<T> {
-  let lastError: Error
+  if (!Number.isInteger(maxRetries) || maxRetries < 1) throw new Error("Positive attempt count required")
+  let lastError: unknown
 
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -323,7 +326,7 @@ async function fetchWithRetry<T>(
     }
   }
 
-  throw lastError!
+  throw lastError
 }
 
 // Usage
@@ -341,12 +344,14 @@ import jwt from 'jsonwebtoken'
 interface JWTPayload {
   userId: string
   email: string
-  role: 'admin' | 'user'
+  role: 'admin' | 'moderator' | 'user'
 }
 
 export function verifyToken(token: string): JWTPayload {
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload
+    const payload = jwt.verify(token, process.env.JWT_SECRET!, { algorithms: ['HS256'], issuer: process.env.JWT_ISSUER!, audience: process.env.JWT_AUDIENCE! }) as JWTPayload
+    if (!payload || typeof payload !== "object" || typeof payload.userId !== "string" ||
+        !["admin", "moderator", "user"].includes(payload.role)) throw new Error("Invalid claims")
     return payload
   } catch (error) {
     throw new ApiError(401, 'Invalid token')
@@ -406,9 +411,11 @@ export function requirePermission(permission: Permission) {
 }
 
 // Usage
-export const DELETE = requirePermission('delete')(async (request: Request) => {
-  // Handler with permission check
-})
+export async function DELETE(request: Request) {
+  const user = await requirePermission('delete')(request)
+  // Validate resource ID and enforce ownership/tenant scope before deleting.
+  return NextResponse.json({ success: true }) // replace with authorized operation
+}
 ```
 
 
@@ -428,6 +435,7 @@ class RateLimiter {
     const now = Date.now()
     const requests = this.requests.get(identifier) || []
 
+    if (maxRequests < 1 || windowMs <= 0) throw new Error("Invalid limit")
     // Remove old requests outside window
     const recentRequests = requests.filter(time => now - time < windowMs)
 
@@ -446,7 +454,8 @@ class RateLimiter {
 const limiter = new RateLimiter()
 
 export async function GET(request: Request) {
-  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  // Application adapter must accept forwarded IP only from a configured trusted proxy.
+  const ip = trustedClientIdentifier(request)
 
   const allowed = await limiter.checkLimit(ip, 100, 60000)  // 100 req/min
 
@@ -460,6 +469,8 @@ export async function GET(request: Request) {
 }
 ```
 
+
+The in-memory limiter is single-process and retains identifiers until explicitly evicted; production requires bounded eviction and shared atomic state where requests span replicas. Do not trust arbitrary X-Forwarded-For headers as identity.
 
 ## Background Jobs & Queues
 
@@ -509,6 +520,7 @@ const indexQueue = new JobQueue<IndexJob>()
 export async function POST(request: Request) {
   const { marketId } = await request.json()
 
+  // Authenticate, validate marketId and authorize tenant/resource scope before enqueueing.
   // Add to queue instead of blocking
   await indexQueue.add({ marketId })
 

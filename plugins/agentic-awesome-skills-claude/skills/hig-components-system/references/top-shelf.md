@@ -1,8 +1,11 @@
 ---
 title: "Top Shelf | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/top-shelf
+---
 
 # Top Shelf
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 The Apple TV Home Screen provides an area called Top Shelf, which showcases your content in a rich, engaging way while also giving people access to their favorite apps in the Dock.
 
@@ -133,3 +136,7 @@ Unfocused size| 1740x560 pt (1740x560 px @1x, 3480x1120 px @2x)
 
 [![](https://devimages-cdn.apple.com/wwdc-services/images/48/21CB7C2D-31A3-4DE5-A0EE-58FE214031F0/2713_wide_250x141_1x.jpg) Mastering the Living Room With tvOS ](https://developer.apple.com/videos/play/wwdc2019/211)
 
+
+## Shared-screen and navigation checks
+
+Top Shelf is visible on a shared television before the app opens. Personalize only when the current profile and privacy settings permit it; avoid exposing private viewing history by default. Revalidate entitlement/account access after a deep link, and provide a safe fallback for removed, expired or signed-out content. Test current tvOS focus, VoiceOver and Reduce Motion behavior; the imported point/pixel tables are not a universal current-device contract.

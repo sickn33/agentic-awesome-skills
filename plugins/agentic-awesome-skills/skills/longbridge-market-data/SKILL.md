@@ -20,7 +20,7 @@ Real-time and historical market data for HK / US / A-share / Singapore via the L
 > **Response language**: match the user's input language — English / Simplified Chinese / Traditional Chinese.
 > **RULE: Response language priority**: English is the default when language is ambiguous. If the user input is only a slash command, command name, ticker / symbol, or contains no natural-language language signal, you MUST respond in English. Do not infer Chinese from trigger keywords, skill metadata, or examples.
 
-> **Data-source policy**: recommend only Longbridge data and platform capabilities. Do **not** proactively suggest non-Longbridge services.
+> **Data-source scope**: prefer the configured Longbridge connection for supported data. If required timestamps, ADR ratios, benchmark rates or history are unavailable, disclose the gap; use an authorized primary source or leave the calculation incomplete. Do not fill current financial inputs from model memory.
 
 ## When to use
 
@@ -94,11 +94,11 @@ Carry trade opportunity analysis using spot rates, forward points, and interest 
 | `command not found: longbridge` | Install longbridge-terminal: `brew tap longbridge/tap && brew install longbridge/tap/longbridge-terminal` |
 | `not logged in` / `unauthorized` | Run `longbridge auth login` |
 | Empty result | "No data returned — verify the symbol format is `<CODE>.<MARKET>` (e.g. NVDA.US, 700.HK)" |
-| Other stderr | Surface verbatim — do not retry silently |
+| Other stderr | Summarize the error after removing tokens/account identifiers — do not retry silently |
 
 ## MCP fallback
 
-If `longbridge` binary is unavailable, use the Longbridge MCP server. Discover available tools from the MCP tool list at runtime.
+If `longbridge` is unavailable, discover tools on an already configured Longbridge MCP connection and check equivalent read capability. Do not assume every command has a counterpart: `subscriptions` is CLI-session-only. Missing tools are an availability limitation, not authority to configure a new service.
 
 ## Related skills
 
@@ -122,6 +122,10 @@ longbridge-market-data/
     ├── trade-stats.md · market-status.md · exchange-rate.md
     ├── ipo.md · adr-premium.md · fx-carry.md
 ```
+
+## Data checks and example
+
+For a request such as “compare the ADR and Hong Kong listing”, return instrument identifiers, quote timestamps/time zones, currency, FX direction and timestamp, and verified depositary ratio before computing a common-unit premium. Label delayed, stale, missing and closed-market observations. A price gap is not an executable arbitrage: conversion eligibility, fees, settlement, borrowing and trading-hour overlap matter. Read-only analysis does not authorize IPO orders or trading. Account results are private.
 
 ## Limitations
 

@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Soroban Storag
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Verification procedure
+
+Bind each record to network, current ledger, contract/code identity, storage type and exact ledger entry key. TTL is measured in ledgers, not wall-clock seconds; do not assume fixed ledger cadence. Persistent and instance entries archive on expiry, whereas temporary entries are removed and cannot be restored. Track instance/code and persistent-key lifetimes as the actual protocol/API requires; an Auto-Bump field does not schedule anything. Inspect current network maximum TTL and simulation/resource fees before any extension. Test threshold equality, expired/missing entries, restore requirements and insufficient fee budget on a disposable fixture, then verify post-operation live-until ledger. A monitoring label alone does not prove an extension succeeded.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | TTL Monitoring ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `TTL-001` |
+| 1 | TTL Monitoring ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `TTL-001` |
 | 2 | Contract Address | `text` | `VARCHAR(56)` | `string` | Text | `CVLT...` |
 | 3 | Storage Tier Lifetime | `select` | `VARCHAR(32)` | `string` | Select | `Persistent` |
 | 4 | Key Identifier Name | `text` | `VARCHAR(64)` | `string` | Text | `UserShareBalance` |

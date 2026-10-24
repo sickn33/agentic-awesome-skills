@@ -133,7 +133,7 @@ unitary = np.array([
     [0, 1, 0, 0],
     [0, 0, 0, 1],
     [0, 0, 1, 0]
-]) / np.sqrt(2)
+])  # A permutation matrix is already unitary; do not rescale it.
 
 # Create gate from unitary
 gate = cirq.MatrixGate(unitary)
@@ -239,7 +239,7 @@ def qft_circuit(qubits):
 
 ```python
 # Export to QASM
-qasm_str = circuit.to_qasm()
+qasm_str = cirq.qasm(circuit)
 
 # Import from QASM
 from cirq.contrib.qasm_import import circuit_from_qasm

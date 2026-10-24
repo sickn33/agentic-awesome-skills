@@ -12,13 +12,13 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## Key Principles
 
-1. **Adapt to different sizes and contexts.** Content components must work across screen sizes, orientations, and multitasking configurations. Use Auto Layout and size classes.
+1. **Adapt to different sizes and contexts.** Content components must work across screen sizes, orientations, and multitasking configurations. Use the layout system appropriate to the framework (SwiftUI layout or Auto Layout), and use size classes where available.
 
-2. **Make content accessible.** Charts need audio graph support. Images need alt text. Collections need proper VoiceOver navigation order. All content components need labels and descriptions.
+2. **Make content accessible.** Provide chart summaries and appropriate accessible data navigation; Swift Charts includes a default Audio Graphs implementation. Give meaningful images descriptive accessibility labels and hide decorative or redundant images. Collections need a logical VoiceOver navigation order.
 
 3. **Maintain visual hierarchy.** Use spacing, sizing, and grouping to establish clear information hierarchy. Primary content should be visually prominent.
 
-4. **Use system components first.** Evaluate UICollectionView, SwiftUI Charts, WKWebView before building custom. System components come with built-in accessibility and platform adaptation.
+4. **Use system components first.** Evaluate UICollectionView, SwiftUI Charts, WKWebView before building custom. System components provide accessibility and adaptation defaults; still test labels, interactions and supported platform versions.
 
 5. **Respect platform conventions.** A collection on tvOS uses large lockups with parallax. The same collection on iOS uses compact cells with touch targets. On visionOS, content gains depth and hover effects.
 
@@ -48,9 +48,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 | Displaying a single image | Image View | Support aspect ratio fitting; provide accessibility description |
 | Selecting an image via drag or browse | Image Well | macOS primarily; use image pickers on iOS |
 | Selecting a color | Color Well | Triggers system color picker; macOS, iOS 14+ |
-| Showing web content inline | Web View (WKWebView) | Use SFSafariViewController for external browsing |
+| Showing web content inline | Web View (WKWebView) | On supported UIKit platforms consider SFSafariViewController; on macOS use the default browser for external links |
 | Sharing content to other apps | Activity View | System share sheet with configurable activity types |
-| Content card (image + text) | Lockup | Primarily tvOS; adaptable to other platforms |
+| Content card (image + text) | Lockup | TVUIKit lockups are tvOS-specific; adapt the content-card pattern with native components elsewhere |
 
 ## Output Format
 
@@ -87,6 +87,8 @@ This skill is applicable to execute the workflow or actions described in the ove
 > Use @hig-components-content for this task: Apple Human Interface Guidelines for content display components.
 
 ## Limitations
+
+- Bundled HIG pages are reference snapshots, not a live compatibility matrix. Verify API availability against the target SDK and deployment version. macOS uses native sharing APIs rather than UIActivityViewController; do not infer API portability from a shared visual pattern.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

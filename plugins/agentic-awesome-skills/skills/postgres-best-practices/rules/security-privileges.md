@@ -39,7 +39,7 @@ grant usage on sequence orders_id_seq to app_writer;
 -- No DELETE permission
 
 -- Login role inherits from these
-create role app_user login password 'xxx';
+create role app_user login;  -- Provision credentials separately through a secure channel.
 grant app_writer to app_user;
 ```
 

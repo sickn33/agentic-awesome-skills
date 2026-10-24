@@ -62,7 +62,7 @@ export function scan({ files }) {
           file: path,
           line: i + 1,
           evidence: `import "${spec}" in edge-runtime file`,
-          edgeReason: isMiddleware(path) ? 'middleware (always edge)' : 'export const runtime = "edge"',
+          edgeReason: isMiddleware(path) ? 'middleware (no explicit Node runtime detected)' : 'export const runtime = "edge"',
           importedModule: spec,
           trafficIndependent: metadata.trafficIndependent,
         });
@@ -73,6 +73,7 @@ export function scan({ files }) {
 }
 
 function isEdgeRuntimeFile(path, content) {
+  if (/\bruntime\s*[:=]\s*['"]nodejs['"]/.test(content)) return false;
   return isMiddleware(path) || EDGE_RUNTIME_RE.test(content);
 }
 

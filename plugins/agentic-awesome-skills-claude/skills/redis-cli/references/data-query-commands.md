@@ -58,7 +58,7 @@ SET key value IFDNE expected-digest    # Set only if digest differs
 ```
 
 **Behavioral notes:**
-- `SET` overwrites any existing value regardless of type and clears any existing TTL
+- `SET` overwrites any existing value regardless of type and clears any existing TTL unless KEEPTTL is supplied
 - `SET NX` is commonly used for distributed locks
 - `INCR`/`DECR` fail if the value is not a valid integer; use `INCRBYFLOAT` for decimals
 - `GETRANGE` is 0-indexed; negative indices count from end (-1 = last character)
@@ -66,7 +66,7 @@ SET key value IFDNE expected-digest    # Set only if digest differs
 
 ## Hashes
 
-Hashes map string fields to string values — ideal for representing objects. Small hashes are stored in a memory-efficient ziplist encoding.
+Hashes map string fields to string values — ideal for representing objects. Compact hash encoding is version-dependent; modern versions use listpack rather than legacy ziplist.
 
 ```
 # Read
@@ -94,8 +94,8 @@ HSCAN key cursor [MATCH pat] [COUNT n] [NOVALUES]  # Incremental iterate O(1)/ca
 # Field-level expiry (Redis 7.4+)
 HEXPIRE key seconds [NX|XX|GT|LT] FIELDS numfields field [field ...]  # Set field TTL
 HPEXPIRE key milliseconds [NX|XX|GT|LT] FIELDS numfields field [field ...]  # Set field TTL (ms)
-HTTL key numfields field [field ...]               # Get field TTL
-HPERSIST key [NX|XX|GT|LT] FIELDS numfields field [field ...]  # Remove field TTL
+HTTL key FIELDS numfields field [field ...]               # Get field TTL
+HPERSIST key FIELDS numfields field [field ...]  # Remove field TTL
 ```
 
 **Behavioral notes:**
@@ -104,7 +104,7 @@ HPERSIST key [NX|XX|GT|LT] FIELDS numfields field [field ...]  # Remove field TT
 - Field order in `HGETALL` and `HKEYS` is non-deterministic
 - `HSCAN` with `NOVALUES` returns field names only (saves bandwidth)
 - For small hashes, `HGETALL` is efficient; for large ones, prefer `HSCAN`
-- Minimum hash length is 0 (empty hash after HDEL of last field)
+- Deleting the last hash field removes the key; a retained empty hash is not created.
 
 ## Lists
 
@@ -284,7 +284,7 @@ XINFO CONSUMERS key group                          # Consumer info
 # Management
 XTRIM key MAXLEN|MINID [=|~] threshold [LIMIT count]  # Trim stream
 XDEL key ID [ID ...]                               # Delete entries
-XSETID key last-idle                               # Set last ID
+XSETID key last-id                               # Set last ID
 ```
 
 **Behavioral notes:**
@@ -343,7 +343,7 @@ GEOSEARCHSTORE dest key [...]          # Store search results             O(N)
 
 ```
 DEBUG OBJECT key                       # Internal debug info (rl:refcount, lru, lru_seconds_idle, etc.)  O(1)
-DEBUG SEGFAULT                        # Crash server (debugging only, never in production)
+DEBUG subcommand                      # Privileged debug operations; do not run crash commands
 ```
 
 `DEBUG OBJECT` returns internal metadata such as reference count, LRU idle time, encoding, and serialized length. Useful for diagnosing memory and eviction issues.

@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples are independent version-pinned fragments, not a complete load suite. Choose duration/vus or staged/scenario scheduling rather than conflicting options. Cloud zone IDs and historical latency tables are illustrative; validate current supported configuration and actual SLOs. Raw output may include URLs/tags; redact secrets and bound artifacts. A load run is evidence under its workload, not SLA certification.
+
 ## Overview
 
 k6 is a modern, developer-centric load testing tool that helps you write and execute performance tests for HTTP APIs, WebSocket endpoints, and browser scenarios. This skill provides comprehensive guidance on writing realistic load tests, configuring test scenarios (smoke, load, stress, spike, soak), analyzing results, and integrating with CI/CD pipelines.
@@ -65,13 +67,8 @@ Run with: `k6 run simple-test.js`
 
 ```javascript
 export const options = {
-  // Virtual Users (concurrent users)
-  vus: 100,
-
-  // Test duration
-  duration: '5m',
-
-  // Or use stages for ramp-up/ramp-down
+  // Ramping scenario shortcut; do not combine stages with vus/duration.
+  // For a constant test, replace stages with vus: 100, duration: "5m".
   stages: [
     { duration: '30s', target: 20 },   // Ramp up
     { duration: '1m', target: 100 },  // Stay at 100
@@ -84,16 +81,9 @@ export const options = {
     http_req_failed: ['rate<0.01'],     // Error rate < 1%
   },
 
-  // Load zones (distributed testing)
-  ext: {
-    loadimpact: {
-      name: 'My Load Test',
-      distribution: {
-        'amazon:us:ashburn': { weight: 50 },
-        'amazon:eu: Dublin': { weight: 50 },
-      },
-    },
-  },
+  // Configure account-approved Grafana Cloud load zones separately using the
+  // installed k6 version’s cloud schema; no hardcoded unverified zone IDs here.
+
 };
 ```
 
@@ -156,10 +146,14 @@ import { check } from 'k6';
 export default function () {
   // Login and extract token
   const loginRes = http.post('https://api.example.com/login',
-    JSON.stringify({ email: 'test@example.com', password: 'password123' })
+    JSON.stringify({ email: __ENV.TEST_EMAIL, password: __ENV.TEST_PASSWORD }),
+    {headers: {'Content-Type': 'application/json'}, timeout: '10s', redirects: 0}
   );
 
-  const token = loginRes.json('access_token');
+  if (!check(loginRes, {'login succeeded': r => r.status === 200})) return;
+  let token;
+  try { token = loginRes.json('access_token'); } catch (_) { return; }
+  if (typeof token !== 'string' || !token) return;
 
   // Use token in subsequent requests
   const headers = {
@@ -211,9 +205,7 @@ export const options = {
       executor: 'constant-vus',
       vus: 5,
       duration: '30s',
-      browser: {
-        type: 'chromium',
-      },
+      options: { browser: { type: 'chromium' } },
     },
   },
 };
@@ -228,10 +220,10 @@ export default async function () {
     console.log(`Page title: ${title}`);
 
     // Click and interact
-    await page.click('button[data-testid="submit"]');
+    await page.locator('button[data-testid="submit"]').click();
 
     // Wait for response
-    await page.waitForSelector('.success-message');
+    await page.locator('.success-message').waitFor({state: 'visible'});
 
   } finally {
     await page.close();
@@ -239,7 +231,7 @@ export default async function () {
 }
 ```
 
-Install browser support: `k6 install chromium`
+Install a supported Chromium browser through the approved OS package manager; k6 install chromium is not a k6 command. Configure K6_BROWSER_EXECUTABLE_PATH when needed.
 
 ---
 
@@ -297,7 +289,8 @@ import { SharedArray } from 'k6/data';
 
 // Option 1: Load once, shared across VUs
 const users = new SharedArray('users', function () {
-  return open('./users.csv').split('\n').slice(1).map(line => {
+  // Restricted fixture CSV: no quoted commas/newlines; use a real CSV parser for general CSV.
+  return open('./users.csv').trim().split(/\r?\n/).slice(1).filter(Boolean).map(line => {
     const [email, password] = line.split(',');
     return { email, password };
   });
@@ -307,7 +300,8 @@ export default function () {
   const user = users[__VU % users.length];
 
   const res = http.post('https://api.example.com/login',
-    JSON.stringify({ email: user.email, password: user.password })
+    JSON.stringify({ email: user.email, password: user.password }),
+    {headers: {'Content-Type': 'application/json'}, timeout: '10s', redirects: 0}
   );
 
   check(res, { 'login successful': (r) => r.status === 200 });
@@ -373,10 +367,10 @@ export const options = {
     ],
 
     // Custom metrics
-    my_custom_metric: ['avg<100'],
+    // Define and record a custom Trend before asserting its name.
 
-    // Abort on threshold failure
-    'http_req_duration{method:GET}': ['p(95)<300'],
+    // Evaluate threshold; add abortOnFail explicitly to stop early
+    'http_req_duration{method:GET}': [{threshold: 'p(95)<300', abortOnFail: true, delayAbortEval: '10s'}],
   },
 };
 ```
@@ -444,7 +438,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup k6
-        uses: grafana/k6-action@v0.2.0
+        uses: grafana/setup-k6-action@v1 # Pin a reviewed commit for deployment
 
       - name: Run load test
         env:
@@ -452,6 +446,7 @@ jobs:
         run: k6 run --out json=results.json load-test.js
 
       - name: Upload results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: k6-results
@@ -471,13 +466,12 @@ jobs:
 load_test:
   image: grafana/k6:latest
   script:
-    - k6 run load-test.js
+    - k6 run --out json=results.json load-test.js
   artifacts:
     when: always
     paths:
       - results.json
-    reports:
-      junit: results.xml
+    # No JUnit file is produced by this script; add a reviewed summary exporter before declaring one.
 ```
 
 ---
@@ -498,7 +492,7 @@ k6 run --out json=results.json load-test.js
 k6 run --out influxdb=http://localhost:8086/k6 load-test.js
 
 # Prometheus remote write
-k6 run --out prometheus=localhost:9090/k6 load-test.js
+K6_PROMETHEUS_RW_SERVER_URL=http://localhost:9090/api/v1/write k6 run --out experimental-prometheus-rw load-test.js
 
 # Cloud results
 k6 run --out cloud load-test.js
@@ -519,7 +513,7 @@ k6 run --out cloud load-test.js
 ## Best Practices
 
 - **Start with smoke test**: Verify test works with 1-5 VUs before scaling up
-- **Use realistic data**: Parameterize with real user data and behaviors
+- **Use realistic data**: Use synthetic test identities with realistic distributions, never production passwords or personal data
 - **Set meaningful thresholds**: Match your SLA and business requirements
 - **Warm up systems**: Include ramp-up time in stages
 - **Monitor external dependencies**: Track not just your APIs but downstream services
@@ -538,7 +532,7 @@ k6 run --out cloud load-test.js
   **Solution:** Check for external dependencies, random data, or test data pollution
 
 - **Problem:** k6 runs out of memory
-  **Solution:** Use ` SharedArray` for large data, reduce VUs, or use `--max-memory` flag
+  **Solution:** Use SharedArray, discard unnecessary response bodies, bound result output and reduce VUs; no generic --max-memory k6 flag is established here
 
 - **Problem:** Thresholds too strict
   **Solution:** Start with relaxed thresholds, tighten based on historical data

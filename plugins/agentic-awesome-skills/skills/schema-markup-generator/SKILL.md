@@ -61,7 +61,7 @@ export default function MyPage() {
 
 ## Schema Types by Page Type
 
-### WebSite + Sitelinks Searchbox (homepage only)
+### WebSite / SearchAction (schema semantics, not a Google search-box feature)
 ```js
 {
   "@context": "https://schema.org",
@@ -118,7 +118,7 @@ export default function MyPage() {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "How to Improve Your Core Web Vitals in 2025",
-  "description": "A practical guide to improving LCP, FID, and CLS scores for better rankings.",
+  "description": "A practical guide to improving LCP, INP, and CLS scores for better rankings.",
   "url": "https://www.100seotools.com/blog/improve-core-web-vitals",
   "datePublished": "2025-01-15",
   "dateModified": "2025-03-20",
@@ -161,7 +161,7 @@ export default function MyPage() {
       "name": "What is keyword density?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Keyword density is the percentage of times a keyword appears in a piece of content relative to the total word count. A healthy keyword density is typically 1-3%."
+        "text": "Keyword density is the percentage of times a keyword appears in a piece of content relative to the total word count. There is no universal optimal keyword-density percentage; prioritize useful natural language and avoid keyword stuffing."
       }
     },
     {
@@ -318,3 +318,5 @@ curl -s https://www.yourdomain.com/tools/keyword-density | grep -A 5 "applicatio
 - Does not guarantee rich-result eligibility or display; Google and other consumers decide whether to use valid schema.
 - Generated examples must be adapted to the site's real content, legal entity details, ratings, pricing, and availability.
 - Always validate deployed HTML, not only source code, because frameworks and rendering modes can change the final markup.
+
+Google rich-result support is separate from Schema.org validity: sitelinks search box was removed in November 2024, HowTo rich results were deprecated in September 2023, and FAQ rich results are limited to eligible well-known authoritative government/health sites. Do not promise these enhancements for ordinary FAQ/how-to pages. Use only truthful visible content and real ratings; eligibility tests do not guarantee display. See [search-box removal](https://developers.google.com/search/blog/2024/10/sitelinks-search-box) and [FAQ/HowTo changes](https://developers.google.com/search/blog/2023/08/howto-faq-changes).

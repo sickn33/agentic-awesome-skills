@@ -2,7 +2,7 @@
 name: usage-engineer
 description: "Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage."
 category: productivity
-risk: safe
+risk: critical
 source: community
 source_repo: noamshorts22-prog/usage-engineer
 source_type: community
@@ -21,7 +21,7 @@ license_source: "https://github.com/noamshorts22-prog/usage-engineer/blob/main/L
 Every token an agent spends on a 5,000-line log, a retried command or a stale project map is paid for
 again on every later turn. This skill removes that waste without lowering the bar: requirements, tests
 and verification stay exactly as strict as without it. It ships a bundled zero-dependency Python CLI
-(`scripts/ue.py`) that runs locally and makes no network calls.
+(`scripts/ue.py`). Its audit helpers run locally; optional benchmark runners can launch agents that contact providers.
 
 ## When to Use This Skill
 
@@ -65,7 +65,7 @@ change the input, or try a different method.
 python <skill-dir>/scripts/ue.py map check --project . --map <map.json>
 ```
 
-Exit code 1 means STALE and lists the changed files: re-read those, and only those. Build a map at
+Exit code 1 means STALE or incomplete coverage. Re-read listed changes and widen inspection whenever the map is truncated or evidence requires it. Build a map at
 the end of a work session so the next one can check it:
 
 ```bash
@@ -134,9 +134,9 @@ paid for on every turn.
 
 ## Security & Safety Notes
 
-- The script makes no network calls and never reads `auth.json`, cookies, tokens or chat text.
+- Audit opens rollout JSONL files that can contain chat text and secrets; it extracts metadata without intentionally printing message contents. It does not open auth or cookie files. Treat input logs and all local copies as sensitive; summaries are not secret-redacted.
 - Output files go to `~/.usage-engineer` (override with `UE_STATE_DIR`) unless `--out` is given; printed paths start with `%HOME%` for the redacted home directory.
-- Nothing here changes the model, reasoning effort or agent settings.
+- `apply-profile` and `rollback` write configuration files only when explicitly invoked. Review their exact destinations first; bundled profile/benchmark fixtures are omitted. Audit and map commands do not change model or agent settings.
 
 ## Related Skills
 

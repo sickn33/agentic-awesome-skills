@@ -34,7 +34,12 @@ Example:
 Base styles → Variants → Sizes → States → Overrides
 ```
 
-## Quick Start
+## Quick Start — Tailwind v3-style configuration
+
+These snippets use the v3 config/directive model; Tailwind v4 uses a different
+CSS-first setup and integration. Pin the intended major version, compatible plugins,
+React/CVA/Radix/tailwind-merge versions and framework client boundaries. No build
+compatibility is implied. Do not paste both major-version setup styles together.
 
 ```typescript
 // tailwind.config.ts
@@ -48,15 +53,15 @@ const config: Config = {
       colors: {
         // Semantic color tokens
         primary: {
-          DEFAULT: 'hsl(var(--primary))',
+          DEFAULT: 'hsl(var(--primary) / <alpha-value>)',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: 'hsl(var(--secondary) / <alpha-value>)',
           foreground: 'hsl(var(--secondary-foreground))',
         },
         destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
+          DEFAULT: 'hsl(var(--destructive) / <alpha-value>)',
           foreground: 'hsl(var(--destructive-foreground))',
         },
         muted: {
@@ -64,9 +69,11 @@ const config: Config = {
           foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
-          DEFAULT: 'hsl(var(--accent))',
+          DEFAULT: 'hsl(var(--accent) / <alpha-value>)',
           foreground: 'hsl(var(--accent-foreground))',
         },
+        card: { DEFAULT: 'hsl(var(--background))', foreground: 'hsl(var(--foreground))' },
+        input: 'hsl(var(--border))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         border: 'hsl(var(--border))',
@@ -137,6 +144,7 @@ export default config
 // components/ui/button.tsx
 import { cva, type VariantProps } from 'class-variance-authority'
 import { forwardRef } from 'react'
+import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
@@ -173,10 +181,11 @@ export interface ButtonProps
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, type = "button", ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
     return (
       <Comp
+        type={asChild ? undefined : type}
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
@@ -287,7 +296,7 @@ export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 ```typescript
 // components/ui/input.tsx
-import { forwardRef } from 'react'
+import { forwardRef, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -295,10 +304,15 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, error, ...props }, ref) => {
+  ({ className, type, error, id, "aria-describedby": describedBy, ...props }, ref) => {
+    const generatedId = useId()
+    const inputId = id ?? generatedId
+    const description = [describedBy, error ? `${inputId}-error` : null].filter(Boolean).join(" ") || undefined
     return (
       <div className="relative">
         <input
+          {...props}
+          id={inputId}
           type={type}
           className={cn(
             'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
@@ -307,12 +321,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
           ref={ref}
           aria-invalid={!!error}
-          aria-describedby={error ? `${props.id}-error` : undefined}
-          {...props}
+          aria-describedby={description}
         />
         {error && (
           <p
-            id={`${props.id}-error`}
+            id={`${inputId}-error`}
             className="mt-1 text-sm text-destructive"
             role="alert"
           >
@@ -491,7 +504,7 @@ const DialogOverlay = forwardRef<
     className={cn(
       'fixed inset-0 z-50 bg-black/80',
       'data-[state=open]:animate-in data-[state=closed]:animate-out',
-      'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none',
       className
     )}
     {...props}
@@ -502,25 +515,25 @@ const DialogContent = forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
-  <DialogPortal>
+  <DialogPrimitive.Portal>
     <DialogOverlay />
     <DialogPrimitive.Content
       ref={ref}
       className={cn(
         'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg',
         'data-[state=open]:animate-in data-[state=closed]:animate-out',
-        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+        'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 motion-reduce:animate-none',
         'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
         'data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]',
         'data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-        'sm:rounded-lg',
+        'sm:rounded-lg motion-reduce:animate-none motion-reduce:transition-none',
         className
       )}
       {...props}
     >
       {children}
     </DialogPrimitive.Content>
-  </DialogPortal>
+  </DialogPrimitive.Portal>
 ))
 ```
 
@@ -557,32 +570,30 @@ export function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState<'dark' | 'light'>('light')
 
   useEffect(() => {
-    const stored = localStorage.getItem(storageKey) as Theme | null
-    if (stored) setTheme(stored)
+    try {
+      const stored = localStorage.getItem(storageKey)
+      if (stored === 'light' || stored === 'dark' || stored === 'system') setTheme(stored)
+    } catch { /* Storage may be denied; keep the in-memory default. */ }
   }, [storageKey])
 
   useEffect(() => {
     const root = window.document.documentElement
-    root.classList.remove('light', 'dark')
-
-    let resolved: 'dark' | 'light'
-
-    if (theme === 'system') {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light'
-    } else {
-      resolved = theme
+    const media = window.matchMedia('(prefers-color-scheme: dark)')
+    const apply = () => {
+      const resolved = theme === 'system' ? (media.matches ? 'dark' : 'light') : theme
+      root.classList.remove('light', 'dark')
+      root.classList.add(resolved)
+      setResolvedTheme(resolved)
     }
-
-    root.classList.add(resolved)
-    setResolvedTheme(resolved)
+    apply()
+    if (theme === 'system') media.addEventListener('change', apply)
+    return () => media.removeEventListener('change', apply)
   }, [theme])
 
   const value = {
     theme,
     setTheme: (newTheme: Theme) => {
-      localStorage.setItem(storageKey, newTheme)
+      try { localStorage.setItem(storageKey, newTheme) } catch { /* in-memory fallback */ }
       setTheme(newTheme)
     },
     resolvedTheme,
@@ -663,3 +674,21 @@ export const disabled = 'disabled:pointer-events-none disabled:opacity-50'
 - [CVA Documentation](https://cva.style/docs)
 - [shadcn/ui](https://ui.shadcn.com/)
 - [Radix Primitives](https://www.radix-ui.com/primitives)
+
+## Accessibility and integration limits
+
+Component fragments need actual imports/exports, Link/Button/form adapters and React
+types; no application/build is bundled or tested. Dialog usage must include an
+accessible Title/Description or valid labels, close control, keyboard/focus return
+and bounded scroll behavior. An asChild anchor is not a native disabled button:
+prevent its activation when disabled and preserve correct semantics.
+
+For example, rendering two Inputs without IDs must still produce distinct error
+IDs, and a caller’s help-text ID must remain in aria-describedby alongside the error.
+Check keyboard-only focus, screen-reader names and high-contrast/reduced-motion modes.
+The illustrative destructive color pair is not contrast-certified; measure actual
+text/background pairs in BOTH themes before claiming WCAG conformance.
+The effect-based theme provider can flash the wrong theme during SSR/hydration;
+use the framework’s reviewed prepaint theme strategy/CSP rather than claiming no flash.
+CSS classes must be statically discoverable in scanned sources; token names alone
+do not generate styles or prove accessible colors. No UI/browser tests were run.

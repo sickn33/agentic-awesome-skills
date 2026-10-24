@@ -25,8 +25,7 @@ request, from one field list so they cannot drift apart.
 
 **Scope of one row.** This is a single-table skill and one row is one invoice carrying
 **one line item**. It is deliberately not a multi-line billing engine. An invoice with
-several items either becomes several rows that repeat the same `Invoice Number`, or is
-kept in a separate line table alongside this one - whichever the business actually needs.
+several items requires an invoice header with a separate line table. Do not repeat invoice totals, payments or balances per item: summing them would double-count receivables.
 Decide that in Step 2, do not assume it.
 
 **Everything is conditional.** Not every sale is on credit, not every invoice has an order
@@ -140,8 +139,7 @@ Never ask for a Notion password or token.
 
 The SQL below is written in PostgreSQL-flavoured DDL. `SERIAL PRIMARY KEY` and
 `TIMESTAMP DEFAULT NOW()` are PostgreSQL-specific; on another engine use that engine's
-identity column and default-timestamp syntax. `created_at` and `updated_at` are maintained
-by the database and are not business fields - leave them out of the CSV, JSON Schema and
+identity column and default-timestamp syntax. `created_at` is initialized by the database; `updated_at` needs an application update or a trigger (DEFAULT alone does not maintain it). Both are technical metadata and are not business fields - leave them out of the CSV, JSON Schema and
 Notion mapping.
 
 ```csv
@@ -175,7 +173,7 @@ CREATE TABLE sales_accounting (
   credit_terms_days NUMERIC,
   due_date DATE,
   payment_status VARCHAR(100) NOT NULL,
-  aging_status VARCHAR(100) NOT NULL,
+  aging_status VARCHAR(100),
   amount_received NUMERIC(14,2) NOT NULL,
   balance NUMERIC(14,2) NOT NULL,
   ledger_account VARCHAR(255),
@@ -242,7 +240,6 @@ CREATE TABLE sales_accounting (
       "Invoice Total",
       "Net Receivable",
       "Payment Status",
-      "Aging Status",
       "Amount Received",
       "Balance",
       "VAT Register Updated",
@@ -332,6 +329,8 @@ and anything pointing at another table stays `relation`.
 
 The table above is the single source of truth. The CSV, SQL, JSON Schema and Notion mapping
 are all derived from it - never edit one without the others.
+
+Before using calculations, confirm the single currency (add a currency code for mixed currencies), tax base, rounding stage and minor-unit precision. Example rates are fictional, not tax guidance. Unknown numeric values remain blank/null, not the literal string `Unknown`; incomplete records do not satisfy the final schema. Optional aging is unset for paid/cash invoices.
 
 How the amounts relate, so a reviewer can check any row:
 
@@ -428,7 +427,7 @@ We issue credit invoices and nobody can tell which customers have actually paid.
 
 > Based on what you have confirmed: one invoice register, one row per invoice. Because most
 > of your invoices carry a single line, this stays a single table; for the two-item invoices,
-> either add a second row repeating the invoice number or keep a separate line table - tell me
+> use an invoice header plus a separate line table, keeping totals and payments only on the header - tell me
 > which, and the build follows that choice.
 >
 > Sales order links only where you raise one, so that field is optional. No challan field is
@@ -462,8 +461,7 @@ We issue credit invoices and nobody can tell which customers have actually paid.
 
 ## Limitations
 
-- One row is one invoice with a single line item. Multi-line invoices need repeated invoice
-  numbers or a separate line table; this skill does not model line-level tax or discounts.
+- One row is one invoice with a single line item. Multi-line invoices require a separate line table and header totals; this skill does not model line-level tax or discounts.
 - Empty template only. It does not compute tax, file returns or keep ledgers.
 - Does not raise or send invoices, collect money, execute accounting entries, or call any
   external API. The surrounding platform decides whether such tools exist.

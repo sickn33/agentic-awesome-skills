@@ -85,6 +85,8 @@ EventHubConsumerAsyncClient asyncConsumer = new EventHubClientBuilder()
     .buildAsyncConsumerClient();
 ```
 
+Pin compatible SDKs including identity/storage and add java.util/time imports; client declarations are alternatives. Scope producer/consumer/checkpoint roles and redact bodies/connection strings. Checkpoint only after durable effects and handle failure; it does not provide exactly-once processing. Preserve subscription handles for cancellation and close clients/stop processors on every exit. ErrorContext can lack partition context: guard it before reading partition ID. Batch retries must preserve partition options, and uncertain sends can duplicate events; use event IDs/reconciliation.
+
 ## Core Patterns
 
 ### Send Single Event
@@ -112,7 +114,7 @@ for (int i = 0; i < 100; i++) {
         // Batch is full, send and create new batch
         producer.send(batch);
         batch = producer.createBatch();
-        batch.tryAdd(event);
+        if (!batch.tryAdd(event)) throw new IllegalArgumentException("Event exceeds empty batch capacity");
     }
 }
 
@@ -129,7 +131,7 @@ CreateBatchOptions options = new CreateBatchOptions()
     .setPartitionId("0");
 
 EventDataBatch batch = producer.createBatch(options);
-batch.tryAdd(new EventData("Partition 0 event"));
+if (!batch.tryAdd(new EventData("Partition 0 event"))) throw new IllegalArgumentException("Event too large");
 producer.send(batch);
 ```
 
@@ -140,7 +142,7 @@ CreateBatchOptions options = new CreateBatchOptions()
     .setPartitionKey("customer-123");
 
 EventDataBatch batch = producer.createBatch(options);
-batch.tryAdd(new EventData("Customer event"));
+if (!batch.tryAdd(new EventData("Customer event"))) throw new IllegalArgumentException("Event too large");
 producer.send(batch);
 ```
 
@@ -344,7 +346,7 @@ STORAGE_CONNECTION_STRING=<for-checkpointing>
 1. **Use EventProcessorClient**: For production, provides load balancing and checkpointing
 2. **Batch Events**: Use `EventDataBatch` for efficient sending
 3. **Partition Keys**: Use for ordering guarantees within a partition
-4. **Checkpointing**: Checkpoint after processing to avoid reprocessing
+4. **Checkpointing**: Checkpoint after durable processing; replay remains possible, so consumers must be idempotent
 5. **Error Handling**: Handle transient errors with retries
 6. **Close Clients**: Always close producer/consumer when done
 

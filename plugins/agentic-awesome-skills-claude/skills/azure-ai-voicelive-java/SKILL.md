@@ -231,3 +231,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These are beta-version fragments, not a complete audio application. Verify endpoint/model/voice availability and SDK signatures against the deployed resource, supply imports/audio helpers and retain one managed event subscription with shutdown/error handling. Audio/transcription is transmitted to a cloud service: get consent for capture and transmission, minimize retention and protect transcripts. Function-call arguments are untrusted; validate them and authorize any external action separately before invoking it.

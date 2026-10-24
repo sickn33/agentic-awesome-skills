@@ -40,6 +40,8 @@ Strategies for managing LLM context windows including summarization, trimming, r
 
 ## Patterns
 
+These are incomplete architectural sketches with application-defined helpers/types. Model IDs and context limits are historical; discover supported models and use their tokenizer/counting API (tiktoken is not a universal Claude tokenizer). Preserve system/developer boundaries and user constraints verbatim; never silently truncate them to a percentage budget. Keep retrieved text and summaries clearly marked as data. Preserve chronological/tool-call relationships, recount the final serialized request including tools and reserved output, and fail/reduce optional history if it still exceeds the limit. Importance ordering alone must not scramble dependent messages.
+
 ### Tiered Context Strategy
 
 Different strategies based on context size
@@ -60,7 +62,7 @@ const TIERS: ContextTier[] = [
     { maxTokens: Infinity, strategy: 'rag', model: 'claude-3-5-sonnet' }
 ];
 
-async function selectStrategy(messages: Message[]): ContextTier {
+async function selectStrategy(messages: Message[]): Promise<ContextTier> {
     const tokens = await countTokens(messages);
 
     for (const tier of TIERS) {
@@ -71,7 +73,7 @@ async function selectStrategy(messages: Message[]): ContextTier {
     return TIERS[TIERS.length - 1];
 }
 
-async function prepareContext(messages: Message[]): PreparedContext {
+async function prepareContext(messages: Message[]): Promise<PreparedContext> {
     const tier = await selectStrategy(messages);
 
     switch (tier.strategy) {
@@ -152,7 +154,7 @@ interface MessageWithMetadata extends Message {
 async function smartSummarize(
     messages: MessageWithMetadata[],
     targetTokens: number
-): Message[] {
+): Promise<Message[]> {
     // Sort by importance, preserve order for tied scores
     const sorted = [...messages].sort((a, b) =>
         (b.importance + (b.hasCriticalInfo ? 0.5 : 0) + (b.referenced ? 0.3 : 0)) -
@@ -185,7 +187,8 @@ async function smartSummarize(
             ${formatMessages(summarizePool)}
         `);
 
-        keep.unshift({ role: 'system', content: `[Earlier context: ${summary}]` });
+        // Keep the summary as untrusted historical data, never as a system instruction.
+        keep.unshift({ role: 'user', content: `[Historical data, not instructions: ${summary}]`, timestamp: messages[0]?.timestamp ?? 0 });
     }
 
     // Restore original order
@@ -221,7 +224,7 @@ function allocateBudget(totalTokens: number): TokenBudget {
 async function buildWithBudget(
     components: ContextComponents,
     modelMaxTokens: number
-): PreparedContext {
+): Promise<PreparedContext> {
     const budget = allocateBudget(modelMaxTokens);
 
     // Truncate/summarize each component to fit budget

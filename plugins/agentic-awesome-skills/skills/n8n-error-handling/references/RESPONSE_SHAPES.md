@@ -104,7 +104,7 @@ The status code is the caller's first signal; be deliberate.
 Distinguishing 4xx from 5xx matters because the caller's tooling depends on it:
 
 - Caller monitoring alerts on 5xx (your fault) but not 4xx (their fault). Returning 500 for bad input fires *their* pager on *their* bug.
-- 5xx implies "retry", 4xx implies "don't bother".
+- Retry depends on documented semantics and idempotency: 429 and some 4xx may be retryable, while many 5xx are unsafe to replay automatically.
 - Aggregated error rates segment by class — collapse everything to 500 and you lose that.
 
 ### Error codes (a small, stable set)
@@ -178,7 +178,7 @@ The body goes to the caller. Treat everything in it as public.
 | **SQL queries** — `{ "query": "SELECT * FROM users WHERE ..." }` | Exposes schema and access patterns. |
 | **Tokens / credentials / auth values** | Even innocuous-looking `headers`, `config`, or `request` fields can carry token values. Audit error bodies — leaks are easier than you'd expect. |
 
-The pattern is always the same: **log the full error privately, return a sanitized message.** See "Don't leak internals" in API_WORKFLOWS.md for the log-then-respond wiring.
+The pattern is always the same: **log only necessary redacted error detail in approved private storage, return a sanitized message.** See "Don't leak internals" in API_WORKFLOWS.md for the log-then-respond wiring.
 
 ---
 

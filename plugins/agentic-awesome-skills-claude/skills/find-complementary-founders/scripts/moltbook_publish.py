@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import importlib.util
+import stat
 import argparse
 import hashlib
 import http.client
@@ -222,23 +224,14 @@ def safe_identifier(value: object, field: str) -> str:
 
 
 def validate_profile(profile: dict) -> None:
-    if profile.get("profile_type") != "founder-collaboration":
-        raise PublishError("Profile is not a founder-collaboration profile")
-    consent = profile.get("consent", {})
-    if consent.get("state") != "public_profile_approved":
-        raise PublishError("Profile lacks public-profile approval")
+    path = Path(__file__).with_name("validate_profile.py")
+    spec = importlib.util.spec_from_file_location("findmate_renderer_validator", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
     try:
-        expires = date.fromisoformat(profile["expires_on"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise PublishError("Profile has invalid expires_on") from exc
-    if expires < datetime.now(timezone.utc).date():
-        raise PublishError(f"Profile expired on {expires.isoformat()}")
-    safe_text(profile.get("alias"), "profile.alias", 50)
-    safe_text(profile.get("summary"), "profile.summary", 280)
-    contact = profile.get("contact")
-    if not isinstance(contact, dict):
-        raise PublishError("Profile lacks contact")
-    safe_https_url(contact.get("url"), "profile.contact.url")
+        module.validate_profile(profile)
+    except (module.ValidationError, TypeError, ValueError) as exc:
+        raise PublishError("Profile failed complete local validation: " + str(exc)) from exc
 
 
 def format_vectors(values: object, *, limit: int = 4) -> list[str]:
@@ -455,16 +448,21 @@ def write_or_print(value: dict, output: Path | None) -> None:
         output.parent.mkdir(parents=True, exist_ok=True)
         if output.is_symlink():
             raise PublishError(f"Refusing to write through symlink: {output}")
-        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+        flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
         fd = os.open(output, flags, 0o644)
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            os.fchmod(handle.fileno(), 0o644)
+            file_stat = os.fstat(handle.fileno())
+            if not stat.S_ISREG(file_stat.st_mode) or file_stat.st_nlink != 1:
+                raise PublishError("Refusing nonregular or multiply linked output")
+            os.ftruncate(handle.fileno(), 0)
+            os.fchmod(handle.fileno(), 0o600)
             handle.write(serialized)
     else:
         sys.stdout.write(serialized)
 
 
 def validate_draft(draft: dict, expected_operation: str, supplied_hash: str) -> None:
+    if draft.get("draft_version") != "1.0": raise PublishError("Unsupported draft version")
     operation = draft.get("operation")
     endpoint = draft.get("endpoint")
     payload = draft.get("payload")
@@ -479,6 +477,9 @@ def validate_draft(draft: dict, expected_operation: str, supplied_hash: str) -> 
         raise PublishError("Draft content changed after its approval hash was created")
     if supplied_hash != digest:
         raise PublishError("Supplied approval hash does not match the exact draft")
+    expiry = re.search(r"^Expires: (\d{4}-\d{2}-\d{2})$|^Profile expires: (\d{4}-\d{2}-\d{2})$", str(payload.get("content", "")), re.M)
+    if expiry and date.fromisoformat(expiry[1] or expiry[2]) < datetime.now(timezone.utc).date():
+        raise PublishError("Draft profile has expired; obtain approval for a renewed draft")
     if operation == "create_post" and endpoint != "/posts":
         raise PublishError("Post drafts may target only /posts")
     if operation == "create_comment" and not re.fullmatch(
@@ -540,8 +541,8 @@ def api_request(
         parsed: dict | str = json.loads(text)
     except json.JSONDecodeError:
         parsed = text[:1000]
-    if response.status >= 400:
-        safe_body = text[:1000]
+    if not 200 <= response.status < 300:
+        safe_body = "response body omitted"
         if key:
             safe_body = safe_body.replace(key, "[REDACTED]")
         raise PublishError(f"Moltbook returned HTTP {response.status}: {safe_body}")
@@ -617,7 +618,7 @@ def publish(args: argparse.Namespace, operation: str) -> int:
 
 
 def probe(_: argparse.Namespace) -> int:
-    status, response = api_request("GET", "/posts?sort=new&limit=1", require_key=False)
+    status, response = api_request("GET", f"/posts/{DEFAULT_THREAD_ID}/comments?sort=old", require_key=False)
     json.dump(
         {"ok": True, "http_status": status, "response": response},
         sys.stdout,

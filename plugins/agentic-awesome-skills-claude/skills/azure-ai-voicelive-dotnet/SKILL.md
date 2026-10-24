@@ -18,7 +18,7 @@ dotnet add package Azure.Identity
 dotnet add package NAudio                    # For audio capture/playback
 ```
 
-**Current Versions**: Stable v1.0.0, Preview v1.1.0-beta.1
+**Version scope**: Examples are SDK fragments; pin a compatible package and check its API/model availability in the linked Microsoft documentation rather than treating these examples as a current version list.
 
 ## Environment Variables
 
@@ -64,6 +64,10 @@ VoiceLiveClient
     ├── SendAudioAsync()
     └── StartResponseAsync()
 ```
+
+## Voice and tool boundaries
+
+Obtain applicable microphone/recording/transmission consent, select an approved Azure resource/region and bound session duration/costs. Model-provided tool arguments are untrusted: validate schema, allowlist operations, and require authorization for external effects. Do not place secrets in instructions/logs or treat a function definition as an executed integration. Reconfigure the session after adding tools; exact audio formats/rates depend on the pinned model and SDK.
 
 ## Core Workflow
 
@@ -173,10 +177,12 @@ if (serverEvent is SessionUpdateResponseFunctionCallArgumentsDone functionCall)
     if (functionCall.Name == "get_current_weather")
     {
         var parameters = JsonSerializer.Deserialize<Dictionary<string, string>>(functionCall.Arguments);
-        string location = parameters?["location"] ?? "";
+        if (parameters is null || !parameters.TryGetValue("location", out string? location)
+            || string.IsNullOrWhiteSpace(location))
+            throw new ArgumentException("location is required");
         
         // Call external service
-        string weatherInfo = $"The weather in {location} is sunny, 75°F.";
+        string weatherInfo = $"Demo only: no live weather lookup was performed for {location}.";
         
         // Send response
         await session.AddItemAsync(new FunctionCallOutputItem(functionCall.CallId, weatherInfo));

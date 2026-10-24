@@ -62,6 +62,10 @@ export interface MyNodeData extends Record<string, unknown> {
 export type MyNode = Node<MyNodeData, 'my-node'>;
 ```
 
+## Template integration checks
+
+These templates require the project-specific `@/types`, `@/store`, utility aliases and CSS variables; this bundle does not supply the application/store. Replace placeholders, verify `NodeProps` against installed `@xyflow/react`, and confirm `updateNode` merges node data rather than discarding sibling fields. Give editable inputs accessible labels plus `nodrag`/`nowheel` behavior as appropriate, and test keyboard editing, resize and connection state. Editing-mode UI visibility is not a server authorization boundary.
+
 ## Integration Steps
 
 1. Add type to `src/frontend/src/types/index.ts`

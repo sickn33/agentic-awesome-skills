@@ -197,7 +197,7 @@ import json
 from pathlib import Path
 
 out = Path("handoff")
-out.mkdir(exist_ok=True)
+out.mkdir(mode=0o700, exist_ok=False)
 refs = {"cellSelection": "analysis_cell_selection", "featureSelection": "highly_variable_features",
         "graph": "connectivity_map", "selectedClusters": "clusters"}
 record = {

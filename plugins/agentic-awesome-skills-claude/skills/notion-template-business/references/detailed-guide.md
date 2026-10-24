@@ -121,10 +121,10 @@ Where to sell templates
 ### Platform Comparison
 | Platform | Fee | Pros | Cons |
 |----------|-----|------|------|
-| Gumroad | 10% | Simple, trusted | Higher fees |
-| Lemon Squeezy | 5-8% | Modern, lower fees | Newer |
-| Notion Marketplace | 0% | Built-in audience | Approval needed |
-| Your site | 3% (Stripe) | Full control | Build audience |
+| Gumroad | Verify current channel/transaction fees | Simple, trusted | Higher fees |
+| Lemon Squeezy | Verify base and supplemental fees | Modern, lower fees | Newer |
+| Notion Marketplace | Paid-checkout fee applies; verify current terms | Built-in audience | Approval needed |
+| Your site | Processor, currency and regional fees vary | Full control | Build audience |
 
 ### Gumroad Setup
 ```
@@ -222,8 +222,8 @@ Symptoms:
 
 Why this breaks:
 Digital products are easily copied.
-Notion doesn't have DRM.
-Cheap customers share.
+Marketplace access locking may restrict redistribution; it cannot prevent all copying.
+Some recipients may redistribute copies.
 Can't fully prevent.
 
 Recommended fix:
@@ -521,3 +521,5 @@ Workflow:
 ## Related Skills
 
 Works well with: `micro-saas-launcher`, `copywriting`, `landing-page-design`, `seo`
+
+Pricing, saved-time valuation, revenue outcomes and channel mixes are illustrative hypotheses, not validated benchmarks. Verify current [Notion Marketplace payment/access-locking terms](https://www.notion.com/help/selling-on-marketplace) and other provider fees before modeling margins. Scrub real workspace data, linked databases, integrations and credentials before sharing duplicate links. Publishing/listing, email campaigns and tracking IDs require their own authorization and consent/retention scope. Do not infer piracy from lower sales alone.

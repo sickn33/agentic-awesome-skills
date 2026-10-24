@@ -85,7 +85,7 @@ It can be configured with .socket and .service unit files as described in
 Socket activation can be tested ad-hoc with the `systemd-socket-activate`command
 
 ```console
-systemd-socket-activate -l 8000 -- rclone serve
+systemd-socket-activate -l 127.0.0.1:8000 -- rclone rcd
 ```
 
 This will socket-activate rclone on the first connection to port 8000 over TCP.
@@ -126,18 +126,20 @@ rendering of HTML. They can be used to render HTML based on specific conditions.
 
 ### Authentication
 
-By default this will serve files without needing a login.
+Without configured authentication, file serving can be accessible without a
+login, while sensitive RC API calls require authentication unless explicitly
+disabled. Keep the listener on localhost unless authenticated access is configured.
 
 You can either use an htpasswd file which can take lots of users, or
 set a single username and password with the `--rc-user` and `--rc-pass` flags.
 
 Alternatively, you can have the reverse proxy manage authentication and use the
-username provided in the configured header with `--user-from-header`  (e.g., `--rc-user-from-header=x-remote-user`).
+username provided in the configured header with `--rc-user-from-header`  (e.g., `--rc-user-from-header=x-remote-user`).
 Ensure the proxy is trusted and headers cannot be spoofed, as misconfiguration
 may lead to unauthorized access.
 
 If either of the above authentication methods is not configured and client
-certificates are required by the `--client-ca` flag passed to the server, the
+certificates are required by the `--rc-client-ca` flag passed to the server, the
 client certificate common name will be considered as the username.
 
 Use `--rc-htpasswd /path/to/htpasswd` to provide an htpasswd file.  This is

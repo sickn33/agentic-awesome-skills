@@ -70,7 +70,7 @@ Control how models are loaded from remote sources (default: Hugging Face Hub).
 ```javascript
 import { env } from '@huggingface/transformers';
 
-// Force local-only mode (no network requests)
+// Disable remote model loading; runtime/WASM assets must also be local for offline use
 env.allowRemoteModels = false;
 ```
 
@@ -215,9 +215,9 @@ Configure ONNX Runtime Web Assembly backend settings.
 import { env } from '@huggingface/transformers';
 
 // Set custom WASM paths
-env.backends.onnx.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
+env.backends.onnx.wasm.wasmPaths = '/static/wasm/' // Copy assets matching the installed ONNX Runtime version;
 
-// Configure number of threads (Node.js only)
+// Configure threads; browsers require SharedArrayBuffer and cross-origin isolation
 env.backends.onnx.wasm.numThreads = 4;
 
 // Enable/disable SIMD (single instruction, multiple data)
@@ -229,7 +229,7 @@ env.backends.onnx.wasm.simd = true;
 ```javascript
 import { env } from '@huggingface/transformers';
 
-// Configure proxy for WASM downloads
+// Run WASM through a Web Worker proxy; this is not an HTTP proxy
 env.backends.onnx.wasm.proxy = true;
 ```
 
@@ -242,11 +242,7 @@ import { env } from '@huggingface/transformers';
 env.backends.onnx.wasm.wasmPaths = '/static/wasm/';
 ```
 
-**Required files:**
-- `ort-wasm.wasm` - Main WASM binary
-- `ort-wasm-simd.wasm` - SIMD-enabled WASM binary
-- `ort-wasm-threaded.wasm` - Multi-threaded WASM binary
-- `ort-wasm-simd-threaded.wasm` - SIMD + multi-threaded WASM binary
+**Required files:** copy the WASM and JavaScript module assets referenced by the exact installed ONNX Runtime build. Filenames vary by release and execution provider; do not mix a floating CDN build with installed JavaScript. Test offline with network disabled after supplying models, tokenizers, runtime assets and application code locally.
 
 ## Network and Logging Controls
 
@@ -254,21 +250,16 @@ Transformers.js v4 adds environment controls for authenticated fetching and clea
 
 ### Custom Fetch (`env.fetch`)
 
-Use `env.fetch` to inject auth headers, retries, custom routing, or abort handling.
+Main/v4 builds support `env.fetch` overrides for retries, routing or abort handling. For Hub authentication, prefer the built-in server-side `HF_TOKEN` handling:
 
 ```javascript
 import { env } from '@huggingface/transformers';
 
 const HF_TOKEN = process.env.HF_TOKEN;
 
-env.fetch = (url, options) =>
-  fetch(url, {
-    ...options,
-    headers: {
-      ...options?.headers,
-      Authorization: `Bearer ${HF_TOKEN}`,
-    },
-  });
+// Server-side only: let the library scope HF_TOKEN to the Hugging Face Hub.
+// Set process.env.HF_TOKEN through your secret manager; never embed it in browser code.
+// Do not attach bearer tokens to arbitrary model/CDN/WASM URLs.
 ```
 
 ### Logging Level (`env.logLevel`)

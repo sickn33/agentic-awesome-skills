@@ -2,7 +2,7 @@
 name: terraform-infrastructure
 description: "Terraform infrastructure as code workflow for provisioning cloud resources, creating reusable modules, and managing infrastructure at scale."
 category: granular-workflow-bundle
-risk: safe
+risk: critical
 source: personal
 date_added: "2026-02-27"
 ---
@@ -146,6 +146,10 @@ Use @cicd-automation-workflow-automate to create Terraform CI/CD
 ```
 Use @secrets-management to secure Terraform secrets
 ```
+
+## Change-control checkpoint
+
+Before any apply, state migration, import or destroy, confirm the account/project, region, backend, workspace and allowed resource scope. Treat state and saved plans as sensitive artifacts; do not commit credentials, state or secret variable files. Inspect a saved plan for replacements, deletions, IAM and network exposure, then apply only the reviewed plan to the authorized environment. Stop on backend/lock errors rather than disabling locking or force-unlocking another operation. Validate modules in an isolated test environment; a successful plan does not prove deployment safety or absence of charges.
 
 ## Quality Gates
 

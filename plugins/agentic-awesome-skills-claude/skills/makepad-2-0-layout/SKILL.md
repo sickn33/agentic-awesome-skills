@@ -7,33 +7,23 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## Limitations
-
 - Verify against current Makepad 2.0 docs; upstream APIs change frequently.
 - Do not run bundled scripts without explicit user approval.
-
 ## When to Use
-- Use when this upstream workflow matches the user's stated goal.
-- Use when the task requires the procedures documented in this skill.
-
+- Build or diagnose Makepad layouts using the project's installed Splash/script DSL.
+- Investigate sizing, flow, clipping, scrolling or overlay-placement problems.
+First identify the exact Makepad revision and DSL in the project. These sketches assume the imported 2.0-style syntax and are not compiled test fixtures; do not migrate a working application wholesale to match them. See the [official Makepad repository](https://github.com/makepad/makepad) for matching widget/source examples.
 # Makepad 2.0 Layout System
-
 Makepad uses a **layout turtle** system -- not CSS flexbox, not CSS grid. The turtle walks
 through children one by one, placing each widget according to two core concepts:
-
 - **Walk** -- how a widget sizes itself (width, height, margin)
 - **Layout** -- how a container arranges its children (flow, spacing, padding, align)
-
 Every container widget (View, SolidView, RoundedView, ScrollYView, etc.) has both Walk
 properties (its own size) and Layout properties (how it lays out children).
-
 ---
-
 ## Walk System (Widget Sizing)
-
 Walk controls how an individual widget claims space inside its parent.
-
 ### width / height
 
 | Syntax | Meaning |
@@ -84,7 +74,7 @@ View{
 
 The default height is `Fill`. When your output renders inside a `Fit` container,
 `Fill` inside `Fit` creates a circular dependency and resolves to **0 pixels**.
-Your entire UI becomes invisible.
+A symptom can be zero or unexpected height; inspect the actual parent/child constraints rather than assuming every invisible widget has this cause.
 
 **Rule: ALWAYS set `height: Fit` on every View, SolidView, RoundedView, and similar
 container unless the parent has a fixed or Fill height.**
@@ -117,7 +107,7 @@ View{
 }
 ```
 2. Inside a `height: Fill` chain that ultimately reaches a known size (e.g., Window body).
-3. ScrollYView always uses `height: Fill` because it must fill its parent to scroll.
+3. A ScrollYView needs a bounded viewport. `height: Fill` inside a known-height parent is one option; an explicit fixed/constrained height is also valid.
 
 ### margin
 
@@ -319,8 +309,10 @@ prefer `walk.abs_pos` over runtime `margin` tweaks.
   that into `popup.walk.abs_pos = Some(dvec2(x, y))`.
 
 ```rust
+// Sketch: define popup_height from measured content; clamp/flip at viewport edges.
+// Verify the overlay's coordinate space and convert screen coordinates if required.
 let button_rect = button.area().clipped_rect(cx);
-let popup_pos = dvec2(button_rect.pos.x, button_rect.pos.y - 294.0);
+let popup_pos = dvec2(button_rect.pos.x, button_rect.pos.y - popup_height);
 
 if let Some(mut popup) = self.view(cx, ids!(popup)).borrow_mut() {
     popup.walk.abs_pos = Some(popup_pos);
@@ -492,6 +484,13 @@ SolidView{
     padding: Inset{left: 12 right: 12}
     align: Align{y: 0.5}
     draw_bg.color: #2a2a3d
+    ButtonFlatter{text: "File"}
+    ButtonFlatter{text: "Edit"}
+    ButtonFlatter{text: "View"}
+    Filler{}
+    ButtonFlat{text: "Run"}
+}
+```
 
 ## Extended reference
 

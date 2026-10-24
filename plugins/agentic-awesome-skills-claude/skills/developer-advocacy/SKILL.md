@@ -29,7 +29,7 @@ This skill helps you with developer advocacy activities: conference talks, live 
 - Your product's positioning (what story to tell)
 - Voice & tone (how formal/technical to be)
 
-If the context file doesn't exist, run the `developer-audience-context` skill first.
+If the context file does not exist, use the available `developer-audience-context` skill if discovered; otherwise ask only for essential audience, product and voice details. Do not claim an absent dependency ran.
 
 ---
 
@@ -49,7 +49,7 @@ If the context file doesn't exist, run the `developer-audience-context` skill fi
 
 **The winning formula:**
 ```
-Specific Problem + Unique Angle + Clear Takeaways = Accepted Talk
+Specific Problem + Unique Angle + Clear Takeaways = Stronger Proposal (acceptance is not guaranteed)
 ```
 
 **CFP Template:**
@@ -123,6 +123,8 @@ Example: "Building Real-Time Features with Edge Functions and WebSockets"
 ---
 
 ## Live Coding & Demos
+
+Use a separate demo account and synthetic data. Hide secrets, production dashboards and personal notifications before screen-sharing; verify environment variables are present without displaying their values. Keep checkpoint changes in a disposable demo checkout, preserving unrelated work. CFPs, podcast pitches, messages, posts and scheduling are drafts until the user authorizes the action and target. Use only genuine credentials and listening history in pitch templates; obtain recording consent and rights for shared clips.
 
 ### The Demo Danger Zone
 
@@ -332,8 +334,8 @@ Developer advocacy impact is notoriously hard to measure. Proxy metrics:
 
 | Signal | What It Indicates |
 |--------|-------------------|
-| **Traffic spikes** | Content/talk/podcast drove visits |
-| **"How did you hear about us?"** | Direct attribution |
+| **Traffic spikes** | Timing suggests a possible contribution; verify referral/UTM evidence and alternative causes |
+| **"How did you hear about us?"** | Self-reported attribution with recall/selection limitations |
 | **Social mentions** | Brand awareness |
 | **Inbound leads quality** | Community-qualified leads |
 | **Conference invites** | Growing reputation |

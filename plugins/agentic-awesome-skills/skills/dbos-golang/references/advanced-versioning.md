@@ -16,7 +16,7 @@ ctx, _ := dbos.NewDBOSContext(context.Background(), dbos.Config{
 	AppName:     "my-app",
 	DatabaseURL: os.Getenv("DBOS_SYSTEM_DATABASE_URL"),
 	// No version set - version auto-computed from binary hash
-	// Old workflows will be recovered with new code, which may break
+	// Automatic binary hashing distinguishes versions; old work can remain pending without matching workers
 })
 ```
 
@@ -52,7 +52,8 @@ oldWorkflows, _ := dbos.ListWorkflows(ctx,
 
 ```go
 // Fork a workflow from a failed step to run on the new version
-handle, _ := dbos.ForkWorkflowstring
+// Select a source workflow, fork step and supported target-version option from the pinned SDK.
+// Forking may repeat external effects; reconcile before execution.
 ```
 
 Reference: [Versioning](https://docs.dbos.dev/golang/tutorials/upgrading-workflows#versioning)

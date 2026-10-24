@@ -16,6 +16,8 @@ Usage:
     python score_calculator.py --target /path/to/project --verbose
 """
 
+import contextlib
+import io
 import argparse
 import json
 import os
@@ -36,6 +38,11 @@ def safe_user_path(path_value, base_dir="."):
     except ValueError as exc:
         raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
     return resolved_path
+
+def _run_scanner(scanner, **kwargs):
+    """Capture scanner chatter so the parent emits one redacted JSON document."""
+    with contextlib.redirect_stdout(io.StringIO()):
+        return scanner(**kwargs)
 
 # ---------------------------------------------------------------------------
 # Imports from the 007 config hub (same directory)
@@ -155,7 +162,7 @@ def _collect_source_files(target: Path) -> list[Path]:
     max_files = LIMITS["max_files_per_scan"]
 
     for fpath in safe_user_path(target).rglob("*"):
-        if not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
+        if fpath.is_symlink() or not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
             continue
         if len(files) >= max_files:
             return files
@@ -355,6 +362,8 @@ def _save_score_history(
 
     # Read existing history (JSON array)
     history: list[dict] = []
+    if SCORE_HISTORY_PATH.is_symlink():
+        raise ValueError("Refusing symlink score history")
     if SCORE_HISTORY_PATH.exists():
         try:
             raw = SCORE_HISTORY_PATH.read_text(encoding="utf-8")
@@ -386,7 +395,7 @@ def _bar(score: float, width: int = 20) -> str:
 def _redact_report_value(value):
     """Recursively redact sensitive values from report payloads."""
     if isinstance(value, dict):
-        return {key: _redact_report_value(value[key]) for key in value}
+        return {key: "[redacted]" if str(key).lower() in _SENSITIVE_FINDING_KEYS else _redact_report_value(item) for key, item in value.items()}
     if isinstance(value, list):
         return [_redact_report_value(item) for item in value]
     return value
@@ -562,13 +571,13 @@ def run_score(
     # 1a. Secrets scanner
     logger.info("Running secrets scanner...")
     try:
-        secrets_report = secrets_scanner.run_scan(
+        secrets_report = _run_scanner(secrets_scanner.run_scan,
             target_path=target_str,
             output_format="json",
             verbose=verbose,
         )
-    except SystemExit:
-        secrets_report = {"findings": [], "score": 50, "total_findings": 0}
+    except SystemExit as exc:
+        raise RuntimeError("Secrets scan failed; score unavailable") from exc
 
     secrets_findings = secrets_report.get("findings", [])
     scanner_summaries["secrets_scanner"] = {
@@ -579,13 +588,13 @@ def run_score(
     # 1b. Dependency scanner
     logger.info("Running dependency scanner...")
     try:
-        dep_report = dependency_scanner.run_scan(
+        dep_report = _run_scanner(dependency_scanner.run_scan,
             target_path=target_str,
             output_format="json",
             verbose=verbose,
         )
-    except SystemExit:
-        dep_report = {"findings": [], "score": 50, "total_findings": 0}
+    except SystemExit as exc:
+        raise RuntimeError("Scanner failed; score unavailable") from exc
 
     dep_findings = dep_report.get("findings", [])
     scanner_summaries["dependency_scanner"] = {
@@ -596,13 +605,13 @@ def run_score(
     # 1c. Injection scanner
     logger.info("Running injection scanner...")
     try:
-        inj_report = injection_scanner.run_scan(
+        inj_report = _run_scanner(injection_scanner.run_scan,
             target_path=target_str,
             output_format="json",
             verbose=verbose,
         )
-    except SystemExit:
-        inj_report = {"findings": [], "score": 50, "total_findings": 0}
+    except SystemExit as exc:
+        raise RuntimeError("Scanner failed; score unavailable") from exc
 
     inj_findings = inj_report.get("findings", [])
     scanner_summaries["injection_scanner"] = {
@@ -613,13 +622,13 @@ def run_score(
     # 1d. Quick scan (broad patterns)
     logger.info("Running quick scan...")
     try:
-        quick_report = quick_scan.run_scan(
+        quick_report = _run_scanner(quick_scan.run_scan,
             target_path=target_str,
             output_format="json",
             verbose=verbose,
         )
-    except SystemExit:
-        quick_report = {"findings": [], "score": 50, "total_findings": 0}
+    except SystemExit as exc:
+        raise RuntimeError("Scanner failed; score unavailable") from exc
 
     quick_findings = quick_report.get("findings", [])
     scanner_summaries["quick_scan"] = {

@@ -58,7 +58,7 @@ body {
 }
 
 .duotone-container::after {
-  /* Overlay the dark color using screen/lighten */
+  /* Approximate dark overlay; multiply/screen is not exact endpoint interpolation. */
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -108,52 +108,38 @@ struct DuotoneImage: View {
 }
 ```
 - Real-time image processing is easy in SwiftUI.
-- Convert to `.grayscale()`, boost `.contrast()`, then use `.colorMultiply()` and `.blendMode(.screen)` layers to map the two colors exactly like CSS `mix-blend-mode`.
+- Convert to `.grayscale()`, boost `.contrast()`, then use `.colorMultiply()` and `.blendMode(.screen)` layers to approximate a multiply/screen effect. This does not map exactly to arbitrary endpoint colors; use a luminance matrix when exact endpoints matter.
 
 ### Flutter
+A luminance-to-endpoints matrix avoids the incorrect assumption that a filter on a transparent sibling modifies the image beneath it. `ColorFiltered` filters only its child.
+
 ```dart
 class DuotoneImage extends StatelessWidget {
-  final Color duoDark = const Color(0xFF1E0045);
-  final Color duoLight = const Color(0xFFCCFF00);
+  const DuotoneImage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 400,
-      width: double.infinity,
-      color: duoLight,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 1. Grayscale & Contrast (using ColorFilter matrix)
-          // 2. Light Color Multiply
-          ColorFiltered(
-            colorFilter: ColorFilter.mode(duoLight, BlendMode.multiply),
-            child: ColorFiltered(
-              // Simple grayscale matrix
-              colorFilter: const ColorFilter.matrix([
-                0.2126, 0.7152, 0.0722, 0, 0,
-                0.2126, 0.7152, 0.0722, 0, 0,
-                0.2126, 0.7152, 0.0722, 0, 0,
-                0,      0,      0,      1, 0,
-              ]),
-              child: Image.asset('assets/sample_photo.jpg', fit: BoxFit.cover),
-            ),
-          ),
-          // 3. Dark Color Screen Overlay
-          ColorFiltered(
-            colorFilter: ColorFilter.mode(duoDark, BlendMode.screen),
-            child: Container(color: Colors.transparent), // Applies filter to stack below
-          ),
-        ],
-      ),
+    // Output = dark + luminance * (light - dark), RGB values in 0..255.
+    const dark = [30.0, 0.0, 69.0];
+    const light = [204.0, 255.0, 0.0];
+    const luminance = [0.2126, 0.7152, 0.0722];
+    final matrix = <double>[];
+    for (var channel = 0; channel < 3; channel++) {
+      final delta = light[channel] - dark[channel];
+      matrix.addAll([
+        for (final weight in luminance) delta * weight / 255.0,
+        0.0, dark[channel],
+      ]);
+    }
+    matrix.addAll([0.0, 0.0, 0.0, 1.0, 0.0]);
+    return ColorFiltered(
+      colorFilter: ColorFilter.matrix(matrix),
+      child: Image.asset('assets/sample_photo.jpg', fit: BoxFit.cover),
     );
   }
 }
 ```
-- Flutter requires stacking `ColorFiltered` widgets.
-- Use a `ColorFilter.matrix` to convert the image to grayscale first.
-- Apply `BlendMode.multiply` with the light color, then overlay the dark color using `BlendMode.screen`.
+The image asset must exist. This is an RGB luminance approximation; verify color-space behavior and accessibility in the target renderer.
 
 ### React Native
 ```jsx
@@ -178,10 +164,12 @@ const DuotoneImage = () => {
           {/* Note: In production, you would construct a specific 
               ColorMatrix to map the luminance to the two hex colors. */}
           <ColorMatrix
+            // Skia uses normalized channel offsets. Map black to #1E0045
+            // and white to #CCFF00 instead of using an inversion matrix.
             matrix={[
-              -1, 0, 0, 0, 255,
-              0, -1, 0, 0, 255,
-              0, 0, -1, 0, 255,
+              174/255*0.2126, 174/255*0.7152, 174/255*0.0722, 0, 30/255,
+              0.2126, 0.7152, 0.0722, 0, 0,
+              -69/255*0.2126, -69/255*0.7152, -69/255*0.0722, 0, 69/255,
               0, 0, 0, 1, 0,
             ]}
           />
@@ -241,8 +229,10 @@ fun DuotoneImage() {
 
 ## Do's and Don'ts
 - **DO**: Ensure the dark color is dark enough to be legible when used as text against the light color.
-- **DON'T**: Add a third color. It instantly ruins the aesthetic.
+- **DON'T**: Let a strict palette hide focus, errors or status; accessible state indicators take precedence.
 
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+Primary implementation reference: [Flutter ColorFiltered](https://api.flutter.dev/flutter/widgets/ColorFiltered-class.html).

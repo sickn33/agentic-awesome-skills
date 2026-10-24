@@ -9,6 +9,8 @@ import json
 import csv
 from typing import List, Dict, Tuple
 import argparse
+import sys
+import math
 
 class RICECalculator:
     """Calculate RICE scores for feature prioritization"""
@@ -46,9 +48,13 @@ class RICECalculator:
             confidence: high/medium/low (percentage)
             effort: xl/l/m/s/xs (person-months)
         """
-        impact_score = self.impact_map.get(impact.lower(), 1.0)
-        confidence_score = self.confidence_map.get(confidence.lower(), 50) / 100
-        effort_score = self.effort_map.get(effort.lower(), 5)
+        if not isinstance(reach, (int, float)) or not math.isfinite(reach) or reach < 0:
+            raise ValueError('reach must be finite and non-negative')
+        if impact.lower() not in self.impact_map or confidence.lower() not in self.confidence_map or effort.lower() not in self.effort_map:
+            raise ValueError('unknown impact/confidence/effort label')
+        impact_score = self.impact_map[impact.lower()]
+        confidence_score = self.confidence_map[confidence.lower()] / 100
+        effort_score = self.effort_map[effort.lower()]
         
         if effort_score == 0:
             return 0
@@ -133,6 +139,8 @@ class RICECalculator:
             features: Prioritized feature list
             team_capacity: Person-months available per quarter
         """
+        if team_capacity <= 0:
+            raise ValueError("team capacity must be positive")
         quarters = []
         current_quarter = {
             'quarter': 1,
@@ -144,6 +152,8 @@ class RICECalculator:
         for feature in features:
             effort = self.effort_map.get(feature.get('effort', 'm').lower(), 5)
             
+            if effort > team_capacity:
+                raise ValueError(f"Feature {feature.get('name', '')!r} exceeds quarterly capacity; split or rescope it")
             if current_quarter['capacity_used'] + effort <= team_capacity:
                 current_quarter['features'].append(feature)
                 current_quarter['capacity_used'] += effort
@@ -184,7 +194,7 @@ def format_output(features: List[Dict], analysis: Dict, roadmap: List[Dict]) -> 
     output.append("\n📈 PORTFOLIO ANALYSIS\n")
     output.append(f"Total Features: {analysis.get('total_features', 0)}")
     output.append(f"Total Effort: {analysis.get('total_effort_months', 0)} person-months")
-    output.append(f"Total Reach: {analysis.get('total_reach', 0):,} users")
+    output.append(f"Summed Reach (overlap not deduplicated): {analysis.get('total_reach', 0):,} users")
     output.append(f"Average RICE Score: {analysis.get('average_rice', 0)}")
     
     output.append(f"\n🎯 Quick Wins: {analysis.get('quick_wins', 0)} features")
@@ -207,8 +217,11 @@ def format_output(features: List[Dict], analysis: Dict, roadmap: List[Dict]) -> 
 def load_features_from_csv(filepath: str) -> List[Dict]:
     """Load features from CSV file"""
     features = []
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r', newline='', encoding='utf-8-sig') as f:
         reader = csv.DictReader(f)
+        required = {"name", "reach", "impact", "confidence", "effort"}
+        if not required <= set(reader.fieldnames or []):
+            raise ValueError("Missing required CSV columns")
         for row in reader:
             feature = {
                 'name': row.get('name', ''),
@@ -237,7 +250,7 @@ def create_sample_csv(filepath: str):
         ['Analytics Dashboard', '6000', 'high', 'medium', 'l', 'Advanced analytics for users'],
     ]
     
-    with open(filepath, 'w', newline='') as f:
+    with open(filepath, 'x', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerows(sample_features)
     
@@ -286,9 +299,17 @@ def main():
         # Output prioritized features as CSV
         if prioritized:
             keys = prioritized[0].keys()
-            print(','.join(keys))
+            writer = csv.DictWriter(sys.stdout, fieldnames=keys, lineterminator='\n')
+            writer.writeheader()
             for feature in prioritized:
-                print(','.join(str(feature.get(k, '')) for k in keys))
+                # Spreadsheet-safe export for untrusted descriptive cells.
+                row = dict(feature)
+                for key in ('name', 'description'):
+                    value = str(row.get(key, ''))
+                    if value.lstrip().startswith(('=', '+', '-', '@', '\t', '\r')):
+                        row[key] = "'" + value
+                writer.writerow(row)
+
     else:
         print(format_output(prioritized, analysis, roadmap))
 

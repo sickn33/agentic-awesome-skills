@@ -21,11 +21,11 @@ Qiskit is backend-agnostic and supports execution on simulators and real quantum
 
 ```python
 from qiskit_ibm_runtime import QiskitRuntimeService
+from getpass import getpass
 
 # First time: save credentials
 QiskitRuntimeService.save_account(
-    channel="ibm_quantum",
-    token="YOUR_IBM_QUANTUM_TOKEN"
+    token=getpass("IBM Cloud API key: ")
 )
 
 # Subsequent sessions: load credentials
@@ -44,14 +44,14 @@ for backend in backends:
 backends_127q = service.backends(min_num_qubits=127)
 
 # Get specific backend
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 backend = service.least_busy()  # Get least busy backend
 ```
 
 ### Backend Properties
 
 ```python
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Basic info
 print(f"Name: {backend.name}")
@@ -63,7 +63,7 @@ print(f"Status: {backend.status()}")
 print(backend.coupling_map)
 
 # Basis gates
-print(backend.configuration().basis_gates)
+print(backend.operation_names)
 
 # Qubit properties
 print(backend.qubit_properties(0))  # Properties of qubit 0
@@ -87,7 +87,7 @@ from qiskit import QuantumCircuit, transpile
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Create and transpile circuit
 qc = QuantumCircuit(2)
@@ -99,7 +99,7 @@ qc.measure_all()
 transpiled_qc = transpile(qc, backend=backend, optimization_level=3)
 
 # Run with Sampler
-sampler = Sampler(backend)
+sampler = Sampler(mode=backend)
 job = sampler.run([transpiled_qc], shots=1024)
 
 # Retrieve results
@@ -135,7 +135,7 @@ result = retrieved_job.result()
 ```python
 # Check queue position
 job_status = job.status()
-print(f"Queue position: {job.queue_position()}")
+print(f"Status: {job_status}")  # queue position is not a portable Runtime V2 method
 
 # Cancel job if needed
 job.cancel()
@@ -149,10 +149,10 @@ Use sessions for iterative algorithms (VQE, QAOA) to reduce queue time:
 from qiskit_ibm_runtime import Session, SamplerV2 as Sampler
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 with Session(backend=backend) as session:
-    sampler = Sampler(session=session)
+    sampler = Sampler(mode=session)
 
     # Multiple iterations in same session
     for iteration in range(10):
@@ -167,7 +167,7 @@ with Session(backend=backend) as session:
 
 Session benefits:
 - Reduced queue waiting between iterations
-- Guaranteed backend availability during session
+- Session prioritization depends on availability, limits and account entitlement
 - Better for variational algorithms
 
 ## Batch Mode
@@ -178,10 +178,10 @@ Use batch mode for independent parallel jobs:
 from qiskit_ibm_runtime import Batch, SamplerV2 as Sampler
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 with Batch(backend=backend) as batch:
-    sampler = Sampler(session=batch)
+    sampler = Sampler(mode=batch)
 
     # Submit multiple independent jobs
     jobs = []
@@ -215,12 +215,12 @@ from qiskit_ibm_runtime import SamplerV2 as Sampler
 simulator = AerSimulator()
 
 # Simulate with backend noise model
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 noisy_simulator = AerSimulator.from_backend(backend)
 
 # Run simulation
 transpiled_qc = transpile(qc, simulator)
-sampler = Sampler(simulator)
+sampler = Sampler(mode=simulator)
 job = sampler.run([transpiled_qc], shots=1024)
 result = job.result()
 ```
@@ -270,38 +270,10 @@ result = job.result()
 
 ## Error Mitigation
 
-### Measurement Error Mitigation
-
-```python
-from qiskit_ibm_runtime import SamplerV2 as Sampler, Options
-
-# Configure error mitigation
-options = Options()
-options.resilience_level = 1  # 0=none, 1=minimal, 2=moderate, 3=heavy
-
-sampler = Sampler(backend, options=options)
-job = sampler.run([qc], shots=1024)
-result = job.result()
-```
-
-### Error Mitigation Levels
-
-- **Level 0**: No mitigation
-- **Level 1**: Readout error mitigation
-- **Level 2**: Level 1 + gate error mitigation
-- **Level 3**: Level 2 + advanced techniques
-
-**Qiskit's Samplomatic package** can reduce sampling overhead by up to 100x with probabilistic error cancellation.
-
-### Zero Noise Extrapolation (ZNE)
-
-```python
-options = Options()
-options.resilience_level = 2
-options.resilience.zne_mitigation = True
-
-sampler = Sampler(backend, options=options)
-```
+Runtime V2 Sampler and Estimator have different option schemas. Do not reuse
+legacy `Options`/`resilience_level` examples across them. Select mitigation only
+after checking the installed primitive's options and budget; mitigation can add
+substantial execution cost. Test locally before hardware.
 
 ## Monitoring Usage and Costs
 
@@ -312,7 +284,7 @@ sampler = Sampler(backend, options=options)
 service = QiskitRuntimeService()
 
 # Check remaining credits
-print(service.usage())
+print(job.usage())  # completed workload usage; inspect account/instance limits separately
 ```
 
 ### Estimate Job Cost
@@ -320,10 +292,10 @@ print(service.usage())
 ```python
 from qiskit_ibm_runtime import EstimatorV2 as Estimator
 
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Estimate job cost
-estimator = Estimator(backend)
+estimator = Estimator(mode=backend)
 # Cost depends on circuit complexity and shots
 ```
 
@@ -369,7 +341,7 @@ shots_final = 10000
 backend = service.least_busy(min_num_qubits=5)
 
 # For production: Use backend matching requirements
-backend = service.backend("ibm_brisbane")  # 127 qubits
+backend = service.least_busy(operational=True, simulator=False)  # 127 qubits
 ```
 
 ### 5. Use Sessions for Variational Algorithms
@@ -383,8 +355,8 @@ import time
 
 job = sampler.run([qc], shots=1024)
 
-while job.status().name not in ['DONE', 'ERROR', 'CANCELLED']:
-    print(f"Status: {job.status().name}")
+while job.status() not in ['DONE', 'ERROR', 'CANCELLED']:
+    print(f"Status: {job.status()}")
     time.sleep(10)
 
 result = job.result()
@@ -402,9 +374,8 @@ print([b.name for b in service.backends()])
 ```python
 # Re-save credentials
 QiskitRuntimeService.save_account(
-    channel="ibm_quantum",
-    token="YOUR_TOKEN",
-    overwrite=True
+    token=getpass("IBM Cloud API key: "),
+    name="research-account"
 )
 ```
 

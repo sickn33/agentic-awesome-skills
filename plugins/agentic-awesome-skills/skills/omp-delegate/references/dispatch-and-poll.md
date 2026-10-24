@@ -39,7 +39,7 @@ node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 | `--read-only` | Restrict omp to `--tools read,grep,glob`. |
 | `--approve` | Load project-local `.omp` extensions, skills, and rules. The default passes `--no-extensions --no-skills --no-rules`. |
 | `--timeout <dur>` | Relay watchdog (default: `30m`; h/m/s strings). The relay does not forward omp's `--max-time`. |
-| `--out-dir <dir>` | Artifact directory (default: a fresh directory under the system temp dir). |
+| `--out-dir <dir>` | New nonexistent directory whose parent exists; existing directories refused (default: a fresh private temporary directory). |
 | `-h`, `--help` | Print the relay's header help. |
 
 `--session` and `--resume-last` are mutually exclusive. The child cwd pins the workspace; omp's
@@ -91,7 +91,7 @@ omp's stream carries thinking and message-update events the relay archives but d
 
 The relay blocks. Use the orchestrator's background-command facility, or background it in a
 shell and poll for `result.json`. The run is done only when the process exits and the file
-contains a `status`. The result file is written atomically, so a partial read is impossible.
+contains a `status`. The result file is replaced atomically so normal polling does not see a partial JSON document. Logs and briefs may contain sensitive content; store them privately with an appropriate retention policy.
 
 A pre-run usage error exits 2 and writes no result. A missing `omp` exits 127 and writes
 `status: "omp_unavailable"`.

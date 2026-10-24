@@ -73,12 +73,12 @@ def load_records(path: Path) -> list[dict[str, Any]]:
             if not line:
                 continue
             try:
-                records.append(json.loads(line))
-            except json.JSONDecodeError as exc:
-                print(
-                    f"warning: skipping malformed line {lineno}: {exc}",
-                    file=sys.stderr,
-                )
+                rec = json.loads(line)
+                if not isinstance(rec, dict):
+                    raise ValueError(f"line {lineno}: expected JSON object")
+                records.append(rec)
+            except (json.JSONDecodeError, ValueError) as exc:
+                raise ValueError(f"malformed input at line {lineno}: {exc}") from exc
     return records
 
 
@@ -100,7 +100,7 @@ def render_findings(findings: list[dict[str, Any]]) -> str:
     older schemas or hand-rolled fixtures.
     """
     if not findings:
-        return "## Findings\n\nNo exposure-catalog matches.\n"
+        return "## Findings\n\nNo finding records in the supplied output. Catalog availability and scan completeness must be verified separately.\n"
 
     # Sort by severity (critical first) then by package name.
     sorted_findings = sorted(
@@ -349,7 +349,7 @@ def build_report(records: list[dict[str, Any]], source_path: Path) -> str:
 
 def main(argv: list[str]) -> int:
     if len(argv) != 3:
-        print(f"usage: {safe_user_path(argv[0]).name} <input.ndjson> <output.md>", file=sys.stderr)
+        print(f"usage: {Path(argv[0]).name} <input.ndjson> <output.md>", file=sys.stderr)
         return 1
 
     input_path = safe_user_path(argv[1])
@@ -364,9 +364,13 @@ def main(argv: list[str]) -> int:
         print("error: no JSON records parsed from input", file=sys.stderr)
         return 3
 
+    if not any(r.get("record_type", r.get("type")) == "scan_summary" for r in records):
+        print("error: missing scan_summary; retain raw evidence as incomplete", file=sys.stderr)
+        return 4
     report = build_report(records, input_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(report, encoding="utf-8")
+    with output_path.open("x", encoding="utf-8") as fh:
+        fh.write(report)
     print(f"wrote {output_path} ({len(records)} records)")
     return 0
 

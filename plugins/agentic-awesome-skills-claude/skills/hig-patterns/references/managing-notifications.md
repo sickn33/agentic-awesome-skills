@@ -1,14 +1,17 @@
 ---
 title: "Managing notifications | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/managing-notifications
+---
 
 # Managing notifications
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Notifications can give people timely and important information, whether the device is locked or in use.
 
 ![A sketch of bell with a small overlapping circle, suggesting a notification sound. The image is overlaid with rectangular and circular grid lines and is tinted orange to subtly reflect the orange in the original six-color Apple logo.](https://docs-assets.developer.apple.com/published/ba0d1e169421e490842a4009ee7d09e5/patterns-managing-notifications-intro%402x.png)
 
-You need to get permission before sending any notification. The system lets people change this decision in settings, where they can also silence all notifications (except for government alerts in some locales).
+Check notification authorization and settings before requesting delivery. Supported provisional or App Clip ephemeral authorization differs from full alert authorization; none grants marketing consent. The system lets people change this decision in settings, where they can also silence all notifications (except for government alerts in some locales).
 
 ## [Integrating with Focus](https://developer.apple.com/design/human-interface-guidelines/managing-notifications#Integrating-with-Focus)
 
@@ -25,7 +28,7 @@ People identify the contacts and apps that can break through a Focus to deliver 
 
 Important
 
-Even though a Focus might delay the delivery of a notification alert, the notification itself is available as soon as it arrives.
+Focus and summaries can affect presentation; do not treat receipt or immediate availability as guaranteed, because network, APNs and device state can delay or prevent delivery.
 
 To support these behavior customizations, you first identify the types of notifications your app or game can send. If you support direct communications — like phone calls and messages — you use _communication_ notifications; for all other types of tasks, you use _noncommunication_ notifications. To support communication notifications, you adopt SiriKit intents, which means people can use Siri to customize notification behaviors; for developer guidance, see [`INSendMessageIntent`](https://developer.apple.com/documentation/Intents/INSendMessageIntent) and [`UNNotificationContentProviding`](https://developer.apple.com/documentation/UserNotifications/UNNotificationContentProviding).
 
@@ -97,3 +100,7 @@ By default, the notification settings people use for apps on their iPhone apply 
 
 [![](https://devimages-cdn.apple.com/wwdc-services/images/49/3D8237BC-06E3-4711-8552-7008A5D5BAAD/3764_wide_250x141_1x.jpg) The Push Notifications primer ](https://developer.apple.com/videos/play/wwdc2020/10095)
 
+
+## Implementation checks
+
+Time Sensitive delivery depends on user settings; Critical alerts require the entitlement and appropriate authorization. The interruption-level table describes eligible behavior, not an unconditional bypass. Never use elevated urgency to evade Focus for marketing or routine updates; provide in-app status and explicit preference controls.

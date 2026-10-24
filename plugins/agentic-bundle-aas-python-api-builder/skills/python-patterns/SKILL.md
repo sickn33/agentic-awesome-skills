@@ -55,7 +55,7 @@ What are you building?
 | Factor | FastAPI | Django | Flask |
 |--------|---------|--------|-------|
 | **Best for** | APIs, microservices | Full-stack, CMS | Simple, learning |
-| **Async** | Native | Django 5.0+ | Via extensions |
+| **Async** | ASGI support | ASGI support; check ORM/transaction constraints | Async views with async extra; WSGI constraints apply |
 | **Admin** | Manual | Built-in | Via extensions |
 | **ORM** | Choose your own | Django ORM | Choose your own |
 | **Learning curve** | Low | Medium | Low |
@@ -390,11 +390,11 @@ Include:
 # Use pytest-asyncio for async tests
 
 import pytest
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
 
 @pytest.mark.asyncio
 async def test_endpoint():
-    async with AsyncClient(app=app, base_url="http://test") as client:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get("/users")
         assert response.status_code == 200
 ```
@@ -410,6 +410,8 @@ Common fixtures:
 ```
 
 ---
+
+The ASGI test excerpt requires an application fixture and does not manage startup/shutdown automatically; use the project lifespan fixture/manager when needed. Native async views do not make blocking libraries or CPU-heavy work nonblocking. See [HTTPX ASGI transport](https://www.python-httpx.org/advanced/transports/).
 
 ## 10. Decision Checklist
 

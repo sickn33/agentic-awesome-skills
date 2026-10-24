@@ -6,89 +6,56 @@ source: community
 date_added: "2026-01-30"
 ---
 
-# Python Code Node (Beta)
+# Python Code Node (Native)
 
-Expert guidance for writing Python code in n8n Code nodes.
+## When to Use
 
----
+Use for bounded Python transformations in an n8n Code node when native nodes or
+expressions are insufficient. Check the installed n8n version and task runner first.
+
+## Runtime contract
+
+n8n 2 removed the legacy Pyodide runtime. Native Python uses `_items` in all-items
+mode and `_item` in per-item mode; legacy `_input`, `_json`, `_node` and `_now`
+helpers are unavailable. Self-hosted imports depend on installed runner packages
+and explicit allowlists. Cloud imports may be unavailable, including standard
+modules. JavaScript imports are restricted too; switching languages does not
+provide unrestricted filesystem, networking or package access.
+
+## Examples
+
+All-items mode, with no imports:
+
+```python
+return [
+    {"json": {"id": item["json"].get("id"), "processed": True},
+     "pairedItem": {"item": index}}
+    for index, item in enumerate(_items)
+    if item["json"].get("active")
+]
+```
+
+Per-item mode:
+
+```python
+return {"json": {**_item["json"], "name_upper": (_item["json"].get("name") or "").upper()}}
+```
+
+Validate actual input types before string operations. Use HTTP Request nodes with
+managed credentials for remote calls and enforce allowed destinations. Do not log
+payloads/tokens or execute code supplied by webhook users. Keep item count, input
+size and runtime bounded; prepare changes in an inactive test workflow before
+activating workflows that send messages, spend money or modify external systems.
 
 ## Detailed Guide
 
-Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
-
-## Critical Limitation: No External Libraries
-
-**MOST IMPORTANT PYTHON LIMITATION**: Cannot import external packages
-
-### What's NOT Available
-
-```python
-# ❌ NOT AVAILABLE - Will raise ModuleNotFoundError
-import requests  # ❌ No
-import pandas  # ❌ No
-import numpy  # ❌ No
-import scipy  # ❌ No
-from bs4 import BeautifulSoup  # ❌ No
-import lxml  # ❌ No
-```
-
-### What IS Available (Standard Library)
-
-```python
-# ✅ AVAILABLE - Standard library only
-import json  # ✅ JSON parsing
-import datetime  # ✅ Date/time operations
-import re  # ✅ Regular expressions
-import base64  # ✅ Base64 encoding/decoding
-import hashlib  # ✅ Hashing functions
-import urllib.parse  # ✅ URL parsing
-import math  # ✅ Math functions
-import random  # ✅ Random numbers
-import statistics  # ✅ Statistical functions
-```
-
-### Workarounds
-
-**Need HTTP requests?**
-- ✅ Use **HTTP Request node** before Code node
-- ✅ Or switch to **JavaScript** and use `$helpers.httpRequest()`
-
-**Need data analysis (pandas/numpy)?**
-- ✅ Use Python **statistics** module for basic stats
-- ✅ Or switch to **JavaScript** for most operations
-- ✅ Manual calculations with lists and dictionaries
-
-**Need web scraping (BeautifulSoup)?**
-- ✅ Use **HTTP Request node** + **HTML Extract node**
-- ✅ Or switch to **JavaScript** with regex/string methods
-
-**See**: STANDARD_LIBRARY.md for complete reference
-
----
-
-## When to Use Python vs JavaScript
-
-### Use Python When:
-- ✅ You need `statistics` module for statistical operations
-- ✅ You're significantly more comfortable with Python syntax
-- ✅ Your logic maps well to list comprehensions
-- ✅ You need specific standard library functions
-
-### Use JavaScript When:
-- ✅ You need HTTP requests ($helpers.httpRequest())
-- ✅ You need advanced date/time (DateTime/Luxon)
-- ✅ You want better n8n integration
-- ✅ **For 95% of use cases** (recommended)
-
-### Consider Other Nodes When:
-- ❌ Simple field mapping → Use **Set** node
-- ❌ Basic filtering → Use **Filter** node
-- ❌ Simple conditionals → Use **IF** or **Switch** node
-- ❌ HTTP requests only → Use **HTTP Request** node
-
----
+Read [the guide](references/detailed-guide.md) for transformation patterns and
+migration caveats. The referenced upstream auxiliary files are not bundled.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
-- Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
-- Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+No workflow or runner is included. Import availability and output normalization
+must be checked in the deployed version; item linking, binary data and aggregation
+require explicit handling. No runtime tests are established by these examples.
+
+Primary runtime reference: [n8n Code node documentation source](https://github.com/n8n-io/n8n-docs/blob/main/docs/reusable-content/.gitbook/includes/integrations/builtin/core-nodes/code-node.md).

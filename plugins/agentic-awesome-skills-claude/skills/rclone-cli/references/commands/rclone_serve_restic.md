@@ -63,11 +63,11 @@ rclone.
 For the example above you will want to use "http://localhost:8080/" as
 the URL for the REST server.
 
-For example:
+For example (enter the repository password at restic's prompt; for automation,
+use a protected password file through `RESTIC_PASSWORD_FILE`):
 
 ```console
 $ export RESTIC_REPOSITORY=rest:http://localhost:8080/
-$ export RESTIC_PASSWORD=yourpassword
 $ restic init
 created restic backend 8b1a4b56ae at rest:http://localhost:8080/
 
@@ -164,7 +164,7 @@ It can be configured with .socket and .service unit files as described in
 Socket activation can be tested ad-hoc with the `systemd-socket-activate`command
 
 ```console
-systemd-socket-activate -l 8000 -- rclone serve
+systemd-socket-activate -l 127.0.0.1:8000 -- rclone serve restic remote:backup
 ```
 
 This will socket-activate rclone on the first connection to port 8000 over TCP.

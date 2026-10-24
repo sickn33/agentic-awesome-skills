@@ -1,5 +1,7 @@
 # Tuning Validation Monitors
 
+> Modified during local review: detection-signal, evidence and apply-verification constraints clarified; upstream attribution retained.
+
 This reference covers type-specific tuning guidance for validation monitors. Read this file after
 determining the monitor type in Phase 1.5.
 
@@ -21,14 +23,14 @@ Validation incidents only report **invalid row counts** — not what the rows co
 fundamentally limits what you can recommend without troubleshooting analysis (TSA).
 
 **Without TSA:** You cannot determine _why_ rows are invalid or whether the alert condition
-itself is too broad. Only schedule changes are safe to recommend.
+itself is too broad. Schedule changes may be considered with an explicit detection-latency trade-off; none is automatically safe. Seek approved read-only sample evidence or domain-owner validation before suppressing conditions.
 
 **With TSA:** If troubleshooting analysis identifies specific values, patterns, or root causes
 for the invalid rows, you can recommend alert condition modifications.
 
 ---
 
-## Schedule tuning (always safe)
+## Schedule tuning (evaluate detection coverage)
 
 - If the monitor fires repeatedly for the same underlying issue (e.g., the same batch of invalid
   rows detected on every run) → increase the schedule interval to reduce duplicate alerts.
@@ -47,10 +49,12 @@ The alert condition is a FilterGroup tree. When tuning:
 
 ### Add exclusions
 
+Confirm whether this tree selects invalid rows or valid rows before editing: an added AND can invert intended coverage. SQL NULL comparisons use three-valued logic; preserve NULL coverage deliberately.
+
 Add SQL conditions or additional predicates to exclude known-valid edge cases that trigger
 false positives:
 
-```json
+```jsonc
 {
   "type": "GROUP",
   "operator": "AND",
@@ -58,7 +62,7 @@ false positives:
     // ... existing conditions ...
     {
       "type": "SQL",
-      "sql": "category != 'legacy_import'"
+      "sql": "(category IS NULL OR category <> 'legacy_import')"
     }
   ]
 }
@@ -90,7 +94,7 @@ existing structure and only modify what's needed.
 If TSA is absent and the monitor is noisy, say so explicitly:
 
 > This validation monitor is firing frequently, but without troubleshooting analysis I cannot
-> determine what the invalid rows contain. I can only recommend schedule changes. To enable
+> determine what the invalid rows contain. I can assess scheduling trade-offs, but cannot classify the rows as harmless. To enable
 > deeper tuning, run troubleshooting on recent incidents to identify the root cause.
 
 ---
@@ -129,4 +133,4 @@ Use `create_or_update_validation_monitor` to update the monitor in place.
 - **IMPORTANT:** Always produce the full `alert_condition` tree, not just the changed node.
   The tool replaces the entire condition tree.
 - **NEVER** recommend condition changes without TSA evidence — schedule changes are the only
-  safe lever without it.
+  available lever to assess without row-level cause evidence; it still changes detection risk.

@@ -76,7 +76,7 @@ const ListItem = React.memo(({ item }: { item: Item }) => {
 // 2. Memoize renderItem with useCallback
 const renderItem = useCallback(
   ({ item }: { item: Item }) => <ListItem item={item} />,
-  [] // Empty deps = never recreated
+  [] // Empty deps are correct only when the callback captures no changing values
 );
 
 // 3. Stable keyExtractor (NEVER use index!)
@@ -128,7 +128,7 @@ import { FlashList } from "@shopify/flash-list";
 <FlashList
   data={items}
   renderItem={renderItem}
-  estimatedItemSize={ITEM_HEIGHT}
+  // FlashList v1: estimatedItemSize={ITEM_HEIGHT}; v2 removes this prop. Check installed version.
   keyExtractor={keyExtractor}
 />
 
@@ -170,7 +170,7 @@ Animated.timing(value, {
 ### Reanimated for Complex Animations
 
 ```javascript
-// For animations native driver can't handle, use Reanimated 3
+// For animations native driver can't handle, use a compatible maintained Reanimated version
 
 import Animated, {
   useSharedValue,
@@ -189,8 +189,8 @@ const Component = () => {
 };
 
 // Benefits:
-// ├── Runs on UI thread (60fps guaranteed)
-// ├── Can animate any property
+// ├── Runs on UI thread (frame-rate improvement must be measured; no FPS guarantee)
+// ├── Can animate supported properties; version/platform limitations apply
 // ├── Gesture-driven animations
 // └── Worklets for complex logic
 ```
@@ -253,7 +253,7 @@ useEffect(() => {
 ### 🚫 The #1 AI Mistake: setState Overuse
 
 ```dart
-// ❌ WRONG: setState rebuilds ENTIRE widget tree
+// ❌ WRONG: setState schedules build for this State subtree; Flutter can reuse unchanged children
 class BadCounter extends StatefulWidget {
   @override
   State<BadCounter> createState() => _BadCounterState();
@@ -284,7 +284,7 @@ class _BadCounterState extends State<BadCounter> {
 ### The `const` Constructor Revolution
 
 ```dart
-// ✅ CORRECT: const prevents rebuilds
+// ✅ CORRECT: const can enable child reuse; inherited dependencies and framework updates can still rebuild
 
 class GoodCounter extends StatefulWidget {
   const GoodCounter({super.key}); // CONST constructor!
@@ -301,8 +301,8 @@ class _GoodCounterState extends State<GoodCounter> {
     return Column(
       children: [
         Text('Counter: $_counter'),
-        const ExpensiveWidget(), // Won't rebuild!
-        const AnotherExpensiveWidget(), // Won't rebuild!
+        const ExpensiveWidget(), // Reusable static child; inherited dependencies can still change it
+        const AnotherExpensiveWidget(), // Reusable static child; inherited dependencies can still change it
       ],
     );
   }
@@ -319,7 +319,8 @@ setState(() => _value = newValue);
 
 // ✅ ValueListenableBuilder: surgical rebuilds
 class TargetedState extends StatelessWidget {
-  final ValueNotifier<int> counter = ValueNotifier(0);
+  final ValueListenable<int> counter; // Caller owns and disposes the notifier.
+  const TargetedState({super.key, required this.counter});
   
   @override
   Widget build(BuildContext context) {
@@ -329,9 +330,9 @@ class TargetedState extends StatelessWidget {
         ValueListenableBuilder<int>(
           valueListenable: counter,
           builder: (context, value, child) => Text('$value'),
-          child: const Icon(Icons.star), // Won't rebuild!
+          child: const Icon(Icons.star), // Reusable static child; inherited dependencies can still change it
         ),
-        const ExpensiveWidget(), // Never rebuilds
+        const ExpensiveWidget(), // Static child identity may avoid parent-driven rebuild work
       ],
     );
   }
@@ -406,7 +407,7 @@ class MyWidget extends StatefulWidget {
   State<MyWidget> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MyWidgetState extends State<MyWidget> with SingleTickerProviderStateMixin {
   late final StreamSubscription _subscription;
   late final AnimationController _controller;
   late final TextEditingController _textController;
@@ -448,7 +449,7 @@ class _MyWidgetState extends State<MyWidget> {
 - [ ] Image caching with size limits
 
 ## Before Any Animation
-- [ ] Using Impeller (Flutter 3.16+)
+- [ ] Renderer verified on the actual Flutter version/platform; not guaranteed by one global version threshold
 - [ ] Avoiding Opacity widget (use FadeTransition)
 - [ ] TickerProviderStateMixin for AnimationController
 
@@ -474,7 +475,7 @@ Human eye detects:
 ├── 60 fps → "Buttery" (target)
 └── 120 fps → "Premium" (ProMotion devices)
 
-NEVER ship < 60fps animations.
+Set and measure a suitable device/workload frame budget; honor reduced motion.
 ```
 
 ### GPU vs CPU Animation
@@ -487,8 +488,8 @@ GPU-ACCELERATED (FAST):          CPU-BOUND (SLOW):
 ├── opacity                       ├── border-radius (animated)
 └── (Composited, off main)        └── box-shadow (animated)
 
-RULE: Only animate transform and opacity.
-Everything else causes layout recalculation.
+Prefer cheap supported properties; measure the actual framework/render path.
+Color, corner radius and shadows do not universally trigger layout; they can still be costly.
 ```
 
 ### Animation Timing Guide
@@ -552,7 +553,7 @@ Image memory = width × height × 4 bytes (RGBA)
 1080p image = 1920 × 1080 × 4 = 8.3 MB
 4K image = 3840 × 2160 × 4 = 33.2 MB
 
-10 4K images = 332 MB → App crash!
+10 decoded 4K RGBA images ≈ 332 MB before overhead; assess actual memory limits, not a universal crash threshold.
 
 RULE: Always resize images to display size (or 2-3x for retina).
 ```
@@ -561,7 +562,7 @@ RULE: Always resize images to display size (or 2-3x for retina).
 
 ```
 React Native:
-├── Flipper → Memory tab
+├── Current RN DevTools plus native memory profilers
 ├── Xcode Instruments (iOS)
 └── Android Studio Profiler
 
@@ -589,7 +590,7 @@ Flutter:
 ### OLED Battery Saving
 
 ```
-OLED screens: Black pixels = OFF = 0 power
+OLED screens: Black reduces emissive pixel power; display electronics still consume power
 
 Dark mode savings:
 ├── True black (#000000) → Maximum savings
@@ -597,7 +598,7 @@ Dark mode savings:
 ├── Any color → Some power
 └── White (#FFFFFF) → Maximum power
 
-RULE: On dark mode, use true black for backgrounds.
+Choose a readable tested semantic palette; true black is optional, not a universal rule.
 ```
 
 ### Background Task Guidelines
@@ -672,7 +673,7 @@ COMPRESS: Reduce payload size
 | **Frame rate** | ≥ 60fps | Performance overlay |
 | **Memory** | Stable, no growth | Profiler |
 | **Cold start** | < 2s | Manual timing |
-| **TTI (Time to Interactive)** | < 3s | Lighthouse |
+| **TTI (Time to Interactive)** | < 3s | native platform profiler (Lighthouse applies to web surfaces) |
 | **List scroll** | No jank | Manual feel |
 | **Animation smoothness** | No drops | Performance monitor |
 
@@ -758,10 +759,20 @@ void dispose() {
 ```
 Transform/Opacity only ← What to animate
 16.67ms per frame ← Time budget
-60fps minimum ← Target
+Frame budget chosen for actual device and workload ← Target
 Low-end Android ← Test device
 ```
 
 ---
 
 > **Remember:** Performance is not optimization—it's baseline quality. A slow app is a broken app. Test on the worst device your users have, not the best device you have.
+
+## Runtime qualification
+
+Use callbacks/memo only where identity or measured work matters; inline functions
+are not inherently incorrect. FlatList can infer a key from item.key/item.id, so
+absence of keyExtractor alone does not prove index keys. getItemLayout requires
+actually fixed dimensions including separators and accessibility text effects.
+removeClippedSubviews can cause missing content; benchmark before enabling it.
+Frame rate, engine defaults, native-driver property support and renderer availability
+are version/platform-specific. JS source presence cannot certify any of them.

@@ -65,7 +65,7 @@ This avoids agent-002 waiting for agent-001 to finish, saving significant time a
 
 ---
 
-## Quota Log
+## Illustrative Quota Log (not measured)
 
 | Event | Impact |
 |-------|--------|

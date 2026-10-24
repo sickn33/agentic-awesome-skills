@@ -1,5 +1,7 @@
 # longbridge-competitive-analysis
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Constructs a competitive landscape analysis for a company, covering Porter five-forces dynamics, peer financial and valuation benchmarking, moat assessment, and disruptor identification.
 
 ## Workflow
@@ -78,4 +80,4 @@ Structure the competitive analysis report:
 | `not logged in` / `unauthorized` | 请运行 `longbridge auth login`               | 請運行 `longbridge auth login` / Run `longbridge auth login`      |
 | Invalid symbol / `param_error`   | 请确认股票代码，如 NVDA.US                   | 請確認股票代碼 / Check symbol format e.g. NVDA.US                 |
 | Peer data partially unavailable  | 展示可用数据并标注缺失字段                   | 展示可用資料並標注缺失 / Show available data, flag missing fields |
-| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface verbatim, no silent retry              |
+| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface a redacted error summary, no silent retry              |

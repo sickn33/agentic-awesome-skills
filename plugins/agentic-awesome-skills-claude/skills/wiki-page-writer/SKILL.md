@@ -42,7 +42,7 @@ description: "One-line description"
 ```
 
 ### Mermaid Diagrams
-- **Minimum 2 per page**
+- Include diagrams only when they clarify the actual component; no minimum count
 - Use `autonumber` in all `sequenceDiagram` blocks
 - Choose appropriate types: `graph`, `sequenceDiagram`, `classDiagram`, `stateDiagram-v2`, `erDiagram`, `flowchart`
 - **Dark-mode colors (MANDATORY)**: node fills `#2d333b`, borders `#6d5dfc`, text `#e6edf3`
@@ -52,7 +52,7 @@ description: "One-line description"
 
 ### Citations
 - Every non-trivial claim needs `(file_path:line_number)`
-- Minimum 5 different source files cited per page
+- Cite the actual relevant files; small components may have fewer than five. Never invent references to meet a quota
 - If evidence is missing: `(Unknown – verify in path/to/check)`
 
 ### Structure

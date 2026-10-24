@@ -119,7 +119,7 @@ class JucisrsScraper(AbstractJuntaScraper):
                 "nome": nome,
                 "matricula": matricula,
                 "situacao": situacao,
-                "municipio": "Porto Alegre",
+                "municipio": None,
                 "data_registro": None,
                 "telefone": None,
                 "email": None,
@@ -178,7 +178,8 @@ class JucisrsScraper(AbstractJuntaScraper):
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
                 verify=should_verify_tls(),
-                follow_redirects=True,
+                follow_redirects=False,
+                event_hooks=self.request_hooks(),
                 timeout=60.0,
             ) as client:
                 # GET primeiro para obter cookies/CSRF se necessario
@@ -224,7 +225,8 @@ class JucisrsScraper(AbstractJuntaScraper):
             async with httpx.AsyncClient(
                 headers=self.HEADERS,
                 verify=should_verify_tls(),
-                follow_redirects=True,
+                follow_redirects=False,
+                event_hooks=self.request_hooks(),
                 timeout=30.0,
             ) as client:
                 resp = await client.get(self.url)
@@ -244,17 +246,12 @@ class JucisrsScraper(AbstractJuntaScraper):
             async with async_playwright() as pw:
                 browser = await pw.chromium.launch(
                     headless=True,
-                    args=[
-                        "--ignore-certificate-errors",
-                        "--ignore-ssl-errors",
-                        "--disable-web-security",
-                        "--allow-insecure-localhost",
-                    ],
                 )
                 ctx = await browser.new_context(
                     user_agent=self.HEADERS["User-Agent"],
                     ignore_https_errors=not should_verify_tls(),
                 )
+                await ctx.route("**/*", self.browser_route)
                 page = await ctx.new_page()
                 try:
                     await page.goto(url, timeout=60000, wait_until="networkidle")
@@ -271,7 +268,7 @@ class JucisrsScraper(AbstractJuntaScraper):
                 await browser.close()
                 return self._parse_plain_html(html)
         except Exception as exc:
-            logger.error("[RS] Playwright SSL bypass falhou: %s", exc)
+            logger.error("[RS] Playwright com TLS verificado falhou: %s", exc)
             return []
 
     async def parse_leiloeiros(self) -> List[Leiloeiro]:
@@ -284,8 +281,8 @@ class JucisrsScraper(AbstractJuntaScraper):
             records = await self._fetch_get_all()
 
         if not records:
-            # Estrategia 3: Playwright com SSL bypass e submissao de formulario
-            logger.info("[RS] GET falhou, tentando Playwright com SSL bypass")
+            # Estrategia 3: Playwright com TLS verificado e submissao de formulario
+            logger.info("[RS] GET falhou, tentando Playwright com TLS verificado")
             records = await self._playwright_ssl_bypass(self.url)
 
         if not records:

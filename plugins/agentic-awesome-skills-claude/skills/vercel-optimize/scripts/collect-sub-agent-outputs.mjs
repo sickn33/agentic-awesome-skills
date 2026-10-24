@@ -67,7 +67,7 @@ async function main() {
   }
 
   let ordered = collected;
-  if (expected.length > 0) {
+  if (manifest) {
     const byRef = new Map();
     for (const item of collected) {
       const ref = item.record.candidateRef;

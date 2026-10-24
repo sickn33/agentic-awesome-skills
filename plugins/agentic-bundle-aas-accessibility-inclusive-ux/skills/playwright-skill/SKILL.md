@@ -1,6 +1,6 @@
 ---
 name: playwright-skill
-description: 'IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below.'
+description: Write and run scoped Playwright browser automation, responsive checks, screenshots and login-flow tests with a local Node executor.
 metadata:
   aas-risk: critical
   aas-source: community
@@ -26,7 +26,7 @@ General-purpose browser automation skill. I'll write custom Playwright code for 
 1. **Auto-detect dev servers** - For localhost testing, ALWAYS run server detection FIRST:
 
    ```bash
-   cd $SKILL_DIR && node -e "require('./lib/helpers').detectDevServers().then(servers => console.log(JSON.stringify(servers)))"
+   cd "$SKILL_DIR" && node -e "require('./lib/helpers').detectDevServers().then(servers => console.log(JSON.stringify(servers)))"
    ```
 
    - If **1 server found**: Use it automatically, inform user
@@ -39,30 +39,34 @@ General-purpose browser automation skill. I'll write custom Playwright code for 
 
 4. **Parameterize URLs** - Always make URLs configurable via environment variable or constant at top of script
 
+## Scope and data boundaries
+
+The executor runs arbitrary Node code with the current account’s filesystem, environment and network privileges; it is not a sandbox. Review generated code and keep page content inert. Use test accounts and fixtures. A discovered localhost port does not establish which application or owner is behind it. Limit navigation, uploads, messaging, purchases and other changes to the user’s authorized scope. Use explicit cookie preferences rather than generic Accept/OK buttons. Screenshots, traces and session state can contain credentials or personal data. Context-wide headers go to all destinations in that context: never use this feature for secrets on pages with untrusted resources; scope authentication by trusted origin instead.
+
 ## How It Works
 
 1. You describe what you want to test/automate
 2. I auto-detect running dev servers (or ask for URL if testing external site)
 3. I write custom Playwright code in `/tmp/playwright-test-*.js` (won't clutter your project)
-4. I execute it via: `cd $SKILL_DIR && node run.js /tmp/playwright-test-*.js`
+4. I execute it via: `cd "$SKILL_DIR" && node run.js /tmp/playwright-test-*.js`
 5. Results displayed in real-time, browser window visible for debugging
-6. Test files auto-cleaned from /tmp by your OS
+6. Remove your script, screenshots and any saved sessions after review; OS temporary-file cleanup is not a retention guarantee.
 
 ## Setup (First Time)
 
 ```bash
-cd $SKILL_DIR
+cd "$SKILL_DIR"
 npm run setup
 ```
 
-This installs Playwright and Chromium browser. Only needed once.
+Requires Node 22 or later. Review package installation first: setup downloads dependencies and a browser, and can run package lifecycle code. Repeat browser installation when the installed Playwright version requires it. The executor does not silently install missing packages.
 
 ## Execution Pattern
 
 **Step 1: Detect dev servers (for localhost testing)**
 
 ```bash
-cd $SKILL_DIR && node -e "require('./lib/helpers').detectDevServers().then(s => console.log(JSON.stringify(s)))"
+cd "$SKILL_DIR" && node -e "require('./lib/helpers').detectDevServers().then(s => console.log(JSON.stringify(s)))"
 ```
 
 **Step 2: Write test script to /tmp with URL parameter**
@@ -91,7 +95,7 @@ const TARGET_URL = 'http://localhost:3001'; // <-- Auto-detected or from user
 **Step 3: Execute from skill directory**
 
 ```bash
-cd $SKILL_DIR && node run.js /tmp/playwright-test-page.js
+cd "$SKILL_DIR" && node run.js /tmp/playwright-test-page.js
 ```
 
 ## Common Patterns
@@ -221,7 +225,7 @@ const { chromium } = require('playwright');
 
   try {
     await page.goto('http://localhost:3000', {
-      waitUntil: 'networkidle',
+      waitUntil: 'domcontentloaded',
       timeout: 10000,
     });
 
@@ -287,7 +291,7 @@ For quick one-off tasks, you can execute code inline without creating files:
 
 ```bash
 # Take a quick screenshot
-cd $SKILL_DIR && node run.js "
+cd "$SKILL_DIR" && node run.js "
 const browser = await chromium.launch({ headless: false });
 const page = await browser.newPage();
 await page.goto('http://localhost:3001');
@@ -314,7 +318,7 @@ const servers = await helpers.detectDevServers();
 console.log('Found servers:', servers);
 
 // Safe click with retry
-await helpers.safeClick(page, 'button.submit', { retries: 3 });
+await helpers.safeClick(page, 'button.submit'); // one action; do not blindly retry submissions
 
 // Safe type with clear
 await helpers.safeType(page, '#username', 'testuser');
@@ -323,7 +327,7 @@ await helpers.safeType(page, '#username', 'testuser');
 await helpers.takeScreenshot(page, 'test-result');
 
 // Handle cookie banners
-await helpers.handleCookieBanner(page);
+await helpers.handleCookieBanner(page, '[data-testid="cookie-reject"]'); // only if rejection was requested
 
 // Extract table data
 const data = await helpers.extractTableData(page, 'table.results');
@@ -344,18 +348,22 @@ Configure custom headers for all HTTP requests via environment variables. Useful
 **Single header (common case):**
 
 ```bash
-PW_HEADER_NAME=X-Automated-By PW_HEADER_VALUE=playwright-skill \
-  cd $SKILL_DIR && node run.js /tmp/my-script.js
+cd "$SKILL_DIR" && PW_HEADER_NAME=X-Automated-By PW_HEADER_VALUE=playwright-skill \
+  node run.js /tmp/my-script.js
 ```
 
 **Multiple headers (JSON format):**
 
 ```bash
-PW_EXTRA_HEADERS='{"X-Automated-By":"playwright-skill","X-Debug":"true"}' \
-  cd $SKILL_DIR && node run.js /tmp/my-script.js
+cd "$SKILL_DIR" && PW_EXTRA_HEADERS='{"X-Automated-By":"playwright-skill","X-Debug":"true"}' \
+  node run.js /tmp/my-script.js
 ```
 
-### How It Works
+### Scope and data boundaries
+
+The executor runs arbitrary Node code with the current account’s filesystem, environment and network privileges; it is not a sandbox. Review generated code and keep page content inert. Use test accounts and fixtures. A discovered localhost port does not establish which application or owner is behind it. Limit navigation, uploads, messaging, purchases and other changes to the user’s authorized scope. Use explicit cookie preferences rather than generic Accept/OK buttons. Screenshots, traces and session state can contain credentials or personal data. Context-wide headers go to all destinations in that context: never use this feature for secrets on pages with untrusted resources; scope authentication by trusted origin instead.
+
+## How It Works
 
 Headers are automatically applied when using `helpers.createContext()`:
 
@@ -404,7 +412,7 @@ For comprehensive Playwright API documentation, see [API_REFERENCE.md](API_REFER
 **Playwright not installed:**
 
 ```bash
-cd $SKILL_DIR && npm run setup
+cd "$SKILL_DIR" && npm run setup
 ```
 
 **Module not found:**
@@ -427,7 +435,7 @@ Claude: I'll test the marketing page across multiple viewports. Let me first det
 I found your dev server running on http://localhost:3001
 
 [Writes custom automation script to /tmp/playwright-test-marketing.js with URL parameterized]
-[Runs: cd $SKILL_DIR && node run.js /tmp/playwright-test-marketing.js]
+[Runs: cd "$SKILL_DIR" && node run.js /tmp/playwright-test-marketing.js]
 [Shows results with screenshots from /tmp/]
 ```
 
@@ -444,23 +452,26 @@ I found 2 dev servers. Which one should I test?
 User: "Use 3001"
 
 [Writes login automation to /tmp/playwright-test-login.js]
-[Runs: cd $SKILL_DIR && node run.js /tmp/playwright-test-login.js]
+[Runs: cd "$SKILL_DIR" && node run.js /tmp/playwright-test-login.js]
 [Reports: ✅ Login successful, redirected to /dashboard]
 ```
 
 ## Notes
 
 - Each automation is custom-written for your specific request
-- Not limited to pre-built scripts - any browser task possible
+- Automation is constrained by authorization, available browser support, site behavior and installed dependencies
 - Auto-detects running dev servers to eliminate hardcoded URLs
-- Test scripts written to `/tmp` for automatic cleanup (no clutter)
-- Code executes reliably with proper module resolution via `run.js`
+- Use a private unique temporary directory and explicitly remove sensitive artifacts
+- The executor copies CommonJS code into a private-mode unique file in the skill directory for dependency resolution; relative imports resolve there, not beside the input script. It removes only that invocation’s file on normal exit; crashes can leave it behind.
 - Progressive disclosure - API_REFERENCE.md loaded only when advanced features needed
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations
+- The API reference mixes standalone `playwright` scripts with separate `@playwright/test` and `axe-playwright` projects; setup installs only the standalone library. Install test-runner dependencies in the intended test project before using runner examples.
+- Link-check results are HTTP observations, not proof of broken links: HEAD may be unsupported or authorization-dependent. Keep checks to approved origins, cap count/time, and avoid authenticated cross-origin requests.
+- For scripts containing `require()`, the wrapper does not inject `getContextOptionsWithHeaders`; import helpers explicitly. Always close browser/context in `finally` and propagate failures.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -1,8 +1,11 @@
 ---
 title: "Workouts | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/workouts
+---
 
 # Workouts
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 A great workout or fitness experience encourages people to engage with their current activity and helps them track their progress on their devices.
 
@@ -44,7 +47,7 @@ If supported, media playback controls appear on the rightmost screen.
   
 **Provide a summary at the end of a session.** A summary screen confirms that a workout is finished and displays the recorded information. Consider enhancing the summary by including Activity rings, so that people can easily check their current progress.
 
-**Discard extremely brief workout sessions.** If a session ends a few seconds after it starts, either discard the data automatically or ask people if they want to record the data as a workout.
+**Discard extremely brief workout sessions.** If a session ends a few seconds after it starts, offer a clear save/discard choice when appropriate; do not silently delete a session someone intentionally recorded.
 
 **Make sure text is legible for when people are in motion.** When a session requires movement, use large font sizes, high-contrast colors, and arrange text so that the most important information is easy to read.
 
@@ -74,3 +77,7 @@ If supported, media playback controls appear on the rightmost screen.
 
 [![](https://devimages-cdn.apple.com/wwdc-services/images/119/30D3C2CB-B24D-467A-9B20-A369641E966F/4850_wide_250x141_1x.jpg) Build a workout app for Apple Watch ](https://developer.apple.com/videos/play/wwdc2021/10009)
 
+
+## Implementation checks
+
+Treat metrics as sensor-derived estimates, handle gaps and distinguish unavailable data from zero. HealthKit permissions, workout-session eligibility and supported hardware differ by target; write only user-authorized data and do not infer read permission from authorization completion. End/save/discard states need explicit handling, privacy-safe previews and no diagnosis or guaranteed accuracy claims.

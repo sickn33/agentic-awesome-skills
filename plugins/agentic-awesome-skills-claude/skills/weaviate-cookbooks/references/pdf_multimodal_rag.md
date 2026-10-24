@@ -150,7 +150,7 @@ collection = client.collections.create(
     ],
     vector_config=[
         Configure.MultiVectors.multi2vec_weaviate(
-            name="doc_vector"
+            name="doc_vector",
             image_field="doc_page",
             model="ModernVBERT/colmodernvbert",
             encoding=Configure.VectorIndex.MultiVector.Encoding.muvera(
@@ -202,7 +202,7 @@ def image_to_base64(image):
         Base64-encoded string of the JPEG image
     """
     buffer = BytesIO()
-    image.save(buffer, format="JPEG")
+    image.convert("RGB").save(buffer, format="JPEG")
     return base64.b64encode(buffer.getvalue()).decode("utf-8")
 ```
 
@@ -237,7 +237,7 @@ with collection.batch.dynamic() as batch:
 # Clean up dataset if memory is limited
 del your_document_dataset
 
-print(f"Total documents indexed: {len(collection)}")
+print(f"Total documents indexed: {collection.aggregate.over_all(total_count=True).total_count}")
 ```
 
 **Performance Tips:**
@@ -314,20 +314,20 @@ BLOB properties like `doc_page` are not returned by default when used as the `im
 Add filters to narrow search scope by document properties:
 
 ```python
-import weaviate.classes.config as wc
+from weaviate.classes.query import Filter
 
 # Example: Filter by document ID
 response = collection.query.near_text(
     query="query text",
     limit=5,
-    filters=wc.Filter.by_property("document_id").equal("paper_123"),
+    filters=Filter.by_property("document_id").equal("paper_123"),
 )
 
 # Example: Filter by page range
 response = collection.query.near_text(
     query="query text",
     limit=5,
-    filters=wc.Filter.by_property("page_number").less_than(10),
+    filters=Filter.by_property("page_number").less_than(10),
 )
 
 # Example: Combine multiple filters
@@ -639,3 +639,5 @@ The implementation is complete when:
 - **Scale the dataset** by processing larger document collections with batch chunking and memory management
 - **Swap in API-based VLMs** (GPT, Claude, Gemini) or other Ollama vision models (`gemma3`, `llava`) as alternatives
 - **Evaluate retrieval quality** by testing queries against known-relevant documents and tuning MUVERA parameters
+
+Check batch failed_objects/number_errors before reporting successful ingestion. Supply consistent page_id values (the dataset-shape excerpt omits this field). Hybrid keyword search over image-only blobs will not search document text: ingest OCR text and configure its indexing first. Ollama pulls model weights and still requires adequate memory; cloud embeddings upload page content to the provider. Set PDF page/pixel/file limits, validate MIME and sandbox conversion for untrusted files. Always close clients in finally blocks.

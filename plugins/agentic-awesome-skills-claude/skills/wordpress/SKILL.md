@@ -1,8 +1,8 @@
 ---
 name: wordpress
-description: "Complete WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardening. Includes WordPress 7.0 features: Real-Time Collaboration, AI Connectors, Abilities API, DataViews, and PHP-only blocks."
+description: "WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardening. Includes WordPress 7.0 features: Real-Time Collaboration, AI Connectors, Abilities API, DataViews, and PHP-only blocks."
 category: workflow-bundle
-risk: safe
+risk: critical
 source: personal
 date_added: "2026-02-27"
 ---
@@ -23,6 +23,12 @@ Use this workflow when:
 - Optimizing WordPress performance
 - Hardening WordPress security
 - Implementing WordPress 7.0 features (RTC, AI, DataViews)
+
+## Example
+
+```text
+Build a staging-only book catalog plugin for our selected WordPress release. Use per-post capability checks for private content, test REST access with authorized and unauthorized accounts, and keep AI calls opt-in with an approved provider budget.
+```
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

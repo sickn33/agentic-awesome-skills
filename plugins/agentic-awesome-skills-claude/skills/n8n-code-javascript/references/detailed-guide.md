@@ -22,11 +22,11 @@ return processed;
 
 ### Essential Rules
 
-1. **Choose "Run Once for All Items" mode** (recommended for most use cases)
+1. Choose All Items for aggregation or Each Item for independent item transformations; mode changes return shape.
 2. **Access data**: `$input.all()`, `$input.first()`, or `$input.item`
-3. **CRITICAL**: Must return `[{json: {...}}]` format
-4. **CRITICAL**: Webhook data is under `$json.body` (not `$json` directly)
-5. **Built-ins available**: $helpers.httpRequest(), DateTime (Luxon), $jmespath()
+3. All Items returns an array of items; Each Item returns one item object.
+4. Inspect the actual source shape: Webhook body, query, params and headers are distinct.
+5. Verify built-ins in the installed n8n version. Use the HTTP Request node for network access and managed credentials, not an assumed $helpers.httpRequest Code API.
 
 ---
 
@@ -37,23 +37,26 @@ The Code node offers two execution modes. Choose based on your use case:
 
 ### Run Once for All Items (Recommended - Default)
 
-**Use this mode for:** 95% of use cases
+**Use this mode for:** cross-item transformations
 
 - **How it works**: Code executes **once** regardless of input count
-- **Data access**: `$input.all()` or `items` array
+- **Data access**: declare `const items = $input.all()`; do not assume an implicit items variable
 - **Best for**: Aggregation, filtering, batch processing, transformations, API calls with all data
 - **Performance**: Faster for multiple items (single execution)
 
 ```javascript
 // Example: Calculate total from all items
 const allItems = $input.all();
-const total = allItems.reduce((sum, item) => sum + (item.json.amount || 0), 0);
+const total = allItems.reduce((sum, item) => {
+  if (typeof item.json.amount !== "number" || !Number.isFinite(item.json.amount)) throw new Error("Expected finite amount");
+  return sum + item.json.amount;
+}, 0);
 
 return [{
   json: {
     total,
     count: allItems.length,
-    average: total / allItems.length
+    average: allItems.length ? total / allItems.length : null
   }
 }];
 ```
@@ -71,7 +74,7 @@ return [{
 **Use this mode for:** Specialized cases only
 
 - **How it works**: Code executes **separately** for each input item
-- **Data access**: `$input.item` or `$item`
+- **Data access**: `$input.item` for the current item
 - **Best for**: Item-specific logic, independent operations, per-item validation
 - **Performance**: Slower for large datasets (multiple executions)
 
@@ -79,13 +82,9 @@ return [{
 // Example: Add processing timestamp to each item
 const item = $input.item;
 
-return [{
-  json: {
-    ...item.json,
-    processed: true,
-    processedAt: new Date().toISOString()
-  }
-}];
+return {
+  json: { ...item.json, processed: true, processedAt: new Date().toISOString() }
+};
 ```
 
 **When to use:**
@@ -149,12 +148,7 @@ return [{
 // Current item in loop (Each Item mode only)
 const currentItem = $input.item;
 
-return [{
-  json: {
-    ...currentItem.json,
-    itemProcessed: true
-  }
-}];
+return { json: { ...currentItem.json, itemProcessed: true } };
 ```
 
 ### Pattern 4: $node - Reference Other Nodes
@@ -176,7 +170,7 @@ return [{
 }];
 ```
 
-**See**: DATA_ACCESS.md for comprehensive guide
+**External reference (not bundled)**: DATA_ACCESS.md for comprehensive guide
 
 ---
 
@@ -199,16 +193,16 @@ const webhookData = $input.first().json.body;
 const name = webhookData.name;
 ```
 
-**Why**: Webhook node wraps all request data under `body` property. This includes POST data, query parameters, and JSON payloads.
+**Why**: The normal Webhook item separates body, query, params and headers. POST JSON is typically in body; query parameters are in query. Prior nodes and raw/binary options can change this shape.
 
-**See**: DATA_ACCESS.md for full webhook structure details
+**External reference (not bundled)**: DATA_ACCESS.md for full webhook structure details
 
 ---
 
 
 ## Return Format Requirements
 
-**CRITICAL RULE**: Always return array of objects with `json` property
+All following multi-result examples use All Items mode. Each Item mode returns one `{json: {...}}` object. n8n may auto-wrap some values, but explicit mode-appropriate items are clearest.
 
 ### Correct Return Formats
 
@@ -252,7 +246,7 @@ if (shouldProcess) {
 ### Incorrect Return Formats
 
 ```javascript
-// ❌ WRONG: Object without array wrapper
+// Each Item mode: valid object; All Items examples use an array.
 return {
   json: {field: value}
 };
@@ -263,8 +257,8 @@ return [{field: value}];
 // ❌ WRONG: Plain string
 return "processed";
 
-// ❌ WRONG: Raw data without mapping
-return $input.all();  // Missing .map()
+// Valid pass-through in All Items mode; mapping is not required.
+return $input.all();
 
 // ❌ WRONG: Incomplete structure
 return [{data: value}];  // Should be {json: value}
@@ -272,7 +266,7 @@ return [{data: value}];  // Should be {json: value}
 
 **Why it matters**: Next nodes expect array format. Incorrect format causes workflow execution to fail.
 
-**See**: ERROR_PATTERNS.md #3 for detailed error solutions
+**External reference (not bundled)**: ERROR_PATTERNS.md #3 for detailed error solutions
 
 ---
 
@@ -312,7 +306,7 @@ const pattern = /\b([A-Z]{2,5})\b/g;
 const matches = {};
 
 for (const item of $input.all()) {
-  const text = item.json.text;
+  const text = typeof item.json.text === "string" ? item.json.text : "";
   const found = text.match(pattern);
 
   if (found) {
@@ -333,7 +327,7 @@ const items = $input.all();
 
 return items.map(item => {
   const data = item.json;
-  const nameParts = data.name.split(' ');
+  const nameParts = typeof data.name === 'string' ? data.name.trim().split(/\s+/) : []; // Parsing names is locale-dependent
 
   return {
     json: {
@@ -364,19 +358,22 @@ Sum, count, group data
 
 ```javascript
 const items = $input.all();
-const total = items.reduce((sum, item) => sum + (item.json.amount || 0), 0);
+const total = items.reduce((sum, item) => {
+  if (typeof item.json.amount !== "number" || !Number.isFinite(item.json.amount)) throw new Error("Expected finite amount");
+  return sum + item.json.amount;
+}, 0);
 
 return [{
   json: {
     total,
     count: items.length,
-    average: total / items.length,
+    average: items.length ? total / items.length : null,
     timestamp: new Date().toISOString()
   }
 }];
 ```
 
-**See**: COMMON_PATTERNS.md for 10 detailed production patterns
+**External reference (not bundled)**: COMMON_PATTERNS.md for 10 detailed production patterns
 
 ---
 
@@ -413,10 +410,10 @@ const value = $input.first().json.field;
 ### #3: Incorrect Return Wrapper
 
 ```javascript
-// ❌ WRONG: Returning object instead of array
+// Valid in Each Item mode; use the next array form for All Items.
 return {json: {result: 'success'}};
 
-// ✅ CORRECT: Array wrapper required
+// All Items array form
 return [{json: {result: 'success'}}];
 ```
 
@@ -446,29 +443,16 @@ const email = $json.email;
 const email = $json.body.email;
 ```
 
-**See**: ERROR_PATTERNS.md for comprehensive error guide
+**External reference (not bundled)**: ERROR_PATTERNS.md for comprehensive error guide
 
 ---
 
 
 ## Built-in Functions & Helpers
 
-### $helpers.httpRequest()
+### HTTP Requests
 
-Make HTTP requests from within code:
-
-```javascript
-const response = await $helpers.httpRequest({
-  method: 'GET',
-  url: 'https://api.example.com/data',
-  headers: {
-    'Authorization': 'Bearer token',
-    'Content-Type': 'application/json'
-  }
-});
-
-return [{json: {data: response}}];
-```
+Use the HTTP Request node for network operations and n8n credential management. The $helpers.httpRequest snippets previously shown here are not a verified Code-node API. Node-development helpers are a different context. Avoid embedding tokens in Code text or exported workflows, and never fetch arbitrary input URLs without destination/scheme/private-network policy and bounded timeout/response size.
 
 ### DateTime (Luxon)
 
@@ -510,7 +494,7 @@ const names = $jmespath(data, 'users[*].name');
 return [{json: {adults, names}}];
 ```
 
-**See**: BUILTIN_FUNCTIONS.md for complete reference
+**External reference (not bundled)**: BUILTIN_FUNCTIONS.md for complete reference
 
 ---
 
@@ -535,24 +519,9 @@ if (!items[0].json) {
 // Continue processing...
 ```
 
-### 2. Use Try-Catch for Error Handling
+### 2. Error Handling
 
-```javascript
-try {
-  const response = await $helpers.httpRequest({
-    url: 'https://api.example.com/data'
-  });
-
-  return [{json: {success: true, data: response}}];
-} catch (error) {
-  return [{
-    json: {
-      success: false,
-      error: error.message
-    }
-  }];
-}
-```
+Validate expected fields and throw a descriptive, secret-free error when failure must fail the workflow. Returning {success:false} is ordinary data, not an n8n execution error; route such items explicitly if that is the intended contract. Use the workflow’s configured error behavior for retries and failures; mutation retries need idempotency.
 
 ### 3. Prefer Array Methods Over Loops
 
@@ -562,7 +531,7 @@ const processed = $input.all()
   .filter(item => item.json.valid)
   .map(item => ({json: {id: item.json.id}}));
 
-// ❌ SLOWER: Manual loop
+// Equally valid imperative option; measure before claiming a speed difference
 const processed = [];
 for (const item of $input.all()) {
   if (item.json.valid) {
@@ -605,15 +574,17 @@ const items = $input.all();
 console.log(`Processing ${items.length} items`);
 
 for (const item of items) {
-  console.log('Item data:', item.json);
+  console.log('Processing item'); // Do not log secrets or complete personal-data payloads
   // Process...
 }
 
-return result;
+return items;
 ```
 
 ---
 
+
+When output items reorder, filter or combine inputs and downstream nodes use item linking, preserve/assign pairedItem to the correct original input indices. Copy binary data deliberately; rebuilding only json drops binary attachments. Test empty/multiple/malformed inputs, selected mode and downstream linking in a disabled/test workflow before activation. MCP tool names below are examples from another integration and must be discovered before calls; no validator executes arbitrary JavaScript merely by checking node configuration.
 
 ## Integration with Other Skills
 
@@ -667,7 +638,9 @@ Before deploying Code nodes, verify:
 
 ## Additional Resources
 
-### Related Files
+### External Reference Names
+
+The following named documents are not bundled in this tree; do not claim they were loaded. Use this guide or current official docs.
 - DATA_ACCESS.md - Comprehensive data access patterns
 - COMMON_PATTERNS.md - 10 production-tested patterns
 - ERROR_PATTERNS.md - Top 5 errors and solutions

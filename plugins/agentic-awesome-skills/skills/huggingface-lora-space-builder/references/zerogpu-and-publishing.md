@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # ZeroGPU and publishing
 
 ZeroGPU is the default hardware target. It's a shared serverless GPU pool: GPU is allocated on each request, held for the duration of a `@spaces.GPU` function call, and released. The key implications for the demo's code shape:
@@ -36,7 +38,7 @@ Typical durations:
 - Short video (3-5 seconds): 120-180 seconds.
 - Long video / multi-stage: 180-300 seconds.
 
-**Don't use `torch.compile`.** It's incompatible with ZeroGPU's process model (the GPU process forks per call). The decorator is a no-op outside ZeroGPU, so `pipe(...)` runs uncompiled in both environments.
+**Don't use `torch.compile`.** It's incompatible with ZeroGPU's process model (the GPU process forks per call). The decorator does not itself compile or remove compilation; outside ZeroGPU it is effect-free.
 
 **Validate inputs at the top of the GPU function.** Raising `gr.Error(...)` inside a `@spaces.GPU` function still consumes some GPU quota for the allocation. Validate before doing real work, or move validation into a non-decorated function called by the UI.
 
@@ -44,7 +46,7 @@ Typical durations:
 
 **Don't initialize CUDA from outside the controlled paths.** `pipe.to("cuda")` is fine (CUDA emulation handles it). Calling `torch.cuda.something()` directly at module level can break the process model — when in doubt, do it inside the GPU function or skip it.
 
-**ZeroGPU requires PRO/Team/Enterprise.** A free-tier user can create a Space with `hardware: zero-a10g` in the README, but it'll fall back to CPU. If the user isn't on a supporting plan, mention this and point them at two paths: upgrade to PRO (unlocks ZeroGPU directly), or apply for a [community GPU grant](https://huggingface.co/docs/hub/spaces-gpus#community-gpu-grants) (request free paid GPU hardware via the Space's hardware settings, subject to approval).
+**Check current hosting eligibility.** Qualifying free personal accounts can host a limited number of ZeroGPU Spaces. Paid tiers have different limits; inspect current official docs and actual Space hardware. README hints do not allocate hardware, and failure does not guarantee an automatic CPU fallback.
 
 ## HF Hub patterns
 
@@ -71,7 +73,7 @@ Decision tree:
 
 - **User already authenticated and the LoRA repo is public**: use the existing token. Confirm the username with the user before publishing ("I'll publish to `{username}` — confirm?").
 - **User already authenticated and the LoRA repo is private**: try `api.repo_info(repo_id, token=cached)`. If it succeeds, the existing token has the right scope — proceed. If it fails (token doesn't have access to that repo), ask for a token with broader access.
-- **No cached token**: ask the user. One ask, with the explanation: "I need a Hugging Face access token with **write** scope. Create one at https://huggingface.co/settings/tokens. Paste it here." The same token will be reused for publishing.
+- **No cached token**: ask the user. One ask, with the explanation: "Reading needs a scoped read credential; separately authorized publishing needs scoped write permission. Create one at https://huggingface.co/settings/tokens. Configure it through local `hf auth login` or an approved secret store; never paste a token into chat." Use a separate scoped write credential for publication and a read credential for app runtime when needed.
 
 The default flow on a Hugging Face Space, in a logged-in user's local environment with `huggingface-cli login`, or in any environment with `HF_TOKEN` set, will *not* require asking the user for a token. Asking is the fallback, not the default.
 
@@ -116,48 +118,10 @@ import os
 pipe.load_lora_weights("user/private-lora", token=os.environ["HF_TOKEN"])
 ```
 
-### Creating and publishing the Space
+### Creating or updating the Space
 
-```python
-from huggingface_hub import HfApi, SpaceHardware
+Follow the current SKILL.md scope: `exist_ok=False` for a new private target, explicit inspection for an existing target, one atomic upload of reviewed files/assets, and a dedicated model-read secret when needed. An existing public repository is not made private by `create_repo(private=True, exist_ok=True)`. Use Space settings or hardware API to select allocation; `suggested_hardware` is only a duplication hint. Diagnose 401/403 before retrying. Do not change hardware, visibility, model or account silently.
 
-api = HfApi(token=hf_token)
-username = api.whoami()["name"]
-repo_id = f"{username}/{space_name}"
-
-api.create_repo(
-    repo_id=repo_id,
-    repo_type="space",
-    space_sdk="gradio",
-    space_hardware=SpaceHardware.ZERO_A10G,
-    private=True,
-    exist_ok=True,
-)
-
-# Set HF token as a Space secret if the LoRA or base model is private/gated
-api.add_space_secret(repo_id=repo_id, key="HF_TOKEN", value=hf_token)
-
-# Upload files
-for path in ["app.py", "requirements.txt", "README.md"]:
-    api.upload_file(
-        path_or_fileobj=path,
-        path_in_repo=path,
-        repo_id=repo_id,
-        repo_type="space",
-    )
-```
-
-The Space starts building automatically once files are pushed.
-
-### `SpaceHardware.ZERO_A10G`
-
-The string value is `"zero-a10g"`. This is a legacy name from when ZeroGPU ran on A10Gs; the actual hardware is NVIDIA RTX Pro 6000 Blackwell, but the identifier stuck. Both `SpaceHardware.ZERO_A10G` and the literal `"zero-a10g"` work. Prefer the enum for clarity.
-
-If `create_repo` rejects the hardware (typically because the user isn't on PRO), retry without `space_hardware=`, set the README's `hardware: zero-a10g` anyway, and tell the user the Space will run on CPU until they either upgrade to PRO or apply for a [community GPU grant](https://huggingface.co/docs/hub/spaces-gpus#community-gpu-grants) (request form lives in the Space's hardware settings).
-
-### Updating an existing Space
-
-If the user already has a Space they want to update (rather than creating fresh), `create_repo` with `exist_ok=True` is a no-op on the existing repo. `upload_file` overwrites. Existing secrets and hardware settings are preserved. Don't delete and recreate the Space — they'll lose stars, comments, and any custom config.
 
 ## After publishing
 
@@ -170,25 +134,8 @@ When sharing the URL with the user:
 - Offer to look at the logs if anything fails.
 - Don't add a long postamble — they want to click the link, not read more text.
 
-**Confirm a redeploy is actually live before testing it.** An `app.py`-only push does **not** change the Space's reported `runtime.stage` — the old replica keeps serving "RUNNING" while the new build swaps in, so a `gradio_client` test can silently hit **stale code**. To be sure: push → `api.restart_space(repo)` → poll until the stage leaves and returns to RUNNING → grep the boot logs (`/logs/run`) for a unique `[VERSION] …` marker you printed at module scope → then test. Also set `demo.launch(show_error=True)` so `gradio_client` surfaces the real traceback instead of a generic `AppError`.
+**Confirm a redeploy is actually live before testing it.** An `app.py`-only push does **not** change the Space's reported `runtime.stage` — the old replica keeps serving "RUNNING" while the new build swaps in, so a `gradio_client` test can silently hit **stale code**. To be sure: verify the deployed commit and a non-sensitive `[VERSION]` marker in protected logs, using bounded polling. Restart only if needed within scope. Keep shared `demo.launch(show_error=False)` and inspect protected redacted errors.
 
-## Publish-time failures (before the build starts)
+## Failure handling
 
-These happen during `create_repo` or `upload_file`, *before* the Space build pipeline runs. Diagnose by reading the exception, not the container logs (the container hasn't started yet).
-
-- **`HfHubHTTPError: 400 Bad Request` from `https://huggingface.co/api/validate-yaml`.** The README's YAML frontmatter failed server-side validation. By far the most common cause is `short_description` exceeding the server's length cap (the cap isn't documented and may change; targeting ~60 characters keeps you well clear). Other causes include typos in field names (`hardware` vs `hardwre`), invalid color values in `colorFrom`/`colorTo`, an unrecognized `hardware` string, or a malformed `models:` list. Fix: open `README.md`, shorten `short_description`, double-check the other YAML fields, retry. If the user gave you a long description for the Space, put the long version in the README body below the YAML — that's the right home for prose.
-
-- **`HfHubHTTPError: 403 Forbidden` on `create_repo` with `space_hardware="zero-a10g"`.** The user's account can't request ZeroGPU at creation time (typically because they're not on PRO/Team/Enterprise). Fix: retry `create_repo` without the `space_hardware` argument; keep `hardware: zero-a10g` in the README YAML. The Space gets created on CPU. Point the user at two paths to get off CPU: upgrade to PRO (auto-promotes the Space to ZeroGPU), or apply for a [community GPU grant](https://huggingface.co/docs/hub/spaces-gpus#community-gpu-grants) (request via the Space's hardware settings).
-
-- **`HfHubHTTPError: 401/403` on `upload_file`.** Token lacks write scope. Fix: ask the user for a write-scoped token (or use a fine-grained token with write permission on this specific Space).
-
-- **`RepositoryNotFoundError` on `upload_file` immediately after `create_repo`.** Race condition; very rare. Fix: small `time.sleep(1)` between create and upload, or retry the upload.
-
-## Common build failures
-
-- **`weight_name` mismatch in `load_lora_weights`.** The actual file in the repo is named differently. Fix: `api.list_repo_files(repo_id)` to find the real filename; pass `weight_name=` explicitly.
-- **Gated base model, no token.** The base model (e.g. `black-forest-labs/FLUX.1-dev`) requires accepting a license. Fix: ensure the user has accepted the license on the Hub, and the token is set as a Space secret.
-- **Diffusers version too old for the pipeline class.** The base model was released after the latest pinned diffusers. Fix: change `requirements.txt` from `diffusers` to `git+https://github.com/huggingface/diffusers`.
-- **CUDA OOM on first request.** The model is too big for the 48GB VRAM available on the default `large` size. Solutions, in order of preference: pick a smaller or quantized variant (FP8, smaller checkpoint); request `@spaces.GPU(size="xlarge")` to get the full 96GB (costs 2× quota and queues longer); enable model offloading (`pipe.enable_model_cpu_offload()` — conflicts with ZeroGPU's process model, last resort only).
-- **`cache_examples=True` failure.** Build-time GPU isn't available on ZeroGPU. Fix: add `cache_mode="lazy"` so caching happens on first user click instead of at build.
-- **Free-tier user, hardware not allocated.** Space falls back to CPU. The build succeeds but inference is unusably slow. Fix: user upgrades to PRO, or removes `hardware: zero-a10g` and lives with CPU.
+Read the exact service response and distinguish YAML, permissions, gating, package compatibility, quota and runtime errors. A short-description field error is only one possible 400 cause. Never assume all 403 responses require a subscription. Pin a reviewed compatible Diffusers release/commit; do not switch to moving git main automatically. For OOM, measure weights and activation requirements, use supported VAE tiling or bounded dimensions, and report when the selected hardware cannot support the recipe. Model offload is not a generic ZeroGPU fix. Preserve visibility, account and budget; report partial deployment explicitly.

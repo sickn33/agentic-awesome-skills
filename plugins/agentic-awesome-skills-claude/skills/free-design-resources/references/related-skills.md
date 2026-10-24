@@ -21,4 +21,4 @@
   that this register points at.
 
 
-See the [Reusable Prompt](references/reusable-prompt.md) reference for the full guidance.
+See the [Reusable Prompt](reusable-prompt.md) reference for the full guidance.

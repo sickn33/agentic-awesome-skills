@@ -22,9 +22,8 @@ from datetime import datetime
 
 try:
     import psutil
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "psutil", "--quiet"])
-    import psutil
+except ImportError as exc:
+    raise SystemExit("Missing psutil: install a reviewed pinned version in an isolated environment before running") from exc
 
 
 ENDPOINTS = [
@@ -124,7 +123,7 @@ def run_benchmark(samples=5):
             latencies.append(result)
             time.sleep(0.2)
 
-        valid = [r["latency_ms"] for r in latencies if r["reachable"] and r["latency_ms"]]
+        valid = [r["latency_ms"] for r in latencies if r["reachable"] and r["latency_ms"] is not None]
 
         ep_result = {
             "name": ep["name"],
@@ -149,7 +148,7 @@ def run_benchmark(samples=5):
     if api_ep.get("avg_ms") is None:
         results["diagnosis"] = {
             "status": "critical",
-            "message": "API do Claude INACESSIVEL. Verifique sua conexao de internet.",
+            "message": "Conexao TCP ao endpoint falhou; saude da API nao determinada. Verifique sua conexao de internet.",
         }
     elif api_ep["avg_ms"] > 500:
         results["diagnosis"] = {
@@ -172,7 +171,7 @@ def run_benchmark(samples=5):
             "status": "ok",
             "message": (
                 f"Conexao excelente ({api_ep['avg_ms']}ms). "
-                f"A rede NAO e o gargalo."
+                f"Conexao TCP rapida; nao mede inferencia, HTTP ou estabilidade da API."
             ),
         }
 
@@ -238,7 +237,9 @@ def main():
     parser.add_argument("--json", action="store_true", help="Output JSON")
     args = parser.parse_args()
 
-    print(f"Testando conectividade ({args.samples} amostras por endpoint)...\n")
+    if not 1 <= args.samples <= 100:
+        parser.error("--samples must be 1..100")
+    print(f"Testando conectividade ({args.samples} amostras por endpoint)...\n", file=sys.stderr)
     results = run_benchmark(args.samples)
 
     if args.json:

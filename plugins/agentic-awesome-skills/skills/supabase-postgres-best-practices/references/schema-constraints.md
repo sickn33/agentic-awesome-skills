@@ -34,6 +34,8 @@ begin
 end $$;
 ```
 
+Serialize migration execution: check-then-add can race, and matching a name does not prove the existing definition is correct. Compare pg_get_constraintdef and use appropriate lock/validation strategy.
+
 For all constraint types:
 
 ```sql
@@ -42,7 +44,7 @@ do $$
 begin
   if not exists (
     select 1 from pg_constraint
-    where conname = 'check_age_positive'
+    where conname = 'check_age_positive' and conrelid = 'public.users'::regclass
   ) then
     alter table users add constraint check_age_positive check (age > 0);
   end if;
@@ -53,7 +55,7 @@ do $$
 begin
   if not exists (
     select 1 from pg_constraint
-    where conname = 'profiles_birthchart_id_fkey'
+    where conname = 'profiles_birthchart_id_fkey' and conrelid = 'public.profiles'::regclass
   ) then
     alter table profiles
     add constraint profiles_birthchart_id_fkey

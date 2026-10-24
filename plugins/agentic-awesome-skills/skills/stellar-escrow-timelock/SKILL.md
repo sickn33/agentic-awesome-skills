@@ -32,11 +32,15 @@ Provides a standardized, auditable framework and data model for **Stellar Escrow
 2. Select appropriate boundary enforcement values from validated enum select sets.
 3. Export standardized artifacts (CSV table, SQL DDL, JSON Schema) to integrate into validation CI pipelines.
 
+## Verification procedure
+
+First choose the actual mechanism: classic claimable-balance predicates, preauthorized transactions/multisig or a deployed Soroban contract have different release/refund behavior. Record network, full asset issuer/contract ID, escrow identity and exact amount units. Define who may deposit/release/refund/arbitrate in each state and which ledger timestamp/bounds apply. Test before/at/after unlock, competing release/refund, double settlement, missing signer and asset trustline/authorization failures. A 14-day clawback field creates no protocol grace period; issuer clawback rights depend on actual asset flags/implementation. Verify deposited funds and final settlement transaction evidence separately; this register neither locks funds nor grants signing authority.
+
 ## Field Reference
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Escrow Agreement ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `ESC-001` |
+| 1 | Escrow Agreement ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `ESC-001` |
 | 2 | Depositor Account | `text` | `VARCHAR(56)` | `string` | Text | `GDEP...` |
 | 3 | Beneficiary Account | `text` | `VARCHAR(56)` | `string` | Text | `GBEN...` |
 | 4 | Arbitrator Account | `text` | `VARCHAR(56)` | `string` | Text | `GARB...` |

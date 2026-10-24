@@ -8,7 +8,8 @@ app.disable('x-powered-by');
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+// Local-only unauthenticated demo; a production service needs auth and explicit origin policy.
+app.use(cors({ origin: ["http://localhost:3000", "http://127.0.0.1:3000"] }));
 app.use(express.json());
 
 // Initialize database on startup
@@ -28,7 +29,7 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // Start server
-const server = app.listen(PORT, () => {
+const server = app.listen(Number(PORT), "127.0.0.1", () => {
   console.log(`Server is running on port ${PORT}`);
 });
 

@@ -29,6 +29,10 @@ Design, implement, and secure network infrastructure on Google Cloud Platform.
 - Deploying load balancers for HTTP(S), TCP/UDP, or internal traffic
 - Implementing Private Service Connect or Shared VPC
 
+## Network change and fragment scope
+
+Verify exact project/network/region, existing routes/firewalls and recovery access before mutations; broad internal 10.0.0.0/8 allow rules do not establish segmentation. Scope ingress to required targets and source identities. Confirm health-check scope and backend membership: the internal-LB fragment needs a regional health check/backend not created by the preceding global example. Terraform blocks are excerpts; semicolons in compact multi-attribute blocks must be expanded into valid HCL newlines before validation. NAT max-port settings depend on dynamic allocation mode; verify installed CLI constraints. No certificate provisioning-time guarantee or compliance follows from these examples.
+
 ## Prerequisites
 
 - Google Cloud SDK (`gcloud`) installed and authenticated

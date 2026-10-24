@@ -1,44 +1,7 @@
-# Locais Conhecidos para Deteccao de Skills
+# Discovery locations
 
-O `detect_skills.py` escaneia os seguintes locais para encontrar skills nao-instaladas:
+`detect_skills.py` defaults to the current working directory, not a particular Windows user account. Use `--path ./incoming` to narrow discovery. It searches to five levels, skips common caches and symlink directories, and reports candidate metadata without executing or installing skills.
 
-## Locais Padrao (sempre escaneados)
+`--all` explicitly adds the home directory, Projects/dev/repos/workspace/code and legacy Windows `C:\temp`/`C:\projects` locations if present. Request this broad read scope only when relevant to the user's task. Candidate output can reveal paths and timestamps; keep it local unless sharing is authorized.
 
-| Local | Motivo |
-|-------|--------|
-| `%USERPROFILE%\Desktop` | Usuario pode ter criado skill na area de trabalho |
-| `%USERPROFILE%\Downloads` | Skills baixadas da internet |
-| `%USERPROFILE%\Documents` | Documentos com skills criadas manualmente |
-| `%TEMP%` | skill-creator pode deixar workspaces em temp |
-
-## Locais Estendidos (com --all)
-
-| Local | Motivo |
-|-------|--------|
-| `%USERPROFILE%` | Raiz do usuario |
-| `%USERPROFILE%\Projects` | Projetos comuns |
-| `%USERPROFILE%\dev` | Diretorio de desenvolvimento |
-| `%USERPROFILE%\repos` | Repositorios git |
-| `%USERPROFILE%\workspace` | Workspaces |
-| `%USERPROFILE%\code` | Codigo-fonte |
-| `C:\temp` | Temp alternativo |
-| `C:\projects` | Projetos em raiz |
-
-## Padroes Reconhecidos
-
-- `*-workspace/v*/skill/SKILL.md` — Workspace do skill-creator
-- Qualquer diretorio com `SKILL.md` com frontmatter YAML valido
-
-## Locais Ignorados
-
-- `C:\Users\renat\skills\` (ja instalados)
-- `.git/`, `__pycache__/`, `node_modules/`, `.venv/`, `venv/`
-- Profundidade maxima: 5 niveis
-
-## Adicionando Novos Locais
-
-Para escanear um local especifico:
-
-```bash
-python detect_skills.py --path "C:\meu\diretorio"
-```
+Installed names are discovered under the workspace's `./skills`. Duplicate names are hints, not evidence of equal content. Discovery validates required frontmatter fields and rejects malformed YAML; it does not establish trust, provenance, dependency compatibility or secret-free contents. A candidate needs individual review before installation.

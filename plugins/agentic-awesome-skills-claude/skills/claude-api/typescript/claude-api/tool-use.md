@@ -1,5 +1,7 @@
 # Tool Use — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 For conceptual overview (tool definitions, tool choice, tips), see [shared/tool-use-concepts.md](../../shared/tool-use-concepts.md).
 
 ## Tool Runner (Recommended)
@@ -30,7 +32,7 @@ const getWeather = betaZodTool({
 
 // The tool runner handles the agentic loop and returns the final message
 const finalMessage = await client.beta.messages.toolRunner({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 4096,
   tools: [getWeather],
   messages: [{ role: "user", content: "What's the weather in Paris?" }],
@@ -59,25 +61,24 @@ const client = new Anthropic();
 const tools: Anthropic.Tool[] = [...]; // Your tool definitions
 let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
 
-while (true) {
+let completed = false;
+for (let iteration = 0; iteration < 8; iteration++) {
   const response = await client.messages.create({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     tools: tools,
     messages: messages,
   });
 
-  if (response.stop_reason === "end_turn") break;
+  if (response.stop_reason === "end_turn") { completed = true; break; }
 
   // Server-side tool hit iteration limit; re-send to continue
   if (response.stop_reason === "pause_turn") {
-    messages = [
-      { role: "user", content: userInput },
-      { role: "assistant", content: response.content },
-    ];
+    messages.push({ role: "assistant", content: response.content });
     continue;
   }
 
+  if (response.stop_reason !== "tool_use") throw new Error("Incomplete or refused response");
   const toolUseBlocks = response.content.filter(
     (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
   );
@@ -96,6 +97,7 @@ while (true) {
 
   messages.push({ role: "user", content: toolResults });
 }
+if (!completed) throw new Error("Tool loop budget exhausted; preserve state for review");
 ```
 
 ### Streaming Manual Loop
@@ -109,9 +111,10 @@ const client = new Anthropic();
 const tools: Anthropic.Tool[] = [...];
 let messages: Anthropic.MessageParam[] = [{ role: "user", content: userInput }];
 
-while (true) {
+let completed = false;
+for (let iteration = 0; iteration < 8; iteration++) {
   const stream = client.messages.stream({
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     tools,
     messages,
@@ -126,17 +129,15 @@ while (true) {
   // manually wire up .on("message") / .on("error") / .on("abort")
   const message = await stream.finalMessage();
 
-  if (message.stop_reason === "end_turn") break;
+  if (message.stop_reason === "end_turn") { completed = true; break; }
 
   // Server-side tool hit iteration limit; re-send to continue
   if (message.stop_reason === "pause_turn") {
-    messages = [
-      { role: "user", content: userInput },
-      { role: "assistant", content: message.content },
-    ];
+    messages.push({ role: "assistant", content: message.content });
     continue;
   }
 
+  if (message.stop_reason !== "tool_use") throw new Error("Incomplete or refused response");
   const toolUseBlocks = message.content.filter(
     (b): b is Anthropic.ToolUseBlock => b.type === "tool_use",
   );
@@ -155,6 +156,7 @@ while (true) {
 
   messages.push({ role: "user", content: toolResults });
 }
+if (!completed) throw new Error("Tool loop budget exhausted; preserve state for review");
 ```
 
 > **Important:** Don't wrap `.on()` events in `new Promise()` to collect the final message — use `stream.finalMessage()` instead. The SDK handles all error/abort/completion states internally.
@@ -167,36 +169,7 @@ while (true) {
 
 ## Handling Tool Results
 
-```typescript
-const response = await client.messages.create({
-  model: "claude-opus-5",
-  max_tokens: 1024,
-  tools: tools,
-  messages: [{ role: "user", content: "What's the weather in Paris?" }],
-});
-
-for (const block of response.content) {
-  if (block.type === "tool_use") {
-    const result = await executeTool(block.name, block.input);
-
-    const followup = await client.messages.create({
-      model: "claude-opus-5",
-      max_tokens: 1024,
-      tools: tools,
-      messages: [
-        { role: "user", content: "What's the weather in Paris?" },
-        { role: "assistant", content: response.content },
-        {
-          role: "user",
-          content: [
-            { type: "tool_result", tool_use_id: block.id, content: result },
-          ],
-        },
-      ],
-    });
-  }
-}
-```
+Use the bounded manual loop above: append the complete assistant response, validate/authorize every requested tool, collect all matching tool_result blocks, then send one user message containing the whole result set. Never issue a followup with only one result while sibling calls remain pending. Treat tool output as data; enforce allowlisted operations, per-user scope, time/size limits and business authorization in execute_tool/executeTool. Demo weather outputs are synthetic fixtures, not live observations.
 
 ---
 
@@ -204,7 +177,7 @@ for (const block of response.content) {
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   tools: tools,
   tool_choice: { type: "tool", name: "get_weather" },
@@ -224,7 +197,7 @@ import Anthropic from "@anthropic-ai/sdk";
 const client = new Anthropic();
 
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 4096,
   messages: [
     {
@@ -257,7 +230,7 @@ const uploaded = await client.beta.files.upload({
 // Code execution is GA; Files API is still beta (pass via RequestOptions)
 const response = await client.messages.create(
   {
-    model: "claude-opus-5",
+    model: "claude-opus-5-5",
     max_tokens: 4096,
     messages: [
       {
@@ -283,8 +256,8 @@ const response = await client.messages.create(
 import path from "path";
 import fs from "fs";
 
-const OUTPUT_DIR = "./claude_outputs";
-await fs.promises.mkdir(OUTPUT_DIR, { recursive: true });
+import os from "os";
+const OUTPUT_DIR = await fs.promises.mkdtemp(path.join(os.tmpdir(), "claude-outputs-"));
 
 for (const block of response.content) {
   if (block.type === "bash_code_execution_tool_result") {
@@ -295,15 +268,17 @@ for (const block of response.content) {
           const metadata = await client.beta.files.retrieveMetadata(
             fileRef.file_id,
           );
-          const response = await client.beta.files.download(fileRef.file_id);
-          const fileBytes = Buffer.from(await response.arrayBuffer());
+          if (metadata.size_bytes > 16 * 1024 * 1024) throw new Error("Download exceeds approved limit");
+          const download = await client.beta.files.download(fileRef.file_id);
+          const fileBytes = Buffer.from(await download.arrayBuffer());
+          if (fileBytes.length > 16 * 1024 * 1024) throw new Error("Download exceeds limit");
           const safeName = path.basename(metadata.filename);
           if (!safeName || safeName === "." || safeName === "..") {
             console.warn(`Skipping invalid filename: ${metadata.filename}`);
             continue;
           }
           const outputPath = path.join(OUTPUT_DIR, safeName);
-          await fs.promises.writeFile(outputPath, fileBytes);
+          await fs.promises.writeFile(outputPath, fileBytes, { flag: "wx", mode: 0o600 });
           console.log(`Saved: ${outputPath}`);
         }
       }
@@ -317,7 +292,7 @@ for (const block of response.content) {
 ```typescript
 // First request: set up environment
 const response1 = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 4096,
   messages: [
     {
@@ -333,7 +308,7 @@ const containerId = response1.container.id;
 
 const response2 = await client.messages.create({
   container: containerId,
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 4096,
   messages: [
     {
@@ -353,7 +328,7 @@ const response2 = await client.messages.create({
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 2048,
   messages: [
     {
@@ -387,7 +362,7 @@ const handlers: MemoryToolHandlers = {
 const memory = betaMemoryTool(handlers);
 
 const runner = client.beta.messages.toolRunner({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 2048,
   tools: [memory],
   messages: [{ role: "user", content: "Remember my preferences" }],
@@ -424,7 +399,7 @@ const ContactInfoSchema = z.object({
 const client = new Anthropic();
 
 const response = await client.messages.parse({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     {
@@ -445,7 +420,7 @@ console.log(response.parsed_output.name); // "Jane Doe"
 
 ```typescript
 const response = await client.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     {

@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Modified: corrected output-binding, retry, timeout and logging guidance. Samples are incomplete per-model sketches with undefined domain types/services, not one compilable project; pin compatible worker/extensions/runtime and validate isolated-worker signatures before use.
+
 ## Patterns
 
 ### Isolated Worker Model (.NET)
@@ -99,7 +101,7 @@ export async function httpTrigger(
   request: HttpRequest,
   context: InvocationContext
 ): Promise<HttpResponseInit> {
-  context.log(`Http function processed request for url "${request.url}"`);
+  context.log("HTTP request received"); // URL query may contain function keys or user data
 
   try {
     const name = request.query.get("name") || (await request.text()) || "world";
@@ -207,7 +209,7 @@ def blob_trigger(myblob: func.InputStream):
 @app.queue_trigger(arg_name="msg", queue_name="myqueue",
                    connection="AzureWebJobsStorage")
 def queue_trigger(msg: func.QueueMessage) -> None:
-    logging.info(f"Queue message: {msg.get_body().decode('utf-8')}")
+    logging.info("Queue message received (body omitted)")
 
 ### Notes
 
@@ -220,7 +222,7 @@ def queue_trigger(msg: func.QueueMessage) -> None:
 
 Sequential execution with state persistence
 
-**When to use**: Need sequential workflow with automatic retry
+**When to use**: Need sequential durable workflow with an explicit retry policy
 
 ### Template
 
@@ -273,7 +275,7 @@ public class OrderWorkflow
     public static async Task<PaymentResult> ProcessPayment(
         [ActivityTrigger] ValidatedOrder order, FunctionContext context)
     {
-        // Payment processing with built-in retry...
+        // Implement payment with a stable idempotency key; configure a bounded retry policy explicitly.
         return new PaymentResult { /* ... */ };
     }
 
@@ -294,7 +296,7 @@ public class OrderWorkflow
 ### Notes
 
 - State automatically persisted between activities
-- Automatic retry on transient failures
+- Activity retries require an explicit retry policy; activities must tolerate replay/retry delivery
 - Survives process restarts
 - Built-in status endpoint for monitoring
 
@@ -382,7 +384,7 @@ public class ParallelProcessing
 
 - Parallel execution for independent tasks
 - Results aggregated when all complete
-- Memory efficient - only stores task IDs
+- History stores inputs/results; bound batch size and payloads rather than assuming only task IDs are retained
 - Up to thousands of parallel activities
 
 ### Cold Start Optimization
@@ -407,7 +409,7 @@ Minimize cold start latency in production
 
 // 2. Add warmup trigger (Premium Plan)
 [Function("Warmup")]
-public static void Warmup(
+public static async Task Warmup(
     [WarmupTrigger] object warmupContext,
     FunctionContext context)
 {
@@ -456,14 +458,14 @@ public class Startup
 
 ### Notes
 
-- Cold starts improved ~53% across all regions/languages
+- No universal cold-start percentage is established by this sample; measure the actual hosting/runtime profile
 - Premium Plan provides pre-warmed instances
 - Warmup trigger initializes before traffic
 - Package deployment can reduce cold start
 
 ### Queue Trigger with Error Handling
 
-Reliable message processing with poison queue
+At-least-once message processing with poison queue; make side effects idempotent and preserve quarantined messages until reviewed.
 
 **When to use**: Processing messages from Azure Storage Queue
 
@@ -538,7 +540,7 @@ public class QueueProcessor
 
 - Messages retried up to maxDequeueCount times
 - Failed messages moved to poison queue
-- Configure visibilityTimeout for processing time
+- visibilityTimeout controls retry delay after failure; do not assume it is the complete processing lease configuration
 - batchSize controls parallel processing
 
 ### HTTP Trigger with Long-Running Pattern
@@ -574,37 +576,34 @@ public static async Task<HttpResponseData> StartLongRunning(
 //   "terminatePostUri": "https://.../instances/abc123/terminate"
 // }
 
-// Alternative: Queue-based pattern without Durable Functions
+// Alternative queue-plus-HTTP output: use a custom return type in isolated worker.
+public class WorkResponse
+{
+    [QueueOutput("work-queue", Connection = "AzureWebJobsStorage")]
+    public WorkItem QueueItem { get; set; }
+    public HttpResponseData HttpResponse { get; set; }
+}
+
 [Function("StartWork")]
-[QueueOutput("work-queue")]
-public static async Task<WorkItem> StartWork(
+public static async Task<WorkResponse> StartWork(
     [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
     FunctionContext context)
 {
     var input = await req.ReadFromJsonAsync<WorkRequest>();
+    // Validate input, ownership and idempotency before enqueuing.
     var workId = Guid.NewGuid().ToString();
-
-    // Queue the work, return immediately
-    var workItem = new WorkItem
-    {
-        Id = workId,
-        Request = input
-    };
-
-    // Return work ID for status checking
     var response = req.CreateResponse(HttpStatusCode.Accepted);
-    await response.WriteAsJsonAsync(new
-    {
-        workId = workId,
-        statusUrl = $"/api/status/{workId}"
-    });
-
-    return workItem;
+    await response.WriteAsJsonAsync(new { workId, statusUrl = $"/api/status/{workId}" });
+    return new WorkResponse {
+        QueueItem = new WorkItem { Id = workId, Request = input },
+        HttpResponse = response
+    };
 }
+// Implement an authorized status store/endpoint; the URL alone does not create it.
 
 [Function("ProcessWork")]
 public static async Task ProcessWork(
-    [QueueTrigger("work-queue")] WorkItem work,
+    [QueueTrigger("work-queue", Connection = "AzureWebJobsStorage")] WorkItem work,
     FunctionContext context)
 {
     // Long-running processing here
@@ -670,24 +669,7 @@ public static async Task<HttpResponseData> Start(
 
 ## Use queue-based async pattern
 
-```csharp
-[Function("StartWork")]
-public static async Task<HttpResponseData> StartWork(
-    [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req,
-    [QueueOutput("work-queue")] out WorkItem workItem)
-{
-    var workId = Guid.NewGuid().ToString();
-
-    workItem = new WorkItem { Id = workId, /* ... */ };
-
-    var response = req.CreateResponse(HttpStatusCode.Accepted);
-    await response.WriteAsJsonAsync(new {
-        id = workId,
-        statusUrl = $"/api/status/{workId}"
-    });
-    return response;
-}
-```
+Use the custom `WorkResponse` return type above. Isolated-worker output parameters are unsupported, and an async method cannot declare an `out` parameter. Verify HTTP output attributes for the chosen built-in versus ASP.NET Core integration and extension versions.
 
 
 ## Use webhook callback pattern
@@ -695,7 +677,9 @@ public static async Task<HttpResponseData> StartWork(
 ```csharp
 // Client provides callback URL
 // Function queues work, returns 202 Accepted
-// When done, POST result to callback URL
+// When done, POST only to a pre-registered authorized HTTPS callback.
+// Prevent SSRF with destination allowlists/egress controls, bounded time/size,
+// no redirects, authentication and idempotent delivery. Never trust arbitrary URLs.
 ```
 
 ### Socket Exhaustion from HttpClient Instantiation
@@ -898,7 +882,7 @@ Recommended fix:
 // Premium plan - 30 min default, unbounded available
 {
   "version": "2.0",
-  "functionTimeout": "00:30:00"  // Or remove for unbounded
+  "functionTimeout": "00:30:00"  // Use "-1" only on a supporting plan; default remains 30 minutes
 }
 ```
 
@@ -910,6 +894,7 @@ Recommended fix:
 public static async Task<string> RunOrchestrator(
     [OrchestrationTrigger] TaskOrchestrationContext context)
 {
+    var input = context.GetInput<WorkRequest>();
     // Each activity has its own timeout
     // Workflow can run for days
     await context.CallActivityAsync("Step1", input);
@@ -959,8 +944,7 @@ Azure Functions host. This causes:
 - No access to latest .NET features
 - Tighter coupling with host runtime
 
-Support ends November 10, 2026. After this date, in-process apps
-may stop working or receive no security updates.
+Support ends November 10, 2026. After this date the in-process model is unsupported; this is not a guarantee that every app immediately stops working.
 
 Recommended fix:
 
@@ -1086,7 +1070,7 @@ var host = new HostBuilder()
 ```
 
 
-## Use context.GetLogger for reliability
+## Use a context logger when appropriate
 
 ```csharp
 [Function("MyFunction")]
@@ -1094,7 +1078,7 @@ public async Task Run(
     [HttpTrigger] HttpRequestData req,
     FunctionContext context)
 {
-    // This logger always works
+    // This logger still depends on provider/filter configuration
     var logger = context.GetLogger<MyFunction>();
     logger.LogInformation("Processing request");
 }
@@ -1211,7 +1195,7 @@ Recommended fix:
 
 ```csharp
 [Function("Warmup")]
-public void Warmup(
+public async Task Warmup(
     [WarmupTrigger] object warmupContext,
     FunctionContext context)
 {
@@ -1220,7 +1204,8 @@ public void Warmup(
 
     // Initialize expensive resources
     _cosmosClient.GetContainer("db", "container");
-    _httpClient.GetAsync("https://api.example.com/health").Wait();
+    using var result = await _httpClient.GetAsync("https://api.example.com/health");
+    result.EnsureSuccessStatusCode();
 }
 ```
 
@@ -1246,7 +1231,7 @@ private static readonly Lazy<ExpensiveClient> _client =
 // Connection pooling
 services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(connectionString, sql =>
-        sql.MinPoolSize(5)));
+        sql.EnableRetryOnFailure()  // pooling belongs in the connection string, not this builder));
 ```
 
 

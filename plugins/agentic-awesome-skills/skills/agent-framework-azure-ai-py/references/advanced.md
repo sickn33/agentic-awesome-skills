@@ -1,5 +1,7 @@
 # Advanced Patterns Reference
 
+**Compatibility note:** This is preserved legacy-generation reference material, not a verified current SDK recipe. Apply the SDK-generation, authorization, privacy, cost and cleanup gate in the root skill before adapting any snippet.
+
 Advanced patterns including structured outputs, OpenAPI tools, file handling, and more.
 
 ## Structured Outputs with Pydantic
@@ -257,6 +259,8 @@ async with (
 
 ## Citations and Source Attribution
 
+Prompted citation markup and regex extraction do not authenticate sources. Use structured service annotations/file IDs/URLs from tool results, resolve within the authorized project, verify that sources support claims and render links safely. Do not treat model-written `【...】` text as evidence.
+
 ### Enabling Citations
 
 ```python
@@ -346,7 +350,7 @@ async with (
     # Create agent and save ID
     agent = await provider.create_agent(
         name="PersistentAgent",
-        instructions="You remember everything.",
+        instructions="Use the provided conversation context; do not claim unlimited memory.",
     )
     agent_id = agent.id  # Save this
 
@@ -379,6 +383,8 @@ async with (
 ## Error Handling Patterns
 
 ### Graceful Degradation
+
+A model-only fallback cannot replace fresh retrieval, authorized execution or verified citations. Return an explicit unavailable/partial result for tasks requiring those capabilities. Do not hide tool/auth failures or replay mutating operations under fallback; only use this illustrative pattern for low-risk knowledge requests.
 
 ```python
 from agent_framework import HostedWebSearchTool, HostedCodeInterpreterTool
@@ -415,6 +421,9 @@ async def run_with_retry(
     delay: float = 1.0,
 ) -> Optional[str]:
     """Run query with exponential backoff retry."""
+    if max_retries < 1: raise ValueError("max_retries must be positive")
+    # Only safe for read-only/idempotent runs. A timeout may follow completed
+    # side effects or an appended thread turn; reconcile before retrying.
     for attempt in range(max_retries):
         try:
             result = await agent.run(query, thread=thread)
@@ -473,6 +482,7 @@ async def process_queries(provider, queries: list[str]) -> list[str]:
         result = await agent.run(query, thread=thread)
         return result.text
 
+    # Bound concurrency and input size for real batches; gather starts all tasks.
     results = await asyncio.gather(*[process_one(q) for q in queries])
     return results
 ```
@@ -482,6 +492,8 @@ async def process_queries(provider, queries: list[str]) -> list[str]:
 ## Debugging and Logging
 
 ### Enable Verbose Logging
+
+Enable only for a bounded local diagnostic session after reviewing SDK redaction; debug traces may include prompts, responses, URLs or tool arguments. Do not retain or share raw production logs.
 
 ```python
 import logging
@@ -506,7 +518,7 @@ async for chunk in agent.run_stream("Calculate something"):
         if chunk.tool_calls:
             for tool_call in chunk.tool_calls:
                 print(f"[DEBUG] Tool: {tool_call.name}")
-                print(f"[DEBUG] Args: {tool_call.arguments}")
+                print("[DEBUG] Arguments omitted; may contain credentials or personal data")
     if chunk.text:
         print(chunk.text, end="", flush=True)
 ```

@@ -39,9 +39,9 @@ Target: **$ARGUMENTS**
 - **Color independence**: Don't convey info by color alone (add icons/text)
 
 #### 2. Operable
-- **Touch targets**: Minimum 44x44px (`min-h-11 min-w-11`)
-  - Common violation: `h-9` (36px) buttons — should be `h-11`
-  - Icon buttons need explicit size: `w-11 h-11`
+- **Pointer targets**: WCAG 2.2 AA SC 2.5.8 requires 24x24 CSS pixels or an applicable spacing/other exception. A 36px button is not automatically a failure.
+  - Prefer 44x44px (`min-h-11 min-w-11`) as a usability target; SC 2.5.5 uses that size at AAA with exceptions.
+  - Inspect the actual clickable area and adjacent targets, not only the visual icon dimensions. See [minimum](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum) and [enhanced](https://www.w3.org/WAI/WCAG22/Understanding/target-size-enhanced) criteria.
 - **Keyboard navigation**: All interactive elements must be keyboard-accessible
   - Tab order should be logical
   - `focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2`
@@ -62,8 +62,8 @@ Target: **$ARGUMENTS**
 
 #### 4. Robust
 - **Semantic HTML**: Use appropriate elements (`<button>`, `<nav>`, `<main>`, `<header>`)
-- **ARIA**: Use Radix UI components (they handle ARIA automatically)
-- **Roles**: Custom interactive elements need proper `role` attributes
+- **ARIA**: Radix primitives can supply accessible behavior, but composition still needs verified names, state, focus and keyboard handling.
+- **Roles**: Prefer native controls; a role alone does not implement keyboard interaction or accessible state.
 
 ## Design System Token Reference
 

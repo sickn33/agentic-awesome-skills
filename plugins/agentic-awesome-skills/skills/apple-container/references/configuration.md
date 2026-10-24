@@ -1,5 +1,7 @@
 # Configuration & administration
 
+> Reference scope: this imported guide mixes release-era and later branch documentation; its `1.0.0+` annotations are not verified introduction versions. Match the installed `container --version` and subcommand `--help` to the same upstream release tag before using flags or defaults. Current branch documentation can describe unreleased behavior. No container runtime was executed for this static review.
+
 Admin guide for Apple's `container` CLI runtime (Apple silicon macOS). This is **not Docker** —
 the CLI is Docker-like but the runtime is a per-container lightweight VM. For exhaustive
 flags/subcommands see `commands.md`; this file covers the operator surface only.
@@ -14,7 +16,7 @@ for `container list` but `toml` for `system property list`; check `<command> --h
 
 ## 1. System service: start / stop / status / logs
 
-The `container` services must be running before any container/image/build command works.
+Runtime/image/build operations using the API server require running services. Help and CLI version inspection do not require service startup.
 
 ```bash
 container system start        # register services in launchd, launch apiserver + machine API
@@ -213,7 +215,7 @@ domain = "ghcr.io"
 ```bash
 container registry login registry.example.com            # prompts user + password
 container registry login -u alice ghcr.io                # prompt password only
-echo "$TOKEN" | container registry login -u alice --password-stdin ghcr.io   # non-interactive
+printf '%s\n' "$TOKEN" | container registry login --scheme https -u alice --password-stdin ghcr.io   # non-interactive
 container registry list                                  # HOSTNAME/USERNAME/MODIFIED/CREATED (1.0.0+)
 container registry logout ghcr.io
 ```
@@ -279,7 +281,7 @@ persists across restarts. Ideal for "edit on Mac, build inside Linux" and runnin
 services. Distinct from the transient per-container VMs that back `container run`.
 
 ```bash
-container machine create alpine:3.22 --name dev --set-default
+container machine create docker.io/library/alpine:3.22 --home-mount none --name dev --set-default
 container machine run                 # interactive shell in the default machine (matches host user)
 container machine run -n dev uname
 container machine run -n dev -- cat /proc/cpuinfo    # everything after -- passed through verbatim
@@ -303,7 +305,7 @@ container machine logs -f -n 100 dev  # --boot for boot log
 **Nested virtualization / custom kernel** (per-machine): requires Apple Silicon **M3+** on
 **macOS 15+** and a kernel with `CONFIG_KVM=y` (the default kernel does not qualify).
 ```bash
-container machine create --virtualization --kernel /path/to/vmlinux-kvm -n kvm-dev alpine:latest
+container machine create --home-mount none --virtualization --kernel /path/to/vmlinux-kvm -n kvm-dev alpine:latest
 container machine run -n kvm-dev -- ls -l /dev/kvm     # verify /dev/kvm exposed
 ```
 Any Linux image with `/sbin/init` works. Override first-boot user provisioning by adding an
@@ -460,7 +462,7 @@ macOS 15 vs macOS 26+ behavior.
 ### `[plugin.<id>]` — plugin-scoped config
 
 Plugins ship their own schemas under `[plugin.<id>]` (`<id>` = plugin identifier). Each plugin
-defines and reads only its own section; values cannot leak across plugins. Consult the specific
+defines and reads only its own section; this section naming convention is not a confidentiality or sandbox guarantee. A plugin executable may still access host data permitted to its process. Consult the specific
 plugin's documentation for its keys.
 
 ### Type formats
@@ -497,3 +499,7 @@ Reported by `container system status`:
 The data root contains subdirectories such as `apiserver/`, `builder/`, `containers/`,
 `content/`, `kernels/`, `networks/`, `plugin-state/`, `snapshots/`, `user-plugins/`, `volumes/`,
 and a top-level `state.json`.
+
+## Operational boundaries
+
+See the root skill operational boundaries before executing recipes: verify trusted images and kernels, avoid secret environment output and build args, use HTTPS and explicit loopback bindings, restrict host mounts and agent forwarding, and inventory exact resources before cleanup. Machines share substantially more host access than ordinary containers.

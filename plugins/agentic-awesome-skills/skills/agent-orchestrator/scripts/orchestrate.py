@@ -33,8 +33,8 @@ _data_directory = os.environ.get("AGENT_ORCHESTRATOR_DATA_DIR")
 if not _data_directory or not Path(_data_directory).is_absolute():
     raise ValueError("Set AGENT_ORCHESTRATOR_DATA_DIR to an authorized absolute storage directory")
 DATA_DIR = Path(_data_directory)
-if DATA_DIR.is_symlink():
-    raise ValueError("Storage directory must not be a symlink")
+if any(path.is_symlink() for path in [DATA_DIR, *DATA_DIR.parents]):
+    raise ValueError("Storage directory and ancestors must not be symlinks")
 REGISTRY_PATH = DATA_DIR / "registry.json"
 
 # Define which capabilities are typically "producers" vs "consumers"
@@ -49,6 +49,8 @@ HYBRID_CAPABILITIES = {"api-integration", "web-automation"}
 def load_registry() -> dict[str, dict]:
     if not REGISTRY_PATH.is_file() or REGISTRY_PATH.is_symlink():
         raise ValueError("Registry unavailable; run an explicit scan")
+    if REGISTRY_PATH.stat().st_size > 16 * 1024 * 1024:
+        raise ValueError("Registry exceeds 16 MiB")
     data = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
     if not isinstance(data, dict) or not isinstance(data.get("skills"), list):
         raise ValueError("Malformed registry")
@@ -95,6 +97,9 @@ def validate_skills(skills):
     for skill in skills:
         if not isinstance(skill, dict) or not isinstance(skill.get("name"), str) or not skill["name"].strip():
             raise ValueError("Every candidate requires a nonempty name")
+        score = skill.get("score", 0)
+        if isinstance(score, bool) or not isinstance(score, (int, float)) or not math.isfinite(score) or score < 0:
+            raise ValueError("Scores must be finite non-negative numbers")
         caps = skill.get("capabilities", [])
         if not isinstance(caps, list) or any(not isinstance(c, str) for c in caps):
             raise ValueError("Candidate capabilities must be strings")

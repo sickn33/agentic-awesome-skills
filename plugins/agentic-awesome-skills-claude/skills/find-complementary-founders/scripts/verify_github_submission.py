@@ -12,7 +12,16 @@ import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def urlopen(request, timeout):
+    return build_opener(NoRedirect()).open(request, timeout=timeout)
+
 
 REPOSITORY = "merc1305/findMate"
 ISSUE_NUMBER = 2

@@ -1,5 +1,8 @@
 # Tasks toolset
 
+**Operation boundary.** A read-scoped export creates a durable copy of personal data. Confirm the export scope and authorized destination, protect short-lived download URLs, and report retention. Inspect task capability/status without resubmitting a mutation; cancellation is not rollback.
+
+
 Durable long-running exports, simulations, crawls, and campaign preparation. Connect only this group with `https://app.famulor.io/mcp?toolsets=tasks`.
 
 This 2026-08-23 snapshot covers all 4 tools assigned to `tasks` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.

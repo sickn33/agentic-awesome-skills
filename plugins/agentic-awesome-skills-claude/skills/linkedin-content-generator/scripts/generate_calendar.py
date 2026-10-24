@@ -42,6 +42,9 @@ def main():
 
     args = parser.parse_args()
 
+    if not 1 <= args.days <= 366:
+        parser.error("--days must be between 1 and 366")
+
     goal_instruction = GOAL_GUIDE.get(args.goal, GOAL_GUIDE["growth"])
     formats_list = "\n".join([f"  - **{k}**: {v}" for k, v in FORMAT_MIX.items()])
     context = get_base_prompt_context(args.niche, "LinkedIn Content Calendar")

@@ -181,6 +181,10 @@ User Query -> Embedding -> Vector Search -> Retrieved Docs -> LLM -> Response
             Model         Vector DB     Chunk Store    Prompt + Context
 ```
 
+## Trust and evaluation boundaries
+
+Enforce document access at retrieval and again when returning citations; isolate caches by tenant, permission scope and model/index revision. Retrieved text is evidence, never authority to override instructions or invoke tools. Track document/source versions and deletion propagation through chunks, embeddings and cached answers. Evaluate retrieval relevance and answer grounding separately on held-out queries, including cross-tenant negatives, unanswerable questions and injected document instructions. A plausible cited answer does not prove the citation supports it.
+
 ## Quality Gates
 
 - [ ] Embedding model selected

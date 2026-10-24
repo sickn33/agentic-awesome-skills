@@ -64,7 +64,7 @@ Clarity Gate defines validation codes for structural and semantic checks per FOR
 
 ## Bundled Scripts
 
-This skill includes Python scripts for deterministic computations per FORMAT_SPEC.
+This catalog tree contains no scripts/ directory or normative docs/CLARITY_GATE_FORMAT_SPEC.md. Commands and vectors below describe upstream material, not available local functionality. Obtain the pinned specification and review implementation before invoking it or claiming format compliance.
 
 ### scripts/claim_id.py
 
@@ -240,7 +240,7 @@ Document dates and timestamps must be internally consistent and plausible.
 
 | Fails | Passes |
 |-------|--------|
-| "Last Updated: December 2024" (when current is 2026) | "Last Updated: January 2026" |
+| An old last-updated date | Preserve it unless a real revision occurred; qualify stale current-state claims separately |
 | v1.0.0 dated 2024-12-23, v1.1.0 dated 2024-12-20 | Versions in chronological order |
 
 **Sub-checks:**
@@ -248,7 +248,7 @@ Document dates and timestamps must be internally consistent and plausible.
 2. Internal chronology (versions, events in order)
 3. Reference freshness ("current", "now", "today" claims)
 
-**Fix:** Update dates, add "as of [date]" qualifiers, flag stale claims
+**Fix:** Preserve historical timestamps. Change a last-updated date only after an actual update; add accurate as-of qualifiers and verify volatile claims.
 
 ---
 
@@ -394,7 +394,7 @@ Claim verification status is determined by field **presence**, not an explicit s
 | *(invalid)* | present | absent | W-HC01: partial fields |
 | *(invalid)* | absent | present | W-HC01: partial fields |
 
-**Why no explicit status field?** Field presence is self-enforcing—you can't accidentally set status without providing who/when.
+**Why no explicit status field?** Field presence is a structural convention, not authentication or evidence that a person actually reviewed the claim. Never invent reviewer names, dates or confirmations.
 
 ### Source Field Semantics (v2.1)
 
@@ -413,7 +413,7 @@ The `source` field meaning changes based on claim state:
 
 | Approach | Pattern | Example | Use Case |
 |----------|---------|---------|----------|
-| **Hash-based** (preferred) | `claim-[a-f0-9]{8,}` | `claim-75fb137a` | Deterministic, collision-resistant |
+| **Hash-based** (with collision checks) | `claim-[a-f0-9]{8,}` | `claim-75fb137a` | Deterministic, collision-resistant |
 | **Sequential** | `claim-[0-9]+` | `claim-1`, `claim-2` | Simple documents |
 | **Semantic** | `claim-[a-z0-9-]+` | `claim-revenue-q3` | Human-friendly |
 
@@ -485,7 +485,7 @@ The 9 Verification Points apply to SOT content:
 - **Structured claims table:** `## Verified Claims` section with columns: Claim, Value, Source, Verified
 - **Table outside exclusions:** The verified claims table must NOT be inside an exclusion block
 - **Staleness markers:** Use `[STABLE]`, `[CHECK]`, `[VOLATILE]`, `[SNAPSHOT]` in content
-  - `[STABLE]` — Safe to cite without rechecking
+  - `[STABLE]` — Expected low drift; still verify when accuracy or current applicability matters
   - `[CHECK]` — Verify before citing
   - `[VOLATILE]` — Changes frequently; always verify
   - `[SNAPSHOT]` — Point-in-time data; include date when citing
@@ -503,7 +503,7 @@ After running Clarity Gate, report:
 **Document:** [filename]
 **Issues Found:** [number]
 
-### Critical (will cause hallucination)
+### Critical (risk of unsupported interpretation)
 - [issue + location + fix]
 
 ### Warning (could cause equivocation)

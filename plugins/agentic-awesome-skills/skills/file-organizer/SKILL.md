@@ -100,7 +100,9 @@ When a user requests file organization help:
 
    ```bash
    # Find exact duplicates by hash
-   find [directory] -type f -exec md5 {} \; | sort | uniq -d
+   find [directory] -type f -exec shasum -a 256 {} \;
+# Group by the digest field using a filename-safe script; the full output line includes paths.
+# Identical hashes are candidates: compare bytes and metadata before any removal.
 
    # Find files with similar names
    find [directory] -type f -printf '%f\n' | sort | uniq -d
@@ -182,6 +184,7 @@ When a user requests file organization help:
    - Always confirm before deleting anything
    - Log all moves for potential undo
    - Preserve original modification dates
+   - Refuse overwrite by default; show exact source/destination and preserve a reversible move manifest. Do not follow symlinks outside the authorized tree.
    - Handle filename conflicts gracefully
    - Stop and ask if you encounter unexpected situations
 

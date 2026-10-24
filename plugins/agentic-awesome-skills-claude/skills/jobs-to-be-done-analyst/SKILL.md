@@ -94,7 +94,7 @@ The line between persuasion and manipulation is using a real progress problem to
 
 ## SKILL CHAINING
 
-Before invoking this skill, the agent should have completed:
+Optional context, when available and authorized:
 - [ ] `@customer-psychographic-profiler`
 
 This skill's output feeds into:
@@ -103,6 +103,10 @@ This skill's output feeds into:
 - [ ] `@ux-persuasion-engineer`
 - [ ] `@onboarding-psychologist`
 - [ ] `@pitch-psychologist`
+
+## Evidence handling
+
+Separate interview quotations, observed behavior and hypotheses. The author-year citations above lack full bibliographic entries here; verify original publications before presenting them as support for a specific causal claim. Do not infer hidden motives from a demographic label.
 
 ## OUTPUT QUALITY CHECK
 

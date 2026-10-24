@@ -9,7 +9,7 @@ metadata:
 
 ## Prerequisites
 
-First, the @remotion/media package needs to be installed.  
+First, the @remotion/media package needs to be installed.
 If it is not, use the following command:
 
 ```bash
@@ -38,7 +38,7 @@ Remote URLs are also supported:
 
 ## Trimming
 
-Use `trimBefore` and `trimAfter` to remove portions of the video. Values are in seconds.
+Use `trimBefore` and `trimAfter` to remove portions of the video. Values are in frames. In current versions, prefer `durationInFrames` over deprecated `trimAfter`; verify installed-version support.
 
 ```tsx
 const { fps } = useVideoConfig();

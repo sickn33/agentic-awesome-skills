@@ -29,6 +29,8 @@ export const TodoForm = ({ onAddTodo }: TodoFormProps) => {
     <form onSubmit={handleSubmit} className="todo-form">
       <input
         type="text"
+        aria-label="New todo title"
+        maxLength={500}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Add a new todo..."

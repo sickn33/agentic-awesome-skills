@@ -29,7 +29,7 @@ Use when the user explicitly requests brevity ("caveman mode", "less tokens", "b
 
 Default: **full** mode. Switch: `/caveman lite|full|ultra`. Off: `stop caveman` / `normal mode`.
 
-**Drop:** articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), hedging. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Pattern: `[thing] [action] [reason]. [next step].`
+**Drop:** articles (a/an/the), filler (just/really/basically/actually/simply), pleasantries (sure/certainly/of course/happy to), empty hedging. Preserve meaningful uncertainty and qualifications. Fragments OK. Short synonyms (big not extensive, fix not "implement a solution for"). Pattern: `[thing] [action] [reason]. [next step].`
 
 **Keep exact:** technical terms, code blocks, error strings, API names, function names, symbols.
 
@@ -45,9 +45,9 @@ Default: **full** mode. Switch: `/caveman lite|full|ultra`. Off: `stop caveman` 
 | **wenyan-ultra** | Extreme classical compression. Maximum terseness. |
 
 ### Quick example — "Why React component re-render?"
-- **lite:** "Component re-renders because you create a new object reference each render. Wrap it in `useMemo`."
-- **full:** "New obj ref each render. Inline object prop = new ref = re-render. Wrap in `useMemo`."
-- **ultra:** "Inline obj prop → new ref → re-render. `useMemo`."
+- **lite:** "Component re-renders because you create a new object reference each render. If it defeats a memoized child bailout, consider `useMemo` after profiling."
+- **full:** "New obj ref each render. Inline object prop can defeat memoized child bailout. Profile before `useMemo`."
+- **ultra:** "Inline obj prop → may defeat memo bailout. Profile."
 
 ### Auto-clarity — drop compression for:
 - Security warnings
@@ -129,4 +129,4 @@ Strong success criteria = loop independently. Weak criteria ("make it work") = c
 Code and commits are always written normally regardless of SPEAK level. Only prose is compressed.
 
 ## Limitations
-- Over-compression may lead to ambiguity. Use full mode if the context is lost.
+- Over-compression may lead to ambiguity. Use full prose if context is lost; brevity must not hide uncertainty, scope, failed checks or consequential details. Numeric character-reduction targets are stylistic aspirations, not measured guarantees.

@@ -52,4 +52,6 @@ function useWindowEvent(event: string, handler: () => void) {
 }
 ```
 
-`useEffectEvent` provides a cleaner API for the same pattern: it creates a stable function reference that always calls the latest version of the handler.
+`useEffectEvent` provides a cleaner API for the same pattern: it accesses the latest committed handler when invoked from Effect-managed events.
+
+Effect Events require a supporting React version and hooks linter. They access latest committed values but do not promise a stable identity; exclude Effect Events from Effect dependencies. Do not use them to hide real dependencies. The ref fallback updates after commit, not synchronously during render.

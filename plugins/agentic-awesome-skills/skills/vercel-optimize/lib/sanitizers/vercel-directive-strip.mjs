@@ -20,7 +20,7 @@ export function apply(rec, _ctx = {}) {
       const re = new RegExp(`(?:,\\s*)?\\b${escapeRegex(directive)}\\b(?:\\s*,)?`, 'g');
       if (re.test(rec[f])) {
         rec[f] = rec[f]
-          .replace(new RegExp(`\\b${escapeRegex(directive)}\\b`, 'g'), '')
+          .replace(new RegExp(`\\b${escapeRegex(directive)}\\b(?:\\s*=\\s*(?:\"[^\"]*\"|[^,\\s\"']+))?`, 'g'), '')
           .replace(/,\s*,/g, ',')
           .replace(/(['"])\s*,\s*/g, '$1, ')
           .replace(/,\s*(['"])/g, ', $1')

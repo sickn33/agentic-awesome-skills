@@ -1,11 +1,19 @@
 # 堆类利用 (Heap Pwn)
 
+## 静态学习边界
+
+以下 exploit 片段均为特定实验题的非完整草图；有未定义的 edit、偏移、目标与分配假设。
+不可视为跨版本可运行模板。tcache容量可配置；主流默认7不保证所有环境。
+unsorted指针通常指向arena/libc，并非通用heap-base泄漏。现代FILE利用有vtable验证，
+不能声称任意伪造vtable即可成功；pointer mangling也不是2.34才普遍出现。
+
 ## glibc 版本差异（必看）
 
 堆利用的所有技术都跟 glibc 版本强绑定。先确认版本：
 
 ```bash
-./libc.so.6 | head -1
+# Do not execute an untrusted libc to identify it; inspect strings/build ID statically.
+readelf -n ./libc.so.6
 # GNU C Library (Ubuntu GLIBC 2.31-0ubuntu9.9) stable release version 2.31.
 
 # 或 strings
@@ -14,8 +22,8 @@ strings ./libc.so.6 | grep "GNU C Library"
 
 | glibc 版本 | 关键变化 | 影响 |
 |-----------|---------|------|
-| 2.26 及之前 | 无 tcache | unsorted/fastbin 是主战场 |
-| 2.27 | **引入 tcache** | tcache poisoning 极其简单 |
+| 2.25 及之前 | 无 tcache | unsorted/fastbin 是主战场 |
+| 2.26 | **引入 tcache** | tcache poisoning 极其简单 |
 | 2.29 | unsorted bin unlink 加固（chunk size 检查） | unsorted bin attack 被砍 |
 | 2.31 | tcache 多重检查（key 字段） | tcache poisoning 略复杂 |
 | 2.32 | **safe-linking**（fd 指针异或 PROTECT_PTR） | 需要先 leak heap base |

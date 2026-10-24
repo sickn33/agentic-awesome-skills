@@ -51,7 +51,7 @@ Growth = (Real value) x (Discoverability) x (First-use experience)
 
 | Time | Action |
 |------|--------|
-| Morning | Hacker News (6-8am PT, Tue-Thu) |
+| Morning | Hacker News at a time the maintainer can support |
 | +1 hour | Twitter thread |
 | +2 hours | Reddit to relevant subs |
 | All day | Respond to everything |

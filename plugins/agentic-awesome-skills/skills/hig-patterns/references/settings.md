@@ -1,8 +1,11 @@
 ---
 title: "Settings | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/settings
+---
 
 # Settings
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 People expect apps and games to just work, but they also appreciate having ways to customize the experience to fit their needs.
 
@@ -82,3 +85,7 @@ Date| Changes
 ---|---  
 June 10, 2024| Reorganized some guidance into new topics and added game-specific examples.  
   
+
+## Implementation checks
+
+Use supported settings links for the target platform instead of undocumented URL schemes. Keep passwords/tokens out of UserDefaults and settings exports; use appropriate secure storage. A task-level override can coexist with respecting system accessibility defaults, but must be explicit and reversible. Do not change global device preferences as a side effect of opening an app settings screen.

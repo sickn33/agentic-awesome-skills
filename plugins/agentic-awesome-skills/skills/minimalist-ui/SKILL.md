@@ -101,6 +101,10 @@ Motion should feel invisible — present but never distracting. The goal is quie
 - Background Ambient Motion: Optional. A single, very slow-moving radial gradient blob (`animation-duration: 20s+`, `opacity: 0.02-0.04`) drifting behind hero sections. Must be applied to a `position: fixed; pointer-events: none` layer. Never on scrolling containers.
 - Performance: Animate exclusively via `transform` and `opacity`. No layout-triggering properties (`top`, `left`, `width`, `height`). Use `will-change: transform` sparingly and only on actively animating elements.
 
+## Accessibility and content constraints
+
+Keep content visible when scripts/observers fail and provide a no-motion path for `prefers-reduced-motion`. Validate actual text/background contrast, focus indicators, semantic order and zoom with real content; pale borders alone cannot identify controls. Use authentic licensed assets or explicitly labeled placeholders—do not invent testimonials/customer identities to appear realistic. Existing user/brand/accessibility requirements supersede aesthetic bans.
+
 ## 8. Execution Protocol
 When tasked with writing frontend code (HTML, React, Tailwind, Vue) or designing a layout:
 1. Establish the macro-whitespace first. Use massive vertical padding between sections (e.g., `py-24` or `py-32` in Tailwind).

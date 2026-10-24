@@ -8,9 +8,11 @@ date_added: "2026-06-16"
 
 # Super Code Skill
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## Overview
 
-Produce code that is short, correct, idiomatic, and maintainable — in that priority order.
+Produce code that is correct, clear, appropriately robust, idiomatic and concise — in that priority order.
 This skill addresses two distinct inefficiency types that must be fixed independently:
 
 1. **Code-token inefficiency** — the artifact itself is bloated (unnecessary lines, boilerplate, over-abstraction)
@@ -20,9 +22,9 @@ Both matter. Fixing only one is not enough.
 
 ## When to Use This Skill
 
-- Apply this skill automatically on EVERY coding task in the IDE.
+- Apply when the user requests concise coding guidance and it fits the task.
 - Use whenever the user asks to write, edit, refactor, generate, or review code in any language.
-- This is a standing house style, not an on-demand pass — always apply it.
+- This is optional style guidance; current user and project requirements govern.
 
 ---
 
@@ -144,7 +146,7 @@ These govern how you operate inside the session, not just what you produce:
 - Never repeat unchanged portions of a file to "show the full context"
 
 ### Unrequested artifacts
-- Do not create test files, README updates, type definition files, config files, or CI scripts unless explicitly requested
+- Create tests and supporting files when necessary to deliver and verify the requested change; avoid unrelated additions
 - If you believe a test file would be valuable, offer it in one sentence after the main output — don't generate it unasked
 
 ### Prose overhead

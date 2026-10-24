@@ -57,10 +57,10 @@ frida --version
 
 ```javascript
 // hook.js — intercept a function and log arguments/return value
-Interceptor.attach(Module.findExportByName(null, "strcmp"), {
+Interceptor.attach(Module.getGlobalExportByName("strcmp"), {
     onEnter: function(args) {
-        this.arg0 = Memory.readUtf8String(args[0]);
-        this.arg1 = Memory.readUtf8String(args[1]);
+        this.arg0 = args[0].readUtf8String();
+        this.arg1 = args[1].readUtf8String();
         console.log(`strcmp("${this.arg0}", "${this.arg1}")`);
     },
     onLeave: function(retval) {
@@ -74,13 +74,13 @@ Interceptor.attach(Module.findExportByName(null, "strcmp"), {
 frida -p $(pidof binary) -l hook.js
 
 # Spawn and instrument from start
-frida -f ./binary -l hook.js --no-pause
+frida -f ./binary -l hook.js
 
 # One-liner: hook strcmp and dump comparisons
-frida -f ./binary --no-pause -e '
-Interceptor.attach(Module.findExportByName(null, "strcmp"), {
+frida -f ./binary -e '
+Interceptor.attach(Module.getGlobalExportByName("strcmp"), {
     onEnter(args) {
-        console.log("strcmp:", Memory.readUtf8String(args[0]), Memory.readUtf8String(args[1]));
+        console.log("strcmp:", args[0].readUtf8String(), args[1].readUtf8String());
     }
 });
 '
@@ -90,7 +90,7 @@ Interceptor.attach(Module.findExportByName(null, "strcmp"), {
 
 ```javascript
 // Bypass ptrace(PTRACE_TRACEME) — returns 0 (success) without calling
-Interceptor.attach(Module.findExportByName(null, "ptrace"), {
+Interceptor.attach(Module.getGlobalExportByName("ptrace"), {
     onEnter: function(args) {
         this.request = args[0].toInt32();
     },
@@ -103,7 +103,7 @@ Interceptor.attach(Module.findExportByName(null, "ptrace"), {
 });
 
 // Bypass IsDebuggerPresent (Windows)
-var isDbg = Module.findExportByName("kernel32.dll", "IsDebuggerPresent");
+var isDbg = Process.getModuleByName("kernel32.dll").getExportByName("IsDebuggerPresent");
 Interceptor.attach(isDbg, {
     onLeave: function(retval) {
         retval.replace(ptr(0));
@@ -111,12 +111,13 @@ Interceptor.attach(isDbg, {
 });
 
 // Bypass timing checks — hook clock_gettime to return constant
-Interceptor.attach(Module.findExportByName(null, "clock_gettime"), {
-    onLeave: function(retval) {
-        // Force constant timestamp to defeat timing checks
-        var ts = this.context.rsi || this.context.x1; // x86 or ARM
-        Memory.writeU64(ts, 0);        // tv_sec
-        Memory.writeU64(ts.add(8), 0); // tv_nsec
+Interceptor.attach(Module.getGlobalExportByName("clock_gettime"), {
+    onEnter(args) { this.ts = args[1]; },
+    onLeave(retval) {
+        // Example for a verified LP64 timespec layout only; constant time can break progress.
+        if (retval.toInt32() === 0 && !this.ts.isNull()) {
+            this.ts.writeS64(0); this.ts.add(8).writeS64(0);
+        }
     }
 });
 ```
@@ -128,14 +129,14 @@ Interceptor.attach(Module.findExportByName(null, "clock_gettime"), {
 Process.enumerateRanges('r--').forEach(function(range) {
     Memory.scan(range.base, range.size, "66 6c 61 67 7b", { // "flag{"
         onMatch: function(address, size) {
-            console.log("[FLAG] Found at:", address, Memory.readUtf8String(address, 64));
+            console.log("[FLAG] Found at:", address, address.readUtf8String(64));
         },
         onComplete: function() {}
     });
 });
 
 // Patch instruction (NOP out a check)
-var addr = Module.findBaseAddress("binary").add(0x1234);
+var addr = Process.getModuleByName("binary").base.add(0x1234);
 Memory.patchCode(addr, 2, function(code) {
     var writer = new X86Writer(code, { pc: addr });
     writer.putNop();
@@ -148,9 +149,9 @@ Memory.patchCode(addr, 2, function(code) {
 
 ```javascript
 // Replace a validation function to always return true
-var checkFlag = Module.findExportByName(null, "check_flag");
+var checkFlag = Module.getGlobalExportByName("check_flag");
 Interceptor.replace(checkFlag, new NativeCallback(function(input) {
-    console.log("[*] check_flag called with:", Memory.readUtf8String(input));
+    console.log("[*] check_flag called with:", input.readUtf8String());
     return 1; // always valid
 }, 'int', ['pointer']));
 ```
@@ -159,14 +160,14 @@ Interceptor.replace(checkFlag, new NativeCallback(function(input) {
 
 ```javascript
 // Trace all calls in a function (Stalker — instruction-level tracing)
-var targetAddr = Module.findExportByName(null, "main");
+var targetAddr = Module.getGlobalExportByName("main");
 Stalker.follow(Process.getCurrentThreadId(), {
     transform: function(iterator) {
         var instruction;
         while ((instruction = iterator.next()) !== null) {
             if (instruction.mnemonic === "call") {
                 iterator.putCallout(function(context) {
-                    console.log("CALL at", context.pc, "→", ptr(context.pc).readPointer());
+                    console.log("CALL at", context.pc, "(call site; decode instruction to recover target)");
                 });
             }
             iterator.keep();
@@ -197,7 +198,7 @@ adb push frida-server /data/local/tmp/
 adb shell "chmod 755 /data/local/tmp/frida-server && /data/local/tmp/frida-server &"
 
 # Hook Android Java methods
-frida -U -f com.example.app -l hook_android.js --no-pause
+frida -U -f com.example.app -l hook_android.js
 ```
 
 ```javascript
@@ -245,7 +246,7 @@ Interceptor.attach(funcAddr, {
 
 ```bash
 # Usage
-frida -f ./binary -l memo_hook.js --no-pause
+frida -f ./binary -l memo_hook.js
 ```
 
 For multi-argument functions, build a composite key:
@@ -402,8 +403,8 @@ def should_avoid(state):
 
 simgr.explore(find=is_successful, avoid=should_avoid)
 
-# Pattern 4: Timeout protection
-simgr.explore(find=0x401234, avoid=0x401256, num_find=1)
+# Pattern 4: Found-state count is NOT a time limit; add an external wall-clock watchdog
+simgr.explore(find=0x401234, avoid=0x401256, num_find=1)  # may still run indefinitely
 # Or use exploration techniques:
 simgr.use_technique(angr.exploration_techniques.DFS())  # Depth-first
 simgr.use_technique(angr.exploration_techniques.LengthLimiter(max_length=500))
@@ -424,8 +425,16 @@ import hashlib
 class SHA256Hook(angr.SimProcedure):
     def run(self, data, length, output):
         # Concretize input and compute hash
+        if self.state.solver.symbolic(length):
+            raise ValueError("Symbolic hash length requires a sound model")
+        n = self.state.solver.eval(length)
+        if n < 0 or n > 4096:
+            raise ValueError("Hash input exceeds fixture bounds")
+        expr = self.state.memory.load(data, n)
+        if self.state.solver.symbolic(expr):
+            raise ValueError("Do not concretize symbolic hash input and claim general equivalence")
         concrete_data = self.state.solver.eval(
-            self.state.memory.load(data, self.state.solver.eval(length)),
+            expr,
             cast_to=bytes
         )
         h = hashlib.sha256(concrete_data).digest()
@@ -622,12 +631,12 @@ for ch in string.printable:
 ```
 
 **Advantages over GDB/Frida:**
-- No debugger artifacts (bypasses all anti-debug by default)
+- Emulated OS behavior differs; anti-debug checks are not universally bypassed
 - Cross-platform without hardware (ARM, MIPS, RISC-V on x86 host)
 - Scriptable with Python (faster iteration than GDB)
 - Snapshot/restore for brute-forcing
 
-**Key insight:** Qiling emulates the entire OS layer (syscalls, filesystem, registry), not just the CPU. This means anti-debug checks like `ptrace(TRACEME)` naturally return success without patching, and you can analyze ARM/MIPS binaries on an x86 host without QEMU or real hardware.
+**Key insight:** Qiling emulates the entire OS layer (syscalls, filesystem, registry), not just the CPU. This means anti-debug checks like `ptrace(TRACEME)` depend on the emulated implementation, target and configured hooks, and you can analyze ARM/MIPS binaries on an x86 host without QEMU or real hardware.
 
 **When to use:** Foreign architecture binaries, IoT firmware, heavy anti-debug, automated testing of many inputs.
 
@@ -671,7 +680,7 @@ tool = './source/tools/ManualExamples/obj-ia32/inscount0.so'
 binary = './target'
 
 key = ''
-while True:
+for position in range(128):  # bounded fixture length; require an observed stopping signal
     best_count, best_char = 0, ''
     for c in string.printable:
         cmd = [pin, '-injection', 'child', '-t', tool, '--', binary]
@@ -681,6 +690,8 @@ while True:
             count = int(f.read().split()[-1])
         if count > best_count:
             best_count, best_char = count, c
+    if not best_char:
+        break
     key += best_char
     print(f"Found: {key}")
 ```
@@ -823,9 +834,11 @@ int rand(void) { return 42; }
 
 ```c
 // memcmp_hook.c - compile: gcc -shared -fPIC -o hook.so memcmp_hook.c
-int memcmp(const char *s1, const char *s2, int n) {
+#include <stddef.h>
+int memcmp(const void *a, const void *b, size_t n) {
+    const unsigned char *s1 = a, *s2 = b;
     int cnt = 0;
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         if (s1[i] == s2[i]) cnt++;
         else break;
     }
@@ -844,3 +857,7 @@ int memcmp(const char *s1, const char *s2, int n) {
 **Detection:** Binary uses `memcmp` or `strcmp` for flag validation (visible in `ltrace` output or import table). The comparison function is called with user input and a computed/stored expected value.
 
 **References:** Blaze CTF 2018
+
+## Interpretation and execution limits
+
+All examples require authorized isolated fixture copies. Frida APIs shown use the modern Module/NativePointer interface; verify bridges and installed release. Return-value modification may leave original side effects intact. Register-jump memoization assumes a pure function and validated ABI/prologue state; it does not safely skip arbitrary functions. Pin count correlations, prefix oracles, timing and claimed runtimes are case observations, not guarantees. Use unique run directories, explicit process timeouts, fresh output files and budgets; stale inscount files do not prove success. Replacing memcmp above deliberately changes semantics and is diagnostic only. Preserve the original trace order; sorting a separate index cannot replace temporal evidence. Emulation is not containment.

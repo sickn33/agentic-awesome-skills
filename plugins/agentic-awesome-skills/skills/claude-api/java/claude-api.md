@@ -1,5 +1,7 @@
 # Claude API — Java
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 > **Note:** The Java SDK supports the Claude API and beta tool use with annotated classes. Agent SDK is not yet available for Java.
 
 ## Installation
@@ -107,7 +109,7 @@ static class GetWeather implements Supplier<String> {
 
 BetaToolRunner toolRunner = client.beta().messages().toolRunner(
     MessageCreateParams.builder()
-        .model("claude-opus-5")
+        .model("claude-opus-5-5")
         .maxTokens(1024L)
         .putAdditionalHeader("anthropic-beta", "structured-outputs-2025-11-13")
         .addTool(GetWeather.class)

@@ -43,8 +43,11 @@ Use `statement_timeout` to prevent runaway transactions:
 -- Abort queries running longer than 30 seconds
 set statement_timeout = '30s';
 
--- Or per-session
+-- Per-transaction setting must run inside BEGIN/COMMIT
+begin;
 set local statement_timeout = '5s';
+-- Run the bounded query here
+commit;
 ```
 
 Reference: [Transaction Management](https://www.postgresql.org/docs/current/tutorial-transactions.html)

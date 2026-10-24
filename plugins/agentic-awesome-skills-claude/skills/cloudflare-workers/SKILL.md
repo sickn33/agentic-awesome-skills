@@ -36,6 +36,8 @@ Deploy JavaScript and TypeScript functions to Cloudflare's global edge network w
 - Cloudflare account (free plan supports 100,000 requests/day).
 - Authenticated: `wrangler login` or set `CLOUDFLARE_API_TOKEN`.
 
+Verify Node/Wrangler support, plan quotas and CPU limits for the actual account; historical numbers below are not current entitlement guarantees. Choose target account/environment/routes explicitly before deploy, rollback or remote dev. KV read-modify-write is non-atomic and eventually consistent; concurrent increments lose updates, repeated puts hit write limits, and TTL resets make this a sliding approximation. Use an authoritative rate limiter for security. Increasing cacheTtl does not make KV strongly consistent. waitUntil is bounded background work, not a durable job queue and does not bypass CPU limits. Bind only approved origins, strip unexpected credentials before proxying and validate incoming data before analytics egress. Inline KV/D1 examples mutate on every request and must be isolated or authenticated. Scheduled helpers and analytics endpoints are placeholders, the third cron has no handler, and the Durable Object class must be re-exported from the configured entrypoint with a compatible migration type.
+
 ## Quick Start
 
 ```bash
@@ -56,7 +58,7 @@ npx wrangler deploy
 ## Essential Wrangler Commands
 
 ```bash
-# Local development with remote bindings (KV, D1, R2)
+# Remote development: executes in Cloudflare and can affect bound remote resources
 npx wrangler dev --remote
 
 # Deploy to a specific environment
@@ -163,7 +165,7 @@ async function logToAnalytics(data: unknown): Promise<void> {
 }
 ```
 
-### Middleware: Rate Limiting with KV
+### Approximate KV Counter (not an enforcement-grade rate limiter)
 
 ```typescript
 // src/rate-limiter.ts
@@ -193,7 +195,7 @@ export default {
     });
 
     // Forward to origin
-    const originRequest = new Request(env.ORIGIN_URL + new URL(request.url).pathname, request);
+    const originRequest = new Request(new URL(new URL(request.url).pathname + new URL(request.url).search, env.ORIGIN_URL), request);
     return fetch(originRequest);
   },
 };
@@ -207,11 +209,8 @@ export default {
 binding = "MY_KV"
 id = "abc123def456"
 
-# Preview namespace for local dev
-[[kv_namespaces]]
-binding = "MY_KV"
-id = "abc123def456"
-preview_id = "preview789"
+# Optional preview namespace on the same binding:
+# preview_id = "preview789"
 ```
 
 ```typescript

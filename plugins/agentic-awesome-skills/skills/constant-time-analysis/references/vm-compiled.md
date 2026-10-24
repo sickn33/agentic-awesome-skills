@@ -24,7 +24,7 @@ Bytecode (.class/.dll)
 
 **Security implications:**
 
-1. **Bytecode is deterministic** - Same source always produces same bytecode
+1. **Bytecode is deterministic** - Output depends on compiler version, flags and dependencies
 2. **JIT is non-deterministic** - Native code varies by runtime, version, and warmup state
 3. **Analysis target** - We analyze bytecode since JIT output is impractical to capture
 
@@ -81,15 +81,7 @@ Note: The `--arch` and `--opt-level` flags do not apply to VM-compiled languages
 
 #### Replace Division
 
-```java
-// VULNERABLE: Division instruction emitted
-int q = secretValue / divisor;
-
-// SAFE: Barrett reduction (for fixed divisor)
-// Precompute: mu = (1L << 32) / divisor
-long mu = 0x100000000L / divisor;
-int q = (int) ((secretValue * mu) >>> 32);
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 #### Replace Branches
 
@@ -102,9 +94,7 @@ if (secret != 0) {
     result = b;
 }
 
-// SAFE: Constant-time selection using bitwise ops
-int mask = -(secret != 0 ? 1 : 0);  // All 1s if true, all 0s if false
-// Better: compute mask without branch
+// Candidate selection pattern: generated native code still requires review using bitwise ops
 int mask = (secret | -secret) >> 31;  // -1 if secret != 0, else 0
 int result = (a & mask) | (b & ~mask);
 ```
@@ -143,7 +133,7 @@ int q = secretValue / divisor;
 // SAFE: Barrett reduction (for fixed divisor)
 // Precompute: mu = (1UL << 32) / divisor
 ulong mu = 0x100000000UL / (ulong)divisor;
-int q = (int)((secretValue * mu) >> 32);
+int q = (int)(((ulong)secretValue * mu) >> 32);
 ```
 
 #### Replace Branches
@@ -152,11 +142,11 @@ int q = (int)((secretValue * mu) >> 32);
 // VULNERABLE: Branch timing reveals secret
 int result = secret != 0 ? a : b;
 
-// SAFE: Constant-time selection
+// Candidate selection pattern: generated native code still requires review
 int mask = -(secret != 0 ? 1 : 0);
 int result = (a & mask) | (b & ~mask);
 
-// Or use Vector<T> for SIMD constant-time ops (.NET 7+)
+// SIMD or branch-free source alone does not guarantee constant-time native code.
 ```
 
 #### Replace Comparisons
@@ -189,7 +179,7 @@ byte[] bytes = RandomNumberGenerator.GetBytes(32);
 ### Java
 
 - **Bouncy Castle**: Use `org.bouncycastle.util.Arrays.constantTimeAreEqual()` for constant-time comparison
-- **JEP 329 (Java 12+)**: ChaCha20 and Poly1305 implementations are designed to be constant-time
+- **JEP 329 (Java 11)**: ChaCha20 and Poly1305 implementations are designed to be constant-time
 - **BigInteger**: Operations like `modPow()` may have timing leaks; consider using Bouncy Castle's constant-time implementations
 
 ### C# / .NET

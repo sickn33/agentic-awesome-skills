@@ -146,13 +146,13 @@ Goal: Help implement. Remove friction to purchase.
 - **Email + company/role** — better lead qualification, more friction
 - **Multi-field** — only for high-value offers (webinars, demos)
 
-Rule of thumb: Ask for the minimum needed. Every extra field reduces conversion by 5-10%.
+Rule of thumb: Ask for the minimum needed. Extra fields may add friction; measure their effect in the actual funnel rather than assuming a fixed penalty.
 
 ### How to Frame the Exchange
 
 - Make the value obvious: "Get the full 25-page guide free"
 - Show a preview: table of contents, first page, sample results
-- Add social proof: "Downloaded by 5,000+ marketers"
+- Use only verified social proof; a download count requires actual dated evidence, not the illustrative number 5,000
 - Reduce risk: "No spam. Unsubscribe anytime."
 
 **For form optimization**: See **form-cro** skill
@@ -178,7 +178,7 @@ Rule of thumb: Ask for the minimum needed. Every extra field reduces conversion 
 | Method | Pros | Cons |
 |--------|------|------|
 | **Instant download** | Immediate gratification | No email verification |
-| **Email delivery** | Verifies email, starts relationship | Slight delay |
+| **Email delivery** | Delivers to an address if accepted; explicit confirmation link is needed to demonstrate address control | Delay/failed delivery possible |
 | **Thank you page + email** | Best of both—instant access + email copy | Slightly more complex |
 | **Drip delivery** | Builds habit, multiple touchpoints | Only for courses/series |
 
@@ -198,7 +198,7 @@ Don't waste the thank you page. After they've converted:
 
 - Add relevant CTAs within blog posts (inline, end-of-post)
 - Create post-specific content upgrades (bonus checklist for a how-to post)
-- Content upgrades convert 2-5x better than generic sidebar CTAs
+- Test content upgrades against generic CTAs; no universal 2–5× uplift is established here
 
 ### Exit-Intent & Popups
 
@@ -234,7 +234,7 @@ Don't waste the thank you page. After they've converted:
 
 ### Key Metrics
 
-| Metric | What It Tells You | Benchmark |
+| Metric | What It Tells You | Illustrative planning input (unverified) |
 |--------|-------------------|-----------|
 | **Landing page conversion rate** | Offer attractiveness | 20-40% (warm traffic), 5-15% (cold) |
 | **Cost per lead** | Acquisition efficiency | Varies by channel and industry |
@@ -327,3 +327,5 @@ When creating a lead magnet strategy, provide:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The benchmark/cost/timing tables are unverified illustrative assumptions; source each material forecast and distinguish cash costs, labor and paid-service limits. Opens are affected by privacy prefetching and do not prove a human read or a lead’s quality; use consented clicks, activation and downstream outcomes with cohort/denominator definitions. Delivery/gating does not imply consent to ongoing marketing: disclose the exchange, offer appropriate opt-out/suppression and avoid deceptive urgency or inaccessible gates. Use only synthetic example data and licensed/authorized swipe-file content. A strategy does not authorize ads, bulk sends, public sharing or live funnel changes.

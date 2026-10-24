@@ -37,7 +37,7 @@ body {
 .card-grid {
   display: grid;
   /* Auto-responsive magic */
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 24px;
 }
 
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 4,
     margin: 8,
-    overflow: 'hidden', // Keeps image inside borders
+    // Keep the shadow wrapper unclipped; clip only a separate image/content wrapper.
   },
   imageArea: {
     height: 160,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
 });
 // In your view: <FlatList numColumns={2} data={data} renderItem={...} />
 ```
-- Wrap everything in a View with `borderRadius` and `overflow: 'hidden'`.
+- Separate the outer shadow wrapper from an inner rounded clipping wrapper. Preserve visible focus and avoid nesting independent controls inside a whole-card button.
 - `elevation: 4` provides the drop shadow on Android, while the `shadow*` props handle iOS.
 - For a Pinterest/Masonry style (columns of different heights), you must use a third-party library like `react-native-masonry-list`, as `FlatList` cannot do varying row heights in columns.
 

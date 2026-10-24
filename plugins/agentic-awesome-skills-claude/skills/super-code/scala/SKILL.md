@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Scala: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for scala.
 
@@ -206,7 +208,7 @@ def findUser(id: String): User = {
 }
 
 // ✅ — Option for absence, Either for expected errors
-def findUser(id: String): Option[User] = db.query(id)
+def findUser(id: String): Option[User] = Option(db.query(id)) // wraps a nullable result
 // or:
 def findUser(id: String): Either[AppError, User]
 ```
@@ -263,7 +265,8 @@ Future {
 
 // ✅
 Future {
-  blocking { val result = blockingHttpCall() }
+  val result = blocking { blockingHttpCall() }
+  process(result)
   // or use a dedicated blocking ExecutionContext
 }
 ```

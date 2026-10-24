@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import time
@@ -34,7 +35,7 @@ _ACCEPTED_FORMS = {"10-K", "10-Q", "20-F", "6-K"}
 _ANNUAL_FORMS = {"10-K", "20-F"}
 _QUARTERLY_FORMS = {"10-Q", "6-K"}
 _HEADERS = {
-    "User-Agent": "claude-code-stock-analysis-skill/1.0 (research@xvary.com)",
+    "User-Agent": os.environ.get("SEC_USER_AGENT", ""),
     "Accept": "application/json",
     "Accept-Encoding": "gzip, deflate",
 }
@@ -154,6 +155,8 @@ _FIELD_CONCEPT_PRIORITY = _field_concept_priority()
 
 
 def _session() -> requests.Session:
+    if not _HEADERS["User-Agent"]:
+        raise ValueError("Set SEC_USER_AGENT to your application name and genuine contact email")
     s = requests.Session()
     s.headers.update(_HEADERS)
     return s
@@ -187,9 +190,6 @@ def _variants(ticker: str) -> list[str]:
         t,
         t.replace(".", "-"),
         t.replace("-", "."),
-        t.replace(".", ""),
-        t.split(".")[0],
-        t.split("-")[0],
     ]
     out: list[str] = []
     for c in candidates:
@@ -221,8 +221,7 @@ def _parse_period_months(start: Optional[str], end: Optional[str]) -> Optional[i
 
 
 def _is_quarterly(form: str, period_months: Optional[int]) -> bool:
-    if form in _QUARTERLY_FORMS:
-        return True
+    # Filing form alone cannot distinguish a quarter from year-to-date cash flow.
     return period_months is not None and 1 <= period_months <= 4
 
 
@@ -361,6 +360,8 @@ def _best_entry(
     scoped: list[dict[str, Any]] = []
     for record in records:
         is_q = _is_quarterly(record.get("form", ""), record.get("period_months"))
+        if statement == "balance_sheet":
+            is_q = record.get("form") in _QUARTERLY_FORMS
         if quarterly and is_q:
             scoped.append(record)
         elif not quarterly and not is_q and record.get("form") in _ANNUAL_FORMS:
@@ -369,6 +370,9 @@ def _best_entry(
     if not scoped:
         return None
 
+    # Use aliases to resolve the newest reporting period, not to prefer stale facts.
+    latest_period = max(r.get("period_end", "") for r in scoped)
+    scoped = [r for r in scoped if r.get("period_end", "") == latest_period]
     concept_priority = _FIELD_CONCEPT_PRIORITY.get((statement, field), {})
     if concept_priority:
         default_rank = len(concept_priority) + 100

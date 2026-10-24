@@ -69,7 +69,7 @@ CommunicationTokenRefreshOptions refreshOptions = new CommunicationTokenRefreshO
 CommunicationTokenCredential credential = new CommunicationTokenCredential(refreshOptions);
 ```
 
-### Async Token Refresh
+### Blocking bridge to an async token source
 
 ```java
 import java.util.concurrent.CompletableFuture;
@@ -162,6 +162,8 @@ import com.azure.communication.common.UnknownIdentifier;
 UnknownIdentifier unknown = new UnknownIdentifier("some-raw-id");
 ```
 
+Raw-ID prefix parsing below is illustrative and incomplete for cloud/anonymous variants; prefer the pinned SDK's documented conversion APIs and validate identifier type before casts. Token refresh must use an authenticated, authorized backend with bounded request timeouts; `future.get()` blocks and must not run on an event-loop/UI thread. Never embed ACS resource connection strings or privileged token-issuing credentials in client code. Keep identifier and token diagnostics out of shared logs.
+
 ## Identifier Parsing
 
 ```java
@@ -225,7 +227,7 @@ System.out.println("Token expires: " + accessToken.getExpiresAt());
 // Async access
 credential.getTokenAsync()
     .subscribe(token -> {
-        System.out.println("Token: " + token.getToken().substring(0, 20) + "...");
+        // Never log even a token prefix; report expiry or a non-secret diagnostic ID only.
         System.out.println("Expires: " + token.getExpiresAt());
     });
 ```

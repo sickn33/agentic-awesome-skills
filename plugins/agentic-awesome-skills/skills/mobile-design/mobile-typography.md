@@ -23,7 +23,7 @@ DESKTOP:                        MOBILE:
 
 | Rule | Desktop | Mobile |
 |------|---------|--------|
-| **Minimum body size** | 14px | 16px (14pt/14sp) |
+| **Minimum body size** | 14px | Use the platform text style; CSS px, iOS pt and Android sp are not interchangeable |
 | **Maximum line length** | 75 characters | 40-60 characters |
 | **Line height** | 1.4-1.5 | 1.4-1.6 (more generous) |
 | **Font weight** | Varies | Regular dominant, bold sparingly |
@@ -189,7 +189,7 @@ ALWAYS use sp for text:
 
 User can scale from 85% to 200%:
 ├── Default (100%): 14sp = 14dp
-├── Largest (200%): 14sp = 28dp
+├── Largest (200%): do not infer 14sp = 28dp on nonlinear font scaling; use platform conversion APIs
 
 Test at 200%!
 ```
@@ -219,10 +219,10 @@ Solutions:
 
 | Element | Minimum | Recommended |
 |---------|---------|-------------|
-| Body text | 14px/pt/sp | 16px/pt/sp |
-| Secondary text | 12px/pt/sp | 13-14px/pt/sp |
+| Body text | platform-relative size, tested at large settings | platform text style, e.g. iOS body / Material bodyLarge |
+| Secondary text | 12px/pt/sp | 13-platform-relative size, tested at large settings |
 | Captions | 11px/pt/sp | 12px/pt/sp |
-| Buttons | 14px/pt/sp | 14-16px/pt/sp |
+| Buttons | platform-relative size, tested at large settings | 14-platform text style, e.g. iOS body / Material bodyLarge |
 | **Nothing smaller** | 11px | - |
 
 ### Contrast Requirements (WCAG)
@@ -242,17 +242,10 @@ Logos/decorative: No requirement
 ### Line Height for Accessibility
 
 ```
-WCAG Success Criterion 1.4.12:
-
-Line height (line spacing): ≥ 1.5×
-Paragraph spacing: ≥ 2× font size
-Letter spacing: ≥ 0.12× font size
-Word spacing: ≥ 0.16× font size
-
-Mobile recommendation:
-├── Body: 1.4-1.6 line height
-├── Headings: 1.2-1.3 line height
-├── Never below 1.2
+WCAG SC 1.4.12 tests whether markup content remains usable when users override:
+line height to 1.5×, paragraph spacing to 2×, letter spacing to .12×,
+and word spacing to .16× the font size. These are NOT mandatory authored defaults.
+Native Dynamic Type/font scaling has separate platform behavior; test it directly.
 ```
 
 ---
@@ -341,7 +334,7 @@ Font file sizes matter on mobile:
 
 Recommendations:
 ├── Subset to needed characters
-├── Use WOFF2 format
+├── Web: WOFF2; native: supported bundled OTF/TTF/variable formats and license
 ├── Max 2-3 font files
 ├── Consider variable fonts
 ├── Cache fonts appropriately
@@ -354,7 +347,7 @@ Recommendations:
    Show system font → swap when custom loads
    
 2. FONT DISPLAY SWAP
-   font-display: swap (CSS)
+   font-display: swap applies only to CSS/web, not native font loading
    
 3. PRELOAD CRITICAL FONTS
    Preload fonts needed above the fold
@@ -369,7 +362,7 @@ Recommendations:
 
 ### Before Any Text Design
 
-- [ ] Body text ≥ 16px/pt/sp?
+- [ ] Body text ≥ platform text style, e.g. iOS body / Material bodyLarge?
 - [ ] Line height ≥ 1.4?
 - [ ] Line length ≤ 60 chars?
 - [ ] Type scale defined (max 5-7 sizes)?
@@ -431,3 +424,7 @@ Long text: 1.5-1.75
 ---
 
 > **Remember:** If users can't read your text, your app is broken. Typography isn't decoration—it's the primary interface. Test on real devices, in real conditions, with accessibility settings enabled.
+
+Official spacing reference: https://www.w3.org/WAI/WCAG22/Understanding/text-spacing.html .
+RN Text normally enables allowFontScaling by default; fontSize alone does not disable it.
+Native pt/sp are not CSS point equivalents for WCAG threshold calculations.

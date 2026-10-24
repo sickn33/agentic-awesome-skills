@@ -45,8 +45,29 @@ API_KEY = os.environ.get("ALPHAVANTAGE_API_KEY")
 BASE_URL = "https://www.alphavantage.co/query"
 
 def av_get(function, **params):
-    response = requests.get(BASE_URL, params={"function": function, "apikey": API_KEY, **params})
-    return response.json()
+    if not API_KEY:
+        raise ValueError("Set ALPHAVANTAGE_API_KEY before requesting data")
+    if "apikey" in params or "function" in params:
+        raise ValueError("Reserved request parameters")
+    try:
+        response = requests.get(
+            BASE_URL, params={**params, "function": function, "apikey": API_KEY},
+            timeout=30,
+        )
+    except requests.RequestException:
+        raise RuntimeError("Alpha Vantage transport failure; request URL redacted") from None
+    # Avoid logging request URLs or raw HTTP exceptions: URLs contain the key.
+    if not response.ok:
+        raise RuntimeError(f"Alpha Vantage HTTP status {response.status_code}")
+    try:
+        data = response.json()
+    except ValueError:
+        raise RuntimeError("Alpha Vantage returned invalid JSON") from None
+    if not isinstance(data, dict):
+        raise RuntimeError("Alpha Vantage returned an unexpected response shape")
+    if any(key in data for key in ("Error Message", "Note", "Information")):
+        raise RuntimeError("API returned an error, quota, or entitlement message; inspect a redacted response")
+    return data
 ```
 
 ## Quick Start Examples
@@ -88,7 +109,7 @@ rsi = av_get("RSI", symbol="AAPL", interval="daily", time_period=14, series_type
 | **Fundamentals** | OVERVIEW, ETF_PROFILE, INCOME_STATEMENT, BALANCE_SHEET, CASH_FLOW, EARNINGS, DIVIDENDS, SPLITS |
 | **Forex (FX)** | CURRENCY_EXCHANGE_RATE, FX_INTRADAY, FX_DAILY, FX_WEEKLY, FX_MONTHLY |
 | **Crypto** | CURRENCY_EXCHANGE_RATE, CRYPTO_INTRADAY, DIGITAL_CURRENCY_DAILY |
-| **Commodities** | GOLD (WTI spot), BRENT, NATURAL_GAS, COPPER, WHEAT, CORN, COFFEE, ALL_COMMODITIES |
+| **Commodities** | WTI (crude oil), BRENT, NATURAL_GAS, COPPER, WHEAT, CORN, COFFEE, ALL_COMMODITIES |
 | **Economic Indicators** | REAL_GDP, TREASURY_YIELD, FEDERAL_FUNDS_RATE, CPI, INFLATION, UNEMPLOYMENT, NONFARM_PAYROLL |
 | **Technical Indicators** | SMA, EMA, MACD, RSI, BBANDS, STOCH, ADX, ATR, OBV, VWAP, and 40+ more |
 
@@ -96,7 +117,7 @@ rsi = av_get("RSI", symbol="AAPL", interval="daily", time_period=14, series_type
 
 | Parameter | Values | Notes |
 |-----------|--------|-------|
-| `outputsize` | `compact` / `full` | compact = last 100 points; full = 20+ years |
+| `outputsize` | `compact` / `full` | For applicable time-series endpoints; depth and entitlement vary |
 | `datatype` | `json` / `csv` | Default: json |
 | `interval` | `1min`, `5min`, `15min`, `30min`, `60min`, `daily`, `weekly`, `monthly` | Depends on endpoint |
 | `adjusted` | `true` / `false` | Adjust for splits/dividends |
@@ -105,14 +126,8 @@ rsi = av_get("RSI", symbol="AAPL", interval="daily", time_period=14, series_type
 
 - Free tier: 25 requests/day (as of 2026)
 - Premium plans: higher limits, real-time data, intraday access
-- HTTP 429 = rate limit exceeded
-- Add delays between requests when processing multiple symbols
-
-```python
-import time
-# Add delay to avoid rate limits
-time.sleep(0.5)  # 0.5s between requests on free tier
-```
+- Quota or entitlement messages may arrive in JSON even with HTTP 200; check `Note` and `Information` as well as HTTP status.
+- A short delay cannot satisfy a daily quota. Cache results, track the account request budget, and stop when exhausted. Verify current limits and endpoint entitlements in [official support](https://www.alphavantage.co/support/) and [API documentation](https://www.alphavantage.co/documentation/).
 
 ## Error Handling
 
@@ -133,6 +148,6 @@ if "Information" in data:
 Use this skill when tackling tasks related to its primary domain or functionality as described above.
 
 ## Limitations
-- Use this skill only when the task clearly matches the scope described above.
+- Quotes may be end-of-day or delayed depending on entitlement. Report timestamps and adjustment basis; market-data retrieval is not investment advice. API responses and empty reports need schema checks before indexing.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

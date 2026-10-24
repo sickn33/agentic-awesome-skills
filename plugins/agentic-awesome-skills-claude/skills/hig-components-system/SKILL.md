@@ -8,7 +8,7 @@ date_added: '2026-02-27'
 
 # Apple HIG: System Experiences
 
-Check for `.claude/apple-design-context.md` before asking questions. Use existing context and only ask for information not already covered.
+If the project contains `.claude/apple-design-context.md`, read it as project context. Do not require that file or create global configuration to use this skill. Ask only for target platform, content or constraints still missing.
 
 ## Key Principles
 
@@ -34,13 +34,13 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ### Notifications
 
-8. **Respect user attention.** Only send notifications for information users genuinely care about. No promotional or low-value notifications.
+8. **Respect user attention.** Only send notifications for information users genuinely care about. Avoid low-value notifications. Promotional notifications require explicit opt-in and compliance with current platform rules; never infer consent from app installation.
 
 9. **Actionable and self-contained.** Include enough context to understand and act without opening the app. Support notification actions. Use threading and grouping.
 
 ### Complications
 
-10. **Focused data on the watch face.** Design for the smallest useful representation. Support multiple families. Budget updates wisely.
+10. **Focused data on the watch face.** Use WidgetKit for modern complications; legacy ClockKit templates do not map one-to-one to WidgetKit layouts. Design for the smallest useful representation. Support multiple families. Budget updates wisely.
 
 ### Home Screen Quick Actions
 
@@ -52,7 +52,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ### App Clips
 
-13. **Instant, focused functionality within a strict size budget.** Load quickly without App Store download. Only what's needed for the immediate task, then offer full app install.
+13. **Instant, focused functionality within a strict size budget.** Download and launch a small App Clip without installing the full app. Only what's needed for the immediate task, then offer full app install.
 
 ### App Shortcuts
 
@@ -98,15 +98,23 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 *Built by [Raintree Technology](https://raintree.technology) · [More developer tools](https://raintree.technology)*
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use when designing Apple system surfaces outside the main app: widgets, Live Activities, notifications, watch complications, Home Screen quick actions, tvOS Top Shelf, App Clips or App Shortcuts. Choose the target platform and OS version before applying a reference.
 
 ## Example
 
 **User request:**
 
-> Use @hig-components-system for this task: Apple HIG guidance for system experience components: widgets, live activities, notifications, complications, home screen quick actions, top shelf, watch faces, app clips, and app shortcuts.
+> Design a delivery-tracking Live Activity for iPhone with a clear stale state, accessible labels, privacy-safe Lock Screen content and an explicit end state.
+
+Recommend supported presentations, source timestamps, ActivityKit update/dismissal handling and a device test matrix. Do not promise real-time delivery or start a push campaign as part of a design request.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Implementation boundaries
+
+Imported references are snapshots with local corrections, not Apple endorsement. Confirm current SDK availability; do not interpret a historical platform summary as proof that an API is unavailable. Widgets use budgeted timelines, Live Activities use ActivityKit and system/APNs delivery limits, and neither is a guaranteed real-time monitor. Show stale/offline states and make critical information available in the app. Separate App Shortcuts phrase restrictions from the parameters an underlying App Intent accepts.
+
+Watch-face sharing configures existing supported faces with complications; it does not grant arbitrary third-party face rendering. Use synthetic data for previews and redact sensitive information on Lock Screens, shared TVs, watch faces and Siri responses. Revalidate authentication/authorization in intent and deep-link handlers; a launch URL, notification action or widget tap does not authorize a purchase, account change or data disclosure. Sending notifications, publishing App Clips or deploying backend services requires the corresponding user task scope.

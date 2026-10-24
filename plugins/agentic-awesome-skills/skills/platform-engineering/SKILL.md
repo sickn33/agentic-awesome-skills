@@ -24,6 +24,10 @@ Platform engineering is the discipline of building and maintaining internal deve
 
 ---
 
+## Deployment boundaries
+
+Pin and review tool, chart, provider and template versions before installation. Localhost Backstage config is development-only: production requires TLS, authentication, permission policy, secret management and restricted proxy/RBAC. Portal forms do not authorize cloud changes; enforce tenancy, costs and production approval at the API/controller. Examples are integration sketches, not a tested platform.
+
 ## 2. Backstage Setup
 
 [Backstage](https://backstage.io) is the leading open-source developer portal framework, originally created at Spotify.
@@ -31,7 +35,7 @@ Platform engineering is the discipline of building and maintaining internal deve
 ### Installation
 
 ```bash
-# Prerequisites: Node.js 18+, yarn 1.x
+# Prerequisites: supported Node/Yarn versions required by the pinned Backstage release
 npx @backstage/create-app@latest
 
 # Follow the prompts -- name your app, e.g., "internal-platform"
@@ -43,29 +47,13 @@ yarn dev
 
 ### Production Docker Build
 
-```dockerfile
-# Dockerfile for Backstage production image
-FROM node:18-bookworm-slim AS build
-WORKDIR /app
+Use the Dockerfile generated for your pinned Backstage release and its documented
+build flow. The backend build emits `skeleton.tar.gz` and `bundle.tar.gz`; copying
+`dist/` without extracting them does not produce a runnable backend. See
+[Backstage Docker deployment](https://backstage.io/docs/deployment/docker/).
+Use a supported Node version, non-root runtime and scoped build context; validate
+the generated image before deploying it.
 
-COPY package.json yarn.lock ./
-COPY packages/ packages/
-COPY plugins/ plugins/
-
-RUN yarn install --frozen-lockfile
-RUN yarn tsc
-RUN yarn build:backend
-
-FROM node:18-bookworm-slim
-WORKDIR /app
-
-COPY --from=build /app/packages/backend/dist/ ./
-COPY --from=build /app/node_modules/ ./node_modules/
-COPY app-config.yaml app-config.production.yaml ./
-
-ENV NODE_ENV=production
-CMD ["node", "packages/backend", "--config", "app-config.production.yaml"]
-```
 
 ### Core app-config.yaml
 
@@ -124,8 +112,7 @@ helm repo update
 # Install Crossplane into its own namespace
 helm install crossplane crossplane-stable/crossplane \
   --namespace crossplane-system \
-  --create-namespace \
-  --set args='{"--enable-composition-revisions"}'
+  --create-namespace
 
 # Install the AWS provider
 kubectl apply -f - <<EOF
@@ -214,6 +201,8 @@ spec:
 
 ### Composition (AWS RDS)
 
+Legacy Crossplane 1.x Resources-mode sketch, not a current deployable composition. Pin compatible CRDs/providers and migrate to Pipeline mode for current deployments. The family provider alone does not install the RDS service provider; verify installed kinds. Complete required RDS credentials/username, providerConfigRef and final-snapshot settings against the exact CRD. The illustrative secret resource is not connected to the RDS connection secret and does not deliver credentials. The postgres default version is invalid for mysql; constrain supported engine/version pairs. Add claim selector/composition selection, RBAC, quotas and tenancy policy.
+
 ```yaml
 # composition-aws-database.yaml
 apiVersion: apiextensions.crossplane.io/v1
@@ -238,9 +227,9 @@ spec:
             autoMinorVersionUpgrade: true
             backupRetentionPeriod: 7
             dbName: appdb
-            deletionProtection: false
+            deletionProtection: true
             publiclyAccessible: false
-            skipFinalSnapshot: true
+            skipFinalSnapshot: false
             storageEncrypted: true
             storageType: gp3
             vpcSecurityGroupIdSelector:
@@ -259,16 +248,15 @@ spec:
         - type: FromCompositeFieldPath
           fromFieldPath: spec.parameters.storageGB
           toFieldPath: spec.forProvider.allocatedStorage
-        - type: CombineFromComposite
-          combine:
-            variables:
-              - fromFieldPath: spec.parameters.instanceSize
-            strategy: map
-            map:
-              small: db.t3.micro
-              medium: db.t3.medium
-              large: db.r6g.large
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.parameters.instanceSize
           toFieldPath: spec.forProvider.instanceClass
+          transforms:
+            - type: map
+              map:
+                small: db.t3.micro
+                medium: db.t3.medium
+                large: db.r6g.large
     - name: db-secret
       base:
         apiVersion: secretstores.aws.upbound.io/v1beta1

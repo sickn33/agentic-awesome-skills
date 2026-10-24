@@ -1,5 +1,7 @@
 # longbridge-investors
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Prompt-only skill. Provides a **fund-manager–centric** view of SEC 13F filings via the Longbridge CLI — who the biggest players are, what a specific manager holds, and how their portfolio changed quarter over quarter.
 
 ## CLI
@@ -84,4 +86,4 @@ EXITED:  HPQ.US (−7.2M, −$195M)
 | `command not found: longbridge` | 回退到 MCP；如也不可用，请安装 longbridge-terminal。                        | 回退到 MCP；如也不可用，請安裝 longbridge-terminal。/ Fall back to MCP; if unavailable, install longbridge-terminal. |
 | `investors` returns empty       | "暂无 13F 数据，CIK 可能有误，请用 `longbridge investors` 列出前50名确认。" | "暫無 13F 數據，請確認 CIK。" / "No 13F data — verify CIK via `longbridge investors`."                               |
 | CIK not found in top-50         | 提示用户运行 `longbridge investors --format json` 获取完整 CIK 列表。       | 提示用戶查看完整 CIK 列表。/ Ask user to run `longbridge investors` for the full CIK list.                           |
-| Other stderr                    | 直接显示原始错误，不静默重试。                                              | 顯示原始錯誤。/ Surface verbatim — do not retry silently.                                                            |
+| Other stderr                    | 直接显示原始错误，不静默重试。                                              | 顯示原始錯誤。/ Surface a redacted error summary — do not retry silently.                                                            |

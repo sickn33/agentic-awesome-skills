@@ -4,107 +4,29 @@
 
 ## Overview
 
-**This is the core skill for the deep research and writing tool**—combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.
+**This is the core skill for the deep research and writing tool**—combining AI-driven deep research with well-formatted written outputs. A comprehensive literature search and verified citations require actual source access and a documented search; this skill alone does not provide them.
 
 Scientific writing is a process for communicating research with precision and clarity. Write manuscripts using IMRAD structure, citations (APA/AMA/Vancouver), figures/tables, and reporting guidelines (CONSORT/STROBE/PRISMA). Apply this skill for research papers and journal submissions.
 
-**Critical Principle: Always write in full paragraphs with flowing prose. Never submit bullet points in the final manuscript.** Use a two-stage process: first create section outlines with key points using research-lookup, then convert those outlines into complete paragraphs.
+**Style principle:** Prefer clear connected prose; lists, structured abstracts and contribution statements are appropriate when the venue/style requires them. Use a two-stage process: first create section outlines with key points using research-lookup, then convert those outlines into complete paragraphs.
 
 
-## Visual Enhancement with Scientific Schematics
+## Figures appropriate to the evidence and venue
 
-**⚠️ MANDATORY: Every scientific paper MUST include a graphical abstract plus 1-2 additional AI-generated figures using the scientific-schematics skill.**
+Follow the target journal's current author and image/AI policies. A graphical
+abstract is required only when the venue requests it; no universal figure quota
+applies. Use reproducible plotting tools for actual data and label conceptual
+schematics as illustrations. Never generate or alter microscopy, gels, patient
+images, measurements, sample counts or results to manufacture evidence.
 
-This is not optional. Scientific papers without visual elements are incomplete. Before finalizing any document:
-1. **ALWAYS generate a graphical abstract** as the first visual element
-2. Generate at minimum ONE additional schematic or diagram using scientific-schematics
-3. Prefer 3-4 total figures for comprehensive papers (graphical abstract + methods flowchart + results visualization + conceptual diagram)
-
-### Graphical Abstract (REQUIRED)
-
-**Every scientific writeup MUST include a graphical abstract.** This is a visual summary of your paper that:
-- Appears before or immediately after the text abstract
-- Captures the entire paper's key message in one image
-- Is suitable for journal table of contents display
-- Uses landscape orientation (typically 1200x600px)
-
-**Generate the graphical abstract FIRST:**
-```bash
-python scripts/generate_schematic.py "Graphical abstract for [paper title]: [brief description showing workflow from input → methods → key findings → conclusions]" -o figures/graphical_abstract.png
-```
-
-**Graphical Abstract Requirements:**
-- **Content**: Visual summary showing workflow, key methods, main findings, and conclusions
-- **Style**: Clean, professional, suitable for journal TOC
-- **Elements**: Include 3-5 key steps/concepts with connecting arrows or flow
-- **Text**: Minimal labels, large readable fonts
-- Log: `[HH:MM:SS] GENERATED: Graphical abstract for paper summary`
-
-### Additional Figures (GENERATE EXTENSIVELY)
-
-**⚠️ CRITICAL: Use BOTH scientific-schematics AND generate-image EXTENSIVELY throughout all documents.**
-
-Every document should be richly illustrated. Generate figures liberally - when in doubt, add a visual.
-
-**MINIMUM Figure Requirements:**
-
-| Document Type | Minimum | Recommended |
-|--------------|---------|-------------|
-| Research Papers | 5 | 6-8 |
-| Literature Reviews | 4 | 5-7 |
-| Market Research | 20 | 25-30 |
-| Presentations | 1/slide | 1-2/slide |
-| Posters | 6 | 8-10 |
-| Grants | 4 | 5-7 |
-| Clinical Reports | 3 | 4-6 |
-
-**Use scientific-schematics EXTENSIVELY for technical diagrams:**
-```bash
-python scripts/generate_schematic.py "your diagram description" -o figures/output.png
-```
-
-- Study design and methodology flowcharts (CONSORT, PRISMA, STROBE)
-- Conceptual framework diagrams
-- Experimental workflow illustrations
-- Data analysis pipeline diagrams
-- Biological pathway or mechanism diagrams
-- System architecture visualizations
-- Neural network architectures
-- Decision trees, algorithm flowcharts
-- Comparison matrices, timeline diagrams
-- Any technical concept that benefits from schematic visualization
-
-**Use generate-image EXTENSIVELY for visual content:**
-```bash
-python scripts/generate_image.py "your image description" -o figures/output.png
-```
-
-- Photorealistic illustrations of concepts
-- Medical/anatomical illustrations
-- Environmental/ecological scenes
-- Equipment and lab setup visualizations
-- Artistic visualizations, infographics
-- Cover images, header graphics
-- Product mockups, prototype visualizations
-- Any visual that enhances understanding or engagement
-
-The AI will automatically:
-- Create publication-quality images with proper formatting
-- Review and refine through multiple iterations
-- Ensure accessibility (colorblind-friendly, high contrast)
-- Save outputs in the figures/ directory
-
-**When in Doubt, Generate a Figure:**
-- Complex concept → generate a schematic
-- Data discussion → generate a visualization
-- Process description → generate a flowchart
-- Comparison → generate a comparison diagram
-- Reader benefit → generate a visual
-
-For detailed guidance, refer to the scientific-schematics and generate-image skill documentation.
+If using an approved image tool for a conceptual diagram, verify every label,
+arrow, anatomical detail, unit and causal claim against the study/source; record
+the tool/version and disclose AI assistance as the venue requires. Accessibility,
+publication resolution and scientific accuracy require human verification, not
+an automatic generation claim. Obtain permission before sharing unpublished or
+identifiable material with external tools. No generation scripts are bundled.
 
 ---
-
 
 ## Core Capabilities
 
@@ -187,7 +109,7 @@ Create effective data visualizations that enhance comprehension. For detailed be
 - Use consistent formatting and terminology across all display items
 - Label all axes, columns, and rows with units
 - Include sample sizes (n) and statistical annotations
-- Follow the "one table/figure per 1000 words" guideline
+- Choose the number of displays needed to communicate results within the venue limits
 - Avoid duplicating information between text, tables, and figures
 
 **Common Figure Types:**
@@ -245,7 +167,7 @@ Apply fundamental scientific writing principles. For detailed guidance, refer to
 
 ### 7. Writing Process: From Outline to Full Paragraphs
 
-**CRITICAL: Always write in full paragraphs, never submit bullet points in scientific papers.**
+**Use the target venue’s format, with prose for developed arguments and lists where appropriate.**
 
 Scientific papers must be written in complete, flowing prose. Use this two-stage approach for effective writing:
 
@@ -260,7 +182,9 @@ When starting a new section:
    - Logical flow and organization
 3. These bullet points serve as scaffolding—they are NOT the final manuscript
 
-**Example outline (Introduction section):**
+**Fictional example outline (Introduction section):**
+
+Smith/Jones/Lee/Chen citations, dataset counts and method/results statements below are invented teaching placeholders, not verified literature or research performed. Replace every such claim with supplied study evidence before reuse.
 ```
 - Background: AI in drug discovery gaining traction
   * Cite recent reviews (Smith 2023, Jones 2024)
@@ -315,27 +239,9 @@ interpretability of the results.
 | Abbreviated ideas | Developed arguments with transitions |
 | For your eyes only | For publication and peer review |
 
-**Common Mistakes to Avoid:**
-
-- ❌ **Never** leave bullet points in the final manuscript
-- ❌ **Never** submit lists where paragraphs should be
-- ❌ **Don't** use numbered or bulleted lists in Results or Discussion sections (except for specific cases like study hypotheses or inclusion criteria)
-- ❌ **Don't** write sentence fragments or incomplete thoughts
-- ✅ **Do** use occasional lists only in Methods (e.g., inclusion/exclusion criteria, materials lists)
-- ✅ **Do** ensure every section flows as connected prose
-- ✅ **Do** read paragraphs aloud to check for natural flow
-
-**When Lists ARE Acceptable (Limited Cases):**
-
-Lists may appear in scientific papers only in specific contexts:
-- **Methods**: Inclusion/exclusion criteria, materials and reagents, participant characteristics
-- **Supplementary Materials**: Extended protocols, equipment lists, detailed parameters
-- **Never in**: Abstract, Introduction, Results, Discussion, Conclusions
-
-**Abstract Format Rule:**
-- ❌ **NEVER** use labeled sections (Background:, Methods:, Results:, Conclusions:)
-- ✅ **ALWAYS** write as flowing paragraph(s) with natural transitions
-- Exception: Only use structured format if journal explicitly requires it in author guidelines
+**Final structure check:** Follow the actual journal requirements for abstract
+headings, Methods lists, contribution bullets and supplementary protocols.
+Do not impose a universal ban on lists or structured abstracts.
 
 **Integration with Research Lookup:**
 
@@ -353,7 +259,7 @@ This two-stage process ensures you:
 
 ### 8. Professional Report Formatting (Non-Journal Documents)
 
-For research reports, technical reports, white papers, and other professional documents that are NOT journal manuscripts, use the `scientific_report.sty` LaTeX style package for a polished, professional appearance.
+For non-journal reports, use an available approved template. The scientific_report.sty package and supporting assets described below are not bundled, so its commands/environments will not compile without separately supplied definitions. Standard report/article classes are a fallback. Do not download a same-named package or enable shell escape automatically.
 
 **When to Use Professional Report Formatting:**
 - Research reports and technical reports
@@ -500,7 +406,7 @@ Adapt language, terminology, and conventions to match the specific scientific di
 - Follow species-specific gene nomenclature (uppercase for human: *BRCA1*; sentence case for mouse: *Brca1*)
 - Specify organism names in full at first mention, then use accepted abbreviations (e.g., *Escherichia coli*, then *E. coli*)
 - Use standard genetic notation (e.g., +/+, +/-, -/- for genotypes)
-- Employ established terminology for molecular techniques (e.g., "quantitative PCR" or "qPCR," not "real-time PCR")
+- Use the actual technique precisely (qPCR, RT-qPCR and real-time PCR are not interchangeable in every context)
 
 **Chemistry and Pharmaceutical Sciences:**
 - Follow IUPAC nomenclature for chemical compounds
@@ -671,7 +577,7 @@ The venue-templates skill provides:
 
 ## References
 
-This skill includes comprehensive reference files covering specific aspects of scientific writing:
+The following upstream reference names are not included in this tracked two-file bundle; verify availability before referencing or loading them:
 
 - `references/imrad_structure.md`: Detailed guide to IMRAD format and section-specific content
 - `references/citation_styles.md`: Complete citation style guides (APA, AMA, Vancouver, Chicago, IEEE)
@@ -683,7 +589,7 @@ This skill includes comprehensive reference files covering specific aspects of s
 
 ## Assets
 
-This skill includes LaTeX style packages and templates for professional report formatting:
+The following upstream style assets are not included in this tracked bundle:
 
 - `assets/scientific_report.sty`: Professional LaTeX style package with Helvetica fonts, colored boxes, and attractive tables
 - `assets/scientific_report_template.tex`: Complete report template demonstrating all style features

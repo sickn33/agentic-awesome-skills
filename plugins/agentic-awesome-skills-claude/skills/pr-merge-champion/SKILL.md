@@ -28,8 +28,8 @@ A systematic playbook for preparing, reviewing, and documenting pull requests to
 ### Step 1: Pre-Flight Clean Up & Rebase
 
 Before presenting your code to reviewers, clean up any workspace noise and ensure your branch is up to date:
-1. Rebase your feature branch on top of the latest target branch (e.g., `main` or `master`) to resolve conflicts early.
-2. Clean up untracked, temp, or swap files from your repository.
+1. Read repository policy and inspect branch/staged scope. Update the topic branch through the required workflow; do not rewrite a shared branch or force-push merely to follow this example.
+2. Inspect untracked/temp files and preserve unrelated user work. Remove only task-owned artifacts within authorized cleanup scope; untracked does not mean disposable.
 3. Run local linters, formatters, and compilers to ensure no stylistic or syntax errors exist.
 
 ### Step 2: Critical Self-Review

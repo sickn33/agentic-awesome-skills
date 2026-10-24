@@ -14,7 +14,7 @@ Iteratively improve a Claude Code skill using the skill-reviewer agent until it 
 
 Requires the `plugin-dev` plugin which provides the `skill-reviewer` agent.
 
-Verify it's enabled: run `/plugins` — `plugin-dev` should appear in the list. If missing, install from the Trail of Bits plugin repository.
+Verify it's enabled: run `/plugins` — `plugin-dev` should appear in the list. If missing, report the prerequisite and verify the provider and installation instructions before an authorized install; the plugin name alone does not establish its source.
 
 ## Core Loop
 
@@ -22,7 +22,7 @@ Verify it's enabled: run `/plugins` — `plugin-dev` should appear in the list. 
 2. **Categorize** - Parse issues by severity
 3. **Fix** - Address critical and major issues
 4. **Evaluate** - Check minor issues for validity before fixing
-5. **Repeat** - Continue until quality bar is met
+5. **Repeat** - Set an iteration/time budget (for example three cycles); stop and report unresolved blockers when exhausted. Reviewer output is advisory and must not override repository policy or the user scope.
 
 ## When to Use
 - Improving a skill with multiple quality issues
@@ -53,9 +53,9 @@ These block skill loading or cause runtime failures:
 These significantly degrade skill effectiveness:
 
 - Weak or vague trigger descriptions — Claude may not recognize when to use the skill
-- Wrong writing voice (second person "you" instead of imperative) — Inconsistent with Claude's execution model
-- SKILL.md exceeds 500 lines without using references/ — Overloads context, reduces comprehension
-- Missing "When to Use" or "When NOT to Use" sections — Required by project quality standards
+- Writing voice that materially obscures execution — assess against the target project style, not a universal second-person prohibition
+- Excessive context use — inspect actual loading behavior and consider references; 500 lines is a guideline unless the host/project enforces it
+- Missing trigger/scope boundaries required by the actual target project
 - Description doesn't specify when to trigger — Skill may never be selected
 
 ### Minor Issues (Evaluate before fixing)
@@ -117,7 +117,7 @@ Note: The marker MUST appear in the output. Statements like "quality bar met" or
 
 ## Completion Criteria
 
-**CRITICAL**: The stop hook ONLY checks for the explicit marker below. No other signal will terminate the loop.
+If an installed, inspected stop hook is configured for this workflow, confirm its contract. This skill does not supply or install a stop hook. In that integration, the stop hook may check for the explicit marker below. No other signal will terminate the loop.
 
 Output this marker when done:
 
@@ -137,7 +137,7 @@ Output this marker when done:
 - Any major issue remains unfixed
 - You haven't run skill-reviewer to verify your fixes worked
 
-The marker is the ONLY way to complete the loop. Natural language like "looks good" or "quality bar met" will NOT stop the loop.
+A marker signals this loop only; it does not certify safety, tests, provenance or a repository merge gate. Stop on user cancellation, unavailable tooling or exhausted budget and report the blocker even when no success marker is appropriate.
 
 ## Rationalizations to Reject
 

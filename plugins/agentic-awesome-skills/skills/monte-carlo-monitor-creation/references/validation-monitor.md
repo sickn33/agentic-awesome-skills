@@ -24,7 +24,7 @@ Think of it this way: the monitor scans rows and fires an alert when it finds ro
 |------------|----------------------|----------------|
 | "id should never be null" | id IS NULL (alert when null found) | id IS NOT NULL (would alert on every valid row) |
 | "status must be in [active, pending]" | status NOT IN [active, pending] (alert on unexpected values) | status IN [active, pending] (would alert on valid rows) |
-| "amount must be positive" | amount IS NEGATIVE (alert on bad values) | amount > 0 (would alert on valid rows) |
+| "amount must be positive" | amount IS NULL OR amount <= 0 (if positive and required) | amount > 0 (would alert on valid rows) |
 | "email must not be empty" | email IS NULL **OR** email = '' (alert on missing) | email IS NOT NULL (would alert on valid rows) |
 
 **Before building any condition, ask yourself: "If a row matches this condition, is the row INVALID?" If the answer is no, the logic is backwards.**
@@ -115,7 +115,7 @@ Used for complex conditions that are difficult to express with UNARY/BINARY node
 ```json
 {
   "type": "SQL",
-  "sql": "amount > 0 AND amount < 1000000"
+  "sql": "amount IS NULL OR amount <= 0 OR amount >= 1000000"
 }
 ```
 
@@ -349,7 +349,7 @@ Verify that `customer_id` exists in the table schema from `getTable` before proc
     "conditions": [
       {
         "type": "SQL",
-        "sql": "customer_id IS NOT NULL AND customer_id NOT IN (SELECT id FROM analytics.core.customers)"
+        "sql": "customer_id IS NOT NULL AND customer_id NOT IN (SELECT id FROM analytics.core.customers WHERE id IS NOT NULL)"
       }
     ]
   }
@@ -394,11 +394,13 @@ Verify that `email` and `phone` exist in the table schema from `getTable` before
 
 If `createValidationMonitorMac` fails -- for example because a referenced column does not exist yet in the live table, or the warehouse does not support a particular predicate -- fall back to `createCustomSqlMonitorMac` with an explicit SQL query instead.
 
-A custom SQL monitor lets you express any validation logic as a SQL query that returns rows or a count. This is always available as a backup when the structured validation condition tree cannot express what you need or encounters an API error.
+A custom SQL monitor must return exactly one row with one numeric column,
+usually a count of invalid rows with a `GT 0` threshold. It still requires
+existing columns and supported SQL; do not use it to bypass schema failures.
 
 When falling back:
 
 1. Translate the intended validation logic into a SQL query.
-2. The SQL should select rows that violate the rule (matching the same "conditions match INVALID data" principle).
+2. Count rows that violate the rule, e.g. `SELECT COUNT(*) FROM ... WHERE <invalid condition>`.
 3. Use `createCustomSqlMonitorMac` with the translated query.
 4. Inform the user that you used a custom SQL monitor as a fallback and explain why.

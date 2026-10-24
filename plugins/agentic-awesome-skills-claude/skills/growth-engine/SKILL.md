@@ -42,6 +42,10 @@ Motor de crescimento para produtos digitais -- growth hacking, SEO, ASO, viral l
 
 ---
 
+## Evidencia e limites
+
+Auri e um exemplo: metas, taxas, ratings e claims abaixo sao hipoteticos, nao resultados comprovados. Substitua-os apenas por dados verificados; nunca publique aggregateRating sem avaliacoes reais. Envie emails/posts somente com autorizacao e publico elegivel; preserve consentimento e descadastro. Os comandos sao pedidos de workflow, nao ferramentas instaladas.
+
 ## Pirate Metrics (Aarrr) Para Auri
 
 AQUISICAO:  Como as pessoas descobrem a Auri?
@@ -199,7 +203,7 @@ Dia 0 -- Boas-vindas (imediato apos cadastro)
     - Pedir a hunters influentes para cacar o produto
     - Preparar assets: logo, tagline, screenshots, video demo 60s
     - Warm up: posts no X/LinkedIn sobre o problema que Auri resolve
-    - Recrutar 50 early adopters para upvotar no lancamento
+    - Convidar early adopters para testar e dar feedback honesto, seguindo as regras da plataforma
 
     Dia de lancamento (meia-noite PT):
     - Post no X: demo impressionante + link PH

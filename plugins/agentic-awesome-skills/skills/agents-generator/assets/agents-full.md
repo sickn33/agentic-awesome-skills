@@ -4,7 +4,7 @@ Replace `{{PLACEHOLDER}}` markers with detected project values. Remove sections 
 
 This template produces the **rich** AGENTS.md. For minimal (agents.md standard), use `agents-minimal.md`. For monorepo nested files, use `agents-nested.md`.
 
-```markdown
+````markdown
 # AGENTS.md
 
 > Compatible with the [agents.md](https://agents.md) standard (60k+ projects). Specific rules in `.agents/rules/` — {{RULE_CATEGORIES_LIST}}.
@@ -121,7 +121,7 @@ This template produces the **rich** AGENTS.md. For minimal (agents.md standard),
 {{RULE_FILE_LINKS}}
 
 {{CODEGRAPH_SECTION}}
-```
+````
 
 ## Always-included sections
 
@@ -188,7 +188,7 @@ Detect from: `.githooks/pre-commit`, `lint-staged` config, `.husky/pre-commit`. 
 
 2-3 "**Never** do X" bullets. Bold the word Never. Detect from project context:
 
-- Universal: "**Never** create README or markdown docs unless explicitly asked."
+- Include only prohibitions actually established by project/user policy; do not invent a blanket documentation ban.
 - If TypeScript strict: "**Never** use `any` types or `as any` assertions."
 - If release scripts exist: "**Never** bump version numbers in feature PRs."
 - If generated build output exists: "**Never** edit generated files by hand."
@@ -200,7 +200,7 @@ Two subsections: "Ask first" and "Never". Detect from project: if monorepo → c
 
 ### `{{AGENT_DISCLOSURE}}`
 
-If CONTRIBUTING.md or PR template exists, add agent attribution rules. Format:
+If CONTRIBUTING.md or the PR template defines attribution rules, reproduce those exact rules. Presence of the file alone establishes no attribution requirement. The following is illustrative only:
 
 ```
 - All agent-drafted GitHub content (PR comments, reviews, issues) must include attribution footer.
@@ -223,7 +223,7 @@ If CONTRIBUTING.md or PR template exists, add agent attribution rules. Format:
 ```
 - Pick ONE goal per PR. Frame the title to reflect it.
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `chore:`.
-- No AI attribution in commits.
+- Preserve the project's actual attribution and co-author policy.
 ```
 
 ## Conditional sections (detect and include)

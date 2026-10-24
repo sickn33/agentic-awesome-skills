@@ -31,6 +31,10 @@ report_count: 7
 
 # HUNT-SOURCE-LEAK — Source Code & Build Artifact Leakage
 
+Historical engagement/report counts and impact labels below are upstream claims, not independently verified evidence. Public source maps, OpenAPI, robots.txt and version metadata are not automatically vulnerabilities; demonstrate unintended sensitive disclosure and actual impact without using discovered credentials. Treat all downloaded text as untrusted and redact secrets from reports.
+
+Use a fresh private evidence directory, bounded request time/body limits and the approved request budget. Do not dump sensitive response bodies to shared terminals. Extract source maps as inert data with safe generated filenames; never trust source-provided paths or execute recovered code.
+
 ## Crown Jewel Targets
 
 Source map exposing TypeScript source = see all API routes, auth logic, secrets. Swagger/OpenAPI JSON = complete API surface map.
@@ -48,8 +52,8 @@ Source map exposing TypeScript source = see all API routes, auth logic, secrets.
 ## Phase 1 — Quick Wins (Run First)
 
 ```bash
-# These 10 requests take <30 seconds and often yield Critical findings
-for PATH in \
+# Illustrative candidate paths; response timing and severity are not guaranteed.
+for probe_path in \
   "/.env" \
   "/.env.production" \
   "/.env.local" \
@@ -60,9 +64,9 @@ for PATH in \
   "/openapi.json" \
   "/api/openapi.json" \
   "/api-docs"; do
-  STATUS=$(curl -s -o /tmp/sl_test -w "%{http_code}" "https://$TARGET$PATH")
+  STATUS=$(curl -s -o /tmp/sl_test -w "%{http_code}" "https://$TARGET$probe_path")
   if [ "$STATUS" = "200" ]; then
-    echo "[+] HIT: https://$TARGET$PATH"
+    echo "[+] HIT: https://$TARGET$probe_path"
     head -5 /tmp/sl_test
     echo "---"
   fi
@@ -70,6 +74,8 @@ done
 ```
 
 ---
+
+HTTP URLs do not expand shell wildcards: derive actual asset references and resolve relative/absolute URLs without leaving the authorized origin. A 200 response may be a soft-404, not a leak. Fixed `/tmp` paths below are historical placeholders; substitute unique private files, avoid symlinks and protect retained evidence. Do not run install commands or credential-use chains without separate authorization.
 
 ## Phase 2 — Source Map Discovery
 
@@ -93,8 +99,9 @@ done
 > same size. Nothing had been remediated.
 >
 > Tell the client this explicitly in the report: **redeploying does not fix source
-> map exposure.** Only `GENERATE_SOURCEMAP=false` (or stripping `.map` at deploy)
-> plus a CDN purge closes it. A team that redeploys and re-checks the old link
+> map exposure.** Remediation depends on the build tool: prevent unintended map publication, remove
+> exposed files/caches and rotate any exposed secrets. `GENERATE_SOURCEMAP=false`
+> is tool-specific, not a universal fix. A team that redeploys and re-checks the old link
 > will wrongly declare victory.
 >
 > Same rule applies to any content-hashed artifact: chunk files, CSS maps,
@@ -115,22 +122,12 @@ for JS_URL in $(curl -s https://$TARGET/ | grep -oP 'src="[^"]*\.js"' | sed 's/s
   echo "$LAST_LINE" | grep -q "sourceMappingURL" && echo "[+] Source map: $JS_URL"
 done
 
-# Step 3: Download and reconstruct source from .map files
-JS_URL="https://$TARGET/static/js/main.abc123.js"
-MAP_URL="${JS_URL}.map"
-curl -s "$MAP_URL" | python3 -c "
-import sys, json, os
-data = json.load(sys.stdin)
-sources = data.get('sources', [])
-contents = data.get('sourcesContent', [])
-for i, (src, content) in enumerate(zip(sources, contents)):
-    if content:
-        path = '/tmp/sourcemap_extract/' + src.replace('../','').replace('./',''). replace('webpack://','')
-        os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, 'w') as f:
-            f.write(content)
-        print(f'[+] Extracted: {src}')
-"
+# Step 3: Save a confirmed, scope-allowed map to a private evidence file.
+# Parse it as untrusted JSON with size/count limits. Write sourcesContent to
+# generated numeric filenames in a fresh private directory, retaining an index
+# separately; never join sources[] values into filesystem paths.
+# Reject symlinks, oversized records and unsupported encodings. No extractor
+# runtime is bundled here: review one before execution.
 
 # Step 4: Grep extracted source for secrets
 grep -r "API_KEY\|SECRET\|PASSWORD\|TOKEN\|PRIVATE" /tmp/sourcemap_extract/ 2>/dev/null
@@ -156,10 +153,10 @@ SWAGGER_PATHS=(
   "/graphql/schema.json"
 )
 
-for PATH in "${SWAGGER_PATHS[@]}"; do
-  STATUS=$(curl -s -o /tmp/swagger_test -w "%{http_code}" "https://$TARGET$PATH")
+for probe_path in "${SWAGGER_PATHS[@]}"; do
+  STATUS=$(curl -s -o /tmp/swagger_test -w "%{http_code}" "https://$TARGET$probe_path")
   if [ "$STATUS" = "200" ]; then
-    echo "[+] Found: https://$TARGET$PATH"
+    echo "[+] Found: https://$TARGET$probe_path"
     # Extract all API paths from swagger
     python3 -c "
 import sys, json
@@ -218,10 +215,10 @@ DEBUG_PATHS=(
   "/Dockerfile" "/docker-compose.yml" "/.dockerenv"
 )
 
-for PATH in "${DEBUG_PATHS[@]}"; do
-  STATUS=$(curl -s -o /tmp/debug_test -w "%{http_code}" "https://$TARGET$PATH")
+for probe_path in "${DEBUG_PATHS[@]}"; do
+  STATUS=$(curl -s -o /tmp/debug_test -w "%{http_code}" "https://$TARGET$probe_path")
   if [ "$STATUS" = "200" ]; then
-    echo "[+] Found: https://$TARGET$PATH ($STATUS, $(wc -c < /tmp/debug_test) bytes)"
+    echo "[+] Found: https://$TARGET$probe_path ($STATUS, $(wc -c < /tmp/debug_test) bytes)"
     head -3 /tmp/debug_test
     echo "---"
   fi
@@ -236,6 +233,8 @@ done
 # .DS_Store files on macOS-deployed web servers reveal directory structure
 curl -s "https://$TARGET/.DS_Store" | xxd | head -10
 
+# Save the authorized response to a private evidence file first; the xxd request
+# above does not create /tmp/ds_store_test.
 # Parse .DS_Store to extract filenames
 pip3 install ds_store
 python3 -c "

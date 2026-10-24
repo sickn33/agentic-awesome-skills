@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Candidate Name,AI Match Score,Department,Email,Experience (Years),Hired Employee,Interview Date,Interview Score,Interviewer,Notes,Notice Period,Offered Salary,Currency,Phone,Position,Applied Date,Rec ID,Resume URL,Salary Expectation,Source,Stage
-Karan Malhotra,0.82,Delivery,aarav.sharma@example.com,6,Priya Nair,2026-01-15,4,Sneha Iyer,"Candidate asked about the timeline in February and has not heard back since.",60 days,1450000.00,INR,+91 98xxxxxx21,Delivery Manager,2026-01-15,,https://example.com/cv.pdf,1500000.00,Referral,Applied
+Karan Malhotra,0.82,Delivery,aarav.sharma@example.com,6,,,,,"Application received; interview and offer are not yet recorded.",60 days,,INR,+91 98xxxxxx21,Delivery Manager,2026-01-15,,https://example.com/cv.pdf,1500000.00,Referral,Applied
 ```
 
 ```sql
@@ -131,21 +131,21 @@ CREATE TABLE recruitment_pipeline (
   ai_match_score NUMERIC,
   department VARCHAR(255),
   email VARCHAR(255),
-  experience_years NUMERIC NOT NULL,
+  experience_years NUMERIC,
   hired_employee VARCHAR(255),  -- relation -> target record
   interview_date DATE,
   interview_score NUMERIC,
   interviewer VARCHAR(255),
   notes TEXT,
   notice_period VARCHAR(255),
-  offered_salary NUMERIC(14,2) NOT NULL,
+  offered_salary NUMERIC(14,2),
   currency VARCHAR(255),
   phone VARCHAR(255),
   position VARCHAR(255),
   applied_date DATE NOT NULL,
   rec_id SERIAL PRIMARY KEY,
   resume_url TEXT,
-  salary_expectation NUMERIC(14,2) NOT NULL,
+  salary_expectation NUMERIC(14,2),
   source VARCHAR(255),
   stage VARCHAR(100) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -229,9 +229,7 @@ CREATE TABLE recruitment_pipeline (
     }
   },
   "required": [
-    "Experience (Years)",
     "Applied Date",
-    "Salary Expectation",
     "Stage"
   ]
 }
@@ -266,6 +264,8 @@ CREATE TABLE recruitment_pipeline (
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+Applied-stage records may omit experience, salary expectation, interview, offer and hired-employee link when unknown; never infer these values. Hired Employee is a stable employee-record ID populated only after a verified hire, not another person’s name. Keep stage-transition timestamps/history to measure time-to-hire or stalls; Applied Date plus current Stage alone cannot provide durations for each stage. Define salary period/currency and score rubric/provenance before comparing records.
+
 ## Field Reference
 
 `AI Match Score`, `Interview Date`, `Interview Score`, `Offered Salary` may be absent before the relevant lifecycle stage or when no verified source exists. Do not invent values to satisfy a schema.
@@ -281,7 +281,7 @@ and anything pointing at another table stays `relation`.
 | 7 | Interview Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 8 | Interview Score | `number` | `NUMERIC` | `number` | Number | `4` |
 | 9 | Interviewer | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
-| 10 | Notes | `long_text` | `TEXT` | `string` | Text | `Candidate asked about the timeline in February and has not heard back since.` |
+| 10 | Notes | `long_text` | `TEXT` | `string` | Text | `Application received; interview and offer are not yet recorded.` |
 | 11 | Notice Period | `text` | `VARCHAR(255)` | `string` | Text | `60 days` |
 | 12 | Offered Salary | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1450000.00` |
 | 13 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |

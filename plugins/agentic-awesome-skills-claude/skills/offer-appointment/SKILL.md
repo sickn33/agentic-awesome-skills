@@ -96,7 +96,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Why this one:** Offer data is the bridge between recruiting and payroll. Capturing it once, at offer stage, prevents re-keying at joining.
 
-**Workflow:** Approved offer → Offer sent → Candidate accepts → Record created → Onboarding started
+**Workflow:** Draft record created → Offer approved → Offer sent → Candidate decision recorded → Onboarding started
 
 ### Step 5 - Build only on request
 
@@ -106,7 +106,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Offer Title,Candidate Name,Recruitment Record,Position,Department,Grade Level,Employment Type,Offered Salary,Currency,Offer Date,Offer Expiry,Joining Date,Probation Period (Days),Approver,Signed Via,Status,Notes,Offer ID
-Delivery Manager,Karan Malhotra,REC-2026-031,Delivery Manager,Delivery,L1,Full Time,1450000.00,INR,2026-01-15,2026-02-01,2026-01-15,90,Sneha Iyer,DocuSign,Offered,Offer discussed in February and accepted; the start date depends on the notice period.,
+Delivery Manager,Karan Malhotra,REC-2026-031,Delivery Manager,Delivery,L1,Full Time,1450000.00,INR,2026-01-15,2026-02-01,,90,Sneha Iyer,DocuSign,Offered,Offer sent and awaiting acceptance; proposed start date remains unconfirmed.,
 ```
 
 ```sql
@@ -138,8 +138,8 @@ CREATE TABLE offer_appointment (
   currency VARCHAR(255),
   offer_date DATE NOT NULL,
   offer_expiry DATE NOT NULL,
-  joining_date DATE NOT NULL,
-  probation_period_days NUMERIC NOT NULL,
+  joining_date DATE,
+  probation_period_days INTEGER NOT NULL CHECK (probation_period_days >= 0),
   approver VARCHAR(255),
   signed_via VARCHAR(255),
   status VARCHAR(100) NOT NULL,
@@ -171,7 +171,7 @@ CREATE INDEX idx_offer_appointment_status ON offer_appointment (status);
       "Offer Date": { "type": "string", "format": "date" },
       "Offer Expiry": { "type": "string", "format": "date" },
       "Joining Date": { "type": "string", "format": "date" },
-      "Probation Period (Days)": { "type": "number" },
+      "Probation Period (Days)": { "type": "integer", "minimum": 0 },
       "Approver": { "type": "string" },
       "Signed Via": { "type": "string" },
       "Status": { "type": "string" },
@@ -184,7 +184,6 @@ CREATE INDEX idx_offer_appointment_status ON offer_appointment (status);
       "Offered Salary",
       "Offer Date",
       "Offer Expiry",
-      "Joining Date",
       "Probation Period (Days)",
       "Status"
   ]
@@ -217,6 +216,8 @@ CREATE INDEX idx_offer_appointment_status ON offer_appointment (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+Create the record before sending so declined/expired offers retain an audit history. Joining Date may be omitted until confirmed. Keep salary currency and period (annual/monthly/hourly, gross/net) explicit before using an amount downstream. A channel name in Signed Via is not evidence of signature or acceptance: record the actual version, authorized approver decision and dated signed-document reference in the confirmed field list when those are required. This register does not validate employment terms or authorize sending an offer.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
@@ -237,7 +238,7 @@ and anything pointing at another table stays `relation`.
 | 14 | Approver | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 15 | Signed Via | `text` | `VARCHAR(255)` | `string` | Text | `DocuSign` |
 | 16 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Offered` |
-| 17 | Notes | `long_text` | `TEXT` | `string` | Text | `Offer discussed in February and accepted; the start date depends on the notice period.` |
+| 17 | Notes | `long_text` | `TEXT` | `string` | Text | `Offer sent and awaiting acceptance; proposed start date remains unconfirmed.` |
 | 18 | Offer ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
 ## Select Options
@@ -285,7 +286,7 @@ We make offers over email and then re-type everything into payroll.
 
 > Store the offer as a record with version, approver and expiry. The template is secondary; the record is what you lose today.
 >
-> Workflow: Approved offer → Offer sent → Candidate accepts → Record created → Onboarding started
+> Workflow: Draft record created → Offer approved → Offer sent → Candidate decision recorded → Onboarding started
 >
 > Want the CSV, SQL, JSON Schema and Notion mapping for this?
 
@@ -336,9 +337,9 @@ We make offers over email and then re-type everything into payroll.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
+- [notification-reminder-hub](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

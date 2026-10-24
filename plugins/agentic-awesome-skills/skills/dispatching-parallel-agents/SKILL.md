@@ -12,7 +12,7 @@ date_added: "2026-02-27"
 
 When you have multiple unrelated failures (different test files, different subsystems, different bugs), investigating them sequentially wastes time. Each investigation is independent and can happen in parallel.
 
-**Core principle:** Dispatch one agent per independent problem domain. Let them work concurrently.
+**Core principle:** When current user/repository instructions authorize delegation, dispatch one agent per independent problem domain with disjoint file/resource ownership. This guide does not itself grant delegation authority or a model override.
 
 ## When to Use
 ```dot

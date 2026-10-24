@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Event Name,Event Type,Date,Start Time,End Time,Venue or Link,Organizer,Department,Audience,Budget,Actual Cost,Currency,RSVP Count,Attended Count,Attendance %,Feedback Score,Linked Calendar Entry,Status,Notes,Event ID
-Q1 Town Hall,Team Meeting,2026-01-15,10:00,11:00,https://example.com/venue,Karan Malhotra,Delivery,All employees,250000.00,98000.00,INR,38,38,96,4,CAL-2026-W03,Held,February session moved to a larger room; feedback asked for shorter sessions.,
+Q1 Town Hall,Team Meeting,2026-01-15,10:00,11:00,https://example.com/venue,Karan Malhotra,Delivery,All employees,250000.00,98000.00,INR,38,38,100,4,CAL-2026-W03,Held,February session moved to a larger room; feedback asked for shorter sessions.,
 ```
 
 ```sql
@@ -136,13 +136,13 @@ CREATE TABLE events_activities (
   organizer VARCHAR(255),
   department VARCHAR(255),
   audience VARCHAR(255),
-  budget NUMERIC(14,2) NOT NULL,
-  actual_cost NUMERIC(14,2) NOT NULL,
+  budget NUMERIC(14,2),
+  actual_cost NUMERIC(14,2),
   currency VARCHAR(255),
   rsvp_count NUMERIC NOT NULL,
-  attended_count NUMERIC NOT NULL,
-  attendance_pct NUMERIC NOT NULL,
-  feedback_score NUMERIC NOT NULL,
+  attended_count NUMERIC,
+  attendance_pct NUMERIC,
+  feedback_score NUMERIC,
   linked_calendar_entry VARCHAR(255),  -- relation -> target record
   status VARCHAR(100) NOT NULL,
   notes TEXT,
@@ -173,8 +173,8 @@ CREATE INDEX idx_events_activities_status ON events_activities (status);
       "Budget": { "type": "number" },
       "Actual Cost": { "type": "number" },
       "Currency": { "type": "string" },
-      "RSVP Count": { "type": "number" },
-      "Attended Count": { "type": "number" },
+      "RSVP Count": { "type": "integer", "minimum": 0 },
+      "Attended Count": { "type": "integer", "minimum": 0 },
       "Attendance %": { "type": "number" },
       "Feedback Score": { "type": "number" },
       "Linked Calendar Entry": { "type": "string" },
@@ -185,12 +185,7 @@ CREATE INDEX idx_events_activities_status ON events_activities (status);
   "required": [
       "Event Type",
       "Date",
-      "Budget",
-      "Actual Cost",
       "RSVP Count",
-      "Attended Count",
-      "Attendance %",
-      "Feedback Score",
       "Status"
   ]
 }
@@ -223,6 +218,8 @@ CREATE INDEX idx_events_activities_status ON events_activities (status);
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
+
+Attendance % is `100 * Attended Count / RSVP Count` for this template; leave it unknown when RSVP Count is zero or attendance is not yet measured. Walk-ins can make this RSVP-based ratio exceed 100%; use a separate capacity/invite metric if that is the intended denominator. The sample is 38/38 = 100%, not 96%. Leave actual cost, attendance and feedback blank before the event; budget is optional when none is set. Define the feedback scale and currency, and record the event’s time zone (plus an end date for overnight events). A physical venue is text rather than a URI: adapt Venue or Link to separate venue text and URL fields when needed.
 
 ## Field Reference
 
@@ -340,7 +337,7 @@ We run about eight events a year and plan them in chat.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

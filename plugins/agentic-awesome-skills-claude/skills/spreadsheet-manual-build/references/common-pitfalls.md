@@ -19,4 +19,4 @@
   implying a relationship the file does not have.
 
 
-See the [Related Skills](references/related-skills.md) reference for the full guidance.
+See the [Related Skills](related-skills.md) reference for the full guidance.

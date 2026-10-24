@@ -135,7 +135,7 @@ BF.LOADCHUNK key iter data             # Incremental restore
 
 ## Cuckoo Filter
 
-Alternative to Bloom filters with the additional ability to delete items and count occurrences. Supports "definitely in set" or "possibly not in set" semantics.
+Alternative to Bloom filters with the additional ability to delete items and count occurrences. A positive membership result may be a false positive; a negative means absent under correct use. Delete only items known to have been inserted, because fingerprint collisions can otherwise affect other entries.
 
 ```
 # Create (optional — auto-created on first ADD)
@@ -166,7 +166,7 @@ CF.LOADCHUNK key iter data             # Incremental restore
 **Behavioral notes:**
 - Unlike Bloom filters, Cuckoo filters support deletion (`CF.DEL`)
 - Cuckoo filters can contain the same item multiple times
-- `CF.ADD` always succeeds (allows duplicates); use `CF.ADDNX` for unique inserts
+- CF.ADD allows duplicates but can fail, including when the filter is full. CF.ADDNX avoids inserts that test present, including false-positive matches.
 - `CF.COUNT` returns the number of times an item was added (subject to false positives)
 
 ## Top-K
@@ -313,7 +313,7 @@ TS.DEL key from to                                                # Delete range
 
 **Timestamps:** Use `-` for earliest, `+` for latest in range queries.
 
-**Label filter syntax:** `label=value` (exact), `label!=(value1,value2)` (exclude), `label=(v1,v2)` (OR), `label=` (exists). Filters are conjunctive (AND).
+**Label filter syntax:** `label=value` (exact), `label!=(value1,value2)` (exclude), `label=(v1,v2)` (OR), `label!=` (exists), `label=` (absent). Filters are conjunctive (AND).
 
 **DUPLICATE_POLICY** (on TS.CREATE): How to handle duplicate timestamps:
 - `BLOCK` — reject duplicate (default)
@@ -407,7 +407,7 @@ FT.CURSOR DEL index cursor                                      # Delete cursor
 - `GEOSHAPE` — geometric shapes (SPHERICAL|FLAT)
 
 **Query syntax (DIALECT 2+):**
-- `hello world` — union (OR) of terms
+- `hello world` — intersection (AND) of terms; `hello|world` expresses OR
 - `"hello world"` — exact phrase
 - `@field:term` — field-specific search
 - `@price:[100 200]` — numeric range
@@ -424,6 +424,8 @@ FT.CURSOR DEL index cursor                                      # Delete cursor
 - `FT.SEARCH` returns `[total_count, doc_id, field, value, ...]` array
 - Without `SORTBY`, pagination (`LIMIT`) results are non-deterministic
 - `FT.CREATE` with `PREFIX` auto-indexes matching keys; new keys are indexed on write
-- In cluster mode, index and documents must be on the same shard (use hash tags)
+- Cluster search/index distribution depends on the Redis deployment and search edition; do not assume hash-tag co-location is universally required.
 - `SORTABLE` fields increase memory usage but enable fast sorting
 - Maximum 1024 fields per index, 128 TEXT fields
+
+This is a version-dependent syntax digest, not a claim that every command is available in every Redis distribution. Check COMMAND INFO and installed module/version documentation. [Cuckoo insertion limits](https://redis.io/docs/latest/commands/cf.add/) and [TimeSeries label filters](https://redis.io/docs/latest/commands/ts.mrange/).

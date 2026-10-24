@@ -52,6 +52,10 @@ metrics because they make the difference between helpful and hallucinating.
 
 - Required skills: LLM fundamentals, Understanding of embeddings, Basic NLP concepts
 
+## Trust and evaluation scope
+
+Enforce document/tenant authorization before retrieval and again before returning context; metadata similarity is not an access-control boundary. Treat retrieved content as untrusted evidence, never instructions to tools or the agent. Review data approval/retention before embedding or reranking with external providers, and propagate source versions/deletions into indexes and caches. Keep token ceilings alongside semantic boundaries, measure retrieval and generation on representative held-out questions, and allow abstention with citations when evidence is missing. Hybrid retrieval or reranking is a hypothesis to benchmark, not a universal quality guarantee.
+
 ## Patterns
 
 ### Semantic Chunking

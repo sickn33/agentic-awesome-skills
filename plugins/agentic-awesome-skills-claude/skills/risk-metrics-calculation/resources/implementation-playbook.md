@@ -36,6 +36,12 @@ Monthly:    Performance attribution
 Annual:     Strategic allocation
 ```
 
+## Model and data contract
+
+Educational calculations, not a certified risk engine, investment recommendation or regulatory model. Use decimal simple returns at one declared frequency, a sorted unique aligned index, finite values, at least two observations and no return <= -1 for the compounding examples. Define missing-data treatment before calculation; do not silently change pairwise covariance samples. Confirm currency, fees, cash flows, leverage and rebalancing assumptions. Fixed weights imply constant rebalancing and exclude its costs. Match risk-free rate, benchmark and downside target to the same periods. Square-root annualization assumes appropriate serial-independence/stationarity and is not a universal rule.
+
+VaR/ES below use a loss sign (negative return quantile), drawdown a negative return sign. A negative VaR is possible when even the tail shows gains; do not silently clamp it. Historical tail mean is a finite-sample estimator with a disclosed percentile convention, not a guaranteed future-loss bound. Report insufficient tail samples and backtest exceptions. All fragments require the imports above.
+
 ## Implementation
 
 ### Pattern 1: Core Risk Metrics
@@ -55,7 +61,15 @@ class RiskMetrics:
             returns: Series of periodic returns
             rf_rate: Annual risk-free rate
         """
-        self.returns = returns
+        if not isinstance(returns, pd.Series) or len(returns) < 2:
+            raise ValueError("At least two periodic returns required")
+        if not returns.index.is_unique or not returns.index.is_monotonic_increasing:
+            raise ValueError("Returns require a sorted unique index")
+        if not np.isfinite(returns.to_numpy(dtype=float)).all() or (returns <= -1).any():
+            raise ValueError("Finite simple returns greater than -1 required")
+        if not np.isfinite(rf_rate) or rf_rate <= -1:
+            raise ValueError("Invalid annual risk-free rate")
+        self.returns = returns.astype(float)
         self.rf_rate = rf_rate
         self.ann_factor = 252  # Trading days per year
 
@@ -68,11 +82,9 @@ class RiskMetrics:
         return vol
 
     def downside_deviation(self, threshold: float = 0, annualized: bool = True) -> float:
-        """Standard deviation of returns below threshold."""
-        downside = self.returns[self.returns < threshold]
-        if len(downside) == 0:
-            return 0.0
-        dd = downside.std()
+        """Root mean squared shortfall over ALL observations; threshold is periodic."""
+        shortfalls = np.minimum(self.returns - threshold, 0.0)
+        dd = np.sqrt(np.mean(shortfalls ** 2))
         if annualized:
             dd *= np.sqrt(self.ann_factor)
         return dd
@@ -83,7 +95,7 @@ class RiskMetrics:
         if len(aligned) < 2:
             return np.nan
         cov = np.cov(aligned.iloc[:, 0], aligned.iloc[:, 1])
-        return cov[0, 1] / cov[1, 1] if cov[1, 1] != 0 else 0
+        return cov[0, 1] / cov[1, 1] if cov[1, 1] != 0 else np.nan
 
     # Value at Risk
     def var_historical(self, confidence: float = 0.95) -> float:
@@ -93,11 +105,11 @@ class RiskMetrics:
     def var_parametric(self, confidence: float = 0.95) -> float:
         """Parametric VaR assuming normal distribution."""
         z_score = stats.norm.ppf(confidence)
-        return self.returns.mean() - z_score * self.returns.std()
+        return -self.returns.mean() + z_score * self.returns.std()
 
     def var_cornish_fisher(self, confidence: float = 0.95) -> float:
         """VaR with Cornish-Fisher expansion for non-normality."""
-        z = stats.norm.ppf(confidence)
+        z = stats.norm.ppf(1 - confidence)  # lower RETURN tail, then negate
         s = stats.skew(self.returns)  # Skewness
         k = stats.kurtosis(self.returns)  # Excess kurtosis
 
@@ -118,7 +130,7 @@ class RiskMetrics:
     def drawdowns(self) -> pd.Series:
         """Calculate drawdown series."""
         cumulative = (1 + self.returns).cumprod()
-        running_max = cumulative.cummax()
+        running_max = cumulative.cummax().clip(lower=1.0)
         return (cumulative - running_max) / running_max
 
     def max_drawdown(self) -> float:
@@ -161,21 +173,23 @@ class RiskMetrics:
     # Risk-Adjusted Returns
     def sharpe_ratio(self) -> float:
         """Annualized Sharpe ratio."""
-        excess_return = self.returns.mean() * self.ann_factor - self.rf_rate
+        rf_period = (1 + self.rf_rate) ** (1 / self.ann_factor) - 1
+        excess_return = (self.returns.mean() - rf_period) * self.ann_factor
         vol = self.volatility(annualized=True)
-        return excess_return / vol if vol > 0 else 0
+        return excess_return / vol if vol > 0 else np.nan
 
     def sortino_ratio(self) -> float:
         """Sortino ratio using downside deviation."""
-        excess_return = self.returns.mean() * self.ann_factor - self.rf_rate
-        dd = self.downside_deviation(threshold=0, annualized=True)
-        return excess_return / dd if dd > 0 else 0
+        rf_period = (1 + self.rf_rate) ** (1 / self.ann_factor) - 1
+        excess_return = (self.returns.mean() - rf_period) * self.ann_factor
+        dd = self.downside_deviation(threshold=rf_period, annualized=True)
+        return excess_return / dd if dd > 0 else np.nan
 
     def calmar_ratio(self) -> float:
         """Calmar ratio (return / max drawdown)."""
         annual_return = (1 + self.returns).prod() ** (self.ann_factor / len(self.returns)) - 1
         max_dd = abs(self.max_drawdown())
-        return annual_return / max_dd if max_dd > 0 else 0
+        return annual_return / max_dd if max_dd > 0 else np.nan
 
     def omega_ratio(self, threshold: float = 0) -> float:
         """Omega ratio."""
@@ -193,7 +207,7 @@ class RiskMetrics:
         active_returns = self.returns - benchmark_returns
         tracking_error = active_returns.std() * np.sqrt(self.ann_factor)
         active_return = active_returns.mean() * self.ann_factor
-        return active_return / tracking_error if tracking_error > 0 else 0
+        return active_return / tracking_error if tracking_error > 0 else np.nan
 
     # Summary
     def summary(self) -> Dict[str, float]:
@@ -268,6 +282,8 @@ class PortfolioRisk:
         port_vol = self.portfolio_volatility()
 
         # Marginal contribution
+        if port_vol <= 0 or not np.isfinite(port_vol):
+            raise ValueError("Undefined risk contributions for zero/invalid volatility")
         mrc = (cov_matrix @ self.weights) / port_vol
         return mrc
 
@@ -285,6 +301,8 @@ class PortfolioRisk:
 
         def risk_budget_objective(weights):
             port_vol = np.sqrt(weights @ cov_matrix @ weights)
+            if port_vol <= 0 or not np.isfinite(port_vol):
+                return np.inf
             mrc = (cov_matrix @ weights) / port_vol
             rc = weights * mrc
             target_rc = port_vol / n  # Equal risk contribution
@@ -293,6 +311,10 @@ class PortfolioRisk:
         constraints = [
             {"type": "eq", "fun": lambda w: np.sum(w) - 1},  # Weights sum to 1
         ]
+        if n < 1 or n > 100:
+            raise ValueError("1% floor is infeasible for this asset count")
+        if target_vol is not None:
+            raise NotImplementedError("Leverage/target-vol scaling is not implemented")
         bounds = [(0.01, 1.0) for _ in range(n)]  # Min 1%, max 100%
         x0 = np.array([1/n] * n)
 
@@ -304,6 +326,9 @@ class PortfolioRisk:
             constraints=constraints
         )
 
+        if not result.success or not np.isfinite(result.x).all():
+            raise ValueError("Risk parity optimization failed")
+        # Also inspect constraints, positive covariance and residual risk imbalance.
         return pd.Series(result.x, index=self.returns.columns)
 
     def correlation_matrix(self) -> pd.DataFrame:
@@ -373,7 +398,7 @@ class RollingRiskMetrics:
         """Rolling maximum drawdown."""
         def max_dd(returns):
             cumulative = (1 + returns).cumprod()
-            running_max = cumulative.cummax()
+            running_max = cumulative.cummax().clip(lower=1.0)
             drawdowns = (cumulative - running_max) / running_max
             return drawdowns.min()
 
@@ -381,17 +406,12 @@ class RollingRiskMetrics:
 
     def rolling_beta(self, market_returns: pd.Series) -> pd.Series:
         """Rolling beta vs market."""
-        def calc_beta(window_data):
-            port_ret = window_data.iloc[:, 0]
-            mkt_ret = window_data.iloc[:, 1]
-            cov = np.cov(port_ret, mkt_ret)
-            return cov[0, 1] / cov[1, 1] if cov[1, 1] != 0 else 0
-
-        combined = pd.concat([self.returns, market_returns], axis=1)
-        return combined.rolling(self.window).apply(
-            lambda x: calc_beta(x.to_frame()),
-            raw=False
-        ).iloc[:, 0]
+        aligned = pd.concat([self.returns, market_returns], axis=1).dropna()
+        portfolio = aligned.iloc[:, 0]
+        market = aligned.iloc[:, 1]
+        covariance = portfolio.rolling(self.window).cov(market)
+        variance = market.rolling(self.window).var()
+        return covariance / variance.replace(0, np.nan)
 
     def volatility_regime(
         self,
@@ -402,6 +422,8 @@ class RollingRiskMetrics:
         vol = self.rolling_volatility()
 
         def classify(v):
+            if pd.isna(v):
+                return "unknown"
             if v < low_threshold:
                 return "low"
             elif v > high_threshold:
@@ -444,11 +466,18 @@ class StressTester:
 
         # Get returns during crisis
         crisis_returns = historical_data.loc[start:end]
+        if crisis_returns.empty:
+            raise ValueError("No observations in scenario window")
 
         if self.weights is not None:
             port_returns = (crisis_returns @ self.weights)
         else:
-            port_returns = crisis_returns
+            if isinstance(crisis_returns, pd.DataFrame):
+                if crisis_returns.shape[1] != 1:
+                    raise ValueError("Provide weights for multi-asset data")
+                port_returns = crisis_returns.iloc[:, 0]
+            else:
+                port_returns = crisis_returns
 
         total_return = (1 + port_returns).prod() - 1
         max_dd = self._calculate_max_dd(port_returns)
@@ -476,6 +505,10 @@ class StressTester:
         if self.weights is None:
             raise ValueError("Weights required for hypothetical stress test")
 
+        if set(shocks) != set(self.weights.index):
+            raise ValueError("Explicit shocks required for every asset; unknown assets rejected")
+        if not all(np.isfinite(v) for v in shocks.values()):
+            raise ValueError("Nonfinite shock")
         total_impact = 0
         for asset, shock in shocks.items():
             if asset in self.weights.index:
@@ -493,7 +526,9 @@ class StressTester:
         mean = self.returns.mean()
         vol = self.returns.std() * vol_multiplier
 
-        simulations = np.random.normal(
+        # Toy unbounded-normal model can generate returns below -1; not a
+        # physically constrained price model or calibrated extreme-risk forecast.
+        simulations = np.random.default_rng(42).normal(
             mean,
             vol,
             (n_simulations, horizon_days)
@@ -505,16 +540,22 @@ class StressTester:
             "expected_loss": -total_returns.mean(),
             "var_95": -np.percentile(total_returns, 5),
             "var_99": -np.percentile(total_returns, 1),
-            "worst_case": -total_returns.min(),
+            "worst_simulated_loss": -total_returns.min(),
             "prob_10pct_loss": (total_returns < -0.10).mean()
         }
 
     def _calculate_max_dd(self, returns: pd.Series) -> float:
         cumulative = (1 + returns).cumprod()
-        running_max = cumulative.cummax()
+        running_max = cumulative.cummax().clip(lower=1.0)
         drawdowns = (cumulative - running_max) / running_max
         return drawdowns.min()
 ```
+
+## Verification before use
+
+Validate every confidence is strictly between 0 and 1, every rolling window is an integer >=2 and stress/Monte Carlo dimensions and memory are bounded. Portfolio data needs unique columns, exactly matching finite weights, declared cash/leverage and aligned complete observations; reject zero variance for beta/risk-parity rather than inventing zero risk. Validate covariance conditioning and optimization constraints/residual, not merely solver success. Validate benchmarks before alignment.
+
+Concrete regressions: an initial -10% return must produce -10% drawdown (include initial wealth 1); lower-return-tail normal VaR must increase as confidence increases; identical market/portfolio series must yield rolling beta 1 after warmup; all-positive returns have zero downside deviation but an undefined Sortino denominator; tied/small historical tails need an explicit ES estimator. Cornish-Fisher can be nonmonotone/invalid in extreme distributions and must be rejected or compared with a validated alternative. An average drawdown across all underwater observations differs from average episode depth; duration counts observations and includes an unrecovered censored episode.
 
 ## Quick Reference
 

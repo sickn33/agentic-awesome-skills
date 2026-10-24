@@ -1,6 +1,6 @@
 # CSS Gradients
 
-> **New Architecture Only**: CSS gradients require React Native's New Architecture (Fabric). They are not available in the old architecture or Expo Go.
+> **New Architecture Only**: CSS gradients require React Native's New Architecture (Fabric). Check the installed React Native/Expo version and platform; Expo Go availability depends on its bundled version.
 
 Use CSS gradients with the `experimental_backgroundImage` style property.
 
@@ -80,7 +80,7 @@ Stack multiple gradients by comma-separating them:
 ```tsx
 <View style={{
   experimental_backgroundImage: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-  backdropFilter: 'blur(10px)',
+  // For native blur, compose expo-blur; backdropFilter is a web CSS property.
 }} />
 ```
 
@@ -98,7 +98,7 @@ Stack multiple gradients by comma-separating them:
 
 ## Important Notes
 
-- Do NOT use `expo-linear-gradient` — use CSS gradients instead
+- Use a compatible gradient package when the experimental native property is unavailable.
 - Gradients are strings, not objects
 - Use `rgba()` for transparency, or `transparent` keyword
 - Color stops use percentages (0%, 50%, 100%)

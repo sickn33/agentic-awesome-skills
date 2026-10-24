@@ -36,7 +36,7 @@ queue := dbos.NewWorkflowQueue(ctx, "limited_tasks",
 **In-order processing (sequential):**
 
 ```go
-// Only one task at a time - guarantees order
+// At most one active workflow; strict business ordering still needs version/retry-aware design
 serialQueue := dbos.NewWorkflowQueue(ctx, "sequential_queue",
 	dbos.WithGlobalConcurrency(1),
 )

@@ -1,5 +1,10 @@
 # Prompt Template Systems
 
+These are small illustrative renderers, not injection-resistant template engines.
+Keep untrusted values out of privileged instructions; a second `.format` pass on
+inserted content can interpret braces as placeholders. Escape literal JSON braces
+and do not recursively format untrusted text.
+
 ## Template Architecture
 
 ### Basic Template Structure
@@ -115,7 +120,7 @@ builder.register_component('format', "Output format: {format}")
 basic_prompt = builder.render(
     ['system', 'instruction', 'input'],
     role='helpful assistant',
-    instruction='Summarize the text',
+    task='Summarize the text',
     input='...'
 )
 
@@ -124,7 +129,7 @@ advanced_prompt = builder.render(
     role='expert analyst',
     context='Financial analysis',
     examples='...',
-    instruction='Analyze sentiment',
+    task='Analyze sentiment',
     input='...',
     format='JSON'
 )

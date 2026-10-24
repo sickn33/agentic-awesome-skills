@@ -87,7 +87,7 @@ The pattern is always the same: producer names a property, consumers point at th
 Most workflows never read the bytes — they pass binary straight through to a consumer. When you genuinely need the bytes (hashing, parsing, text extraction), use `getBinaryDataBuffer` in a Code node. Do **not** grab `$binary.<key>.data` and base64-decode it yourself; the helper handles n8n's storage modes (in-memory vs filesystem) for you.
 
 ```javascript
-// Code node, "Run Once for Each Item"
+// Code node, "Run Once for All Items"; single-item example only
 const buffer = await this.helpers.getBinaryDataBuffer(0, 'data'); // (itemIndex, propertyName)
 
 const text = buffer.toString('utf-8'); // for text-like files

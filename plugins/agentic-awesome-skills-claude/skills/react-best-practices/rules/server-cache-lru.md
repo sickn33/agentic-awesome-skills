@@ -39,3 +39,5 @@ Use when sequential user actions hit multiple endpoints needing the same data wi
 **In traditional serverless:** Each invocation runs in isolation, so consider Redis for cross-process caching.
 
 Reference: [https://github.com/isaacs/node-lru-cache](https://github.com/isaacs/node-lru-cache)
+
+Authenticate and authorize before consulting shared caches. Include tenant, permission scope and projection in keys, invalidate on authorization/data changes, and avoid caching credentials or sensitive user objects globally. TTL is not an authorization check. Process-local caches are best effort; serverless instances may be reused but are not shared reliably.

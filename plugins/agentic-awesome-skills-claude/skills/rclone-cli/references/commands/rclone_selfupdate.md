@@ -35,7 +35,7 @@ example `1.53`), the latest matching micro version will be used.
 Upon successful update rclone will print a message that contains a previous
 version number. You will need it if you later decide to revert your update
 for some reason. Then you'll have to note the previous version and run the
-following command: `rclone selfupdate [--beta] OLDVER`.
+following command: `rclone selfupdate [--beta] --version OLDVER`.
 If the old version contains only dots and digits (for example `v1.54.0`)
 then it's a stable release so you won't need the `--beta` flag. Beta releases
 have an additional information similar to `v1.54.0-beta.5111.06f1c0c61`.

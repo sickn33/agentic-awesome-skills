@@ -82,13 +82,25 @@
     {
       "id": 6,
       "prompt": "Just give me a quick marketing plan. Don't make it long.",
-      "expected_output": "Should resist defaulting to a short plan. Should explain that a marketing-plan is the comprehensive fCMO-deliverable artifact (~10K words) and that for a single-channel quick plan, the channel-specific skill is the right tool (emails, ads, seo-audit, etc.). Should offer alternatives: (a) full marketing-plan as designed, or (b) point to a specific skill for the user's actual need. Should NOT silently produce a stripped-down 3K-word plan that misses the ops stack or the idea bank.",
+      "expected_output": "Honor the request with a concise AARRR plan, key priorities, owners, budget constraints, measures and explicit unknowns. Do not force10000 words,13 approval pauses or a tool switch when a short full-funnel plan fits.",
       "assertions": [
-        "Resists short-plan request and explains why",
-        "Names marketing-plan as the comprehensive fCMO artifact",
-        "Recommends channel-specific skills for single-channel quick plans",
-        "Offers alternatives clearly",
-        "Does not silently produce a stripped-down plan"
+        "Respects requested brevity",
+        "Covers relevant funnel stages without padding",
+        "States budget/capacity limits and unknowns",
+        "Includes priorities, owners and measurement",
+        "Does not invent evidence or force interactive approval"
+      ],
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "Starting ARR1M, target2M, gross opening retention85%, new-cohort survival85%, monthly ARPC50 and CAC100. Give a budget scenario; do not send anything.",
+      "expected_output": "Compute1.15M surviving new ARR gap; round2254.90 gross additions up to2255 and225500 acquisition spend. State assumptions, exclude hardware from ARR, keep reserve inside approved total and make no external writes.",
+      "assertions": [
+        "Accounts for churn in opening base",
+        "Uses new cohort survival separately",
+        "Budget225500 after customer rounding",
+        "No campaign, price, payout or publication action"
       ],
       "files": []
     }

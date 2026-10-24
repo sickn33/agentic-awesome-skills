@@ -40,7 +40,7 @@ Marketing is an exchange. Every action must trade for something — money, clear
 
 ### Step 2: Read the state of the business
 
-Ask for the two numbers that decide everything else: how many paying clients exist today, and what channel produced them. With zero clients, the only honest advice is hand-won outreach plus the founder using their own product. Money is a scaling instrument, not a starting instrument — spend at zero clients buys noise.
+Ask for the two numbers that decide everything else: how many paying clients exist today, and what channel produced them. With zero clients, consider direct customer discovery and founder use as early options; choose channels from actual audience, budget and distribution evidence rather than a universal rule. Money is a scaling instrument, not a starting instrument — spend at zero clients buys noise.
 
 ### Step 3: Ground the hypothesis in live competitors
 
@@ -48,7 +48,7 @@ Benchmark against companies working the same audience right now and making money
 
 ### Step 4: Size the test before judging it
 
-Below a floor you are measuring randomness, not the market. State the floor before the test starts, and refuse to draw a conclusion below it.
+Predeclare the detectable effect, baseline rate, confidence/power or sequential decision rule and budget. The floors below are planning heuristics, not universal statistical sufficiency; report inconclusive outcomes and stop early for harm, consent or budget limits.
 
 | Channel | Minimum volume before a verdict |
 |---|---|

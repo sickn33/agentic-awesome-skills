@@ -135,7 +135,7 @@ MEDIA_SPECS: Dict[str, Dict[str, Any]] = {
 
 # ── Imgur (upload de mídia local) ─────────────────────────────────────────────
 IMGUR_UPLOAD_URL = "https://api.imgur.com/3/image"
-IMGUR_CLIENT_ID = "546c25a59c58ad7"  # anonymous uploads (público)
+IMGUR_CLIENT_ID = os.environ.get("IMGUR_CLIENT_ID", "")  # use your own client; public uploads require explicit opt-in
 
 # ── Retry / Backoff ──────────────────────────────────────────────────────────
 MAX_RETRIES = 3

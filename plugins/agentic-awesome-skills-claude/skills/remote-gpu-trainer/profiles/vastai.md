@@ -16,6 +16,8 @@ local_nvme: host-dependent
 
 # vast.ai — platform profile
 
+Historical June 2026 snapshot: confirm current official API, offer terms, prices and storage lifecycle before authorized use. This review made no provider calls. A verified marketplace host is not a confidentiality boundary: its operator can access the host and workload. Use only approved data and narrowly scoped short-lived credentials.
+
 One-line purpose: rent a marketplace GPU as a **Docker image on a third-party host**, run a spot-resumable
 job, and **copy results off before `destroy`** — the only verb that stops the full meter.
 
@@ -46,8 +48,7 @@ one physical host and even one GPU ID**, **bandwidth is host-priced (not free by
 
 **Entry points** (all equivalent): web console (`cloud.vast.ai`), the `vastai` CLI / Python SDK, the REST
 API (`https://console.vast.ai/api/v1/...`, Bearer token), and SSH into the running container. The CLI is the
-orchestration surface: `pip install vastai`, then `vastai set api-key $VAST_API_KEY` (env-var name only —
-never inline the key).
+orchestration surface: `pip install vastai`, configure authentication through the currently supported private credential-file or interactive mechanism. Expanding an environment variable into a CLI argument still exposes the key in the process argument list; never pass a secret that way.
 
 **Env contract — the Docker image IS the env.** A bare VM is not offered by default; the create call MUST
 specify `--image` (e.g. `pytorch/pytorch:2.4.0-cuda12.4-cudnn9-runtime`). **CUDA version is whatever the
@@ -75,8 +76,8 @@ host can simply vanish (`Offline`) mid-run (VAST7). Boot is not instant: the hos
 image and boot — typically 1–5 min depending on image size** (verified docs.vast.ai CLI Hello World 2026-06);
 a fat image stuck in `Loading` is the slow-download symptom (VAST13).
 
-→ **verify:** `vastai show instance OFFER_ID` lists the new instance `running`, and an in-container
-`nvidia-smi` (via `--onstart-cmd` or first SSH) shows the expected GPU with a CUDA that matches the image.
+→ **verify:** `vastai show instance INSTANCE_ID` (use the instance ID returned by create, not the marketplace offer ID) lists the new instance `running`, and an in-container
+`nvidia-smi` (via `--onstart-cmd` or first SSH) shows the expected GPU with a compatible host driver and working framework CUDA build (the nvidia-smi CUDA field need not equal the image toolkit).
 
 ---
 
@@ -216,9 +217,7 @@ This is the most error-prone section — be precise. (verified docs.vast.ai/.../
 - **Poll-loop cost trap:** a status-poll loop with no timeout/error check will loop forever while the
   instance keeps accruing disk + bandwidth charges. Bound every poll loop with `timeout` + an exit check.
 
-**Teardown Iron Law (vast.ai instance):** NO `destroy` until checkpoints are **copied off-box AND verified by
-load** — either `vastai copy`-ed to local (`scripts/verify_local.py` reports 100% OK) or `vastai cloud copy`
-confirmed — the copy exit status is checked (VAST2), and the user has **explicitly approved** the
+**Teardown Iron Law (vast.ai instance):** NO `destroy` until checkpoints are **copied to local AND verified there by load** (`scripts/verify_local.py`); a cloud copy is an additional durable copy, not a substitute for this gate — the copy exit status is checked (VAST2), and the user has **explicitly approved** the
 cost-affecting action. "It looked done in the log" is not evidence (principle #3). Because `destroy` deletes
 the disk and there is **no shared FS to fall back on**, the confirmation gate matters more here, not less.
 
@@ -235,7 +234,7 @@ the disk and there is **no shared FS to fall back on**, the confirmation gate ma
   tmux, so a spot-resume actually restarts the job.
 - **SSH keys apply only to instances created AFTER the key is added** — existing instances do not get a new
   key automatically. Set the account key **before** creating, or inject it via `onstart`. A pasted key missing
-  its `ssh-rsa`/`ssh-ed25519` prefix or `user@host` suffix authenticates as a password prompt — copy the whole
+  its `ssh-rsa`/`ssh-ed25519` prefix or key bytes fails key authentication; the trailing comment such as `user@host` is optional — copy the whole
   line (verified docs.vast.ai jupyter-ssh FAQ 2026-06).
 - **Native queue:** vast.ai has **Serverless / autoscaler** for queue-style workloads, but single-instance
   training has no managed scheduler — the orchestrator + `onstart.sh` + checkpoint-resume **is** the queue.
@@ -293,7 +292,7 @@ egress-surcharge) live in `references/gotchas_universal.md` — not repeated her
 - **VAST10 — disk full, and you can't grow it.** Symptom: `No space left on device` mid-run; `--disk` can't
   be raised. → Root cause: container disk is **fixed at create (min 10 GB) and non-resizable**; Docker
   layers + HF cache + checkpoints overrun it. → Fix: over-provision `--disk` at create; redirect `HF_HOME`
-  onto the data disk; prune `latest`/periodic checkpoints, keep only `best` (inode/byte audit:
+  onto the data disk; prune redundant periodic checkpoints after verified copies; retain a full-state latest resume checkpoint plus best (inode/byte audit:
   `gotchas_universal.md` U6/U7).
 - **VAST11 — secret baked into the image or onstart-cmd is recoverable.** Symptom: a key embedded at build
   time or in `--onstart-cmd` is stored by the platform. → Root cause: image layers and the 16 KB onstart
@@ -306,8 +305,7 @@ egress-surcharge) live in `references/gotchas_universal.md` — not repeated her
 - **VAST13 — instance stuck in `Loading`, never reaches `running`.** Symptom: a new instance sits in
   `Loading`/`Connecting` for many minutes. → Root cause: the host is **pulling a large Docker image** (boot is
   1–5 min, longer for fat images) or the host link is slow. → Fix: wait out the documented window, then read
-  `vastai show logs <id>` (below) for the pull progress; if still stuck, `destroy` and re-create on a faster
-  offer with a slimmer image.
+  `vastai show logs <id>` (below) for the pull progress; if still stuck, propose a budgeted replacement; obtain the required teardown approval and preserve any results before destroying it.
 
 ### Platform-specific debugging (commands + what to check)
 
@@ -338,13 +336,13 @@ Values to parameterize the `scripts/` templates for vast.ai:
 ```bash
 # DATA_DIR — data + (only) checkpoint mount; NOTHING survives destroy, so durable = off-box copy-out/cloud-sync
 DATA_DIR=/workspace              # container disk; survives stop, bills forever, GONE on destroy
-DURABLE_DIR=off-box              # no destroy-surviving mount: vastai copy / vastai cloud copy before destroy (§5)
+DURABLE_DIR=""                   # no durable local mount; configure and verify a separate explicit off-box copy stage before destroy (§5)
 # PROXY_HOOK — none at platform level (no /etc/network_turbo). HF mirror is the JOB's own env if needed:
 PROXY_HOOK=''                    # set HF_ENDPOINT=https://hf-mirror.com in the job env only if a host can't reach HF
 # CRED_FILE — empty: vast's key is the VAST_API_KEY env var, not a file. WANDB_API_KEY/HF_TOKEN also arrive via env.
 CRED_FILE=""                     # no cred FILE on disk → run_one's [ -n "$CRED_FILE" ] guard skips the cat; VAST_API_KEY + WANDB_API_KEY/HF_TOKEN injected via env at create, NOT into the image or onstart-cmd
 # SCRATCH — what to prune (disk is fixed-size, non-resizable → prune aggressively)
-SCRATCH='latest.pth periodic-*.pth *.tmp ~/.cache/huggingface/hub/blobs'  # keep only best + tiny eval JSONs
+SCRATCH='periodic-*.pth'          # only confirmed redundant files; retain full-state latest + best; never delete HF blobs blindly
 # HF_HOME — redirect cache off the small root onto the data disk
 HF_HOME=/workspace/.cache/huggingface
 # DETACH — durable relaunch is onstart.sh, NOT tmux (tmux dies on container restart/spot-resume)

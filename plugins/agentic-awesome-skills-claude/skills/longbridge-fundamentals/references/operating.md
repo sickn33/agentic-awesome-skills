@@ -35,7 +35,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge operating --format json
+longbridge operating 700.HK --format json
 
 # See all options
 longbridge operating --help

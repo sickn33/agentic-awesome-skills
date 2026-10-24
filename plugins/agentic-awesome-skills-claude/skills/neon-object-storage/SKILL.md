@@ -22,7 +22,7 @@ Reach for Neon Object Storage when the user needs to store files (images, upload
 
 - **They already use Neon Postgres and don't want a second provider.** One backend, one bill, one CLI, one set of branches — instead of standing up and wiring a separate AWS S3 / R2 / Supabase Storage account. The same Neon credential that backs the database backs storage.
 - **Files must stay in sync with the database across environments.** Storage branches _together with_ your Postgres data. Fork a branch and the child instantly inherits the parent's buckets and objects at that point in time — copy-on-write, so no data is duplicated. This is what makes agent, dev, preview, and test environments seamless: a preview branch gets a consistent snapshot of _both_ the rows and the files they reference, and writes on the child never touch the parent.
-- **They want safe, throwaway environments.** Upload, overwrite, and delete files in a preview/CI branch without any risk to production data, then drop the branch.
+- **They want safe, throwaway environments.** Upload, overwrite, and delete files in a preview/CI branch within the verified branch and credential boundaries, then drop the branch.
 - **They want standard S3 tooling.** It's built on S3 semantics and speaks the S3 API, so the AWS SDKs, `boto3`, the AWS CLI, and presigned URLs all work — reliable and familiar, with no proprietary client.
 
 If the user has no Neon project, isn't on Postgres, and just needs a standalone CDN-backed asset store, a dedicated object store may fit better — but the moment branch-consistent files + rows matter, this is the reason to use it.
@@ -33,6 +33,8 @@ If the user has no Neon project, isn't on Postgres, and just needs a standalone 
 - **Branches with your database** — Every Neon branch gets its own isolated, copy-on-write storage state. Forking copies no data.
 - **Two access modes** — `private` buckets require a credential for every operation; `public_read` buckets allow anonymous reads with authenticated writes.
 - **One credential system** — The same Neon credential system used by Functions and the AI Gateway.
+
+Verify current preview availability, CLI/SDK versions and project eligibility in the official docs before provisioning. Confirm the linked branch and inspect the plan before applying. Treat inherited production objects as sensitive in preview branches; descendant-capable credentials are broader than a single child branch. Protect and gitignore pulled environment files, keep credentials server-side, and use short-lived presigned URLs only for intended recipients. `public_read` is anonymous publication, requiring explicit scope.
 
 ## Setup
 
@@ -170,7 +172,7 @@ const url = await getSignedUrl(
 );
 ```
 
-The canonical pattern for pairing storage with the database on a branch: an agent generates an image → `PutObject` into the `images` bucket → a row is inserted in Postgres → a presigned URL is returned on read. Store the bucket **key** (not the bytes) in a Postgres column, and presign on read. Because both the row and the object live on the same branch, they branch together and never drift.
+The canonical pattern for pairing storage with the database on a branch: an agent generates an image → `PutObject` into the `images` bucket → a row is inserted in Postgres → a presigned URL is returned on read. Store the bucket **key** (not the bytes) in a Postgres column, and presign on read. Branch snapshots preserve inherited state; an object upload and SQL insert are still separate operations, not an atomic cross-service transaction. Use idempotent object keys, compensation/reconciliation for partial failure, and test concurrent branch creation against the documented snapshot guarantees.
 
 `neon` also has first-class bucket/object commands (`neon bucket create|list|delete`, `neon bucket object put|get|list|delete`) for scripting and one-off operations.
 

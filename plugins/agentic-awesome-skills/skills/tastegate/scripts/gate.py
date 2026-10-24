@@ -71,7 +71,7 @@ CHECKS_JS = r"""
     return {h: h * 60, s, l};
   };
   const lum = ({r, g, b}) => {
-    const f = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
+    const f = (c) => { c /= 255; return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); };
     return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
   };
   const over = (top, bottom) => ({
@@ -192,7 +192,7 @@ CHECKS_JS = r"""
       } else if (r.height < 40 || r.width < 40) {
         add('small_tap_target', 'fail', el, `${Math.round(r.width)}x${Math.round(r.height)}px control, needs 44px`);
       } else if (r.height < 44) {
-        add('small_tap_target', 'warn', el, `${Math.round(r.height)}px tall, 44px is the phone standard`);
+        add('small_tap_target', 'warn', el, `${Math.round(r.height)}px tall, 44px is this design target; assess applicable accessibility requirements`);
       }
     }
     if (!document.querySelector('meta[name="viewport"]')) add('no_viewport_meta', 'fail', document.head, 'phones will render the desktop layout zoomed out');
@@ -202,7 +202,7 @@ CHECKS_JS = r"""
   if (!mobile) {
     const h1 = shown.find(e => e.tagName === 'H1');
     if (!h1) add('no_h1', 'warn', document.body, 'no visible H1');
-    else if (h1.getBoundingClientRect().bottom > H) add('hero_below_fold', 'fail', h1, `H1 ends at ${Math.round(h1.getBoundingClientRect().bottom)}px in a ${H}px screen`);
+    else if (h1.getBoundingClientRect().bottom > H) add('hero_below_fold', 'warn', h1, `H1 ends at ${Math.round(h1.getBoundingClientRect().bottom)}px in a ${H}px screen`);
     const inChrome = (e) => !!e.closest('nav, header');
     const cta = shown.find(e => (e.tagName === 'A' || e.tagName === 'BUTTON') && !inChrome(e) && e.getBoundingClientRect().top < H && e.getBoundingClientRect().height >= 32 &&
       ((parseColors(cs(e).backgroundColor)[0] || {a: 0}).a > 0.2 || cs(e).backgroundImage !== 'none' || parseFloat(cs(e).borderTopWidth) >= 1));
@@ -223,9 +223,9 @@ CHECKS_JS = r"""
       const s = cs(el);
       const clipText = (s.webkitBackgroundClip || s.backgroundClip || '').includes('text');
       if (s.backgroundImage && s.backgroundImage.includes('gradient')) {
-        if (clipText) { add('gradient_text', 'fail', el, 'text filled with a gradient'); continue; }
+        if (clipText) { add('gradient_text', 'warn', el, 'text filled with a gradient'); continue; }
         const purple = parseColors(s.backgroundImage).map(hsl).some(c => c.h >= 245 && c.h <= 295 && c.s >= 0.35 && c.l >= 0.2 && c.l <= 0.85);
-        if (purple) add('ai_purple_gradient', 'fail', el, 'violet or indigo gradient');
+        if (purple) add('ai_purple_gradient', 'warn', el, 'violet or indigo gradient');
       }
       const sh = s.boxShadow;
       if (sh && sh !== 'none' && /\)\s+0px\s+0px\s+([1-9]\d)px/.test(sh)) {
@@ -241,7 +241,7 @@ CHECKS_JS = r"""
       if (!pict.test(r.text)) continue;
       const stripped = r.text.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}\u{200D}\s]/gu, '');
       const leads = pict.test([...r.text][0]);
-      if ((stripped.length === 0 || leads) && !iconish.has(r.el)) { iconish.add(r.el); add('emoji_icon', 'fail', r.el, `"${r.text.slice(0, 12)}" used as an icon`); }
+      if ((stripped.length === 0 || leads) && !iconish.has(r.el)) { iconish.add(r.el); add('emoji_icon', 'warn', r.el, `"${r.text.slice(0, 12)}" used as an icon`); }
     }
 
     // 11. Eyebrow labels above headings.
@@ -257,7 +257,7 @@ CHECKS_JS = r"""
     const brows = heads.filter(h => isEyebrow(h.previousElementSibling) || (!h.previousElementSibling && isEyebrow(h.parentElement && h.parentElement.previousElementSibling)));
     const sections = Math.max(1, shown.filter(e => e.tagName === 'H2').length + 1);
     const allowed = Math.ceil(sections / 3);
-    if (brows.length > allowed) add('eyebrow_labels', 'fail', brows[0].previousElementSibling || brows[0], `${brows.length} small uppercase labels over headings, at most ${allowed} for ${sections} sections`);
+    if (brows.length > allowed) add('eyebrow_labels', 'warn', brows[0].previousElementSibling || brows[0], `${brows.length} small uppercase labels over headings, at most ${allowed} for ${sections} sections`);
 
     // 12. Rows of same-size icon + heading + text cards.
     const cardy = (e) => { const s = cs(e); return (parseColors(s.backgroundColor)[0] || {a: 0}).a > 0.05 || parseFloat(s.borderTopWidth) >= 1 || s.boxShadow !== 'none' || s.backgroundImage !== 'none'; };
@@ -274,7 +274,7 @@ CHECKS_JS = r"""
       const w0 = row[0].r.width;
       if (w0 < 160 || !row.every(x => Math.abs(x.r.width - w0) <= 6)) continue;
       if (row.every(x => cardy(x.k) && hasIcon(x.k) && hasHead(x.k) && hasText(x.k)))
-        add('equal_icon_cards', 'fail', box, `${row.length} same-size icon + heading + text cards in a row`);
+        add('equal_icon_cards', 'warn', box, `${row.length} same-size icon + heading + text cards in a row`);
     }
 
     // 13. Display font is a default, or the chosen font never loaded.
@@ -284,16 +284,16 @@ CHECKS_JS = r"""
     for (const h of heads.filter(e => e.tagName !== 'H3')) {
       const fam = cs(h).fontFamily.split(',')[0].replace(/["']/g, '').trim().toLowerCase();
       if (reported.has(fam)) continue; reported.add(fam);
-      if (defaults.includes(fam)) add('default_display_font', 'fail', h, `headings set in ${fam}`);
+      if (defaults.includes(fam)) add('default_display_font', 'warn', h, `headings set in ${fam}`);
       else if (![...loaded].includes(fam) && !document.fonts.check(`16px "${fam}"`)) add('display_font_not_loaded', 'warn', h, `${fam} did not load, a fallback is showing`);
     }
 
     // 14. Placeholder copy and 15. em dashes.
     const text = document.body.innerText || '';
     const ph = text.match(/lorem ipsum|\bacme\b|john doe|jane doe|example\.com|unlock the power|your company name/i);
-    if (ph) add('placeholder_copy', 'fail', document.body, `"${ph[0]}" on the page`);
+    if (ph) add('placeholder_copy', 'warn', document.body, `"${ph[0]}" on the page`);
     const dashes = (text.match(/—/g) || []).length;
-    if (dashes) add('em_dash', 'fail', document.body, `${dashes} em dash${dashes > 1 ? 'es' : ''} in the copy`);
+    if (dashes) add('em_dash', 'warn', document.body, `${dashes} em dash${dashes > 1 ? 'es' : ''} in the copy`);
   }
   return out;
 }
@@ -315,6 +315,12 @@ def run(target: str, out_dir: Path, wait_ms: int = 900) -> dict:
     from playwright.sync_api import sync_playwright
 
     url = target_url(target)
+    out_dir = out_dir.expanduser().absolute()
+    for ancestor in (out_dir.parent, *out_dir.parent.parents):
+        if ancestor.is_symlink():
+            raise ValueError(f"output parent must not be a symlink: {ancestor}")
+    if not 0 <= wait_ms <= 30000:
+        raise ValueError("wait must be between 0 and 30000 ms")
     out_dir.mkdir(parents=False, mode=0o700, exist_ok=False)
     report = {"target": target, "url": url, "findings": [], "screenshots": {}, "console_errors": []}
     with sync_playwright() as pw:
@@ -335,7 +341,7 @@ def run(target: str, out_dir: Path, wait_ms: int = 900) -> dict:
                     pass
                 page.evaluate("document.fonts ? document.fonts.ready.then(() => true) : true")
                 # Walk the page once so scroll-triggered reveals settle, then judge from the top.
-                page.evaluate("""async () => { const h = document.documentElement.scrollHeight;
+                page.evaluate("""async () => { const h = Math.min(document.documentElement.scrollHeight, innerHeight * 40);
                     for (let y = 0; y < h; y += Math.round(innerHeight * 0.7)) { scrollTo({top: y, behavior: 'instant'}); await new Promise(r => setTimeout(r, 90)); }
                     scrollTo({top: 0, behavior: 'instant'}); }""")
                 page.wait_for_timeout(wait_ms)

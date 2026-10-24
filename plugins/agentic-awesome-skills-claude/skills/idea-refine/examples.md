@@ -1,3 +1,8 @@
+> All sessions, code paths, commission percentages and savings below are fictional examples,
+> not research results or evidence about the current user workspace/market. Verify actual costs,
+> competitors and unit economics before recommendations. SMS/contact imports require consent;
+> never send or order automatically from a brainstorming example.
+
 # Ideation Session Examples
 
 These examples demonstrate what good ideation sessions look like across different kinds of ideas. Study the rhythm, tone, and structure — not just the content. The skill should feel equally at home with a vague startup concept, a feature for an existing product, or a process improvement.
@@ -60,7 +65,7 @@ A tool focused entirely on a restaurant's existing repeat customers. Auto-reorde
 - **Core bet:** A restaurant's top 20% of customers will shift to direct ordering if the experience is frictionless and personal. The restaurant doesn't need *new* customers — it needs to stop paying 30% on customers it already has.
 - **User value:** High and immediate. Every direct reorder saves the restaurant 25-30% commission. If a regular orders $30/week, that's ~$400/year in saved fees per customer. 50 regulars = $20K/year. That's real money for a small restaurant.
 - **Feasibility:** Medium. The ordering/payment tech is commodity. The hard parts: (a) how do you identify and onboard "regulars" without the restaurant doing manual work? (b) How do you handle the cold start — the first reorder needs an order history that lives on the delivery platform, not with you.
-- **Differentiation:** High for the niche. Platforms optimize for marketplace dynamics (new customer discovery, driver logistics). Nobody is optimizing specifically for "keep your regulars ordering direct." It's too small for DoorDash to care about, which is exactly why it's a good wedge.
+- **Differentiation:** High for the niche. Platforms optimize for marketplace dynamics (new customer discovery, driver logistics). Do not assume nobody is optimizing for "keep your regulars ordering direct." It's too small for DoorDash to care about, which is exactly why it's a good wedge.
 - **Hidden assumptions:**
   - Regulars will install/use yet another ordering method (assumption most likely to be wrong)
   - Restaurant owners will share customer contact info or let you access it
@@ -153,7 +158,7 @@ I see your document model uses independent blocks with a flat ordering system (`
 
 Here are 5 variations:
 
-1. **Block-Level Locking (Simplest Path):** When someone starts editing a block, it's locked for others. They see a presence indicator ("Alex is editing...") but can edit any other block freely. No conflict resolution needed. Your existing block model supports this with minimal changes — add a `locked_by` field and a WebSocket layer for presence.
+1. **Block-Level Locking (Simplest Path):** When someone starts editing a block, it's locked for others. They see a presence indicator ("Alex is editing...") but can edit any other block freely. Requires lock leases, expiry, disconnect recovery, atomic acquisition and permissions; locking reduces simultaneous edit conflicts but does not eliminate concurrency design. Your existing block model supports this with minimal changes — add a `locked_by` field and a WebSocket layer for presence.
 
 2. **Inversion — Async-First Collaboration:** Instead of real-time co-editing, lean into async. Inline suggestions, comments, and proposed edits that the document owner merges. Like suggestion mode, but as the *primary* collaboration model. Bet: for 2-5 people in different sections, async might actually be *better* than real-time.
 
@@ -215,7 +220,7 @@ The interesting tension: variations 1 and 5 fix the *output* problem (nothing ch
 
 *Phase 2 would evaluate in terms of: effort to try (most are free — just change how you run the next meeting), risk (variation 2 is the biggest departure), and whether the team's real problem is output (action items die) or input (not enough honesty).*
 
-*Phase 3 would produce a one-pager recommending starting with variation 1 (one action item, demo next week) as a zero-cost experiment, combined with variation 3's anonymous submission. "Not Doing" list: new tools, elaborate facilitation techniques, or anything requiring budget. The first fix should take 0 minutes of prep and $0.*
+*Phase 3 would produce a one-pager recommending starting with variation 1 (one action item, demo next week) as a zero-cost experiment, combined with variation 3's anonymous submission. "Not Doing" list: new tools, elaborate facilitation techniques, or anything requiring budget. Estimate preparation time, facilitation and participant costs; a process change is not literally costless.*
 
 ---
 

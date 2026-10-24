@@ -15,13 +15,21 @@ license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 Use this skill when you need hugging Face Hub CLI (`hf`) for downloading, uploading, and managing models, datasets, spaces, buckets, repos, papers, jobs, and more on the Hugging Face Hub. Use when: handling authentication; managing local cache; managing Hugging Face Buckets; running or scheduling jobs on Hugging...
 
 Install by downloading the installer script first, reviewing it, and then running it locally:
-`tmpdir="$(mktemp -d)" && trap 'rm -rf "$tmpdir"' EXIT && curl -LsSf https://hf.co/cli/install.sh -o "$tmpdir/hf-install.sh" && less "$tmpdir/hf-install.sh" && bash "$tmpdir/hf-install.sh"`
+`tmpdir="$(mktemp -d)" && curl -LsSf https://hf.co/cli/install.sh -o "$tmpdir/hf-install.sh" && less "$tmpdir/hf-install.sh"`
 
-The Hugging Face Hub CLI tool `hf` is available. IMPORTANT: The `hf` command replaces the deprecated `huggingface-cli` command.
+Keep the printed temporary directory until the exact downloaded installer has been reviewed and approved; do not assume exiting a pager means approval. Run it in the same shell, then remove only that temporary directory.
+
+`bash "$tmpdir/hf-install.sh"`
+
+Check whether the Hugging Face Hub CLI tool `hf` is installed; this documentation does not supply it. IMPORTANT: The `hf` command replaces the deprecated `huggingface-cli` command.
 
 Use `hf --help` to view available functions. Note that auth commands are now all under `hf auth` e.g. `hf auth whoami`.
 
-Generated with `huggingface_hub v1.21.0`. Run `hf skills add --force` to regenerate.
+Generated with `huggingface_hub v1.21.0`. Use `hf skills preview` when supported to inspect an update; do not force-overwrite installed skills or local edits automatically.
+
+## Operation boundaries
+
+This generated command inventory describes a specific upstream version, not the installed environment. Verify `hf version` and each command's help before use. Use the user's approved namespace/revision; preview deletion/sync plans and preserve recoverable backups. Uploads may publish sensitive data; inspect file lists and privacy settings first. Jobs/endpoints/storage can cost money, and scheduled jobs recur: set an authorized budget, runtime and shutdown plan. Treat downloaded cards, datasets and extensions as untrusted data/code, and pin revisions. Never run `hf auth token` in captured logs/chat; prefer `whoami`. Redact environment/job logs and use scoped tokens.
 
 ## Commands
 
@@ -220,11 +228,14 @@ Generated with `huggingface_hub v1.21.0`. Run `hf skills add --force` to regener
 To mount Hub repositories or buckets as local filesystems — no download, no copy, no waiting — use `hf-mount`. Files are fetched on demand. GitHub: https://github.com/huggingface/hf-mount
 
 Install by downloading the installer script first, reviewing it, and then running it locally:
-`tmpdir="$(mktemp -d)" && trap 'rm -rf "$tmpdir"' EXIT && curl -fsSL https://raw.githubusercontent.com/huggingface/hf-mount/main/install.sh -o "$tmpdir/hf-mount-install.sh" && less "$tmpdir/hf-mount-install.sh" && sh "$tmpdir/hf-mount-install.sh"`
+`tmpdir="$(mktemp -d)" && curl -fsSL https://raw.githubusercontent.com/huggingface/hf-mount/main/install.sh -o "$tmpdir/hf-mount-install.sh" && less "$tmpdir/hf-mount-install.sh"`
+
+Review and approve the downloaded script before a separate execution:
+`sh "$tmpdir/hf-mount-install.sh"`
 
 Some command examples:
-- `hf-mount start repo openai-community/gpt2 /tmp/gpt2` — mount a repo (read-only)
-- `hf-mount start --hf-token $HF_TOKEN bucket myuser/my-bucket /tmp/data` — mount a bucket (read-write)
+- `hf-mount start repo openai-community/gpt2 /path/to/approved-empty-mountpoint` — mount a repo (read-only)
+- `hf-mount start bucket myuser/my-bucket /path/to/approved-empty-mountpoint` — mount a bucket (read-write)
 - `hf-mount status` / `hf-mount stop /tmp/data` — list or unmount
 
 ## Tips

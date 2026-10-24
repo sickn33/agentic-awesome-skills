@@ -6,7 +6,7 @@ Quick reference for reading EAS Observe dashboards and CLI output.
 
 All durations are in seconds. Metric data is retained for a minimum of 60 days. By default, every installation dispatches all of its events; high-volume apps can sample per installation with `configure({ sampleRate })` — see [Sampling](https://docs.expo.dev/eas/observe/configuration/#sampling).
 
-## Target thresholds
+## Illustrative targets (validate by device and release cohort)
 
 | Metric | Full name | Target | Auto-collected? |
 |---|---|---|---|
@@ -40,16 +40,16 @@ Every TTI event carries automatic params in three groups: frame rate, device sta
 
 | Param | Type | What it indicates |
 |---|---|---|
-| `expo.device.lowPowerMode` | boolean | OS power saver was active (Low Power Mode on iOS, Battery Saver on Android). It throttles CPU, GPU, and background work. A regression that disappears when you filter this out is environmental, not a code change. |
+| `expo.device.lowPowerMode` | boolean | OS power saver was active (Low Power Mode on iOS, Battery Saver on Android). It throttles CPU, GPU, and background work. A disappearing regression suggests cohort composition or power-state effects; it does not rule out a code interaction. |
 | `expo.device.thermalState` | `nominal` \| `fair` \| `serious` \| `critical` \| `unknown` | Sustained `serious`/`critical` means the OS is throttling. Startup slows independently of any app change. |
-| `expo.device.batteryLevel` | number, 0–1 | Fractional charge at TTI. Rules out throttling on devices that manage performance aggressively at low charge. Omitted when the OS reports no value. |
+| `expo.device.batteryLevel` | number, 0–1 | Fractional charge at TTI. May help investigate power-related throttling; battery level alone cannot rule it out. Omitted when the OS reports no value. |
 | `expo.device.batteryCharging` | boolean | Charging raises sustained CPU ceilings on iOS and some Android OEMs. Non-charging samples are the more conservative population. |
 
 ### Network state — is startup network-bound?
 
 | Param | Type | What it indicates |
 |---|---|---|
-| `expo.network.connected` | boolean | If TTI degrades only when `true`, startup is network-bound. If it degrades when `false`, the app does too much before showing cached content. |
+| `expo.network.connected` | boolean | A connectivity association alone does not establish a network bottleneck; compare request timings and controlled traces. If it degrades when `false`, the app does too much before showing cached content. |
 | `expo.network.type` | `wifi` \| `cellular` \| `ethernet` \| `none` \| `other` \| `unknown` | Compare cellular against Wi-Fi. A large gap points to network-bound startup work. VPN traffic reports the underlying transport. The value set is identical on both platforms, so dashboards need no per-platform branching. |
 | `expo.network.isExpensive` | boolean | Both platforms. The OS considers the connection metered (cellular, hotspot). Present only when a network exists. |
 | `expo.network.isConstrained` | boolean | **iOS only.** Low Data Mode is on for this path, so the system defers background transfers. |
@@ -74,10 +74,10 @@ TTI events summarize the HTTP requests made during launch, from the end of the n
 
 **Diagnostic patterns:**
 
-- **`slowest.duration` mostly `timeToFirstByte`** → the server was slow to answer. Optimize the endpoint, or stop blocking startup on it.
-- **Small `timeToFirstByte` + large `bytesReceived`** → the transfer itself was slow. Shrink the payload or defer it.
+- **`slowest.duration` mostly `timeToFirstByte`** → investigate server processing, DNS, connection setup, TLS and transport latency. Optimize the endpoint, or stop blocking startup on it.
+- **Small `timeToFirstByte` + large `bytesReceived`** → inspect transfer duration and throughput; response size alone does not establish slowness. Shrink the payload or defer it.
 - **High `failed` + high `totalDuration`** → the launch burned time on requests that never arrived. Add timeouts and render cached content first.
-- **Low `throughputBytesPerSecond` on `wifi`** → suspect the population, not the code; cross-check `isExpensive` and `isConstrained` / `dataSaverEnabled`.
+- **Low `throughputBytesPerSecond` on `wifi`** → compare matched cohorts and network measurements; code and population can both contribute; cross-check `isExpensive` and `isConstrained` / `dataSaverEnabled`.
 
 > The summary is bounded by an in-memory ring buffer of the 200 most recent requests. A launch that makes more undercounts, so read these as a sample of a very busy window.
 

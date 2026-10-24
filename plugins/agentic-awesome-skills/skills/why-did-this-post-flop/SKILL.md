@@ -46,21 +46,18 @@ their usual is a different conversation from a post doing nothing.
 
 ## Step 2: find which of the three failures it was
 
-**Few impressions.** The post was barely distributed. The writing is not the
-problem, so rewriting the hook would fix nothing. Look instead at timing, how
+**Few impressions.** The post was barely distributed. This suggests limited distribution, but does not rule out writing: content and early engagement can also affect distribution. Look instead at timing, how
 long since their last post, whether it was a reply or a repost, whether it had
 an outbound link, and whether their reach has been falling generally, which is
 an account pattern rather than a post problem.
 
-**Impressions fine, engagement near zero.** People saw it and scrolled. This is
-the first line, or the shape. This is also the most common case and the one
-worth the most work.
+**Impressions fine, engagement near zero.** People saw it and scrolled. This suggests a relevance, hook, format or audience mismatch; impressions alone cannot prove people read it or isolate the cause.
 
 **Engagement fine, but not what they wanted.** Likes but no comments, or
 comments but no clicks. The post worked and asked for the wrong thing, or asked
 for nothing.
 
-Name which one it was, and say what it rules out. Telling someone their hook is
+Present the best-supported hypothesis and alternatives, not a causal verdict. Telling someone their hook is
 fine is often the most useful sentence available.
 
 ## Step 3: only now, look at the writing
@@ -91,9 +88,8 @@ User: Why did this LinkedIn post flop? 380 impressions, 6 reactions, 0
 comments. My posts usually get about 2,000 impressions.
 
 Agent:
-1. Names the failure: few impressions, so a distribution problem, not the
-   writing.
-2. Says what that rules out: rewriting the hook would not have fixed it.
+1. Notes lower impressions than baseline and checks equal observation windows.
+2. Treats distribution and content explanations as hypotheses rather than ruling either out.
 3. Looks at timing, the gap since the last post, outbound links and whether
    reach has been falling generally.
 4. Ends with one change to try next time and how much it is likely to matter.

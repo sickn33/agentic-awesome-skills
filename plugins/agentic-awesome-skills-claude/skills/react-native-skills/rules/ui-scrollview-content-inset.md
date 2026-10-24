@@ -7,6 +7,8 @@ tags: scrollview, layout, contentInset, performance
 
 ## Use contentInset for Dynamic ScrollView Spacing
 
+`contentInset` and `scrollIndicatorInsets` are iOS-specific; use padding or safe-area/context handling on other platforms.
+
 When adding space to the top or bottom of a ScrollView that may change
 (keyboard, toolbars, dynamic content), use `contentInset` instead of padding.
 Changing `contentInset` doesn't trigger layout recalculation—it adjusts the
@@ -15,7 +17,7 @@ scroll area without re-rendering content.
 **Incorrect (padding causes layout recalculation):**
 
 ```tsx
-function Feed({ bottomOffset }: { bottomOffset: number }) {
+function Feed({ bottomOffset, children }: { bottomOffset: number; children: React.ReactNode }) {
   return (
     <ScrollView contentContainerStyle={{ paddingBottom: bottomOffset }}>
       {children}
@@ -28,7 +30,7 @@ function Feed({ bottomOffset }: { bottomOffset: number }) {
 **Correct (contentInset for dynamic spacing):**
 
 ```tsx
-function Feed({ bottomOffset }: { bottomOffset: number }) {
+function Feed({ bottomOffset, children }: { bottomOffset: number; children: React.ReactNode }) {
   return (
     <ScrollView
       contentInset={{ bottom: bottomOffset }}

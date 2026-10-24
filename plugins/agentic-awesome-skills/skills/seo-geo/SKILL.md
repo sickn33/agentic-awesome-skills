@@ -21,38 +21,15 @@ allowed-tools:
 - Use when evaluating llms.txt readiness, AI crawler access, or citation-oriented content structure.
 - Use when the user asks about GEO, AI SEO, LLM visibility, or AI citations.
 
-## Key Statistics
+## Evidence boundaries
 
-| Metric | Value | Source |
-|--------|-------|--------|
-| AI Overviews reach | 1.5 billion users/month across 200+ countries | Google |
-| AI Overviews query coverage | 50%+ of all queries | Industry data |
-| AI-referred sessions growth | 527% (Jan-May 2025) | SparkToro |
-| ChatGPT weekly active users | 900 million | OpenAI |
-| Perplexity monthly queries | 500+ million | Perplexity |
-
-## Critical Insight: Brand Mentions > Backlinks
-
-**Brand mentions correlate 3x more strongly with AI visibility than backlinks.**
-(Ahrefs December 2025 study of 75,000 brands)
-
-| Signal | Correlation with AI Citations |
-|--------|------------------------------|
-| YouTube mentions | ~0.737 (strongest) |
-| Reddit mentions | High |
-| Wikipedia presence | High |
-| LinkedIn presence | Moderate |
-| Domain Rating (backlinks) | ~0.266 (weak) |
-
-**Only 11% of domains** are cited by both ChatGPT and Google AI Overviews for the same query, so platform-specific optimization is essential.
-
----
+Use a dated query/platform sample and actual citation/referral evidence. No market-share, correlation, passage-length or uplift figures are established by this file; correlations do not prove an optimization causes citations. Scores below are a disclosed qualitative rubric, not a provider ranking metric.
 
 ## GEO Analysis Criteria (Updated)
 
 ### 1. Citability Score (25%)
 
-**Optimal passage length: 134-167 words** for AI citation.
+Use self-contained passages sized for the topic; no universal optimal citation word count is established.
 
 **Strong signals:**
 - Clear, quotable sentences with specific facts/statistics
@@ -70,7 +47,7 @@ allowed-tools:
 
 ### 2. Structural Readability (20%)
 
-**92% of AI Overview citations come from top-10 ranking pages**, but 47% come from pages ranking below position 5, demonstrating different selection logic.
+Evaluate citation sources on a defined current sample instead of assuming a universal ranking-position distribution.
 
 **Strong signals:**
 - Clean H1->H2->H3 heading hierarchy
@@ -88,7 +65,7 @@ allowed-tools:
 
 ### 3. Multi-Modal Content (15%)
 
-Content with multi-modal elements sees **156% higher selection rates**.
+Use relevant media when it helps the reader; measure any citation effect rather than promising a fixed uplift.
 
 **Check for:**
 - Text + relevant images
@@ -116,7 +93,7 @@ Content with multi-modal elements sees **156% higher selection rates**.
 
 ### 5. Technical Accessibility (20%)
 
-**AI crawlers do NOT execute JavaScript.** Server-side rendering is critical.
+Crawler rendering capabilities differ. Inspect initial and rendered content for the actual target system; server-rendered critical content improves broad accessibility.
 
 **Check for:**
 - Server-side rendering (SSR) vs client-only content
@@ -132,7 +109,7 @@ Check `robots.txt` for these AI crawlers:
 
 | Crawler | Owner | Purpose |
 |---------|-------|---------|
-| GPTBot | OpenAI | ChatGPT web search |
+| GPTBot | OpenAI | Content that may be used for model training |
 | OAI-SearchBot | OpenAI | OpenAI search features |
 | ChatGPT-User | OpenAI | ChatGPT browsing |
 | ClaudeBot | Anthropic | Claude web features |
@@ -142,13 +119,13 @@ Check `robots.txt` for these AI crawlers:
 | Bytespider | ByteDance | TikTok/Douyin AI |
 | cohere-ai | Cohere | Cohere models |
 
-**Recommendation:** Allow GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot for AI search visibility. Block CCBot and training crawlers if desired.
+**Recommendation:** Choose search and training access independently. [OpenAI crawler guidance](https://developers.openai.com/api/docs/bots) distinguishes OAI-SearchBot from GPTBot; do not enable training as a requirement for search visibility.
 
 ---
 
-## llms.txt Standard
+## llms.txt Proposal
 
-The emerging **llms.txt** standard provides AI crawlers with structured content guidance.
+The [llms.txt proposal](https://llmstxt.org/) provides agent-friendly navigation; its presence does not guarantee indexing or citations.
 
 **Location:** `/llms.txt` (root of domain)
 
@@ -176,11 +153,7 @@ The emerging **llms.txt** standard provides AI crawlers with structured content 
 
 ## RSL 1.0 (Really Simple Licensing)
 
-New standard (December 2025) for machine-readable AI licensing terms.
-
-**Backed by:** Reddit, Yahoo, Medium, Quora, Cloudflare, Akamai, Creative Commons
-
-**Check for:** RSL implementation and appropriate licensing terms.
+Machine-readable licensing proposals are separate from search ranking or guaranteed crawler enforcement. Verify the current specification and publisher adoption before recommending an implementation; this guide does not establish legal enforceability or endorsements.
 
 ---
 
@@ -188,9 +161,9 @@ New standard (December 2025) for machine-readable AI licensing terms.
 
 | Platform | Key Citation Sources | Optimization Focus |
 |----------|---------------------|-------------------|
-| **Google AI Overviews** | Top-10 ranking pages (92%) | Traditional SEO + passage optimization |
-| **ChatGPT** | Wikipedia (47.9%), Reddit (11.3%) | Entity presence, authoritative sources |
-| **Perplexity** | Reddit (46.7%), Wikipedia | Community validation, discussions |
+| **Google AI Overviews** | Measure current citation sources | Traditional SEO + passage optimization |
+| **ChatGPT** | Measure current citation sources | Entity presence, authoritative sources |
+| **Perplexity** | Measure current citation sources | Community validation, discussions |
 | **Bing Copilot** | Bing index, authoritative sites | Bing SEO, IndexNow |
 
 ---
@@ -204,7 +177,7 @@ Generate `GEO-ANALYSIS.md` with:
 3. **AI Crawler Access Status** (which crawlers allowed/blocked)
 4. **llms.txt Status** (present, missing, recommendations)
 5. **Brand Mention Analysis** (presence on Wikipedia, Reddit, YouTube, LinkedIn)
-6. **Passage-Level Citability** (optimal 134-167 word blocks identified)
+6. **Passage-Level Citability** (self-contained, source-backed passages identified)
 7. **Server-Side Rendering Check** (JavaScript dependency analysis)
 8. **Top 5 Highest-Impact Changes**
 9. **Schema Recommendations** (for AI discoverability)
@@ -215,7 +188,7 @@ Generate `GEO-ANALYSIS.md` with:
 ## Quick Wins
 
 1. Add "What is [topic]?" definition in first 60 words
-2. Create 134-167 word self-contained answer blocks
+2. Create concise self-contained answer blocks
 3. Add question-based H2/H3 headings
 4. Include specific statistics with sources
 5. Add publication/update dates

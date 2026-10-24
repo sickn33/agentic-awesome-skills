@@ -33,8 +33,7 @@ raised along the way has a visible answer.
 One rule that causes most of the trouble at year end: permanent documents and tax filings
 need current originals, not copies of copies. A registration certificate that lapsed, a
 licence that was never renewed, a return filed only as a screenshot of a portal - each one
-turns into an avoidable exception. Current originals, verified and dated, or the document
-is not there.
+turns into an avoidable exception. Record source, version/date and verification status. Acceptable originals, certified copies and digital filings depend on the auditor and applicable rules; do not mark a valid digital record absent merely because it is a copy.
 
 Layer: Layer 9: Audit. Fits: Growth stage. Table code: n/a.
 
@@ -110,7 +109,7 @@ Build an already requested artifact without asking again. For advice-only reques
 
 **Recommended approach:** One audit file record per document, tagged to the section of the file it belongs to, carrying the request date, the received date, days pending and any query or adjustment, so the file is assembled continuously instead of hunted for in the last week of the year.
 
-**Why this one:** The ten sections of the audit file are fixed from year to year, so a checklist is the whole job - the failure is never that nobody knows what an auditor wants, it is that nobody tracked whether it arrived. One record per document, with the section as a select, turns a folder into something a reviewer can navigate and something the business can hand over without a fortnight of searching.
+**Why this one:** The proposed ten sections are a starting checklist; confirm the auditor’s current request list, engagement scope and period rather than assuming it is fixed. One record per document, with the section as a select, turns a folder into something a reviewer can navigate and something the business can hand over without a fortnight of searching.
 
 **Workflow:** Section listed → Document identified → Request logged → Document prepared → Handover and receipt → Query or adjustment tracked → File closed
 
@@ -322,8 +321,7 @@ The auditor asked for twelve documents in one email and we found seven of them.
 - Build the file across the year, not in the last week. Every record created after the
   request date was already late.
 - Hold current originals for permanent documents and tax filings - a registration
-  certificate, a licence, a filed return with its acknowledgement. A copy of a copy is
-  not a document, and "we could probably get it" is not an audit trail.
+  certificate, a licence, a filed return with its acknowledgement. Record whether the auditor accepts the available copy/digital acknowledgement; "we could probably get it" is not evidence of receipt.
 - Record the query and the answer on the same row as the document. A query answered
   somewhere else is a query that gets raised again next year.
 - Use `Not Required` on `Adjusted` where no adjustment was needed, and leave it blank
@@ -414,3 +412,5 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+For this register, define `Days Pending` as the nonnegative calendar-day difference from Requested Date to Received Date, or the explicit report-as-of date when outstanding. Do not treat missing dates as zero or permit receipt before request. Select values and Done/adjustment/query consistency require application validation; the shown SQL and JSON schemas do not enforce those business rules, and JSON date formats require a validator configured for format assertions. `updated_at DEFAULT NOW()` initializes the value only; updates need explicit application/trigger logic. This remains an empty-template/document tracking workflow, not an audit opinion or proof a document is legally sufficient.

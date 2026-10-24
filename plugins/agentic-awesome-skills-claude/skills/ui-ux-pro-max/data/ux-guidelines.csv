@@ -23,7 +23,7 @@ No,Category,Issue,Platform,Description,Do,Don't,Code Example Good,Code Example B
 22,Touch,Touch Target Size,Mobile,Small buttons are hard to tap accurately,Minimum 44x44px touch targets,Tiny clickable areas,min-h-[44px] min-w-[44px],w-6 h-6 buttons,High
 23,Touch,Touch Spacing,Mobile,Adjacent touch targets need adequate spacing,Minimum 8px gap between touch targets,Tightly packed clickable elements,gap-2 between buttons,gap-0 or gap-1,Medium
 24,Touch,Gesture Conflicts,Mobile,Custom gestures can conflict with system,Avoid horizontal swipe on main content,Override system gestures,Vertical scroll primary,Horizontal swipe carousel only,Medium
-25,Touch,Tap Delay,Mobile,300ms tap delay feels laggy,Use touch-action CSS or fastclick,Default mobile tap handling,touch-action: manipulation,No touch optimization,Medium
+25,Touch,Tap Delay,Mobile,300ms tap delay feels laggy,Use native controls and appropriate viewport configuration; avoid legacy tap-delay libraries,Default mobile tap handling,touch-action: manipulation,No touch optimization,Medium
 26,Touch,Pull to Refresh,Mobile,Accidental refresh is frustrating,Disable where not needed,Enable by default everywhere,overscroll-behavior: contain,Default overscroll,Low
 27,Touch,Haptic Feedback,Mobile,Tactile feedback improves interaction feel,Use for confirmations and important actions,Overuse vibration feedback,navigator.vibrate(10),Vibrate on every tap,Low
 28,Interaction,Focus States,All,Keyboard users need visible focus indicators,Use visible focus rings on interactive elements,Remove focus outline without replacement,focus:ring-2 focus:ring-blue-500,outline-none without alternative,High
@@ -34,12 +34,12 @@ No,Category,Issue,Platform,Description,Do,Don't,Code Example Good,Code Example B
 33,Interaction,Error Feedback,All,Users need to know when something fails,Show clear error messages near problem,Silent failures with no feedback,Red border + error message,No indication of error,High
 34,Interaction,Success Feedback,All,Confirm successful actions to users,Show success message or visual change,No confirmation of completed action,Toast notification or checkmark,Action completes silently,Medium
 35,Interaction,Confirmation Dialogs,All,Prevent accidental destructive actions,Confirm before delete/irreversible actions,Delete without confirmation,Are you sure modal,Direct delete on click,High
-36,Accessibility,Color Contrast,All,Text must be readable against background,Minimum 4.5:1 ratio for normal text,Low contrast text,#333 on white (7:1),#999 on white (2.8:1),High
+36,Accessibility,Color Contrast,All,Text must be readable against background,Minimum 4.5:1 ratio for normal text,Low contrast text,#333 on white (approximately 12.6:1),#999 on white (2.8:1),High
 37,Accessibility,Color Only,All,Don't convey information by color alone,Use icons/text in addition to color,Red/green only for error/success,Red text + error icon,Red border only for error,High
 38,Accessibility,Alt Text,All,Images need text alternatives,Descriptive alt text for meaningful images,Empty or missing alt attributes,alt='Dog playing in park',alt='' for content images,High
 39,Accessibility,Heading Hierarchy,Web,Screen readers use headings for navigation,Use sequential heading levels h1-h6,Skip heading levels or misuse for styling,h1 then h2 then h3,h1 then h4,Medium
 40,Accessibility,ARIA Labels,All,Interactive elements need accessible names,Add aria-label for icon-only buttons,Icon buttons without labels,aria-label='Close menu',<button><Icon/></button>,High
-41,Accessibility,Keyboard Navigation,Web,All functionality accessible via keyboard,Tab order matches visual order,Keyboard traps or illogical tab order,tabIndex for custom order,Unreachable elements,High
+41,Accessibility,Keyboard Navigation,Web,All functionality accessible via keyboard,Tab order matches visual order,Keyboard traps or illogical tab order,Native controls in logical DOM order,Unreachable elements,High
 42,Accessibility,Screen Reader,All,Content should make sense when read aloud,Use semantic HTML and ARIA properly,Div soup with no semantics,<nav> <main> <article>,<div> for everything,Medium
 43,Accessibility,Form Labels,All,Inputs must have associated labels,Use label with for attribute or wrap input,Placeholder-only inputs,<label for='email'>,placeholder='Email' only,High
 44,Accessibility,Error Messages,All,Error messages must be announced,Use aria-live or role=alert for errors,Visual-only error indication,role='alert',Red border only,High
@@ -67,7 +67,7 @@ No,Category,Issue,Platform,Description,Do,Don't,Code Example Good,Code Example B
 66,Responsive,Touch Friendly,Web,Mobile layouts need touch-sized targets,Increase touch targets on mobile,Same tiny buttons on mobile,Larger buttons on mobile,Desktop-sized targets on mobile,High
 67,Responsive,Readable Font Size,All,Text must be readable on all devices,Minimum 16px body text on mobile,Tiny text on mobile,text-base or larger,text-xs for body text,High
 68,Responsive,Viewport Meta,Web,Set viewport for mobile devices,Use width=device-width initial-scale=1,Missing or incorrect viewport,<meta name='viewport'...>,No viewport meta tag,High
-69,Responsive,Horizontal Scroll,Web,Avoid horizontal scrolling,Ensure content fits viewport width,Content wider than viewport,max-w-full overflow-x-hidden,Horizontal scrollbar on mobile,High
+69,Responsive,Horizontal Scroll,Web,Avoid horizontal scrolling,Ensure content fits viewport width,Content wider than viewport,Responsive sizing; scroll wrappers for wide tables,Horizontal scrollbar on mobile,High
 70,Responsive,Image Scaling,Web,Images should scale with container,Use max-width: 100% on images,Fixed width images overflow,max-w-full h-auto,width='800' fixed,Medium
 71,Responsive,Table Handling,Web,Tables can overflow on mobile,Use horizontal scroll or card layout,Wide tables breaking layout,overflow-x-auto wrapper,Table overflows viewport,Medium
 72,Typography,Line Height,All,Adequate line height improves readability,Use 1.5-1.75 for body text,Cramped or excessive line height,leading-relaxed (1.625),leading-none (1),Medium

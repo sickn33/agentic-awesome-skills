@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/human-decision.schema.json",
+  "title": "Product Design Harness Human Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "decision_id",
+    "review_id",
+    "decision_type",
+    "decision",
+    "options_considered",
+    "rationale",
+    "accountable_owner",
+    "decided_at",
+    "reversal_conditions"
+  ],
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "review_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The review_id of the review-result this decision belongs to."
+    },
+    "decision_type": {
+      "type": "string",
+      "enum": [
+        "taste",
+        "risk",
+        "strategy",
+        "ethics",
+        "meaning"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "options_considered": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 2
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accountable_owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "reversal_conditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    }
+  }
+}

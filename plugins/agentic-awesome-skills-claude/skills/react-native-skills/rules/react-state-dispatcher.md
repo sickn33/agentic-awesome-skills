@@ -48,22 +48,22 @@ re-render.
 **Incorrect (unnecessary comparison for primitive state):**
 
 ```tsx
-const [size, setSize] = useState<Size | undefined>(undefined)
+const [width, setWidth] = useState<number | undefined>(undefined)
 
 const onLayout = (e: LayoutChangeEvent) => {
-  const { width, height } = e.nativeEvent.layout
-  setSize((prev) => (prev === width ? prev : width))
+  const nextWidth = e.nativeEvent.layout.width
+  setWidth((prev) => (prev === nextWidth ? prev : nextWidth))
 }
 ```
 
 **Correct (sets primitive state directly):**
 
 ```tsx
-const [size, setSize] = useState<Size | undefined>(undefined)
+const [width, setWidth] = useState<number | undefined>(undefined)
 
 const onLayout = (e: LayoutChangeEvent) => {
-  const { width, height } = e.nativeEvent.layout
-  setSize(width)
+  const nextWidth = e.nativeEvent.layout.width
+  setWidth(nextWidth)
 }
 ```
 

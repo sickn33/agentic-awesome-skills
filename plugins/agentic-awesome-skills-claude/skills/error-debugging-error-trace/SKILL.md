@@ -28,6 +28,8 @@ The user needs to implement or improve error tracking and monitoring. Focus on r
 ## Requirements
 $ARGUMENTS
 
+Use supplied source/log samples for a static assessment when runtime access is absent; state what remains unverified. The bundled playbook consists of partial sketches with undefined application methods and legacy SDK APIs, not a deployable monitoring system. Inspect installed SDK versions before adapting it. Define a redacted event schema and approved destination before enabling collection; user identity, query strings, exception text, breadcrumbs and arbitrary context can contain secrets. Sending test alerts or enabling production recovery requires the corresponding authorization.
+
 ## Instructions
 
 - Assess current error capture, alerting, and grouping.

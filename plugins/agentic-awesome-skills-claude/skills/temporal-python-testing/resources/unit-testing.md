@@ -4,7 +4,7 @@ Focused guide for testing individual workflows and activities in isolation using
 
 ## WorkflowEnvironment with Time-Skipping
 
-**Purpose**: Test workflows in isolation with instant time progression (month-long workflows → seconds)
+**Purpose**: Test workflows in isolation with instant time progression (long timer waits can be accelerated; activities still consume real time)
 
 ### Basic Setup Pattern
 
@@ -17,8 +17,10 @@ from temporalio.worker import Worker
 async def workflow_env():
     """Reusable time-skipping test environment"""
     env = await WorkflowEnvironment.start_time_skipping()
-    yield env
-    await env.shutdown()
+    try:
+        yield env
+    finally:
+        await env.shutdown()
 
 @pytest.mark.asyncio
 async def test_workflow_execution(workflow_env):
@@ -177,8 +179,11 @@ async def test_activity_heartbeat():
         return total_items
 
     env = ActivityEnvironment()
+    heartbeats = []
+    env.on_heartbeat = lambda *details: heartbeats.append(details)
     result = await env.run(long_running_activity, 10)
     assert result == 10
+    assert heartbeats == [(i,) for i in range(10)]
 ```
 
 **Cancellation Testing**:
@@ -197,8 +202,9 @@ async def test_activity_cancellation():
         except asyncio.CancelledError:
             return "cancelled"
 
-    env = ActivityEnvironment(cancellation_reason="test-cancel")
-    result = await env.run(cancellable_activity)
+    env = ActivityEnvironment()
+    env.cancel() # pre-cancellation scenario; separately test cancellation after start
+    result = await asyncio.wait_for(env.run(cancellable_activity), timeout=2)
     assert result == "cancelled"
 ```
 
@@ -230,6 +236,8 @@ async def test_activity_error():
 
 ## Pytest Integration Patterns
 
+Imports used across examples: `asyncio`, `timedelta`, `activity`, `workflow`, `ApplicationError`, `RetryPolicy`, `Worker`, `WorkflowEnvironment`, `ActivityEnvironment` and pytest. Define workflow classes at module scope and supply a running Worker for manual-time examples. Assertions about intermediate state require an explicit workflow readiness/query protocol; elapsed time alone does not establish that processing started.
+
 ### Shared Fixtures
 
 ```python
@@ -237,12 +245,14 @@ async def test_activity_error():
 import pytest
 from temporalio.testing import WorkflowEnvironment
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 async def workflow_env():
     """Module-scoped environment (reused across tests)"""
     env = await WorkflowEnvironment.start_time_skipping()
-    yield env
-    await env.shutdown()
+    try:
+        yield env
+    finally:
+        await env.shutdown()
 
 @pytest.fixture
 def activity_env():
@@ -266,10 +276,10 @@ async def test_activity_parameterized(activity_env, input, expected):
 
 ## Best Practices
 
-1. **Fast Execution**: Use time-skipping for all workflow tests
+1. **Fast Execution**: Use time-skipping where appropriate, plus real-time/server tests for behavior it cannot model
 2. **Isolation**: Test workflows and activities separately
 3. **Shared Fixtures**: Reuse WorkflowEnvironment across related tests
-4. **Coverage Target**: ≥80% for workflow logic
+4. **Coverage Target**: a project-defined threshold (80% here is illustrative) for workflow logic
 5. **Mock Activities**: Use ActivityEnvironment for activity-specific logic
 6. **Determinism**: Ensure test results are consistent across runs
 7. **Error Cases**: Test both success and failure scenarios

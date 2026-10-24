@@ -16,14 +16,14 @@ Dimension names are used to construct paths, so validate them strictly:
 | `..`, backslashes, spaces, and absolute paths are forbidden | Prevents path traversal. |
 | Reserved names are forbidden | Avoids collisions with runtime folders. |
 
-Reserved names: `backlog`, `readme-ai`, `export`, `raw`, `ignored`, `define`, `general`.
+Reserved path segments: `readme-ai`, `export`, `raw`, `ignored`, `define`. `backlog` and `general` are supported dimension names.
 
 ## Content Safety
 
 Raw entries use this format:
 
 ```text
-- [HH:MM] original user text | suggested-dim:dimension
+- [HH:MM] {"text":"JSON-escaped original user text"} | suggested-dim:dimension
 ```
 
 The suffix is agent-generated metadata. User text may contain markdown and should be preserved as written. Parse the last ` | suggested-dim:` separator only.
@@ -63,3 +63,5 @@ Processed raw files are retained for traceability. Dimension files should be app
 ## Sensitive Data
 
 The skill preserves original wording and does not redact secrets or personal data. Users should use ignore commands before sensitive content is captured, and teams should protect `.ustht/` with normal repository and filesystem hygiene.
+
+Local modification: file writes use private exclusive temporary files and atomic replace; sortin appends source-ID markers to avoid duplicate appends on retry. This is not a multi-file transaction or a concurrent-writer guarantee; keep raw files unchanged during processing and inspect recovery after interruption. Ignored content is not copied to ignored/ by the current helper. Legacy ignored logs/backups are not automatically erased.

@@ -89,7 +89,7 @@ Step 6: 远程稳定化
    ├─ 远程网络延迟 → recvuntil 精确锚字符串，禁用模糊 sleep
    ├─ 远程缓冲：sendlineafter 比 sendline 更稳
    ├─ 堆喷成功率：放大 spray 数量 + 留 padding chunk 防合并
-   └─ 多次跑：写 while True 验证成功率 ≥ 95%
+   └─ 仅在隔离实验环境按预先批准的次数验证；不得无限重试或扩大远程喷射负载
 ```
 
 ## 典型场景
@@ -147,25 +147,12 @@ Step 6: 远程稳定化
 | binwalk / cpio | initramfs 拆包 | `apt install binwalk cpio` |
 | patchelf | 切换 libc 版本 | `apt install patchelf` |
 
-### Bootstrap 检查脚本
+### 安装边界
 
-```bash
-# 一键检查 + 安装核心工具
-for t in pwntools ropgadget ropper; do
-  pip show $t >/dev/null 2>&1 || pip install $t
-done
-
-command -v one_gadget >/dev/null || gem install one_gadget
-
-[ -d ~/tools/libc-database ] || git clone https://github.com/niklasb/libc-database ~/tools/libc-database
-[ -d ~/tools/libc-database/db ] || (cd ~/tools/libc-database && ./get ubuntu debian)
-
-[ -d ~/tools/pwndbg ] || (git clone https://github.com/pwndbg/pwndbg ~/tools/pwndbg && cd ~/tools/pwndbg && ./setup.sh)
-```
-
-### 同一工具自动安装失败 2 次后
-
-停止重试，输出结构化手动安装步骤（pip 源 / gem 源 / git 国内镜像 / apt 源）让用户确认。
+本包没有工具运行时。先盘点已安装工具；需要安装时，在隔离环境选择固定版本，
+审阅安装脚本和下载来源，不自动执行 git clone 后的 setup.sh/get 或未知二进制。
+依赖扫描优先使用 readelf/strings 等静态方法，不为确定版本运行目标 libc。
+路径 `routing.md`、`tool-index`、`RULES` 是上游上下文，未随本 skill 提供；不可伪称完成。
 
 ## 路由上下文
 
@@ -187,16 +174,16 @@ command -v one_gadget >/dev/null || gem install one_gadget
 
 ## 注意事项
 
-- **不要在本地跑通就交差** — 本地 libc / ASLR / 网络环境都和远程不同，必须在 remote 模式下连续跑 20 次以上验证稳定性
+- **不要在本地跑通就交差** — 本地 libc / ASLR / 网络环境都和远程不同，仅在授权允许远程验证时按约定次数测试；只读审计无需执行利用
 - **libc 版本必须确认** — 用 leak + libc-database 反查，不要假设是 Ubuntu 22.04 默认 libc
 - **栈对齐是 64 位的常见坑** — `movaps xmm0, [rsp]` 在 rsp 未 16 字节对齐时段错误，加一个空 `ret` gadget 解决
-- **堆利用对 glibc 版本极敏感** — tcache 在 2.27 引入，safe-linking 在 2.32 引入，2.34 移除 hooks，每个版本利用路径不同
+- **堆利用对 glibc 版本极敏感** — tcache 在 2.26 引入，safe-linking 在 2.32 引入，2.34 移除 hooks，每个版本利用路径不同
 - **内核 pwn 必须先确认 cpu 标志** — qemu 启动参数里有没有 +smep +smap +pku 直接决定 ROP 链怎么写
 - **KASLR leak 一次就够** — 拿到一个内核地址后所有地址都算偏移，不要反复 leak
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
+- [ ] 我是否按授权范围完成所需步骤，并真实区分静态审阅与运行验证？
 - [ ] 我是否基于 `tool-index` 使用了真实工具路径？
 - [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
 - [ ] 我是否完成并回写了 RULES 要求的 Checklist 项？

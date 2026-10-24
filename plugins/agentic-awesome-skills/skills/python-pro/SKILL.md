@@ -42,7 +42,7 @@ Expert Python developer mastering Python 3.12+ features, modern tooling, and pro
 - Generator expressions, itertools, and memory-efficient data processing
 
 ### Modern Tooling & Development Environment
-- Package management with uv (2024's fastest Python package manager)
+- Package management with uv (evaluate against the project's lockfile and tooling requirements)
 - Code formatting and linting with ruff (replacing black, isort, flake8)
 - Static type checking with mypy and pyright
 - Project configuration with pyproject.toml (modern standard)

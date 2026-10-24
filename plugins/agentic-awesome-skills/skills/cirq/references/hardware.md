@@ -55,40 +55,13 @@ except ValueError as e:
 
 ## Qubit Selection
 
-### Best Qubit Selection
+### Calibration-based selection
 
-```python
-import cirq_google
-
-# Get calibration metrics
-import os
-import cirq_google as cg
-
-engine = cg.Engine(project_id=os.environ['GOOGLE_CLOUD_PROJECT'])
-processor = engine.get_processor('weber')
-calibration = processor.get_current_calibration()
-
-# Find qubits with lowest error rates
-def select_best_qubits(calibration, n_qubits):
-    """Select n qubits with best single-qubit gate fidelity."""
-    qubit_fidelities = {}
-
-    for qubit in calibration.keys():
-        if 'single_qubit_rb_average_error_per_gate' in calibration[qubit]:
-            error = calibration[qubit]['single_qubit_rb_average_error_per_gate']
-            qubit_fidelities[qubit] = 1 - error
-
-    # Sort by fidelity
-    best_qubits = sorted(
-        qubit_fidelities.items(),
-        key=lambda x: x[1],
-        reverse=True
-    )[:n_qubits]
-
-    return [q for q, _ in best_qubits]
-
-best_qubits = select_best_qubits(calibration, n_qubits=10)
-```
+Calibration metrics map metric names to tuples of qubits and numeric values;
+do not interpret `calibration.keys()` as individual qubits. Inspect the actual
+metric schema, reject missing/nonfinite values, retain its timestamp, and select
+a connected subset that also supports the intended two-qubit operations.
+Highest individual one-qubit fidelity alone is insufficient.
 
 ### Topology-Aware Selection
 
@@ -96,16 +69,20 @@ best_qubits = select_best_qubits(calibration, n_qubits=10)
 def select_connected_qubits(device, n_qubits):
     """Select connected qubits forming a path or grid."""
     graph = device.metadata.nx_graph
-
-    # Find connected subgraph
     import networkx as nx
-    for node in graph.nodes():
-        subgraph = nx.ego_graph(graph, node, radius=n_qubits)
-        if len(subgraph) >= n_qubits:
-            return list(subgraph.nodes())[:n_qubits]
 
-    raise ValueError(f"Could not find {n_qubits} connected qubits")
+    if n_qubits < 1:
+        raise ValueError("n_qubits must be positive")
+    for node in graph.nodes():
+        # A BFS prefix is connected, unlike an arbitrary ego-graph node slice.
+        nodes = list(nx.bfs_tree(graph, node).nodes())[:n_qubits]
+        if len(nodes) == n_qubits:
+            return nodes
+    raise ValueError("No sufficiently large connected component")
 ```
+
+Import `networkx as nx` before calling this helper. Connectivity alone does not
+ensure a usable gateset, calibration quality or permitted hardware access.
 
 ## Service Providers
 
@@ -387,58 +364,22 @@ def optimize_for_hardware(circuit, device):
     return circuit
 ```
 
-### Error Mitigation
+### Error mitigation and job management boundaries
 
-```python
-def run_with_readout_error_mitigation(circuit, sampler, repetitions):
-    """Mitigate readout errors using calibration."""
+Readout mitigation requires a complete calibration matrix and explicit qubit/bit
+ordering. The old placeholder returned raw results, so it was not mitigation.
+Calibration needs 2**n preparations and additional billable shots. Validate
+conditioning and uncertainties; an inverse can produce negative quasiprobabilities.
 
-    # Measure readout error
-    cal_circuits = []
-    for state in range(2**len(circuit.qubits)):
-        cal_circuit = cirq.Circuit()
-        for i, q in enumerate(circuit.qubits):
-            if state & (1 << i):
-                cal_circuit.append(cirq.X(q))
-        cal_circuit.append(cirq.measure(*circuit.qubits, key='m'))
-        cal_circuits.append(cal_circuit)
+For async samplers, await `run_async` using bounded concurrency and record each
+provider job ID before retrying. Coroutines are not futures with `.result()`.
+Do not replay an ambiguous paid submission automatically.
 
-    # Run calibration
-    cal_results = [sampler.run(c, repetitions=1000) for c in cal_circuits]
-
-    # Build confusion matrix
-    # ... (implementation details)
-
-    # Run actual circuit
-    result = sampler.run(circuit, repetitions=repetitions)
-
-    # Apply correction
-    # ... (apply inverse of confusion matrix)
-
-    return result
-```
-
-### Job Management
-
-```python
-def submit_jobs_in_batches(circuits, sampler, batch_size=10):
-    """Submit multiple circuits in batches."""
-    jobs = []
-
-    for i in range(0, len(circuits), batch_size):
-        batch = circuits[i:i+batch_size]
-        job_ids = []
-
-        for circuit in batch:
-            job = sampler.run_async(circuit, repetitions=1000)
-            job_ids.append(job)
-
-        jobs.extend(job_ids)
-
-    # Wait for all jobs
-    results = [job.result() for job in jobs]
-    return results
-```
+Confirm provider, account, target, circuit data, shot count and budget before
+remote simulator or QPU submission. Provider snippets above are historical
+integration sketches: AQT/Pasqal constructors, IonQ job/calibration methods and
+Azure target names require checking the installed provider documentation. They
+have not been tested against live accounts.
 
 ## Device Specifications
 

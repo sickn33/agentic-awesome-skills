@@ -10,7 +10,7 @@ const KIND_LABELS = new Map([
   ['external_api_slow', 'Slow external API'],
   ['isr_overrevalidation', 'ISR over-revalidation'],
   ['middleware_heavy', 'Heavy middleware'],
-  ['cwv_poor', 'Poor Core Web Vitals'],
+  ['cwv_poor', 'Core Web Vitals above good thresholds'],
   ['platform_fluid_compute', 'Fluid Compute usage'],
   ['platform_bot_protection', 'Bot traffic'],
   ['rendering_candidate', 'Rendering opportunity'],

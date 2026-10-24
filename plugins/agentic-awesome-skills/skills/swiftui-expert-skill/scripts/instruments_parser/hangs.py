@@ -42,7 +42,7 @@ def analyze(
             continue
         start_ns = xml_utils.int_text(stream.resolve(start_el))
         duration_ns = xml_utils.int_text(stream.resolve(dur_el))
-        if start_ns is None or duration_ns is None:
+        if start_ns is None or duration_ns is None or duration_ns < 0:
             continue
         if not xml_utils.event_overlaps_window(start_ns, start_ns + duration_ns, window):
             continue

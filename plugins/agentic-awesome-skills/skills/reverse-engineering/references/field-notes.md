@@ -1,6 +1,6 @@
 # Reverse Engineering Field Notes
 
-Detailed quick notes that support [`SKILL.md`](SKILL.md). Read this file after triage, not before.
+Detailed quick notes that support [`SKILL.md`](../SKILL.md). Read this file after triage, not before.
 
 ## Table of Contents
 
@@ -97,7 +97,7 @@ Disassemble with `marshal.load()` + `dis.dis()`. Header: 8 bytes (2.x), 12 (3.0-
 ### WASM
 ```bash
 wasm2c checker.wasm -o checker.c
-gcc -O3 checker.c wasm-rt-impl.c -o checker
+# Requires matching WABT runtime, headers and a harness; not a standalone build command.
 
 # WASM patching (challenge binaries):
 wasm2wat main.wasm -o main.wat    # Binary → text
@@ -233,7 +233,7 @@ Binary validates flag via matrix multiplication with 64-bit coefficients; soluti
 `RegisterNatives` in `JNI_OnLoad` hides which C++ function handles each Java native method (no standard `Java_com_pkg_Class_method` symbol). Find the real handler by tracing `JNI_OnLoad` → `RegisterNatives` → `fnPtr`. Use x86_64 `.so` from APK for best Ghidra decompilation. See [languages-platforms.md](languages-platforms.md#android-jni-registernatives-obfuscation-htb-wondersms).
 
 ### Multi-Layer Self-Decrypting Binary
-N-layer binary where each layer decrypts the next using user-provided key bytes + SHA-NI. Use oracle (correct key → valid code with expected pattern). JIT execution with fork-per-candidate COW isolation for speed. See [patterns-ctf-2.md](patterns-ctf-2.md#multi-layer-self-decrypting-binary-dicectf-2026).
+N-layer binary where each layer decrypts the next using user-provided key bytes + SHA-NI. Use oracle (correct key → valid code with expected pattern). JIT/fork is execution, not host containment; use a dedicated offline disposable VM. See [patterns-ctf-2.md](patterns-ctf-2.md#multi-layer-self-decrypting-binary-dicectf-2026).
 
 ### GLSL Shader VM with Self-Modifying Code
 **Pattern:** WebGL2 fragment shader implements Turing-complete VM on a 256x256 RGBA texture (program memory + VRAM). Self-modifying code (STORE opcode) patches drawing instructions. GPU parallelism causes write conflicts — emulate sequentially in Python to recover full output. See [patterns-ctf-3.md](patterns-ctf-3.md#glsl-shader-vm-with-self-modifying-code-apoorvctf-2026).
@@ -257,7 +257,7 @@ N-layer binary where each layer decrypts the next using user-provided key bytes 
 **Pattern:** Kernel module registers binfmt handler for encrypted flat binaries. Reverse the `.ko` to find RC4 key (in `movabs` immediates), decrypt the flat binary, import at the fixed virtual address from the module's `vm_mmap` call. See [patterns-ctf.md](patterns-ctf.md#custom-binfmt-kernel-module-with-rc4-flat-binaries-bsidessf-2026).
 
 ### Hash-Resolved Imports / No-Import Ransomware
-**Pattern:** Binary with zero visible imports resolves APIs via symbol name hashing at runtime. Skip the hash reversing — hook OpenSSL functions via `LD_PRELOAD` in Docker to capture AES keys directly. See [patterns-ctf.md](patterns-ctf.md#hash-resolved-imports-no-import-ransomware-bsidessf-2026).
+**Pattern:** Binary with zero visible imports resolves APIs via symbol name hashing at runtime. Skip the hash reversing — analyze symbol resolution statically or use approved captured artifacts; do not execute ransomware with host bind mounts. See [patterns-ctf.md](patterns-ctf.md#hash-resolved-imports-no-import-ransomware-bsidessf-2026).
 
 ### ELF Section Header Corruption for Anti-Analysis
 **Pattern:** Corrupted section headers crash analysis tools but program headers are intact so binary runs normally. Patch `e_shoff` to zero or use `readelf -l` (program headers only). Flag hidden after corrupted sections with magic marker + XOR. See [patterns-ctf.md](patterns-ctf.md#elf-section-header-corruption-for-anti-analysis-bsidessf-2026).
@@ -272,7 +272,7 @@ N-layer binary where each layer decrypts the next using user-provided key bytes 
 **Pattern:** Compiled BF uses fixed idioms for equality checks (`<[-<->] +<[>-<[-]]>[-<+>]`). Instrument interpreter to detect patterns and extract comparison operands (expected flag bytes). See [languages.md](languages.md#brainfuck-comparison-idiom-detection-bsidessf-2026).
 
 ### Backdoored Shared Library Detection
-Binary works in GDB but fails when run normally (suid)? Check `ldd` for non-standard libc paths, then `strings | diff` the suspicious vs. system library to find injected code/passwords. See [patterns-ctf.md](patterns-ctf.md#backdoored-shared-library-detection-via-string-diffing-hacklu-ctf-2012).
+Binary works in GDB but fails when run normally (suid)? Inspect DT_NEEDED/RPATH/RUNPATH statically for suspicious dependency paths, then `strings | diff` the suspicious vs. system library to find injected code/passwords. See [patterns-ctf.md](patterns-ctf.md#backdoored-shared-library-detection-via-string-diffing-hacklu-ctf-2012).
 
 ### Go Binary Reversing
 Large static binary with `go.buildid`? Use GoReSym to recover function names (works even on stripped binaries). Go strings are `{ptr, len}` pairs — not null-terminated. Look for `main.main`, `runtime.gopanic`, channel ops (`runtime.chansend1`/`chanrecv1`). Use Ghidra golang-loader plugin for best results. See [languages-compiled.md](languages-compiled.md#go-binary-reversing).
@@ -284,7 +284,7 @@ Large static binary with `go.buildid`? Use GoReSym to recover function names (wo
 D language binaries have unique symbol mangling (not C++ style). Template-heavy, many function variants. Look for `_D` prefix in symbols. See [languages-compiled.md](languages-compiled.md#d-language-binary-reversing-csaw-ctf-2016).
 
 ### Rust Binary Reversing
-Binary with `core::panicking` strings and `_ZN` mangled symbols? Use `rustfilt` for demangling. Panic messages contain source paths and line numbers — `strings binary | grep "panicked"` is the fastest approach. Option/Result enums use discriminant byte (0=None/Err, 1=Some/Ok). See [languages-compiled.md](languages-compiled.md#rust-binary-reversing).
+Binary with `core::panicking` strings and `_ZN` mangled symbols? Use `rustfilt` for demangling. Panic messages contain source paths and line numbers — `strings binary | grep "panicked"` is the fastest approach. Option/Result layout depends on type/compiler and may use niches; no universal discriminant byte is guaranteed. See [languages-compiled.md](languages-compiled.md#rust-binary-reversing).
 
 ### Frida Dynamic Instrumentation
 Hook runtime functions without modifying binary. `frida -f ./binary -l hook.js` to spawn with instrumentation. Hook `strcmp`/`memcmp` to capture expected values, bypass anti-debug by replacing `ptrace` return value, scan memory for flag patterns, replace validation functions. See [tools-dynamic.md](tools-dynamic.md#frida-dynamic-instrumentation).
@@ -296,7 +296,7 @@ Hook runtime functions without modifying binary. `frida -f ./binary -l hook.js` 
 Automatic path exploration to find inputs satisfying constraints. Load binary with `angr.Project`, set find/avoid addresses, call `simgr.explore()`. Constrain input to printable ASCII and known prefix for faster solving. Hook expensive functions (crypto, I/O) to prevent path explosion. See [tools-dynamic.md](tools-dynamic.md#angr-symbolic-execution).
 
 ### Qiling Emulation
-Cross-platform binary emulation with OS-level support (syscalls, filesystem). Emulate Linux/Windows/ARM/MIPS binaries on any host. No debugger artifacts — bypasses all anti-debug by default. Hook syscalls and addresses with Python API. See [tools-dynamic.md](tools-dynamic.md#qiling-framework-cross-platform-emulation).
+Cross-platform binary emulation with OS-level support (syscalls, filesystem). Emulate Linux/Windows/ARM/MIPS binaries on any host. Emulation can differ from target behavior and does not universally bypass anti-debugging. Hook syscalls and addresses with Python API. See [tools-dynamic.md](tools-dynamic.md#qiling-framework-cross-platform-emulation).
 
 ### VMProtect / Themida Analysis
 VMProtect virtualizes code into custom bytecode. Identify VM entry (pushad-like), find handler table (large indirect jump), trace handlers dynamically. For CTF, focus on tracing operations on input rather than full devirtualization. Themida: dump at OEP with ScyllaHide + Scylla. See [tools-advanced.md](tools-advanced.md#vmprotect-analysis).
@@ -335,7 +335,7 @@ Custom OpenType font maps multi-character ligature sequences to single glyphs; r
 Invert BWT without terminator character by trying all possible row indices. Standard `bwtool` or manual column-sorting reconstruction. See [patterns-ctf-3.md](patterns-ctf-3.md#burrows-wheeler-transform-inversion-without-terminator-asis-ctf-finals-2016).
 
 ### FRACTRAN Program Inversion
-Esoteric language using iterated fraction multiplication. Invert by swapping numerator/denominator in fraction table, run output backward. I/O encoded as prime factorization exponents. See [languages.md](languages.md#fractran-program-inversion-boston-key-party-2016).
+Esoteric language using iterated fraction multiplication. Swapped fractions only generate predecessor candidates; original first-applicable-rule order must be replayed and may have multiple predecessors. I/O encoded as prime factorization exponents. See [languages.md](languages.md#fractran-program-inversion-boston-key-party-2016).
 
 ### Opcode-Only Trace Reconstruction
 Execution traces with only opcodes (no data) still leak info through branch decisions. Sorting algorithm comparisons reveal element ordering. Reconstruct by deduplicating trace, splitting into basic blocks. See [tools-dynamic.md](tools-dynamic.md#opcode-only-trace-reconstruction-0ctf-2016).
@@ -365,50 +365,14 @@ Fork/pipe IPC where parent writes data and exits, child reads and continues. Rea
 
 ### Signed Cookie Key Reuse: access token to admin_session
 
-**Case:** `class.pangbaoba.me` CTF homework system. Public `/access/<token>` route set a signed `student_gate`; the same access token also worked as the HMAC key for `admin_session`, allowing direct admin API access by forging the exact session payload shape.
+**Synthetic defensive case:** Reusing a public invite token as a cookie-signing secret can let a client forge claims. Confirm only with a local fixture or a specifically authorized application and account; read-only admin endpoints can still expose other users’ data. A changed HTTP status alone does not prove authorization bypass.
 
-**Core pattern:** A visible invite/access token is reused as a server-side signing secret. If one signed cookie can be validated offline, test whether sibling auth cookies use the same signing scheme and key.
-
-**Triage workflow:**
-1. Capture `Set-Cookie` from the gated entry route, especially cookies shaped like `<base64url-json>.<base64url-signature>`.
-2. Decode the first segment; identify compact JSON payloads such as `{"access":"student"}`.
-3. Recompute `HMAC-SHA256(payload_b64, candidate_key)` using visible route tokens, invite codes, reset tokens, or frontend constants as candidate keys.
-4. If the signature matches, enumerate *payload shape*, not passwords: try likely authorization claims on the correct cookie name (`admin_session`, `session`, `auth`, etc.).
-5. Verify with read-only endpoints first (`/api/admin/me`, settings/status/list routes) before any write action.
-
-**Important lesson:** The first obvious payload may fail. In this case `{"access":"admin"}`, `{"role":"admin"}`, and `{"access":"student","isAdmin":true}` failed, while the backend actually checked:
-
-```json
-{"admin":true}
-```
-
-**Minimal PoC shape:**
-
-```python
-import base64, hashlib, hmac, json
-
-def b64u(data: bytes) -> str:
-    return base64.urlsafe_b64encode(data).decode().rstrip("=")
-
-access_token = "<token from /access/<token>>"
-payload_b64 = b64u(json.dumps({"admin": True}, separators=(",", ":")).encode())
-sig_b64 = b64u(hmac.new(access_token.encode(), payload_b64.encode(), hashlib.sha256).digest())
-print(f"admin_session={payload_b64}.{sig_b64}")
-```
-
-**Validation signals:**
-- `GET /api/admin/me` changes from `401 {"error":"unauthorized"}` to `200 {"admin":true}`.
-- Other read-only admin endpoints return real data with the forged cookie.
-- A JSON-cookie value like `admin_session=j:{}` causing `500` suggests Express/cookie-parser type confusion and confirms fragile cookie parsing; it is not required for the bypass but helps identify the stack and parsing assumptions.
-
-**What to avoid:** Do not brute-force admin passwords or enumerate unrelated user IDs when a signed-cookie structure is visible. Work offline on signatures and use low-frequency read-only verification.
-
-**Fix guidance:** Never use public route/access tokens as HMAC secrets. Use server-only cookie signing secrets, separate student/admin secrets, server-side sessions for admin identity, strict cookie type checks, and return `401` on parse/verify failure instead of `500`.
+Compare a captured synthetic signature offline, then verify the local server rejects a forged role and binds identity/authorization server-side. Never enumerate real admin payloads, users or private data by default. Use independent server-only signing keys, authenticated server sessions, explicit claim/type validation and consistent rejection on parse/verify failure. No live host is a bundled test target.
 
 ## Web Phishing Infrastructure
 
 ### Phishing Panel: {target_domain_a} / {target_domain_b}
-**完整分析**: [phishing-case-study.md](phishing-case-study.md)
+**来源限制**: 原始 phishing-case-study.md 未随包提供；下面是未经独立复核的脱敏历史笔记，不是当前基础设施事实。
 
 Two-server phishing infrastructure impersonating a government agency. Full victim control system with server-driven status code redirection.
 
@@ -538,3 +502,7 @@ strace ./binary 2>&1 | grep ptrace
 5. 如果有解密逻辑 → 动态跑到解密后 dump
 6. 如果有反调试 → 先 patch 掉或用 LD_PRELOAD 绕过
 ```
+
+## Evidence limits
+
+Treat all named competitions, counts, dates, domains, success claims and infrastructure records as inherited unverified case notes, not live intelligence or approved targets. References contain the authoritative local caveats and corrected examples; no timing/accuracy guarantee, source-fidelity certificate or clinical/identity inference follows. Static traits such as filenames, paths or imports do not prove authorship or malice. Dynamic work is optional and subject to actual authorization/containment; record uncertainty instead of forcing execution.

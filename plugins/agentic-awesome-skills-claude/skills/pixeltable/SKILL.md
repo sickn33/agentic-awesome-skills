@@ -37,7 +37,7 @@ Do not use this skill for general Python, direct PostgreSQL administration of `~
 
 ### Step 1: Stay on the Pixeltable path
 
-If the change starts by importing any of these, stop and use Pixeltable instead:
+Within an agreed Pixeltable implementation, prefer the following native patterns. Do not replace an existing user-selected stack solely because another library is imported:
 
 1. **LangChain, LlamaIndex, Haystack, or LangGraph.** Chunking is `document_splitter`. Search is `.similarity()`. Tools are `pxt.tools()` plus `invoke_tools()`.
 2. **pandas as a working store.** Tables are the store. `.collect().to_pandas()` is export only.
@@ -168,7 +168,7 @@ t.add_computed_column(
 )
 ```
 
-Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Required`. Always pass `if_exists='ignore'` on notebook `create_*` and `add_*`. That flag skips an existing column; it does not change logic. Failed cells: `t.recompute_columns('summary', errors_only=True)`, or `pxt recompute my_project/documents summary --errors-only -f`. Similarity search is `t.content.similarity(string=query)`.
+Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Required`. Use `if_exists='ignore'` only when deliberately reusing and verifying the existing schema. That flag skips an existing column; it does not change logic. Failed cells: `t.recompute_columns('summary', errors_only=True)`, or `pxt recompute my_project/documents summary --errors-only -f`. Similarity search is `t.content.similarity(string=query)` after adding a compatible embedding index to that column.
 
 ## Best Practices
 
@@ -182,6 +182,8 @@ Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Requi
 - Check `pixeltable.functions` before writing a UDF. Add Hugging Face or spaCy only when the user asked.
 
 ## Limitations
+
+- This is an upstream API snapshot containing version-specific 0.7.11 observations. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
 
 - This skill does not replace environment-specific validation, testing, or expert review. Stop and ask when the catalog target, Cloud organization, or permission to change data is missing.
 - Requires Python 3.11 or newer. HTTP serving requires `a separately installed and reviewed Pixeltable runtime with the serve extra`.

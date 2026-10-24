@@ -29,7 +29,11 @@ allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 
 ## Purpose
 
-AI search platforms do not just find content — they evaluate whether content deserves to be cited. The primary framework for this evaluation is **E-E-A-T** (Experience, Expertise, Authoritativeness, Trustworthiness), which per Google's December 2025 Quality Rater Guidelines update now applies to **ALL competitive queries**, not just YMYL (Your Money Your Life) topics. Content that scores high on E-E-A-T is dramatically more likely to be cited by AI platforms.
+Use this as a local editorial assessment of evidence, accuracy and useful content.
+[Google's people-first guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content)
+describes E-E-A-T, emphasizes trust and YMYL, and says E-E-A-T is not a single
+ranking factor. This guide's equal 25-point weights and citation labels are not
+Google's scoring system or evidence of how other AI platforms rank sources.
 
 This skill evaluates content through two lenses:
 1. **E-E-A-T signals** — does the content demonstrate real expertise and trust?
@@ -66,7 +70,7 @@ First-hand knowledge and direct involvement with the topic. AI platforms increas
 - Content that only summarizes what other sources say without adding new perspective
 - Generic advice that could apply to any situation ("It depends on your needs")
 - No mention of actual usage, testing, or direct involvement
-- Hedging language that suggests lack of direct knowledge ("reportedly", "supposedly", "some say")
+- Unattributed or evasive claims; accurate qualified language is appropriate when evidence is uncertain
 
 ### Expertise — 25 points
 Demonstrated knowledge depth and professional competence in the subject matter.
@@ -139,7 +143,7 @@ Signals that the content and its publisher are reliable and transparent.
 ## Content Quality Metrics
 
 ### Word Count Benchmarks
-These are **floors, not targets**. More words does not mean better content. The benchmark is the minimum length to adequately cover a topic for AI citability.
+These are optional planning examples, not minimums or measured citation requirements. Answer the reader’s question completely at an appropriate length; Google specifies no preferred word count.
 
 | Page Type | Minimum Words | Ideal Range | Notes |
 |---|---|---|---|
@@ -228,7 +232,7 @@ AI-generated content is **acceptable** per Google's guidance (March 2024 clarifi
 
 ### Publication Dates
 - Check for visible `datePublished` and `dateModified` in both the content and structured data
-- Content without dates is treated as less trustworthy by AI platforms
+- Record missing dates as unknown; there is no universal cross-platform penalty established here
 - Dates should be specific (January 15, 2026) not vague ("recently")
 
 ### Freshness Scoring
@@ -243,7 +247,7 @@ AI-generated content is **acceptable** per Google's guidance (March 2024 clarifi
 
 ### Evergreen Indicators
 Some content remains relevant regardless of age. Flag content as evergreen if:
-- It covers fundamental concepts that do not change (physics, basic math, legal definitions)
+- It covers fundamental concepts that do not change (basic mathematics and stable foundational concepts; legal definitions can change by jurisdiction/date)
 - It is clearly labeled as a reference/guide for lasting concepts
 - It does not contain time-dependent claims ("the latest", "currently", "in 2024")
 
@@ -381,3 +385,7 @@ curl -s https://example.com/llms.txt
 ```
 
 > Adapted from [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: upstream runtime helpers not bundled.
+
+## Rubric boundaries
+
+Readability, word counts, page totals and freshness age bands are editorial heuristics, not calibrated citation probabilities. Do not label AI authorship from style or generic phrasing alone. Credentials, first-person claims, screenshots and testimonials require corroboration; do not invent them to improve a score. Mark not-applicable rubric items and disclose denominator adjustments; lack of affiliate disclosure is not a defect when no affiliate relationship exists. Trust can outweigh the other dimensions, so equal weighting cannot prove quality or safety. Keep audit scope public and bounded; cite exact passages and original sources, record unavailable pages as unknown, and request publication authorization only when it is not already provided. No inferred score licenses medical/legal/financial assertions or guarantees rankings.

@@ -1,5 +1,7 @@
 # forecast-eps
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
 EPS forecasts and analyst consensus estimates for a symbol
 
@@ -32,7 +34,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge forecast-eps --format json
+longbridge forecast-eps AAPL.US --format json
 
 # See all options
 longbridge forecast-eps --help

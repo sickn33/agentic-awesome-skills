@@ -20,7 +20,7 @@ Google Cloud Storage, Regional Storage, Nearline, Coldline etc.
 Note that, certain tier changes make objects not available to access immediately.
 For example tiering to archive in azure blob storage makes objects in frozen state,
 user can restore by setting tier to Hot/Cool, similarly S3 to Glacier makes object
-inaccessible.true
+inaccessible.
 
 You can use it to tier single object
 

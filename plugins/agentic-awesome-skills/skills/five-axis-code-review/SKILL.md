@@ -25,9 +25,9 @@ One review answers a single question: "Will this code become someone else's prob
 
 ## Workflow
 
-1. **Check the scope first**: look at the diff size. Over ~400 changed lines, ask for a split before reviewing — review quality on huge diffs always collapses.
+1. **Check the scope first**: look at the diff size. For a large diff, divide review into coherent sections and inspect all required files; ask for a split when the change cannot be assessed coherently, rather than refusing by line count alone.
 2. **Check axis by axis** (order = priority):
-   - **Correctness**: edge cases (null, empty, zero, negative, oversized), concurrency/timing assumptions, error handling (are exceptions swallowed?). The only axis that can block a merge.
+   - **Correctness**: edge cases (null, empty, zero, negative, oversized), concurrency/timing assumptions, error handling (are exceptions swallowed?). Correctness and security defects can both block a merge; actual repository policy and evidenced impact determine other blocking requirements.
    - **Security**: is user input concatenated into SQL / shell commands / HTML; are secrets or tokens hard-coded; does logging leak sensitive data.
    - **Readability**: do names say what things are; does each function do one thing; are magic numbers named. Flag only what you can't understand — not "I'd write it differently."
    - **Performance**: repeated queries or recomputation inside loops; N+1 problems; avoidable large-object copies. No data-free performance speculation ("this might get slow" is not a comment).
@@ -37,7 +37,7 @@ One review answers a single question: "Will this code become someone else's prob
 
 ## Rules
 
-- At most 10 comments per review. More than that means the code is too broken — send it back for a rewrite instead of grading 50 items.
+- Prioritize and group related findings, but do not suppress evidenced defects to satisfy a numeric comment cap. Summarize systemic issues with representative locations and explicit remaining scope.
 - No style policing: indentation, quotes, semicolons — that's the linter's job, not a human's.
 - Speak with the diff: every comment must cite a concrete line of code. A comment without a code reference is invalid.
 
@@ -52,7 +52,7 @@ One review answers a single question: "Will this code become someone else's prob
 - [ ] Readability: names are descriptive, functions have a single responsibility, no magic numbers
 - [ ] Performance: no repeated queries/computation in loops, no N+1, no evidence-free performance worries
 - [ ] Tests: new logic is covered, edge cases have cases
-- [ ] Scope: diff ≤ ~400 lines, otherwise split first
+- [ ] Scope: coherent review sections and all required files assessed; unresolved coverage is explicit
 ```
 
 Example review comments:

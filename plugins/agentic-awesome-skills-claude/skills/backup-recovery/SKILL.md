@@ -45,6 +45,8 @@ Implement comprehensive backup and recovery strategies using rsync, Restic, and 
 - **2** different storage media or types (e.g., local disk + cloud)
 - **1** copy offsite (cloud storage, remote datacenter)
 
+Confirm source/destination paths, retention ownership and recovery targets. A mirror with --delete propagates deletions and is not an independent historical backup; dry-run before destructive sync/prune. Never copy a running PostgreSQL data directory as a consistent backup: use pg_dump or a supported physical backup/snapshot protocol. Run pipelines in Bash with pipefail so failed dumps cannot become apparently successful empty snapshots. Restore to an isolated new database/path first; --clean deletes target objects. Keep repository credentials and recovery keys in a separate approved location; logs and backup data are sensitive.
+
 ## rsync Backups
 
 ### Basic Operations
@@ -106,10 +108,9 @@ apt install -y restic
 # RHEL / CentOS
 dnf install -y restic
 
-# Or download the latest binary
-curl -L https://github.com/restic/restic/releases/latest/download/restic_0.17.3_linux_amd64.bz2 \
-  | bunzip2 > /usr/local/bin/restic
-chmod +x /usr/local/bin/restic
+# Alternatively obtain a pinned release for the actual OS/architecture from
+# https://github.com/restic/restic/releases and verify its published checksums
+# and signature before installing it. Do not mix latest/ URLs with old filenames.
 
 # Verify installation
 restic version
@@ -129,7 +130,7 @@ restic init --repo s3:s3.amazonaws.com/my-backup-bucket
 # S3-compatible (MinIO)
 export AWS_ACCESS_KEY_ID="minioadmin"
 export AWS_SECRET_ACCESS_KEY="miniosecret"
-restic init --repo s3:http://minio.example.com:9000/backup-bucket
+restic init --repo s3:https://minio.example.com:9000/backup-bucket
 
 # Backblaze B2 backend
 export B2_ACCOUNT_ID="accountid"
@@ -141,7 +142,10 @@ restic init --repo sftp:backup@remote:/backups/server01
 
 # Restic will prompt for a repository password -- store it securely
 # Use a password file for automation
-echo "my-secure-repo-password" > /etc/restic/password.txt
+umask 077
+read -r -s -p "Repository password: " RESTIC_NEW_PASSWORD
+printf '%s\n' "$RESTIC_NEW_PASSWORD" > /etc/restic/password.txt
+unset RESTIC_NEW_PASSWORD
 chmod 600 /etc/restic/password.txt
 ```
 
@@ -152,7 +156,7 @@ chmod 600 /etc/restic/password.txt
 restic backup /data --repo /backup/restic-repo --password-file /etc/restic/password.txt
 
 # Backup multiple directories
-restic backup /data /etc /var/lib/postgresql \
+restic backup /data /etc \
   --repo s3:s3.amazonaws.com/my-backup-bucket \
   --password-file /etc/restic/password.txt
 
@@ -237,7 +241,7 @@ restic mount /mnt/restic --repo /backup/restic-repo --password-file /etc/restic/
 ### Verification
 
 ```bash
-# Verify repository integrity (checks all data and metadata)
+# Verify repository metadata/structure (does not read every data pack)
 restic check --repo /backup/restic-repo --password-file /etc/restic/password.txt
 
 # Full data verification (reads all pack files -- slow but thorough)
@@ -273,7 +277,7 @@ LOG="/var/log/restic-backup.log"
 
 echo "$(date): Starting backup" >> "$LOG"
 
-restic backup /data /etc /var/lib/postgresql \
+restic backup /data /etc \
   --exclude-file=/etc/restic/excludes.txt \
   --tag "$(hostname)" --tag daily \
   --verbose >> "$LOG" 2>&1
@@ -368,7 +372,7 @@ restic dump latest mydb.dump \
 | "wrong password" | Check env vars / password file | Verify RESTIC_PASSWORD_FILE contents and permissions |
 | Backup is slow | `restic backup -v` for progress | Check network bandwidth; exclude large unneeded dirs |
 | S3 permission denied | `aws s3 ls s3://bucket/` | Check IAM policy includes s3:GetObject, s3:PutObject |
-| "unable to create lock" | `restic unlock --repo <repo>` | A previous backup crashed; unlock the repository |
+| "unable to create lock" | `restic unlock --repo <repo>` | Confirm no backup/check/prune process is active before removing stale locks |
 | Restore shows empty dirs | `restic ls <snapshot-id>` | Verify correct snapshot ID; check --include path syntax |
 | Repository growing too large | `restic stats --repo <repo>` | Run `restic forget --prune` with stricter retention |
 | Check fails with pack errors | `restic check --read-data` | Rebuild index: `restic rebuild-index`; restore from another copy |

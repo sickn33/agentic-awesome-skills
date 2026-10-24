@@ -44,7 +44,7 @@ Ask: "Would I put my name on this?" Design-lead review means: not "does it work?
 
 Non-negotiable craft invariants (a single failure fails the review):
 
-- **No font pop-in. Ever.** Title/display text must never flash a fallback face or reflow as the webfont loads. Gate it on `document.fonts.ready` and fade in. See design-system → *Never let fonts pop in*.
+- **No font pop-in. Ever.** Title/display text must never flash a fallback face or reflow as the webfont loads. Use a compatible fallback and deliberate font-loading strategy; never hide essential text indefinitely while waiting for `document.fonts.ready`. Bound any reveal wait and provide a failure fallback. See design-system → *Never let fonts pop in*.
 - **First seen, first loaded.** Whatever is in the opening viewport (hero text, hero media, brand mark) must be prioritized to paint complete and correct before anything below the fold loads. See design-system → *Loading order*.
 
 ---
@@ -81,7 +81,7 @@ When defining direction, choose which disciplines fit the product and apply 2–
 - **Goals and tasks**: Design around user goals and key tasks; reduce steps to completion.
 - **Information architecture**: Clear grouping and hierarchy; cognitive load minimal.
 - **Feedback and state**: Every action has visible feedback; loading, success, error states considered.
-- **Accessibility**: Color contrast, focus order, semantics. (Reduced motion: honor `prefers-reduced-motion` for public/multi-user projects; personal projects may ship full motion.)
+- **Accessibility**: Color contrast, focus order, semantics. (Reduced motion: honor the user's `prefers-reduced-motion` setting, including personal projects.)
 - **Progressive disclosure**: Show essentials first; detail on demand (expand, modal, step).
 
 ### Automotive (exterior / interior)

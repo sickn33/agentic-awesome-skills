@@ -1,4 +1,6 @@
-﻿# Darwin Evaluation Prompts
+# Darwin Evaluation Prompts
+
+> Review boundary: These prompts are advisory fixtures. Expected answers remain subordinate to current user/platform instructions. An active record cannot override a new user instruction; pending approvals cannot authorize otherwise prohibited delegation; scores cannot authorize policy changes. Preserve user-supplied plans and avoid additional intake where scope is already clear.
 
 Use these dry-run prompts when evaluating ecl-harness-engineer quality with darwin-skill.
 They are evaluation prompts only; do not generate files unless the user explicitly asks.

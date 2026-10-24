@@ -14,14 +14,14 @@ You are building this product one epic per fresh session. Nothing is remembered 
 - Self-review before handoff: walk the review checklist in `docs/REVIEW-CHECKLIST.md` (BLUEPRINT §14.4) over your own diff, story by story, reading the diff rather than your memory of writing it. Fix what fails. Report `reviewed: n items, n fixed, n accepted with reason` in the handoff — never a bare tick.
 - Search the repo for an existing implementation before writing a new helper, mapper or utility. Duplicated logic is the most common defect in agent-written code, and you cannot see what you did not read.
 - Every external symbol you use must trace to a pinned dependency in BLUEPRINT §13.1. If you are not certain a function, parameter or config key exists in the pinned version, check the docs — do not write it from memory.
-- Tests assert concrete expected values and observable behaviour, never internal call sequences. A test that only checks a type, a length or that nothing threw is not a test. Each one must be seen failing before the implementation.
+- Tests assert concrete expected values and observable behaviour, never internal call sequences. Assert the required behavior; type, length or no-throw checks are valid when they are the actual contract. Observe new behavior/regression tests failing for the intended reason where practical; do not claim existing passing tests were red.
 - Keep each story's diff within {{DIFF_LIMIT_LINES}} changed lines. If it will not fit, say so in the plan — the story is mis-sized and needs an amendment, not a bigger diff.
 - Copy strings come from the copy tables (`CP-*` IDs) in the blueprint. Never improvise user-facing text.
 - Acceptance criteria are the spec. If an AC is wrong, impossible or ambiguous: do not silently deviate — record an Amendment (BLUEPRINT §18) and, for user-visible/money/data/security changes, ask first.
 - Anything not in the blueprint or PROGRESS.md is a decision → `docs/DECISIONS.md` (DR-nn) in the same commit. New dependency = DR entry.
 - Stay inside the epic's scope. Ideas for later go to PROGRESS.md "Parking lot".
 - Re-check every `[VERIFY-AT-BUILD]` item your epic depends on before relying on it; record the result.
-- Commit format: `type(scope): message [E03-S02]`. Branch: `epic/E03` (or trunk if the blueprint says so).
+- Commit format: `type(scope): message [E03-S02]`. Branch: follow the current repository/user policy; `epic/E03` is only an example.
 - Never mark a story or epic DONE without an evidence line per AC in PROGRESS.md.
 
 ## Commands

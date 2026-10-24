@@ -31,12 +31,12 @@ func main() {
 	})
 
 	// Modify request headers for API calls
-	router.MustAdd("*api.*", func(ctx *rod.Hijack) {
+	router.MustAdd("https://api.example.com/*", func(ctx *rod.Hijack) {
 		ctx.Request.Req().Header.Set("X-Custom-Header", "go-rod")
-		ctx.Request.Req().Header.Set("Authorization", "Bearer my-token")
+		// Do not attach credentials using a wildcard host matcher.
 
 		// Load the actual response from the server
-		if err := ctx.LoadResponse(http.DefaultClient, true); err != nil {
+		if err := ctx.LoadResponse(&http.Client{Timeout: 15 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}, true); err != nil {
 			fmt.Printf("Failed to load response: %v\n", err)
 			return
 		}
@@ -46,7 +46,7 @@ func main() {
 
 	// Inject JavaScript into every JS file loaded
 	router.MustAdd("*.js", func(ctx *rod.Hijack) {
-		if err := ctx.LoadResponse(http.DefaultClient, true); err != nil {
+		if err := ctx.LoadResponse(&http.Client{Timeout: 15 * time.Second, CheckRedirect: func(_ *http.Request, _ []*http.Request) error { return http.ErrUseLastResponse }}, true); err != nil {
 			return
 		}
 		// Append tracking code to all JavaScript files
@@ -76,7 +76,7 @@ func main() {
 		fmt.Printf("  [%d] %s %s\n",
 			e.Response.Status,
 			e.Type.String(),
-			e.Response.URL,
+			"[URL redacted; inspect only allowlisted non-sensitive fields]",
 		)
 	})()
 

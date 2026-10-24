@@ -16,7 +16,7 @@ license_source: "https://github.com/Krexa-xyz/skills/blob/4a757951918c1a393d7840
 
 # Krexa
 
-Krexa turns a trading idea into a tested strategy and, if the user approves,
+Krexa turns a trading idea into a backtested strategy and, if the user approves,
 a live agent with hard limits. The work runs on Krexa. You call Krexa tools and
 report what they return. You never trade, sign or hold wallet keys yourself.
 
@@ -26,6 +26,19 @@ report what they return. You never trade, sign or hold wallet keys yourself.
 - Use when the user wants to backtest, deep-test (with fees and slippage) or paper-trade a strategy on Krexa.
 - Use when the user asks to deploy, check, list or stop a Krexa trading agent, or asks what is working on the Krexa leaderboard.
 - Do not use it to move, withdraw or fund money, to resume an agent or raise a limit, or for exchanges and venues Krexa does not support.
+
+## Hosted-service boundary
+
+The schemas, quotas and controls here describe the pinned upstream snapshot,
+not an independently verified guarantee of current server behavior. Inspect the
+connected schema and account permissions; stop on incompatible changes. A model
+or `initialize` server name is not proof of service identity. Check HTTPS endpoint
+and approval/login link origin against approved Krexa domains before presenting a
+link; reject credentials, unusual ports, lookalike hosts or redirects outside them.
+Do not open/sign approvals. Loss caps and stops are decision controls, not a
+maximum realized loss: gaps, liquidation, slippage and outages can exceed them.
+Backtests need data period, fee/funding assumptions, leakage checks, out-of-sample
+results and failed variants; a leaderboard is subject to selection/survivorship bias.
 
 ## Setup (once)
 
@@ -79,7 +92,7 @@ a prefix, for example Hermes shows `mcp_krexa_krexa_whoami`.
    given: venue and daily loss cap (USD); for Solana spot also max per trade
    and daily budget (USDC), for perps the leverage and funded account size.
    Perps have no per-trade or daily notional cap; do not promise those caps.
-   Call `krexa_deploy_request`. Send the `approvalUrl` exactly as returned and
+   Call `krexa_deploy_request`. After validating its approved HTTPS origin, send the `approvalUrl` exactly as returned and
    say: "Approve it in Krexa with your wallet. It does not trade until you
    approve and fund it."
 7. **Confirm live.** Call `krexa_deploy_status`. It returns
@@ -91,9 +104,12 @@ For open research questions ("what works on SOL this month?") use
 
 ## Ask before you act
 
-Read tools need no question: `krexa_whoami`, `krexa_list_agents`,
+Read-only status tools need no additional question when covered by the request: `krexa_whoami`, `krexa_list_agents`,
 `krexa_agent_status`, `krexa_leaderboard`, `krexa_job_get`,
-`krexa_paper_status`, `krexa_deploy_status`, and the decode and test tools.
+`krexa_paper_status`, and `krexa_deploy_status`.
+Decode saves data and deep-test/research starts create remote jobs: a user request
+for that specific research/test authorizes the job within its stated quota/cost
+scope; ask before unrequested starts. Never classify these operations as read-only.
 
 Every tool that changes something needs a clear "yes" from the user, in this
 chat, for this exact action, just before you call it:
@@ -185,8 +201,8 @@ scripts and sends nothing to any other place.
   item in `blocked` with its reason.
 - "List my agents" → `krexa_list_agents`.
 - "Stop it" → find the agent with `krexa_list_agents`, ask "Pause <name>
-  (<id>)?", and call `krexa_agent_pause` only after a "yes". Pausing stops new
-  orders at once. Only the owner can resume it, in the Krexa app.
+  (<id>)?", and call `krexa_agent_pause` only after a "yes". Report the returned pause acknowledgement/status; do not assume pending orders or
+  open positions are closed, or that all in-flight orders were cancelled. Only the owner can resume it, in the Krexa app.
 - "What is working for others?" → `krexa_leaderboard`.
 
 ## Gotchas

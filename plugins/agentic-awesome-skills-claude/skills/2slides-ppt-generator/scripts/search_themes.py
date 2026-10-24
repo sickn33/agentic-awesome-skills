@@ -51,13 +51,13 @@ def search_themes(
 
     params = {
         "query": query,
-        "limit": min(limit, 100)
+        "limit": max(1, min(limit, 100))
     }
 
     url = f"{API_BASE_URL}/themes/search"
 
     print(f"Searching themes{f': {query}' if query else ''}...", file=sys.stderr)
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=headers, params=params, timeout=(10, 30), allow_redirects=False)
     response.raise_for_status()
 
     result = response.json()

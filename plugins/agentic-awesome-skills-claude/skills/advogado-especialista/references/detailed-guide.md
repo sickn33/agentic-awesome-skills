@@ -9,17 +9,7 @@ Advogado especialista em todas as areas do Direito brasileiro: familia, criminal
 
 ## How It Works
 
-Voce e o **Advogado Especialista mais completo do ecossistema** — equivalente a uma banca de advocacia de elite com os melhores profissionais do Brasil reunidos em um so. Sua capacidade juridica e equivalente a:
-
-- **Jurista de nivel supremo** com dominio enciclopedico da legislacao brasileira
-- **Advogado militante de elite** com 30+ anos de atuacao em TODAS as areas do Direito
-- **Parecerista e consultor** de nivel equivalente aos maiores nomes da advocacia nacional
-- **Processualista** com dominio absoluto do CPC, CPP, CLT e legislacao especial
-- **Estrategista juridico** capaz de tracar a melhor estrategia para qualquer caso
-- **Constitucionalista** com dominio dos direitos fundamentais e controle de constitucionalidade
-
-Voce atua em TODAS as areas, mas tem **especialidade profunda** e
-
+Atue como assistente de pesquisa juridica, sem alegar experiencia, habilitacao ou equivalencia a uma banca real. Os quadros sao pontos de partida historicos e nao um compendio atualizado de todas as materias. Confirmar a vigencia, o contexto fatico e o inteiro teor antes de utilizar qualquer referencia.
 
 ## 1. Identificar A Area Do Direito
 
@@ -64,11 +54,11 @@ Voce atua em TODAS as areas, mas tem **especialidade profunda** e
 | Requisito | Detalhe |
 |-----------|---------|
 | **Consenso** | Ambos concordam com divorcio e termos |
-| **Sem filhos menores/incapazes** | Se houver, e judicial obrigatoriamente |
+| **Filhos menores/incapazes** | A Resolucao CNJ 571/2024 admite escritura com previa resolucao judicial de guarda, visitacao e alimentos; verificar requisitos e situacao concreta |
 | **Escritura publica** | Lavrada em cartorio de notas |
 | **Advogado** | Obrigatorio (pode ser um so para ambos) |
 | **Prazo** | Imediato (nao ha prazo de separacao desde EC 66/2010) |
-| **Custo medio** | R$ 1.500 a R$ 4.000 (emolumentos + honorarios) |
+| **Custos** | Consultar tabela estadual e honorarios do caso; nao ha media nacional verificada aqui |
 | **Partilha** | Pode incluir na mesma escritura |
 
 #### Divorcio Judicial (Art. 731-734 CPC)
@@ -92,7 +82,7 @@ Voce atua em TODAS as areas, mas tem **especialidade profunda** e
 #### Sumula 377 STF — Separacao Obrigatoria
 No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na constancia do casamento.
 
-**Aplicacao pratica:** Casamentos de maiores de 70 anos (Art. 1.641, II CC) — mesmo com separacao obrigatoria, o conjuge tem direito a meacao dos bens adquiridos durante a uniao.
+**Aplicacao concreta:** Nao presumir meacao automatica. Verificar regime efetivo, declaracao de vontade, data, prova de esforco comum e jurisprudencia atual do STF/STJ antes de aplicar a Sumula 377.
 
 ### 1.2 Alimentos
 
@@ -127,15 +117,9 @@ No regime de separacao obrigatoria de bens, comunicam-se os adquiridos na consta
 - **Possibilidade do alimentante:** rendimentos, patrimonio, padrao de vida
 - **Proporcionalidade:** o juiz equilibra os dois
 
-#### Parametros de Fixacao (Jurisprudencia)
+#### Fixacao concreta
 
-| Situacao | Parametro comum |
-|----------|----------------|
-| 1 filho (CLT) | 30% dos rendimentos liquidos |
-| 2 filhos (CLT) | 33-40% |
-| 3+ filhos (CLT) | 40-50% |
-| Autonomo/informal | Percentual do salario minimo (1-3 SM) |
-| Alimentos para ex-conjuge | 20-33% dos rendimentos (temporario) |
+Nao ha percentual legal geral de 30% por filho. Demonstrar necessidades, recursos e proporcionalidade com documentos, considerando outros dependentes e a decisao aplicavel; nao transformar faixas sem precedentes identificados em prognostico.
 
 ### 1.3 Uniao Estavel (Art. 1.723-1.727 Cc)
 
@@ -205,8 +189,8 @@ Para casos de Maria da Penha, orquestrar com `advogado-criminal` que contem o mo
 ### 3.1 Fluxo De Urgencia Para Vitima
 
 ```
-PERIGO IMEDIATO → Ligar 190 (PM) ou 180 (Central da Mulher)
-VIOLENCIA RECORRENTE → Delegacia/DEAM → Medida Protetiva (48h)
+PERIGO IMEDIATO → Ligar 190 (PM); 180 e canal de orientacao/denuncia, nao substitui resposta emergencial
+VIOLENCIA RECORRENTE → Delegacia/DEAM → Pedido urgente de medida protetiva; nao prometer protecao efetiva em 48h
 ORIENTACAO → CRAM ou Defensoria Publica
 SINAL VERMELHO → X na mao em farmacia/hospital participante
 ```
@@ -262,9 +246,9 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 
 | Requisito | Detalhe |
 |-----------|---------|
-| Todos herdeiros maiores e capazes | Obrigatorio |
+| Herdeiros menores/incapazes | Pode haver via extrajudicial nas condicoes da Resolucao CNJ 571/2024, inclusive protecao do quinhao e manifestacao do Ministerio Publico |
 | Consenso sobre partilha | Todos concordam |
-| Sem testamento | Regra geral (excepcao: Resolucao CNJ 35/2007, Art. 12-A admite com testamento ja confirmado) |
+| Sem testamento | Regra geral (excepcao: Resolucao CNJ 35/2007 alterada pela 571/2024: verificar art. 12-B, autorizacao judicial e demais requisitos) |
 | Escritura publica | Cartorio de notas — qualquer comarca |
 | Advogado | Obrigatorio |
 | Prazo | 60 dias da abertura da sucessao (Art. 611 CPC) — multa ITCMD se ultrapassar |
@@ -296,7 +280,7 @@ SINAL VERMELHO → X na mao em farmacia/hospital participante
 | Separacao convencional | Sim, concorre sobre tudo | STJ — REsp 1.382.170 |
 
 #### Companheiro (Uniao Estavel)
-- **STF RE 878.694 (Tema 498):** equiparou companheiro a conjuge para fins sucessorios
+- **STF RE 878.694 (Tema 809):** equiparou companheiro a conjuge para fins sucessorios
 - Art. 1.790 CC declarado inconstitucional — aplica-se Art. 1.829 CC
 
 ### 4.3 Testamento
@@ -344,7 +328,7 @@ Cabe quando:
 | Aspecto | Detalhe |
 |---------|---------|
 | **Regra geral** | E a REGRA mesmo quando nao ha acordo (Art. 1.584, par. 2 CC) |
-| **Excecao** | So nao aplica se genitor declarar que nao quer guarda ou nao tem condicoes |
+| **Excecao** | Tambem risco de violencia domestica/familiar (Lei 14.713/2023); avaliar aptidao, vontade e melhor interesse |
 | **Base-residencia** | Crianca tem residencia base, mas convive com ambos |
 | **Tempo de convivio** | Equilibrado — nao precisa ser 50/50 |
 | **Decisoes** | Ambos decidem sobre saude, educacao, lazer |
@@ -357,7 +341,7 @@ Cabe quando:
 | **Direito de quem** | Do genitor E da crianca (interesse do menor prevalece) |
 | **Avos** | Tem direito de visita (Art. 1.589, par. unico CC — Lei 12.398/2011) |
 | **Fixacao** | Judicial ou consensual |
-| **Descumprimento** | Busca e apreensao de menor (Art. 461 CPC) + multa |
+| **Descumprimento** | Busca e apreensao de menor (CPC vigente, arts. 536-537 conforme medida) + multa |
 | **Supervisao** | Visita supervisionada quando ha risco |
 
 ### 5.4 Alienacao Parental (Lei 12.318/2010)
@@ -386,13 +370,13 @@ Interferencia na formacao psicologica da crianca, promovida por um genitor (ou a
 | Multa | Moderada |
 | Acompanhamento psicologico | Moderada |
 | Alteracao da guarda | Grave |
-| Suspensao da autoridade parental | Gravissima |
+| Medidas sobre autoridade parental | Verificar texto vigente e procedimento proprio; nao deduzir automaticamente de alegacao de alienacao |
 
 ### 5.5 Busca E Apreensao De Menor
 
 | Aspecto | Detalhe |
 |---------|---------|
-| **Base legal** | Art. 461, par. 5 CPC (tutela especifica) |
+| **Base legal** | CPC vigente, arts. 536-537 conforme medida e decisao (tutela especifica) |
 | **Quando** | Descumprimento de ordem judicial de guarda/visita |
 | **Como** | Oficial de justica + forca policial se necessario |
 | **Competencia** | Vara de Familia do domicilio do menor |
@@ -442,23 +426,9 @@ Pode ser modificada a qualquer tempo se houver:
 | **Existencial** | Privacao de atividades essenciais da vida | Jornadas exaustivas, restricao de liberdade |
 | **Moral coletivo** | Lesao a valores de grupo/coletividade | Propaganda discriminatoria, desastre ambiental |
 
-### 6.3 Parametros De Indenizacao (Jurisprudencia)
+### 6.3 Estimativa de indenizacao
 
-| Situacao | Faixa de Valor (2024-2025) |
-|----------|--------------------------|
-| Negativacao indevida (SPC/SERASA) | R$ 5.000 - R$ 30.000 |
-| Protesto indevido | R$ 5.000 - R$ 20.000 |
-| Atraso/cancelamento voo | R$ 3.000 - R$ 15.000 |
-| Cobranca vexatoria | R$ 5.000 - R$ 20.000 |
-| Erro medico (leve) | R$ 20.000 - R$ 100.000 |
-| Erro medico (grave/morte) | R$ 100.000 - R$ 500.000+ |
-| Acidente de transito (lesao) | R$ 10.000 - R$ 100.000 |
-| Morte de familiar | R$ 100.000 - R$ 500.000+ |
-| Dano estetico | R$ 10.000 - R$ 300.000 |
-| Violencia domestica (dano moral minimo) | Valor minimo fixado pelo juiz (STJ Tema 983) |
-| Exposicao intima (revenge porn) | R$ 20.000 - R$ 100.000 |
-| Assedio moral trabalhista | R$ 5.000 - R$ 100.000 |
-| Publicacao ofensiva em rede social | R$ 5.000 - R$ 50.000 |
+Nao ha tabela geral de dano moral. Pesquisar julgados comparaveis no tribunal competente, com numero/data, fatos, gravidade, prova, eventual recurso e criterios atuais. Separar pedido, valor reconhecido e efetivo recebimento; nao prometer faixa de valores sem esse suporte.
 
 ### 6.4 Dano Moral In Re Ipsa (Presumido)
 
@@ -477,7 +447,7 @@ Dispensa prova do dano — basta provar o fato:
 | Aspecto | Detalhe |
 |---------|---------|
 | **Competencia** | Domicilio do autor (Art. 53, IV, a CPC — acidente; Art. 101, I CDC — consumidor) |
-| **JEC** | Ate 40 SM sem advogado / ate 20 SM com advogado |
+| **JEC** | Ate 40 SM nas materias admitidas; ate 20 SM advogado facultativo em primeiro grau, acima de 20 obrigatorio; recurso exige advogado |
 | **Justica Comum** | Acima de 40 SM ou materia complexa |
 | **Prescricao** | 3 anos (Art. 206, par. 3, V CC — pretensao de reparacao civil) |
 | **Prescricao contra Fazenda** | 5 anos (Decreto 20.910/32) |
@@ -615,14 +585,14 @@ Dispensa prova do dano — basta provar o fato:
 
 | Beneficio | Requisitos Principais |
 |-----------|----------------------|
-| **Aposentadoria por idade** | 65 (H) / 62 (M) + 15 anos contribuicao (EC 103/2019) |
+| **Aposentadoria por idade** | Verificar filiacao, carencia, sexo, regra permanente/transicao e tempo contributivo; nao aplicar 15 anos indistintamente a todos os homens |
 | **Aposentadoria por tempo** | Regras de transicao (EC 103/2019) — pontos, pedagio, idade minima progressiva |
 | **Aposentadoria especial** | Exposicao a agentes nocivos + 15/20/25 anos |
 | **Aposentadoria por invalidez** | Incapacidade total e permanente + carencia 12 meses (regra) |
 | **Auxilio-doenca** | Incapacidade temporaria + carencia 12 meses |
 | **Auxilio-acidente** | Sequela permanente de acidente (50% do salario beneficio) |
 | **Pensao por morte** | Dependentes do segurado falecido (duracao variavel — Art. 77 Lei 8.213) |
-| **Salario-maternidade** | 120 dias (empregada) / 14 dias (contribuinte individual) |
+| **Salario-maternidade** | Em regra 120 dias para parto/adocao/natimorto; 14 dias refere-se a aborto nao criminoso, nao a categoria de contribuinte |
 | **BPC/LOAS** | Idoso 65+ ou PcD + renda per capita familiar < 1/4 SM |
 
 ### 10.2 Revisao De Beneficios
@@ -631,7 +601,7 @@ Dispensa prova do dano — basta provar o fato:
 |-----------------|-------|
 | **Revisao administrativa** | A qualquer tempo (erro material) |
 | **Revisao judicial** | 10 anos (decadencia — Art. 103 Lei 8.213) |
-| **Revisao da vida toda** | STF Tema 1.102 — media de TODOS os salarios (inclusive pre-1994) |
+| **Revisao da vida toda** | Verificar a tese e modulacao atuais no STF, inclusive ADIs 2.110/2.111; nao apresentar revisao como direito disponivel a todos |
 
 ---
 
@@ -672,9 +642,9 @@ Dispensa prova do dano — basta provar o fato:
 
 | Tipo | Art. | Sancao |
 |------|------|--------|
-| **Enriquecimento ilicito** | Art. 9 | Perda funcao + suspensao direitos politicos 14 anos + multa 3x acrescimo |
-| **Prejuizo ao erario** | Art. 10 | Perda funcao + suspensao 12 anos + multa 2x dano |
-| **Contra principios** | Art. 11 | Perda funcao + suspensao 4 anos + multa 24x remuneracao |
+| **Enriquecimento ilicito** | Art. 9 | Perda funcao + sancoes do art. 12, I vigente, conforme gravidade; conferir limites e cumulacao |
+| **Prejuizo ao erario** | Art. 10 | Perda funcao + sancoes do art. 12, II vigente; conferir limites e cumulacao |
+| **Contra principios** | Art. 11 | Verificar art. 12, III vigente; nao transportar sancoes de redacoes revogadas |
 
 **IMPORTANTE (Lei 14.230/2021):** Agora exige-se DOLO para todas as modalidades — nao cabe mais improbidade culposa.
 
@@ -704,7 +674,7 @@ Dispensa prova do dano — basta provar o fato:
 
 | Aspecto | Detalhe |
 |---------|---------|
-| **Responsabilidade de plataformas** | So apos ordem judicial especifica (Art. 19) |
+| **Responsabilidade de plataformas** | Depende do tipo de conteudo, notificacao e teses atuais do STF; o texto do art. 19 isolado nao resume a responsabilidade atual |
 | **Remocao de conteudo** | Mediante ordem judicial (Art. 19) ou notificacao (revenge porn — Art. 21) |
 | **Guarda de registros** | Conexao: 1 ano (Art. 13); Aplicacao: 6 meses (Art. 15) |
 | **Direito ao esquecimento** | Controverso — STF RE 1.010.606 (caso Aida Curi) |
@@ -870,6 +840,8 @@ OBSERVACOES: ___________
 ---
 
 
+Prazos abaixo sao duracoes abstratas para conferir, nao datas finais: verificar termo inicial, dias uteis/corridos, feriados/suspensoes, intimação, rito e excecoes. Tributos/custas dependem do ente competente; nao aplicar automaticamente 60 dias/aliquota de um estado a outro.
+
 ## Cpc (Processo Civil)
 
 | Ato | Prazo |
@@ -913,9 +885,8 @@ OBSERVACOES: ___________
 |--------|----------|
 | 301 | Recusa ao DNA gera presuncao de paternidade |
 | 309 | Prisao civil — debito alimentar dos ultimos 3 meses |
-| 336 | Alimentos devidos desde a citacao |
 | 364 | Bem de familia protege solteiro, separado e viuvo |
-| 596 | Alimentos transitivos possiveis entre ex-conjuges |
+| 596 | Obrigacao alimentar dos avos complementar e subsidiaria, na impossibilidade total/parcial dos pais |
 
 
 ## Stj — Responsabilidade Civil
@@ -924,10 +895,8 @@ OBSERVACOES: ___________
 |--------|----------|
 | 37 | Cumulaveis danos moral e material |
 | 227 | PJ pode sofrer dano moral |
-| 370 | Responsabilidade civil do cirurgiao plastico e de resultado |
 | 385 | Negativacao anterior legitima exclui dano moral por nova inclusao |
 | 387 | Cumulaveis dano estetico e dano moral |
-| 479 | Seguradora responde mesmo apos prescrever a pretensao contra o segurado |
 
 
 ## Stj — Consumidor
@@ -935,9 +904,7 @@ OBSERVACOES: ___________
 | Sumula | Conteudo |
 |--------|----------|
 | 297 | CDC aplica-se a instituicoes financeiras |
-| 302 | Clausula de carencia em plano de saude e valida, mas urgencia afasta |
-| 469 | Tabela SUB e aplicavel a danos morais bancarios |
-| 532 | Cadastro de inadimplentes — notificacao previa obrigatoria |
+| 302 | Abusiva limitacao temporal da internacao hospitalar em plano de saude |
 
 
 ## Stf — Constitucional
@@ -945,7 +912,7 @@ OBSERVACOES: ___________
 | Tema/Sumula | Conteudo |
 |-------------|----------|
 | Sumula Vinculante 25 | Prisao civil so para devedor de alimentos |
-| RE 878.694 (Tema 498) | Companheiro = conjuge para heranca |
+| RE 878.694 (Tema 809) | Companheiro = conjuge para heranca |
 | RE 898.060 (Tema 622) | Paternidade socioafetiva nao impede biologica |
 | ADI 4.277 | Uniao estavel homoafetiva |
 
@@ -1018,51 +985,9 @@ OBSERVACOES: ___________
 ---
 
 
-## Instalacao
+## Disponibilidade e privacidade
 
-Skill baseada em conhecimento (knowledge-only). Nao requer instalacao de dependencias.
-
-```bash
-
-## Verificar Se A Skill Esta Registrada:
-
-python C:\Users\renat\skills\agent-orchestrator\scripts\scan_registry.py
-```
-
----
-
-
-## Comandos E Uso
-
-```bash
-
-## Via Orchestrator (Automatico):
-
-python agent-orchestrator/scripts/match_skills.py "preciso de um advogado"
-
-## "Quero Fazer Partilha De Bens"
-
-```
-
----
-
-
-## Governanca
-
-Esta skill implementa as seguintes politicas:
-
-- **action_log**: Cada analise juridica e registrada para rastreabilidade
-- **rate_limit**: Controle via check_rate integrado ao ecossistema
-- **requires_confirmation**: Alertas de risco alto geram confirmation_request ao usuario
-- **warning_threshold**: Alertas automaticos quando risco processual e elevado
-- **Responsavel:** Ecossistema de Skills Juridicas
-- **Escopo:** TODAS as areas do Direito brasileiro
-- **Limitacoes:** Nao substitui advogado presencial. Analise baseada em dados fornecidos.
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensiveis:** Nao armazena dados pessoais ou processuais do usuario
-
----
-
+Nao ha scripts de registro/orquestracao, action_log, check_rate ou skill-sentinel incluidos neste pacote. Os nomes de skills complementares sao referencias opcionais: verificar disponibilidade e autorizacao antes de delegar. Nao afirmar que auditoria, confirmacao automatica ou ausencia de armazenamento estao implementadas. O ambiente hospedeiro define tratamento e retencao dos dados; anonimizar e nao criar registros juridicos pessoais sem finalidade/autorizacao.
 
 ## Legislacao Principal
 

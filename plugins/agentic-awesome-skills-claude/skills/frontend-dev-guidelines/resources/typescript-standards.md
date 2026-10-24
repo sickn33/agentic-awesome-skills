@@ -50,7 +50,7 @@ function handleData(data: MyData) {
 // ✅ Or use unknown for truly unknown data
 function handleUnknown(data: unknown) {
     if (typeof data === 'object' && data !== null && 'something' in data) {
-        return (data as MyData).something;
+        return typeof data.something === 'string' ? data.something : undefined;
     }
 }
 ```
@@ -91,11 +91,11 @@ export const MyComponent: React.FC<Props> = ({ prop }) => {
 };
 
 // For custom hooks
-function useMyData(id: number): { data: Data; isLoading: boolean } {
+function useMyData(id: number): { data: Data | null; isLoading: boolean } {
     const [data, setData] = useState<Data | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    return { data: data!, isLoading };
+    return { data, isLoading };
 }
 ```
 
@@ -169,7 +169,7 @@ interface ContainerProps {
     title: string;
 }
 
-// React.FC automatically includes children type, but be explicit
+// Current React types require children to be declared explicitly
 export const Container: React.FC<ContainerProps> = ({ children, title }) => {
     return (
         <div>
@@ -259,8 +259,8 @@ function isUser(data: unknown): data is User {
     return (
         typeof data === 'object' &&
         data !== null &&
-        'id' in data &&
-        'name' in data
+        'id' in data && typeof data.id === 'number' &&
+        'name' in data && typeof data.name === 'string'
     );
 }
 
@@ -300,8 +300,8 @@ function Component({ state }: { state: LoadingState }) {
 ### Generic Functions
 
 ```typescript
-function getById<T>(items: T[], id: number): T | undefined {
-    return items.find(item => (item as any).id === id);
+function getById<T extends { id: number }>(items: T[], id: number): T | undefined {
+    return items.find(item => item.id === id);
 }
 
 // Usage with type inference
@@ -416,3 +416,6 @@ if (data) {
 **See Also:**
 - [component-patterns.md](component-patterns.md) - Component typing
 - [data-fetching.md](data-fetching.md) - API typing
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

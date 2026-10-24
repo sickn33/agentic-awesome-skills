@@ -18,7 +18,7 @@ Automate Coda document and data operations through Composio's Coda toolkit via R
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Adding the endpoint does not authenticate Coda; use the host-supported authorized connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
@@ -27,6 +27,8 @@ Automate Coda document and data operations through Composio's Coda toolkit via R
 4. Confirm connection status shows ACTIVE before running any workflows
 
 ## Core Workflows
+
+Confirm the exact doc/table/row IDs and requested change before writes. Permission grants can notify recipients; publishing exposes content publicly. These require a specific user request including recipient/access or publication scope. A push-button call may trigger external actions, not just edit a cell: inspect its effect first. Row writes can be asynchronous; use the returned mutation/request status where supported, then read back. Reconcile timeouts before retrying an upsert, and do not overwrite formula/computed columns. Keep temporary export URLs and private doc content out of public reports. Bound polling and handle failed/expired jobs.
 
 ### 1. Search and Browse Documents
 

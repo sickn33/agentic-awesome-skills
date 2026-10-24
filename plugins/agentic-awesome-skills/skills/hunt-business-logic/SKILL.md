@@ -31,14 +31,14 @@ report_count: 25
 
 ## Crown Jewel Targets
 
-Business logic vulnerabilities pay highest in platforms where financial transactions, identity verification, and access controls intersect with real-world consequences. The richest targets are:
+Business logic vulnerabilities can cause serious harm in platforms where financial transactions, identity verification, and access controls intersect with real-world consequences. Relevant authorized application categories include:
 
 - **E-commerce & payment platforms** (Valve/Steam, Shopify) — payment flow manipulation, free goods, price tampering
 - **Marketplace & gig economy apps** (Airbnb, Uber) — identity/verification bypass enabling fraud or unsafe interactions
 - **SaaS with tiered access** (Mozilla Monitor) — bypassing verification to unlock monitoring features without entitlement
 - **High-traffic consumer apps** (Snapchat, Yelp) — rate-limit bypass enabling spam, enumeration, or abuse at scale
 
-Asset types that pay: checkout flows, subscription endpoints, callback/verification systems, webhook handlers, employee/internal portals exposed to the internet, and any endpoint that trusts client-supplied data to make authorization decisions.
+Relevant asset types: checkout flows, subscription endpoints, callback/verification systems, webhook handlers, employee/internal portals exposed to the internet, and any endpoint that trusts client-supplied data to make authorization decisions.
 
 ---
 
@@ -76,11 +76,11 @@ Asset types that pay: checkout flows, subscription endpoints, callback/verificat
 
 2. **Identify every verification flow.** Enumerate: email verification, phone/SMS verification, payment verification, CAPTCHA, age gates. For each, test: what happens if you skip the verification step entirely? What happens if you replay a valid token on a different account?
 
-3. **Test rate-limiting controls on every form.** For every POST endpoint (subscribe, login, OTP, search), send 50+ rapid requests. Vary: remove cookies, rotate `X-Forwarded-For` / `X-Real-IP` headers, change `User-Agent`. Check if the server uses IP from headers rather than connection IP.
+3. **Test rate-limiting controls on every form.** For every POST endpoint (subscribe, login, OTP, search), use a tiny owner-approved request budget with controlled test accounts and stop on 429/lockout/errors; never infer safety from a fixed request count. In a sandbox, compare trusted proxy handling of `X-Forwarded-For` / `X-Real-IP` headers, change `User-Agent`. Check if the server uses IP from headers rather than connection IP.
 
-4. **Intercept and tamper with payment flows.** Use Burp Suite to intercept every request between your browser, the application, and the payment provider. Identify where price, currency, order ID, or status fields are set. Attempt to modify amounts to $0.01 or currency to a low-value currency. Look for POST-back/webhook endpoints that accept payment confirmation — test if they validate HMAC/signature.
+4. **Intercept and tamper with payment flows.** Use Burp Suite to intercept every request between your browser, the application, and the payment provider. Identify where price, currency, order ID, or status fields are set. Use a provider sandbox and synthetic products/orders with fulfillment, billing and notifications disabled; compare price/currency/order binding without real financial transactions. Look for POST-back/webhook endpoints that accept payment confirmation — test if they validate HMAC/signature.
 
-5. **Test phone/callback number verification.** Whenever a platform accepts a callback number, test: can you set it to a number you don't own? Does the platform call/text that number and grant trust based solely on submission? Try setting it to a victim's number.
+5. **Test phone/callback number verification.** Whenever a platform accepts a callback number, test: can you set it to a number you don't own? Does the platform call/text that number and grant trust based solely on submission? Use only two owner-controlled test numbers with prior consent; never cause calls or messages to a victim.
 
 6. **Check for unprotected employee/internal surfaces.** Search Shodan, GitHub, JS bundles, and Wayback Machine for internal subdomain/path references. Test access without authentication. Check if these surfaces allow order placement, data access, or privilege escalation.
 
@@ -90,29 +90,23 @@ Asset types that pay: checkout flows, subscription endpoints, callback/verificat
 
 ## Payload & Detection Patterns
 
-**Rate limit bypass via header rotation:**
-```bash
-# Rotate X-Forwarded-For to bypass IP rate limiting
-for i in $(seq 1 100); do
-  curl -s -X POST https://target.com/api/subscribe \
-    -H "X-Forwarded-For: 10.0.0.$i" \
-    -H "X-Real-IP: 10.0.0.$i" \
-    -H "Content-Type: application/json" \
-    -d '{"email":"victim+'"$i"'@example.com"}' \
-    -o /dev/null -w "%{http_code}\n"
-done
-```
+**Controlled rate-limit validation plan:**
+
+Create two synthetic test identities and a tiny preapproved cap. Compare baseline
+requests to a single changed forwarding-header input in a sandbox with known trusted
+proxy configuration. Confirm the server-derived limiter key; a 200 response alone
+is not proof of bypass. Never send subscription email/SMS or evade an active block.
 
 **Payment tampering — modify in-flight price:**
 ```http
 POST /payment/initiate HTTP/1.1
-Host: target.com
+Host: target.example
 
 amount=0.01&currency=USD&order_id=12345&product_id=99
 ```
 ```bash
 # Look for unvalidated webhook endpoints
-curl -X POST https://target.com/payment/callback \
+curl -X POST https://target.example/payment/callback \
   -H "Content-Type: application/json" \
   -d '{"status":"success","amount":"0.01","order_id":"12345","transaction_id":"fake-txn"}'
 ```
@@ -120,24 +114,24 @@ curl -X POST https://target.com/payment/callback \
 **Unauthenticated internal page discovery:**
 ```bash
 # Check robots.txt and sitemap for internal paths
-curl -s https://target.com/robots.txt | grep -iE "(disallow|allow)" 
-curl -s https://target.com/sitemap.xml | grep -iE "(employee|internal|staff|summit|admin)"
+curl -s https://target.example/robots.txt | grep -iE "(disallow|allow)"
+curl -s https://target.example/sitemap.xml | grep -iE "(employee|internal|staff|summit|admin)"
 
 # Grep JS bundles for internal paths
-curl -s https://target.com/assets/app.js | grep -oE '"/[a-zA-Z0-9/_-]{3,50}"' | sort -u
+curl -s https://target.example/assets/app.js | grep -oE '"/[a-zA-Z0-9/_-]{3,50}"' | sort -u
 ```
 
 **Email verification bypass:**
 ```bash
 # Skip the verification step: hit the post-verification API endpoint directly
-# with an unverified session. If it succeeds, the gate is UI-only.
-curl -s -X POST https://monitor.target.com/api/monitoring/enable \
+# with an unverified session. A 2xx alone is insufficient; verify the controlled account’s forbidden state transition and absence of a later server-side gate.
+curl -s -X POST https://monitor.target.example/api/monitoring/enable \
   -H "Cookie: session=<your_unverified_session>" \
   -H "Content-Type: application/json" \
-  -d '{"email":"victim@example.com"}'
+  -d '{"email":"controlled-account-b@example.com"}'
 
 # Replay verification token on different account
-curl -X POST https://target.com/verify \
+curl -X POST https://target.example/verify \
   -d 'token=VALID_TOKEN_FROM_ACCOUNT_A&email=account_b@example.com'
 ```
 
@@ -173,7 +167,12 @@ grep -iE "x-forwarded-for|x-real-ip|cf-connecting-ip" src/ -r
 
 ---
 
-## Bypass Techniques
+## Candidate test hypotheses
+
+These are not universal bypasses. Trusted proxy boundaries, anti-CSRF alternatives,
+provider signature algorithms and server-side state must be inspected before drawing
+a conclusion. Missing visible CAPTCHA/token or a client-side price is not proof of a
+vulnerability. All payment/webhook fragments are sandbox-only, never live fulfillment.
 
 | Defense | Bypass |
 |---|---|
@@ -183,7 +182,7 @@ grep -iE "x-forwarded-for|x-real-ip|cf-connecting-ip" src/ -r
 | Payment amount server validation | Modify currency to a lower-value currency; test with $0.00 or negative amounts; manipulate order IDs to reference different products |
 | Webhook HMAC validation | Test with no/empty signature header (is validation enforced at all — a modified payload only "passes" if it isn't); replay an UNMODIFIED captured webhook to test missing idempotency/anti-replay |
 | Auth on internal pages | Try unauthenticated; try with a low-privilege account; try path traversal variants (`/employee/../employee/`) |
-| Phone verification (OTP sent) | Submit someone else's number without OTP validation; check if the system grants trust on submission vs. OTP confirmation |
+| Phone verification (OTP sent) | Submit only a second controlled consenting test number without OTP validation; check if the system grants trust on submission vs. OTP confirmation |
 
 ---
 
@@ -197,8 +196,8 @@ Before writing any report, answer all three:
 2. **What does the victim LOSE?**
    Identify a concrete, attributable loss: financial loss (free goods, fraudulent payments), privacy loss (phone number spoofed, unauthorized monitoring), service abuse (spam campaigns via rate-limit bypass), or security degradation (unverified identity trusted for sensitive actions). If the loss is purely theoretical, re-evaluate severity.
 
-3. **Can it be reproduced in 10 minutes from scratch?**
-   Create a fresh account (or use no account). Follow your documented steps. Achieve the impact. If you can't reliably reproduce it end-to-end in under 10 minutes with the steps you've written, your methodology is incomplete — refine before submitting.
+3. **Can it be reproduced safely from a documented clean test state?**
+   Create a fresh account (or use no account). Follow your documented steps. Use minimal synthetic evidence without actual loss, shipments, victim monitoring or repeated redemption. State timing/preconditions and any untested impact; a 10-minute cutoff is not a validity criterion.
 
 ---
 
@@ -215,41 +214,22 @@ A breach-monitoring service required email verification before enabling monitori
 
 ---
 
-## Disclosed Report Citations (Backfill +5 — 2016-2023)
+## Upstream citation leads (not verified case evidence)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. All five share a measurable financial-impact angle (actual $ loss demonstrated or quantifiable platform-wide exposure).
+The upstream text linked the following reports. Their contents, identities, payouts,
+amounts, payloads and root causes were not established by this static review; do not
+repeat those details as facts or execute against the named organizations. Read each
+original disclosure and distinguish author observation from inference before citing:
 
-8. **Stripe — Fee discount race redemption** ([H1 #1849626](https://hackerone.com/reports/1849626))
-    - Subclass: coupon/discount race-multi-redemption + financial primitive
-    - Payload: Stripe Support applied a one-time $20,000 fee-credit. Researcher captured the "accept-discount" POST and replayed it 30× in parallel via Burp Turbo Intruder, each acceptance crediting the account anew
-    - Root cause: idempotency missing on discount-acceptance endpoint; no unique constraint on (account_id, discount_id)
-    - Year: 2023 — **$5,000**, $600,000 of fee-free transactions accrued before fix (~$18,000 real Stripe loss at 3% take rate)
+- https://hackerone.com/reports/1849626
+- https://hackerone.com/reports/759247
+- https://hackerone.com/reports/364843
+- https://hackerone.com/reports/1446090
+- https://hackerone.com/reports/1328278
 
-9. **Reverb.com — Gift-card race multi-redemption** ([H1 #759247](https://hackerone.com/reports/759247))
-    - Subclass: gift-card / store-credit race-redemption
-    - Payload: single valid gift card, parallel-POST to `/redeem` from 10 sockets via Turbo Intruder. Balance credits N× the face value
-    - Root cause: no row-level lock on gift_card table; balance debit and credit live in separate transactions
-    - Year: 2019 — **$1,500**
-
-10. **Upserve / OLO — Negative-quantity price manipulation** ([H1 #364843](https://hackerone.com/reports/364843))
-    - Subclass: negative-quantity-in-cart price tampering
-    - Payload: `POST /api/order {"items":[{"id":1,"qty":1,"price":50},{"id":2,"qty":-3,"price":50}]}` — order total computes to `-$100`, floors to ~$0 at payment capture, food still fulfills
-    - Root cause: server multiplies `qty * price` with no `qty >= 1` guard
-    - Year: 2018 — textbook citation for the subclass (acknowledged-only program)
-
-11. **Krisp — Pay-less-per-seat via PUT tampering** ([H1 #1446090](https://hackerone.com/reports/1446090))
-    - Subclass: price-per-unit mass-assignment / quantity-discount manipulation
-    - Payload: `PUT /v2/seats` body includes a server-trusted `price` field. Set `price=1` instead of $60. Subscription updates, billing engine charges $1/seat for 100 seats
-    - Root cause: server reads price from request body instead of looking it up by plan_id; classic mass-assignment
-    - Year: 2021 — Stripe-billed SaaS pricing exposure
-
-12. **Stripe — Pay using archived price via mid-flow swap** ([H1 #1328278](https://hackerone.com/reports/1328278))
-    - Subclass: cart-state TOCTOU / cancel-then-deliver (price-version race at checkout)
-    - Payload: merchant archives an old price (e.g., $5 instead of new $50). Buyer starts checkout via the new payment-link, then mid-flow swaps `price_id` back to the archived one. Stripe charges $5; subscription provisions at the new tier
-    - Root cause: payment-link validates "is active", price object validates "exists" — but the join "price.active AND price ∈ link.allowed_prices" is missing
-    - Year: 2021 — Stripe Medium (per-subscription recurring loss)
-
----
+The preceding brand-style scenarios are hypothetical illustrations, not independently
+verified incidents or claims that those companies remain vulnerable. A possible
+chain does not establish every prerequisite, exploitability or payout.
 
 ## Related Skills & Chains
 
@@ -268,7 +248,7 @@ The following real, verified bug-bounty / coordinated-disclosure cases extend th
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; separately review any official tools and provenance before installation.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -279,3 +259,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+For example, a sandbox order with canonical total 10.00 USD must reject a callback for 0.01 USD or the wrong controlled order even if the provider signature is valid; replay of the same valid event must not credit twice. Verify persisted state with fulfillment disabled, then clean up synthetic fixtures. These are proposed checks, not observed findings.

@@ -32,6 +32,12 @@ typing in its own run; you verify and commit.
 
 The loop needs only a shell command and file access, so any comparable orchestrator can drive it.
 
+## Runtime availability and authorization
+
+This tracked bundle has documentation only: scripts/relay.mjs is absent. Do not run the documented path or automatically install it/Aider. Use an already reviewed installed runtime, or stop that execution path and prepare a separately authorized pinned installation. CLI flags/defaults and result semantics below describe an upstream version, not locally verified behavior. Review actual runtime/config/hooks before dispatch.
+
+Delegation sends selected code, brief and repository context to the configured provider; confirm the intended endpoint/data policy and cost limit. Use a non-secret placeholder only for a trusted local endpoint that ignores credentials, never send a real provider key to an arbitrary api-base. Logs/history can retain private code and keys; protect paths and retention. Disable or review repository lint/test commands before execution. A dry run can still write history/cache and incur model costs. The orchestrator retains publication/commit authority from the actual task; this skill alone does not grant it.
+
 ## The one thing to know about Aider
 
 **Aider commits by default.** Two of its defaults would destroy the reviewable diff this skill exists
@@ -92,6 +98,8 @@ until the relay's `--timeout` watchdog fires and reports `status: "timeout"`. Co
 before dispatching a long brief.
 
 ### Staying offline
+
+The listed flags reduce known automatic requests; they do not prove offline operation. Model requests, repository config/lint/hooks and dependencies may still use the network. Enforce egress outside the child when offline behavior is required.
 
 No account or provider registration is involved: Aider is a pip install, the endpoint is yours, and
 `OPENAI_API_KEY` only has to be non-empty. The relay pins the flags that would otherwise reach the
@@ -181,8 +189,7 @@ that path.
 What remains is not a sandbox, and nothing here pretends otherwise. Aider has no permission modes and
 no isolation: within its file scope it edits freely, and `--auto-lint` (on by default) runs whatever
 linter the repository configures. A brief that tells Aider to run a command still gets a command run.
-Delegation is the authorization; if a run must not be able to touch the host, run it in a container or
-a throwaway worktree, because no flag in this relay will give you that.
+Delegation is the authorization; if a run must not be able to touch the host, run it in a configured container/VM with restricted mounts, credentials and egress. A throwaway worktree alone shares host access and cannot enforce that boundary.
 
 **File selection is not a security boundary.** `--file`, `--read`, and `--subtree-only` set what Aider
 puts in its chat context, which is a scoping and token-cost decision. They do not confine what it can
@@ -190,7 +197,7 @@ reach. See [references/writing-the-brief.md](references/writing-the-brief.md).
 
 `--read-only` maps to Aider's `--dry-run`, which performs the run without modifying files. The relay
 does not independently verify that claim - it reports what `git status --porcelain` shows and warns if
-a `--read-only` run left the tree changed. `touchedFiles` and the diff, not a flag, are the guarantee.
+a `--read-only` run left the tree changed. `touchedFiles` and the diff are partial observations; compare HEAD, index and untracked/ignored outputs too. They are not an isolation guarantee.
 
 ## Resume
 

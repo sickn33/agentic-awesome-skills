@@ -189,38 +189,31 @@ renderer.setAnimationLoop(() => {
 For lightweight custom controls without importing OrbitControls:
 
 ```javascript
-let isDragging = false;
+let activePointer = null;
 let previousMousePosition = { x: 0, y: 0 };
-
-renderer.domElement.addEventListener("mousedown", () => {
-  isDragging = true;
+renderer.domElement.style.touchAction = "none";
+renderer.domElement.addEventListener("pointerdown", (event) => {
+  if (activePointer !== null) return;
+  activePointer = event.pointerId;
+  previousMousePosition = { x: event.clientX, y: event.clientY };
+  renderer.domElement.setPointerCapture(activePointer);
 });
-
-renderer.domElement.addEventListener("mouseup", () => {
-  isDragging = false;
-});
-
-renderer.domElement.addEventListener("mousemove", (event) => {
-  if (isDragging) {
-    const deltaX = event.clientX - previousMousePosition.x;
-    const deltaY = event.clientY - previousMousePosition.y;
-
-    // Rotate camera around scene
-    const rotationSpeed = 0.005;
-    camera.position.x += deltaX * rotationSpeed;
-    camera.position.y -= deltaY * rotationSpeed;
-    camera.lookAt(scene.position);
-  }
-
+renderer.domElement.addEventListener("pointermove", (event) => {
+  if (event.pointerId !== activePointer) return;
+  camera.position.x += (event.clientX - previousMousePosition.x) * 0.005;
+  camera.position.y -= (event.clientY - previousMousePosition.y) * 0.005;
+  camera.lookAt(scene.position); // pans viewpoint; this is not an orbital camera
   previousMousePosition = { x: event.clientX, y: event.clientY };
 });
-
-// Zoom with mouse wheel
+for (const type of ["pointerup", "pointercancel", "lostpointercapture"]) {
+  renderer.domElement.addEventListener(type, (event) => {
+    if (event.pointerId === activePointer) activePointer = null;
+  });
+}
 renderer.domElement.addEventListener("wheel", (event) => {
   event.preventDefault();
-  camera.position.z += event.deltaY * 0.01;
-  camera.position.z = Math.max(2, Math.min(20, camera.position.z)); // Clamp
-});
+  camera.position.z = Math.max(2, Math.min(20, camera.position.z + event.deltaY * 0.01));
+}, { passive: false });
 ```
 
 ### Raycasting for Object Selection
@@ -232,6 +225,7 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 const clickableObjects = []; // Array of meshes that can be clicked
 
+// Full-window canvas only; embedded canvases must use getBoundingClientRect().
 // Update mouse position
 window.addEventListener("mousemove", (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -239,7 +233,9 @@ window.addEventListener("mousemove", (event) => {
 });
 
 // Detect clicks
-window.addEventListener("click", () => {
+window.addEventListener("click", (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(clickableObjects);
 
@@ -531,7 +527,7 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 Three.js r183 includes a WebGPU renderer as an alternative to WebGL:
 
 ```javascript
-import { WebGPURenderer } from "three/addons/renderers/webgpu/WebGPURenderer.js";
+import { WebGPURenderer } from "three/webgpu";
 
 const renderer = new WebGPURenderer({ antialias: true });
 await renderer.init();
@@ -546,6 +542,7 @@ WebGPU uses TSL (Three.js Shading Language) instead of GLSL for custom shaders. 
 
 ```javascript
 const timer = new THREE.Timer();
+timer.connect(document); // enable page-visibility handling; dispose on teardown
 
 renderer.setAnimationLoop(() => {
   timer.update();
@@ -649,7 +646,7 @@ for (let i = 0; i < 1000; i++) {
 
 ```javascript
 // In production, load 3D models:
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const loader = new GLTFLoader();
 loader.load("model.gltf", (gltf) => {
@@ -691,3 +688,14 @@ Three.js r183 + Vite
 ├── Leva (debug GUI)
 └── Post-processing effects
 ```
+
+## Integration boundaries
+
+The snippets are alternatives, not a single script: define `mesh`, add it to the
+scene and choose exactly one render loop. Frame increments above are illustrative;
+use elapsed seconds for refresh-rate-independent motion. On teardown stop the loop,
+dispose controls/renderer/timer/geometries/materials/textures and remove listeners.
+Respect reduced-motion settings, pause offscreen work and offer keyboard controls.
+Cap pixel ratio/asset size for target devices; particle counts do not guarantee FPS.
+Remote CDN scripts/models disclose network requests and need approved pinned sources
+and asset licenses. No scene, browser rendering or WebGPU fallback is tested here.

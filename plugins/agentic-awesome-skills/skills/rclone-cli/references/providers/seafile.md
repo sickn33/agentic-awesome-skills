@@ -60,7 +60,7 @@ Enter a string value. Press Enter for the default ("").
 Choose a number from below, or type in your own value
  1 / Connect to cloud.seafile.com
    \ "https://cloud.seafile.com/"
-url> http://my.seafile.server/
+url> https://my.seafile.server/
 User name (usually email address)
 Enter a string value. Press Enter for the default ("").
 user> me@example.com
@@ -79,7 +79,7 @@ Enter a boolean value (true or false). Press Enter for the default ("false").
 Name of the library. Leave blank to access all non-encrypted libraries.
 Enter a string value. Press Enter for the default ("").
 library>
-Library password (for encrypted libraries only). Leave blank if you pass it through the command line.
+Library password (for encrypted libraries only). Configure it interactively or via a protected secret source.
 y) Yes type in my own password
 g) Generate random password
 n) No leave this optional password blank (default)
@@ -93,7 +93,7 @@ Two-factor authentication is not enabled on this account.
 --------------------
 [seafile]
 type = seafile
-url = http://my.seafile.server/
+url = https://my.seafile.server/
 user = me@example.com
 pass = *** ENCRYPTED ***
 2fa = false
@@ -160,7 +160,7 @@ Enter a string value. Press Enter for the default ("").
 Choose a number from below, or type in your own value
  1 / Connect to cloud.seafile.com
    \ "https://cloud.seafile.com/"
-url> http://my.seafile.server/
+url> https://my.seafile.server/
 User name (usually email address)
 Enter a string value. Press Enter for the default ("").
 user> me@example.com
@@ -179,7 +179,7 @@ Enter a boolean value (true or false). Press Enter for the default ("false").
 Name of the library. Leave blank to access all non-encrypted libraries.
 Enter a string value. Press Enter for the default ("").
 library> My Library
-Library password (for encrypted libraries only). Leave blank if you pass it through the command line.
+Library password (for encrypted libraries only). Configure it interactively or via a protected secret source.
 y) Yes type in my own password
 g) Generate random password
 n) No leave this optional password blank (default)
@@ -196,7 +196,7 @@ Success!
 --------------------
 [seafile]
 type = seafile
-url = http://my.seafile.server/
+url = https://my.seafile.server/
 user = me@example.com
 pass =
 2fa = true
@@ -217,7 +217,7 @@ pointing at the root of the library `My Library`:
 See all files in the library:
 
 ```console
-rclone lsd seafile:
+rclone ls seafile:
 ```
 
 Create a new directory inside the library
@@ -267,7 +267,7 @@ They can either be for a file or a directory:
 
 ```console
 $ rclone link seafile:seafile-tutorial.doc
-http://my.seafile.server/f/fdcd8a2f93f84b8b90f4/
+https://my.seafile.server/f/fdcd8a2f93f84b8b90f4/
 
 ```
 
@@ -275,7 +275,7 @@ or if run on a directory you will get:
 
 ```console
 $ rclone link seafile:dir
-http://my.seafile.server/d/9ea2455f6f55478bbb0d/
+https://my.seafile.server/d/9ea2455f6f55478bbb0d/
 ```
 
 Please note a share link is unique for each file or directory. If you run a link
@@ -368,7 +368,8 @@ Properties:
 
 Library password (for encrypted libraries only).
 
-Leave blank if you pass it through the command line.
+Use interactive configuration or a protected secret source; avoid passwords
+in shell history and process arguments.
 
 **NB** Input to this must be obscured - see [rclone obscure](/commands/rclone_obscure/).
 

@@ -1,6 +1,6 @@
 # Reference: Manus Context Engineering Principles
 
-This skill is based on context engineering principles from Manus, the AI agent company acquired by Meta for $2 billion in December 2025.
+This skill adapts the July 18, 2025 Manus engineering article linked below. Its observations and historical pricing are workload-specific, not current product guarantees. Business/acquisition assertions are outside this technical reference.
 
 ## The 6 Manus Principles
 
@@ -75,7 +75,9 @@ End of context: [Recently read task_plan.md - gets ATTENTION!]
 
 ---
 
-## The 3 Context Engineering Strategies
+## Additional Editorial Strategies
+
+The architecture/percentages below were not established by the linked Manus article; treat them as illustrative proposals rather than documented Manus internals.
 
 Based on Lance Martin's analysis of Manus architecture.
 
@@ -115,7 +117,7 @@ RULES:
 └─────────────────────────────────┘
 ```
 
-**Key Insight:** Manus originally used `todo.md` for task planning but found ~33% of actions were spent updating it. Shifted to dedicated planner agent calling executor sub-agents.
+**Design option:** A separate planner can reduce repeated bookkeeping, but delegation must be supported and authorized; no measured percentage or internal Manus transition is established here.
 
 ### Strategy 3: Context Offloading
 
@@ -178,7 +180,7 @@ Manus operates in a continuous 7-step loop:
 
 ## Critical Constraints
 
-- **Single-Action Execution:** ONE tool call per turn. No parallel execution.
+- **Execution:** Preserve dependencies and permissions; independent reads may run in parallel when supported. This is not a universal one-call-per-turn requirement.
 - **Plan is Required:** Agent must ALWAYS know: goal, current phase, remaining phases
 - **Files are Memory:** Context = volatile. Filesystem = persistent.
 - **Never Repeat Failures:** If action failed, next action MUST be different
@@ -186,15 +188,11 @@ Manus operates in a continuous 7-step loop:
 
 ---
 
-## Manus Statistics
+## Historical observations
 
-| Metric | Value |
-|--------|-------|
-| Average tool calls per task | ~50 |
-| Input-to-output token ratio | 100:1 |
-| Acquisition price | $2 billion |
-| Time to $100M revenue | 8 months |
-| Framework refactors since launch | 5 times |
+The linked 2025 article describes its authors’ experience, not a reproducible
+benchmark for this skill. Token costs, cache behavior and task length depend on
+the provider, model, serialization and workload; check current documentation.
 
 ---
 

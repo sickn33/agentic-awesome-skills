@@ -7,7 +7,7 @@
 - The free Apify plan searches at most 40 keywords per run.
 - Some feeds return fewer rows than requested, even when `resultsPerPage` is large.
 
-## Cost examples
+## Historical illustrative cost examples (verify live pricing)
 
 | Run | Rows | Cost |
 |---|---|---|
@@ -26,7 +26,7 @@ AI video options count started 30-second blocks: a 45-second video is 2 blocks.
 
 ## Media links
 
-TikTok's own video and image links expire within hours. When the user needs the files later, turn on the download options. The saved files stay in the run's key-value store and their links are in `mediaUrls`.
+TikTok's own video and image links expire within hours. When the user needs the files later, obtain authorization and budget before enabling download options. The saved files stay in the run's key-value store and their links are in `mediaUrls`.
 
 ## Fields kept for clockworks compatibility
 
@@ -42,4 +42,4 @@ TikTok's own video and image links expire within hours. When the user needs the 
 | `mcpMessage` | Template with `{{field}}` placeholders, for example `*@{{authorMeta.name}}* — {{diggCount}} likes\n{{webVideoUrl}}`. |
 | `mcpMaxItems` | Most videos to send. Default 50. |
 
-A delivery problem never fails the scrape.
+Verify scrape and delivery status independently; a dataset is not delivery evidence.

@@ -14,13 +14,14 @@ const summary = {
   interesting: [],
 };
 
-function walk(current) {
+function walk(current, depth = 0) {
+  if (depth > 64 || summary.files + summary.directories > 100000) throw new Error("Artifact inventory limit reached");
   const entries = fs.readdirSync(current, { withFileTypes: true });
   for (const entry of entries) {
     const fullPath = path.join(current, entry.name);
     if (entry.isDirectory()) {
       summary.directories += 1;
-      walk(fullPath);
+      walk(fullPath, depth + 1);
       continue;
     }
     if (!entry.isFile()) continue;
@@ -44,6 +45,10 @@ if (!fs.existsSync(root)) {
   process.exit(1);
 }
 
+if (!fs.lstatSync(root).isDirectory() || fs.lstatSync(root).isSymbolicLink()) {
+  console.error("ERROR: Artifact root must be a regular directory, not a symlink");
+  process.exit(1);
+}
 walk(root);
 
 console.log(`Artifact root: ${summary.root}`);

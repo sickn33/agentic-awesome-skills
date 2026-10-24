@@ -23,6 +23,15 @@ Implement a vendor risk management program covering vendor assessment questionna
 
 ## Vendor Risk Tiering
 
+Illustrative policy defaults, not regulatory requirements or automatic vendor classifications.
+Tier the actual data flows/access/criticality: HR and expense systems can hold highly
+sensitive data and must not be assigned Medium just by product category. Deadlines,
+DPAs and BAAs depend on applicable law/role/contract; 72 hours is not a universal
+vendor notice rule. Have qualified owners determine obligations. Request minimal
+redacted evidence through approved channels; restrict report/employee/contact data.
+SOC 2 is an attestation report, not a certification; review scope, period, exceptions,
+subservice organizations and complementary controls rather than counting badges.
+
 ```yaml
 vendor_risk_tiers:
   critical:
@@ -253,10 +262,10 @@ risk_scoring:
   calculation:
     formula: "Sum of (dimension_score * dimension_weight) / 100"
     risk_levels:
-      low: "Score 1.0 - 2.0"
-      medium: "Score 2.1 - 3.0"
-      high: "Score 3.1 - 4.0"
-      critical: "Score 4.1 - 5.0"
+      low: "1.0 <= score <= 2.0"
+      medium: "2.0 < score <= 3.0"
+      high: "3.0 < score <= 4.0"
+      critical: "4.0 < score <= 5.0"
 
   example:
     vendor: "Payment Processor X"
@@ -282,7 +291,7 @@ vendor_registry_schema:
 
   risk_assessment:
     risk_tier: ""  # critical, high, medium, low
-    risk_score: 0.0
+    risk_score: null # unknown until assessed
     last_assessment_date: ""
     next_assessment_date: ""
     assessment_status: ""  # current, due, overdue
@@ -290,10 +299,10 @@ vendor_registry_schema:
     certifications:
       - type: "SOC 2 Type II"
         valid_until: ""
-        report_on_file: true
+        report_on_file: null # verify
       - type: "ISO 27001"
         valid_until: ""
-        certificate_on_file: true
+        certificate_on_file: null # verify
 
   contract:
     contract_id: ""
@@ -330,6 +339,13 @@ vendor_registry_schema:
 
 ## SLA Monitoring
 
+Unexecuted sampling sketch. Endpoint configuration is trusted administrator input:
+allowlist HTTPS hosts/ports and resolved destinations, reject credential-bearing URLs
+and private/metadata destinations unless explicitly approved, cap bytes/time and do
+not follow redirects. Do not accept vendor-supplied URLs as unrestricted fetch targets.
+Headers must come from secret storage and never be logged. A status page must expose
+the expected Statuspage-compatible schema; other providers need separate adapters.
+
 ```python
 """
 Vendor SLA monitoring - Track uptime and response time commitments.
@@ -351,9 +367,11 @@ class VendorSLAMonitor:
                     endpoint["url"],
                     timeout=endpoint.get("timeout", 10),
                     headers=endpoint.get("headers", {}),
+                    allow_redirects=False,
+                    stream=True,
                 )
                 results.append({
-                    "endpoint": endpoint["url"],
+                    "endpoint": endpoint.get("name", "configured-endpoint"),
                     "status": resp.status_code,
                     "response_time_ms": resp.elapsed.total_seconds() * 1000,
                     "healthy": resp.status_code == endpoint.get("expected_status", 200),
@@ -361,12 +379,15 @@ class VendorSLAMonitor:
                 })
             except requests.RequestException as e:
                 results.append({
-                    "endpoint": endpoint["url"],
+                    "endpoint": endpoint.get("name", "configured-endpoint"),
                     "status": "error",
-                    "error": str(e),
+                    "error": type(e).__name__,
                     "healthy": False,
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 })
+            finally:
+                if "resp" in locals():
+                    resp.close()
         return results
 
     def check_status_page(self, vendor):
@@ -376,8 +397,14 @@ class VendorSLAMonitor:
             return None
         try:
             api_url = f"{status_url}/api/v2/summary.json"
-            resp = requests.get(api_url, timeout=10)
-            data = resp.json()
+            resp = requests.get(api_url, timeout=10, allow_redirects=False, stream=True)
+            resp.raise_for_status()
+            payload = resp.raw.read(262145, decode_content=True)
+            resp.close()
+            if len(payload) > 262144:
+                raise ValueError("Status response exceeds limit")
+            import json
+            data = json.loads(payload)
             return {
                 "vendor": vendor["name"],
                 "status": data.get("status", {}).get("indicator", "unknown"),
@@ -394,7 +421,7 @@ class VendorSLAMonitor:
         """Calculate monthly SLA compliance."""
         total = len(monthly_checks)
         healthy = sum(1 for c in monthly_checks if c.get("healthy"))
-        uptime_pct = (healthy / total * 100) if total > 0 else 0
+        uptime_pct = (healthy / total * 100) if total > 0 else None
         avg_response = (
             sum(c.get("response_time_ms", 0) for c in monthly_checks if c.get("healthy"))
             / max(healthy, 1)
@@ -404,9 +431,10 @@ class VendorSLAMonitor:
             "period": datetime.now(timezone.utc).strftime("%Y-%m"),
             "total_checks": total,
             "healthy_checks": healthy,
-            "uptime_percentage": round(uptime_pct, 3),
-            "avg_response_time_ms": round(avg_response, 1),
-            "sla_met": uptime_pct >= 99.9,
+            "sample_success_percentage": round(uptime_pct, 3) if uptime_pct is not None else None,
+            "avg_headers_response_time_ms": round(avg_response, 1) if healthy else None,
+            "sla_met": None, # requires contractual time-window/exclusions and complete time-weighted monitoring
+            "coverage": "sample observations only; not contractual uptime",
         }
 ```
 

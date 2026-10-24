@@ -12,7 +12,7 @@ export const metadata = {
   description:
     'Two antipatterns: (a) GET handlers without explicit Cache-Control headers serve uncached; (b) fetch() calls with cache:"no-store" or next:{revalidate:0} opt out of caching even on cacheable upstream data. For non-auth routes / fetches, both are leaving cache hits on the floor.',
   fix:
-    'For GET handlers: return a Response with Cache-Control: public, s-maxage=<seconds>, stale-while-revalidate=<window>. For fetch(): drop cache:"no-store" (use { next: { revalidate: <seconds> } } in Next.js) so the response is cached by the framework + CDN.',
+    'Only after proving public, shared, freshness-safe output, for GET handlers return a Response with Cache-Control: public, s-maxage=<seconds>, stale-while-revalidate=<window>. For fetch(): drop cache:"no-store" (use { next: { revalidate: <seconds> } } in Next.js) to cache reusable server data; this does not itself make the HTTP response CDN-cacheable.',
   citations: [
     'https://vercel.com/docs/caching/cdn-cache',
     'https://vercel.com/docs/caching/cache-control-headers',

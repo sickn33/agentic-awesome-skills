@@ -3,7 +3,7 @@ name: asset-inventory
 description: Maintain IT asset inventory and configuration management database. Track
   hardware, software, and cloud resources. Use when managing IT assets.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -92,11 +92,31 @@ asset_record_schema:
     dependencies: "Upstream and downstream services"
 ```
 
+## Scope and evidence limits
+
+Confirm account/subscription/organization and approved regions before queries.
+Use read-only discovery identities and restricted output directories: asset data
+contains internal addresses, account and owner information. These scripts enumerate
+selected services, not every resource. AWS tagging API omits never-tagged resources;
+Azure Resource Graph needs pagination beyond its default page; Config sees only
+recorded supported resources. Record per-provider permission errors and pagination,
+never label a failed query empty or an unseen asset retired. Repeat region-scoped
+queries for each authorized region and reconcile a stable account+region+resource
+ID before CMDB writes. Config setup below mutates paid account settings and needs
+an approved recorder role, delivery channel and change plan first. Tag policies
+constrain supported tag values but do not require tags on every resource; provider
+default_tags and Config evaluations are not universal preventative enforcement.
+The tag-policy YAML is an illustrative wrapper; actual Organizations policy is JSON
+with `tags` at its root, not `tag_policy`.
+
 ## AWS Resource Discovery Script
 
 ```bash
 #!/usr/bin/env bash
-# aws-asset-discovery.sh - Discover and inventory all AWS resources
+# aws-asset-discovery.sh - Selected AWS services in the configured region
+set -euo pipefail
+umask 077
+set -o noclobber
 
 OUTPUT_DIR="./asset-inventory/aws/$(date +%Y-%m-%d)"
 mkdir -p "$OUTPUT_DIR"
@@ -136,16 +156,10 @@ aws rds describe-db-instances \
     BackupRetention:BackupRetentionPeriod
   }' --output json > "$OUTPUT_DIR/rds-instances.json"
 
-# S3 Buckets
-echo "--- S3 Buckets ---"
-aws s3api list-buckets --query 'Buckets[*].{Name:Name,Created:CreationDate}' --output json | \
-  jq -c '.[]' | while read -r bucket; do
-    name=$(echo "$bucket" | jq -r '.Name')
-    region=$(aws s3api get-bucket-location --bucket "$name" --query 'LocationConstraint' --output text 2>/dev/null)
-    encryption=$(aws s3api get-bucket-encryption --bucket "$name" 2>/dev/null | jq -r '.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm' 2>/dev/null)
-    versioning=$(aws s3api get-bucket-versioning --bucket "$name" --query 'Status' --output text 2>/dev/null)
-    echo "{\"Name\":\"$name\",\"Region\":\"${region:-us-east-1}\",\"Encryption\":\"${encryption:-none}\",\"Versioning\":\"${versioning:-Disabled}\"}"
-  done | jq -s '.' > "$OUTPUT_DIR/s3-buckets.json"
+# S3 bucket names only. Per-bucket location/encryption/versioning need separate
+# bounded queries with explicit unknown/access-denied states, not "none" defaults.
+aws s3api list-buckets --query 'Buckets[*].{Name:Name,Created:CreationDate}' \
+  --output json > "$OUTPUT_DIR/s3-buckets.json"
 
 # Lambda Functions
 echo "--- Lambda Functions ---"
@@ -197,13 +211,13 @@ echo "--- EKS Clusters ---"
 aws eks list-clusters --query 'clusters' --output json | jq -r '.[]' | while read -r cluster; do
   aws eks describe-cluster --name "$cluster" \
     --query 'cluster.{Name:name,Version:version,Status:status,Endpoint:endpoint,Created:createdAt}'
-done | jq -s '.' > "$OUTPUT_DIR/eks-clusters.json" 2>/dev/null
+done | jq -s '.' > "$OUTPUT_DIR/eks-clusters.json"
 
 # KMS Keys
 echo "--- KMS Keys ---"
 aws kms list-keys --query 'Keys[*].KeyId' --output text | tr '\t' '\n' | while read -r key_id; do
   aws kms describe-key --key-id "$key_id" \
-    --query 'KeyMetadata.{KeyId:KeyId,Description:Description,State:KeyState,Created:CreationDate,Manager:KeyManager}' 2>/dev/null
+    --query 'KeyMetadata.{KeyId:KeyId,Description:Description,State:KeyState,Created:CreationDate,Manager:KeyManager}'
 done | jq -s '.' > "$OUTPUT_DIR/kms-keys.json"
 
 # Generate summary
@@ -282,7 +296,7 @@ aws configservice list-discovered-resources --resource-type AWS::RDS::DBInstance
 aws configservice select-resource-config \
   --expression "SELECT resourceId, resourceType, tags, configuration.instanceType
                 WHERE resourceType = 'AWS::EC2::Instance'
-                AND tags.tag('Environment') = 'production'"
+                AND tags.Environment = 'production'"
 
 # Get compliance summary
 aws configservice get-compliance-summary-by-config-rule
@@ -351,7 +365,10 @@ provider "aws" {
 
 ```bash
 #!/usr/bin/env bash
-# multi-cloud-discovery.sh - Discover assets across AWS, Azure, and GCP
+# multi-cloud-discovery.sh - Partial scoped inventory, not complete coverage
+set -euo pipefail
+umask 077
+set -o noclobber
 
 OUTPUT_DIR="./asset-inventory/multi-cloud/$(date +%Y-%m-%d)"
 mkdir -p "$OUTPUT_DIR"
@@ -368,13 +385,13 @@ echo "AWS resources: $(jq 'length' "$OUTPUT_DIR/aws-all-resources.json")"
 # Azure - using Resource Graph
 echo "--- Azure Resources ---"
 az graph query -q "Resources | project name, type, location, resourceGroup, subscriptionId, tags" \
-  --output json > "$OUTPUT_DIR/azure-all-resources.json" 2>/dev/null
+  --output json > "$OUTPUT_DIR/azure-all-resources.json"
 
 # GCP - using Cloud Asset Inventory
 echo "--- GCP Resources ---"
 gcloud asset search-all-resources \
   --scope="organizations/ORG_ID" \
-  --format=json > "$OUTPUT_DIR/gcp-all-resources.json" 2>/dev/null
+  --format=json > "$OUTPUT_DIR/gcp-all-resources.json"
 
 # Find untagged resources
 echo "=== Untagged Resources ==="

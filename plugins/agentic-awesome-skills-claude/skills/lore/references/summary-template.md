@@ -42,7 +42,7 @@
 
 For each (scope, layer) tuple, pick entries by this priority:
 
-0. **Skip entries with `#superseded-by:<id>`.** These are historical entries replaced by a newer one; the SUMMARY should reflect current state, not chain history.
+0. **Skip entries marked #stale as well as entries with `#superseded-by:<id>`.** These are historical entries replaced by a newer one; the SUMMARY should reflect current state, not chain history.
 1. Most recent `#verified` date wins
 2. Tiebreaker: most recent `#added` date
 3. Tiebreaker: entries that contain "primary" / "main" / "core" / "use <X>" — these are typically the anchor facts

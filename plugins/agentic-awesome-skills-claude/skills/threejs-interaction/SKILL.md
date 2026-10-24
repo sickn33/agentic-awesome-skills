@@ -17,6 +17,12 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - The task involves raycasting, object picking, pointer handling, touch input, or camera controls.
 - You are building an interactive 3D experience rather than a passive render.
 
+## Example
+
+```text
+Add pointer selection to this canvas using its bounding rectangle, test after resize/scroll and provide keyboard selection. Dispose listeners/controls on unmount and verify picking nested meshes.
+```
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

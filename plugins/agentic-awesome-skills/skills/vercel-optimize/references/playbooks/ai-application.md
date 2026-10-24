@@ -9,10 +9,10 @@ AI Gateway > Sandbox Active Compute > Function Duration > Function Invocations. 
 ## Priority patterns
 
 1. **Provider failover.** Configure AI Gateway with an active-active fallback chain across providers (OpenAI + Anthropic, or model-family pairs). Critical-path agents must not be single-provider — a 429 from one provider becomes a user-visible outage otherwise. Field example: MELI runs homegrown active-active routing because retry-on-error against a single provider degraded their NLP-on-support flow.
-2. **OIDC keyless auth, not explicit API keys.** In production, use the AI Gateway OIDC binding so requests are signed by deployment identity. In local dev, `vercel env run -- <cmd>` rotates OIDC each run. An explicit `AI_GATEWAY_API_KEY` in repo env vars is a regression — it bypasses keyless and creates a long-lived secret.
-3. **Sandbox reuse over per-request `Sandbox.create`.** Each fresh sandbox costs at least 1 minute of billed compute (boot + teardown rounded up). When isolation isn't required (single-tenant agents, shared workspaces), pool sandboxes by name (`sandbox.get(name)`) — auto-snapshot on death + auto-resume on next get is the persistence model.
+2. **OIDC keyless auth, not explicit API keys.** In production, use the AI Gateway OIDC binding so requests are signed by deployment identity. In local dev, `vercel env run -- <cmd>` rotates OIDC each run. Prefer supported deployment identity where available; user-supplied keys may be intentional in other environments and must remain secret.
+3. **Sandbox reuse over per-request `Sandbox.create`.** Confirm the current Sandbox billing units and startup cost from the account/docs before estimating savings. When isolation isn't required (single-tenant agents, shared workspaces), consider reusing an explicitly owned sandbox with the current SDK lookup API; implement persistence explicitly and verify snapshot/expiry semantics. Never share a sandbox across tenants or mutually untrusted jobs.
 4. **`after()` / `waitUntil()` for tool logging.** Tool-call telemetry, audit writes, and analytics should never block the user response. Use `after()` (Next 15+) or `waitUntil()` from `@vercel/functions` for any write that doesn't affect the streamed response.
-5. **Fluid Compute for JIT/process warmth.** Streaming LLM responses benefit from warm processes; the GraphQL/Apollo JIT cache + persisted-document plans only pay back when processes survive across requests. Fluid is the default; disabling it on AI workloads is almost always wrong.
+5. **Fluid Compute for JIT/process warmth.** Streaming LLM responses benefit from warm processes; the GraphQL/Apollo JIT cache + persisted-document plans only pay back when processes survive across requests. Check the actual project setting, module-state isolation and measured workload before proposing a change.
 
 ## Frequent gotchas
 
@@ -29,4 +29,4 @@ AI Gateway > Sandbox Active Compute > Function Duration > Function Invocations. 
 - [observability-events-cost-attribution](../support-topics/observability-events-cost-attribution.md) — when Observability Events climb above 20% of bill
 - [use-cache-remote-shared-origin-data](../support-topics/use-cache-remote-shared-origin-data.md) — caching shared LLM context or embedding lookups
 - `https://vercel.com/docs/ai-gateway` — provider configuration, failover chain
-- `https://vercel.com/docs/vercel-sandbox` — `sandbox.get(name)` and active-compute billing
+- `https://vercel.com/docs/vercel-sandbox` — current lookup/snapshot APIs and active-compute billing

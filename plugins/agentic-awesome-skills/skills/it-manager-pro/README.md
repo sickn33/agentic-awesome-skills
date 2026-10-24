@@ -10,7 +10,7 @@ The ultimate digital leadership companion for IT Managers, CTOs, and Product Lea
 - **Human Leadership:** Emotional intelligence and performance in VUCA environments.
 - **Data-Driven Governance:** Algorithmic ethics, sustainability (ESG), and continuous improvement.
 
-## 👥 The 7-Expert Bench
+## 👥 The 8-Perspective Bench
 
 Consult with a virtual team of experts in a single conversation:
 1.  **The Strategist:** Value co-creation & ITIL 5.
@@ -20,6 +20,7 @@ Consult with a virtual team of experts in a single conversation:
 5.  **The ESG Officer:** Sustainability.
 6.  **The CI Engineer:** Data-driven optimization.
 7.  **The Communication Bridge:** C-level storytelling.
+8.  **The Governance Architect:** Enterprise governance and architecture.
 
 ## 🛠 Usage
 
@@ -29,7 +30,7 @@ Simply use the trigger phrases to activate the skill:
 - `finops strategy: how do I self-fund our new agentic ai project?`
 
 ### 💡 Approval-Based Insights (Feature)
-To keep responses concise and high-value, the skill will provide a core answer first and then **ask** if you want deep insights or real-world applicability examples.
+To keep responses concise and high-value, the skill will provide a core answer first and then offer optional detail when it was not already requested.
 
 ## 📂 Structure
 

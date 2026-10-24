@@ -150,8 +150,8 @@ async def process_items(item_ids: List[int]):
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
     # Filter out failures
-    successful = [r for r in results if r is not None and not isinstance(r, Exception)]
-    failed = [r for r in results if isinstance(r, Exception)]
+    successful = [r for r in results if r is not None and not isinstance(r, BaseException)]
+    failed = [r for r in results if r is None or isinstance(r, BaseException)]
 
     print(f"Success: {len(successful)}, Failed: {len(failed)}")
     return successful
@@ -264,7 +264,7 @@ async def producer(queue: Queue, producer_id: int, num_items: int):
         await queue.put(item)
         print(f"Producer {producer_id} produced: {item}")
         await asyncio.sleep(0.1)
-    await queue.put(None)  # Signal completion
+    # Coordinator sends one sentinel per consumer after ALL producers finish.
 
 async def consumer(queue: Queue, consumer_id: int):
     """Consume items from queue."""
@@ -296,31 +296,32 @@ async def producer_consumer_example():
     # Wait for producers
     await asyncio.gather(*producers)
 
-    # Wait for queue to be empty
+    # One sentinel per consumer, after all produced work was enqueued.
+    for _ in consumers:
+        await queue.put(None)
     await queue.join()
-
-    # Cancel consumers
-    for c in consumers:
-        c.cancel()
+    await asyncio.gather(*consumers)
 
 asyncio.run(producer_consumer_example())
 ```
 
-### Pattern 9: Semaphore for Rate Limiting
+### Pattern 9: Semaphore for concurrency limiting
 
 ```python
 import asyncio
 from typing import List
 
 async def api_call(url: str, semaphore: asyncio.Semaphore) -> dict:
-    """Make API call with rate limiting."""
+    """Bound simultaneous operations; this does not set requests/second."""
     async with semaphore:
         print(f"Calling {url}")
         await asyncio.sleep(0.5)  # Simulate API call
         return {"url": url, "status": 200}
 
 async def rate_limited_requests(urls: List[str], max_concurrent: int = 5):
-    """Make multiple requests with rate limiting."""
+    """Bound simultaneous requests, not their start rate."""
+    if max_concurrent < 1:
+        raise ValueError("max_concurrent must be positive")
     semaphore = asyncio.Semaphore(max_concurrent)
     tasks = [api_call(url, semaphore) for url in urls]
     results = await asyncio.gather(*tasks)
@@ -340,7 +341,7 @@ asyncio.run(main())
 import asyncio
 
 class AsyncCounter:
-    """Thread-safe async counter."""
+    """Task-safe counter within one event loop; not thread/process safe."""
 
     def __init__(self):
         self.value = 0
@@ -389,15 +390,17 @@ from typing import List, Dict
 async def fetch_url(session: aiohttp.ClientSession, url: str) -> Dict:
     """Fetch single URL."""
     try:
-        async with session.get(url, timeout=aiohttp.ClientTimeout(total=10)) as response:
-            text = await response.text()
+        async with session.get(url, timeout=aiohttp.ClientTimeout(total=10), allow_redirects=False) as response:
+            body = await response.content.read(1048577)
+            if len(body) > 1048576:
+                raise ValueError("Response exceeds 1 MiB")
             return {
                 "url": url,
                 "status": response.status,
-                "length": len(text)
+                "length_bytes": len(body)
             }
     except Exception as e:
-        return {"url": url, "error": str(e)}
+        return {"error": type(e).__name__} # no secret-bearing URL/exception text
 
 async def scrape_urls(urls: List[str]) -> List[Dict]:
     """Scrape multiple URLs concurrently."""
@@ -430,21 +433,21 @@ from typing import List, Optional
 class AsyncDB:
     """Simulated async database."""
 
-    async def execute(self, query: str) -> List[dict]:
+    async def execute(self, query: str, *params) -> List[dict]:
         """Execute query."""
         await asyncio.sleep(0.1)
         return [{"id": 1, "name": "Example"}]
 
-    async def fetch_one(self, query: str) -> Optional[dict]:
+    async def fetch_one(self, query: str, *params) -> Optional[dict]:
         """Fetch single row."""
         await asyncio.sleep(0.1)
         return {"id": 1, "name": "Example"}
 
 async def get_user_data(db: AsyncDB, user_id: int) -> dict:
     """Fetch user and related data concurrently."""
-    user_task = db.fetch_one(f"SELECT * FROM users WHERE id = {user_id}")
-    orders_task = db.execute(f"SELECT * FROM orders WHERE user_id = {user_id}")
-    profile_task = db.fetch_one(f"SELECT * FROM profiles WHERE user_id = {user_id}")
+    user_task = db.fetch_one("SELECT * FROM users WHERE id = $1", user_id)
+    orders_task = db.execute("SELECT * FROM orders WHERE user_id = $1", user_id)
+    profile_task = db.fetch_one("SELECT * FROM profiles WHERE user_id = $1", user_id)
 
     user, orders, profile = await asyncio.gather(user_task, orders_task, profile_task)
 
@@ -498,13 +501,13 @@ class WebSocketServer:
 
     async def unregister(self, websocket: WebSocket):
         """Unregister client."""
-        self.clients.remove(websocket)
+        self.clients.discard(websocket)
         print(f"Client {websocket.client_id} disconnected")
 
     async def broadcast(self, message: str):
         """Broadcast message to all clients."""
         if self.clients:
-            tasks = [client.send(message) for client in self.clients]
+            tasks = [client.send(message) for client in tuple(self.clients)]
             await asyncio.gather(*tasks)
 
     async def handle_client(self, websocket: WebSocket):
@@ -535,9 +538,11 @@ async def with_connection_pool():
     connector = aiohttp.TCPConnector(limit=100, limit_per_host=10)
 
     async with aiohttp.ClientSession(connector=connector) as session:
-        tasks = [session.get(f"https://api.example.com/item/{i}") for i in range(50)]
-        responses = await asyncio.gather(*tasks)
-        return responses
+        # Consume/close each response before leaving the session; return data, not
+        # live response objects tied to a closed pool. Bound task count separately.
+        return await asyncio.gather(*[
+            fetch_url(session, f"https://api.example.com/item/{i}") for i in range(50)
+        ])
 ```
 
 ### 2. Batch Operations
@@ -572,10 +577,9 @@ def blocking_operation(data: Any) -> Any:
 
 async def run_in_executor(data: Any) -> Any:
     """Run blocking operation in thread pool."""
-    loop = asyncio.get_event_loop()
-    with concurrent.futures.ThreadPoolExecutor() as pool:
-        result = await loop.run_in_executor(pool, blocking_operation, data)
-        return result
+    # I/O-bound blocking work; Python 3.9+. A thread is not a CPU parallelism
+    # guarantee on a GIL-enabled build and cancellation cannot forcibly stop it.
+    return await asyncio.to_thread(blocking_operation, data)
 
 async def main():
     results = await asyncio.gather(*[run_in_executor(i) for i in range(5)])
@@ -673,6 +677,31 @@ async def test_with_timeout():
 5. **Use timeouts** to prevent hanging operations
 6. **Pool connections** for better performance
 7. **Avoid blocking operations** in async code
-8. **Use semaphores** for rate limiting
+8. **Use semaphores** for concurrency and a separate rate/token-bucket policy for request frequency
 9. **Handle task cancellation** properly
 10. **Test async code** with pytest-asyncio
+
+## Lifecycle and integration limits
+
+Examples are independent simulations, not tested network/database/WebSocket servers.
+Do not run all snippets as one file or call asyncio.run inside an existing event loop;
+use await there. gather with default behavior propagates the first exception but does
+not automatically cancel/drain all siblings; use TaskGroup (3.11+) or explicit cleanup
+when sibling lifetime must be structured. Retain background task handles and await
+cancelled tasks; cancellation is cooperative and not proof an external write stopped.
+
+The queue example assumes successful producers/workers. Real workers need task_done
+in finally, supervised failures and cancellation/drain policy so queue.join cannot
+hang. A semaphore still creates one task per input in these sketches; use bounded
+worker queues for unbounded input. Rate limits, retries and total deadlines are
+separate. The scraper accepts trusted approved URLs only: enforce HTTPS destination,
+DNS/private-address/redirect scope in the actual fetcher and avoid logging credentials.
+No external HTTP examples were called. Simulated DB accepts parameters only to show
+binding syntax; real parallel operations need separate pooled connections and proper
+transaction consistency. Authorize WebSocket origin/identity/tenant channels and bound
+per-client buffers/send time; a slow peer must not block all clients.
+
+Example check: six simulated risky items should report four successes and two
+failures; “None” is a handled failure, not silently omitted success coverage. A real
+write timing out must be reconciled by stable operation ID before retry. No test pass
+or performance improvement follows from this proposed check.

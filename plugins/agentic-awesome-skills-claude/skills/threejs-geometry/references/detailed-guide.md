@@ -4,6 +4,8 @@
 
 ## Quick Start
 
+Use compatible pinned Three.js/addons versions and bound geometry detail, vertex/index count and memory before allocation. Examples require initialized scene/material/renderer and are separate snippets. Merged geometry must have compatible indexing/attribute layouts and transformed coordinates; material groups still require separate draw calls. Dispose owned geometry/material/texture resources after all shared users release them.
+
 ```javascript
 import * as THREE from "three";
 
@@ -399,6 +401,8 @@ for (let i = 0; i < count; i++) {
 
 // Flag for GPU update
 instancedMesh.instanceMatrix.needsUpdate = true;
+instancedMesh.computeBoundingBox();
+instancedMesh.computeBoundingSphere(); // refresh after changed transforms for correct culling/raycasting
 
 // Optional: per-instance colors
 instancedMesh.instanceColor = new THREE.InstancedBufferAttribute(
@@ -425,6 +429,8 @@ instancedMesh.getMatrixAt(index, matrix);
 // Modify matrix...
 instancedMesh.setMatrixAt(index, matrix);
 instancedMesh.instanceMatrix.needsUpdate = true;
+instancedMesh.computeBoundingBox();
+instancedMesh.computeBoundingSphere(); // refresh after changed transforms for correct culling/raycasting
 
 // Raycasting with instanced mesh
 const intersects = raycaster.intersectObject(instancedMesh);
@@ -469,7 +475,7 @@ const merged = BufferGeometryUtils.mergeGeometries([geo1, geo2, geo3]);
 const merged = BufferGeometryUtils.mergeGeometries([geo1, geo2], true);
 
 // Compute tangents (required for normal maps)
-BufferGeometryUtils.computeTangents(geometry);
+geometry.computeTangents(); // indexed position/normal/uv required; consider MikkTSpace utility for normal maps
 
 // Interleave attributes for better performance
 const interleaved = BufferGeometryUtils.interleaveAttributes([
@@ -496,6 +502,7 @@ geometry.computeBoundingBox();
 const size = new THREE.Vector3();
 geometry.boundingBox.getSize(size);
 const maxDim = Math.max(size.x, size.y, size.z);
+if (!Number.isFinite(maxDim) || maxDim <= 0) throw new Error("Empty or invalid bounds");
 geometry.scale(1 / maxDim, 1 / maxDim, 1 / maxDim);
 ```
 
@@ -551,10 +558,11 @@ geometry.dispose();
 
 ## BatchedMesh (r183)
 
-`BatchedMesh` is a higher-level alternative to `InstancedMesh` that supports multiple geometries in a single draw call. As of r183, it supports **per-instance opacity** and **per-instance wireframe**.
+`BatchedMesh` is a higher-level alternative to `InstancedMesh` that supports multiple geometries in a single draw call. Per-instance feature APIs are version-dependent; verify the installed release rather than assuming opacity/wireframe setters exist.
 
 ```javascript
-const batchedMesh = new THREE.BatchedMesh(maxGeometryCount, maxVertexCount, maxIndexCount);
+const batchMaterial = new THREE.MeshStandardMaterial({ color: 0x00ff00 });
+const batchedMesh = new THREE.BatchedMesh(maxInstanceCount, maxVertexCount, maxIndexCount, batchMaterial);
 batchedMesh.sortObjects = true; // Enable depth sorting for transparency
 
 // Add different geometries
@@ -570,8 +578,8 @@ const matrix = new THREE.Matrix4();
 matrix.setPosition(2, 0, 0);
 batchedMesh.setMatrixAt(instance1, matrix);
 
-// Per-instance opacity (r183)
-batchedMesh.setOpacityAt(instance1, 0.5);
+// Per-instance opacity needs an explicitly supported API/material implementation.
+// Do not call a nonexistent setOpacityAt on releases without that method.
 
 // Per-instance visibility
 batchedMesh.setVisibleAt(instance2, false);

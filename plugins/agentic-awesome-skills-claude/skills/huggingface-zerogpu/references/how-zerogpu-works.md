@@ -1,3 +1,4 @@
+<!-- Modified 2026-10-23: scope implementation claims and process count. Apache-2.0 retained. -->
 # How ZeroGPU works (mechanism)
 
 Conceptual lifecycle of model weights, processes, and worker reuse on ZeroGPU. Useful when reasoning about cold-starts, why module-scope warmup does not carry over to requests, why returning CUDA tensors hangs the call, or why `gr.State` mutations do not persist across the worker boundary.
@@ -6,7 +7,7 @@ For numerical limits (concurrency slots per Space, queue priority by tier, etc.)
 
 ## Two processes, two lifetimes
 
-A ZeroGPU Space runs as **two separate processes**:
+Conceptually there is a main process and one or more GPU workers (not exactly two processes). The packing, worker reuse and tensor details below are version-specific implementation descriptions, not a stable public API. Verify the installed spaces release before depending on them:
 
 - **Main web process** — long-lived. Imports `app.py`, launches Gradio, stays up for the life of the Space. Holds no VRAM and, after the startup "pack" step, holds no model weights in RAM either.
 - **GPU worker processes** — short-lived. Forked per `@spaces.GPU` request (or reused if warm). Run the task and are eventually killed by the ZeroGPU scheduler when another Space needs the GPU slot. Your Space code never kills its own worker.

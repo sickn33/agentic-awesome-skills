@@ -44,7 +44,7 @@
 | 39 | Support Quality Rating | `select` | `VARCHAR(100)` | `string` | `Select (add options after import)` | `2 Major limitations` |
 | 40 | Demo Date | `date` | `DATE` | `string, format: date` | `Date` | `2026-07-18` |
 | 41 | Demo Test Result | `select` | `VARCHAR(100)` | `string` | `Select (add options after import)` | `Partially Passed` |
-| 42 | Test Transactions Run | `number` | `NUMERIC` | `number` | `Number` | `25` |
+| 42 | Test Transactions Run | `number` | `INTEGER` | `integer` | `Number` | `25` |
 | 43 | Licence Cost | `currency` | `NUMERIC(14,2)` | `number` | `Number (format: currency)` | `480000.00` |
 | 44 | Implementation Cost | `currency` | `NUMERIC(14,2)` | `number` | `Number (format: currency)` | `120000.00` |
 | 45 | Customization Cost | `currency` | `NUMERIC(14,2)` | `number` | `Number (format: currency)` | `65000.00` |
@@ -57,7 +57,7 @@
 | 52 | Selection Decision | `select` | `VARCHAR(100)` | `string` | `Select (add options after import)` | `Not Selected` |
 | 53 | Rejection Reason | `select` | `VARCHAR(100)` | `string` | `Select (add options after import)` | `Poor Support` |
 | 54 | Evaluated By | `text` | `VARCHAR(255)` | `string` | `Text` | `Example Evaluator` |
-| 55 | Evidence/Source | `text` | `VARCHAR(255)` | `string` | `Text` | `ILLUSTRATIVE - vendor demo 2026-07-18; 25 test transactions; written quotation dated 2026-07-25; the three ratings are the evaluator's own view` |
+| 55 | Evidence/Source | `text` | `TEXT` | `string` | `Text` | `ILLUSTRATIVE - vendor demo 2026-07-18; 25 test transactions; written quotation dated 2026-07-25; the three ratings are the evaluator's own view` |
 | 56 | Notes | `long_text` | `TEXT` | `string` | `Text` | `VAT / TDS / payroll-SSF / IRD reporting / e-billing left Untested - no current evidence held. Service management and multi-company Not required by this business. Ratings are the evaluator's opinion not vendor claims.` |
 | 57 | Selection ID | `id` | `SERIAL PRIMARY KEY` | `integer` | `Text (preserve source ID)` | `(blank)` |
 
@@ -76,8 +76,7 @@ sits in the funnel and whether a Must-have has failed, and neither answer is opt
 (`Unknown` is one of the values `Deal-breaker` takes). Everything else is deliberately
 not required, because its source can legitimately be missing: `Evaluation ID`, `Software`
 and `Vendor` are free text and are recorded as soon as the candidate exists;
-`Deployment Type` and the capability fields are `Untested` or `Not Required` until someone
-checks; `Demo Date`, `Demo Test Result` and `Test Transactions Run` are empty until a
+`Deployment Type` remains absent until known; capability fields are `Untested` or `Not Required` until someone checks; `Demo Date`, `Demo Test Result` and `Test Transactions Run` are empty until a
 demonstration happens; every cost field is empty until a quotation is in hand;
 `First-Year Cost` and `Three-Year TCO` are calculated, and a calculated value is never
 required when its parts may be missing; and `Selection Decision` and `Rejection Reason`

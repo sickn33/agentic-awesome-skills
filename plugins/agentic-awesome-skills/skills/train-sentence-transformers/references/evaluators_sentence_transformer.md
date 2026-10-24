@@ -1,5 +1,6 @@
 # Evaluators (Bi-Encoder)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All bi-encoder evaluators live in `sentence_transformers.sentence_transformer.evaluation`.
 
 ## Choosing the right evaluator
@@ -146,6 +147,6 @@ The first evaluator's score drives `load_best_model_at_end`.
 
 ## Gotchas
 
-- **Always run `evaluator(model)` once before training** — pre-training baseline. If the post-training delta is tiny, the loss/data/base is wrong.
+- **Always run `evaluator(model)` once before training** — pre-training baseline. A tiny delta alone does not establish a broken configuration.
 - Don't run `InformationRetrievalEvaluator` with a large corpus (>100k docs) at frequent `eval_steps` — use `NanoBEIREvaluator` during training, reserve full IR for end-of-training.
 - `greater_is_better=True` is the default; right for nDCG / MRR / accuracy.

@@ -9,14 +9,14 @@ source_type: self
 
 # High Contrast Design
 
-> "Maximum legibility. Stark, powerful, and universally accessible."
+> "Stark visual contrast. Accessibility still requires semantic, interaction and user testing."
 
 
 ## When to Use
 Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
-1. **WCAG AAA Compliance**: Every color pairing must exceed a 7:1 contrast ratio.
+1. **Measure Relevant Contrast**: WCAG AAA text contrast is at least 7:1 for normal text and 4.5:1 for large text. Non-text controls have distinct criteria; high contrast alone does not establish AAA conformance.
 2. **Clear Boundaries**: Interactive elements have highly visible borders and focus states.
 3. **No Ambiguity**: Avoid subtle greys, low-opacity text, or purely decorative elements that distract from the core content.
 
@@ -107,7 +107,7 @@ struct HighContrastView: View {
                     .foregroundColor(.white)
                     .padding(.vertical, 16)
                     .padding(.horizontal, 32)
-                    .background(Color.blue) // Must be a high-contrast blue, e.g., #0000FF
+                    .background(Color(red: 0, green: 0, blue: 1)) // Explicit #0000FF, not adaptive system blue
                     .cornerRadius(4)
             }
         }
@@ -221,7 +221,7 @@ const HighContrastScreen = () => {
 };
 ```
 - In React Native, accessibility relies heavily on high contrast. Ensure `borderWidth: 3` and explicit pure `#000000` text colors.
-- Make sure to use accessible `<TouchableOpacity>` areas (minimum 48x48 padding for hit slop).
+- Make sure to use accessible `<TouchableOpacity>` areas (a target area of at least 48×48 logical units where required by the platform; target size is not padding).
 
 ### Jetpack Compose
 ```kotlin

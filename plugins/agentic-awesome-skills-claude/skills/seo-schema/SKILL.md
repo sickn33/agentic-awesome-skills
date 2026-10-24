@@ -53,7 +53,9 @@ Obtain the required material from the [declared upstream source](https://github.
   - Invalid date formats
 - Flag deprecated types (see below)
 
-## Schema Type Status (as of Feb 2026)
+## Schema Type Status (historical snapshot, verify before use)
+
+Schema.org vocabulary validity and Google rich-result eligibility are different. A retired Google result feature does not make its Schema.org type invalid; check current official documentation for the actual search surface before deleting otherwise truthful markup. `schema/templates.json` is not bundled.
 
 Read `references/schema-types.md` for the full list. Key rules:
 
@@ -70,7 +72,7 @@ See `schema/templates.json` for ready-to-use JSON-LD templates for these types.
 ### RESTRICTED (only for specific sites):
 - **FAQ**: ONLY for government and healthcare authority sites (restricted Aug 2023)
 
-### DEPRECATED (never recommend):
+### Historical Google rich-result retirements (not vocabulary invalidation):
 - **HowTo**: Rich results removed September 2023
 - **SpecialAnnouncement**: Deprecated July 31, 2025
 - **CourseInfo, EstimatedSalary, LearningVideo**: Retired June 2025

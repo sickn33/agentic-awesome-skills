@@ -87,7 +87,7 @@ It can be configured with .socket and .service unit files as described in
 Socket activation can be tested ad-hoc with the `systemd-socket-activate`command
 
 ```console
-systemd-socket-activate -l 8000 -- rclone serve
+systemd-socket-activate -l 127.0.0.1:8000 -- rclone serve http remote:path
 ```
 
 This will socket-activate rclone on the first connection to port 8000 over TCP.
@@ -264,8 +264,8 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and metadata remain intact.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -375,7 +375,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not
@@ -656,9 +656,8 @@ rclone will use that program to generate backends on the fly which
 then are used to authenticate incoming requests.  This uses a simple
 JSON based protocol with input on STDIN and output on STDOUT.
 
-**PLEASE NOTE:** `--auth-proxy` and `--authorized-keys` cannot be used
-together, if `--auth-proxy` is set the authorized keys option will be
-ignored.
+The HTTP server uses HTTP authentication. SFTP-specific `--authorized-keys`
+and SSH public-key authentication do not apply to this listener.
 
 There is an example program
 [bin/test_proxy.py](https://github.com/rclone/rclone/blob/master/bin/test_proxy.py)
@@ -686,16 +685,6 @@ process (on STDIN) would look similar to this:
 {
   "user": "me",
   "pass": "mypassword"
-}
-```
-
-If public-key authentication was used by the client, input to the
-proxy process (on STDIN) would look similar to this:
-
-```json
-{
-  "user": "me",
-  "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDuwESFdAe14hVS6omeyX7edc...JQdf"
 }
 ```
 

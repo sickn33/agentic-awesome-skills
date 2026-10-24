@@ -90,7 +90,7 @@ struct BrutalistTypeView: View {
                     .fontWeight(.black)
                     .foregroundColor(.clear)
                     .overlay(
-                        Text("THE").stroke(Color.red, lineWidth: 3)
+                        Text("THE").foregroundColor(.red) // Solid fallback: Text has no Shape.stroke API
                     )
                     .offset(x: 40)
                 
@@ -109,9 +109,9 @@ struct BrutalistTypeView: View {
     }
 }
 ```
-- `.ignoresSafeArea()` is mandatory. Text must be allowed to clip into the notch and status bar.
+- Keep readable text and controls within safe areas. Only decorative artwork may extend behind system cutouts.
 - Use negative `spacing` in `VStack` or explicit negative `.offset()` to force text elements to overlap each other aggressively.
-- Outline text is achieved by setting `.foregroundColor(.clear)` and overlaying a `.stroke()`.
+- SwiftUI Text does not implement Shape.stroke. Use solid text as shown, or a separately implemented and tested text-path renderer for true outlines.
 
 ### Flutter
 ```dart

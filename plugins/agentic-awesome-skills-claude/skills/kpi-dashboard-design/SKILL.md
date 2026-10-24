@@ -249,11 +249,19 @@ Efficiency:
 
 ## Implementation Patterns
 
+Define reporting timezone, currency/conversion date, numerator/denominator and
+comparison period for each card. Do not mix percent changes with percentage points
+or NPS points. ARR = 12 × MRR implies equal growth rates when using the same
+period and definition. These synthetic layout figures are not reconciled accounts.
+Require access controls, aggregation/minimum cohort sizes and freshness/coverage
+labels before showing customer/employee or financial data; avoid exporting raw PII.
+Email opens/clicks can include privacy proxies/bots and are not direct engagement proof.
+
 ### SQL for KPI Calculations
 
 Use `resources/metric-queries.sql` for executable normalized-input examples. `users` contains one row per customer, `events` contains user/month observations, `spend` contains source spend rows, and `monthly_revenue` contains one reconciled amount per month. Represent months as an integer year × 12 + month − 1 so offsets do not wrap after December.
 
-The queries keep the original cohort denominator, deduplicate activity before counting, aggregate spend before joining customers, and return NULL for undefined growth or acquisition cost. Missing cohort/month combinations need an explicit reporting calendar if zero-activity rows must be displayed. Normalize subscription intervals, currency, refunds and revenue recognition before producing monthly revenue; these examples do not define accounting policy.
+The queries keep the original cohort denominator, deduplicate activity before counting, aggregate spend before joining customers, and return NULL for undefined growth or acquisition cost. Missing cohort/month combinations need an explicit reporting calendar if zero-activity rows must be displayed. The growth query compares consecutive available rows; require a complete monthly calendar or label gaps as unavailable rather than calling a multi-month change monthly growth. Match spend and acquired-customer channel/time cohorts before interpreting CAC. Normalize subscription intervals, currency, refunds and revenue recognition before producing monthly revenue; these examples do not define accounting policy.
 
 
 ### Python Dashboard Code (Streamlit)
@@ -278,13 +286,12 @@ with col2:
     )
 
 # KPI Cards
-def metric_card(label, value, delta, prefix="", suffix=""):
-    delta_color = "green" if delta >= 0 else "red"
-    delta_arrow = "▲" if delta >= 0 else "▼"
+def metric_card(label, value, delta, prefix="", suffix="", delta_unit="%", lower_is_better=False):
     st.metric(
         label=label,
-        value=f"{prefix}{value:,.0f}{suffix}",
-        delta=f"{delta_arrow} {abs(delta):.1f}%"
+        value=f"{prefix}{value:,.1f}{suffix}",
+        delta=f"{delta:+.1f}{delta_unit}",
+        delta_color="inverse" if lower_is_better else "normal",
     )
 
 col1, col2, col3, col4 = st.columns(4)
@@ -293,9 +300,9 @@ with col1:
 with col2:
     metric_card("Customers", 12450, 15.2)
 with col3:
-    metric_card("NPS Score", 72, 5.0)
+    metric_card("NPS Score", 72, 5.0, delta_unit=" pts")
 with col4:
-    metric_card("Churn Rate", 4.2, -0.8, suffix="%")
+    metric_card("Churn Rate", 4.2, -0.8, suffix="%", delta_unit=" pp", lower_is_better=True)
 
 # Charts
 col1, col2 = st.columns(2)
@@ -348,7 +355,7 @@ st.plotly_chart(fig, use_container_width=True)
 # Alerts Section
 st.subheader("Alerts")
 alerts = [
-    {"level": "error", "message": "Churn rate exceeded threshold (>5%)"},
+    {"level": "error", "message": "Illustrative alert: no live threshold evaluation connected"},
     {"level": "warning", "message": "Support ticket volume 20% above average"},
 ]
 for alert in alerts:

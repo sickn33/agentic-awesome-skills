@@ -1,5 +1,8 @@
 # Kotlin Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Platform Types from Java
 
 ```kotlin
@@ -87,8 +90,8 @@ data class User(val name: String, val role: Role) {
     }
 }
 
-// copy() BYPASSES the init block in some scenarios
-// Validation may not run on copy
+// Generated copy() calls the primary constructor, so init validation runs.
+// The actual pitfall is a shallow copy: mutable referenced properties are shared.
 ```
 
 ## Companion Object Initialization
@@ -238,7 +241,7 @@ val seq = listOf(1, 2, 3).asSequence()
 ## Extension Function Shadowing
 
 ```kotlin
-// DANGEROUS: Extension functions can shadow members
+// Members take priority over same-signature extensions; an extension may be unreachable
 class MyClass {
     fun process() = "member"
 }
@@ -256,7 +259,7 @@ obj.process()  // "member" - members always win
 | Java interop without explicit nullability | Platform type NPE |
 | `!!` assertion | Null pointer exception |
 | `lateinit` without isInitialized check | Uninitialized access |
-| `data class` with validation in init | copy() bypasses validation |
+| `data class` with mutable referenced properties | copy() is shallow and shares those objects |
 | `suspend fun` without ensureActive/yield | Can't cancel |
 | `catch (e: Exception)` in coroutines | Swallows cancellation |
 | `@JvmInline` with nullable/generic | Unexpected boxing |

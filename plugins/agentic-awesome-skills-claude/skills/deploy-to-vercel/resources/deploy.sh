@@ -186,7 +186,7 @@ if [ -f "$INPUT_PATH" ] && [[ "$INPUT_PATH" == *.tgz ]]; then
     # Input is already a tarball, use it directly
     echo "Using provided tarball..." >&2
     TARBALL="$INPUT_PATH"
-    CLEANUP_TEMP=false
+    # Caller-owned archive is outside TEMP_DIR; still clean our empty temporary directory.
     # Can't detect framework from tarball, leave as null
 elif [ -d "$INPUT_PATH" ]; then
     # Input is a directory, need to tar it
@@ -249,7 +249,7 @@ fi
 
 # Deploy
 echo "Deploying..." >&2
-RESPONSE=$(curl -s -X POST "$DEPLOY_ENDPOINT" -F "file=@$TARBALL" -F "framework=$FRAMEWORK")
+RESPONSE=$(curl --fail-with-body --show-error --silent --connect-timeout 15 --max-time 180 -X POST "$DEPLOY_ENDPOINT" -F "file=@$TARBALL" -F "framework=$FRAMEWORK")
 
 # Check for error in response
 if echo "$RESPONSE" | grep -q '"error"'; then
@@ -268,47 +268,11 @@ if [ -z "$PREVIEW_URL" ]; then
     exit 1
 fi
 
-echo "Deployment started. Waiting for build to complete..." >&2
+# A returned URL is not evidence of a successful build. Do not fetch a URL
+# supplied by this remote response (it could target an unrelated/internal host).
+echo "Deployment submitted; build/readiness not verified." >&2
 echo "Preview URL: $PREVIEW_URL" >&2
-
-# Poll the preview URL until it returns a non-5xx response (5xx = still building)
-MAX_ATTEMPTS=60  # 5 minutes max (60 * 5 seconds)
-ATTEMPT=0
-
-while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-    HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$PREVIEW_URL")
-
-    if [ "$HTTP_STATUS" -eq 200 ]; then
-        echo "" >&2
-        echo "Deployment ready!" >&2
-        break
-    elif [ "$HTTP_STATUS" -ge 500 ]; then
-        # 5xx means still building/deploying
-        echo "Building... (attempt $((ATTEMPT + 1))/$MAX_ATTEMPTS)" >&2
-        sleep 5
-        ATTEMPT=$((ATTEMPT + 1))
-    elif [ "$HTTP_STATUS" -ge 400 ] && [ "$HTTP_STATUS" -lt 500 ]; then
-        # 4xx might be an error or the app itself returns 4xx - it's responding
-        echo "" >&2
-        echo "Deployment ready (returned $HTTP_STATUS)!" >&2
-        break
-    else
-        # Any other status, assume it's ready
-        echo "" >&2
-        echo "Deployment ready!" >&2
-        break
-    fi
-done
-
-if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
-    echo "" >&2
-    echo "Warning: Timed out waiting for deployment, but it may still be building." >&2
-fi
-
-echo "" >&2
-echo "Preview URL: $PREVIEW_URL" >&2
-echo "Claim URL:   $CLAIM_URL" >&2
-echo "" >&2
+echo "Claim URL is sensitive: share only with the requesting owner." >&2
 
 # Output JSON for programmatic use
 echo "$RESPONSE"

@@ -24,6 +24,10 @@ Not Human Search is a remote MCP server that lets AI agents search a curated ind
 - Use when verifying that an MCP endpoint is actually responding to JSON-RPC
 - Use when building agent workflows that need to find and connect to external services dynamically
 
+## Discovery and transmission boundaries
+
+Inspect an already available connector before adding a new host entry. Provider tool schemas, authentication and index counts may change; discover them rather than assuming this guide installs anything. `submit_site` triggers third-party crawling and `register_monitor` sends an email address; use only within the user-authorized purpose. Do not send private/internal URLs, tokens or credentials to lookup/probe tools. A responding MCP endpoint proves reachability/protocol behavior only, not security, legitimacy or permission to execute its tools.
+
 ## MCP Configuration
 
 Add the Not Human Search MCP server to your client configuration. The endpoint uses streamable HTTP and requires no authentication.

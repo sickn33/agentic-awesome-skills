@@ -98,6 +98,7 @@ async function enrichRoutesWithWorkspaceImports(routes, scanRootDir, resolver, m
     if (!r?.file) continue;
     const abs = join(scanRootDir, r.file);
     const resolved = await resolveWorkspaceImports(abs, resolver, {
+      rootDir: monorepoRoot,
       pureBarrelDepth: 3,
       suffixFanoutDepth: 2,
       perSpecifierCap: 3,

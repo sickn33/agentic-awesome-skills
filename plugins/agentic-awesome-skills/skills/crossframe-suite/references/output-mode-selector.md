@@ -2,7 +2,7 @@
 
 本文件定义 CrossFrame 分析的输出模式（推断风险偏好）和角色（目标受众与分析立场）。模式和角色正交于推理链：它们只改变前台表达风格、推断边界和声口，不降低概念保真、机制候选、判断档位、证据边界和连续联读要求。
 
-文章类型不在本选择器中选择。若本次工作流最终进入 `crossframe-essay`，并且用户没有显式关闭文章层，也没有显式指定文章类型，必须先生成结构洞察底稿，再在正文生成前展示 `../crossframe-essay/templates/article-type-selection-dialog.md`。
+文章类型不在本选择器中选择。若本次工作流最终进入 `crossframe-essay`，并且用户没有显式关闭文章层，也没有显式指定文章类型，必须先生成结构洞察底稿，再在正文生成前展示 `../../crossframe-essay/templates/article-type-selection-dialog.md`。
 
 ## 一、输出模式（4 档）
 
@@ -37,9 +37,9 @@
 
 当角色 = 6（未来探索者）时，自动触发：
 
-1. `../crossframe/protocols/inference-protocol.md`
-2. `../crossframe/protocols/lifecycle-diagnosis-protocol.md`
-3. `../crossframe/protocols/expression-translation-protocol.md`
+1. `../../crossframe/protocols/inference-protocol.md`
+2. `../../crossframe/protocols/lifecycle-diagnosis-protocol.md`
+3. `../../crossframe/protocols/expression-translation-protocol.md`
 4. 至少两个分歧路径，每个路径写清触发条件、可能终点和关闭信号。
 
 ### 各角色默认声口
@@ -79,3 +79,5 @@
 用户可用“保守/客观/激进/批判”切换模式，用“学术/实操/战略/通俗/批判反思/未来”或数字 1-6 切换角色。数字快捷格式为 `模式+角色`，例如 `2+1`。
 
 默认值仅在用户明确回复“默认”“直接开始”“随便”“都行”“不用选”等放弃选择的措辞时生效。否则必须先展示模式与角色选择菜单。
+
+> 本地修订：先应用入口 SKILL.md 的「用户目标与执行边界」。以下长文/菜单/底稿示例不覆盖用户既有要求；底稿表示简明证据与假设摘要，不是内部思维链。缺失 sibling 文件不得虚构已读。

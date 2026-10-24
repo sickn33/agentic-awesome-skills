@@ -38,7 +38,7 @@ Before starting, make sure you have:
 
 | Requirement | Version | Check Command |
 |-------------|---------|---------------|
-| Node.js | 18+ | `node --version` |
+| Node.js | supported project LTS, verified for this tutorial | `node --version` |
 | npm | 9+ | `npm --version` |
 | Git | Any | `git --version` |
 

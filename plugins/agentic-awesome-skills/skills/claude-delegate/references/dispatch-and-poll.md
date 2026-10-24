@@ -1,3 +1,5 @@
+> Documentation-only distribution: `scripts/relay.mjs` is not bundled. All relay behavior below describes the upstream runtime and must be verified against the exact separately reviewed version before use.
+
 # Dispatch and poll
 
 `scripts/relay.mjs` wraps Claude Code's non-interactive `claude -p` mode, sends a brief on stdin,

@@ -79,6 +79,7 @@ import {
   appendFileSync,
   existsSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   renameSync,
   rmSync,
@@ -427,8 +428,10 @@ function buildArgv(opts) {
 
 function prepareRunDir(opts, brief) {
   const startedAt = new Date().toISOString();
-  const outDir = opts.outDir || join(tmpdir(), "delegate-relay", `${basename(opts.cd) || "repo"}-${timestamp()}`);
-  mkdirSync(outDir, { recursive: true });
+  // Never reuse an artifact directory: logs may contain sensitive workspace data,
+  // and pre-existing symlinks must not redirect writes or deletions.
+  const outDir = opts.outDir || mkdtempSync(join(tmpdir(), "pi-delegate-"));
+  if (opts.outDir) mkdirSync(outDir, { mode: 0o700 });
   const run = {
     startedAt,
     briefPath: join(outDir, "brief.txt"),
@@ -437,12 +440,12 @@ function prepareRunDir(opts, brief) {
     stderrPath: join(outDir, "stderr.txt"),
     resultPath: join(outDir, "result.json"),
   };
-  // A reused --out-dir must not leak a previous run's artifacts into this one.
+  // The new private directory contains no artifacts from earlier runs.
   rmSync(run.finalPath, { force: true });
   rmSync(run.resultPath, { force: true });
-  writeFileSync(run.briefPath, brief, "utf8");
-  writeFileSync(run.eventsPath, "", "utf8");
-  writeFileSync(run.stderrPath, "", "utf8");
+  writeFileSync(run.briefPath, brief, { encoding: "utf8", mode: 0o600, flag: "wx" });
+  writeFileSync(run.eventsPath, "", { encoding: "utf8", mode: 0o600, flag: "wx" });
+  writeFileSync(run.stderrPath, "", { encoding: "utf8", mode: 0o600, flag: "wx" });
   return run;
 }
 
@@ -470,7 +473,7 @@ function makeResultWriter(opts, version, run) {
     };
     // Atomic write: a polling orchestrator never reads a half-written result.
     const temporary = `${run.resultPath}.${process.pid}.tmp`;
-    writeFileSync(temporary, `${JSON.stringify(result, null, 2)}\n`, "utf8");
+    writeFileSync(temporary, `${JSON.stringify(result, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
     renameSync(temporary, run.resultPath);
     return result;
   };
@@ -628,7 +631,7 @@ function dispatchToPi(opts, brief, run, writeResult) {
 
   const assembleFinal = () => {
     const message = textChunks.join("\n\n");
-    if (message) writeFileSync(run.finalPath, message, "utf8");
+    if (message) writeFileSync(run.finalPath, message, { encoding: "utf8", mode: 0o600 });
     return message;
   };
 

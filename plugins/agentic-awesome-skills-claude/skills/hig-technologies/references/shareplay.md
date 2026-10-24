@@ -1,8 +1,12 @@
 ---
 title: "SharePlay | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/shareplay
+---
 
 # SharePlay
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 SharePlay helps multiple people share activities — like viewing a movie, listening to music, playing a game, or sketching ideas on a whiteboard — while they’re in a FaceTime call or Messages conversation.
 

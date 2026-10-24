@@ -208,6 +208,8 @@ graph TD
     style REMOVE fill:#f44336,color:#fff
 ```
 
+Pair status colors with text labels so status is not conveyed by color alone. Escape user-provided node labels and render under the host's restricted Mermaid configuration; do not enable arbitrary HTML/click actions for untrusted content.
+
 Color key:
 - **Green** (`#4CAF50`): Existing pages (no changes)
 - **Blue** (`#2196F3`): New pages to create

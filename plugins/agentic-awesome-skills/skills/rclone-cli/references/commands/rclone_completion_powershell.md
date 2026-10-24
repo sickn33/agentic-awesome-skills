@@ -23,7 +23,6 @@ rclone completion powershell | Out-File -Encoding utf8 "$HOME\Documents\PowerShe
 
 Inspect the generated script, then dot-source it from your profile if you want completions
 for every new session.
-to your powershell profile.
 
 If output_file is "-" or missing, then the output will be written to stdout.
 

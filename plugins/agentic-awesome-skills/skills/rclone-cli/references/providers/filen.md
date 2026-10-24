@@ -6,6 +6,10 @@ versionIntroduced: "1.73"
 
 > **Official documentation:** [https://rclone.org/filen/](https://rclone.org/filen/)
 # Filen
+The masked/`ENCRYPTED` values in the setup transcript do not mean the whole
+rclone configuration is encrypted. Password obscuring is reversible; protect
+the config and exported API keys, and use config encryption when required.
+
 ## Configuration
 The initial setup for Filen requires that you get an API key for your account,
 currently this is only possible using the [Filen CLI](https://github.com/FilenCloudDienste/filen-cli).

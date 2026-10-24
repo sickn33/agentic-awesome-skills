@@ -27,7 +27,7 @@ longbridge <subcommand> TSLA.US --format json   # run --help for available flags
 
    | Quantity                 | Method                                                                                                         |
    | ------------------------ | -------------------------------------------------------------------------------------------------------------- |
-   | Historical PE percentile | prefer the daily valuation-rank series from CLI; fallback: rank current PE against historical valuation series |
+   | Historical PE percentile | rank current PE against the same stock historical PE series; industry valuation-rank history is not an own-history percentile |
    | Historical PB percentile | same                                                                                                           |
    | Industry premium         | `(current PE − industry median PE) / industry median PE`                                                       |
    | Industry rank            | bucket from industry valuation distribution data                                                               |

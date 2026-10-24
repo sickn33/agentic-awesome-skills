@@ -66,7 +66,7 @@ tofu --version
 
 ```bash
 # OpenTofu reads Terraform state files directly — no migration needed
-# Check your Terraform version (must be <= 1.6.x for full compat)
+# Check exact Terraform/OpenTofu versions and their current migration compatibility
 terraform version
 
 # Run plan with OpenTofu against existing state
@@ -90,9 +90,8 @@ tofu plan
 ### 3. Update Provider Lock File
 
 ```bash
-# Remove Terraform lock and regenerate for OpenTofu
-rm .terraform.lock.hcl
-tofu init -upgrade
+# Preserve and review the provider lock file; avoid changing providers during migration.
+tofu init
 
 # Verify providers resolve correctly
 tofu providers
@@ -239,7 +238,7 @@ jobs:
           script: |
             const output = `#### OpenTofu Plan
             \`\`\`
-            ${{ steps.plan.outputs.stdout }}
+            See the private revision-bound plan artifact; do not interpolate plan text into JavaScript.
             \`\`\``;
             github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -260,7 +259,9 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::123456789:role/tofu-deploy
           aws-region: us-east-1
-      - run: tofu init && tofu apply -auto-approve
+      # Prerequisite: retrieve the protected, reviewed plan artifact for this exact
+      # revision/workspace/backend using the same pinned OpenTofu/provider versions.
+      - run: tofu init && tofu apply tfplan
         working-directory: infra/
 ```
 
@@ -329,9 +330,9 @@ fi
 
 | Issue | Solution |
 |-------|---------|
-| Provider not found | Run `tofu init -upgrade`, check registry.opentofu.org |
+| Provider not found | Inspect the existing lock/source and registry availability before any separately reviewed upgrade |
 | State lock conflict | Same as Terraform — check DynamoDB/blob lease |
-| Version constraint error | Update `required_version` to `>= 1.6.0` |
+| Version constraint error | Choose a tested version constraint compatible with the actual configuration |
 | Backend migration | State is compatible — just run `tofu init` |
 | Missing provider credentials | Same env vars work (`AWS_*`, `GOOGLE_*`, `ARM_*`) |
 
@@ -347,3 +348,4 @@ fi
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+Before migration, back up configuration and state using the backend’s protected procedures; prohibit concurrent Terraform/OpenTofu writers. First compare no-change plans with unchanged provider versions. CI plan/apply fragments are incomplete without secure artifact upload/download, revision/hash binding, protected approval and an apply role unavailable to untrusted PR code; do not silently re-plan during apply. Plan/state files can contain secrets and must not be posted publicly. See [OpenTofu migration guide](https://opentofu.org/docs/intro/migration/migration-guide/).

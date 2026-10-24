@@ -147,18 +147,17 @@ async function processOrder(orderId: string) {
 ### The Solution: Clean Pipelines with chain
 
 ```typescript
-// AFTER: Flat, readable pipeline
+// Thread the values required by later steps through the pipeline.
 const processOrder = (orderId: string) =>
   pipe(
-    fetchOrder(orderId),
-    TE.chain(order => fetchUser(order.userId)),
-    TE.chain(user =>
-      pipe(
-        checkInventory(order.items),
-        TE.chain(inventory => chargePayment(user, order.total))
-      )
-    ),
-    TE.chain(payment => createShipment(order, user, payment))
+    TE.Do,
+    TE.bind('order', () => fetchOrder(orderId)),
+    TE.bind('user', ({ order }) => fetchUser(order.userId)),
+    TE.bind('inventory', ({ order }) => checkInventory(order.items)),
+    TE.chainFirst(({ inventory }) => inventory.available
+      ? TE.right(undefined) : TE.left(new Error('Out of stock'))),
+    TE.bind('payment', ({ order, user }) => chargePayment(user, order.total)),
+    TE.bind('shipment', ({ order, user, payment }) => createShipment(order, user, payment))
   )
 ```
 
@@ -291,8 +290,8 @@ const fetchAllUsers = pipe(
   TE.traverseArray(fetchUser)
 ) // TaskEither<Error, readonly User[]>
 
-// Note: Fails fast - if ANY request fails, the whole thing fails
-// All errors after the first are lost
+// All tasks start; a Left does not cancel other requests. The combined result
+// selects an error rather than accumulating every error.
 ```
 
 ### Parallel with Batch Control
@@ -301,6 +300,7 @@ When you need to limit concurrent requests:
 
 ```typescript
 const chunk = <T>(arr: T[], size: number): T[][] => {
+  if (!Number.isInteger(size) || size <= 0) throw new Error("Invalid batch size")
   const chunks: T[][] = []
   for (let i = 0; i < arr.length; i += size) {
     chunks.push(arr.slice(i, i + size))
@@ -315,7 +315,7 @@ const fetchUsersWithLimit = (userIds: string[]) => {
   return pipe(
     batches,
     // Process batches sequentially
-    TE.traverseArray(batch =>
+    TE.traverseSeqArray(batch =>
       // But within each batch, run in parallel
       pipe(batch, TE.traverseArray(fetchUser))
     ),
@@ -397,7 +397,7 @@ type ApiError =
 const fetchUser = (id: string): TE.TaskEither<ApiError, User> =>
   TE.tryCatch(
     async () => {
-      const res = await fetch(`/api/users/${id}`)
+      const res = await fetch(`/api/users/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(10000) })
       if (res.status === 404) throw { _tag: 'NotFound', id }
       if (res.status === 401) throw { _tag: 'Unauthorized' }
       if (!res.ok) throw { _tag: 'NetworkError', cause: new Error(`HTTP ${res.status}`) }
@@ -439,6 +439,10 @@ const retry = <E, A>(
   maxAttempts: number,
   baseDelayMs: number = 1000
 ): TE.TaskEither<E, A> => {
+  if (!Number.isInteger(maxAttempts) || maxAttempts < 1 || maxAttempts > 10 ||
+      !Number.isFinite(baseDelayMs) || baseDelayMs < 0 || baseDelayMs > 60000) {
+    throw new Error("Invalid retry budget")
+  }
   const attempt = (remaining: number, delay: number): TE.TaskEither<E, A> =>
     pipe(
       operation,
@@ -522,7 +526,7 @@ app.get('/users/:id', async (req, res) => {
   const result = await pipe(
     fetchUser(req.params.id),
     TE.fold(
-      (error) => T.of({ status: 500, body: { error: error.message } }),
+      (error) => T.of({ status: 500, body: { error: "Request failed" } }),
       (user) => T.of({ status: 200, body: user })
     )
   )()
@@ -539,7 +543,7 @@ const sendResult = <E, A>(
   pipe(
     te,
     TE.fold(
-      (error) => T.of(res.status(errorStatus).json({ error })),
+      (error) => T.of(res.status(errorStatus).json({ error: "Request failed" })),
       (data) => T.of(res.json(data))
     )
   )()
@@ -656,7 +660,7 @@ const fromBoolean = TE.fromPredicate(
 // BEFORE
 async function getUser(id: string) {
   try {
-    const res = await fetch(`/api/users/${id}`)
+    const res = await fetch(`/api/users/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(10000) })
     if (!res.ok) throw new Error('Not found')
     return await res.json()
   } catch (e) {
@@ -669,7 +673,7 @@ async function getUser(id: string) {
 const getUser = (id: string) =>
   TE.tryCatch(
     async () => {
-      const res = await fetch(`/api/users/${id}`)
+      const res = await fetch(`/api/users/${encodeURIComponent(id)}`, { signal: AbortSignal.timeout(10000) })
       if (!res.ok) throw new Error('Not found')
       return res.json()
     },

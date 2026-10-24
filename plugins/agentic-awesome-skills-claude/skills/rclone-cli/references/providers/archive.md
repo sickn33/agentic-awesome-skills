@@ -176,8 +176,8 @@ in Linux-based systems. It's designed to compress entire file systems
 file, which can then be mounted and read directly, appearing as a
 normal directory structure. Because it's read-only and highly
 compressed, Squashfs is ideal for live CDs/USBs, embedded devices with
-limited storage, and software package distribution, as it saves space
-and ensures the integrity of the original files.
+limited storage, and software package distribution, as it saves space and prevents writes through the mounted image. Read-only
+access alone does not authenticate the image or guarantee data integrity.
 
 Rclone supports the following squashfs compression formats:
 
@@ -280,7 +280,8 @@ Properties:
 
 ### Metadata
 
-Any metadata supported by the underlying remote is read and written.
+Metadata support for ordinary files follows the underlying remote. Entries
+inside archives remain read-only; this does not enable metadata writes into them.
 
 See the [metadata](/docs/#metadata) docs for more info.
 

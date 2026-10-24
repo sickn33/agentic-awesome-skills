@@ -153,7 +153,7 @@ POST /api/register
 {"username":"hunter4","password":"x","level":9,"role_id":1}
 {"username":"hunter5","password":"x","permissions":["*"]}
 
-# 2. 看注册响应里有没有 role 字段——如果有，下次请求就能改
+# 2. role 字段出现在响应中只是线索，不能推断服务端接受修改；用自有测试对象与权限差分验证。
 # 3. 注册成功后立即测：能否访问 /admin/* ？
 ```
 
@@ -268,7 +268,7 @@ GET /api/report/daily?date=2025-01-01          # 财务日报
 2. 用研究员两个测试账号互删——证明 A 能删 B 的资源
 3. **永远不删真实用户的数据**——即使能删
 
-如果不能用两个账号证明（如目标是 `/api/admin/wipeAll`），**只截 JS / Burp 看到接口暴露 + curl 不带 cookie 看 401/403 是否拦截**，绝不实际触发。
+如果不能用两个账号证明（如目标是 `/api/admin/wipeAll`），**只分析现有 JS/已捕获流量并请求项目方在沙箱复核，不对破坏性端点发请求**，绝不实际触发。
 
 ### 6.4 垂直越权 / roleid 修改（高频 mass-assignment 子类）
 
@@ -314,9 +314,9 @@ GET /api/system/config
 ```
 
 **响应特征**:
-- 返回的 JSON 里包含 `role: "admin"`(后端把字段回显)→ 命中
+- JSON 回显 `role: "admin"` 仅是候选；验证持久化状态与实际权限，不能把回显当提权。
 - 注册后立刻 `/api/me` 看角色字段 → 命中
-- 注册响应里 token / session 解码后含 `admin` claim → 命中
+- token 含 `admin` claim 仅是候选，须验证服务端是否赋予越界权限。
 
 **修复识别**:
 - 后端有显式 DTO / serializer 白名单 → 字段被丢弃,响应不变
@@ -417,8 +417,7 @@ Authorization: Bearer A_token   ← 普通用户 token
 - 攻击复杂度：单 HTTP 请求
 
 ## 测试边界
-本次测试每笔金额 1 元，总计 2 元（A、B 各 1 笔），
-研究员愿意把 2 元退还给厂方账户。
+示例仅限无真实资金流动的沙箱；报告真实测试账户、环境和审批记录。不得以事后愿意退款代替事前授权。
 
 ## 修复建议
 - 在 /admin/* 路径强制校验 RBAC，仅 role=auditor 可调

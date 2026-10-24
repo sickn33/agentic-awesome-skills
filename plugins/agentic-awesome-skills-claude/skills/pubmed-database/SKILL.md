@@ -91,7 +91,7 @@ Use Medical Subject Headings (MeSH) for precise, consistent searching across the
 **Example**:
 ```
 # Diabetes therapy with specific focus
-diabetes mellitus, type 2[mh]/drug therapy AND cardiovascular diseases[mh]/prevention & control
+"Diabetes Mellitus, Type 2/drug therapy"[mh] AND "Cardiovascular Diseases/prevention and control"[mh]
 ```
 
 ### 3. Article Type and Publication Filtering
@@ -135,32 +135,32 @@ Access PubMed data programmatically using the NCBI E-utilities REST API for auto
 
 **Basic Workflow**:
 ```python
+import os
+import time
 import requests
 
-# Step 1: Search for articles
 base_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/"
-search_url = f"{base_url}esearch.fcgi"
-params = {
-    "db": "pubmed",
-    "term": "diabetes[tiab] AND 2024[dp]",
-    "retmax": 100,
-    "retmode": "json",
-    "api_key": "YOUR_API_KEY"  # Optional but recommended
-}
-response = requests.get(search_url, params=params)
-pmids = response.json()["esearchresult"]["idlist"]
+common = {"db": "pubmed", "tool": "reviewed-literature-client",
+          "email": os.environ["NCBI_CONTACT_EMAIL"]}
+if os.environ.get("NCBI_API_KEY"):
+    common["api_key"] = os.environ["NCBI_API_KEY"]
+session = requests.Session()
+session.headers["User-Agent"] = "reviewed-literature-client/1.0"
+# POST avoids putting optional credentials and the query in the request URL.
+response = session.post(base_url + "esearch.fcgi", data={**common,
+    "term": "diabetes[tiab] AND 2024[dp]", "retmax": 100, "retmode": "json"}, timeout=30)
+response.raise_for_status()
+result = response.json()["esearchresult"]
+pmids = result["idlist"]
+abstracts = ""
+if pmids:
+    time.sleep(0.4)  # This process stays below 3 req/s; coordinate all shared clients too.
+    response = session.post(base_url + "efetch.fcgi", data={**common,
+        "id": ",".join(pmids), "rettype": "abstract", "retmode": "text"}, timeout=30)
+    response.raise_for_status()
+    abstracts = response.text
+# This is at most 100 returned IDs, not the entire result set; inspect count/translation.
 
-# Step 2: Fetch article details
-fetch_url = f"{base_url}efetch.fcgi"
-params = {
-    "db": "pubmed",
-    "id": ",".join(pmids),
-    "rettype": "abstract",
-    "retmode": "text",
-    "api_key": "YOUR_API_KEY"
-}
-response = requests.get(fetch_url, params=params)
-abstracts = response.text
 ```
 
 **Rate Limits**:
@@ -169,7 +169,7 @@ abstracts = response.text
 - Always include User-Agent header
 
 **Best Practices**:
-- Use history server (usehistory=y) for large result sets
+- History improves batching but does not remove PubMed result-retrieval caps; partition large searches reproducibly or use the documented bulk-data route
 - Implement batch operations via EPost for multiple UIDs
 - Cache results locally to minimize redundant calls
 - Respect rate limits to avoid service disruption
@@ -203,7 +203,7 @@ PMC123456[pmc]
 Use journal name, year, volume, page, and author to find PMIDs:
 ```
 Format: journal|year|volume|page|author|key|
-Example: Science|2008|320|5880|1185|key1|
+Example (synthetic fields): JournalTitle|2024|12|34|ExampleAuthor|key1|
 ```
 
 **By Author and Metadata**:
@@ -322,14 +322,14 @@ Export search results in various formats for citation management and further ana
 - Collections: Permanent storage via My NCBI account
 
 **Batch Export via API**:
-```python
-# Export citations in MEDLINE format
+```text
+# Relative API URL example, not executable Python
 efetch.fcgi?db=pubmed&id=PMID1,PMID2&rettype=medline&retmode=text
 ```
 
 ## Working with Reference Files
 
-This skill includes three comprehensive reference files in the `references/` directory:
+The three supporting references listed below are NOT bundled in this catalog tree. They require a separately supplied verified support-root, as explained above; use the inline workflow or official documentation for independent steps.
 
 ### references/api_reference.md
 Complete E-utilities API documentation including all nine endpoints, parameters, response formats, and best practices. Consult when:
@@ -416,17 +416,19 @@ Load reference files into context as needed based on the specific task. For brie
 
 ### API Usage
 - Obtain API key for higher rate limits (10 req/sec vs 3 req/sec)
-- Use history server for result sets > 500 articles
+- For large result sets, verify the current PubMed ESearch cap; history alone does not make retrieval exhaustive
 - Implement exponential backoff for rate limit handling
 - Cache results locally to minimize redundant requests
 - Always include descriptive User-Agent header
+
+Record the exact query, database, search date, translation, total count, returned IDs, partition boundaries and deduplication method. Search terms must not contain identifiable patient records. Abstracts and linked full text can have different reuse licenses; free access does not grant redistribution. Literature retrieval is not clinical advice or evidence appraisal.
 
 ### Quality Filtering
 - Prefer systematic reviews and meta-analyses for synthesized evidence
 - Use publication type filters to find specific study designs
 - Filter by date for most recent research
 - Apply language filters as appropriate
-- Use free full text filter for immediate access
+- Use free-full-text/language/date filters only when justified by the review protocol; they can introduce selection bias. MeSH-only searches may miss newly unindexed records, so combine suitable free-text synonyms.
 
 ### Citation Management
 - Export early and often to avoid losing search results
@@ -466,6 +468,6 @@ Load reference files into context as needed based on the specific task. For brie
 - **PubMed Help**: https://pubmed.ncbi.nlm.nih.gov/help/
 - **E-utilities Documentation**: https://www.ncbi.nlm.nih.gov/books/NBK25501/
 - **NLM Help Desk**: 1-888-FIND-NLM (1-888-346-3656)
-- **Technical Support**: vog.hin.mln.ibcn@seitilitue
+- **Technical Support**: use the current contact channel linked from official NCBI documentation
 - **Mailing List**: utilities-announce@ncbi.nlm.nih.gov
 

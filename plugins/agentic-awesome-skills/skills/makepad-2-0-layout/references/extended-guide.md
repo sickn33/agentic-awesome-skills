@@ -1,10 +1,6 @@
-ButtonFlatter{text: "File"}
-    ButtonFlatter{text: "Edit"}
-    ButtonFlatter{text: "View"}
-    Filler{}
-    ButtonFlat{text: "Run"}
-}
-```
+# Extended layout guide
+
+Additional illustrative layouts for the imported Splash DSL; compile against the project's exact Makepad revision. The toolbar example is complete in SKILL.md.
 
 ### Card Grid with Wrapping
 
@@ -218,16 +214,15 @@ split and text clipping. Use Filler only between `width: Fit` siblings.
 
 ### 5. ScrollYView uses height: Fill, not height: Fit
 
-Scrollable views need a fixed viewport. Use `height: Fill` on ScrollYView so it fills
-the parent and scrolls its content within that space.
+Scrollable views need a bounded viewport. Use `height: Fill` within a known-height parent or an explicit fixed/constrained viewport height; content-fit sizing alone can eliminate the scrollable range.
 
 ---
 
 ## Documentation
 
-- Layout pattern examples and complete code: `./references/layout-patterns.md`
-- Splash language manual: `/splash.md`
-- Widget catalog: `/skills/makepad-2.0-widgets/references/widget-catalog.md`
+- Layout pattern examples and complete code: [layout-patterns.md](layout-patterns.md)
+- Splash language manual: the matching upstream Makepad checkout's `splash.md` (not bundled)
+- Widget catalog: the separately installed `makepad-2-0-widgets` skill, if available
 
 
 ## Examples

@@ -8,29 +8,27 @@
 
 ```bash
 #!/bin/bash
-# auto-rollback.sh
-
-DEPLOYMENT=$1
-THRESHOLD=0.95
-INTERVAL=60
-
-echo "Monitoring deployment $DEPLOYMENT"
-
-while true; do
-  # Get success rate from Prometheus
-  SUCCESS_RATE=$(curl -s "http://prometheus:9090/api/v1/query?query=sum(rate(http_requests_total{status=~\"2.*\"}[5m]))/sum(rate(http_requests_total[5m]))" | jq -r '.data.result[0].value[1]')
-  
-  echo "Current success rate: $SUCCESS_RATE"
-  
-  if (( $(echo "$SUCCESS_RATE < $THRESHOLD" | bc -l) )); then
-    echo "Success rate below threshold! Rolling back..."
-    kubectl rollout undo deployment/$DEPLOYMENT
-    exit 1
-  fi
-  
-  sleep $INTERVAL
-done
+set -euo pipefail
+DEPLOYMENT=${1:?Deployment name required}
+NAMESPACE=${2:?Namespace required}
+: "${PROMETHEUS_URL:?Set the authorized Prometheus base URL}"
+[[ "$DEPLOYMENT" =~ ^[a-z0-9][a-z0-9.-]*$ ]] || exit 2
+[[ "$NAMESPACE" =~ ^[a-z0-9][a-z0-9-]*$ ]] || exit 2
+# Application metrics must actually carry these labels. Empty/invalid/no-traffic
+# results are unavailable evidence and must never trigger an unrelated rollback.
+QUERY="sum(rate(http_requests_total{namespace=\"$NAMESPACE\",deployment=\"$DEPLOYMENT\",status=~\"2.*\"}[5m])) / sum(rate(http_requests_total{namespace=\"$NAMESPACE\",deployment=\"$DEPLOYMENT\"}[5m]))"
+RATE=$(curl --fail --silent --show-error --max-time 10 --get \
+  --data-urlencode "query=$QUERY" "$PROMETHEUS_URL/api/v1/query" | \
+  jq -er '.data.result | select(length == 1) | .[0].value[1] | tonumber | select(. >= 0 and . <= 1)')
+if awk -v rate="$RATE" 'BEGIN {exit !(rate < 0.95)}'; then
+  printf 'Rollback recommended for %s/%s; confirm deployment revision and approved rollback policy.\n' "$NAMESPACE" "$DEPLOYMENT"
+  # Only under an already authorized rollback policy:
+  # kubectl -n "$NAMESPACE" rollout undo "deployment/$DEPLOYMENT" --to-revision=REVIEWED_REVISION
+fi
 ```
+
+Use a preapproved bounded monitoring window, minimum traffic and consecutive-failure policy before automatic rollback. A global success rate cannot identify a deployment regression; rolling back workloads cannot undo incompatible data migrations.
+
 
 ### Manual Rollback Checklist
 
@@ -59,7 +57,7 @@ done
 
 ### Issue: Slow Deployments
 **Problem**: Rollout takes too long
-**Solution**: Increase maxSurge, decrease minReadySeconds
+**Solution**: Inspect capacity and readiness first; adjust maxSurge or minReadySeconds only after verifying resource headroom and stability requirements.
 
 ### Issue: Failed Health Checks
 **Problem**: Pods not becoming ready

@@ -8,7 +8,7 @@ description: "Rclone Global Flags"
 # Global Flags
 
 This describes the global flags available to every rclone command
-split into groups.
+split into groups. This is a historical documentation snapshot (its user-agent default identifies v1.73.0), not a promise that every flag/default exists in the installed version. Consult `rclone help flags` before applying options. Secret-bearing flags are listed for reference, not as permission to put credentials in shell history; use protected configuration or workload identity.
 
 
 ## Copy
@@ -284,7 +284,7 @@ Flags to control the Remote Control API.
       --rc-client-ca string                Client certificate authority to verify clients with
       --rc-enable-metrics                  Enable the Prometheus metrics path at the remote control server
       --rc-files string                    Path to local files to serve on the HTTP server
-      --rc-htpasswd string                 A htpasswd file - if not provided no authentication is done
+      --rc-htpasswd string                 A htpasswd file for authentication; --rc-user/--rc-pass are alternatives
       --rc-job-expire-duration Duration    Expire finished async jobs older than this value (default 1m0s)
       --rc-job-expire-interval Duration    Interval to check for expired async jobs (default 10s)
       --rc-key string                      TLS PEM Private key

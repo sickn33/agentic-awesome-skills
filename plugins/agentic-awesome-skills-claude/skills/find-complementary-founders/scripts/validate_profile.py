@@ -173,7 +173,9 @@ def https_url(
     raw = public_text(value, field, maximum=500)
     parsed = urlparse(raw)
     if (
-        parsed.scheme != "https"
+        any(ord(c) < 32 for c in raw)
+        or parsed.port is not None
+        or parsed.scheme != "https"
         or not parsed.hostname
         or parsed.username
         or parsed.password
@@ -204,6 +206,8 @@ def unique_enum_list(
         raise ValidationError(f"{field} must be a list")
     if required and not value:
         raise ValidationError(f"{field} must not be empty")
+    if any(not isinstance(item, str) for item in value):
+        raise ValidationError(f"{field} must contain strings")
     if len(value) != len(set(value)):
         raise ValidationError(f"{field} must not contain duplicates")
     for item in value:
@@ -262,6 +266,10 @@ def contribution_vectors(
             raise ValidationError(
                 f"{prefix}.evidence_count must be an integer from 0 to 50"
             )
+        if count < 2 and score >= 50:
+            raise ValidationError(f"{prefix} needs multiple evidence items for strong labels")
+        if item["confidence"] == "high" and count < 3:
+            raise ValidationError(f"{prefix} high confidence needs at least three evidence items")
         if item["level"] not in LEVELS:
             raise ValidationError(f"{prefix}.level is unsupported")
         expected_level = score_level(score)
@@ -295,6 +303,8 @@ def validate_profile(profile: dict) -> dict:
     today = datetime.now(timezone.utc).date()
     if expires_on < today:
         raise ValidationError(f"profile expired on {expires_on.isoformat()}")
+    if generated_at > datetime.now(timezone.utc):
+        raise ValidationError("generated_at must not be in the future")
     if generated_at.date() > expires_on:
         raise ValidationError("generated_at must not be after expires_on")
 

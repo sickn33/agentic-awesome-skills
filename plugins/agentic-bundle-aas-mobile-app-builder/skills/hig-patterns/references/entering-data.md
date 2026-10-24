@@ -1,8 +1,11 @@
 ---
 title: "Entering data | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/entering-data
+---
 
 # Entering data
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 When you need information from people, design ways that make it easy for them to provide it without making mistakes.
 
@@ -10,7 +13,7 @@ When you need information from people, design ways that make it easy for them to
 
 Entering information can be a tedious process regardless of the interaction methods people use. Improve the experience by:
 
-  * Pre-gathering as much information as possible to minimize the amount of data that people need to supply
+  * Reusing only necessary data already available within the person’s permissions and expectations to reduce redundant entry
 
   * Supporting all available input methods so people can choose the method that works for them
 
@@ -31,7 +34,7 @@ Entering information can be a tedious process regardless of the interaction meth
 
 **As much as possible, let people provide data by dragging and dropping it or by pasting it.** Supporting these interactions can ease data entry and make your experience feel more integrated with the rest of the system.
 
-**Dynamically validate field values.** People can get frustrated when they have to go back and correct mistakes after filling out a lengthy form. When you verify values as soon as people enter them — and provide feedback as soon as you detect a problem — you give them the opportunity to correct errors right away. For numeric data in particular, consider using a number formatter, which automatically configures a text field to accept only numeric values. You can also configure a formatter to display the value in a specific way, such as with a certain number of decimal places, as a percentage, or as currency.
+**Dynamically validate field values.** People can get frustrated when they have to go back and correct mistakes after filling out a lengthy form. When you verify values as soon as people enter them — and provide feedback as soon as you detect a problem — you give them the opportunity to correct errors right away. For numeric data, use locale-aware parsing and formatting; a formatter or numeric keyboard alone does not reject every invalid value, pasted input, nonfinite number or out-of-range amount. You can also configure a formatter to display the value in a specific way, such as with a certain number of decimal places, as a percentage, or as currency.
 
 **When data entry is necessary, make sure people understand that they must provide the required data before they can proceed.** For example, if you include a Next or Continue button after a set of text fields, make the button available only after people enter the data you require.
 
@@ -67,3 +70,7 @@ Date| Changes
 ---|---  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Validate authoritative constraints on the server where relevant. Secure text entry masks display but does not encrypt transport/storage or justify logging secrets. Use supported Password AutoFill/passkeys; never prefill a stored plaintext password. Keep persistent labels and accessible error descriptions, and avoid announcing errors on every keystroke.

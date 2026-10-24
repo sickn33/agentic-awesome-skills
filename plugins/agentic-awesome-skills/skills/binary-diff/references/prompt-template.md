@@ -2,7 +2,7 @@
 
 ## 标准比对 Prompt（直接复制使用）
 
-```text
+````text
 I have disassembly outputs and procedure code of the same function.
 
 This is the function for reference:
@@ -63,8 +63,8 @@ found_struct_offset:
     member_name: m_pEntitySystem
 ```
 
-If nothing found, output an empty YAML. DO NOT output anything other than the desired YAML. DO NOT collect unrelated symbols.
-```
+If nothing found, output {}. DO NOT output anything other than the desired YAML. DO NOT collect unrelated symbols.
+````
 
 ## 变量填充说明
 
@@ -84,7 +84,8 @@ import httpx
 import json
 from pathlib import Path
 
-PROMPT_TEMPLATE = open("prompt-template.txt").read()
+# Extract the fenced prompt above to a reviewed UTF-8 text file first; no such file is bundled.
+PROMPT_TEMPLATE = Path("prompt-template.txt").read_text(encoding="utf-8")
 
 def migrate_function(ref_disasm, ref_procedure, target_disasm, target_procedure, symbols, api_url, api_key, model="deepseek-chat"):
     prompt = PROMPT_TEMPLATE.format(
@@ -101,6 +102,7 @@ def migrate_function(ref_disasm, ref_procedure, target_disasm, target_procedure,
         "temperature": 0
     }, headers={"Authorization": f"Bearer {api_key}"}, timeout=60)
     
+    resp.raise_for_status()
     content = resp.json()["choices"][0]["message"]["content"]
     
     # 提取 YAML 块
@@ -111,63 +113,39 @@ def migrate_function(ref_disasm, ref_procedure, target_disasm, target_procedure,
     else:
         yaml_str = content
     
-    return yaml.safe_load(yaml_str)
+    if len(yaml_str) > 100_000:
+        raise ValueError("Response too large")
+    result = yaml.safe_load(yaml_str)
+    allowed = {"found_call", "found_funcptr", "found_gv", "found_vcall", "found_struct_offset"}
+    if not isinstance(result, dict) or set(result) - allowed:
+        raise ValueError("Unexpected mapping structure")
+    if any(not isinstance(items, list) or len(items) > 1000 for items in result.values()):
+        raise ValueError("Expected bounded lists")
+    # Validate each item against the expected keys/types and target IDB before use.
+    return result
 
 
-def apply_results(results, ida_session):
-    """将解析后的 YAML 结果应用到 IDA"""
-    if not results:
-        return
-    
-    renames = []
-    comments = []
-    
-    if "found_call" in results:
-        for item in results["found_call"]:
-            # 从 insn_disasm 中提取 call target
-            # call sub_XXXXXXX → 提取 sub_XXXXXXX 的地址
-            renames.append({"addr": item["insn_va"], "name": item["func_name"], "type": "call_target"})
-    
-    if "found_funcptr" in results:
-        for item in results["found_funcptr"]:
-            renames.append({"addr": item["insn_va"], "name": item["funcptr_name"], "type": "funcptr_target"})
-    
-    if "found_gv" in results:
-        for item in results["found_gv"]:
-            renames.append({"addr": item["insn_va"], "name": item["gv_name"], "type": "gv"})
-    
-    if "found_vcall" in results:
-        for item in results["found_vcall"]:
-            comments.append({
-                "addr": item["insn_va"],
-                "comment": f"vcall: {item['func_name']} @ +{item['vfunc_offset']}"
-            })
-    
-    if "found_struct_offset" in results:
-        for item in results["found_struct_offset"]:
-            comments.append({
-                "addr": item["insn_va"],
-                "comment": f"{item['struct_name']}.{item['member_name']} @ +{item['offset']}"
-            })
-    
-    return {"renames": renames, "comments": comments}
+def plan_results(results):
+    """Return a review queue only; instruction VA is never a rename target."""
+    if not isinstance(results, dict):
+        raise ValueError("Expected a validated mapping")
+    queue = []
+    for kind, items in results.items():
+        for item in items:
+            if not isinstance(item, dict) or not isinstance(item.get("insn_va"), str):
+                raise ValueError("Invalid item")
+            address = int(item["insn_va"], 16)
+            queue.append({"kind": kind, "instruction_va": address, "candidate": item,
+                          "status": "requires IDB operand/target and name-conflict validation"})
+    return queue
+
+# A real adapter must decode the target IDB instruction, resolve its referenced
+# call/function-pointer/global operand, validate mapped address ranges and names,
+# preview conflicts, and obtain confirmation before changing a backed-up IDB.
+# It must not use instruction_va as the function/global rename address.
+
 ```
 
-## API 配置建议
+## API 适配边界
 
-```yaml
-# 默认用 DeepSeek（便宜）
-default:
-  api_url: "https://api.deepseek.com/v1/chat/completions"
-  model: "deepseek-chat"
-  
-# 超大函数回退到 GPT
-fallback:
-  api_url: "https://api.openai.com/v1/chat/completions"
-  model: "gpt-4o"
-
-# 或者用 Claude
-alternative:
-  api_url: "https://api.anthropic.com/v1/messages"
-  model: "claude-sonnet-4-20250514"
-```
+上述 Python 骨架只演示 OpenAI-compatible Chat Completions 响应格式；需要获准的 HTTPS 端点、专用 token 和当前模型标识。Anthropic Messages 的请求头、请求体和响应格式不同，不能直接替换 URL。先查阅所选供应商的当前文档并实现相应适配器；本包没有提供可直接执行的 API 客户端或 IDA 工具。不要将 token 写入提示词、日志或版本库。

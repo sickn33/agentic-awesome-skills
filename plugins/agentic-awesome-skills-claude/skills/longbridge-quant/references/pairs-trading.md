@@ -12,17 +12,17 @@ Statistical-arbitrage strategy for a pair of correlated securities. Tests for co
 2. Align on `time`, drop unmatched rows (different trading calendars).
 3. **Cointegration test (Engle-Granger)**:
    - OLS regress `ln(close_A)` on `ln(close_B)` → hedge ratio β
-   - Compute residuals (spread) = `ln(close_A) − β × ln(close_B)`
-   - Run ADF test on residuals; if p-value < 0.05, declare cointegrated
+   - Compute residuals (spread) = `ln(close_A) − α − β × ln(close_B)` (include fitted intercept α)
+   - Use `statsmodels.tsa.stattools.coint` with matching trend specification; p < 0.05 rejects the no-cointegration null under its assumptions, not a guarantee of future convergence. Plain ADF p-values on fitted residuals are not the Engle-Granger test.
 4. **Spread statistics**:
    - Spread mean μ, std σ
    - Z-score = (spread_current − μ) / σ
-   - Half-life λ = −ln(2) / OLS*slope of Δspread ~ spread*{t-1} (AR(1))
+   - Fit Δspread[t] = a + b·spread[t−1] + error. Half-life = −ln(2)/ln(1+b) only for 0 < 1+b < 1; −ln(2)/b is a near-zero approximation.
 5. **Signal**:
    - Z > 2.0: 价差处于历史高位区间（统计上偏离均值偏大）/ Spread at historical high (statistically elevated)
    - Z < −2.0: 价差处于历史低位区间（统计上偏离均值偏小）/ Spread at historical low (statistically depressed)
    - |Z| < 0.5: 价差回归均值区间 / Spread near historical mean
-6. Position sizing: suggest equal-dollar or volatility-scaled sizing; note that execution must be simultaneous.
+6. Position sizing: derive holdings from the fitted price/log-price model and hedge coefficient; equal-dollar sizing is not generally beta-neutral. Discuss asynchronous fill, borrow, slippage and unwind risks; simultaneous fills are not guaranteed.
 
 Run `longbridge kline --help` to confirm current flag names before calling.
 
@@ -45,7 +45,7 @@ longbridge kline <SYMBOL_B> --period day --count 252 --format json
 | Half-life             | 半衰期（天） | 半衰期（天） | Half-life (days)      |
 | Signal                | 交易信号     | 交易訊號     | Trade signal          |
 
-Output: cointegration verdict → spread statistics table → current signal → position guidance. Add a risk note if p-value > 0.05 (not cointegrated). Cite **Longbridge Securities** / **数据来源：长桥证券** / **數據來源：長橋證券**.
+Output: cointegration verdict → spread statistics table → current signal → position guidance. If p ≥ 0.05, report failure to reject no cointegration rather than proof of its absence. Correct for testing many candidate pairs. Cite **Longbridge Securities** / **数据来源：长桥证券** / **數據來源：長橋證券**.
 
 > 以上内容仅供参考，不构成投资建议。投资决策请结合自身风险承受能力独立判断。
 > The above is for reference only and does not constitute investment advice. Investment decisions should be made based on your own risk tolerance.

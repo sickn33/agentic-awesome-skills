@@ -10,6 +10,10 @@ date_added: '2026-02-27'
 
 Client library for Azure Key Vault Certificates — secure storage and management of certificates.
 
+## Version and execution scope
+
+Examples are API sketches: first inspect Cargo.lock and the matching SDK docs for signatures/features, async runtime and response models. Use a test vault and least privilege; importing a PFX/private key or changing/deleting certificate policy requires the corresponding authorized scope. Keep import passwords/private keys in a secret store, never source or logs. A delete response does not prove purge or removal of every related key/secret version; inspect the actual lifecycle state.
+
 ## Installation
 
 ```sh

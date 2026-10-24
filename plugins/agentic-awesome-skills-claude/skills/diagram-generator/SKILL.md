@@ -126,7 +126,7 @@ python "<SKILL_ROOT>/diagram-generator/scripts/render_diagram.py" input.puml --f
 
 The renderer is intentionally dependency-tolerant. It tries common local tools and reports actionable installation hints if a renderer is unavailable. Do not claim an image was rendered unless the script completed successfully and the output file exists.
 
-Only render reviewed diagram sources. The helper invokes locally installed renderers (including PlantUML) and writes the selected output path, which can replace an existing file; inspect the source and choose a fresh output path first.
+Only render reviewed diagram sources. The helper invokes locally installed renderers (including PlantUML) and writes the selected output path, and rejects an existing output path; inspect the source and choose a fresh output path whose extension matches --format.
 
 ## Validation checklist
 
@@ -175,7 +175,7 @@ For English user requests, respond in English. For Chinese user requests, respon
 
 本 skill 主要输出文本格式的图表源码（Mermaid/DOT/PlantUML），不一定需要本地渲染工具。只有当用户明确要求生成 PNG/SVG/PDF 文件时才需要对应的渲染器。
 
-如果渲染器不可用，`scripts/render_diagram.py` 会输出安装提示而不是报错。
+如果渲染器不可用，`scripts/render_diagram.py` 会输出安装提示并以非零状态退出；此时只能交付源码，不能声称已渲染。
 
 ---
 
@@ -203,3 +203,9 @@ For English user requests, respond in English. For Chinese user requests, respon
 - Rendering fidelity depends on the available diagram CLI/renderer.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).
+
+## Renderer trust and availability
+
+The helper is a local subprocess wrapper, not a sandbox. Inspect sources for PlantUML include/file/URL directives, DOT image references, SVG active content/external references and renderer-specific scripts before rendering; use an isolated environment without credentials or network for untrusted input. Escape user labels in the selected grammar, and sanitize SVG before embedding it in a trusted page. A copied SVG is not syntax or security validation.
+
+No bootstrap, tool-index, RULES or upstream routing ecosystem is bundled; do not claim those paths or automatic installation exist. Use an already available approved renderer or provide source plus the missing prerequisite. Mental syntax inspection is not parser validation. The wrapper has a 60-second subprocess deadline but no memory/process-tree sandbox and captures output in memory; bound diagram size externally. Existing-output checks are not race-proof in a shared directory, so use a private destination. No renderer was executed in this review.

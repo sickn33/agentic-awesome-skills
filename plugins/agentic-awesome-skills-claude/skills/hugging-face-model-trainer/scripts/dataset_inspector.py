@@ -3,19 +3,9 @@
 # requires-python = ">=3.10"
 # dependencies = []
 # ///
-"""
-Dataset Format Inspector for TRL Training (LLM-Optimized Output)
-
-Inspects Hugging Face datasets to determine TRL training compatibility.
-Uses Datasets Server API for instant results - no dataset download needed!
-
-ULTRA-EFFICIENT: Uses HF Datasets Server API - completes in <2 seconds.
-
-Usage with HF Jobs:
-    hf_jobs("uv", {
-        "script": "https://huggingface.co/datasets/evalstate/trl-helpers/raw/main/dataset_inspector.py",
-        "script_args": ["--dataset", "your/dataset", "--split", "train"]
-    })
+"""Advisory column inspection using the public Datasets Server API.
+It sends the requested dataset/config/split to that service. This is not full
+format validation and does not authorize training. Samples are hidden by default.
 """
 
 import argparse
@@ -34,32 +24,48 @@ def parse_args():
     parser.add_argument("--preview", type=int, default=150, help="Max chars per field preview")
     parser.add_argument("--samples", type=int, default=5, help="Number of samples to fetch (default: 5)")
     parser.add_argument("--json-output", action="store_true", help="Output as JSON")
-    return parser.parse_args()
+    parser.add_argument("--show-samples", action="store_true", help="Explicitly print potentially sensitive samples")
+    args = parser.parse_args()
+    if not 1 <= args.samples <= 100 or not 0 <= args.preview <= 1000:
+        parser.error("samples must be 1..100 and preview 0..1000")
+    return args
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
 
 
 def api_request(url: str) -> Dict:
-    """Make API request to Datasets Server"""
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or parsed.netloc != "datasets-server.huggingface.co":
+        raise ValueError("unexpected dataset service")
     try:
-        with urllib.request.urlopen(url, timeout=10) as response:
-            return json.loads(response.read().decode())
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
+        with urllib.request.build_opener(NoRedirect()).open(url, timeout=10) as response:
+            raw = response.read(2 * 1024 * 1024 + 1)
+            if len(raw) > 2 * 1024 * 1024:
+                raise ValueError("dataset response exceeds 2 MiB")
+            value = json.loads(raw)
+            if not isinstance(value, dict):
+                raise ValueError("unexpected dataset response schema")
+            return value
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
             return None
-        raise Exception(f"API request failed: {e.code} {e.reason}")
-    except Exception as e:
-        raise Exception(f"API request failed: {str(e)}")
+        raise ValueError("dataset service HTTP failure: " + str(exc.code)) from None
+    except urllib.error.URLError:
+        raise ValueError("dataset service connection failed") from None
 
 
 def get_splits(dataset: str) -> Dict:
-    """Get available splits for dataset"""
-    url = f"https://datasets-server.huggingface.co/splits?dataset={urllib.parse.quote(dataset)}"
-    return api_request(url)
+    return api_request("https://datasets-server.huggingface.co/splits?" +
+                       urllib.parse.urlencode({"dataset": dataset}))
 
 
 def get_rows(dataset: str, config: str, split: str, offset: int = 0, length: int = 5) -> Dict:
-    """Get rows from dataset"""
-    url = f"https://datasets-server.huggingface.co/rows?dataset={urllib.parse.quote(dataset)}&config={config}&split={split}&offset={offset}&length={length}"
-    return api_request(url)
+    return api_request("https://datasets-server.huggingface.co/rows?" +
+                       urllib.parse.urlencode(dict(dataset=dataset, config=config,
+                                                   split=split, offset=offset, length=length)))
 
 
 def find_columns(columns: List[str], patterns: List[str]) -> List[str]:
@@ -126,61 +132,27 @@ def check_kto_compatibility(columns: List[str]) -> Dict[str, Any]:
 
 
 def generate_mapping_code(method: str, info: Dict[str, Any]) -> str:
-    """Generate mapping code for a training method"""
+    """Generate inert mapping text; untrusted column names are Python literals."""
+    if info.get("ready"):
+        return None
     if method == "SFT":
-        if info["ready"]:
+        prompt, response = info.get("possible_prompt"), info.get("possible_response")
+        if not prompt:
             return None
-        
-        prompt_col = info.get("possible_prompt")
-        response_col = info.get("possible_response")
-        has_context = info.get("has_context", False)
-        
-        if not prompt_col:
-            return None
-        
-        if has_context and response_col:
-            return f"""def format_for_sft(example):
-    text = f"Instruction: {{example['{prompt_col}']}}\n\n"
-    if example.get('context'):
-        text += f"Context: {{example['context']}}\n\n"
-    text += f"Response: {{example['{response_col}']}}"
-    return {{'text': text}}
-
-dataset = dataset.map(format_for_sft, remove_columns=dataset.column_names)"""
-        elif response_col:
-            return f"""def format_for_sft(example):
-    return {{'text': f"{{example['{prompt_col}']}}\n\n{{example['{response_col}']}}}}
-
-dataset = dataset.map(format_for_sft, remove_columns=dataset.column_names)"""
-        else:
-            return f"""def format_for_sft(example):
-    return {{'text': example['{prompt_col}']}}
-
-dataset = dataset.map(format_for_sft, remove_columns=dataset.column_names)"""
-    
-    elif method == "DPO":
-        if info["ready"] or not info["can_map"]:
-            return None
-        
-        return f"""def format_for_dpo(example):
-    return {{
-        'prompt': example['{info['prompt_col']}'],
-        'chosen': example['{info['chosen_col']}'],
-        'rejected': example['{info['rejected_col']}'],
-    }}
-
-dataset = dataset.map(format_for_dpo, remove_columns=dataset.column_names)"""
-    
-    elif method == "GRPO":
-        if info["ready"] or not info["can_map"]:
-            return None
-        
-        return f"""def format_for_grpo(example):
-    return {{'prompt': example['{info['prompt_col']}']}}
-
-dataset = dataset.map(format_for_grpo, remove_columns=dataset.column_names)"""
-    
-    return None
+        expression = "example[" + repr(prompt) + "]"
+        if response:
+            expression += " + '\\n\\n' + example[" + repr(response) + "]"
+        mapping = "{'text': " + expression + "}"
+    elif method == "DPO" and info.get("can_map"):
+        mapping = "{" + ", ".join(repr(key) + ": example[" + repr(info[key + "_col"]) + "]"
+                                 for key in ("prompt", "chosen", "rejected")) + "}"
+    elif method == "GRPO" and info.get("can_map"):
+        mapping = "{'prompt': example[" + repr(info["prompt_col"]) + "]}"
+    else:
+        return None
+    return ("# Review value types, chat template and reward requirements before use.\n"
+            "def format_example(example):\n    return " + mapping +
+            "\n\ndataset = dataset.map(format_example, remove_columns=dataset.column_names)")
 
 
 def format_value_preview(value: Any, max_chars: int) -> str:
@@ -202,7 +174,7 @@ def format_value_preview(value: Any, max_chars: int) -> str:
 def main():
     args = parse_args()
     
-    print(f"Fetching dataset info via Datasets Server API...")
+    print("Fetching advisory column information...", file=sys.stderr)
     
     try:
         # Get splits info
@@ -222,11 +194,9 @@ def main():
             if split_info["config"] == args.config and split_info["split"] == args.split:
                 split_found = True
         
-        # If default config not found, try first available
-        if not split_found and available_configs:
-            config_to_use = list(available_configs)[0]
-            print(f"Config '{args.config}' not found, trying '{config_to_use}'...")
-        
+        if not split_found:
+            raise ValueError("requested config/split not found; specify an available pair explicitly")
+
         # Get rows
         rows_data = get_rows(args.dataset, config_to_use, args.split, offset=0, length=args.samples)
         
@@ -263,6 +233,10 @@ def main():
     grpo_info = check_grpo_compatibility(columns)
     kto_info = check_kto_compatibility(columns)
     
+    for info in (sft_info, dpo_info, grpo_info, kto_info):
+        info["validated"] = False
+        info["scope"] = "column-name candidates only; validate actual values and full training subset"
+
     # Determine recommended methods
     recommended = []
     if sft_info["ready"]:
@@ -323,20 +297,19 @@ def main():
             print(f"  {col}: (type info not available)")
     
     print(f"\n{'EXAMPLE DATA':-<80}")
-    example = first_row
-    for col in columns:
-        value = example.get(col)
-        display = format_value_preview(value, args.preview)
-        print(f"\n{col}:")
-        print(f"  {display}")
-    
+    if args.show_samples:
+        for col in columns:
+            print(json.dumps(col) + ": " + json.dumps(format_value_preview(first_row.get(col), args.preview)))
+    else:
+        print("Samples hidden; use --show-samples only for approved non-sensitive data.")
+
     print(f"\n{'TRAINING METHOD COMPATIBILITY':-<80}")
     
     # SFT
-    print(f"\n[SFT] {'✓ READY' if sft_info['ready'] else '✗ NEEDS MAPPING'}")
+    print(f"\n[SFT] {'COLUMN CANDIDATE' if sft_info['ready'] else '✗ NEEDS MAPPING'}")
     if sft_info["ready"]:
         print(f"  Reason: Dataset has '{sft_info['reason']}' field")
-        print(f"  Action: Use directly with SFTTrainer")
+        print(f"  Action: Validate actual row values and model compatibility before using SFTTrainer")
     elif sft_info["possible_prompt"]:
         print(f"  Detected: prompt='{sft_info['possible_prompt']}' response='{sft_info['possible_response']}'")
         print(f"  Action: Apply mapping code (see below)")
@@ -344,10 +317,10 @@ def main():
         print(f"  Status: Cannot determine mapping - manual inspection needed")
     
     # DPO
-    print(f"\n[DPO] {'✓ READY' if dpo_info['ready'] else '✗ NEEDS MAPPING' if dpo_info['can_map'] else '✗ INCOMPATIBLE'}")
+    print(f"\n[DPO] {'COLUMN CANDIDATE' if dpo_info['ready'] else '✗ NEEDS MAPPING' if dpo_info['can_map'] else '✗ INCOMPATIBLE'}")
     if dpo_info["ready"]:
         print(f"  Reason: Dataset has 'prompt', 'chosen', 'rejected' fields")
-        print(f"  Action: Use directly with DPOTrainer")
+        print(f"  Action: Validate actual row values and model compatibility before using DPOTrainer")
     elif dpo_info["can_map"]:
         print(f"  Detected: prompt='{dpo_info['prompt_col']}' chosen='{dpo_info['chosen_col']}' rejected='{dpo_info['rejected_col']}'")
         print(f"  Action: Apply mapping code (see below)")
@@ -355,10 +328,10 @@ def main():
         print(f"  Status: Missing required fields (prompt + chosen + rejected)")
     
     # GRPO
-    print(f"\n[GRPO] {'✓ READY' if grpo_info['ready'] else '✗ NEEDS MAPPING' if grpo_info['can_map'] else '✗ INCOMPATIBLE'}")
+    print(f"\n[GRPO] {'COLUMN CANDIDATE' if grpo_info['ready'] else '✗ NEEDS MAPPING' if grpo_info['can_map'] else '✗ INCOMPATIBLE'}")
     if grpo_info["ready"]:
         print(f"  Reason: Dataset has 'prompt' field")
-        print(f"  Action: Use directly with GRPOTrainer")
+        print(f"  Action: Validate actual row values and model compatibility before using GRPOTrainer")
     elif grpo_info["can_map"]:
         print(f"  Detected: prompt='{grpo_info['prompt_col']}'")
         print(f"  Action: Apply mapping code (see below)")
@@ -366,10 +339,10 @@ def main():
         print(f"  Status: Missing prompt field")
     
     # KTO
-    print(f"\n[KTO] {'✓ READY' if kto_info['ready'] else '✗ INCOMPATIBLE'}")
+    print(f"\n[KTO] {'COLUMN CANDIDATE' if kto_info['ready'] else '✗ INCOMPATIBLE'}")
     if kto_info["ready"]:
         print(f"  Reason: Dataset has 'prompt', 'completion', 'label' fields")
-        print(f"  Action: Use directly with KTOTrainer")
+        print(f"  Action: Validate actual row values and model compatibility before using KTOTrainer")
     else:
         print(f"  Status: Missing required fields (prompt + completion + label)")
     
@@ -397,11 +370,11 @@ def main():
         mapping_needed = True
     
     if not mapping_needed:
-        print("\nNo mapping needed - dataset is ready for training!")
+        print("\nColumn names match; this does not certify training readiness.")
     
     print(f"\n{'SUMMARY':-<80}")
     print(f"Recommended training methods: {', '.join(recommended) if recommended else 'None (dataset needs formatting)'}")
-    print(f"\nNote: Used Datasets Server API (instant, no download required)")
+    print(f"\nNote: Used Datasets Server API (sample metadata/rows only; network request, not full dataset validation)")
     
     print("\n" + "=" * 80)
     sys.exit(0)

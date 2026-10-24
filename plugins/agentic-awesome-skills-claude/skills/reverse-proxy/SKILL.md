@@ -38,6 +38,8 @@ Configure reverse proxies to route traffic, terminate TLS, enforce rate limits, 
 
 ## nginx Reverse Proxy
 
+Treat snippets as separate fragments for the target server/http/location contexts. Preserve the current configuration, run `nginx -t`, and reload only on a passing result with rollback and authorization. `includeSubDomains`/HSTS preload requires all covered hosts to support HTTPS; do not enable it by copying the example blindly. Configure trusted forwarded-header sources and origin access; never trust client-supplied forwarding headers as identity. A Docker socket mount remains privileged even with `:ro`; use restricted socket access and avoid exposing the dashboard.
+
 ### Basic HTTPS Proxy with Redirect
 
 ```nginx
@@ -359,8 +361,8 @@ sudo nginx -t
 # Reload without downtime
 sudo nginx -s reload
 
-# View active connections
-sudo nginx -s status
+# Process/service status (nginx -s supports signals, not a status query)
+sudo systemctl status nginx
 
 # Check which config file is active
 nginx -V 2>&1 | grep -o '\-\-conf-path=[^ ]*'

@@ -35,7 +35,7 @@ use azure_storage_blob::clients::{BlobClient, BlobClientOptions};
 let credential = DeveloperToolsCredential::new(None)?;
 let blob_client = BlobClient::new(
     Url::parse("https://<account>.blob.core.windows.net/container-name/blob-name")?,
-    Some(credential),
+    Some(credential.clone()),
     Some(BlobClientOptions::default()),
 )?;
 ```

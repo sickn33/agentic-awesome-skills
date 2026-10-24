@@ -140,17 +140,19 @@ def _normalize_hive_type(hive_type: str) -> str:
 
 def _connect(host: str, port: int) -> hive.Connection:
     # ← SUBSTITUTE: update username/auth if your cluster requires Kerberos or LDAP
-    return hive.connect(host=host, port=port, username="hadoop", auth="NONE")
+    return hive.connect(host=host, port=port, username=os.environ["HIVE_USERNAME"], auth=os.environ["HIVE_AUTH"])
 
 
 def _fetch_rows(cursor) -> list[tuple]:
-    """Fetch query results in memory-safe chunks."""
+    """Fetch query results in chunks (the accumulated result still uses memory)."""
     rows: list[tuple] = []
     while True:
         chunk = cursor.fetchmany(1000)
         if not chunk:
             break
         rows.extend(chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
@@ -285,13 +287,16 @@ def collect(
                 cursor.execute(f"DESCRIBE FORMATTED {quoted_db}.{quoted_table}")
                 desc_rows = _fetch_rows(cursor)
             except Exception as exc:
-                print(f"    WARNING: could not describe {db}.{table}: {exc}")
-                continue
+                raise RuntimeError("Collection incomplete; provider failure details redacted") from None
 
             info = _parse_describe_formatted(desc_rows)
 
-            row_count = info["row_count"] if info["row_count"] and info["row_count"] > 0 else None
-            byte_count = info["total_size"] if info["total_size"] and info["total_size"] > 0 else None
+            row_count = info["row_count"] if info["row_count"] is not None and info["row_count"] >= 0 else None
+            byte_count = info["total_size"] if info["total_size"] is not None and info["total_size"] >= 0 else None
+
+            if len(assets) >= 10000:
+
+                raise ValueError("Collection exceeds 10000 assets; narrow scope")
 
             assets.append(
                 {

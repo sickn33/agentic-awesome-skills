@@ -1,5 +1,6 @@
 # /// script
 # dependencies = [
+#     "torch",
 #     "transformers>=5.2.0",
 #     "accelerate>=1.1.0",
 #     "albumentations >= 1.4.16",
@@ -7,12 +8,16 @@
 #     "datasets>=4.0",
 #     "torchmetrics",
 #     "pycocotools",
-#     "trackio",
 #     "huggingface_hub",
 # ]
 # ///
 
 """Finetuning any 🤗 Transformers model supported by AutoModelForObjectDetection for object detection leveraging the Trainer API."""
+
+# Modified by AAS: bounded, local-only pilot; see root SKILL.md.
+from vision_safety import execution_guard, configure_local_run, load_bounded_dataset, validated_xywh
+if __name__ == "__main__":
+    execution_guard()  # fail before third-party imports, downloads, writes or telemetry
 
 import logging
 import math
@@ -29,7 +34,6 @@ import torch
 from datasets import load_dataset
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 
-import trackio
 
 import transformers
 from transformers import (
@@ -71,7 +75,7 @@ def format_image_annotations_as_coco(
         categories (list[int]): list of categories/class labels corresponding to provided bounding boxes
         areas (list[float]): list of corresponding areas to provided bounding boxes
         bboxes (list[tuple[float]]): list of bounding boxes provided in COCO format
-            ([center_x, center_y, width, height] in absolute coordinates)
+            ([x_min, y_min, width, height] in absolute coordinates)
 
     Returns:
         dict: {
@@ -80,6 +84,8 @@ def format_image_annotations_as_coco(
         }
     """
     annotations = []
+    if not len(categories)==len(areas)==len(bboxes):
+        raise ValueError("Annotation lengths must match")
     for category, area, bbox in zip(categories, areas, bboxes):
         formatted_annotation = {
             "image_id": image_id,
@@ -102,50 +108,14 @@ def detect_bbox_format_from_samples(dataset, image_col="image", objects_col="obj
     bbox coordinates against image dimensions. The correct format interpretation
     should keep bboxes within image bounds.
     """
-    exceeds_if_xywh = 0
-    exceeds_if_xyxy = 0
-    total = 0
-
-    for example in dataset.select(range(min(num_samples, len(dataset)))):
-        img_w, img_h = example[image_col].size
-        for bbox in example[objects_col]["bbox"]:
-            if len(bbox) != 4:
-                continue
-            a, b, c, d = float(bbox[0]), float(bbox[1]), float(bbox[2]), float(bbox[3])
-            total += 1
-
-            # If 3rd < 1st or 4th < 2nd, can't be xyxy (x_max must exceed x_min)
-            if c < a or d < b:
-                return "xywh"
-
-            # xywh: right/bottom edge = origin + size; exceeding image → wrong format
-            if a + c > img_w * 1.05:
-                exceeds_if_xywh += 1
-            if b + d > img_h * 1.05:
-                exceeds_if_xywh += 1
-            # xyxy: right/bottom edge = coordinate itself
-            if c > img_w * 1.05:
-                exceeds_if_xyxy += 1
-            if d > img_h * 1.05:
-                exceeds_if_xyxy += 1
-
-    if total == 0:
-        return "xywh"
-
-    fmt = "xyxy" if exceeds_if_xywh > exceeds_if_xyxy else "xywh"
-    logger.info(
-        f"Detected bbox format: {fmt} (checked {total} bboxes from {min(num_samples, len(dataset))} images)"
-    )
-    return fmt
+    raise ValueError("Box format is ambiguous: specify dataset documentation format explicitly")
 
 
 def sanitize_dataset(dataset, bbox_format="xywh", image_col="image", objects_col="objects"):
     """
-    Validate bboxes, convert xyxy→xywh if needed, clip to image bounds, and remove
-    entries with non-finite values, non-positive dimensions, or degenerate area (<1 px).
-    Drops images with no remaining valid bboxes.
+    Validate explicitly declared pixel boxes, reject invalid geometry, recompute
+    areas and preserve valid negative images. No automatic clipping or row removal.
     """
-    convert_xyxy = bbox_format == "xyxy"
 
     def _validate(example):
         img_w, img_h = example[image_col].size
@@ -153,56 +123,19 @@ def sanitize_dataset(dataset, bbox_format="xywh", image_col="image", objects_col
         bboxes = objects["bbox"]
         n = len(bboxes)
 
-        valid_indices = []
-        converted_bboxes = []
-
-        for i, bbox in enumerate(bboxes):
-            if len(bbox) != 4:
-                continue
-            vals = [float(v) for v in bbox]
-            if not all(math.isfinite(v) for v in vals):
-                continue
-
-            if convert_xyxy:
-                x_min, y_min, x_max, y_max = vals
-                w, h = x_max - x_min, y_max - y_min
-            else:
-                x_min, y_min, w, h = vals
-
-            if w <= 0 or h <= 0:
-                continue
-
-            x_min, y_min = max(0.0, x_min), max(0.0, y_min)
-            if x_min >= img_w or y_min >= img_h:
-                continue
-            w = min(w, img_w - x_min)
-            h = min(h, img_h - y_min)
-
-            if w * h < 1.0:
-                continue
-
-            valid_indices.append(i)
-            converted_bboxes.append([x_min, y_min, w, h])
-
-        # Rebuild objects dict, filtering all list-valued fields by valid_indices
-        new_objects = {}
-        for key, value in objects.items():
-            if key == "bbox":
-                new_objects["bbox"] = converted_bboxes
-            elif isinstance(value, list) and len(value) == n:
-                new_objects[key] = [value[j] for j in valid_indices]
-            else:
-                new_objects[key] = value
-
-        if "area" not in new_objects or len(new_objects.get("area", [])) != len(converted_bboxes):
-            new_objects["area"] = [b[2] * b[3] for b in converted_bboxes]
+        if len(objects.get("category",[])) != n:
+            raise ValueError("BBox/category lengths must match")
+        converted_bboxes=[validated_xywh(box,img_w,img_h,bbox_format) for box in bboxes]
+        new_objects=dict(objects)
+        new_objects["bbox"]=converted_bboxes
+        new_objects["area"]=[box[2]*box[3] for box in converted_bboxes]
 
         example[objects_col] = new_objects
         return example
 
     before = len(dataset)
     dataset = dataset.map(_validate)
-    dataset = dataset.filter(lambda ex: len(ex[objects_col]["bbox"]) > 0)
+    # Empty annotations are valid negative images; do not remove them.
     after = len(dataset)
     if before != after:
         logger.warning(f"Dropped {before - after}/{before} images with no valid bboxes after sanitization")
@@ -223,7 +156,7 @@ def convert_bbox_yolo_to_pascal(boxes: torch.Tensor, image_size: tuple[int, int]
         torch.Tensor: Bounding boxes in Pascal VOC format (x_min, y_min, x_max, y_max)
     """
     # convert center to corners format
-    boxes = center_to_corners_format(boxes)
+    boxes = center_to_corners_format(boxes.reshape(-1, 4))
 
 
     if isinstance(image_size, torch.Tensor):
@@ -378,6 +311,9 @@ class DataTrainingArguments:
     them on the command line.
     """
 
+    dataset_revision: str = field(default="", metadata={"help": "Full reviewed dataset commit SHA."})
+    bbox_format: str = field(default="", metadata={"help": "Required explicit xywh or xyxy pixel format."})
+
     dataset_name: str = field(
         default="cppe-5",
         metadata={
@@ -475,17 +411,11 @@ def main():
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
 
-    from huggingface_hub import login
-    hf_token = os.environ.get("HF_TOKEN") or os.environ.get("hfjob")
-    if hf_token:
-        login(token=hf_token)
-        training_args.hub_token = hf_token
-        logger.info("Logged in to Hugging Face Hub")
-    elif training_args.push_to_hub:
-        logger.warning("HF_TOKEN not found in environment. Hub push will likely fail.")
-
-    # Initialize Trackio for real-time experiment tracking
-    trackio.init(project=training_args.output_dir, name=training_args.run_name)
+    configure_local_run(model_args, data_args, training_args)
+    from PIL import Image
+    import warnings
+    Image.MAX_IMAGE_PIXELS = 16_000_000
+    warnings.simplefilter("error", Image.DecompressionBombWarning)
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -508,13 +438,16 @@ def main():
         f"Process rank: {training_args.local_process_index}, device: {training_args.device}, n_gpu: {training_args.n_gpu}, "
         + f"distributed training: {training_args.parallel_mode.value == 'distributed'}, 16-bits training: {training_args.fp16}"
     )
-    logger.info(f"Training/evaluation parameters {training_args}")
+    logger.info("Bounded local pilot; credentials/configuration are not logged")
 
-    dataset = load_dataset(
-        data_args.dataset_name, cache_dir=model_args.cache_dir, trust_remote_code=model_args.trust_remote_code
+    dataset = load_bounded_dataset(
+        data_args.dataset_name, data_args.dataset_config_name, cache_dir=model_args.cache_dir, trust_remote_code=model_args.trust_remote_code,
+        revision=data_args.dataset_revision, train_limit=data_args.max_train_samples, eval_limit=data_args.max_eval_samples
     )
 
-    bbox_format = detect_bbox_format_from_samples(dataset["train"])
+    bbox_format = data_args.bbox_format
+    if bbox_format not in {"xyxy", "xywh"}:
+        raise ValueError("Explicit --bbox_format xywh or xyxy is required; no reliable auto-detection")
     if bbox_format == "xyxy":
         logger.info("Converting bboxes from xyxy (Pascal VOC) → xywh (COCO) format across all splits")
     for split_name in list(dataset.keys()):
@@ -557,20 +490,23 @@ def main():
             else:
                 unique_cats.add(cats)
 
+        if not unique_cats or any(isinstance(c,bool) for c in unique_cats):
+            raise ValueError("Explicit nonempty category mapping is required")
         if all(isinstance(c, int) for c in unique_cats):
-            max_cat = max(unique_cats)
-            categories = [f"class_{i}" for i in range(max_cat + 1)]
+            if sorted(unique_cats) != list(range(len(unique_cats))):
+                raise ValueError("Map sparse integer categories to contiguous IDs explicitly")
+            categories = [f"class_{i}" for i in range(len(unique_cats))]
         elif all(isinstance(c, str) for c in unique_cats):
             categories = sorted(unique_cats)
         else:
-            categories = [str(c) for c in sorted(unique_cats, key=str)]
+            raise ValueError("Mixed or unsupported category types require explicit remapping")
         logger.info(f"Discovered {len(categories)} categories: {categories}")
 
     id2label = dict(enumerate(categories))
     label2id = {v: k for k, v in id2label.items()}
 
     # Remap string categories to integer IDs if needed
-    sample_cats = dataset["train"][0]["objects"]["category"]
+    sample_cats = next((row["objects"]["category"] for row in dataset["train"] if row["objects"]["category"]), [])
     if sample_cats and isinstance(sample_cats[0], str):
         logger.info(f"Remapping string categories to integer IDs: {label2id}")
 
@@ -597,7 +533,7 @@ def main():
         "cache_dir": model_args.cache_dir,
         "revision": model_args.model_revision,
         "token": model_args.token,
-        "trust_remote_code": model_args.trust_remote_code,
+        "trust_remote_code": False,
     }
     config = AutoConfig.from_pretrained(
         model_args.config_name or model_args.model_name_or_path,
@@ -609,6 +545,7 @@ def main():
         model_args.model_name_or_path,
         config=config,
         ignore_mismatched_sizes=model_args.ignore_mismatched_sizes,
+        use_safetensors=True,
         **common_pretrained_args,
     )
     image_processor = AutoImageProcessor.from_pretrained(
@@ -659,7 +596,8 @@ def main():
     )
 
     dataset["train"] = dataset["train"].with_transform(train_transform_batch)
-    dataset["validation"] = dataset["validation"].with_transform(validation_transform_batch)
+    if "validation" in dataset:
+        dataset["validation"] = dataset["validation"].with_transform(validation_transform_batch)
     if "test" in dataset:
         dataset["test"] = dataset["test"].with_transform(validation_transform_batch)
 
@@ -680,8 +618,9 @@ def main():
 
     # Training
     if training_args.do_train:
-        train_result = trainer.train(resume_from_checkpoint=training_args.resume_from_checkpoint)
+        train_result = trainer.train()
         trainer.save_model()
+        image_processor.save_pretrained(training_args.output_dir)
         trainer.log_metrics("train", train_result.metrics)
         trainer.save_metrics("train", train_result.metrics)
         trainer.save_state()
@@ -693,7 +632,7 @@ def main():
         trainer.log_metrics(test_prefix, metrics)
         trainer.save_metrics(test_prefix, metrics)
 
-    trackio.finish()
+    # Local metrics only.
 
     kwargs = {
         "finetuned_from": model_args.model_name_or_path,

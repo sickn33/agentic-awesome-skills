@@ -33,7 +33,7 @@ resp = requests.get(
 | `shippingLocation` | 2-letter country code. |
 | `otherSellers` | `true` (default) to include other-seller block. |
 
-Response: top-level `requestMetadata` + `product`. The `product` object's keys (verified live): `asin`, `url`, `title`, `brand`, `isAvailable`, `primaryFeatures`, `features`, `featureBullets`, `description`, `badges`, `breadcrumbs`, `whatIsInTheBox`, `variants`, `totalImages`, `primaryImage`, `images`, `descriptionImages`, `totalVideos`, `primaryVideo`, `videos`, `specification`, `reviewsInfo` (rating + count + sample reviews live here, not at the root). Pricing fields are surfaced via `variants` and `specification`.
+Response: top-level `requestMetadata` + `product`. The `product` object's keys (illustrative snapshot; verify current schema): `asin`, `url`, `title`, `brand`, `isAvailable`, `primaryFeatures`, `features`, `featureBullets`, `description`, `badges`, `breadcrumbs`, `whatIsInTheBox`, `variants`, `totalImages`, `primaryImage`, `images`, `descriptionImages`, `totalVideos`, `primaryVideo`, `videos`, `specification`, `reviewsInfo` (rating + count + sample reviews live here, not at the root). Pricing fields are surfaced via `variants` and `specification`.
 
 ## Amazon Search
 

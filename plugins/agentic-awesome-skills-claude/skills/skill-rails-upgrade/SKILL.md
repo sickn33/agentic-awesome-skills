@@ -1,7 +1,7 @@
 ---
 name: skill-rails-upgrade
 description: "Analyze Rails apps and provide upgrade assessments"
-risk: safe
+risk: critical
 source: "https://github.com/robzolkos/skill-rails-upgrade"
 date_added: "2026-02-27"
 ---
@@ -14,6 +14,8 @@ Use this skill when working with analyze rails apps and provide upgrade assessme
 # Rails Upgrade Analyzer
 
 Analyze the current Rails application and provide a comprehensive upgrade assessment with selective file merging.
+
+Assessment is read-only by default. Dependency changes, generated files, migrations and application startup require the requested implementation scope. Confirm the database/environment before running application commands; use a disposable development database and tested restore for migrations.
 
 ## Step 1: Verify Rails Application
 
@@ -231,7 +233,7 @@ Analyze Rails apps and provide upgrade assessments
 Use this skill when working with analyze rails apps and provide upgrade assessments.
 ## Step 9: Selective File Update (replaces `rails app:update`)
 
-**IMPORTANT:** Do NOT run `rails app:update` as it overwrites files without considering local customizations. Instead, follow this selective merge process:
+Prefer a reviewed selective merge when local customization matters. `rails app:update` may prompt about conflicts, but it is not a substitute for reviewing generated diffs. Never assume generated defaults are safe to overwrite.
 
 ### 9.1: Detect Local Customizations
 
@@ -241,8 +243,9 @@ Before any upgrade, identify files with local customizations:
 # Check for uncommitted changes
 git status
 
-# List config files that differ from a fresh Rails app
-# These are the files we need to be careful with
+# This lists only uncommitted differences, NOT all customization from Rails defaults.
+# Compare the complete tracked files against a clean app generated with the
+# exact current Rails version/options before declaring a file uncustomized.
 git diff HEAD --name-only -- config/ bin/ public/
 ```
 
@@ -304,7 +307,8 @@ Create them directly using the content from railsdiff or by extracting from a fr
 
 ```bash
 # Generate a temporary fresh Rails app to extract new files
-cd /tmp && rails new rails_template --skip-git --skip-bundle
+# Use a fresh unique temporary directory and the exact target Rails version.
+# Inspect generator side effects/options before running; do not reuse /tmp paths.
 # Then copy needed files
 ```
 
@@ -406,7 +410,7 @@ Use this skill when working with analyze rails apps and provide upgrade assessme
 2. **Preserve user intent** - Local customizations exist for a reason
 3. **Minimal changes** - Only add what's necessary for the new Rails version
 4. **Transparency** - Show the user exactly what will change before doing it
-5. **Reversibility** - User should be able to `git checkout` to restore if needed
+5. **Recovery** - Preserve source changes separately; Git cannot undo database migrations, remote actions or generated data. Use a tested database recovery plan.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

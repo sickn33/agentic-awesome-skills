@@ -13,7 +13,7 @@ compatibility: Requires explicit written authorization for a target scope plus t
   relevant testing tools for this technique. Docs-only; helper scripts and commands
   not bundled.
 sources: github, hackerone_public, github_security_lab, projectdiscovery_research
-report_count: 12
+report_count: 12  # imported provenance, not independently verified
 ---
 > **⚠️ AUTHORIZED USE ONLY**
 > This skill is for educational purposes or authorized security assessments only.
@@ -28,6 +28,10 @@ report_count: 12
 > 4. Wait for explicit confirmation in the current conversation.
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
+
+## Scope and evidence boundaries
+
+Test only explicitly scoped portals and owned test accounts; discovering sibling hosts or legacy endpoints does not authorize them. Reachability, method lists, status differences or ten uniform failures do not prove bypass, unlimited guessing, absent MFA or account takeover. No credential stuffing, breached credentials, mass multicall guessing or real-user data extraction. Use minimal canary data and stop at the agreed proof boundary. Historical report counts, payouts and case details below are unverified imported claims; validate the primary disclosure and affected configuration before relying on them.
 
 ## Crown Jewel Targets
 
@@ -126,7 +130,7 @@ passport.js authenticate
 
 6. **Fuzz auth parameters**
    - Null/empty passwords, `password[]=array`, SQL in username field
-   - Try `admin`/`admin`, `test`/`test` on staging subdomains
+   - Use only assigned synthetic accounts and pre-approved credentials; no default-password guessing against arbitrary accounts
    - Modify `role`, `is_admin`, `user_type` in JWTs (none algorithm, weak secret)
 
 7. **Check redirect and state parameters**
@@ -134,9 +138,9 @@ passport.js authenticate
    - Can you change `redirect_uri` to an open redirect target?
    - Does the `RelayState` in SAML get validated?
 
-8. **Verify impact by escalating privileges**
-   - Don't stop at login — prove you can access admin functions, other users' data, or sensitive configuration
-   - Screenshot the highest-privilege action you can perform
+8. **Verify minimal authorized impact**
+   - Check only agreed read-only canary resources under owned accounts.
+   - Do not change privileges, retrieve real users’ data or maximize impact without a separate approved test plan.
 
 ---
 
@@ -171,9 +175,9 @@ When a target has a custom, branded login UI (e.g. `customlogin.aspx`, `/auth/si
 1. Identify the tech stack from headers + paths (use `hunt-misc` Attack Surface Signals).
 2. Find the row above that matches.
 3. Probe the legacy endpoint anonymously to confirm it's reachable and not 403/404.
-4. Test with synthetic credentials to confirm it accepts native credential format and returns differential responses (success vs failure).
-5. Verify there is no rate limit, no lockout, no CAPTCHA — burst 10 requests at the same user, confirm uniform timing.
-6. Report as **Critical / High** depending on chain to ATO: an anonymous + unlimited credential brute-force endpoint is consistently Critical on bug-bounty programs.
+4. Use two owned test accounts and pre-agreed attempts to verify expected authentication/authorization controls, if authorized.
+5. Observe controls within the agreed limit; uniform timing from a finite burst cannot establish unlimited guessing or absent account lockout.
+6. Report only measured behavior and demonstrated impact; severity/bounty eligibility follows the program, not a universal Critical rule.
 
 **Lesson from a authorized engagement:** A an enterprise dealer portal on SharePoint 2013 had a custom branded `customlogin.aspx`. The hunt-auth-bypass skill was loaded but the matrix above did not exist in this document — and the WordPress XMLRPC pattern was not connected to the SharePoint equivalent. `/_vti_bin/Authentication.asmx` was reachable anonymously, accepted unlimited credential attempts with no rate limit and no lockout, and was the highest-impact finding in the engagement. Walking this matrix on the first pass would have surfaced it immediately.
 
@@ -181,7 +185,7 @@ When a target has a custom, branded login UI (e.g. `customlogin.aspx`, `/auth/si
 
 ## Payload & Detection Patterns
 
-**XMLRPC auth probe (bypasses SSO):**
+**XMLRPC auth probe (reachability is not SSO bypass):**
 ```bash
 curl -s -X POST https://target.com/xmlrpc.php \
   -H "Content-Type: text/xml" \
@@ -198,8 +202,8 @@ curl -s -X POST https://target.com/xmlrpc.php \
 <methodCall>
   <methodName>wp.getUsersBlogs</methodName>
   <params>
-    <param><value><string>admin</string></value></param>
-    <param><value><string>password</string></value></param>
+    <param><value><string>APPROVED_TEST_USER</string></value></param>
+    <param><value><string>APPROVED_TEST_PASSWORD</string></value></param>
   </params>
 </methodCall>'
 ```
@@ -248,8 +252,8 @@ curl -s https://admin.target.com/dashboard \
 ```python
 import base64, json
 
-header = base64.b64encode(json.dumps({"alg":"none","typ":"JWT"}).encode()).decode().rstrip('=')
-payload = base64.b64encode(json.dumps({"user_id":1,"role":"admin","email":"victim@company.com"}).encode()).decode().rstrip('=')
+header = base64.urlsafe_b64encode(json.dumps({"alg":"none","typ":"JWT"}).encode()).decode().rstrip('=')
+payload = base64.urlsafe_b64encode(json.dumps({"user_id":1,"role":"admin","email":"victim@company.com"}).encode()).decode().rstrip('=')
 token = f"{header}.{payload}."
 print(token)
 ```
@@ -291,13 +295,13 @@ subfinder -d target.com | grep -E "(admin|partner|internal|sso|auth|login)"
 | SSO enforced on login page | Probe alternate entry points: XMLRPC, REST API, mobile API, legacy endpoints |
 | SAML signature validation | XML comment injection, namespace wrapping, signature wrapping (XSW), remove signature entirely |
 | IP allowlisting on admin portal | Use partner portal token if it shares auth backend |
-| Rate limiting on login | XMLRPC allows credential stuffing via `system.multicall` — batches hundreds of auth attempts in one request |
-| CSRF token on login form | SAML flow is POST-based cross-origin by design; no CSRF token needed on `/saml/callback` |
+| Rate limiting on login | Verify actual WordPress/plugin version and controls; modern implementations can prevent repeated failed authentication within multicall. Do not mass-guess credentials. |
+| CSRF token on login form | SAML POST binding is intentionally cross-origin, but requires response/assertion validation, request correlation and replay/login-CSRF protection appropriate to the flow |
 | JWT signature validation | `alg: none`, key confusion (RS256 → HS256 with public key as secret), brute-force weak secrets |
 | Separate session stores per portal | Check if cookie domain is `.target.com` (wildcard) — cookie bleeds between subdomains |
 | MFA on primary login | If SAML SP doesn't enforce MFA at the assertion level and accepts pre-auth assertions, MFA can be skipped |
 
-**XMLRPC multicall for mass auth bypass:**
+**Historical XMLRPC multicall shape (bounded owned-account lab only):**
 ```xml
 <methodCall>
   <methodName>system.multicall</methodName>
@@ -305,11 +309,11 @@ subfinder -d target.com | grep -E "(admin|partner|internal|sso|auth|login)"
     <value><struct>
       <member><name>methodName</name><value><string>wp.getUsersBlogs</string></value></member>
       <member><name>params</name><value><array><data>
-        <value><string>admin</string></value>
+        <value><string>APPROVED_TEST_USER</string></value>
         <value><string>password1</string></value>
       </data></array></value></member>
     </struct></value>
-    <!-- repeat for each credential pair -->
+    <!-- Do not expand into mass credential attempts. -->
   </data></array></value></param></params>
 </methodCall>
 ```
@@ -346,7 +350,7 @@ An e-commerce platform's partner/reseller portal issued authentication tokens th
 
 ## Disclosed Report Citations (Backfill +8 — 2016-2025)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. Spans 4 SAML subclasses, 4 JWT subclasses, 1 legacy-protocol (XMLRPC), and 2 partner-portal cross-domain reuse patterns.
+The following imported disclosure references have not been independently verified in this review; check their original reports before reusing payload, affected-version, payout or severity claims. Spans 4 SAML subclasses, 4 JWT subclasses, 1 legacy-protocol (XMLRPC), and 2 partner-portal cross-domain reuse patterns.
 
 5. **GitHub Enterprise Server — SAML XSW via parser differential (CVE-2025-25291/25292)** ([H1 #2579939](https://hackerone.com/reports/2579939) · [Blog](https://github.blog/security/sign-in-as-anyone-bypassing-saml-sso-authentication-with-parser-differentials/))
     - Subclass: SAML signature stripping / XSW (parser-differential variant)

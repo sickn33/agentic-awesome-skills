@@ -7,8 +7,6 @@
 package main
 
 import (
-    "log"
-
     "github.com/playwright-community/playwright-go"
     "go.uber.org/zap"
 )
@@ -21,9 +19,12 @@ func main() {
     // 2. Start Playwright Driver
     pw, err := playwright.Run()
     if err != nil {
-        logger.Fatal("could not start playwright", zap.Error(err))
+        logger.Error("could not start playwright", zap.Error(err))
+        return
     }
     
+    defer pw.Stop()
+
     // 3. Launch Browser (Singleton)
     // Use Headless: false and SlowMo for Debugging
     browser, err := pw.Chromium.Launch(playwright.BrowserTypeLaunchOptions{
@@ -31,7 +32,8 @@ func main() {
         SlowMo:   playwright.Float(100), // Slow actions by 100ms for visibility
     })
     if err != nil {
-        logger.Fatal("could not launch browser", zap.Error(err))
+        logger.Error("could not launch browser", zap.Error(err))
+        return
     }
     defer browser.Close() // Graceful cleanup
 
@@ -41,12 +43,18 @@ func main() {
         Viewport: &playwright.Size{Width: 1920, Height: 1080},
     })
     if err != nil {
-        logger.Fatal("could not create context", zap.Error(err))
+        logger.Error("could not create context", zap.Error(err))
+        return
     }
     defer context.Close()
 
     // 5. Open Page
-    page, _ := context.NewPage()
+    page, err := context.NewPage()
+    if err != nil {
+        logger.Error("could not create page", zap.Error(err))
+        return
+    }
+    defer page.Close()
     
     // ... Implementation ...
     // Example: page.Goto("https://example.com")

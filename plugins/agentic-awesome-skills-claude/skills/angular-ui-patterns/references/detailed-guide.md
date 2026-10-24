@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples are fragments: import Angular core/forms/CDK/RxJS symbols and inject application store/service/toast/router dependencies before compiling. Child templates must declare every bound input and required title. @defer handles code loading, not the child's HTTP request/error lifecycle. Background refetch may retain data with a nonblocking refresh/error banner; a full error screen need not erase usable cached data. Use optimistic writes only when rollback/concurrency semantics are safe.
+
 ## Core Principles
 
 1. **Never show stale UI** - Loading states only when actually loading
@@ -23,11 +25,11 @@
 @Component({
   template: `
     @if (error()) {
-      <app-error-state [error]="error()" (retry)="load()" />
+      <app-error-state message="Unable to load items" [showRetry]="true" (retry)="load()" />
     } @else if (loading() && !items().length) {
       <app-skeleton-list />
     } @else if (!items().length) {
-      <app-empty-state message="No items found" />
+      <app-empty-state title="No items found" />
     } @else {
       <app-item-list [items]="items()" />
     }
@@ -39,6 +41,7 @@ export class ItemListComponent {
   items = this.store.items;
   loading = this.store.loading;
   error = this.store.error;
+  load() { return this.store.load(); } // ItemStore must implement load()
 }
 ```
 
@@ -93,7 +96,7 @@ Do we have data?
 } @empty {
 <app-empty-state
   icon="inbox"
-  message="No items yet"
+  title="No items yet"
   actionLabel="Create Item"
   (action)="create()"
 />
@@ -178,7 +181,7 @@ async create(data: CreateItemDto) {
       <img ngSrc="/assets/error-icon.svg" width="64" height="64" alt="" />
       <h3>{{ title() }}</h3>
       <p>{{ message() }}</p>
-      @if (retry.observed) {
+      @if (showRetry()) {
         <button (click)="retry.emit()" class="btn-primary">Try Again</button>
       }
     </div>
@@ -187,6 +190,7 @@ async create(data: CreateItemDto) {
 export class ErrorStateComponent {
   title = input("Something went wrong");
   message = input("An unexpected error occurred");
+  showRetry = input(false);
   retry = output<void>();
 }
 ```
@@ -234,9 +238,12 @@ export class SaveButtonComponent {
   saving = signal(false);
 
   async save() {
+    if (this.saving()) return;
     this.saving.set(true);
     try {
       await this.service.save();
+    } catch {
+      this.toast.error("Save failed. Please try again.");
     } finally {
       this.saving.set(false);
     }
@@ -368,7 +375,10 @@ export class UserFormComponent {
   }
 
   async onSubmit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid || this.submitting()) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
     this.submitting.set(true);
     try {

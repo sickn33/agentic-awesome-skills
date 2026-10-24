@@ -62,7 +62,7 @@ Novidade real raramente vem de invencao total. Vem de:
 - Dashboard padrao com 12 cards sem hierarquia.
 - Copiar tendencia por copiar (glassmorphism, neumorfism, whatever esta "na moda").
 - Entregar sem estados (loading, error, empty, success — todos precisam existir).
-- Ignorar tipografia (tipografia e 80% da personalidade visual).
+- Ignorar tipografia (tipografia influencia a personalidade visual; nao ha percentual universal).
 - Animacoes decorativas sem proposito funcional.
 - Mobile-last (projete mobile-first sempre, desktop e expansao).
 
@@ -247,7 +247,7 @@ ACESSIBILIDADE
 
 ```
 src/
-├── app/                    # Next.js App Router ou Vite pages
+├── app/                    # Exemplo Next.js App Router; Vite exige roteador/configuracao proprios
 │   ├── layout.tsx
 │   ├── page.tsx
 │   └── [rota]/page.tsx
@@ -284,7 +284,7 @@ src/
 7. Error boundaries nos componentes criticos
 8. Loading states com Suspense + skeletons
 9. Mobile-first breakpoints (sm: 640, md: 768, lg: 1024, xl: 1280)
-10. `aria-*` e `role` em todos os componentes interativos
+10. Prefira elementos HTML nativos; adicione ARIA apenas quando necessario para nome, estado e semantica corretos
 
 
 ## Etapa E — Polimento "Apple-Level"
@@ -318,7 +318,7 @@ ANIMACOES
 PERFORMANCE
 [ ] LCP < 2.5s (Largest Contentful Paint)
 [ ] CLS < 0.1 (Cumulative Layout Shift — sem pulos de layout)
-[ ] TTI < 3.8s (Time to Interactive)
+[ ] INP <= 200ms; avaliar LCP, INP e CLS em dados de campo, sem prometer resultado a partir do checklist
 [ ] Imagens com width/height declarados (evita CLS)
 [ ] Fonts com font-display: swap
 
@@ -332,7 +332,7 @@ ACESSIBILIDADE
 [ ] Contraste WCAG AA (4.5:1 texto normal, 3:1 texto grande)
 [ ] Toda acao com teclado (Tab, Enter, Escape, Arrow keys)
 [ ] aria-label em icones sem texto
-[ ] Imagens com alt descritivo
+[ ] Imagens informativas com alt descritivo; decorativas com alt vazio
 [ ] Forms com label associado (nao placeholder como unico label)
 [ ] Role correto em componentes customizados (combobox, dialog, etc.)
 
@@ -340,12 +340,13 @@ MOBILE
 [ ] Touch targets minimo 44x44px
 [ ] Sem hover states como unica indicacao de estado
 [ ] Scroll suave (overscroll-behavior)
-[ ] Safe areas (env(safe-area-inset-*) para notch/home i
+[ ] Safe areas (env(safe-area-inset-*) para notch/home indicator)
+```
 
 ## 4.1 Stack Base
 
 ```
-Framework    : Next.js 15 (App Router) | Vite (SPA simples)
+Framework    : versao suportada de Next.js (App Router) | Vite (SPA simples); verificar compatibilidade do projeto
 Language     : TypeScript strict
 Styling      : Tailwind CSS 4 + CSS variables para tokens
 Components   : shadcn/ui como base OU componentes proprios (ver decisao abaixo)
@@ -361,7 +362,7 @@ Fonts        : next/font (Next.js) | Google Fonts via CSS (Vite)
 
 **Use shadcn/ui como base quando:**
 - Velocidade e prioridade (MVP, prototipo, produto interno)
-- Acessibilidade ja resolvida e prioridade critica
+- Componentes acessiveis como ponto de partida; testar a integracao, foco, teclado e contraste
 - Time vai manter o codigo apos entrega
 - Identidade pode ser aplicada via "skin" (cores, radius, fonts customizadas)
 
@@ -379,7 +380,8 @@ Crie proprios para os componentes que carregam a identidade (Card, Navigation, F
 ```css
 /* globals.css */
 :root {
-  /* Brand */
+  /* Brand: hue de exemplo, substituir pela identidade aprovada */
+  --brand-hue: 260;
   --color-brand-50: oklch(97% 0.02 var(--brand-hue));
   --color-brand-500: oklch(55% 0.18 var(--brand-hue));
   --color-brand-900: oklch(25% 0.12 var(--brand-hue));
@@ -505,7 +507,7 @@ Para qualquer entrega substantiva, use esta estrutura:
 **Na interacao:**
 - Animacoes respondem a intencao (botao de deletar e mais lento que de confirmar)
 - Loading nao paralisa — usuario pode navegar enquanto carrega
-- Erros sao especificos ("Email ja cadastrado" > "Erro de validacao")
+- Erros sao acionaveis sem revelar existencia de contas em fluxos publicos de login/recuperacao
 - Sucesso e breve mas claro — nao fica na tela por 10 segundos
 
 ## 7.2 Anti-Patterns Que Este Agente Nunca Produz
@@ -529,8 +531,8 @@ Para qualquer entrega substantiva, use esta estrutura:
 
 ```
 ✅ Skeleton screens em vez de spinners
-✅ Optimistic UI em acoes previsivelmente bem-sucedidas
-✅ Undo toast em vez de confirmacao de delecao (mais elegante)
+✅ Optimistic UI apenas com reconciliacao de falhas e rollback; nao simular sucesso de pagamentos ou permissoes
+✅ Undo apenas quando a acao e realmente reversivel; confirmar exclusoes irreversiveis ou de alto impacto
 ✅ Progressive disclosure (mostrar mais conforme o usuario precisa)
 ✅ Inline validation em forms (nao so no submit)
 ✅ Placeholder content em zero-states (ajuda o usuario a entender o que vera)
@@ -615,7 +617,7 @@ Radius: 6-10px (contido, profissional)
 
 6. **Dark mode sempre planejado.** Mesmo se nao implementado, tokens devem suportar.
 
-7. **Performance nao e otimizacao tardia.** Image loading lazy, fonts com display:swap,
+7. **Performance nao e otimizacao tardia.** Lazy loading para imagens fora da viewport (nao a imagem LCP), fonts com display:swap,
    code splitting por rota — sao defaults, nao bonus.
 
 8. **Acessibilidade nao e extra.** E parte do codigo base. Focus, aria, contraste — padrao.

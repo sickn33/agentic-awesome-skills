@@ -122,6 +122,7 @@ class ObservableAtlasMigration {
 ```python
 import asyncio
 import json
+import requests
 from kafka import KafkaConsumer, KafkaProducer
 from prometheus_client import Counter, Histogram, Gauge
 from datetime import datetime
@@ -155,6 +156,7 @@ class CDCObservabilityManager:
             'database.changes',
             bootstrap_servers=self.config['kafka_brokers'],
             group_id='migration-consumer',
+            enable_auto_commit=False,
             value_deserializer=lambda m: json.loads(m.decode('utf-8'))
         )
 
@@ -179,6 +181,7 @@ class CDCObservabilityManager:
                 event.data,
                 event.timestamp
             )
+            self.consumer.commit() # only after durable idempotent target application
 
     async def setup_debezium_connector(self, source_config):
         connector_config = {
@@ -202,13 +205,15 @@ class CDCObservabilityManager:
 ### 3. Enterprise Monitoring and Alerting
 
 ```python
-from prometheus_client import Counter, Gauge, Histogram, Summary
+from prometheus_client import Counter, Gauge, Histogram, Summary, CollectorRegistry
+import asyncio
+import requests
 import numpy as np
 
 class EnterpriseMigrationMonitor:
     def __init__(self, config):
         self.config = config
-        self.registry = prometheus.CollectorRegistry()
+        self.registry = CollectorRegistry()
         self.metrics = self.setup_metrics()
         self.alerting = AlertingSystem(config.get('alerts', {}))
 
@@ -235,14 +240,14 @@ class EnterpriseMigrationMonitor:
             )
         }
 
-    async def track_migration_progress(self, migration_id):
+    async def track_migration_progress(self, migration_id, migration):
         while migration.status == 'running':
             stats = await self.calculate_progress_stats(migration)
 
             self.metrics['rows_migrated'].labels(
                 migration_id=migration_id,
                 table_name=migration.table
-            ).inc(stats.rows_processed)
+            ).inc(stats.rows_processed_delta) # increment only the new rows since the last sample
 
             anomalies = await self.detect_anomalies(migration_id, stats)
             if anomalies:
@@ -410,7 +415,7 @@ jobs:
 7. **Replication Lag Tracking**: Source-to-target lag monitoring
 8. **Health Check Systems**: Continuous pipeline monitoring
 
-Focus on real-time visibility, proactive alerting, and comprehensive observability for zero-downtime migrations.
+Focus on real-time visibility, proactive alerting, and comprehensive observability to support migration decisions; observability does not guarantee zero downtime.
 
 ## Cross-Plugin Integration
 
@@ -423,3 +428,5 @@ This plugin integrates with:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+These are incomplete application sketches with migrations, parsers, exporters and alert adapters omitted; CI scripts are not bundled. MongoDB withTransaction can retry its callback: external counters/logs inside it count attempts, not committed rows, and irreversible effects require an outbox/idempotency. Kafka manual commits after target apply give at-least-once behavior, not exactly-once; handle tombstones, snapshots, ordering and durable deduplication. Synchronous Kafka iteration/requests block async loops; use supported async clients or worker threads, timeouts and status checks. Debezium needs version-specific topic prefix, credentials, replication slot/publication and retention settings. Dashboard error counters must actually be emitted; rate is errors/second, not a fraction without a denominator. Configure bounded labels, protected metric endpoints and redacted logs. Production migrations, connector provisioning and alert messages need authorized targets; CI alone does not grant deployment permission.

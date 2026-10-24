@@ -27,6 +27,15 @@ Master C#/.NET patterns for building production-grade APIs, MCP servers, and ent
 - You only need frontend or client guidance
 - The task is unrelated to backend architecture
 
+## Template boundaries
+
+Examples target .NET 8-era APIs and SQL Server; package/provider versions must be
+pinned and compiled in the destination application. Assets are partial sketches,
+not a standalone project: supply interfaces, DTO namespaces, options and schema.
+Use one shared domain Product type when combining them. Authorization/tenant
+filters precede reads, writes and cache access; the single-tenant sample keys are
+not suitable for multi-tenant data. No migration or production write is implied.
+
 ## Instructions
 
 - Define architecture boundaries, modules, and layering.

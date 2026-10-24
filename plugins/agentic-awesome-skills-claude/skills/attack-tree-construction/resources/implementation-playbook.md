@@ -107,7 +107,7 @@ class AttackNode:
             return self.attributes.difficulty.value
 
         if not self.children:
-            return 0
+            raise ValueError("Non-leaf goal has no supporting children")
 
         child_difficulties = [c.calculate_path_difficulty() for c in self.children]
 
@@ -122,7 +122,7 @@ class AttackNode:
             return self.attributes.cost.value
 
         if not self.children:
-            return 0
+            raise ValueError("Non-leaf goal has no supporting children")
 
         child_costs = [c.calculate_path_cost() for c in self.children]
 
@@ -143,7 +143,10 @@ class AttackNode:
                 "cost": self.attributes.cost.name,
                 "detection_risk": self.attributes.detection_risk.name,
                 "time_hours": self.attributes.time_hours,
+                "requires_insider": self.attributes.requires_insider,
+                "requires_physical": self.attributes.requires_physical,
             },
+            "cve_refs": self.cve_refs,
             "mitigations": self.mitigations,
             "children": [c.to_dict() for c in self.children]
         }
@@ -203,12 +206,12 @@ class AttackTree:
     def _path_score(self, path: List[AttackNode], metric: str) -> float:
         """Calculate score for a path."""
         if metric == "difficulty":
-            return sum(n.attributes.difficulty.value for n in path if n.node_type == NodeType.LEAF)
+            return max((n.attributes.difficulty.value for n in path if n.node_type == NodeType.LEAF), default=0)
         elif metric == "cost":
             return sum(n.attributes.cost.value for n in path if n.node_type == NodeType.LEAF)
         elif metric == "detection":
-            return sum(n.attributes.detection_risk.value for n in path if n.node_type == NodeType.LEAF)
-        return 0
+            return max((n.attributes.detection_risk.value for n in path if n.node_type == NodeType.LEAF), default=0)
+        raise ValueError("Unknown path metric")
 
     def get_all_leaf_attacks(self) -> List[AttackNode]:
         """Get all leaf attack nodes."""
@@ -416,6 +419,7 @@ class MermaidExporter:
 
     def export(self) -> str:
         """Export tree to Mermaid flowchart."""
+        self._node_count = 0
         self._lines = ["flowchart TD"]
         self._export_node(self.tree.root, None)
         return "\n".join(self._lines)
@@ -427,13 +431,13 @@ class MermaidExporter:
 
         # Node shape based on type
         if node.node_type == NodeType.OR:
-            shape = f"{node_id}(({node.name}))"
+            shape = f'{node_id}(("OR: {node.name}"))'
         elif node.node_type == NodeType.AND:
-            shape = f"{node_id}[{node.name}]"
+            shape = f'{node_id}["AND: {node.name}"]'
         else:  # LEAF
             # Color based on difficulty
             style = self._get_leaf_style(node)
-            shape = f"{node_id}[/{node.name}/]"
+            shape = f'{node_id}["{node.name}"]'
             self._lines.append(f"    style {node_id} {style}")
 
         self._lines.append(f"    {shape}")
@@ -456,7 +460,7 @@ class MermaidExporter:
             Difficulty.HIGH: "fill:#6bcb77",
             Difficulty.EXPERT: "fill:#4d96ff",  # Blue - hard attack
         }
-        color = colors.get(node.attributes.difficulty, "fill:#gray")
+        color = colors.get(node.attributes.difficulty, "fill:#808080")
         return color
 
 
@@ -570,7 +574,7 @@ class AttackPathAnalyzer:
         """Calculate metrics for a specific path."""
         leaves = [n for n in path if n.node_type == NodeType.LEAF]
 
-        total_difficulty = sum(n.attributes.difficulty.value for n in leaves)
+        total_difficulty = max((n.attributes.difficulty.value for n in leaves), default=0)
         total_cost = sum(n.attributes.cost.value for n in leaves)
         total_time = sum(n.attributes.time_hours for n in leaves)
         max_detection = max((n.attributes.detection_risk.value for n in leaves), default=0)
@@ -592,7 +596,11 @@ class AttackPathAnalyzer:
         node_counts: Dict[str, Tuple[AttackNode, int]] = {}
 
         for path in paths:
+            seen_ids = set()
             for node in path:
+                if node.id in seen_ids:
+                    continue
+                seen_ids.add(node.id)
                 if node.id not in node_counts:
                     node_counts[node.id] = (node, 0)
                 node_counts[node.id] = (node, node_counts[node.id][1] + 1)

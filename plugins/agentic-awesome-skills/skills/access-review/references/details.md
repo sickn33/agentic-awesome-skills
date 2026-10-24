@@ -4,70 +4,15 @@
 
 ## Certification Workflow Automation
 
-```yaml
-# GitHub Actions - Automated access review reminder and tracking
-name: Quarterly Access Review
-on:
-  schedule:
-    - cron: '0 9 1 1,4,7,10 *'  # First day of each quarter
-  workflow_dispatch:
-
-jobs:
-  generate-review:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Generate access reports
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AUDIT_AWS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AUDIT_AWS_SECRET }}
-          OKTA_DOMAIN: ${{ secrets.OKTA_DOMAIN }}
-          OKTA_API_TOKEN: ${{ secrets.OKTA_API_TOKEN }}
-        run: |
-          bash scripts/aws-iam-review.sh
-          bash scripts/github-access-review.sh
-          bash scripts/okta-access-review.sh
-
-      - name: Create review issue
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          QUARTER="Q$(( ($(date +%-m) - 1) / 3 + 1 )) $(date +%Y)"
-          MFA_MISSING=$(wc -l < access-review/$(date +%Y-%m)/users-without-mfa.txt)
-          INACTIVE=$(wc -l < access-review/$(date +%Y-%m)/inactive-users.csv)
-          STALE_KEYS=$(wc -l < access-review/$(date +%Y-%m)/stale-access-keys.csv)
-
-          gh issue create \
-            --title "Access Review - $QUARTER" \
-            --label "compliance,access-review" \
-            --body "## Quarterly Access Review - $QUARTER
-
-          ### Summary
-          - Users without MFA: **$MFA_MISSING**
-          - Inactive users (90+ days): **$INACTIVE**
-          - Stale access keys: **$STALE_KEYS**
-
-          ### Required Actions
-          - [ ] Review and disable inactive users
-          - [ ] Enforce MFA for non-compliant users
-          - [ ] Rotate or deactivate stale access keys
-          - [ ] Review admin/privileged access assignments
-          - [ ] Review outside collaborators on GitHub
-          - [ ] Certify remaining access is appropriate
-          - [ ] Document exceptions with justification
-
-          ### Deadline
-          Complete within 30 days."
-
-      - name: Upload reports as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: access-review-reports
-          path: access-review/
-          retention-days: 365
-```
-
+Automation design (no bundled executable workflow): use pinned read-only tooling
+and workload identity, collect complete paginated inventory, then produce a private
+review package. The upstream scripts named in the historical workflow are not
+bundled. Creating issues/notifying managers needs an explicit recipient/repository
+mandate and must not publish personal access inventories in a public issue.
+Use a reviewed report body file and metadata-only aggregate counts; upload evidence
+only to an approved access-controlled store with an organization-approved retention
+policy. A 365-day Actions artifact retention may exceed account limits and is not
+a substitute for a durable compliance evidence archive.
 
 ## Access Review Checklist
 
@@ -101,7 +46,7 @@ access_review_checklist:
     - [ ] Non-response escalations documented
     - [ ] Remediation actions summarized
     - [ ] Exception register updated
-    - [ ] Evidence archived for audit (retained 3+ years)
+    - [ ] Evidence archived for audit (retained according to approved legal/security policy)
     - [ ] Metrics compared to prior review cycle
 ```
 
@@ -112,10 +57,10 @@ access_review_checklist:
 - Integrate access review with HR systems to automatically flag accounts for departed employees
 - Use risk-based review frequency: privileged access quarterly, standard access semi-annually
 - Provide managers with clear context: show last login date, permissions, and role to inform decisions
-- Set firm deadlines with escalation for non-response (no certification = automatic revocation)
+- Set firm deadlines with escalation for non-response (non-response triggers owner escalation and a risk-approved decision, not blanket automatic revocation)
 - Detect and eliminate orphaned accounts from contractors, former employees, and decommissioned services
 - Review service accounts and API keys alongside human accounts to prevent credential sprawl
 - Document all exceptions with business justification, approver, and expiration date
 - Track review metrics over time: completion rates, revocation rates, time to remediate
-- Archive all access review evidence for a minimum of 3 years for audit purposes
+- Archive all access review evidence for the approved policy period with access controls and minimization
 

@@ -1,6 +1,7 @@
 ---
 title: "Segmented controls | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/segmented-controls
+---
 
 # Segmented controls
 

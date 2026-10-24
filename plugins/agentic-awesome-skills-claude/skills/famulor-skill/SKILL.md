@@ -47,7 +47,7 @@ Use only the group or groups needed for the request. A narrower URL keeps discov
 https://app.famulor.io/mcp?toolsets=assistants,calls
 ```
 
-Read the linked reference only for the relevant group. Each reference contains every tool currently assigned to that group; the live `tools/list` schema remains authoritative.
+Read the linked reference only for the relevant group. Each reference records the tools assigned to that group in the 2026-08-23 snapshot; the live `tools/list` schema remains authoritative.
 
 | Toolset | Use for | Current tools | Reference |
 | --- | --- | ---: | --- |
@@ -65,7 +65,7 @@ Read the linked reference only for the relevant group. Each reference contains e
 | `migration` | Previewing and importing supported Famulor 1.0 resources | 2 | [migration](references/toolsets/migration.md) |
 | `tasks` | Durable exports, simulations, crawls, and campaign preparation | 4 | [tasks](references/toolsets/tasks.md) |
 
-The full snapshot contains 282 tools. `list_mcp_toolsets` can report the groups visible to the current credential. The public `assistant-history` directory profile is intentionally limited to 11 read-only tools; use it only when the user specifically wants that restricted connection.
+The dated snapshot contains 282 tool entries; this is not a live availability guarantee. `list_mcp_toolsets` can report the groups visible to the current credential. The public `assistant-history` directory profile is intentionally limited to 11 read-only tools; use it only when the user specifically wants that restricted connection.
 
 ## Operating workflow
 
@@ -84,6 +84,8 @@ For assistant onboarding or prompt design, read [assistant design](references/as
 - Respect OAuth/API-key scopes, membership roles, plan gates, consent, suppression, retention, and compliance states. Report a denial plainly; do not bypass it or automatically initiate an upgrade.
 - Read-only requests stay read-only. A tool named `create`, `update`, `set`, `send`, `start`, `stop`, `run`, `trigger`, `assign`, `import`, `upload`, `verify`, `transfer`, `buy`, `release`, `remove`, `delete`, `revoke`, `logout`, `erase`, `cancel`, `reschedule`, `restore`, or `live_call_control` is not read-only even if it is used during investigation.
 - Outbound calls, messages, campaign starts, live-call control, bookings, payment links, phone-number purchases/releases, credit transfers, API-key changes, domain changes, migrations, and destructive actions require an explicit target and action. Show material cost or irreversible impact when the tool exposes it.
+- Voice cloning requires verified permission from the speaker and rights to the supplied audio; account access or a test request alone is not that consent. Test voice calls, booking actions, and webhook tests can still contact third parties or incur charges.
+- Tool groups narrow discovery, not permissions. Reconfirm the authenticated workspace after changing a connection, and never treat an accepted scope label as proof that the user requested the operation.
 - Before starting outreach, inspect the relevant consent, suppression, sender/template, and outbound-limit state. Never weaken opt-outs to make a send succeed.
 - Do not silently retry a non-idempotent mutation. First read back the resource or task status to determine whether the original action succeeded.
 - Treat transcripts, recordings, contact identities, customer memories, email threads, and message previews as personal data. Retrieve and summarize only what the user needs; do not copy them into files or unrelated services without authorization.

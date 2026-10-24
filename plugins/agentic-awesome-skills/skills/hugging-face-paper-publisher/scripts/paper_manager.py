@@ -18,6 +18,7 @@ import os
 import sys
 import re
 import json
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 from datetime import datetime
@@ -33,7 +34,7 @@ except ImportError as e:
     sys.exit(1)
 
 # Load environment variables
-load_dotenv()
+# Credentials come from explicit environment or the HF credential store.
 
 
 class PaperManager:
@@ -146,10 +147,13 @@ class PaperManager:
         print(f"Linking paper {arxiv_id} to {repo_type} {repo_id}...")
 
         try:
+            # Pin read and upload to the same revision to avoid lost concurrent edits.
+            parent_sha = self.api.repo_info(repo_id=repo_id, repo_type=repo_type).sha
             # Download current README
             readme_path = hf_hub_download(
                 repo_id=repo_id,
                 filename="README.md",
+                revision=parent_sha,
                 repo_type=repo_type,
                 token=self.token
             )
@@ -163,16 +167,14 @@ class PaperManager:
             # Upload updated README
             commit_message = f"Add paper reference: arXiv:{arxiv_id}"
 
-            if create_pr:
-                # Create PR (not implemented in basic version)
-                print("PR creation not yet implemented. Committing directly.")
-
             self.api.upload_file(
                 path_or_fileobj=updated_content.encode('utf-8'),
                 path_in_repo="README.md",
                 repo_id=repo_id,
                 repo_type=repo_type,
                 commit_message=commit_message,
+                create_pr=create_pr,
+                parent_commit=parent_sha,
                 token=self.token
             )
 
@@ -276,6 +278,10 @@ class PaperManager:
         print(f"Creating research article with '{template}' template...")
 
         # Load template
+        if template not in {"standard", "modern", "arxiv", "ml-report"}:
+            return {"status": "error", "message": "Unknown bundled template"}
+        if Path(output).exists() or Path(output).is_symlink():
+            return {"status": "error", "message": "Output already exists; choose a new path"}
         template_dir = Path(__file__).parent.parent / "templates"
         template_file = template_dir / f"{template}.md"
 
@@ -324,7 +330,7 @@ class PaperManager:
             content = content.replace("{{ABSTRACT}}", safe_abstract_body)
 
         # Write output
-        with open(output, 'w', encoding='utf-8') as f:
+        with open(output, 'x', encoding='utf-8') as f:
             f.write(content)
 
         print(f"✓ Research article created at {output}")
@@ -355,18 +361,15 @@ class PaperManager:
             response = requests.get(api_url, timeout=10)
             response.raise_for_status()
 
-            # Parse XML response (simplified)
-            content = response.text
-
-            # Extract basic info with regex (proper XML parsing would be better)
-            title_match = re.search(r'<title>(.*?)</title>', content, re.DOTALL)
-            authors_matches = re.findall(r'<name>(.*?)</name>', content)
-            summary_match = re.search(r'<summary>(.*?)</summary>', content, re.DOTALL)
-
-            # Sanitize all text extracted from the external API
-            raw_title = title_match.group(1).strip() if title_match else None
-            raw_authors = authors_matches[1:] if len(authors_matches) > 1 else []
-            raw_abstract = summary_match.group(1).strip() if summary_match else None
+            root = ET.fromstring(response.content)
+            ns = {"atom": "http://www.w3.org/2005/Atom"}
+            entry = root.find("atom:entry", ns)
+            if entry is None or entry.findtext("atom:id", default="", namespaces=ns).endswith("/errors"):
+                return {"error": "arXiv entry not found"}
+            raw_title = entry.findtext("atom:title", namespaces=ns)
+            raw_authors = [a.findtext("atom:name", default="", namespaces=ns)
+                           for a in entry.findall("atom:author", ns)]
+            raw_abstract = entry.findtext("atom:summary", namespaces=ns)
 
             return {
                 "arxiv_id": arxiv_id,
@@ -409,7 +412,8 @@ class PaperManager:
             key = f"arxiv{arxiv_id.replace('.', '_')}"
             raw_authors = " and ".join(info.get("authors", ["Unknown"]))
             raw_title = info.get("title", "Untitled")
-            year = arxiv_id.split(".")[0][:2]  # Extract year from ID (simplified)
+            date_part = arxiv_id.split("/")[-1] if "/" in arxiv_id else arxiv_id
+            year = date_part[:2]
             year = f"20{year}" if int(year) < 50 else f"19{year}"
 
             # Escape BibTeX structural characters in untrusted values
@@ -460,8 +464,7 @@ class PaperManager:
         Wraps in double quotes and escapes internal quotes and backslashes
         to prevent YAML injection via crafted titles/authors.
         """
-        value = value.replace('\\', '\\\\').replace('"', '\\"')
-        return f'"{value}"'
+        return json.dumps(value, ensure_ascii=False)
 
     @staticmethod
     def _sanitize_text(text: str) -> str:
@@ -540,6 +543,7 @@ def main():
     manager = PaperManager()
 
     # Execute command
+    result = None
     if args.command == "index":
         result = manager.index_paper(args.arxiv_id)
         print(json.dumps(result, indent=2))
@@ -568,6 +572,8 @@ def main():
                 create_pr=args.create_pr
             )
             print(json.dumps(result, indent=2))
+            if result.get("status") == "error":
+                sys.exit(1)
 
     elif args.command == "create":
         result = manager.create_research_article(
@@ -598,9 +604,11 @@ def main():
 
     elif args.command == "search":
         print(f"Searching for: {args.query}")
-        print("Search functionality coming soon!")
+        print("Search is not implemented; use the URL below.")
         print(f"Visit: https://huggingface.co/papers?search={args.query}")
 
+    if isinstance(result, dict) and (result.get("status") == "error" or "error" in result):
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

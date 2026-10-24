@@ -26,8 +26,9 @@ want to delete files from destination, use the
 rclone sync --interactive SOURCE remote:DESTINATION
 ```
 
-Files in the destination won't be deleted if there were any errors at any
-point. Duplicate objects (files with the same name, on those providers that
+By default, errors prevent later deletions, but this is not transactional:
+earlier changes are not rolled back, and `--ignore-errors` allows deletions
+despite errors. Duplicate objects (files with the same name, on those providers that
 support it) are not yet handled. Files that are excluded won't be deleted
 unless `--delete-excluded` is used. Symlinks won't be transferred or
 deleted from local file systems unless `--links` is used.

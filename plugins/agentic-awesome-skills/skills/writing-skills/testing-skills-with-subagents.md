@@ -1,5 +1,7 @@
 # Testing Skills With Subagents
 
+Scope: examples are authoring/test fixtures, not live instructions. Follow the user, host, and repository instruction hierarchy. Run pressure tests only with authorized isolated fixtures; never delete user work or weaken safety/approval boundaries to enforce a skill. Preserve existing work and adapt the validation plan when a baseline already passes. Sample compliance does not prove universal reliability.
+
 **Load this reference when:** creating or editing skills, before deployment, to verify they work under pressure and resist rationalization.
 
 ## Overview
@@ -12,7 +14,7 @@ You run scenarios without the skill (RED - watch agent fail), write skill addres
 
 **REQUIRED BACKGROUND:** You MUST understand superpowers:test-driven-development before using this skill. That skill defines the fundamental RED-GREEN-REFACTOR cycle. This skill provides skill-specific test formats (pressure scenarios, rationalization tables).
 
-**Complete worked example:** See examples/CLAUDE_MD_TESTING.md for a full test campaign testing CLAUDE.md documentation variants.
+The original campaign referenced examples/CLAUDE_MD_TESTING.md, which is not bundled here; use the self-contained scenarios below.
 
 ## When to Use
 
@@ -23,7 +25,7 @@ Test skills that:
 - Contradict immediate goals (speed over quality)
 
 Don't test:
-- Pure reference skills (API docs, syntax guides)
+- Pure reference skills need retrieval, factual correctness, and application tests instead of discipline pressure tests
 - Skills without rules to violate
 - Skills agents have no incentive to bypass
 
@@ -380,5 +382,5 @@ From applying TDD to TDD skill itself (2025-10-03):
 - 6 RED-GREEN-REFACTOR iterations to bulletproof
 - Baseline testing revealed 10+ unique rationalizations
 - Each REFACTOR closed specific loopholes
-- Final VERIFY GREEN: 100% compliance under maximum pressure
+- Final VERIFY GREEN: all sampled scenarios passed; record model, prompt, sample size and remaining limits
 - Same process works for any discipline-enforcing skill

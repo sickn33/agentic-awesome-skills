@@ -51,7 +51,7 @@ Sync:        Write DB → CDC (Debezium) → Message Queue → Read DB updater
 - ❌ Eventual consistency between write and read models
 - ❌ Increased complexity; two models to maintain
 
-**Real-world users:** Amazon (order service), LinkedIn (feed)
+**Evidence:** Named-company examples require a primary architecture source; none is established by this reference.
 
 ---
 
@@ -60,7 +60,7 @@ Sync:        Write DB → CDC (Debezium) → Message Queue → Read DB updater
 **What it is:** Store state as a sequence of immutable events rather than current state. Rebuild current state by replaying events.
 
 **When to use:**
-- Full audit trail is a regulatory requirement (fintech, healthcare)
+- Domain replay/history is required and simpler audit logs do not meet the use case
 - Need to replay history for debugging or analytics
 - Complex domain with many state transitions
 - Need to derive multiple read projections from same data
@@ -73,7 +73,7 @@ Projections: consumers build read models from events
 ```
 
 **Trade-offs:**
-- ✅ Complete audit history; perfect for compliance
+- ✅ Replayable domain history when event integrity, retention and schema evolution are designed; not automatic regulatory compliance
 - ✅ Replay and time-travel debugging
 - ❌ Querying current state requires projection maintenance
 - ❌ Event schema evolution is hard
@@ -115,7 +115,7 @@ ShippingService fails →
 ```
 
 **Trade-offs:**
-- ✅ No distributed locking; high availability
+- ✅ Local transactions avoid cross-service locking; workflow availability and compensation failures still need handling
 - ✅ Scales well across services
 - ❌ Hard to debug; distributed trace required
 - ❌ Compensating transactions are complex to implement correctly
@@ -197,7 +197,7 @@ Phase 5: Monolith is empty; decommission
 - Need to ship new features during migration
 
 **Trade-offs:**
-- ✅ Zero downtime migration
+- ✅ Incremental migration can reduce downtime; verify cutover, data compatibility and rollback
 - ✅ Incremental risk
 - ❌ Dual maintenance burden during migration (monolith + new services)
 - ❌ Proxy adds latency; must be managed carefully
@@ -225,7 +225,8 @@ Phase 5: Monolith is empty; decommission
   INSERT INTO outbox (event_type, payload) VALUES ('PaymentProcessed', {...});
   COMMIT;
   // Relay process reads outbox and publishes to Kafka
-  // At-least-once delivery guaranteed; make consumers idempotent
+  // At-least-once only with durable outbox, retrying relay and acknowledged
+  // broker writes; make consumers idempotent and monitor poison/backlog records
 ```
 
 **Relay options:** Debezium (CDC), polling relay, transaction log tailing
@@ -237,11 +238,11 @@ Phase 5: Monolith is empty; decommission
 **What it is:** A hashing scheme where adding or removing nodes requires only K/N keys to be remapped (K = keys, N = nodes), instead of remapping all keys.
 
 **When to use:**
-- Distributing cache keys across Redis cluster nodes
+- Designing a custom hash-ring cache/router; Redis Cluster itself uses 16,384 hash slots, not this ring formula
 - Routing requests to servers in a distributed system
 - Partitioning data across database nodes
 
-**Virtual nodes:** Assign multiple positions per physical node on the hash ring to ensure even distribution even with few nodes.
+**Virtual nodes:** Multiple positions can improve statistical balance; they do not guarantee uniform load under hot keys or skewed object sizes.
 
 ---
 
@@ -265,6 +266,8 @@ Phase 5: Monolith is empty; decommission
 ## 10. Leader Election
 
 **What it is:** In a distributed system, elect a single node to perform a privileged task (e.g., writing to DB, sending scheduled jobs, coordinating work).
+
+An elected leader does not by itself prevent an expired/partitioned leader from writing. Use fencing tokens checked by the resource, idempotent jobs and durable progress; election is not exactly-once execution.
 
 **Algorithms:**
 - **Raft:** Used by etcd, CockroachDB, Consul. Practical and well-understood.
@@ -317,7 +320,7 @@ Cache is always populated on miss. Simple for clients. Risk: cold start.
 ```
 Client → Cache → Cache writes to DB synchronously → Confirms
 ```
-Strong consistency. Higher write latency. Good for read-heavy with consistency need.
+Synchronous backing-store persistence increases write latency; consistency also requires invalidation/versioning for all writers, read paths and failures.
 
 **Write-Behind (Write-Back):**
 ```

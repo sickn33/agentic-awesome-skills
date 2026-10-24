@@ -216,62 +216,21 @@ environment variable.
 
 ### Service Account Authentication with Access Tokens
 
-Another option for service account authentication is to use access tokens via
-*gcloud impersonate-service-account*. Access tokens protect security by avoiding
-the use of the JSON key file, which can be breached. They also bypass oauth
-login flow, which is simpler on remote VMs that lack a web browser.
+Short-lived credentials can avoid distributing a long-lived service-account key.
+They still grant bearer access until expiry and must be protected.
 
-If you already have a working service account, skip to step 3.
+Grant the service account a suitable object role on the target bucket using
+[bucket IAM](https://cloud.google.com/storage/docs/access-control/using-iam-permissions).
+A storage role assigned on the service-account resource itself does not grant
+access to bucket objects. Separately authorize the caller to impersonate the
+service account following the
+[impersonation guide](https://cloud.google.com/iam/docs/service-account-impersonation).
 
-#### 1. Create a service account using
-
-```console
-gcloud iam service-accounts create gcs-read-only
-```
-
-You can re-use an existing service account as well (like the one created above)
-
-#### 2. Attach a Viewer (read-only) or User (read-write) role to the service account
-
-```console
-$ PROJECT_ID=my-project
-$ gcloud --verbose iam service-accounts add-iam-policy-binding \
-   gcs-read-only@${PROJECT_ID}.iam.gserviceaccount.com  \
-   --member=serviceAccount:gcs-read-only@${PROJECT_ID}.iam.gserviceaccount.com \
-   --role=roles/storage.objectViewer
-```
-
-Use the Google Cloud console to identify a limited role. Some relevant
-pre-defined roles:
-
-- *roles/storage.objectUser* -- read-write access but no admin privileges
-- *roles/storage.objectViewer* -- read-only access to objects
-- *roles/storage.admin*  -- create buckets & administrative roles
-
-#### 3. Get a temporary access key for the service account
-
-```console
-$ gcloud auth application-default print-access-token  \
-   --impersonate-service-account \
-      gcs-read-only@${PROJECT_ID}.iam.gserviceaccount.com
-
-ya29.c.c0ASRK0GbAFEewXD [truncated]
-```
-
-#### 4. Update `access_token` setting
-
-hit `CTRL-C` when you see *waiting for code*.  This will save the config without
-doing oauth flow
-
-```console
-rclone config update ${REMOTE_NAME} access_token ya29.c.c0Axxxx
-```
-
-#### 5. Run rclone as usual
-
-```console
-rclone ls dev-gcs:${MY_BUCKET}/
-```
+Supply a short-lived token through a protected `RCLONE_GCS_ACCESS_TOKEN`
+environment value rather than pasting it into `rclone config update` arguments,
+logs, or chat. The token expires and must be refreshed by the credential provider;
+a manually supplied token is not automatically renewable. Prefer supported
+Application Default Credentials or workload identity for unattended operation.
 
 ### More Info on Service Accounts
 
@@ -319,7 +278,7 @@ flag. Google Cloud Storage supports the headers as described in the
 - X-Goog-Storage-Class
 - X-Goog-Meta-
 
-Eg `--header-upload "Content-Type text/potato"`
+Eg `--header-upload "Content-Type: text/potato"`
 
 Note that the last of these is for setting custom metadata in the form
 `--header-upload "x-goog-meta-key: value"`

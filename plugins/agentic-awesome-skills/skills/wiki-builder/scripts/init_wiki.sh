@@ -7,7 +7,7 @@ SKILL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Wiki root is configurable. Override with WIKI_ROOT env var or --root flag.
 # Default to ~/dair-wikis so the skill works out of the box on any machine.
-WIKI_ROOT="${WIKI_ROOT:-$HOME/dair-wikis}"
+wiki_root="${WIKI_ROOT:-$HOME/dair-wikis}"
 
 usage() {
   echo "Usage: init_wiki.sh <slug> --title \"Readable Title\" [--flavor research|paper|domain|product|person|organization|project] [--root /path/to/wikis]" >&2
@@ -26,15 +26,18 @@ FLAVOR="research"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --title)
+      [[ $# -ge 2 && -n "$2" ]] || { echo "--title requires a value" >&2; exit 2; }
       TITLE="${2:-}"
       shift 2
       ;;
     --flavor)
+      [[ $# -ge 2 && -n "$2" ]] || { echo "--flavor requires a value" >&2; exit 2; }
       FLAVOR="${2:-}"
       shift 2
       ;;
     --root)
-      WIKI_ROOT="${2:-}"
+      [[ $# -ge 2 && -n "$2" ]] || { echo "--root requires a value" >&2; exit 2; }
+      wiki_root="${2:-}"
       shift 2
       ;;
     *)
@@ -62,27 +65,32 @@ if [[ -z "$TITLE" ]]; then
   TITLE="$(echo "$SLUG" | sed 's/-/ /g' | awk '{for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')"
 fi
 
-mkdir -p "$WIKI_ROOT"
-DEST="$WIKI_ROOT/$SLUG"
-if [[ -e "$DEST" ]]; then
+[[ -n "$wiki_root" && "$TITLE" != *$'\n'* && "$wiki_root" != *$'\n'* ]] || { echo "Root/title must be nonempty single-line values" >&2; exit 2; }
+mkdir -p "$wiki_root"
+DEST="$wiki_root/$SLUG"
+if [[ -e "$DEST" || -L "$DEST" ]]; then
   echo "Wiki already exists: $DEST" >&2
   exit 1
 fi
 
 DATE="$(date +%Y-%m-%d)"
 
+mkdir "$DEST" || exit 1  # atomic reservation: never follow a concurrently created destination
 mkdir -p "$DEST/raw" "$DEST/wiki" "$DEST/derived" "$DEST/prompts" "$DEST/logs" "$DEST/assets"
 
 render_template() {
   local src="$1"
   local dest="$2"
-  # Use a non-/ delimiter for ROOT since the path contains slashes.
+  # Escape replacement metacharacters; titles/paths are literal data.
+  local title_safe root_safe
+  title_safe=$(printf '%s' "$TITLE" | sed 's/[\\&|]/\\&/g')
+  root_safe=$(printf '%s' "$DEST" | sed 's/[\\&|]/\\&/g')
   sed \
-    -e "s/{{SLUG}}/$SLUG/g" \
-    -e "s/{{TITLE}}/$TITLE/g" \
-    -e "s/{{FLAVOR}}/$FLAVOR/g" \
-    -e "s/{{DATE}}/$DATE/g" \
-    -e "s|{{ROOT}}|$DEST|g" \
+    -e "s|{{SLUG}}|$SLUG|g" \
+    -e "s|{{TITLE}}|$title_safe|g" \
+    -e "s|{{FLAVOR}}|$FLAVOR|g" \
+    -e "s|{{DATE}}|$DATE|g" \
+    -e "s|{{ROOT}}|$root_safe|g" \
     "$src" > "$dest"
 }
 

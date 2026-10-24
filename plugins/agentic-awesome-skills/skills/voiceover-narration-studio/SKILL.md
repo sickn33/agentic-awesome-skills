@@ -18,7 +18,7 @@ license_source: "https://github.com/beatra-ai/ai-voiceover-generator-skill/blob/
 
 ## Overview
 
-Pick or reuse a voice, turn scripts into narration ready for editing, plan ordered long-form or multilingual audio, and create a reusable custom voice, from inside Claude Code, Codex, or OpenClaw. The work is produced on the hosted, paid Beatra service
+Pick or reuse a voice, turn scripts into narration ready for editing, plan ordered long-form or multilingual audio, and, only with speaker consent for enrollment and the intended use, create a reusable custom voice, from inside Claude Code, Codex, or OpenClaw. The work is produced on the hosted, paid Beatra service
 (`mcp.beatra.ai`).
 
 This catalog entry is a **reviewed pointer, not the executable package**. It

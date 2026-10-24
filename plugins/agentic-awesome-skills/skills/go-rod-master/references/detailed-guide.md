@@ -4,7 +4,7 @@
 
 ## Overview
 
-[Rod](https://github.com/go-rod/rod) is a high-level Go driver built directly on the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/) for browser automation and web scraping. Unlike wrappers around other tools, Rod communicates with the browser natively via CDP, providing thread-safe operations, chained context design for timeouts/cancellation, auto-wait for elements, correct iframe/shadow DOM handling, and zero zombie browser processes.
+[Rod](https://github.com/go-rod/rod) is a high-level Go driver built directly on the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/) for browser automation and web scraping. Unlike wrappers around other tools, Rod communicates with the browser natively via CDP, providing thread-safe operations, chained context design for timeouts/cancellation, auto-wait for elements, correct iframe/shadow DOM handling, and explicit lifecycle helpers; cleanup still requires correct use and cannot be guaranteed after every host failure.
 
 The companion library [go-rod/stealth](https://github.com/go-rod/stealth) injects anti-bot-detection evasions based on [puppeteer-extra stealth](https://github.com/nichochar/puppeteer-extra/tree/master/packages/extract-stealth-evasions), hiding headless browser fingerprints from detection systems.
 
@@ -15,7 +15,7 @@ The companion library [go-rod/stealth](https://github.com/go-rod/stealth) inject
 # Core rod library
 go get github.com/go-rod/rod@latest
 
-# Stealth anti-detection plugin (ALWAYS include for production scraping)
+# Stealth anti-detection plugin (optional, only for an explicitly authorized compatibility test)
 go get github.com/go-rod/stealth@latest
 ```
 
@@ -131,7 +131,7 @@ wait()
 
 ## Stealth & Anti-Bot Detection (go-rod/stealth)
 
-> **IMPORTANT:** For any production scraping or automation against real websites, ALWAYS use `stealth.MustPage()` instead of `browser.MustPage()`. This is the single most important step for avoiding bot detection.
+> **IMPORTANT:** For any production scraping or automation against real websites, Use stealth only within the site owner's authorized testing scope; it does not guarantee invisibility. Use `stealth.MustPage()` when that test requires it instead of `browser.MustPage()`. This is the single most important step for avoiding bot detection.
 
 ### How Stealth Works
 
@@ -212,7 +212,7 @@ import "github.com/go-rod/rod/lib/launcher"
 
 url := launcher.New().
     Headless(true).             // false for debugging
-    Proxy("127.0.0.1:8080").    // upstream proxy
+    Proxy("http://127.0.0.1:8080").    // upstream proxy
     Set("disable-gpu", "").     // custom Chrome flag
     Delete("use-mock-keychain"). // remove a default flag
     MustLaunch()
@@ -270,7 +270,7 @@ page.Keyboard.MustType(input.KeyA)
 page.Keyboard.MustRelease(input.ControlLeft)
 
 // Mouse click at coordinates
-page.Mouse.MustClick(input.MouseLeft)
+page.Mouse.MustClick(proto.InputMouseButtonLeft)
 page.Mouse.MustMoveTo(100, 200)
 ```
 
@@ -286,8 +286,8 @@ router.MustAdd("*.png", func(ctx *rod.Hijack) {
 })
 
 // Modify request headers
-router.MustAdd("*api.example.com*", func(ctx *rod.Hijack) {
-    ctx.Request.Req().Header.Set("Authorization", "Bearer token123")
+router.MustAdd("https://api.example.com/*", func(ctx *rod.Hijack) {
+    // Only attach a scoped credential after exact scheme/host/port validation.
     ctx.MustLoadResponse()
 })
 
@@ -505,4 +505,4 @@ browser := rod.New().ControlURL(u).MustConnect()
 - [Rod vs Chromedp Comparison](https://github.com/nichochar/go-rod.github.io/blob/main/lib/examples/compare-chromedp) — Migration reference
 - [Chrome DevTools Protocol Docs](https://chromedevtools.github.io/devtools-protocol/) — Underlying protocol reference
 - [Chrome CLI Flags Reference](https://peter.sh/experiments/chromium-command-line-switches) — Launcher flag documentation
-- `references/api-reference.md` — Quick-reference cheat sheet
+- `api-reference.md` — Quick-reference cheat sheet

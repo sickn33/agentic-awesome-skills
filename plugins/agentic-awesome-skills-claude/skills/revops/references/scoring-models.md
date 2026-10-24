@@ -2,6 +2,8 @@
 
 Detailed scoring templates, example models by business type, and calibration guidance.
 
+All weights/thresholds are examples. Normalize fit and engagement to comparable scales before applying percentage weights; cap repeated events and remove bot/privacy-proxy opens. An unsubscribe or complaint suppresses outreach regardless of score. Validate on a later holdout cohort, including non-winners, using only features available at scoring time.
+
 ## Explicit Scoring Template (Fit)
 
 ### Company Attributes

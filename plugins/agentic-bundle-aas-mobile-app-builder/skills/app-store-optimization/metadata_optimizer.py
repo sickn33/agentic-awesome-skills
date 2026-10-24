@@ -21,7 +21,7 @@ class MetadataOptimizer:
             'whats_new': 4000
         },
         'google': {
-            'title': 50,
+            'title': 30,
             'short_description': 80,
             'full_description': 4000
         }
@@ -201,7 +201,7 @@ class MetadataOptimizer:
                 if word not in processed_keywords and word not in title_words:
                     processed_keywords.append(word)
 
-        # Remove plurals if singular exists
+        # Deduplicate exact terms without corrupting words such as business or iOS.
         deduplicated = self._remove_plural_duplicates(processed_keywords)
 
         # Build keyword field within 100 character limit
@@ -212,10 +212,11 @@ class MetadataOptimizer:
 
         return {
             'keyword_field': keyword_field,
-            'length': len(keyword_field),
-            'remaining_chars': max_length - len(keyword_field),
-            'keywords_included': keyword_field.split(','),
-            'keywords_count': len(keyword_field.split(',')),
+            'length': len(keyword_field.encode('utf-8')),
+            'length_unit': 'UTF-8 bytes',
+            'remaining_bytes': max_length - len(keyword_field.encode('utf-8')),
+            'keywords_included': keyword_field.split(',') if keyword_field else [],
+            'keywords_count': len(keyword_field.split(',')) if keyword_field else 0,
             'keywords_excluded': [kw for kw in target_keywords if kw.lower() not in keyword_field],
             'description_coverage': density,
             'optimization_tips': [
@@ -254,7 +255,7 @@ class MetadataOptimizer:
                 continue
 
             max_length = self.limits[field_name]
-            actual_length = len(value)
+            actual_length = len(value.encode("utf-8")) if self.platform == "apple" and field_name == "keywords" else len(value)
             remaining = max_length - actual_length
 
             field_status = {
@@ -301,7 +302,7 @@ class MetadataOptimizer:
         keyword_densities = {}
         for keyword in target_keywords:
             keyword_lower = keyword.lower()
-            count = text_lower.count(keyword_lower)
+            count = len(re.findall(r"(?<!\w)" + re.escape(keyword_lower) + r"(?!\w)", text_lower)) if keyword_lower.strip() else 0
             density = (count / total_words * 100) if total_words > 0 else 0
 
             keyword_densities[keyword] = {
@@ -332,10 +333,9 @@ class MetadataOptimizer:
         separators = [' - ', ': ', ' | ']
 
         for sep in separators:
-            for kw in keywords:
-                title = f"{app_name}{sep}{kw}"
-                if len(title) <= max_length:
-                    return title
+            title = f"{app_name}{sep}{' & '.join(keywords)}"
+            if len(title) <= max_length:
+                return title
 
         return None
 
@@ -421,9 +421,7 @@ class MetadataOptimizer:
         target_audience = app_info.get('target_audience', 'users')
         sections.append(f"PERFECT FOR:\n{target_audience}\n\n")
 
-        # Social proof placeholder
-        sections.append("WHY USERS LOVE US:\n")
-        sections.append("Join thousands of satisfied users who have transformed their workflow.\n\n")
+        # Do not invent user counts, testimonials, or product claims.
 
         # CTA
         sections.append("Download now and start experiencing the difference!")
@@ -451,21 +449,7 @@ class MetadataOptimizer:
 
     def _remove_plural_duplicates(self, keywords: List[str]) -> List[str]:
         """Remove plural forms if singular exists."""
-        deduplicated = []
-        singular_set = set()
-
-        for keyword in keywords:
-            if keyword.endswith('s') and len(keyword) > 1:
-                singular = keyword[:-1]
-                if singular not in singular_set:
-                    deduplicated.append(singular)
-                    singular_set.add(singular)
-            else:
-                if keyword not in singular_set:
-                    deduplicated.append(keyword)
-                    singular_set.add(keyword)
-
-        return deduplicated
+        return list(dict.fromkeys(keywords))
 
     def _build_keyword_field(self, keywords: List[str], max_length: int) -> str:
         """Build comma-separated keyword field within character limit."""
@@ -473,10 +457,10 @@ class MetadataOptimizer:
 
         for keyword in keywords:
             test_field = f"{keyword_field},{keyword}" if keyword_field else keyword
-            if len(test_field) <= max_length:
+            if len(test_field.encode("utf-8")) <= max_length:
                 keyword_field = test_field
             else:
-                break
+                continue
 
         return keyword_field
 

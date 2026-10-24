@@ -313,7 +313,7 @@ struct ThreePropertyModifier: ViewModifier, Animatable {
 ## Quick Reference
 
 ### Do
-- Place transitions outside conditional structures
+- Attach transitions to inserted/removed content; keep the animation transaction on a surviving ancestor or initiating state change
 - Use `withAnimation` or `.animation` outside the `if`
 - Implement `animatableData` explicitly for custom Animatable
 - Use `AnimatablePair` for multiple animated properties

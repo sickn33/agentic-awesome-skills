@@ -90,7 +90,6 @@ classDiagram
     Class1 ..|> Interface1 : implements
     Class1 --> Class2 : uses
 ```
-````
 
 ### Functional/Procedural Code (Modules, Functions)
 
@@ -201,8 +200,6 @@ flowchart TB
 ## Notes
 
 [Any additional context or important information]
-
-```
 
 ## Example Interactions
 

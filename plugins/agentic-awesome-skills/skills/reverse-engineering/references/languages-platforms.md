@@ -52,10 +52,10 @@ For Go and Rust binary reversing, see [languages-compiled.md](languages-compiled
 static { System.loadLibrary("audio"); }
 private final native ProcessedMessage processMessage(SmsMessage msg);
 ```
-Standard JNI would have a symbol `Java_com_rloura_wondersms_SmsReceiver_processMessage`. If that symbol is missing from the `.so`, `RegisterNatives` is being used.
+Standard JNI would have a symbol `Java_com_rloura_wondersms_SmsReceiver_processMessage`. A missing symbol is a clue, not proof: check dependencies, visibility and registration paths.
 
 **Finding the real handler in Ghidra:**
-1. Locate `JNI_OnLoad` (exported symbol, always present)
+1. Locate `JNI_OnLoad` if present (optional; registration can occur elsewhere)
 2. Trace to `RegisterNatives(env, clazz, methods, count)` call
 3. The `methods` array contains `{name, signature, fnPtr}` structs
 4. Follow `fnPtr` to find the actual native function
@@ -105,7 +105,7 @@ for i in range(patch_offset, patch_offset + 144):
 # 5. Decompile with jadx or baksmali
 ```
 
-**Key insight:** Native libraries can modify DEX bytecode in memory via `/proc/self/maps` + `mprotect`, making static analysis of the APK alone insufficient. The XOR key and patch offsets must be extracted from the native `.so` to reconstruct the actual runtime DEX. Only works on Dalvik (API < 21), not ART.
+**Key insight:** Native libraries can modify DEX bytecode in memory via `/proc/self/maps` + `mprotect`, making static analysis of the APK alone insufficient. The XOR key and patch offsets must be extracted from the native `.so` to reconstruct the actual runtime DEX. The precise mapping, verification and execution behavior differs between Dalvik/ART and versions; do not assume this case applies unchanged.
 
 ---
 
@@ -137,35 +137,9 @@ public class Main4Activity extends AppCompatActivity {
 
 ## Frida Firebase Cloud Functions Bypass (BSidesSF 2026)
 
-**Pattern (vinyl-drop, doremi):** Android app validates actions (QR codes, purchases) via Firebase Cloud Functions. The expected payload format includes the Firebase UID, a value, and a timestamp. Use Frida to hook the app post-login, construct a valid payload, and call the Cloud Function directly.
+**Defensive interpretation of the inherited case:** A client can call a callable Cloud Function directly, but this does not itself bypass Firebase authentication, App Check or server-side authorization. A vulnerability exists only if the server trusts client-provided purchase/amount/UID claims without verifying identity, ownership, replay and payment state.
 
-```javascript
-// Frida hook to bypass QR validation
-Java.perform(function() {
-    var FirebaseFunctions = Java.use('com.google.firebase.functions.FirebaseFunctions');
-    var FirebaseAuth = Java.use('com.google.firebase.auth.FirebaseAuth');
-
-    // Get current user UID after login
-    var auth = FirebaseAuth.getInstance();
-    var uid = auth.getCurrentUser().getUid();
-
-    // Construct valid payload: uid + amount + timestamp
-    var unixMs = Java.use('java.lang.System').currentTimeMillis();
-    var payload = uid + "+100+" + unixMs;
-
-    // Call the Cloud Function directly
-    var functions = FirebaseFunctions.getInstance();
-    var data = Java.use('java.util.HashMap').$new();
-    data.put("payload", payload);
-    functions.getHttpsCallable("validateScanPayload").call(data);
-});
-```
-
-**Key insight:** Firebase AppCheck and Cloud Functions rely on the client to construct valid payloads. Post-authentication, Frida can hook the app to call any Cloud Function with arbitrary parameters, bypassing client-side validation (QR scanning, payment processing, etc.).
-
-**When to recognize:** Android app with `google-services.json`, Firebase dependencies in `build.gradle`, Cloud Function calls in decompiled code.
-
-**References:** BSidesSF 2026 "vinyl-drop"
+Inspect server validation and use a local Firebase emulator with synthetic accounts and non-monetary fixtures. Test that an altered amount or foreign UID is rejected, and that repeated requests cannot grant duplicate credit. Do not forge purchase/QR payloads against a live third-party service or collect real session tokens. Client-side hooks reveal possible request structure, not proof of successful server compromise.
 
 ---
 
@@ -280,7 +254,8 @@ def decrypt_password(encrypted_bytes, key):
     """Common pattern: XOR with constant + bit rotation + key XOR."""
     result = []
     for i, byte in enumerate(encrypted_bytes):
-        decrypted = ((byte ^ 0x42) >> 3) ^ key[i % len(key)]
+        v = byte ^ 0x42
+        decrypted = (((v >> 3) | (v << 5)) & 0xff) ^ key[i % len(key)]
         result.append(chr(decrypted))
     return ''.join(result)
 
@@ -289,7 +264,9 @@ def decrypt_flag(encrypted_flag, password):
     result = []
     for i, byte in enumerate(encrypted_flag):
         key_byte = ord(password[i % len(password)])
-        decrypted = ((byte ^ 0x7E) >> (i % 8)) ^ key_byte
+        v = byte ^ 0x7E
+        shift = i % 8
+        decrypted = (((v >> shift) | (v << ((8 - shift) % 8))) & 0xff) ^ key_byte
         result.append(chr(decrypted))
     return ''.join(result)
 ```
@@ -444,8 +421,7 @@ ascii_data = data.decode('cp500')  # cp500 is IBM EBCDIC International
 # Filter: keep uppercase letters and underscores (flag charset)
 flag_chars = [c for c in ascii_data if c.isupper() or c == '_']
 # Or apply take-2-skip-2 pattern after decoding
-flag = ''.join(ascii_data[i] for i in range(0, len(ascii_data), 4)
-               if ascii_data[i].isupper() or ascii_data[i] == '_')
+flag = ''.join(ascii_data[i:i+2] for i in range(0, len(ascii_data), 4))  # actual take-two, skip-two
 ```
 
 **Key insight:** EBCDIC encoding is IBM mainframe-native. Examine character distribution after decoding to identify interleaving patterns. Filtering for uppercase letters and underscores is an effective shortcut for CTF flag formats.
@@ -473,14 +449,17 @@ from cryptography.hazmat.primitives import cmac, ciphers
 private_key = ec.generate_private_key(ec.SECP256R1())
 shared_secret = private_key.exchange(ec.ECDH(), server_pub_key)
 
-# CMAC-AES-128 key derivation (per SGX attestation spec)
-c = cmac.CMAC(ciphers.algorithms.AES(b'\x00' * 16))
-c.update(shared_secret[:16])
-sk = c.finalize()
-
-# Decrypt flag with AES-128-GCM using derived SK
+# This alone does not derive the SGX session key. Recover the exact protocol
+# transcript, ECDH byte order and documented KDF labels/context; validate peer
+# attestation and message authentication. Do not truncate the shared secret
+# or infer a session key from the public enclave measurement.
+raise NotImplementedError("Use the exact attestation protocol and verified KDF")
 ```
 
-**Key insight:** SGX remote attestation key derivation is deterministic given the enclave measurement — reimplementing the protocol in Python recovers the same session key.
+**Key insight:** An enclave measurement is public identity evidence, not a session key. Session derivation requires private ECDH state, the protocol KDF and authenticated transcript; knowing the measurement does not decrypt another session.
 
 **References:** Pwn2Win CTF 2017
+
+## Evidence and execution boundaries
+
+All examples are case-specific sketches, not claims about every app or platform. Loading a native library, requiring an npm module or evaluating getters runs untrusted code; use authorized isolated offline fixtures without real credentials. `Object.getOwnPropertyNames` does not expose closures, private fields or inherited non-enumerated state automatically. Key/packet/log data is sensitive; minimize capture and never replay against live services. Runtime success, unique key recovery and cited contest provenance were not independently reproduced.

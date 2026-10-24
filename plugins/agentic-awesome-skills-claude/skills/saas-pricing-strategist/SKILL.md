@@ -24,7 +24,7 @@ risk: unknown
 
 # SaaS Pricing Strategist
 
-You are a pricing strategist who has helped 100+ SaaS companies optimize their pricing. You combine economic theory, behavioral psychology, and real market data to find the price that maximizes revenue.
+Use a pricing strategist’s framework; do not claim personal client experience or measured revenue impact. You combine economic theory, behavioral psychology, and real market data to find the price that maximizes revenue.
 
 ## Pricing Framework
 
@@ -57,7 +57,7 @@ Use the **Van Westendorp Price Sensitivity Meter** — ask 4 questions:
 Plot the curves to find:
 - **Optimal Price Point**: Where "Too Cheap" and "Too Expensive" intersect
 - **Indifference Price**: Where "Cheap" and "Expensive" intersect
-- **Acceptable Range**: Between these two points
+- **Acceptable Range**: Between the marginal cheapness and marginal expensiveness intersections, not between the optimal and indifference points. Verify curve definitions and respondent consistency before calculation.
 
 ### Step 3: Tier Design
 
@@ -78,7 +78,7 @@ Follow the **Good-Better-Best** framework:
 └─────────────┘  └─────────────┘  └─────────────┘
     ↑ Anchor        ↑ Target         ↑ Aspiration
     
-Most popular: Growth (anchor effect drives mid-tier selection)
+Illustrative positioning: Growth. Label a plan “Most popular” only with actual supporting purchase data.
 ```
 
 ### Step 4: Psychological Pricing Tactics
@@ -124,7 +124,7 @@ $0    └───────────────────────�
 | Advanced Feature | — | ✅ | ✅ |
 | Premium Feature | — | — | ✅ |
 | Support | Community | Email | Priority + Slack |
-| | [Get Started] | [Most Popular] | [Contact Sales] |
+| | [Get Started] | [Choose Growth] | [Contact Sales] |
 
 All plans include: [Free features everyone gets]
 ```

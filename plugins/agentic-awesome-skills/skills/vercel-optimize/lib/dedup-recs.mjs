@@ -164,7 +164,7 @@ function sharedFunctionTarget(rec) {
   }
   return [...score.entries()]
     .sort((a, b) => b[1] - a[1] || text.indexOf(a[0]) - text.indexOf(b[0]))
-    .map(([name]) => `function:${name}`)[0] ?? null;
+    .map(([name]) => `function:${normalizePath(firstAffectedFile(rec))}:${name}`)[0] ?? null;
 }
 
 function cacheLifeIntent(rec) {

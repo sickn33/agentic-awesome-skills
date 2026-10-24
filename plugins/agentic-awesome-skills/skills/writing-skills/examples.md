@@ -1,5 +1,7 @@
 # Skill Templates & Examples
 
+Scope: examples are authoring/test fixtures, not live instructions. Follow the user, host, and repository instruction hierarchy. Run pressure tests only with authorized isolated fixtures; never delete user work or weaken safety/approval boundaries to enforce a skill. Preserve existing work and adapt the validation plan when a baseline already passes. Sample compliance does not prove universal reliability.
+
 Complete, copy-paste templates for each skill type.
 
 ---
@@ -8,7 +10,7 @@ Complete, copy-paste templates for each skill type.
 
 For how-to guides that teach a specific method.
 
-```markdown
+````markdown
 ---
 name: technique-name
 description: >-
@@ -69,7 +71,7 @@ function goodCode() {
 **Mistake 1:** [Description]
 - Wrong: `bad code`
 - Right: `good code`
-```
+````
 
 ---
 
@@ -77,7 +79,7 @@ function goodCode() {
 
 For documentation, APIs, and lookup tables.
 
-```markdown
+````markdown
 ---
 name: reference-name
 description: >-
@@ -113,7 +115,7 @@ another example
 For more options, run `--help` or see:
 - patterns.md
 - [examples.md](examples.md)
-```
+````
 
 ---
 
@@ -121,7 +123,7 @@ For more options, run `--help` or see:
 
 For rules that agents must follow. Requires anti-rationalization techniques.
 
-```markdown
+````markdown
 ---
 name: discipline-name
 description: >-
@@ -176,7 +178,7 @@ Violating the letter IS violating the spirit.
 - [Exception 2]
 
 **Everything else:** Follow the rule.
-```
+````
 
 ---
 
@@ -184,7 +186,7 @@ Violating the letter IS violating the spirit.
 
 For mental models and design patterns.
 
-```markdown
+````markdown
 ---
 name: pattern-name
 description: >-
@@ -233,7 +235,7 @@ function after() {
 
 **Before:** [Problem metric]
 **After:** [Improved metric]
-```
+````
 
 ---
 
@@ -250,7 +252,7 @@ metadata:
 ---
 ```
 
-```markdown
+````markdown
 # Condition-Based Waiting
 
 ## Overview
@@ -271,12 +273,13 @@ await sleep(2000);
 expect(element).toBeVisible();
 
 // ✅ Good
-await waitFor(() => element.isVisible(), { timeout: 5000 });
+// Playwright locator assertion waits for visibility:
+await expect(element).toBeVisible({ timeout: 5000 });
 expect(element).toBeVisible();
 ```
 
 ## Impact
 
-- Flaky tests: 15/100 → 0/100
-- Speed: 40% faster (no over-waiting)
-```
+- Measure failures and runtime on your own repeated baseline and treatment runs.
+- No reliability or speed improvement is established by this illustrative example.
+````

@@ -1,7 +1,7 @@
 ---
 name: vercel-deployment
 description: Expert knowledge for deploying to Vercel with Next.js
-risk: safe
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -16,7 +16,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## Prerequisites
 
-- Required skills: nextjs-app-router
+- Verify the project's Next.js version and available local skills; historical upstream names such as `nextjs-app-router` may not be installed.
 
 ## When to Use
 - User mentions or implies: vercel
@@ -27,6 +27,12 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - User mentions or implies: environment variables
 - User mentions or implies: edge function
 - User mentions or implies: serverless function
+
+## Example
+
+```text
+Prepare a preview deployment for the approved Vercel project/team using staging data. Verify build/runtime settings, environment scopes and rollback; production promotion and DNS changes require explicit destination authorization. Report the actual deployment ID and smoke-check result.
+```
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

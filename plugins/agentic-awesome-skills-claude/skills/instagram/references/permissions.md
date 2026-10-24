@@ -1,5 +1,8 @@
 # Permissões OAuth — Scopes por Feature
 
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
 ## Scopes Necessários
 
 | Scope | Descrição | Features |
@@ -55,9 +58,7 @@ Pesquisa de hashtag   → instagram_basic
 ## Processo de Aprovação
 
 ### Desenvolvimento (Modo de Teste)
-- Até 5 testers configurados no Meta App
-- Todos os scopes funcionam sem aprovação
-- Token de teste funciona normalmente
+- Roles, scopes e requisitos de teste dependem do produto, app, conta e versão. Não presume aprovação automática ou uma quantidade fixa de testers; confirme no painel e na documentação oficial.
 
 ### Produção (App Review)
 Para uso além dos testers, cada scope precisa de aprovação:

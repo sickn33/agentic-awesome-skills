@@ -29,19 +29,18 @@ public abstract class BasePage {
 
     /** Navigate to this page's URL relative to baseUrl */
     @Step("Navigate to {this.getUrl()}")
-    public <T extends BasePage> T navigate() {
+    public BasePage navigate() {
         page.navigate(ConfigReader.getBaseUrl() + getUrl());
         waitForPageLoad();
-        //noinspection unchecked
-        return (T) this;
+        return this;
     }
 
     /** Each page declares its relative URL path, e.g. "/login" */
     protected abstract String getUrl();
 
-    @Step("Wait for network idle")
+    @Step("Wait for DOM content loaded; page-specific readiness asserted by caller")
     protected void waitForPageLoad() {
-        page.waitForLoadState(LoadState.NETWORKIDLE);
+        page.waitForLoadState(LoadState.DOMCONTENTLOADED);
     }
 
     // ─── Locator Shortcuts ──────────────────────────────────────────────────────
@@ -68,21 +67,22 @@ public abstract class BasePage {
 
     // ─── Action Helpers ─────────────────────────────────────────────────────────
 
-    @Step("Fill '{locatorDesc}' with value")
+    // Allure @Step can serialize method parameters including passwords.
+    // Keep sensitive fill actions unannotated and audit report redaction.
     protected void fill(Locator locator, String value) {
         locator.waitFor(new Locator.WaitForOptions()
             .setState(WaitForSelectorState.VISIBLE)
             .setTimeout(10_000));
-        locator.clear();
         locator.fill(value);
     }
 
     @Step("Click and wait for navigation")
-    protected void clickAndWaitForNav(Locator locator) {
-        page.waitForNavigation(() -> locator.click());
+    protected void clickAndWaitForNav(Locator locator, String expectedUrl) {
+        locator.click();
+        page.waitForURL(expectedUrl);
     }
 
-    @Step("Click '{locatorDesc}'")
+    @Step("Click field")
     protected void click(Locator locator) {
         locator.waitFor(new Locator.WaitForOptions()
             .setState(WaitForSelectorState.VISIBLE)

@@ -13,7 +13,7 @@
 
 ## SCAN Family
 
-The SCAN family provides production-safe iteration over collections. Unlike `KEYS *` or `SMEMBERS` which block the server on large datasets, SCAN returns small batches incrementally.
+The SCAN family provides incremental iteration over collections; each call still consumes server time. Unlike `KEYS *` or `SMEMBERS` which block the server on large datasets, SCAN returns small batches incrementally.
 
 ### SCAN Command Reference
 
@@ -41,7 +41,7 @@ SCAN 42 MATCH user:* COUNT 100
 
 ### SCAN Options
 
-**MATCH pattern** — Glob-style filtering applied *after* retrieval (not server-side filtering):
+**MATCH pattern** — Glob filtering is performed by the server after it scans candidates:
 - `*` matches any sequence
 - `?` matches single character
 - `[ae]` matches one of the characters
@@ -77,7 +77,7 @@ A full iteration (cursor 0 → 0) provides:
 
 ### SCAN in Redis Cluster
 
-In cluster mode, SCAN only iterates keys in the current node's slot range. The `--scan` option in redis-cli handles cluster iteration automatically across all nodes.
+In cluster mode, SCAN only iterates keys in the current node's slot range. The --scan option scans the connected node only. Enumerate primaries explicitly; -c handles redirects, not cluster-wide scans.
 
 Pattern matching is optimized for patterns implying a single slot. For example, `{a}h*llo` only scans keys in slot 15495 (hash tag `{a}`).
 
@@ -104,7 +104,7 @@ redis-cli --scan --pattern 'session:*' | wc -l
 
 # Chain with other tools
 redis-cli --scan --pattern 'cache:*' | head -20
-redis-cli --scan --pattern 'temp:*' | while read key; do redis-cli DEL "$key"; done
+redis-cli --scan --pattern 'temp:*' | while IFS= read -r key; do redis-cli TYPE "$key"; done
 ```
 
 ## Big Keys Analysis
@@ -220,14 +220,14 @@ redis-cli PERSIST mykey                # Make key permanent
 
 ```bash
 redis-cli HEXPIRE myhash 3600 FIELDS 2 field1 field2
-redis-cli HTTL myhash 2 field1 field2
+redis-cli HTTL myhash FIELDS 2 field1 field2
 redis-cli HPERSIST myhash FIELDS 2 field1 field2
 ```
 
 ### Expiry Behavior
 
 - Setting a key with `SET`, `GETSET`, or `*STORE` commands clears any existing TTL
-- `DEL`, `RENAME`, and `MOVE` transfer or clear the TTL
+- DEL removes the key and its TTL; RENAME and MOVE preserve the source key TTL at its new location
 - `EXPIRE` on a key with existing TTL updates the timeout
 - Expired keys are deleted lazily or actively sampled (~10 times/sec, random sample of 20 keys)
 

@@ -6,7 +6,7 @@ Walk-forward machine-learning framework for stock direction prediction. Fetches 
 
 Requires: `scikit-learn`, `pandas`, `numpy` (usually pre-installed).
 Optional: `xgboost` or `lightgbm` for gradient-boosting models.
-If unavailable, fall back to a simpler logistic-regression model.
+If scikit-learn is unavailable, its logistic-regression model is unavailable too; report the missing dependency or implement a separately validated alternative.
 
 ## Workflow
 
@@ -23,8 +23,9 @@ If unavailable, fall back to a simpler logistic-regression model.
 
 3. **Walk-forward training**:
    - Training window: 252 days; retrain every 60 days
+   - Purge the final five label horizons before each test window. Fit all preprocessing and feature choices on training data only; use completed bars and execute after their information is available. Keep neutral observations for realistic performance evaluation, even if excluded from binary training.
    - Model: `RandomForestClassifier(n_estimators=100)` or `GradientBoostingClassifier`
-   - Predict probability for the current bar
+   - Predict model scores for the current completed bar; they are not calibrated real-world probabilities without separate calibration/validation.
 
 4. **Signal generation**:
    - prob > 0.60 → 模型上涨概率偏高 / Model upside probability elevated
@@ -34,10 +35,10 @@ If unavailable, fall back to a simpler logistic-regression model.
 5. **Backtest metrics** (on out-of-sample predictions):
    - Win rate (% correct directional calls)
    - Profit factor (gross profit / gross loss)
-   - Annualised Sharpe ratio (assuming daily rebalance)
+   - Annualised Sharpe on realized daily portfolio returns with the five-day holding overlap and position aggregation modeled
    - Max drawdown
 
-6. **Feature importance**: rank top-5 features by mean decrease in impurity.
+6. **Feature importance**: report model-specific importance (MDI is tree-specific) and prefer held-out permutation importance; importance is not causality.
 
 Run `longbridge kline --help` to confirm flag names before calling.
 

@@ -26,7 +26,7 @@ Call `get_change_timeline` for a unified view of all changes correlated with the
 Call `get_asset_lineage(mcons=[table_mcon], direction="UPSTREAM")` to find source tables.
 For each upstream table:
 - Call `get_table_size_history` — did the source data volume also change?
-- If upstream volume changed proportionally, the issue is in the source data, not this table's ETL
+- Proportional upstream volume change suggests an upstream contribution; verify coverage, timing and transformation behavior before concluding
 
 ### 4. Check for failed/futile queries
 
@@ -51,3 +51,5 @@ If a database MCP server is connected:
 - **Late-arriving data** — backfill or reprocessing loaded historical data
 - **Partition swap** — a full partition was replaced with different data
 - **Schema migration** — table was truncated and reloaded as part of a migration
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

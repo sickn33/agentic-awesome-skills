@@ -20,7 +20,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ## When to Use This Skill
 
 - User pastes a PageSpeed Insights report or mentions Lighthouse scores
-- User asks to improve Core Web Vitals (LCP, FCP, CLS, TBT, SI)
+- User asks to improve Core Web Vitals (LCP, INP, CLS) or lab diagnostics (FCP, TBT, SI)
 - User needs help with render-blocking resources, unused JavaScript, image optimisation, security headers, ARIA compliance, or SEO meta-tag fixes
 - User asks "why is my LCP slow", "fix accessibility issues", "improve my SEO score", or "my site scores 80 on performance"
 - Any mention of PageSpeed, Lighthouse, Web Vitals, or site speed
@@ -61,3 +61,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - CSP guidance uses a report-only iterative approach — the final policy must be tuned to each project's actual resource origins
 
 ---
+
+## Measurement and rollout limits
+
+Core Web Vitals are LCP, INP and CLS, assessed with field data at the 75th percentile; Lighthouse lab metrics and a 100 accessibility score are not field performance or WCAG certification. Record report date/version/device and distinguish observed causes from hypotheses. Numeric improvement examples are illustrative, not expected results for the current site.
+
+CSP/COOP/Permissions-Policy can break integrations; merge with actual deployment config and test authentication, popups, camera/geolocation and embedding before enforcement. HSTS subdomains/preload require domain-wide readiness and can persist beyond rollback. The sample report-only CSP contains unsafe-inline and lacks a reporting destination; it is neither a finished XSS defense nor telemetry until configured. Inline stylesheet onload handlers may be blocked by the intended CSP; keep critical styles synchronous and avoid flashes of unstyled content. Font redistribution requires its license. Preserve source assets when converting/resizing. Public audit services and sitemap submission disclose URLs and need the relevant authorization. Missing upstream references do not block independent documented checks. No audit, conversion, deployment or browser test was run.

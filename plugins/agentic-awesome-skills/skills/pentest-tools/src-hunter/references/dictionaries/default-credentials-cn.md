@@ -6,6 +6,8 @@
 
 ---
 
+> Historical candidate list, not verified current vendor defaults. Entries mix old deployments, weak guesses and version-specific settings; validate the exact product/version in official administration documentation before even a bounded attempt. Do not assume managed cloud databases accept blank passwords. Fixed concurrency/hourly counts do not prevent lockouts or authorize credential testing; the project’s explicit account and request budget controls.
+
 ## 1. 国产 OA / 协同办公（核心战场）
 
 ### 1.1 致远 OA（Seeyon）
@@ -15,7 +17,7 @@
 | `/seeyon/` | system / system | 致远 V5/V8 系统账号 |
 | `/seeyon/management/index.jsp` | `WLCCYBD@SEEYON` | 管理控制台超级密码 |
 | `/seeyon/main.do` | admin / 123456 / 000000 | 普通管理员 |
-| `/seeyon/htmlofficeservlet` | — | A8 RCE 路径（CVE-2020-...） |
+| `/seeyon/htmlofficeservlet` | — | 历史 A8 路径线索；CVE 未给出，不能作为漏洞证据 |
 | `/seeyon/m/login` | 工号 / 工号 | 移动端登录 |
 
 **指纹**：响应头 `Server: SEEYON-OA`、登录页 logo、`/seeyon/common/`。
@@ -169,8 +171,8 @@
 | 人大金仓（KingbaseES）| 54321 | system / 123456 |
 | 神舟通用（OSCAR）| 2003 | SYSDBA / szoscar55 |
 | 南大通用（GBase）| 5258 | gbasedba / gbase20110531 |
-| 阿里 PolarDB | 3306 | root / "" |
-| 腾讯 TDSQL | 3306 | mysql / "" |
+| 阿里 PolarDB | 3306 | 未在本包验证厂商默认凭据，不作空密码假设 |
+| 腾讯 TDSQL | 3306 | 未在本包验证厂商默认凭据，不作空密码假设 |
 | GoldenDB | 3306 | admin / 123456 |
 | 国产时序数据库 TDengine | 6030 | root / taosdata |
 | Apache Pulsar | 6650 | — |

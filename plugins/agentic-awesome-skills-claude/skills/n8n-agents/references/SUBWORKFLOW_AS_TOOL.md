@@ -1,5 +1,7 @@
 # Sub-workflow as agent tool
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 The default agent-tool shape for anything beyond one node is the Tool Workflow node (`@n8n/n8n-nodes-langchain.toolWorkflow`). Any sub-workflow becomes a tool the agent calls, with typed inputs filled by `$fromAI()`. It composes with everything good about n8n: branching, error handling, sub-workflow reuse, native nodes, custom logic.
 
 For the sub-workflow primitive itself (Execute Workflow Trigger inputs/outputs, stateless design, naming, search-before-build), see **n8n-subworkflows** — this reference only covers the *agent-tool* angle.
@@ -95,7 +97,7 @@ The `sessionId` line is critical: it is **NOT** an agent decision. Plumb it from
 
 The agent sees the tool's **name** (the Tool Workflow node's name) and **description** (a parameter on the node) — both follow the **TOOLS.md** rules: specific, API-doc style, treated as prompt.
 
-It does **not** see: the sub-workflow internals, the sub-workflow's own name, or plumbed values like `sessionId`. Only `$fromAI` parameters appear in the tool schema. So you can refactor the sub-workflow heavily without changing what the agent sees.
+The model does not receive sub-workflow internals automatically. Deterministic values can still leak through prompts, outputs or errors; do not rely on plumbing as secrecy or authorization. Only `$fromAI` parameters appear in the tool schema. So you can refactor the sub-workflow heavily without changing what the agent sees.
 
 ---
 

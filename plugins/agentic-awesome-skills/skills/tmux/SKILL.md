@@ -159,6 +159,8 @@ tmux capture-pane -t work:1.0 -p | grep "ERROR"
 
 ### Scripting a Full Workspace Layout
 
+This example assumes pane indexes start at 0; the later sample configuration changes them to 1. Read the actual pane IDs/indexes before sending commands, or explicitly configure the new session. Never send keys into an unverified interactive prompt. Killing sessions/windows terminates workloads; confirm targets and preserve needed output first.
+
 This is the most powerful pattern: create a fully configured multi-pane workspace from a single script.
 
 ```bash
@@ -296,7 +298,7 @@ wait_for_output() {
   while (( elapsed < timeout )); do
     tmux capture-pane -t "$target" -p | grep -q "$pattern" && return 0
     sleep 1
-    (( elapsed++ ))
+    elapsed=$((elapsed + 1))
   done
   return 1
 }

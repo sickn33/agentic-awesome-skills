@@ -1,5 +1,8 @@
 # Follow-Up Sequences
 
+The percentages and vendor-attributed findings below are imported historical claims without linked study methods, denominators or controlled comparisons. They are unverified hypotheses for testing, not forecasts or universal causal effects. Open tracking is distorted by privacy protections, image blocking and scanners; compare delivered-mail positive replies/meetings and complaints, with cohort and time window.
+
+
 55% of replies come from follow-ups, not the initial email. Yet 48% of salespeople never follow up even once.
 
 ## How Many: 3–5 Total Emails

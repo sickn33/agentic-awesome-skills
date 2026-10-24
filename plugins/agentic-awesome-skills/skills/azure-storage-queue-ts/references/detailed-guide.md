@@ -8,17 +8,14 @@
 npm install @azure/storage-queue @azure/identity
 ```
 
-**Current Version**: 12.x
-**Node.js**: >= 18.0.0
+Examples target the v12 SDK API; pin a tested release and use its supported Node.js LTS runtime.
 
 
 ## Environment Variables
 
 ```bash
-AZURE_STORAGE_ACCOUNT_NAME=<account-name>
-AZURE_STORAGE_ACCOUNT_KEY=<account-key>
-# OR connection string
-AZURE_STORAGE_CONNECTION_STRING=DefaultEndpointsProtocol=https;AccountName=...
+# Provide AZURE_STORAGE_ACCOUNT_NAME via deployment configuration.
+# Inject keys, SAS or connection strings through a secret manager; never paste them in shell history.
 ```
 
 
@@ -71,7 +68,7 @@ const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
 const sasToken = process.env.AZURE_STORAGE_SAS_TOKEN!;
 
 const client = new QueueServiceClient(
-  `https://${accountName}.queue.core.windows.net${sasToken}`
+  `https://${accountName}.queue.core.windows.net?${sasToken.replace(/^\?/, "")}`
 );
 ```
 
@@ -84,6 +81,8 @@ QueueServiceClient (account level)
     └── Messages (send, receive, peek, delete)
 ```
 
+
+Confirm account/queue and authorization before creating, clearing, deleting, receiving or sending. Receive changes visibility; peek is the nonmutating inspection path. Use least-privilege data RBAC and keep credentials, SAS URLs, bodies and pop receipts out of logs. Worker functions are fragments; supply QueueClient imports and validated application adapters.
 
 ## Queue Operations
 
@@ -163,15 +162,15 @@ await queueClient.sendMessage(JSON.stringify(task));
 ```typescript
 // Receive up to 32 messages (default: 1)
 const response = await queueClient.receiveMessages({
-  numberOfMessages: 10,
+  numberOfMessages: 1,
   visibilityTimeout: 30, // 30 seconds to process
 });
 
 for (const message of response.receivedMessageItems) {
   console.log("Message ID:", message.messageId);
-  console.log("Content:", message.messageText);
+  // Do not log message bodies; they may contain personal data.
   console.log("Dequeue Count:", message.dequeueCount);
-  console.log("Pop Receipt:", message.popReceipt);
+  // Keep pop receipts private.
 
   // Process the message...
 
@@ -191,7 +190,7 @@ const response = await queueClient.peekMessages({
 
 for (const message of response.peekedMessageItems) {
   console.log("Message ID:", message.messageId);
-  console.log("Content:", message.messageText);
+  // Do not log message bodies; they may contain personal data.
   // Note: No popReceipt - cannot delete peeked messages
 }
 ```
@@ -215,7 +214,7 @@ if (message) {
   );
 
   // Use new popReceipt for subsequent operations
-  console.log("New pop receipt:", updateResponse.popReceipt);
+  // Retain updateResponse.popReceipt privately for the next operation.
 }
 ```
 
@@ -246,7 +245,7 @@ await queueClient.clearMessages();
 async function processQueue(queueClient: QueueClient): Promise<void> {
   while (true) {
     const response = await queueClient.receiveMessages({
-      numberOfMessages: 10,
+      numberOfMessages: 1,
       visibilityTimeout: 30,
     });
 
@@ -261,7 +260,7 @@ async function processQueue(queueClient: QueueClient): Promise<void> {
         await processMessage(message.messageText);
         await queueClient.deleteMessage(message.messageId, message.popReceipt);
       } catch (error) {
-        console.error(`Failed to process message ${message.messageId}:`, error);
+        console.error("Message processing failed");
         // Message will become visible again after timeout
       }
     }
@@ -288,7 +287,7 @@ async function processWithPoisonHandling(
   poisonQueueClient: QueueClient
 ): Promise<void> {
   const response = await queueClient.receiveMessages({
-    numberOfMessages: 10,
+    numberOfMessages: 1,
     visibilityTimeout: 30,
   });
 
@@ -305,7 +304,7 @@ async function processWithPoisonHandling(
       await processMessage(message.messageText);
       await queueClient.deleteMessage(message.messageId, message.popReceipt);
     } catch (error) {
-      console.error(`Processing failed (attempt ${message.dequeueCount}):`, error);
+      console.error(`Processing failed (attempt ${message.dequeueCount})`);
     }
   }
 }
@@ -325,60 +324,32 @@ async function processBatchWithExtension(queueClient: QueueClient): Promise<void
 
   let popReceipt = message.popReceipt;
 
-  // Start visibility extension timer
-  const extensionInterval = setInterval(async () => {
-    try {
-      const updateResponse = await queueClient.updateMessage(
-        message.messageId,
-        popReceipt,
-        message.messageText,
-        60 // Extend by another 60 seconds
-      );
-      popReceipt = updateResponse.popReceipt;
-    } catch (error) {
-      console.error("Failed to extend visibility:", error);
-    }
-  }, 45000); // Extend every 45 seconds
-
-  try {
-    await longRunningProcess(message.messageText);
-    await queueClient.deleteMessage(message.messageId, popReceipt);
-  } finally {
-    clearInterval(extensionInterval);
+  // Application-owned adapter yields only after bounded (<30s) idempotent chunks.
+  // Await renewal serially: overlapping callbacks can rotate receipts during delete.
+  for await (const chunk of processInChunks(message.messageText)) {
+    const updated = await queueClient.updateMessage(
+      message.messageId, popReceipt, message.messageText, 60
+    );
+    popReceipt = updated.popReceipt;
+    // On renewal failure, stop and do not delete; processing must tolerate redelivery.
   }
+  await queueClient.deleteMessage(message.messageId, popReceipt);
 }
 ```
 
 
 ## Message Encoding
 
-By default, messages are Base64 encoded. You can customize this:
+The JavaScript SDK sends strings; it does not provide the `messageEncoding` client option shown in some other Azure language SDKs. Agree the wire format with every producer/consumer. For Base64, encode/decode explicitly (Node.js):
 
 ```typescript
-import { QueueClient } from "@azure/storage-queue";
-
-// Custom encoder/decoder for plain text
-const queueClient = new QueueClient(
-  `https://${accountName}.queue.core.windows.net/my-queue`,
-  credential,
-  {
-    messageEncoding: "text", // "base64" (default) or "text"
-  }
-);
-
-// Or with custom encoder
-const customQueueClient = new QueueClient(
-  `https://${accountName}.queue.core.windows.net/my-queue`,
-  credential,
-  {
-    messageEncoding: {
-      encode: (message: string) => Buffer.from(message).toString("base64"),
-      decode: (message: string) => Buffer.from(message, "base64").toString(),
-    },
-  }
-);
+const payload = Buffer.from(JSON.stringify(task), "utf8").toString("base64");
+await queueClient.sendMessage(payload);
+// At the consumer, decode before parsing, and validate the resulting schema.
+const decoded = Buffer.from(message.messageText, "base64").toString("utf8");
 ```
 
+Base64 increases size; the service message limit applies to the encoded content. Encoding is not encryption.
 
 ## SAS Token Generation (Node.js only)
 
@@ -451,7 +422,7 @@ try {
         console.log("Queue already exists or being deleted");
         break;
       default:
-        console.error(`Storage error ${error.statusCode}: ${error.message}`);
+        console.error(`Storage error ${error.statusCode}`);
     }
   }
   throw error;
@@ -502,7 +473,7 @@ import {
 |-------|-------|
 | Max message size | 64 KB |
 | Max visibility timeout | 7 days |
-| Max time-to-live | 7 days (or -1 for infinite) |
+| Time-to-live | Default7 days; supported service versions allow a positive duration or -1 (nonexpiring) |
 | Max messages per receive | 32 |
 | Default visibility timeout | 30 seconds |
 
@@ -510,8 +481,8 @@ import {
 ## Best Practices
 
 1. **Use DefaultAzureCredential** — Prefer AAD over connection strings/keys
-2. **Always delete after processing** — Prevent duplicate processing
-3. **Handle poison messages** — Move failed messages to a dead-letter queue
+2. **Delete only after successful processing** — Delivery is at least once; make effects idempotent
+3. **Handle poison messages** — Application-managed poison queue; send+delete is not atomic and may duplicate
 4. **Use appropriate visibility timeout** — Set based on expected processing time
 5. **Extend visibility for long tasks** — Update message to prevent timeout
 6. **Use JSON for structured data** — Serialize objects to JSON strings

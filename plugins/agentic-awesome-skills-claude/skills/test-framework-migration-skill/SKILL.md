@@ -48,7 +48,7 @@ If the user only names the source (e.g. "convert my Selenium tests"), ask: "Whic
 
 | Source → Target | Language note |
 |----------------|---------------|
-| Selenium (Java/Python/C#) → Playwright | Playwright is typically JS/TS; migration usually implies rewriting to TypeScript or JavaScript. Mention this if source is Java/C#/Python. |
+| Selenium (Java/Python/C#) → Playwright | Playwright has Java, Python and .NET bindings as well as JS/TS. Choose the target language/runner explicitly; migration need not imply a rewrite to JS/TS. |
 | Selenium (JS) → Playwright | Same language (JS/TS) possible. |
 | Playwright/Puppeteer/Cypress → Selenium | Target can be Java, Python, JS, C#. Prefer same as project or ask. |
 | Playwright ↔ Puppeteer ↔ Cypress | Typically stay in JS/TS. |
@@ -96,6 +96,10 @@ After generating migrated code, validate against the "Gotchas" section of the re
 | Full Puppeteer patterns, cloud | `puppeteer-skill` and [puppeteer-skill/reference/cloud-integration.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/../puppeteer-skill/reference/cloud-integration.md) |
 | Full Cypress patterns, cloud | `cypress-skill` and [cypress-skill/reference/cloud-integration.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/../cypress-skill/reference/cloud-integration.md) |
 | TestMu capabilities (all frameworks) | [shared/testmu-cloud-reference.md](https://github.com/LambdaTest/agent-skills/tree/main/test-framework-migration-skill/../shared/testmu-cloud-reference.md) |
+
+## Migration evidence
+
+The linked upstream references are remote prerequisites, not bundled files. If unavailable, state that and use verified target documentation rather than inventing mappings. Preserve original behavior/assertions, test data isolation, skipped-test reasons and failure coverage. Run source and migrated tests against an authorized sandbox when available; compilation alone is not behavioral equivalence. Do not add paid cloud runs or upload private tests without authorization.
 
 ## Validation Workflow
 

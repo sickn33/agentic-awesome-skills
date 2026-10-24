@@ -1,5 +1,13 @@
 # Review Waiver Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Review waivers make human risk acceptance explicit. They are not a way to hide problems; they are a local audit record for warning-level risks that the reviewer intentionally accepts for a bounded release window.
 
 ## When To Use

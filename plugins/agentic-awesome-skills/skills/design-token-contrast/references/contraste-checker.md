@@ -35,6 +35,8 @@ for (let i = 0; i < argv.length; i++) {
   else if (a === '--todos') op.todos = true;
   else if (a === '--json') op.json = argv[++i];
   else if (a === '--ayuda' || a === '-h') { console.log('Uso: node contraste.mjs [--tokens archivo.css] [--pares pares.json] [--todos] [--json salida.json]'); process.exit(0); }
+  else { console.error(`Opción desconocida: ${a}`); process.exit(2); }
+  if (['--tokens', '--pares', '--json'].includes(a) && (!argv[i] || argv[i].startsWith('--'))) { console.error(`Falta valor: ${a}`); process.exit(2); }
 }
 
 function buscarTokens() {
@@ -137,7 +139,7 @@ function parsearColorInterno(valor, vars, profundidad = 0) {
   if (v === 'white') return { r: 1, g: 1, b: 1, a: 1 };
   if (v === 'black') return { r: 0, g: 0, b: 0, a: 1 };
   if (v === 'transparent') return { r: 0, g: 0, b: 0, a: 0 };
-  let m = v.match(/^#([0-9a-f]{3,8})$/);
+  let m = v.match(/^#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/);
   if (m) {
     let h = m[1];
     if (h.length === 3 || h.length === 4) h = h.split('').map((c) => c + c).join('');
@@ -195,7 +197,7 @@ function sugerirTodos(frente, fondos, minimo) {
       if (L2 < 0 || L2 > 1) break;
       let c = C;
       let rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H));
-      while (rgb.some((x) => x < 0 || x > 1) && c > 0) { c -= 0.005; rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H)); }
+      while (rgb.some((x) => x < 0 || x > 1) && c > 0) { c = Math.max(0, c - 0.005); rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H)); }
       const cand = { r: clamp(rgb[0]), g: clamp(rgb[1]), b: clamp(rgb[2]), a: 1 };
       if (fondos.every((f) => contraste(cand, f) >= minimo + 0.05)) {
         if (!mejor || paso < mejor.paso) mejor = { paso, color: cand, oklch: `oklch(${(L2 * 100).toFixed(1)}% ${c.toFixed(3)} ${((H * 180 / Math.PI + 360) % 360).toFixed(1)})` };
@@ -219,7 +221,7 @@ function sugerir(frente, fondo, minimo) {
       if (L2 < 0 || L2 > 1) break;
       let c = C;
       let rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H));
-      while (rgb.some((x) => x < 0 || x > 1) && c > 0) { c -= 0.005; rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H)); }
+      while (rgb.some((x) => x < 0 || x > 1) && c > 0) { c = Math.max(0, c - 0.005); rgb = oklabARgb(L2, c * Math.cos(H), c * Math.sin(H)); }
       const candidato = { r: clamp(rgb[0]), g: clamp(rgb[1]), b: clamp(rgb[2]), a: 1 };
       if (contraste(candidato, fondo) >= minimo + 0.05) {
         if (!mejor || paso < mejor.paso) mejor = { paso, color: candidato, oklch: `oklch(${(L2 * 100).toFixed(1)}% ${c.toFixed(3)} ${((H * 180 / Math.PI + 360) % 360).toFixed(1)})` };
@@ -277,6 +279,8 @@ function evaluar(variables, etiqueta) {
   const filas = [];
   for (const p of pares) {
     const f = colores.get(p.texto), b = colores.get(p.fondo);
+    if (!Object.hasOwn(MINIMOS, p.tipo)) { filas.push({ ...p, error: 'tipo desconocido' }); continue; }
+    if (b && b.a < 1) { filas.push({ ...p, error: 'fondo transparente: especifica el fondo compuesto real' }); continue; }
     if (!f || !b) { filas.push({ ...p, error: 'token no encontrado o no es un color' }); continue; }
     const ratio = contraste(f, b);
     const minimo = MINIMOS[p.tipo] ?? 4.5;
@@ -314,6 +318,7 @@ if (!resultados.some(Boolean)) console.log('\nNo encontré ninguna variable --co
 for (const r of resultados.filter(Boolean)) {
   console.log(`\n== ${r.etiqueta}: ${r.colores} colores leídos ==`);
   if (r.filas.length === 0) console.log('No pude armar pares por nombre. Usa --pares o --todos.');
+  incompletos += r.noLeidos.length;
   const ordenadas = r.filas;
   for (const f of ordenadas) {
     if (f.error) { console.log(`  ?  ${f.texto} sobre ${f.fondo}: ${f.error}`); incompletos++; continue; }
@@ -331,8 +336,8 @@ for (const r of resultados.filter(Boolean)) {
 if (fallas) console.log(`\n${fallas} pares no llegan al mínimo de WCAG 2.2 AA.`);
 if (incompletos) console.log(`\n${incompletos} pares no se pudieron medir: revisa que esos tokens existan y sean colores.`);
 if (!medidos) console.log('\nNo se midió ningún par: el informe no dice nada sobre tu contraste.');
-else if (!fallas && !incompletos) console.log('\nTodos los pares revisados cumplen WCAG 2.2 AA.');
+else if (!fallas && !incompletos) console.log('\nTodos los pares interpretados alcanzan los umbrales numéricos; esto no certifica WCAG.');
 console.log('Ojo: esto mide los tokens. Un texto sobre una imagen o un degradado hay que revisarlo en pantalla.');
-if (op.json) fs.writeFileSync(op.json, JSON.stringify(resultados, null, 2));
+if (op.json) fs.writeFileSync(op.json, JSON.stringify(resultados, null, 2), { flag: 'wx', mode: 0o600 });
 process.exit(fallas && !op.todos ? 1 : (incompletos || !medidos ? 2 : 0));
 ```

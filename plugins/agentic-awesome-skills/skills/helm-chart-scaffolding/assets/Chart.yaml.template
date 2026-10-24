@@ -39,4 +39,4 @@ dependencies:
 
 annotations:
   category: Application
-  licenses: Apache-2.0
+  licenses: "<ACTUAL_CHART_LICENSE>"  # do not invent a license

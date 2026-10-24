@@ -1,7 +1,7 @@
 """
 Service Layer Template
 
-Production-ready service class pattern for Cosmos DB with:
+Application-specific starter service class pattern for Cosmos DB with:
 - Document ↔ Model conversion
 - CRUD operations
 - Graceful degradation
@@ -124,6 +124,8 @@ class EntityService:
         slug = base_slug
         counter = 1
 
+        # Advisory availability check only; enforce uniqueness with a
+        # container unique-key policy or atomic reservation and handle conflict.
         while True:
             existing = await query_documents(
                 doc_type="entity",  # TODO: Change to your entity type
@@ -193,7 +195,7 @@ class EntityService:
             Entity if found, None otherwise
         """
         if not self._use_cosmos():
-            return None
+            raise RuntimeError("Database unavailable")
 
         doc = await get_document(entity_id, partition_key=workspace_id)
         if doc is None:
@@ -216,7 +218,7 @@ class EntityService:
             Entity if found, None otherwise
         """
         if not self._use_cosmos():
-            return None
+            raise RuntimeError("Database unavailable")
 
         docs = await query_documents(
             doc_type="entity",  # TODO: Change to your entity type
@@ -249,7 +251,7 @@ class EntityService:
             Updated entity if found, None otherwise
         """
         if not self._use_cosmos():
-            return None
+            raise RuntimeError("Database unavailable")
 
         doc = await get_document(entity_id, partition_key=workspace_id)
         if doc is None:
@@ -257,10 +259,10 @@ class EntityService:
 
         model_in_db = self._doc_to_model_in_db(doc)
 
-        # Apply updates (only non-None fields)
+        # Apply only mutable fields; exclude_unset preserves an explicit null.
         update_data = data.model_dump(exclude_unset=True)
         for field, value in update_data.items():
-            if hasattr(model_in_db, field):
+            if field in {"name", "description", "visibility", "tags"}:
                 setattr(model_in_db, field, value)
 
         model_in_db.updated_at = datetime.now(timezone.utc)
@@ -282,7 +284,7 @@ class EntityService:
             True if deleted, False if not found
         """
         if not self._use_cosmos():
-            return False
+            raise RuntimeError("Database unavailable")
 
         return await delete_document(entity_id, partition_key=workspace_id)
 
@@ -297,7 +299,7 @@ class EntityService:
             List of entities (empty if unavailable)
         """
         if not self._use_cosmos():
-            return []
+            raise RuntimeError("Database unavailable")
 
         docs = await query_documents(
             doc_type="entity",  # TODO: Change to your entity type

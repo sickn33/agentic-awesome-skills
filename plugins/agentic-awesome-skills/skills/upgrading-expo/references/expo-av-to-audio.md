@@ -63,7 +63,9 @@ async function stopRecording() {
 const recorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
 
 async function startRecording() {
-  await AudioModule.requestRecordingPermissionsAsync();
+  const permission = await AudioModule.requestRecordingPermissionsAsync();
+  if (!permission.granted) throw new Error("Recording permission denied");
+  await setAudioModeAsync({ allowsRecording: true, playsInSilentMode: true });
   await recorder.prepareToRecordAsync();
   recorder.record();
 }

@@ -1,5 +1,13 @@
 # Skill Engineering Method
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 This doctrine defines the default method for turning messy workflow material into a reusable skill without bloating the entrypoint.
 
 ## Core Loop
@@ -100,7 +108,7 @@ Boundary work comes before polishing prose.
 Run a short benchmark pass before deep authoring.
 
 - scan `3-5` reference objects at most
-- prioritize high-star external GitHub and official benchmark sources first
+- prioritize authoritative relevant sources while preserving the user requirements and applicable local contracts
 - ask for user-supplied references second, but extract only patterns and standards
 - use local files third, only for fit, privacy, and compatibility calibration
 - choose from method, structure, execution, portability, and domain patterns
@@ -203,7 +211,7 @@ A candidate route or package is promotable only when:
 - route confusion stays clean
 - context and governance gates still pass
 
-See [Promotion Policy](../evals/promotion_policy.md).
+See the upstream Promotion Policy (not bundled).
 
 ## Design Principle
 

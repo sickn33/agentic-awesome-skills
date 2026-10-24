@@ -1,5 +1,7 @@
 # MCP Integration Reference
 
+**Compatibility note:** This is preserved legacy-generation reference material, not a verified current SDK recipe. Apply the SDK-generation, authorization, privacy, cost and cleanup gate in the root skill before adapting any snippet.
+
 Model Context Protocol (MCP) integration patterns for Azure AI agents.
 
 ## Overview
@@ -34,7 +36,7 @@ async with (
         tools=HostedMCPTool(
             name="Microsoft Learn MCP",
             url="https://learn.microsoft.com/api/mcp",
-            approval_mode="never_require",  # Don't ask for approval
+            approval_mode="always_require",  # Handle approval before executing a tool
         ),
     )
 
@@ -54,6 +56,8 @@ mcp_tool = HostedMCPTool(
     allowed_tools=["microsoft_docs_search", "microsoft_docs_read"],  # Only these tools
 )
 ```
+
+Only use automatic approval for reviewed read-only tools within the approved scope. Approval modes/field names are SDK-generation-specific; fail closed when no approval handler exists. Keep tokens scoped to the exact reviewed HTTPS origin; do not forward them across redirects.
 
 ### With Authentication Headers
 
@@ -138,6 +142,8 @@ For authentication or custom headers:
 from httpx import AsyncClient
 from agent_framework import MCPStreamableHTTPTool
 
+# Close the custom client with `async with AsyncClient(...) as http_client:`
+# around the tool lifecycle unless the pinned tool explicitly owns it.
 # Create HTTP client with authentication
 http_client = AsyncClient(
     headers={
@@ -150,7 +156,7 @@ http_client = AsyncClient(
 async with (
     MCPStreamableHTTPTool(
         name="GitHub MCP",
-        url="https://api.github.com/mcp",
+        url="https://api.githubcopilot.com/mcp/readonly",
         http_client=http_client,
     ) as github_mcp,
     AzureAIAgentsProvider(credential=credential) as provider,
@@ -173,7 +179,7 @@ async with (
     ) as docs_mcp,
     MCPStreamableHTTPTool(
         name="GitHub MCP",
-        url="https://api.github.com/mcp",
+        url="https://api.githubcopilot.com/mcp/readonly",
         http_client=authenticated_client,
     ) as github_mcp,
     AzureAIAgentsProvider(credential=credential) as provider,
@@ -225,7 +231,7 @@ from agent_framework import (
 
 def get_user_id() -> str:
     """Get the current user's ID."""
-    return "user-123"
+    raise NotImplementedError("Read verified caller identity from the application session; never fabricate it")
 
 async with (
     AzureCliCredential() as credential,

@@ -36,10 +36,10 @@ Provides a standardized, auditable framework and data model for **Stellar Anchor
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Anchor Service ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `ANC-001` |
-| 2 | Anchor Domain | `text` | `VARCHAR(128)` | `string` | Text | `anchor.stellar-gateway.org` |
+| 1 | Anchor Service ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `ANC-001` |
+| 2 | Anchor Domain | `text` | `VARCHAR(128)` | `string` | Text | `anchor.example` |
 | 3 | TOML Endpoint Status | `select` | `VARCHAR(32)` | `string` | Select | `Active 200 OK` |
-| 4 | SEP-10 JWT Issuer | `text` | `VARCHAR(56)` | `string` | Text | `GCAUTH...` |
+| 4 | SEP-10 JWT Issuer | `text` | `VARCHAR(256)` | `string` | Text | `https://anchor.example/auth` |
 | 5 | SEP-24 Interactive Deposit Enabled | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
 | 6 | SEP-38 Quote Server Active | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
 | 7 | Supported Asset Codes | `text` | `VARCHAR(64)` | `string` | Text | `USDC, EURC, NPRC` |
@@ -98,6 +98,8 @@ How do I configure and track Stellar Anchor Protocol Integration for our product
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+A register does not prove SEP conformance or regulatory KYC compliance. Bind signing key, home domain, web-auth domain and network separately; JWT issuer is not interchangeable with the Stellar signing public key. Validate the complete [SEP-10 challenge and JWT flow](https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0010.md) using the chosen SDK before signing. Asset identity requires code plus issuer/network, not a comma-separated code alone. KYC tiers are local labels requiring jurisdiction/provider evidence; never upload identity documents or execute deposits/withdrawals merely to fill the register.
 
 ## Best Practices
 

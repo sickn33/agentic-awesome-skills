@@ -186,23 +186,23 @@ Java.perform(function() {
 ```
 Info.plist 中的 CFBundleURLTypes
 打开 myapp://... → 应用响应
-任何 APP 都能注册同名 scheme，先注册的赢
+多个应用可声明同一 scheme，系统选择行为不能作为安全保证；敏感回调使用经过验证的 Universal Links/App Links 和状态绑定。
 ```
 
 #### Pasteboard 泄露
 
 ```swift
 // 应用把敏感数据写到通用剪贴板
-UIPasteboard.general.string = userToken  // 任何 APP 可读
+UIPasteboard.general.string = userToken  // 敏感数据不宜写通用剪贴板；访问行为依系统版本和许可限制
 ```
 
 #### Keychain ACL
 
 ```
 看 Keychain entry 的 kSecAttrAccessible：
-  AlwaysThisDeviceOnly: 解锁后才读
+  AlwaysThisDeviceOnly: 已弃用的始终可访问类别，不是仅解锁后可读；选择符合需求的 WhenUnlocked/AfterFirstUnlock 等类别
   Always: 总是可读（旧设备危险）
-看是否设了 kSecAttrAccessGroup（共享 keychain，跨 APP 可读）
+看 kSecAttrAccessGroup 与签名 entitlements 是否匹配；不是任意 APP 都可读共享组。
 ```
 
 #### URL 处理 / WKWebView
@@ -291,7 +291,7 @@ WebView XSS → 偷 cookie / 调 JS bridge → 本地命令
 
 - jadx 反编译后看到 `OkHttp` / `Retrofit` 配置 → 抓 API
 - AndroidManifest 含 `android:debuggable="true"` → 可附加调试
-- Application 节点 `android:allowBackup="true"` → adb backup 可读取数据
+- `android:allowBackup="true"` 是备份策略线索；实际导出取决于 Android 版本、target SDK、备份规则与设备策略，不能直接断言 adb backup 可读。
 - 字符串中含 `BEGIN RSA PRIVATE KEY` / `aws_access_key_id` → 立即报告
 - Firebase URL 末尾加 `/.json` 返回数据 → 数据库未授权
 

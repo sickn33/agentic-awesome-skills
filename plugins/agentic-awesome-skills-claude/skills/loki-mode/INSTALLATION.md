@@ -64,32 +64,9 @@ unzip loki-mode.zip && rm loki-mode.zip
 
 **Result:** Creates `~/.claude/skills/loki-mode/SKILL.md`
 
-### Option C: Minimal Install (curl)
+### Option C: Complete reviewed package
 
-If you only want the essential files without the full repository:
-
-```bash
-# Create directory structure
-mkdir -p ~/.claude/skills/loki-mode/references
-
-# Download core skill file
-curl -o ~/.claude/skills/loki-mode/SKILL.md \
-  https://raw.githubusercontent.com/asklokesh/loki-mode/main/SKILL.md
-
-# Download agent definitions
-curl -o ~/.claude/skills/loki-mode/references/agents.md \
-  https://raw.githubusercontent.com/asklokesh/loki-mode/main/references/agents.md
-
-# Download deployment guides
-curl -o ~/.claude/skills/loki-mode/references/deployment.md \
-  https://raw.githubusercontent.com/asklokesh/loki-mode/main/references/deployment.md
-
-# Download business operations reference
-curl -o ~/.claude/skills/loki-mode/references/business-ops.md \
-  https://raw.githubusercontent.com/asklokesh/loki-mode/main/references/business-ops.md
-```
-
-**Note:** This minimal install won't include examples, tests, or the autonomous runner. Use Option A or B for full functionality.
+A few downloaded Markdown files are insufficient: `SKILL.md` also depends on the detailed guide and reference files. Use a complete package from Option A or B, select an exact reviewed commit or release, inspect its contents before enabling it, and keep a backup of local changes. Mutable `main` downloads are not pinned to this catalog review.
 
 ---
 
@@ -316,14 +293,16 @@ curl -o ~/.claude/skills/loki-mode/references/agents.md \
 
 ```bash
 cd ~/.claude/skills/loki-mode
-git pull origin main
+# Fetch and inspect the chosen commit before switching; preserve local edits.
+git fetch origin
+git log --oneline HEAD..origin/main
 ```
 
 ### For Manual Installations
 
 1. Download the latest release
-2. Extract to the same directory (overwrite existing files)
-3. Or delete old installation and reinstall
+2. Extract into a new directory and inspect the complete contents
+3. Back up local changes, then replace only after reviewing the selected release
 
 ### Check Current Version
 

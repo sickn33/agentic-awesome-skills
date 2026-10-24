@@ -98,7 +98,7 @@ Previews must compile and render without external dependencies. Live services, n
 Expose sample values as static properties on the model itself so any preview can reuse them without reconstructing values inline:
 
 ```swift
-struct Item: Identifiable {
+struct Item: Identifiable, Codable {
     let id: UUID
     var name: String
     var price: Double
@@ -189,7 +189,10 @@ struct LiveDataFetcher: DataFetching {
     let url: URL
 
     func fetchItems() async throws -> [Item] {
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
         return try JSONDecoder().decode([Item].self, from: data)
     }
 }

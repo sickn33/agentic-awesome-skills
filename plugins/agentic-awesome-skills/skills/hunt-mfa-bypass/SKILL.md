@@ -29,6 +29,10 @@ report_count: 5
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
+## Bounded validation
+
+Use only approved test accounts and a pre-agreed request budget, concurrency, duration and lockout stop condition. The exhaustive million-code example is a lab illustration, not a default live test. Do not evade rate limits or rotate source IPs to continue beyond scope. Severity depends on demonstrated access and preconditions, not the categorical labels below. Prefix timing differences require repeated controlled measurements; one response difference is not proof of an oracle.
+
 ## Autonomous Testing Priority
 
 **Try workflow bypasses before brute force — they're faster and more likely to succeed.**
@@ -57,7 +61,7 @@ This is the go-to when there is no leaked code and no skip/replay path. Some app
 
 **On full brute force:** brute-forcing all 10^6 codes is infeasible in a bounded test — but the prefix oracle above (Pattern 4) usually makes it unnecessary. Only attempt full brute force with evidence of no rate limit AND a small key space.
 
-**Proof:** A session token or protected resource data in the response without completing MFA confirms the bypass.
+**Proof:** A token or HTTP 200 alone is insufficient. With an approved test account, verify a resource that actually requires completed MFA and compare its authorization state; some tokens represent only a pre-MFA session.
 
 ---
 
@@ -81,7 +85,7 @@ ffuf -u "https://target.com/api/verify-otp" \
 1. Login → receive OTP "123456" → enter it → success
 2. Logout → login again with same credentials
 3. Try OTP "123456" again
-4. If accepted → OTP never invalidated = ATO (attacker sniffs OTP once, reuses forever)
+4. If accepted → investigate replay within the defined validity window; this does not prove indefinite reuse or account takeover
 ```
 
 ### Pattern 3: Response Manipulation
@@ -116,7 +120,7 @@ async def race():
         # they almost always resolve sequentially as "already-used" (false negative).
         # Best done as a single-packet / 20+ HTTP-2-stream attack (Turbo Intruder).
         results = await asyncio.gather(*[verify(s, "123456") for _ in range(30)])
-        # Race confirmed if >1 success (or 1 success among many "already-used").
+        # One success among rejected repeats is expected; investigate only multiple independently accepted uses.
         for status, body in results:
             print(status, body)
 asyncio.run(race())
@@ -134,7 +138,7 @@ Also test: can backup codes be reused after exhaustion? Some apps regenerate pre
 1. Complete MFA once on Device A (attacker's browser)
 2. Capture the "remember device" cookie
 3. Present that cookie from a new IP/browser
-4. If MFA skipped = device trust not bound to IP/UA = ATO from any location
+4. Check the documented device-trust policy. A transferable bearer cookie is not automatically an MFA bypass merely because IP or User-Agent changes; demonstrate an unauthorized trust transition.
 ```
 
 ### MFA Chain Escalation
@@ -150,7 +154,7 @@ OTP reuse = persistent session hijack = High
 ## Related Skills & Chains
 
 - **`hunt-ato`** — MFA bypass is a primitive; ATO is the destination. Chain primitive: cookie theft (via XSS or session-fixation) + password oracle (login response timing/length diff reveals valid passwords without lockout) + no MFA step-up on password-change endpoint = persistent ATO without ever facing the OTP challenge → password rotated, attacker locks victim out.
-- **`hunt-race-condition`** — Pattern 5 (OTP race) lives in race-condition territory; load both skills together. Chain primitive: same 6-digit OTP submitted via 20 parallel HTTP/2 streams (single-packet Turbo Intruder attack) before the server marks it used → 1 success + 19 "already-used" → race window confirmed → attacker doesn't need to brute, just guesses once and parallelizes → ATO.
+- **`hunt-race-condition`** — Pattern 5 (OTP race) lives in race-condition territory; load both skills together. Chain primitive: same 6-digit OTP submitted via 20 parallel HTTP/2 streams (single-packet Turbo Intruder attack) before the server marks it used → 1 success + 19 "already-used" is expected rejection of repeats, not proof of a race or account takeover.
 - **`hunt-auth-bypass`** — MFA-step-skip is auth-flow bypass at the workflow layer. Chain primitive: pre-MFA cookie issued after password step + direct navigation to `/dashboard` skipping `/mfa` route + server only middleware-gates `/mfa` not `/dashboard` = full post-auth access from password-only state → MFA never enforced because the route gate was misplaced.
 - **`hunt-misc`** — Recovery-code dump via `/api/me` is a misc-class info disclosure that becomes Critical when chained. Chain primitive: `/api/me` returns full user object including `backup_codes` array (plaintext, never rotated) → attacker with any read-IDOR or XSS exfils backup codes → uses one backup code → MFA satisfied → ATO without OTP knowledge.
 - **`security-arsenal`** — Pull the OTP-brute-force payload section (000000-999999 wordlist generator, ffuf rate-limit-evasion patterns with `-t 5 -p 0.5-2`, distributed-IP rotation via proxychains) and the JWT-token-replay table when "MFA satisfied" claim lives in a JWT claim that can be forged.

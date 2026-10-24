@@ -131,8 +131,9 @@ ax.set_ylabel('Frequency')
 
 ### Multiple Overlapping Histograms
 ```python
-ax.hist(data1, bins=30, alpha=0.5, label='Dataset 1')
-ax.hist(data2, bins=30, alpha=0.5, label='Dataset 2')
+bins = np.histogram_bin_edges(np.concatenate([data1, data2]), bins=30)
+ax.hist(data1, bins=bins, alpha=0.5, label='Dataset 1')
+ax.hist(data2, bins=bins, alpha=0.5, label='Dataset 2')
 ax.legend()
 ```
 
@@ -168,15 +169,15 @@ plt.colorbar(h[3], ax=ax, label='Counts')
 ### Box Plot
 ```python
 ax.boxplot([data1, data2, data3],
-           labels=['Group A', 'Group B', 'Group C'],
+           tick_labels=['Group A', 'Group B', 'Group C'],
            showmeans=True, meanline=True)
 ax.set_ylabel('Values')
 ```
 
 ### Horizontal Box Plot
 ```python
-ax.boxplot([data1, data2, data3], vert=False,
-           labels=['Group A', 'Group B', 'Group C'])
+ax.boxplot([data1, data2, data3], orientation="horizontal",
+           tick_labels=['Group A', 'Group B', 'Group C'])
 ax.set_xlabel('Values')
 ```
 

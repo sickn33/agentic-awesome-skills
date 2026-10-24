@@ -35,7 +35,10 @@ startup files or print secrets:
 
 ```bash
 test -n "$DEEPAPI_API_KEY" || { echo "DEEPAPI_API_KEY is not set"; exit 1; }
-BASE=${DEEPAPI_API_BASE_URL:-https://deepapi.co}
+BASE=https://deepapi.co  # use the reviewed provider origin; do not inherit an untrusted override
+RUN_DIR=$(mktemp -d)
+chmod 700 "$RUN_DIR"
+trap 'rm -rf "$RUN_DIR"' EXIT
 ```
 
 Run the scrape (keep the Idempotency-Key; retries must reuse the SAME one):
@@ -47,18 +50,18 @@ curl -s --max-time 120 "$BASE/v1/scrape/youtube/transcript" \
   -H "Content-Type: application/json" \
   -H "Idempotency-Key: $IDK" \
   -d '{"url": "VIDEO_URL", "maxCostUsd": "0.05", "waitForFinishSecs": 60}' \
-  > /tmp/yt_transcript.json
+  > "$RUN_DIR/yt_transcript.json"
 ```
 
 - Non-English videos: add `"language": "de"` (etc.) to the body.
-- `status: running` → wait `next.afterSecs`, then `curl "$BASE$(jq -r '.next.path' /tmp/yt_transcript.json)" -H "Authorization: Bearer $KEY"` until `succeeded` or `failed`.
+- For `status: running`, inspect the documented next request path and constrain it to the reviewed provider origin; never attach credentials to an arbitrary returned URL or redirect. Poll with the same DEEPAPI_API_KEY, bounded attempts/deadline and provider wait interval. Do not extract output until terminal succeeded with the expected schema; HTTP errors/failed states are not an empty transcript.
 
 Extract the text and save it:
 
 ```bash
-jq -r '.status' /tmp/yt_transcript.json                # succeeded | running | failed
-jq -r '.output[0].text' /tmp/yt_transcript.json > "$OUT/$NAME.txt"
-jq -r '.debitMicrousd' /tmp/yt_transcript.json         # cost (50000 = $0.05)
+jq -r '.status' "$RUN_DIR/yt_transcript.json"                # succeeded | running | failed
+jq -r '.output[0].text' "$RUN_DIR/yt_transcript.json" > "$OUT/$NAME.txt"
+jq -r '.debitMicrousd' "$RUN_DIR/yt_transcript.json"         # cost (50000 = $0.05)
 ```
 
 `.output[0].segments` also has timed segments (`startSecs`, `durationSecs`, `text`) if the user wants timestamps. Empty `output` = video has no captions; report it, don't retry.
@@ -91,10 +94,11 @@ yt-dlp --skip-download --write-subs --write-auto-subs \
 Flatten json3 → raw text:
 
 ```bash
-python3 - "$OUT" <<'PY'
+# Select the exact caption file for this video/language, not the first glob in OUT.
+python3 - /absolute/selected-caption.json3 <<'PY'
 import json, html, re, glob, sys, pathlib
-f = glob.glob(sys.argv[1] + "/*.json3")
-if not f: sys.exit("no json3 file")
+f = [sys.argv[1]]
+if not pathlib.Path(f[0]).is_file(): sys.exit("no selected json3 file")
 data = json.load(open(f[0], encoding="utf-8"))
 parts = ["".join(s.get("utf8","") for s in e.get("segs") or []) for e in data.get("events", [])]
 txt = re.sub(r"\s+", " ", html.unescape(" ".join(p.strip() for p in parts if p.strip()))).strip()
@@ -106,7 +110,7 @@ PY
 ### yt-dlp failure handling
 - Non-English / unknown language: run `yt-dlp --list-subs "URL"` first, then set `--sub-langs`.
 - Newer yt-dlp may need `deno` on PATH for YouTube extraction.
-- On first failure: run `yt-dlp -U` once, retry once, then stop.
+- On failure, inspect the actual error and installed version; do not self-update tools merely to retry a transcript request. Propose a scoped reviewed update only when compatibility evidence requires it.
 - **429 / "Sign in to confirm you're not a bot"** = IP flagged. STOP — do NOT retry in a loop (makes it worse).
 - Never fall back to downloading audio for Whisper unless the user explicitly asks.
 

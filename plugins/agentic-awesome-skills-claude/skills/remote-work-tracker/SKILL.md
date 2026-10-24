@@ -167,7 +167,9 @@ CREATE TABLE remote_work_tracker (
   "required": [
       "Week Start",
       "HQ Days",
-      "Remote Days"
+      "Remote Days",
+      "Core Hours Met",
+      "Approved"
   ]
 }
 ```
@@ -208,6 +210,8 @@ and anything pointing at another table stays `relation`.
 | 10 | Approved | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
 | 11 | Notes | `long_text` | `TEXT` | `string` | Text | `February shows two split-location weeks; the travel policy needs a decision either way.` |
 | 12 | Remote ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+HQ/remote days describe the agreed weekly plan, not inferred presence. Record Core Hours Met and Approved only from an explicit verified decision; if unknown, adapt both SQL and JSON to nullable fields rather than silently treating a missing value as false. Do not infer work performance from location.
 
 ## Select Options
 

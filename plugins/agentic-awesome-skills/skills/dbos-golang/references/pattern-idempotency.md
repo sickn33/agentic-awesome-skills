@@ -7,7 +7,7 @@ tags: pattern, idempotency, workflow-id, deduplication
 
 ## Use Workflow IDs for Idempotency
 
-Assign a workflow ID to ensure a workflow executes only once, even if called multiple times. This prevents duplicate side effects like double payments.
+Assign a workflow ID to ensure a workflow executes only once, even if called multiple times. This deduplicates workflow identity, but external calls inside an uncheckpointed step can repeat after recovery. Use payment-provider idempotency keys as well.
 
 **Incorrect (no idempotency):**
 

@@ -11,6 +11,8 @@ date_added: "2026-03-06"
 
 ## Detailed Guide
 
+本技能仅用于整理用户授权的症状记录，不诊断、不预测自杀/自伤或提供危机风险分层。发生即时危险时应立即联系当地急救/急诊及可信赖的人，不等待数据分析。详见修订后的指南与 NICE 来源。
+
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## When to Use

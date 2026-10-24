@@ -15,7 +15,7 @@ Mediabunny can extract the duration of a video file. It works in browser, Node.j
 import { Input, ALL_FORMATS, UrlSource } from "mediabunny";
 
 export const getVideoDuration = async (src: string) => {
-  const input = new Input({
+  using input = new Input({
     formats: ALL_FORMATS,
     source: new UrlSource(src, {
       getRetryDelay: () => null,
@@ -36,14 +36,14 @@ console.log(duration); // e.g. 10.5 (seconds)
 
 ## Using with local files
 
-For local files, use `FileSource` instead of `UrlSource`:
+For local files, use `BlobSource` instead of `UrlSource`:
 
 ```tsx
-import { Input, ALL_FORMATS, FileSource } from "mediabunny";
+import { Input, ALL_FORMATS, BlobSource } from "mediabunny";
 
-const input = new Input({
+using input = new Input({
   formats: ALL_FORMATS,
-  source: new FileSource(file), // File object from input or drag-drop
+  source: new BlobSource(file), // File object from input or drag-drop
 });
 
 const durationInSeconds = await input.computeDuration();

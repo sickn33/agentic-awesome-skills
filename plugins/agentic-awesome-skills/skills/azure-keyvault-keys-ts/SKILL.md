@@ -14,7 +14,7 @@ Manage cryptographic keys with Azure Key Vault.
 
 ```bash
 # Keys SDK
-npm install @azure/keyvault-keys @azure/identity
+npm install @azure/keyvault-keys @azure/keyvault-secrets @azure/identity
 ```
 
 ## Environment Variables
@@ -30,6 +30,7 @@ AZURE_KEYVAULT_NAME=<vault-name>
 ```typescript
 import { DefaultAzureCredential } from "@azure/identity";
 import { KeyClient, CryptographyClient } from "@azure/keyvault-keys";
+import { SecretClient } from "@azure/keyvault-secrets";
 
 const credential = new DefaultAzureCredential();
 const vaultUrl = `https://${process.env.AZURE_KEYVAULT_NAME}.vault.azure.net`;
@@ -37,6 +38,10 @@ const vaultUrl = `https://${process.env.AZURE_KEYVAULT_NAME}.vault.azure.net`;
 const keyClient = new KeyClient(vaultUrl, credential);
 const secretClient = new SecretClient(vaultUrl, credential);
 ```
+
+## Execution boundaries
+
+Examples are independent fragments and reuse names; do not concatenate them into one script. Use approved test vaults and least-privilege identity. Purge is irreversible and can be blocked by purge protection; key deletion/rotation can break dependent workloads. Confirm exact vault/object/version and recovery plan before mutation. Example expiration dates are historical, not recommended live values.
 
 ## Secrets Operations
 
@@ -59,7 +64,7 @@ const secretWithAttrs = await secretClient.setSecret("MySecret", "value", {
 ```typescript
 // Get latest version
 const secret = await secretClient.getSecret("MySecret");
-console.log(secret.value);
+console.log(secret.name); // Never log secret values.
 
 // Get specific version
 const specificSecret = await secretClient.getSecret("MySecret", {
@@ -185,7 +190,7 @@ const decryptResult = await cryptoClient.decrypt({
   ciphertext: encryptResult.result
 });
 
-console.log(decryptResult.result.toString());
+// Use decrypted bytes only in the authorized application; do not log them.
 ```
 
 ### Sign/Verify
@@ -221,7 +226,7 @@ const unwrapResult = await cryptoClient.unwrapKey("RSA-OAEP", wrapResult.result)
 const keyBackup = await keyClient.backupKey("MyKey");
 const secretBackup = await secretClient.backupSecret("MySecret");
 
-// Restore (can restore to different vault)
+// Restore only within the same subscription and Azure geography.
 const restoredKey = await keyClient.restoreKeyBackup(keyBackup!);
 const restoredSecret = await secretClient.restoreSecretBackup(secretBackup!);
 ```

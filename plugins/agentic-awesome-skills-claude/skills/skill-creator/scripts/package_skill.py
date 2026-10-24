@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-Skill Packager - Creates a distributable .skill file of a skill folder
+Modified for the AAS catalog: corrected bundled workflow, validation and packaging safeguards (2026-10-23).
+
+Skill Packager - Creates a .skill ZIP; host compatibility is not guaranteed
 
 Usage:
     python utils/package_skill.py <path/to/skill-folder> [output-directory]
@@ -31,6 +33,11 @@ from quick_validate import validate_skill
 
 
 def should_include(file_path: Path, skill_path: Path) -> bool:
+    relative = file_path.relative_to(skill_path)
+    if any(part in {".git", ".venv", "venv", "node_modules", "__pycache__", ".pytest_cache"} for part in relative.parts):
+        return False
+    if file_path.name == ".env" or file_path.name.startswith(".env.") or file_path.suffix.lower() in {".pem", ".key", ".pyc", ".skill"}:
+        return False
     if file_path.is_symlink():
         return False
     try:
@@ -85,7 +92,11 @@ def package_skill(skill_path, output_dir=None):
     else:
         output_path = Path.cwd()
 
+    if output_path == skill_path or skill_path in output_path.parents:
+        raise ValueError("Archive output must be outside the skill directory")
     skill_filename = output_path / f"{skill_name}.skill"
+    if skill_filename.exists() or skill_filename.is_symlink():
+        raise FileExistsError(f"Refusing to overwrite archive: {skill_filename}")
 
     # Create the .skill file (zip format)
     try:
@@ -99,7 +110,9 @@ def package_skill(skill_path, output_dir=None):
                         arcname = file_path.relative_to(skill_path.parent)
                         zipf.write(file_path, arcname)
                         print(f"  Added: {arcname}")
-            skill_filename.write_bytes(temp_zip_path.read_bytes())
+            with skill_filename.open("xb") as output, temp_zip_path.open("rb") as source:
+                import shutil
+                shutil.copyfileobj(source, output)
 
         print(f"\n✅ Successfully packaged skill to: {skill_filename}")
         return skill_filename

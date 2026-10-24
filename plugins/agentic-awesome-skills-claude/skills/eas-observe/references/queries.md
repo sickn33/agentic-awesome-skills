@@ -56,7 +56,7 @@ Emitted only when a navigation integration is enabled (SDK 56+). Measured per ro
 
 **Which command takes which alias.** `observe:metrics` (positional argument) and `observe:metrics-summary --metric` accept **all nine** aliases — startup and navigation. `observe:routes --metric` accepts only the three navigation aliases. Use the `nav_` prefix everywhere; there are no bare `cold_ttr` / `warm_ttr` aliases.
 
-`observe:metrics` also accepts a full metric name in place of an alias, for example `eas observe:metrics expo.app_startup.tti`. `observe:routes` accepts full navigation names the same way. The `--metric` flags on `metrics-summary` and `routes` are strict oclif options, so they take aliases only.
+`observe:metrics` also accepts a full metric name in place of an alias, for example `eas observe:metrics expo.app_startup.tti`. Use `observe:routes --metric` with supported aliases; it has no positional metric argument. The `--metric` flags on `metrics-summary` and `routes` are strict oclif options, so they take aliases only.
 
 ## `eas observe:metrics-summary`
 

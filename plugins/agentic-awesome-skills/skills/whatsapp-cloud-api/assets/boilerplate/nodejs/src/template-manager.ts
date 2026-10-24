@@ -11,6 +11,8 @@ export class TemplateManager {
 
     this.client = axios.create({
       baseURL: `https://graph.facebook.com/${version}`,
+      timeout: 30000,
+      maxRedirects: 0,
       headers: {
         Authorization: `Bearer ${config.token}`,
         'Content-Type': 'application/json',
@@ -49,7 +51,7 @@ export class TemplateManager {
 
   async deleteTemplate(templateName: string): Promise<void> {
     await this.client.delete(`/${this.wabaId}/message_templates`, {
-      data: { name: templateName },
+      params: { name: templateName },
     });
   }
 

@@ -143,7 +143,7 @@ Circle()
 ### Custom Timing Per Phase
 
 ```swift
-.phaseAnimator([0, -20, 20], trigger: trigger) { content, offset in
+.phaseAnimator([CGFloat(0), -20, 20], trigger: trigger) { content, offset in
     content.offset(x: offset)
 } animation: { phase in
     switch phase {
@@ -158,7 +158,7 @@ Circle()
 
 ```swift
 // GOOD - use phaseAnimator for multi-step sequences
-.phaseAnimator([0, -10, 10, 0], trigger: trigger) { content, offset in
+.phaseAnimator([CGFloat(0), -10, 10, 0], trigger: trigger) { content, offset in
     content.offset(x: offset)
 }
 
@@ -310,13 +310,13 @@ Circle()
         }
     }
 
-// BAD - completion only fires ONCE (no value parameter)
+// Without value-scoping, registration follows transaction propagation; it is not tied explicitly to this trigger
 Circle()
     .scaleEffect(bounceCount % 2 == 0 ? 1.0 : 1.2)
     .animation(.spring, value: bounceCount)
     .transaction { transaction in  // No value!
         transaction.addAnimationCompletion {
-            completionCount += 1  // Only fires once, ever
+            completionCount += 1  // Invocation frequency depends on incoming transactions
         }
     }
 ```
@@ -382,7 +382,8 @@ struct WaveShape: Shape {
         get { AnimatableValues(amplitude, phase) }
         set {
             amplitude = min(max(newValue.value.0, 0), maxAmplitude)
-            phase = newValue.value.1.truncatingRemainder(dividingBy: 2 * .pi)
+            let period = CGFloat(2) * .pi
+            phase = (newValue.value.1.truncatingRemainder(dividingBy: period) + period).truncatingRemainder(dividingBy: period)
         }
     }
 
@@ -420,7 +421,7 @@ On earlier deployment targets, the same logic uses `AnimatablePair` with `newVal
 ### Completion Handlers (iOS 17+)
 - Use `withAnimation(.animation) { } completion: { }` for one-shot completion handlers
 - Use `.transaction(value:)` for handlers that should refire on every value change
-- Without `value:` parameter, completion only fires once
+- Without value-scoping, completion registration depends on incoming transactions; do not promise once-only behavior
 
 ### @Animatable Macro (iOS 26+)
 - Use `@Animatable` to auto-synthesize `animatableData` from stored properties

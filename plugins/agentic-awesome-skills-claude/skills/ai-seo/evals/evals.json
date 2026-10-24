@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "How do I make sure our SaaS product shows up in AI search results? We're a project management tool and we keep getting left out of ChatGPT and Perplexity recommendations when people ask about project management software.",
-      "expected_output": "Should check for product-marketing-context.md first. Should apply the three pillars framework: Structure (make content extractable), Authority (make content citable), Presence (be where AI looks). Should run through the AI Visibility Audit checklist across platforms (Google AI Overviews, ChatGPT, Perplexity, etc.). Should check content extractability (clear definitions, structured comparisons, statistics). Should reference Princeton GEO research findings (citations improve visibility +40%, statistics +37%). Should check AI bot access in robots.txt. Should provide a prioritized action plan.",
+      "expected_output": "Should check for product-marketing-context.md first. Should apply the three pillars framework: Structure (make content extractable), Authority (make content citable), Presence (be where AI looks). Should run through the AI Visibility Audit checklist across platforms (Google AI Overviews, ChatGPT, Perplexity, etc.). Should check content extractability (clear definitions, structured comparisons, statistics). Should qualify GEO results as benchmark-specific and avoid universal uplift claims. Should check AI bot access in robots.txt. Should provide a prioritized action plan.",
       "assertions": [
         "Checks for product-marketing-context.md",
         "Applies three pillars framework (Structure, Authority, Presence)",
@@ -19,7 +19,7 @@
     {
       "id": 2,
       "prompt": "Should we block AI crawlers like GPTBot and PerplexityBot in our robots.txt? We're worried about content theft.",
-      "expected_output": "Should address the AI bot access question directly. Should explain the tradeoff: blocking AI bots prevents training on your content but also prevents AI platforms from citing and recommending you. Should reference the specific bots and their purposes (GPTBot, Google-Extended, PerplexityBot, ClaudeBot, etc.). Should provide the recommended robots.txt configuration. Should explain that blocking may hurt AI visibility more than it protects content. Should provide a nuanced recommendation based on business goals.",
+      "expected_output": "Should distinguish training, search and user-triggered fetching using current official documentation. Explain independent OAI-SearchBot/GPTBot controls, Googlebot versus Google-Extended, and the limits of robots.txt. Recommend only a policy consistent with the owner's goals; never claim blocking training necessarily prevents citations.",
       "assertions": [
         "Addresses the blocking tradeoff directly",
         "Explains impact on AI visibility vs content protection",
@@ -33,10 +33,10 @@
     {
       "id": 3,
       "prompt": "What kind of content gets cited most by AI systems? We want to create content specifically optimized for AI search.",
-      "expected_output": "Should reference the content types that get cited most, including comparisons (~33% of AI citations), definitive guides (~15%), and other high-citation content types. Should explain why these formats work (they provide the structured, extractable, authoritative information AI systems need). Should provide specific recommendations for creating AI-optimized content: clear definitions, structured data, original statistics, comparison tables, expert quotes. Should reference the Princeton GEO research on what increases citation probability.",
+      "expected_output": "Recommend formats according to audience intent and evidence; explain extractability and accurate sourcing without universal citation-share percentages. Qualify GEO research scope and do not invent quotes or metrics.",
       "assertions": [
-        "References specific content types with citation rates",
-        "Mentions comparisons as highest-cited format",
+        "Does not assert unsupported universal citation shares",
+        "Chooses formats according to user intent",
         "Explains why these formats work for AI",
         "Provides specific content creation recommendations",
         "References Princeton GEO research",

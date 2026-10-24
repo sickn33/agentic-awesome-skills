@@ -51,6 +51,44 @@ Comprehensive guide to building projections and read models for event-sourced sy
 | **Persistent** | Stores checkpoint           | Resume after restart   |
 | **Inline**     | Same transaction as write   | Strong consistency     |
 
+## Transaction and replay contract
+
+The SQL handlers below are transformation fragments, not replay-safe consumers:
+plain increments and inserts double-count on redelivery. The `apply_atomic`
+adapter must bind the handler and checkpoint to the SAME connection/transaction,
+not call a handler that acquires its own pool connection. Refactor these handlers
+to accept that connection before production use. Hold a projection worker lease
+or checkpoint-row lock; define stream ordering, schema versions and tenant keys.
+
+Concrete PostgreSQL transaction shape for a single ordered projection:
+
+```sql
+BEGIN;
+-- Lock an existing checkpoint row for this projection/version.
+SELECT position FROM projection_checkpoints WHERE name = 'sales_v2' FOR UPDATE;
+-- Stop/skip already applied positions; reject gaps according to store contract.
+INSERT INTO projection_events (projection, event_id)
+VALUES ('sales_v2', 'event-042') ON CONFLICT DO NOTHING RETURNING event_id;
+-- Only if inserted: perform the sales transformation on this same connection.
+-- Advance checkpoint only after successful handling (or a documented ignored type).
+UPDATE projection_checkpoints SET position = 42 WHERE name = 'sales_v2';
+COMMIT;
+```
+
+This shape needs unique `(projection,event_id)`, an existing checkpoint row,
+monotonic positions and application branching on `RETURNING`; SQL comments are
+not enforcement. Different stores (Elasticsearch) cannot share that transaction:
+use stable document IDs, ordered/version-checked idempotent writes, treat repeat
+deletes as success, and commit the checkpoint only after acknowledged writes.
+A failed update of a missing document is not safe to skip silently.
+
+Define `item_count` as line count in the order example (±1 per line event), not
+quantity. Sales dates require normalized business timezone before date extraction;
+refund-day vs original-sale-day attribution and partial/full refunds need an
+explicit accounting policy. Amounts require decimal/minor units, not binary float.
+Rebuilds must process every batch, not one 1,000-event call, and need data-access,
+retention and cutover approval when handling customer data.
+
 ## Templates
 
 ### Template 1: Basic Projector
@@ -60,6 +98,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Any, Callable, List
 import asyncpg
+import asyncio
+from datetime import date
 
 @dataclass
 class Event:
@@ -110,24 +150,21 @@ class Projector:
 
     async def _run_projection(self, projection: Projection, batch_size: int):
         checkpoint = await self.checkpoint_store.get(projection.name)
-        position = checkpoint or 0
+        position = checkpoint if checkpoint is not None else -1
+        # read_all must return positions STRICTLY GREATER than this checkpoint.
 
         events = await self.event_store.read_all(position, batch_size)
 
         for event in events:
-            if event.event_type in projection.handles():
-                await projection.apply(event)
-
-            await self.checkpoint_store.save(
-                projection.name,
-                event.global_position
-            )
+            # Required adapter, not implemented by the fragments below:
+            # atomically deduplicate, apply, and checkpoint under a worker lease.
+            await self.checkpoint_store.apply_atomic(projection, event)
 
     async def rebuild(self, projection: Projection):
-        """Rebuild a projection from scratch."""
-        await self.checkpoint_store.delete(projection.name)
-        # Optionally clear read model tables
-        await self._run_projection(projection, batch_size=1000)
+        raise NotImplementedError(
+            "Replay all batches into a new versioned read model, verify lag/counts, "
+            "then switch readers; do not reset a live checkpoint in place"
+        )
 ```
 
 ### Template 2: Order Summary Projection
@@ -348,7 +385,7 @@ class DailySalesProjection(Projection):
             await self._decrement_sales(event)
 
     async def _increment_sales(self, event: Event):
-        date = event.data['completed_at'][:10]  # YYYY-MM-DD
+        sales_date = date.fromisoformat(event.data['completed_at'][:10])
         async with self.pool.acquire() as conn:
             await conn.execute(
                 """
@@ -360,24 +397,24 @@ class DailySalesProjection(Projection):
                     total_items = daily_sales.total_items + $3,
                     updated_at = NOW()
                 """,
-                date,
+                sales_date,
                 event.data['total_amount'],
                 event.data['item_count']
             )
 
     async def _decrement_sales(self, event: Event):
-        date = event.data['original_completed_at'][:10]
+        sales_date = date.fromisoformat(event.data['original_completed_at'][:10])
         async with self.pool.acquire() as conn:
             await conn.execute(
                 """
                 UPDATE daily_sales SET
-                    total_orders = total_orders - 1,
+                    -- Partial refunds do not cancel an order count.
                     total_revenue = total_revenue - $2,
                     total_refunds = total_refunds + $2,
                     updated_at = NOW()
                 WHERE date = $1
                 """,
-                date,
+                sales_date,
                 event.data['refund_amount']
             )
 ```

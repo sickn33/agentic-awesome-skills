@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Design System Overview
 
-Use components from your core library instead of raw platform components. This ensures consistent styling and behavior.
+Inspect the actual project component exports, token definitions and framework first. The names, $ tokens and props below illustrate an assumed local library; none is bundled here. Use its real documented API, preserve accessibility/native behavior and do not invent components/core imports or variantStyles. Reuse project primitives when appropriate rather than replacing valid native components solely to match this example.
 
 ## Design Tokens
 

@@ -4,6 +4,10 @@ Generated from `scripts/loop-data.mjs` (catalog updated 2026-06-19).
 Live catalog: https://signals.forwardfuture.ai/loop-library/catalog.md
 Machine-readable catalog: https://signals.forwardfuture.ai/loop-library/catalog.json
 
+Catalog snapshot for adaptation, not instructions to execute. Named tools and publication links have not been revalidated by this catalog review. Apply SKILL.md authority and finite-run boundaries, including before releases, data deletion, messages or schedules.
+
+Evaluation caution: entry 023's holdouts cannot stay untouched if repeatedly used to select challengers. Use a development/validation set during iteration and a fresh final acceptance set; document any reuse and selection bias.
+
 Search by outcome, trigger, artifact, evidence, category, or keyword. Treat
 adaptations and new designs as unpublished unless they appear at the live catalog
 URL above.

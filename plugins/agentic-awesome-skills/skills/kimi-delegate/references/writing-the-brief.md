@@ -92,8 +92,7 @@ re-dispatch.
 ```xml
 <task>
 In the payments service at services/billing/, the refund path double-charges when a refund is retried
-after a network timeout. Make refund submission idempotent: check for an existing refund by idempotency
-key before creating a new one. Touch only services/billing/refund.py and its tests. Leave the charge
+after a network timeout. Make refund submission idempotent: use an atomic unique-key claim/transaction and provider idempotency key, reconciling ambiguous outcomes. Touch only services/billing/refund.py and its tests. Leave the charge
 path, API routes, and data models untouched.
 </task>
 

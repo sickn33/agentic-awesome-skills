@@ -40,6 +40,10 @@ needed) that parses, describes, deep-validates, and computes next fire times.
   `schedule` field.
 - Use when a user pastes a 5-field cron expression and asks for a sanity check.
 
+## Scheduler and calculation limits
+
+Identify the scheduler/dialect and timezone first. systemd OnCalendar is not a five-field cron expression; Quartz and library day semantics differ. This engine uses the Node process local timezone, not CRON_TZ/spec.timeZone, and scans at most 600,000 minutes (~416 days): fewer than requested results are partial, not proof a schedule never fires. It does not model platform delays, DST policy, missed-job recovery or overlap control. Confirm next runs in the actual scheduler. No scripts were runtime-tested during this content review.
+
 ## How It Works
 
 ### Step 1: Parse the expression
@@ -104,7 +108,7 @@ day-of-week are restricted (neither is `*`), cron uses OR logic, not AND.
 script:
 
 ```bash
-0 0 * * 1 [ "$(date +%d)" = "01" -o "$(date +%d)" = "15" ] && your-command
+0 0 * * 1 [ "$(date +\%d)" = "01" -o "$(date +\%d)" = "15" ] && your-command
 ```
 
 ### 3. Midnight spike — the "everything at once" bug
@@ -131,8 +135,7 @@ This causes load spikes, connection-pool exhaustion, and cascading timeouts.
 (a 4-minute gap). The intervals drift: 7,7,7,7,7,7,7,7,**4**.
 
 **Fix:** 60 is not divisible by 7. Use step values that divide 60 evenly: `*/5`,
-`*/10`, `*/15`, `*/20`, `*/30`. If you truly need every-7-minutes, use a loop with
-`sleep 420`.
+`*/10`, `*/15`, `*/20`, `*/30`. If you truly need every-7-minutes, use a supervised monotonic/interval scheduler; a sleep loop adds task duration and needs restart/overlap handling.
 
 ### 5. Leap-year February 29 — the "annual surprise"
 
@@ -143,7 +146,7 @@ This causes load spikes, connection-pool exhaustion, and cascading timeouts.
 Fires only on leap years — February 29, 2024 / 2028 / 2032… If someone writes this
 expecting "end of February," they'll be confused for 3 out of every 4 years.
 
-**Fix:** use `0 0 28 2 *` and handle the 29th case in the script if needed.
+**Fix:** for last day of February, run on 28 and 29 and use an explicit next-day-is-March guard; running only on the 28th cannot select the 29th.
 
 ## Using the validation script
 
@@ -196,7 +199,7 @@ node scripts/cli.js next "0 9 * * 1-5" 5
 - ✅ Prefer step values that divide 60 evenly (`*/5`, `*/15`, `*/30`).
 - ✅ Add a comment above every crontab line explaining intent.
 - ✅ Set an explicit timezone (`CRON_TZ`) on schedulers that support it.
-- ❌ Don't trust `crontab -l` validation — it only checks syntax, not semantics.
+- ❌ Don't trust `crontab -l` validation — it lists the installed crontab; it is not a syntax or semantic validator.
 - ❌ Don't restrict both day-of-month and day-of-week without confirming OR-logic.
 - ❌ Don't schedule everything at `0 0`.
 
@@ -215,13 +218,11 @@ node scripts/cli.js next "0 9 * * 1-5" 5
   **Solution:** Step value doesn't divide 60 evenly (trap #4). Use a divisor of 60.
 
 - **Problem:** "My job works locally but not in the cluster."
-  **Solution:** Timezone mismatch. Kubernetes `CronJob` and GitHub Actions default
-  to UTC. Confirm `timeZone` / `TZ` is set as intended.
+  **Solution:** Timezone mismatch. Kubernetes uses the controller local timezone unless `spec.timeZone` is set; use `spec.timeZone: Etc/UTC` deliberately. Do not embed TZ/CRON_TZ in its schedule string. Check the exact GitHub Actions schedule support and execution delays.
 
 ## Limitations
 
-- This skill targets standard 5-field cron as implemented by Vixie cron, systemd
-  timers, Kubernetes `CronJob`, GitHub Actions `schedule`, and most libraries. It
+- This skill targets standard 5-field cron as implemented by Vixie-style cron and Kubernetes `CronJob`, GitHub Actions `schedule`, and most libraries. It
   does **not** validate Quartz 6/7-field expressions with seconds/years, nor
   non-standard `@reboot` / `L` / `#` extensions without a note.
 - Estimated annual fire counts assume a non-leap reference year; February 29
@@ -240,5 +241,4 @@ node scripts/cli.js next "0 9 * * 1-5" 5
 ## Security & Safety Notes
 
 This skill is read-only and `risk: safe`. The validation script performs no file
-writes, network calls, or mutations — it only parses and computes. It is safe to
-run against any cron expression without preconditions.
+writes, network calls, or mutations — it only parses and computes. It accepts data only, but inputs/counts must be bounded and execution should use reviewed local files. Parsing cannot guarantee a job will execute.

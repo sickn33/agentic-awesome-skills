@@ -26,3 +26,5 @@ Reduce SVG coordinate precision to decrease file size. The optimal precision dep
 ```bash
 npx svgo --precision=1 --multipass icon.svg
 ```
+
+Keep an original and visually compare the optimized asset at target sizes; precision=1 can distort small geometry. Run a reviewed project-local SVGO version rather than fetching an unreviewed latest tool.

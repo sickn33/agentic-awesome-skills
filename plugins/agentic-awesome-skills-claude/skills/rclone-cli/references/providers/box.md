@@ -116,14 +116,10 @@ rclone copy /home/source remote:backup
 
 ### Using rclone with an Enterprise account with SSO
 
-If you have an "Enterprise" account type with Box with single sign on
-(SSO), you need to create a password to use Box with rclone. This can
-be done at your Enterprise Box account by going to Settings, "Account"
-Tab, and then set the password in the "Authentication" field.
-
-Once you have done this, you can setup your Enterprise Box account
-using the same procedure detailed above in the, using the password you
-have just set.
+For an enterprise account using SSO, use the organization's approved Box OAuth
+sign-in and application authorization process. Do not create a separate password
+or weaken SSO policy as a routine workaround. If authorization is blocked, ask
+the Box administrator to approve the appropriate application/authentication flow.
 
 ### Invalid refresh token
 
@@ -265,8 +261,9 @@ of your Box drive.
 Normally you will leave this blank and rclone will determine the
 correct root to use itself.
 
-However you can set this to restrict rclone to a specific folder
-hierarchy.
+You can set this to start rclone in a specific folder hierarchy. This is a
+client-side root setting, not an authorization boundary; constrain access with
+Box permissions and the application identity.
 
 In order to do this you will have to find the `Folder ID` of the
 directory you wish rclone to display.  This will be the last segment

@@ -14,7 +14,8 @@
 //   { "url": "https://foo.com", "status": "PASS" | "REJECT" | "UNKNOWN",
 //     "matched_includes": [...], "matched_excludes": [...], "title": "...", "hero": "..." }
 
-import sanitizeFilename from 'sanitize-filename';
+import assert from 'node:assert/strict';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
 import { execFile } from 'child_process';
 import { promisify } from 'util';
 import { readFileSync } from 'fs';
@@ -26,25 +27,8 @@ import { readFileSync } from 'fs';
 const execFileAsync = promisify(execFile);
 
 const args = process.argv.slice(2);
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeCliPath(value, base = process.cwd()) { return checkedPath(value, base); }
 
-function safeCliPath(pathValue, baseDir = process.cwd()) {
-  const root = resolve(baseDir);
-  const target = resolve(root, ...sanitizePathSegments(pathValue));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || isAbsolute(rel)) {
-    throw new Error(`Path escapes allowed directory: ${pathValue}`);
-  }
-  return target;
-}
 
 
 if (args.includes('--help') || args.includes('-h')) {
@@ -74,8 +58,8 @@ const excludes = (flag('--exclude') || '').split(',').map(s => s.trim().toLowerC
 // Floor at 1: `--concurrency 0` or a non-numeric value makes parseInt yield 0/NaN, which would
 // spawn zero workers — the script would exit "successfully" having gated nothing, making
 // discovery look empty with no error. Always run at least one worker.
-const concurrency = Math.max(1, parseInt(flag('--concurrency') || '6', 10) || 0);
-const heroChars = parseInt(flag('--hero-chars') || '800', 10);
+const concurrency = Math.min(8, Math.max(1, parseInt(flag('--concurrency') || '6', 10) || 1));
+const heroChars = Math.min(5000, Math.max(200, parseInt(flag('--hero-chars') || '800', 10) || 800));
 const inputFile = flag('--input');
 
 function stripHtml(html) {
@@ -118,8 +102,8 @@ function removeElementContent(html, tagName) {
 }
 
 if (args.includes('--self-test')) {
-  console.assert(stripHtml('<p>A&amp;lt;B</p>') === 'A&lt;B');
-  console.assert(stripHtml('<script>alert(1)</script ignored><p>ok</p>') === 'ok');
+  assert(stripHtml('<p>A&amp;lt;B</p>') === 'A&lt;B');
+  assert(stripHtml('<script>alert(1)</script ignored><p>ok</p>') === 'ok');
   process.exit(0);
 }
 
@@ -130,7 +114,7 @@ if (includes.length === 0) {
 
 let urls;
 if (inputFile) {
-  urls = readFileSync(inputFile, 'utf-8').split('\n').map(l => l.trim()).filter(Boolean);
+  urls = readFileSync(checkedPath(inputFile), 'utf-8').split('\n').map(l => l.trim()).filter(Boolean);
 } else {
   const stdin = readFileSync(0, 'utf-8');
   urls = stdin.split('\n').map(l => l.trim()).filter(Boolean);
@@ -167,7 +151,7 @@ function classify(title, heroFull, includes, excludes) {
     // Break the tie by the early hero — whichever category has more mentions wins.
     if (incEarly.length > excEarly.length)       { status = 'PASS';   reason = `title-hybrid→hero200 leans include(${incEarly[0] || incTitle[0]})`; }
     else if (excEarly.length > incEarly.length)  { status = 'REJECT'; reason = `title-hybrid→hero200 leans exclude(${excEarly[0] || excTitle[0]})`; }
-    else                                          { status = 'PASS';   reason = `title-hybrid→tie, defaulting include(${incTitle[0]})`; }
+    else                                          { status = 'UNKNOWN'; reason = 'ambiguous hybrid title'; }
   }
   else if (excTitle.length > 0)                   { status = 'REJECT'; reason = `title→exclude(${excTitle[0]})`; }
   else if (incTitle.length > 0)                   { status = 'PASS';   reason = `title→include(${incTitle[0]})`; }
@@ -179,7 +163,7 @@ function classify(title, heroFull, includes, excludes) {
   // so the candidate surfaces in the user-confirmation bucket at Step 4.5 instead of
   // being silently dropped as REJECT.
   else if (incHero.length > 0 && excHero.length > 0)     { status = 'UNKNOWN'; reason = `hero→conflict(include:${incHero[0]}, exclude:${excHero[0]})`; }
-  else                                            { status = 'REJECT'; reason = 'no category signal'; }
+  else                                            { status = 'UNKNOWN'; reason = 'no category signal'; }
 
   return {
     status, reason,
@@ -193,20 +177,21 @@ async function gateOne(url) {
   try {
     // --format raw returns the JSON envelope with raw HTML in `.content` (the default
     // is markdown, which has no <title> tag for the position-aware classifier to read).
-    const r = await execFileAsync('browse', ['cloud', 'fetch', '--allow-redirects', '--format', 'raw', url], {
+    const r = await execFileAsync('browse', ['cloud', 'fetch', '--format', 'raw', publicURL(url)], {
       maxBuffer: 4 * 1024 * 1024,
       timeout: 20000,
     });
     stdout = r.stdout;
   } catch (err) {
     // Non-zero exit, timeout, or spawn failure all surface here.
-    return { url, status: 'UNKNOWN', reason: `browse cloud fetch failed: ${err.message}`, matched_includes: [], matched_excludes: [], title: '', hero: '' };
+    return { url, status: 'UNKNOWN', reason: 'fetch failed or URL refused', matched_includes: [], matched_excludes: [], title: '', hero: '' };
   }
   let resp;
   try { resp = JSON.parse(stdout); } catch {
     return { url, status: 'UNKNOWN', reason: 'non-JSON response', matched_includes: [], matched_excludes: [], title: '', hero: '' };
   }
-  const html = resp.content || '';
+  const html = typeof resp.content === 'string' && (!resp.status || resp.status < 400) ? resp.content : '';
+  if (!html || /just a moment|verify you are human/i.test(html.slice(0,1000))) return { url, status: 'UNKNOWN', reason: 'missing or blocked content', matched_includes: [], matched_excludes: [], title: '', hero: '' };
   const titleM = html.match(/<title[^>]*>([^<]*)<\/title>/i);
   const title = titleM ? titleM[1].trim() : '';
   const heroFull = stripHtml(html).slice(0, heroChars);

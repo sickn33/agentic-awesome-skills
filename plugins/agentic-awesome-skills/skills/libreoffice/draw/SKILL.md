@@ -71,10 +71,11 @@ def create_drawing():
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
-    doc = smgr.createInstanceWithContext("com.sun.star.drawing.DrawingDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/sdraw", "_blank", 0, ())
     page = doc.getDrawPages().getByIndex(0)
     doc.storeToURL("file:///path/to/drawing.odg", ())
     doc.close(True)
@@ -90,7 +91,7 @@ soffice --headless --convert-to svg drawing.odg
 soffice --headless --convert-to pdf drawing.odg
 
 # ODG to PNG
-soffice --headless --convert-to png:PNG_drawing drawing.odg
+soffice --headless --convert-to png:draw_png_Export drawing.odg
 
 # SVG to ODG
 soffice --headless --convert-to odg drawing.svg
@@ -139,14 +140,13 @@ pip install svgwrite  # SVG generation
 
 ### Cannot open socket
 ```bash
-killall soffice.bin
-soffice --headless --accept="socket,host=localhost,port=8100;urp;"
+# Inspect the listener and stop only the task-owned process after saving its documents.
+soffice --headless --accept="socket,host=127.0.0.1,port=8100;urp;"
 ```
 
 ### Quality Issues in PNG Export
 ```bash
-soffice --headless --convert-to png:PNG_drawing_Export \
-  --filterData='{"Width":2048,"Height":2048}' drawing.odg
+soffice --headless --convert-to 'png:draw_png_Export:{"PixelWidth":{"type":"long","value":"2048"},"PixelHeight":{"type":"long","value":"2048"}}' drawing.odg
 ```
 
 ## Resources
@@ -167,3 +167,9 @@ soffice --headless --convert-to png:PNG_drawing_Export \
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Automation and document limits
+
+Verify the actual LibreOffice version, filters, Python UNO binding and database drivers; installing unrelated Python libraries does not provide UNO. Bind any UNO listener to loopback in a separate task-owned profile and stop it after use; UNO is not an authenticated sandbox. Do not terminate all office processes or expose the listener publicly. Use a fresh private output directory, check expected file type/nonempty output and inspect the rendered result; exit zero alone is insufficient.
+
+Opening documents can invoke macros, external links or embedded content: use approved inputs with macros/updates disabled and isolate untrusted conversions. Format conversion may lose layout, formulas, links, notes, multiple sheets/pages or features. Retain originals, clarify CSV sheet/delimiter/encoding and preserve formula/identifier semantics. Do not automatically install packages, publish documents or put sensitive records in Git. These examples were statically reviewed only; no LibreOffice process or conversion was run.

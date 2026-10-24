@@ -34,6 +34,10 @@ Administer, optimize, and secure PostgreSQL databases in development and product
 - Root or sudo access for package installation.
 - Familiarity with SQL fundamentals.
 
+## Database, retention and recovery scope
+
+Confirm exact host/database/version/role and authorized maintenance window. Restore examples with `--clean` destroy existing objects; restore to a new disposable database and verify data before any approved replacement. Do not delete a replica data directory merely to follow the example: identify it via server configuration, stop only the intended instance, retain a tested backup/snapshot and recovery procedure. Use protected password files/secret management instead of real passwords in SQL, conninfo or logs. Restrict remote addresses and require TLS with certificate verification; broad CIDRs and `listen_addresses=*` are not secure defaults. Query text and logs can contain confidential values.
+
 ## Installation and Setup
 
 ```bash
@@ -93,7 +97,7 @@ Edit `/etc/postgresql/15/main/postgresql.conf` (path varies by OS and version).
 
 ```ini
 # Connection settings
-listen_addresses = '*'
+listen_addresses = 'localhost' # add only the required private interface after access/TLS review
 max_connections = 200
 
 # Memory — adjust to ~25% of total RAM for shared_buffers
@@ -238,6 +242,8 @@ SELECT pg_last_wal_receive_lsn();
 SELECT pg_last_wal_replay_lsn();
 ```
 
+The dead-tuple ratio below is a statistics estimate, not measured on-disk bloat. Zero index scans may reflect a short/reset observation window or rare critical/constraint use; never drop indexes from that metric alone. Base backup plus a finite `wal_keep_size` does not guarantee indefinite replica catch-up or PITR: plan WAL retention/archive, monitor lag and test restoration. See [EXPLAIN execution semantics](https://www.postgresql.org/docs/current/sql-explain.html).
+
 ## Monitoring Queries
 
 ```sql
@@ -358,7 +364,7 @@ sudo -u postgres psql -d mydb -c "
 | Symptom | Likely Cause | Fix |
 |---|---|---|
 | `FATAL: too many connections` | Connection limit reached | Increase `max_connections` or add PgBouncer |
-| Slow SELECT on large table | Missing index or stale statistics | Run `EXPLAIN ANALYZE`; add index; run `ANALYZE` |
+| Slow SELECT on large table | Missing index or stale statistics | Start with EXPLAIN; ANALYZE executes the statement and needs bounded authorized load, then review indexes/statistics |
 | High CPU from autovacuum | Large number of dead tuples | Tune `autovacuum_vacuum_cost_delay`; run manual `VACUUM` |
 | Replication lag increasing | Replica under-provisioned or network bottleneck | Check `pg_stat_replication`; increase `wal_keep_size` |
 | `could not access file "base/..."` | Disk full or corrupt data directory | Free disk space; restore from `pg_basebackup` |

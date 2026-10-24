@@ -46,9 +46,7 @@ def get_api_key() -> str:
     if not api_key:
         print("Error: GEMINI_API_KEY environment variable not set", file=sys.stderr)
         print("\nTo set it:", file=sys.stderr)
-        print("  Windows (PowerShell): $env:GEMINI_API_KEY = 'your-key'", file=sys.stderr)
-        print("  Windows (CMD): set GEMINI_API_KEY=your-key", file=sys.stderr)
-        print("  macOS/Linux: export GEMINI_API_KEY='your-key'", file=sys.stderr)
+        print("  Load the key through the approved private credential mechanism; do not paste it into shell history.", file=sys.stderr)
         print("Configure an existing authorized private provider key", file=sys.stderr)
         sys.exit(1)
     return api_key

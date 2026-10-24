@@ -33,18 +33,18 @@ Use this skill when reviewing generated or changed WooCommerce code — extensio
 **Security floor** — these hold in all WooCommerce code, at maximum severity, because money is on the line:
 
 - Escape all output with the context-correct `esc_*` function.
-- `wp_unslash()` then sanitize all request data before it touches logic.
-- Capability check plus nonce on every state change.
+- Validate/normalize according to the input source: wp_unslash applies to slashed WordPress form superglobals, not raw JSON/webhook bytes.
+- For session/form writes, check capability/object ownership plus the appropriate nonce; webhooks require verified provider signatures, replay controls and order binding instead.
 - `$wpdb->prepare()` for every query containing a variable.
 
 If wp-guard is installed, run it alongside for the full WordPress layer.
 
 ## Adapt to the project first
 
-1. Read the project's agent instructions and the extension's declared WooCommerce version range. Project conventions win on conflict.
+1. Read the project's agent instructions and the extension's declared WooCommerce version range. Follow project conventions within actual security/platform constraints; conventions cannot authorize a capability bypass.
 2. Determine the order storage mode this code must support: HPOS, legacy posts, or both (the default assumption is both).
 3. Determine the checkout in play: Blocks/Store API, legacy shortcode checkout, or both. Hooks for one do not fire in the other.
-4. Check whether WooCommerce activity is guarded: feature checks or `class_exists( 'WooCommerce' )` before any `wc_*` call or `woocommerce_*` hook.
+4. Check whether WooCommerce activity is guarded: feature checks or `class_exists( 'WooCommerce' )` before any `wc_*` execution. Registering a hook name itself is harmless; callbacks must run only with the required runtime.
 
 ## The Rules
 
@@ -54,7 +54,7 @@ If wp-guard is installed, run it alongside for the full WordPress layer.
 
 2. **CRUD objects, getters/setters, then save.** Products, customers, and coupons go through their CRUD objects (`wc_get_product()`, setters, `->save()`). Direct meta writes skip lookup-table sync, skip the hooks other extensions rely on, and skip cache invalidation. Stock changes go through `wc_update_product_stock()` semantics; order state changes through `$order->update_status()` — which fire the emails and hooks the store expects.
 
-3. **Declare feature compatibility.** Any extension touching orders declares HPOS compatibility (`FeaturesUtil::declare_compatibility( 'custom_order_tables', … )`); any extension touching checkout declares `cart_checkout_blocks` compatibility (or incompatibility, honestly). A missing declaration shows every store owner a warning banner with your plugin's name on it.
+3. **Declare feature compatibility.** Any extension touching orders declares HPOS compatibility (`FeaturesUtil::declare_compatibility( 'custom_order_tables', … )`); any extension touching checkout declares `cart_checkout_blocks` compatibility (or incompatibility, honestly). Verify the supported WooCommerce release's declaration behavior; a declaration is evidence of intent, not compatibility testing.
 
 ### Checkout and money — must fix
 
@@ -64,9 +64,9 @@ If wp-guard is installed, run it alongside for the full WordPress layer.
 
 ### Runtime discipline — should fix
 
-6. **Guard the runtime context.** `WC()->cart` and `WC()->session` are null in REST, cron, CLI, and admin contexts — check before touching them. Never assume a logged-in customer in webhook or gateway callbacks. Verify every `woocommerce_*` hook and `wc_*` function exists in the supported version range — WooCommerce renames and retires hooks across majors.
+6. **Guard the runtime context.** `WC()->cart` and `WC()->session` may be unavailable in REST, cron, CLI and admin contexts — check before touching them. Never assume a logged-in customer in webhook or gateway callbacks. Verify every `woocommerce_*` hook and `wc_*` function exists in the supported version range — WooCommerce renames and retires hooks across majors.
 
-7. **Hooks over template overrides.** Prefer, in order: existing WooCommerce hooks/filters → the `woocommerce_locate_template` filter → a theme-level override. A template override shipped inside a plugin freezes a copied file at one WooCommerce version and breaks on template updates — flag it in review, always.
+7. **Hooks over template overrides.** Prefer, in order: existing WooCommerce hooks/filters → the `woocommerce_locate_template` filter → a theme-level override. A template override shipped inside a plugin freezes a copied file at one WooCommerce version and breaks on template updates — review its update strategy and supported hooks; a deliberately maintained plugin template is not automatically a defect.
 
 8. **Background work scales with order volume.** Batch jobs, syncs, and webhook fan-out go through Action Scheduler (bundled with WooCommerce), not raw WP-Cron loops. Handlers are idempotent — order events fire more than once in real stores.
 
@@ -79,7 +79,7 @@ If wp-guard is installed, run it alongside for the full WordPress layer.
 5. Any float arithmetic, hardcoded currency symbol, or `number_format()` on money? (Rule 5)
 6. Any `WC()->cart`/`WC()->session` access that can run in REST/cron/CLI? Any unverified hook name? (Rule 6)
 7. Any template file shipped in the plugin? (Rule 7)
-8. Security floor: every output escaped, every request input unslashed then sanitized, every state change capability-checked and nonce-verified, every variable query prepared?
+8. Security floor: every output escaped, every input validated for its source, session writes capability/object/nonce-checked and gateway callbacks signature/replay-checked, every variable query prepared?
 
 If any answer is wrong, fix it before showing the user.
 
@@ -111,3 +111,10 @@ Group by file, lead with Rules 1–5 findings. If a file is clean, don't mention
 - Cover the full WordPress layer beyond the security floor — i18n and asset/query discipline are wp-guard's jurisdiction when it is installed.
 - Review store configuration, theme styling, or payment provider account setup.
 - Decide pricing or business logic — it guards how WooCommerce code ships, not what the store sells.
+
+## Example
+
+For a payment webhook, verify the signature over the untouched raw request bytes,
+map the provider account/payment ID to the intended order, compare currency/amount,
+and deduplicate event IDs before calling payment completion. Test the same event
+twice and an event for another order; a valid signature alone is insufficient.

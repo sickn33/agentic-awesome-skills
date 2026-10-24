@@ -3,7 +3,7 @@ name: azure-functions
 description: Expert patterns for Azure Functions development including isolated
   worker model, Durable Functions orchestration, cold start optimization, and
   production patterns. Covers .NET, Python, and Node.js programming models.
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -13,6 +13,8 @@ date_added: 2026-02-27
 Expert patterns for Azure Functions development including isolated worker model,
 Durable Functions orchestration, cold start optimization, and production patterns.
 Covers .NET, Python, and Node.js programming models.
+
+Modified: output-binding and operational semantics review. Cloud provisioning/deployment and billable tests require the intended account, budget and authorization. Function keys are shared secrets, not per-user/tenant authorization; protect status/control URLs and do not log keys or payloads. Durable orchestrators must be deterministic, with I/O in activities.
 
 ## Detailed Guide
 

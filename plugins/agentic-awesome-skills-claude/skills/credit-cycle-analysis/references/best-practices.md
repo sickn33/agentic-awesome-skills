@@ -20,14 +20,13 @@
 - Write the basis into `Measurement Basis` and keep it stable across periods. Changing the basis
   mid-year makes the trend a measurement change, not a change in behaviour.
 - Where part-payments happen, use the weighted settlement calculation above and say so. Taking the
-  final payment date as if it settled the whole invoice understates every day count.
+  final payment date as if it settled the whole invoice overstates the settled-amount-weighted delay when earlier partial payments occurred.
 - A benchmark must be the user’s, explicitly chosen, or labelled a proposed default. Never present
   one as a business target.
 - Convert days to money only with a recorded monetary basis, and record that basis every time.
 - State the gap descriptively. This module measures the timing difference and does not decide
   whether it is acceptable.
-- Keep every field name identical across CSV, SQL, JSON Schema and the Notion mapping, in the same
-  order. A field that exists in one and not the others is a defect.
+- Maintain an explicit logical-to-physical field mapping across CSV, SQL, JSON Schema and Notion; distinguish technical identity/timestamp columns, requiredness and null representation.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text. Days are numeric.
   Percentages are stored as `97` for 97%, never `0.97`.
 - Round once, at the end, so the components re-derive the total.

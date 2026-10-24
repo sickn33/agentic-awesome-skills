@@ -25,7 +25,7 @@ to recognize anti-patterns.
 
 ### 3. Quantified Impact
 
-Include specific metrics. Helps agents prioritize fixes.
+Include measured metrics with dataset, version and method, or explicitly label numbers illustrative. Never invent speedups to satisfy a template.
 
 **Good:** "10x faster queries", "50% smaller index", "Eliminates N+1"
 **Bad:** "Faster", "Better", "More efficient"

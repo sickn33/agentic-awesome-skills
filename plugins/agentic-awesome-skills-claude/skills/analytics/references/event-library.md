@@ -1,6 +1,6 @@
 # Event Library Reference
 
-Comprehensive list of events to track by business type and context.
+Candidate events to select by decision need, not a mandate to collect everything. Map these conceptual names to destination recommended events. Never transmit raw search terms, errors, URLs, field values or settings unless allowlisted and scrubbed of personal data; opaque IDs still require privacy review.
 
 ## Contents
 - Marketing Site Events (navigation & engagement, CTA & form interactions, conversion events)

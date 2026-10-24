@@ -13,7 +13,7 @@ license_source: https://github.com/hyhmrright/logic-lens/blob/main/LICENSE
 # Logic-Lens — Logic Fix All
 ## When to Use
 
-Use this skill when you need autonomous repository-wide audit-and-fix pipeline: health → review → locate/explain → fix → diff-verify → iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free. Trigger when the user wants ALL logic issues found and fixed — "fix...
+Use this skill when you need autonomous repository-wide audit-and-fix pipeline: health → review → locate/explain → fix → diff-verify → iterate until clean. Starts with a mandatory consent prompt (token-intensive); after consent runs hands-free. Trigger when the user wants ALL logic issues found and fixed — for example "fix all confirmed logic defects within this repository".
 
 
 ## Setup
@@ -37,9 +37,9 @@ Use phase-gated lazy loading per `../_shared/common.md` §13:
 
 **Step 5. Fix queue + remedy** (guide Phase 6) — sort by severity; write a paste-ready Remedy per finding; route cross-file contradictions to the correct edit target (code / constraint / config / doc).
 
-**Step 6. Apply + verify** (guide Phase 7) — apply each fix, then apply logic-diff methodology comparing original vs. fixed code. Expected verdict: `⚠️ Conditionally Equivalent` where the differing condition is exactly the bug scenario. Revert if verdict is `✅ Semantically Equivalent` (fix had no effect) or shows new divergences outside the bug scenario (regression). Retry up to 3×.
+**Step 6. Apply + verify** (guide Phase 7) — apply each fix, then apply logic-diff methodology comparing original vs. fixed code. Expected verdict: `⚠️ Conditionally Equivalent` where the differing condition is exactly the bug scenario. Investigate a Semantically Equivalent verdict; it can be appropriate for a behavior-preserving safety/refactor change, and an LLM verdict is not proof or shows new divergences outside the bug scenario (regression). Retry up to 3×.
 
-**Step 7. Iterate + report** (guide Phase 8–9) — re-run health + review on modified files and their consumers; Criticals loop without cap; Warning/Suggestion rounds capped by `fix_all.max_iterations` with user-escalation prompt at the cap. Output the Fix Report.
+**Step 7. Iterate + report** (guide Phase 8–9) — re-run health + review on modified files and their consumers; Critical findings use the same finite run budget; Warning/Suggestion rounds capped by `fix_all.max_iterations` with user-escalation prompt at the cap. Output the Fix Report.
 
 **Mode line in report:** `Logic Fix All` (Chinese: `逻辑全修`).
 
@@ -85,3 +85,7 @@ Empty if all resolved.]
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+### Missing-runtime and evidence gate
+
+This five-file distribution does not bundle ../_shared/* or the sibling logic-health/review/locate/explain/diff methods. Verify they actually exist before claiming the branded pipeline, scores or invocations. If absent, state the gap and offer a bounded ordinary review within existing authorization; do not fabricate method results. Existing explicit authorization for repository-wide work satisfies consent; ask only when scope/budget is materially unresolved. No unlimited Critical loop is authorized: use a finite total time/token/attempt budget, checkpoint and report unresolved findings.

@@ -27,6 +27,8 @@ This skill generates and reviews Odoo XML view definitions for Kanban, Form, Lis
 
 ## Examples
 
+These examples target Odoo 17 and require the custom model, fields and methods. For v14–16, convert dynamic modifiers to `attrs` domains. View visibility is not access control: enforce ACLs, record rules and method authorization separately.
+
 ### Example 1: Form View with Tabs
 
 ```xml
@@ -55,7 +57,11 @@ This skill generates and reviews Odoo XML view definitions for Kanban, Form, Lis
                     </page>
                 </notebook>
             </sheet>
-            <chatter/>
+            <div class="oe_chatter">
+                <field name="message_follower_ids"/>
+                <field name="activity_ids"/>
+                <field name="message_ids"/>
+            </div>
         </form>
     </field>
 </record>
@@ -73,7 +79,7 @@ This skill generates and reviews Odoo XML view definitions for Kanban, Form, Lis
             <field name="state"/>
             <field name="doctor_id"/>
             <templates>
-                <t t-name="kanban-card">
+                <t t-name="kanban-box">
                     <div class="oe_kanban_content">
                         <strong><field name="name"/></strong>
                         <div>Doctor: <field name="doctor_id"/></div>
@@ -88,12 +94,14 @@ This skill generates and reviews Odoo XML view definitions for Kanban, Form, Lis
 ## Best Practices
 
 - ✅ **Do:** Use inline `invisible="condition"` (Odoo 17+) instead of `attrs` for show/hide logic.
-- ✅ **Do:** Use `attrs="{'invisible': [...]}"` only if you are targeting Odoo 14–16 — it is deprecated in v17.
-- ✅ **Do:** Always set a `string` attribute on your view record for debugging clarity.
-- ✅ **Do:** Use `<chatter/>` (v17) or `<div class="oe_chatter">` + field tags (v16 and below) for activity tracking.
-- ❌ **Don't:** Use `attrs` in Odoo 17 — it is fully deprecated and raises warnings in logs.
+- ✅ **Do:** Use `attrs="{'invisible': [...]}"` only if you are targeting Odoo 14–16 — it is no longer supported in v17.
+- ✅ **Do:** Set the `ir.ui.view` record's `name` field; use supported `string` attributes on the architecture elements that accept them.
+- ✅ **Do:** For Odoo 17, use the `oe_chatter` block and ensure the model inherits the required mail mixins; verify syntax against the exact target version.
+- ❌ **Don't:** Use `attrs` in Odoo 17 — it is unsupported and can prevent view loading.
 - ❌ **Don't:** Put business logic in view XML — keep it in Python model methods.
 - ❌ **Don't:** Use hardcoded `domain` strings in views when a `domain` field on the model can be used dynamically.
+
+Reference: [Odoo 17 view architectures](https://www.odoo.com/documentation/17.0/developer/reference/user_interface/view_architectures.html).
 
 ## Limitations
 

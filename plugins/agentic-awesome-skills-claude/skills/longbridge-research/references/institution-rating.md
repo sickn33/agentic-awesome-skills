@@ -1,5 +1,7 @@
 # institution-rating
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
 Institution rating overview and target price summary
 
@@ -55,7 +57,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge institution-rating --format json
+longbridge institution-rating AAPL.US --format json
 
 # See all options
 longbridge institution-rating --help

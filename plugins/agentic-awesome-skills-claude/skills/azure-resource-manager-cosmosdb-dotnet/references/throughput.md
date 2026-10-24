@@ -1,6 +1,6 @@
 # Throughput Configuration
 
-Patterns for configuring and managing throughput (RU/s) for Cosmos DB resources.
+Patterns for configuring and managing throughput (RU/s) for Cosmos DB resources. Modified: qualified historical sizing/costs. Minimums depend on stored data, peak historical throughput and container counts; use the resource-reported minimum. Dollar estimates below are unverified historical illustrations, not current quotes. Shared database throughput cannot be applied to a database created without it by this update call; choose a supported migration/recreation plan. Serverless does not use provisioned-throughput update operations.
 
 ## Throughput Concepts
 

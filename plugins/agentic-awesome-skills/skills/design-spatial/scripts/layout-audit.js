@@ -22,6 +22,7 @@
    Re-run __clearAudit() to remove the overlay.
    ============================================================================ */
 function __audit(opts){
+  __clearAudit(); // Remove prior annotation before measuring it as page content.
   opts = opts || {};
   const DRAW = opts.draw !== false;
   const COL = {collision:'#e0245e',align:'#d98a00',spacing:'#2f7fd6',contrast:'#8a2be2',tap:'#159a4d',balance:'#111'};
@@ -76,9 +77,11 @@ function __audit(opts){
   const lum=({r,g,b})=>{const f=v=>{v/=255;return v<=0.03928?v/12.92:((v+0.055)/1.055)**2.4;};return .2126*f(r)+.7152*f(g)+.0722*f(b);};
   const ratio=(a,b)=>{const L1=lum(a),L2=lum(b),hi=Math.max(L1,L2),lo=Math.min(L1,L2);return (hi+.05)/(lo+.05);};
   const contrast=[];
+  let contrastUnknown = 0;
   [...document.querySelectorAll('h1,h2,h3,h4,h5,h6,p,a,span,li,button,label,td,th,figcaption,small,strong,em')].filter(vis).forEach(el=>{
     const t=(el.childNodes.length&&[...el.childNodes].some(n=>n.nodeType===3&&n.textContent.trim()));if(!t)return;
-    const cs=getComputedStyle(el),fg=rgb(cs.color);if(!fg)return;
+    const cs=getComputedStyle(el),fg=rgb(cs.color);
+    if(!fg || ![fg.r,fg.g,fg.b].every(Number.isFinite) || fg.a!==1 || cs.opacity!=="1" || cs.backgroundImage!=="none") { contrastUnknown++; return; }
     const ra=ratio(fg,ebg(el)),px=parseFloat(cs.fontSize),wt=parseInt(cs.fontWeight)||400,large=px>=24||(px>=18.66&&wt>=700);
     if(ra < (large?3:4.5)){const r=R(el);contrast.push({x:r.x,y:r.y,w:r.w,h:r.h,ratio:Math.round(ra*10)/10,large});}
   });
@@ -119,7 +122,8 @@ function __audit(opts){
   return {
     // GATES — correctness (accessibility/usability facts). Safe to block on; gates_pass must hold.
     gates: { overflow_px: overflow, contrast_fails: contrast.length, tap_too_small: tap.length },
-    gates_pass: overflow===0 && contrast.length===0 && tap.length===0,
+    gates_pass: overflow===0 && contrast.length===0 && tap.length===0 && contrastUnknown===0,
+    coverage: { contrast_unresolved: contrastUnknown, accessibility_conformance: "not established; color compositing, images, ancestors and target exceptions require manual review" },
     // REVIEW — usually a real defect, but can be intentional (deliberate overlap). Eye-confirm; do NOT auto-fail.
     collisions: collisions.length,
     // SIGNALS — convention, NOT correctness. High score = closer to the symmetric/regular MEAN (§2).
@@ -128,7 +132,7 @@ function __audit(opts){
                align_nearmiss: nearmiss.length, spacing_cov:+spacing.cov.toFixed(2) },
     contrast_detail: contrast.map(c=>({ratio:c.ratio, large:c.large})),
     note: 'These are HEURISTICS. (1) LOOK at the annotated screenshot — a flag marks WHERE to look, never a verdict. '
-        + '(2) GATES (overflow/contrast/tap) are correctness — fix them. (3) SIGNALS (balance/alignment/spacing) measure '
+        + '(2) GATES are heuristic flags; manually verify contrast and target exceptions before fixing them. (3) SIGNALS (balance/alignment/spacing) measure '
         + 'CONVENTION = the generic mean; off-center balance, deliberate misalignment, uneven rhythm are creative tools — '
         + 'do NOT "fix" a signal toward symmetry unless the eye judges the deviation worse. Maximizing signals designs the mean. '
         + '(4) collisions: usually a bug, sometimes intentional (overlap aesthetics) — eye-confirm. '

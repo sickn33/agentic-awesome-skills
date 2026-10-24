@@ -156,7 +156,7 @@ CREATE TABLE dei_dashboard (
       "Measure Type": { "type": "string" },
       "Value": { "type": "number" },
       "Target": { "type": "number" },
-      "Group Size": { "type": "number" },
+      "Group Size": { "type": "integer", "minimum": 0 },
       "Minimum Group Size Met": { "type": "boolean" },
       "Data Source": { "type": "string" },
       "Notes": { "type": "string" },
@@ -166,7 +166,8 @@ CREATE TABLE dei_dashboard (
       "Measure Type",
       "Value",
       "Target",
-      "Group Size"
+      "Group Size",
+      "Minimum Group Size Met"
   ]
 }
 ```
@@ -205,6 +206,8 @@ and anything pointing at another table stays `relation`.
 | 9 | Data Source | `text` | `VARCHAR(255)` | `string` | Text | `Manual` |
 | 10 | Notes | `long_text` | `TEXT` | `string` | Text | `Baseline captured in February; headcount denominators still exclude the contract workforce.` |
 | 11 | Metric ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+A threshold checkbox does not anonymize data. Define the threshold, denominator and suppression policy explicitly; suppress small cells and complementary totals/breakdowns that permit re-identification. Do not infer protected characteristics or use this template to rank individuals.
 
 ## Select Options
 
@@ -292,7 +295,7 @@ We want to see where our hiring process drops people out.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

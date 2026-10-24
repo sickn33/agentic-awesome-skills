@@ -53,7 +53,9 @@ if [ ! -f "$RESULTS_DIR/swebench-loki-predictions.json" ]; then
 fi
 
 # Create submission directory
-mkdir -p "$SUBMISSION_DIR"
+mkdir -p "$SCRIPT_DIR/submission"
+# Refuse to overwrite an earlier export.
+mkdir "$SUBMISSION_DIR"
 
 # Copy template files
 log_info "Copying template files..."
@@ -62,13 +64,16 @@ cp "$SCRIPT_DIR/submission-template/metadata.yaml" "$SUBMISSION_DIR/"
 
 # Convert predictions to JSONL format
 log_info "Converting predictions to JSONL format..."
-python3 << CONVERT_PREDS
+python3 - "$RESULTS_DIR" "$SUBMISSION_DIR" << 'CONVERT_PREDS'
 import json
+import sys
+from pathlib import Path
+results_dir, submission_dir = map(Path, sys.argv[1:])
 
-with open("$RESULTS_DIR/swebench-loki-predictions.json", 'r') as f:
+with open(results_dir / "swebench-loki-predictions.json", 'r') as f:
     predictions = json.load(f)
 
-with open("$SUBMISSION_DIR/all_preds.jsonl", 'w') as f:
+with open(submission_dir / "all_preds.jsonl", 'w') as f:
     for pred in predictions:
         # Format required by SWE-bench
         entry = {
@@ -81,6 +86,9 @@ with open("$SUBMISSION_DIR/all_preds.jsonl", 'w') as f:
 print(f"Converted {len(predictions)} predictions to JSONL format")
 CONVERT_PREDS
 
+# Logs and trajectories may contain prompts, credentials or proprietary code.
+# Export only after an explicit review and redaction step.
+if [ "${LOKI_EXPORT_REVIEWED_LOGS:-false}" = "true" ]; then
 # Copy trajectories if they exist
 if [ -d "$RESULTS_DIR/trajs" ]; then
     log_info "Copying trajectory files..."
@@ -103,25 +111,30 @@ else
     mkdir -p "$SUBMISSION_DIR/logs"
 fi
 
+fi
+
 # Update metadata with actual results
 log_info "Updating metadata with actual results..."
-python3 << UPDATE_META
+python3 - "$RESULTS_DIR" "$SUBMISSION_DIR" << 'UPDATE_META'
+import sys
+from pathlib import Path
+results_dir, submission_dir = map(Path, sys.argv[1:])
 import json
 import yaml
 from datetime import datetime
 
 # Load results
-with open("$RESULTS_DIR/swebench-loki-results.json", 'r') as f:
+with open(results_dir / "swebench-loki-results.json", 'r') as f:
     results = json.load(f)
 
 # Load metadata template
-with open("$SUBMISSION_DIR/metadata.yaml", 'r') as f:
+with open(submission_dir / "metadata.yaml", 'r') as f:
     metadata = yaml.safe_load(f)
 
 # Update with actual results
 metadata['results'] = {
-    'patch_generation_rate': round((results.get('generated', 0) / results.get('total_problems', 1)) * 100, 2),
-    'problems_solved': results.get('generated', 0),
+    'patch_generation_rate': round((results.get('generated', 0) / max(results.get('total_problems', 0), 1)) * 100, 2),
+    'problems_solved': None,
     'problems_total': results.get('total_problems', 0),
     'fixed_by_rarv': results.get('fixed_by_rarv', 0),
     'avg_attempts': round(results.get('avg_attempts', 1.0), 2),
@@ -131,11 +144,11 @@ metadata['results'] = {
 metadata['submission']['date'] = datetime.now().strftime('%Y-%m-%d')
 
 # Save updated metadata
-with open("$SUBMISSION_DIR/metadata.yaml", 'w') as f:
+with open(submission_dir / "metadata.yaml", 'w') as f:
     yaml.dump(metadata, f, default_flow_style=False, sort_keys=False)
 
-print("Metadata updated with actual results")
-CONVERT_PREDS
+print("Metadata updated with generation counts; official resolved evaluation is pending")
+UPDATE_META
 
 # Generate submission summary
 log_info "Generating submission summary..."
@@ -148,7 +161,7 @@ cat > "$SUBMISSION_DIR/SUBMISSION_CHECKLIST.md" << 'CHECKLIST'
 - [x] metadata.yaml - Submission metadata
 
 ## Optional but Recommended
-- [ ] trajs/ - Reasoning trajectories (required for some leaderboards)
+- [ ] trajs/ - Recorded prompts and outputs (redact before sharing)
 - [ ] logs/ - Execution logs
 
 ## Pre-Submission Steps
@@ -158,7 +171,7 @@ cat > "$SUBMISSION_DIR/SUBMISSION_CHECKLIST.md" << 'CHECKLIST'
    head -1 all_preds.jsonl | python -m json.tool
    ```
 
-2. **Run SWE-bench evaluator (optional but recommended):**
+2. **Run the official SWE-bench evaluator before reporting a resolved score:**
    ```bash
    python -m swebench.harness.run_evaluation \
      --predictions all_preds.jsonl \
@@ -206,7 +219,7 @@ ls -la "$SUBMISSION_DIR/"
 echo ""
 echo "  Next Steps:"
 echo "  1. Review all_preds.jsonl format"
-echo "  2. Run SWE-bench evaluator (optional)"
+echo "  2. Run official SWE-bench evaluator before claiming resolved results"
 echo "  3. Fork SWE-bench/experiments"
 echo "  4. Copy submission folder to evaluation/lite/"
 echo "  5. Create pull request"

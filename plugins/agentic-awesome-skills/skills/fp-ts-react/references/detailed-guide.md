@@ -145,9 +145,9 @@ interface ValidatedForm {
 function validateForm(form: SignupForm): E.Either<string[], ValidatedForm> {
   return pipe(
     validateAll({
-      name: pipe(validateName(form.name), E.mapLeft(e => [e])),
-      email: pipe(validateEmail(form.email), E.mapLeft(e => [e])),
-      password: pipe(validatePassword(form.password), E.mapLeft(e => [e])),
+      name: pipe(validateName(form.name), E.mapLeft(e => [e] as [string])),
+      email: pipe(validateEmail(form.email), E.mapLeft(e => [e] as [string])),
+      password: pipe(validatePassword(form.password), E.mapLeft(e => [e] as [string])),
     })
   )
 }
@@ -238,47 +238,53 @@ import * as E from 'fp-ts/Either'
 import { pipe } from 'fp-ts/function'
 
 // Wrap fetch in TaskEither
-const fetchJson = <T>(url: string): TE.TaskEither<Error, T> =>
+const fetchJson = <T,>(url: string, decode: (value: unknown) => T, signal?: AbortSignal): TE.TaskEither<Error, T> =>
   TE.tryCatch(
     async () => {
-      const res = await fetch(url)
+      const res = await fetch(url, { signal })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      return res.json()
+      return decode(await res.json())
     },
     (err) => err instanceof Error ? err : new Error(String(err))
   )
 
 // Custom hook
-function useFetch<T>(url: string) {
+function useFetch<T>(url: string, decode: (value: unknown) => T) {
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let active = true
+    const controller = new AbortController()
     setLoading(true)
+    setData(null)
     setError(null)
 
     pipe(
-      fetchJson<T>(url),
+      fetchJson<T>(url, decode, controller.signal),
       TE.match(
         (err) => {
+          if (!active) return
           setError(err)
           setLoading(false)
         },
         (result) => {
+          if (!active) return
           setData(result)
           setLoading(false)
         }
       )
     )()
-  }, [url])
+    return () => { active = false; controller.abort() }
+  }, [url, decode])
 
   return { data, error, loading }
 }
 
 // Usage
 function UserList() {
-  const { data, error, loading } = useFetch<User[]>('/api/users')
+  const { data, error, loading } = useFetch<User[]>('/api/users', decodeUsers) // stable runtime decoder required
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error.message}</div>
@@ -295,9 +301,9 @@ function UserList() {
 ```typescript
 // Fetch user, then fetch their posts
 const fetchUserWithPosts = (userId: string) => pipe(
-  fetchJson<User>(`/api/users/${userId}`),
+  fetchJson<User>(`/api/users/${encodeURIComponent(userId)}`, decodeUser),
   TE.flatMap(user => pipe(
-    fetchJson<Post[]>(`/api/users/${userId}/posts`),
+    fetchJson<Post[]>(`/api/users/${encodeURIComponent(userId)}/posts`, decodePosts),
     TE.map(posts => ({ ...user, posts }))
   ))
 )
@@ -311,9 +317,9 @@ import { sequenceT } from 'fp-ts/Apply'
 // Fetch multiple things at once
 const fetchDashboardData = () => pipe(
   sequenceT(TE.ApplyPar)(
-    fetchJson<User>('/api/user'),
-    fetchJson<Stats>('/api/stats'),
-    fetchJson<Notifications[]>('/api/notifications')
+    fetchJson<User>('/api/user', decodeUser),
+    fetchJson<Stats>('/api/stats', decodeStats),
+    fetchJson<Notifications[]>('/api/notifications', decodeNotifications)
   ),
   TE.map(([user, stats, notifications]) => ({
     user,
@@ -423,15 +429,15 @@ type GoodState = RemoteData<Error, User>
 
 fp-ts values like `O.some(1)` create new objects each render. React sees them as "changed".
 
-### The Problem
+### Derived values versus stored state
 
 ```typescript
-// ❌ BAD: Creates new Option every render
+// State itself is stable until updated; the initializer expression may be recreated.
 function BadComponent() {
   const [value, setValue] = useState(O.some(1))
 
   useEffect(() => {
-    // This runs EVERY render because O.some(1) !== O.some(1)
+    // This runs when stored state changes; useState preserves the initial value.
     console.log('value changed')
   }, [value])
 }
@@ -584,8 +590,8 @@ function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
 }
 
 // Parent provides the promise
-function App() {
-  const userPromise = fetchUser('1')  // Start fetching immediately
+function App({ userPromise }: { userPromise: Promise<User> }) {
+  // Parent/framework cache creates a stable promise outside this client render.
 
   return (
     <Suspense fallback={<Spinner />}>
@@ -611,15 +617,16 @@ async function submitForm(
   formData: FormData
 ): Promise<FormState> {
   const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+    name: String(formData.get('name') ?? ''),
+    email: String(formData.get('email') ?? ''),
+    password: String(formData.get('password') ?? ''),
   }
 
   // Use Either for validation
   const result = pipe(
     validateForm(data),
-    E.match(
-      (errors) => ({ errors, success: false }),
+    E.matchW(
+      (errors): Promise<FormState> => Promise.resolve({ errors, success: false }),
       async (valid) => {
         await saveToServer(valid)
         return { errors: [], success: true }
@@ -638,6 +645,7 @@ function SignupForm() {
 
   return (
     <form action={formAction}>
+      <input name="name" type="text" />
       <input name="email" type="email" />
       <input name="password" type="password" />
 
@@ -665,10 +673,10 @@ function TodoList({ todos }: { todos: Todo[] }) {
   const addTodo = async (text: string) => {
     const newTodo = { id: crypto.randomUUID(), text, done: false }
 
-    // Immediately show in UI
+    // Invoke from a React Action/formAction or startTransition; this fragment alone
+    // does not establish that context. Persist then update authoritative todos in
+    // the parent, handling errors/idempotency so optimistic state can reconcile.
     addOptimisticTodo(newTodo)
-
-    // Actually save (will reconcile when done)
     await saveTodo(newTodo)
   }
 
@@ -773,3 +781,21 @@ const modalProps = {
 - **[@devexperts/remote-data-ts](https://github.com/devexperts/remote-data-ts)** - RemoteData
 - **[io-ts](https://github.com/gcanti/io-ts)** - Runtime type validation
 - **[zod](https://github.com/colinhacks/zod)** - Schema validation (works great with fp-ts)
+
+## Integration limits
+
+All snippets are separate sketches, not a bundled application or compatibility test.
+`decodeUser`, `decodeUsers` and other decoders must validate unknown JSON at runtime;
+type parameters/casts do not do so. `submitToServer`, `saveTodo`, UI components and
+test imports are application adapters, not included functions. Next.js hooks require
+a client component boundary; secrets/authentication/authorization belong on the server.
+The “Log In” fixture only sets local demo state and does not authenticate anyone.
+
+The minimal `useRemoteData` and dependency-context examples omit overlapping-request
+and unmount protection: add cancellation/generation guards before use (e.g. ignore A's
+late response once user B is selected). Check HTTP status and decode responses there
+as in the basic hook. Memoize dependency functions intentionally; do not suppress hook
+dependency lint to hide stale closures. Client validation is usability only; enforce
+server validation, avoid logging passwords/PII and send analytics identifiers only
+with appropriate consent. Error-boundary handling is needed for rejected `use()`
+promises. `useMemo` is an optimization, not a semantic re-render guarantee.

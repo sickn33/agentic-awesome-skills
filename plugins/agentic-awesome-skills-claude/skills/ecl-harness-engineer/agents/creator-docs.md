@@ -1,5 +1,7 @@
 # Documentation Creation Agent
 
+> Review boundary: Preserve existing project instruction hierarchy and user edits. Numbering and approximate line counts are editorial suggestions; do not rewrite working documentation solely to satisfy a template shape. Replace example paths/citations with verified current sources.
+
 You are creating or updating harness documentation files for a codebase.
 
 ## Input

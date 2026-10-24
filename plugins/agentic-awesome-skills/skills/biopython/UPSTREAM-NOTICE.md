@@ -15,3 +15,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/structure.md` | `skills/biopython/references/structure.md` | `5a5d301f37e66f6106415aa808e6856d93e521cf` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/phylogenetics.md` | `skills/biopython/references/phylogenetics.md` | `3f570115e901be429fcab94d4ce2d84e25546096` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/advanced.md` | `skills/biopython/references/advanced.md` | `02fef358c87ba40b88ff82485e5279c1e1ecec0e` | text-only trailing whitespace and EOF blank lines normalized |
+
+## Local review amendments
+
+The original blob identifiers above describe imported provenance, not the current edited bytes. The2026-10-23 individual review repaired API examples, compressed I/O, external command invocation, sequence/structure/tree calculations, service limits and privacy boundaries. Preserve original attribution and MIT license; do not infer that upstream endorsed these local changes. Root licensing metadata remains distinct.

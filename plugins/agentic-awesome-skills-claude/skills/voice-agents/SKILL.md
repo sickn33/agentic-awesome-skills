@@ -16,19 +16,18 @@ latency while handling interruptions, background noise, and emotional
 nuance.
 
 This skill covers two architectures: speech-to-speech (OpenAI Realtime API,
-lowest latency, most natural) and pipeline (STT→LLM→TTS, more control,
+one low-latency architecture option) and pipeline (STT→LLM→TTS, more control,
 easier to debug). Key insight: latency is the constraint. Humans expect
 responses in 500ms. Every millisecond matters.
 
-84% of organizations are increasing voice AI budgets in 2025. This is the
-year voice agents go mainstream.
+No market-adoption statistic or universal latency benchmark is established by this skill.
 
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
-## Production Pipeline Example
-"""
+## Legacy Pipeline Sketch (not a production implementation)
+```
 import { Deepgram } from '@deepgram/sdk';
 import { ElevenLabsClient } from 'elevenlabs';
 import OpenAI from 'openai';
@@ -49,7 +48,7 @@ async function processVoiceInput(audioStream) {
   transcription.on('transcript', async (data) => {
     if (data.is_final && data.speech_final) {
       const userText = data.channel.alternatives[0].transcript;
-      console.log('User:', userText);
+      // Do not log raw private transcripts by default.
 
       // 2. LLM Processing
       const completion = await openai.chat.completions.create({
@@ -62,7 +61,7 @@ async function processVoiceInput(audioStream) {
       });
 
       const agentText = completion.choices[0].message.content;
-      console.log('Agent:', agentText);
+      // Log only authorized redacted operational metadata.
 
       // 3. Text-to-Speech (ElevenLabs)
       const audioStream = await elevenlabs.textToSpeech.stream({
@@ -79,7 +78,7 @@ async function processVoiceInput(audioStream) {
   // Pipe audio to transcription
   audioStream.pipe(transcription);
 }
-"""
+```
 
 ### Optimization Tips:
 - Start TTS while LLM still generating (streaming)
@@ -94,12 +93,12 @@ Detect when user starts/stops speaking
 
 # VOICE ACTIVITY DETECTION (VAD):
 
-"""
+```
 VAD Types:
 1. Energy-based: Simple, fast, noise-sensitive
 2. Model-based: Silero VAD, more accurate
 3. Semantic VAD: Understands meaning, best for conversation
-"""
+```
 
 ## When to Use
 - User mentions or implies: voice agent
@@ -120,3 +119,11 @@ VAD Types:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Version, privacy and implementation boundaries
+
+These mixed-version SDK sketches are conceptual and were not executed. Deepgram constructor/transcription.live, ElevenLabs stream signatures, the beta Realtime client and the named Silero JavaScript package must be checked against the installed official SDKs before use; do not infer missing package/runtime availability. smart_format formats text and is not noise reduction; model keyword/keyterm flags vary. A model-VAD probability threshold cannot be set from raw amplitude without a calibrated mapping. Confidence scores/latency figures are not universally comparable.
+
+Define end-of-user-turn to first audible output and measure p50/p95 on representative devices/networks/languages. STT first partial, LLM first token and TTS first audio times are not simply additive end-to-end guarantees. Do not send partial/stale hypotheses to irreversible tools: serialize turns, deduplicate final transcripts, buffer complete TTS-safe segments, maintain history, and cancel/discard obsolete generation/audio. On barge-in truncate unheard assistant content in server history as well as stopping local playback; a checkpoint alone is insufficient.
+
+Clients need appropriate ephemeral/session credentials, not long-lived API keys. Obtain authorized microphone/recording/voice/recipient scope, minimize audio/transcript retention and external-provider transfers, and avoid voice cloning/impersonation without rights. Bound sockets, retries, queues and costs; clean up listeners/streams on disconnect. Spoken names/numbers and claimed identity are not authentication. Validate tenant/recipient/action and obtain transaction-specific confirmation where needed. Text cleanup must preserve decimal numbers, currency, URLs and code semantics; SSML requires supported engines and escaping. A voice prompt is not a tool-authorization boundary. No call, recording or provider request was made.

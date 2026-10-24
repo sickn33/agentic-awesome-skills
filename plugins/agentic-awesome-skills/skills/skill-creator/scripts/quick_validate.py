@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
-Quick validation script for skills - minimal version
+Modified for the AAS catalog: corrected bundled workflow, validation and packaging safeguards (2026-10-23).
+
+Quick validation script for generic skills - not the AAS schema or a semantic audit
 """
 
 import sys
@@ -27,11 +29,13 @@ def validate_skill(skill_path):
 
     # Check SKILL.md exists
     skill_md = skill_path / 'SKILL.md'
-    if not skill_md.exists():
+    if not skill_md.is_file() or skill_md.is_symlink():
         return False, "SKILL.md not found"
 
     # Read and validate frontmatter
-    content = skill_md.read_text()
+    if skill_md.stat().st_size > 1024 * 1024:
+        return False, "SKILL.md exceeds 1 MiB"
+    content = skill_md.read_text(encoding="utf-8")
     if not content.startswith('---'):
         return False, "No YAML frontmatter found"
 
@@ -72,6 +76,10 @@ def validate_skill(skill_path):
     if not isinstance(name, str):
         return False, f"Name must be a string, got {type(name).__name__}"
     name = name.strip()
+    if not name:
+        return False, "Name must not be empty"
+    if name != skill_path.name:
+        return False, "Name must match skill directory"
     if name:
         # Check naming convention (hyphen-case: lowercase with hyphens)
         if not re.match(r'^[a-z0-9-]+$', name):
@@ -87,6 +95,8 @@ def validate_skill(skill_path):
     if not isinstance(description, str):
         return False, f"Description must be a string, got {type(description).__name__}"
     description = description.strip()
+    if not description:
+        return False, "Description must not be empty"
     if description:
         # Check for angle brackets
         if '<' in description or '>' in description:

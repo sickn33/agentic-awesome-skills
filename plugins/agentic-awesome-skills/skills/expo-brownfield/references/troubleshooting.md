@@ -6,19 +6,10 @@ Cross-cutting issues that apply to both the isolated and integrated approaches. 
 
 **Symptom:** Gradle or Xcode build fails after a config change, dependency upgrade, or Expo SDK bump.
 
-- **Integrated approach** — regenerate native projects from scratch:
-  ```sh
-  npx expo prebuild --clean
-  ```
-  Then `cd ios && pod install` and re-open the `.xcworkspace`.
-- **Isolated approach** — clear the local Maven cache and rebuild the artifact:
-  ```sh
-  rm -rf ~/.m2/repository/<group>/<libraryName>
-  npx expo-brownfield build:android
-  npx expo-brownfield build:ios
-  ```
-- For stubborn iOS issues, also delete `ios/build/`, `ios/Pods/`, and `ios/Podfile.lock`, then re-run `pod install`.
-- For stubborn Android issues, `./gradlew clean` and delete the project's `.gradle/` and `build/` directories.
+- **Integrated approach** — preserve host native sources. Compare the exact SDK template and inspect the failing task, resolved paths and dependency lockfiles. Do not run `expo prebuild --clean` on a hand-maintained host: it deletes/recreates native directories and can erase custom code.
+- **Isolated generated workspace** — regenerate only disposable native output whose customizations are fully represented in config plugins and after reviewing a clean baseline. Confirm generated output paths before cleanup.
+- Avoid deleting a whole Maven cache or Podfile.lock as a first response. Inspect artifact coordinates/checksums and dependency resolution first; remove only a confirmed corrupt generated artifact when recovery is understood. Preserve locks unless intentionally resolving an upgrade.
+- For Android build cache issues, prefer the project’s normal clean task. Debug and release failures can have different causes; collect the exact task and variant before changing configuration.
 
 ## Missing autolinked Expo modules
 
@@ -42,7 +33,7 @@ Cross-cutting issues that apply to both the isolated and integrated approaches. 
 
 **Symptom:** App launches but immediately crashes with "Library not loaded" or codesign errors during archive.
 
-- **Every** xcframework produced by `build:ios` must be set to **Embed & Sign** in the app target's **Frameworks, Libraries, and Embedded Content** section. On SDK 56+ this is five frameworks: `{TargetName}.xcframework`, `React.xcframework`, `ReactNativeDependencies.xcframework`, `ExpoModulesJSI.xcframework`, and `hermesvm.xcframework`. On SDK 55 it's two: `{TargetName}.xcframework` and `hermesvm.xcframework`. Missing any of them is a common cause of runtime crashes.
+- Include every required artifact, but inspect whether each framework is dynamic or static: embed/sign dynamic dependencies; link static frameworks according to the generated package/template. A blanket Embed & Sign setting is not correct for every XCFramework. On SDK 56+ this is five frameworks: `{TargetName}.xcframework`, `React.xcframework`, `ReactNativeDependencies.xcframework`, `ExpoModulesJSI.xcframework`, and `hermesvm.xcframework`. On SDK 55 it's two: `{TargetName}.xcframework` and `hermesvm.xcframework`. Missing any of them is a common cause of runtime crashes.
 - The frameworks must be added to the _app target_, not a framework or extension target.
 - Prefer the Swift Package output (`build:ios --package`) — it links every bundled xcframework through one aggregate product, so you cannot forget one.
 
@@ -57,7 +48,7 @@ Cross-cutting issues that apply to both the isolated and integrated approaches. 
 
 **Symptom:** Gradle reports "Could not find com.example:mybrownfield:1.0.0" even after a successful `expo-brownfield build:android`.
 
-- `mavenLocal()` must be declared under `dependencyResolutionManagement { repositories { ... } }` in `settings.gradle.kts`, not the deprecated top-level `allprojects { repositories { ... } }` block. The deprecated form is silently ignored when `dependencyResolutionManagement` is present.
+- `mavenLocal()` must be declared under `dependencyResolutionManagement { repositories { ... } }` in `settings.gradle.kts`, not the deprecated top-level `allprojects { repositories { ... } }` block. Resolution depends on Gradle repositoriesMode; project repositories may be used, ignored or rejected. Follow the host’s settings policy.
 - Confirm the artifact actually landed in `~/.m2`:
   ```sh
   find ~/.m2/repository -name "mybrownfield*"
@@ -84,5 +75,5 @@ Cross-cutting issues that apply to both the isolated and integrated approaches. 
 If the brownfield setup stops building after an SDK upgrade:
 
 - Re-run `npx expo install --fix` in the Expo project to align native module versions.
-- Rebuild the artifact (isolated) or run `npx expo prebuild --clean` (integrated).
+- Rebuild artifacts in the isolated generated workspace; manually reconcile version-matched template changes in integrated native projects. Preserve hand-maintained source.
 - Compare the new `templates/expo-template-bare-minimum` for the target SDK against your customized native files — Expo occasionally changes Gradle plugin names, Podfile helpers, or AppDelegate entry points across SDKs.

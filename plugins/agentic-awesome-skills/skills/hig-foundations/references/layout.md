@@ -254,7 +254,7 @@ Model| Dimensions (portrait)
 ---|---  
 iPad Pro 12.9-inch| 1024x1366 pt (2048x2732 px @2x)  
 iPad Pro 11-inch| 834x1194 pt (1668x2388 px @2x)  
-iPad Pro 10.5-inch| 834x1194 pt (1668x2388 px @2x)  
+iPad Pro 10.5-inch| 834x1112 pt (1668x2224 px @2x)
 iPad Pro 9.7-inch| 768x1024 pt (1536x2048 px @2x)  
 iPad Air 13-inch| 1024x1366 pt (2048x2732 px @2x)  
 iPad Air 11-inch| 820x1180 pt (1640x2360 px @2x)  
@@ -324,7 +324,7 @@ Model| Portrait orientation| Landscape orientation
 ---|---|---  
 iPad Pro 12.9-inch| Regular width, regular height| Regular width, regular height  
 iPad Pro 11-inch| Regular width, regular height| Regular width, regular height  
-iPad Pro 10.5-inch| Regular width, regular height| Regular width, regular height  
+iPad Pro 10.5-inch| Regular width, regular height| Regular width, regular height
 iPad Air 13-inch| Regular width, regular height| Regular width, regular height  
 iPad Air 11-inch| Regular width, regular height| Regular width, regular height  
 iPad 11-inch| Regular width, regular height| Regular width, regular height  
@@ -423,3 +423,5 @@ September 15, 2023| Added specifications for iPhone 15 Pro Max, iPhone 15 Pro, i
 June 21, 2023| Updated to include guidance for visionOS.  
 September 14, 2022| Added specifications for iPhone 14 Pro Max, iPhone 14 Pro, iPhone 14 Plus, iPhone 14, and Apple Watch Ultra.  
   
+
+Review clarification: model tables are dated design references, not a device-detection strategy. Use current window geometry, safe areas and traits; model name or orientation alone does not determine a resizable window’s size class. Test compact/regular changes and avoid selecting layouts by hard-coded display model.

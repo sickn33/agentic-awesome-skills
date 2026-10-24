@@ -139,7 +139,7 @@ This requires `schema` and `data_sample` as an input field to the LLM call `Sear
 
 ```python
 def _format_filters(search_filters: list[SearchFilter]):
-    filters = []
+    filters = None
     for search_filter in search_filters:
         base_filter = Filter.by_property(search_filter.field)
         if search_filter.operator == "=":
@@ -196,7 +196,7 @@ Modify the `retrieve` function
 ```python
 from weaviate.classes.query import Rerank
 
-def retrieve(query: str, limit: int | None = None, filters = []) -> list[dict]:
+def retrieve(query: str, limit: int | None = None, filters = None) -> list[dict]:
 
     # ...existing code
     
@@ -270,5 +270,5 @@ This guide used DSPy. Follow the guidelines in [here](./basic_rag.md), but most 
 
 ## Done Criteria
 
-- Create test scripts to check each function works independently with test data. Tear down tests after completion, or create a proper test suite with pytest (requires install)
+- Create test scripts to check each function works independently with test data. Retain meaningful regression tests with mocks or an explicitly authorized disposable test collection; never delete tests merely after a successful run
 - User has completed specification of the app.

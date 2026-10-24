@@ -37,6 +37,10 @@ Use this skill when:
 - Project enabled in CircleCI dashboard
 - Basic YAML understanding
 
+## CI trust and example scope
+
+Fragments below are separate examples and often omit required executor/install/report setup; validate the combined configuration with the installed CircleCI schema and inspect expanded orbs. Pin reviewed orb/image versions compatible with current runners. Restrict secret contexts/deploy jobs to trusted branches and approved identities; an approval job must depend on the actual build artifact producer as well as tests. Do not allow untrusted PRs to poison privileged caches/workspaces. Protect/redact logs and artifacts and state tests not run when timing/report data is missing.
+
 ## Configuration File
 
 Create `.circleci/config.yml`:
@@ -260,6 +264,7 @@ workflows:
       - hold:
           type: approval
           requires:
+            - build
             - test
       - deploy-production:
           requires:

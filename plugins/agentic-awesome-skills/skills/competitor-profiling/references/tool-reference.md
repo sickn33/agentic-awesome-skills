@@ -1,5 +1,7 @@
 # MCP Tool Reference for Competitor Profiling
 
+Tool names, response keys and query options are illustrative; inspect installed connector schemas and current vendor docs. Missing paid/API access means unavailable data, not zero.
+
 Quick reference for the Firecrawl and DataForSEO MCP tools used in competitor profiling.
 
 ## Contents
@@ -13,7 +15,7 @@ Quick reference for the Firecrawl and DataForSEO MCP tools used in competitor pr
 ## Firecrawl Tools
 
 ### firecrawl_map
-**Purpose**: Discover all URLs on a competitor's site to identify key pages.
+**Purpose**: Discover candidate URLs (not guaranteed complete) on a competitor's site to identify key pages.
 **When to use**: First step for every competitor — before scraping individual pages.
 **Key output**: List of URLs with their page types/paths.
 **Tip**: Look for paths containing `/pricing`, `/features`, `/about`, `/customers`, `/integrations`, `/blog`, `/changelog`.
@@ -176,4 +178,4 @@ Quick reference for the Firecrawl and DataForSEO MCP tools used in competitor pr
 | Pricing page not found in map | Search for `/pricing`, `/plans`, `/packages` — some sites use different paths |
 | DataForSEO returns no data for domain | Domain may be too new or too small — note "insufficient data" in profile |
 | Rate limits hit | Space out requests; prioritize highest-value data first |
-| Review page scraping blocked | Use `firecrawl_search` to find cached or alternative review sources |
+| Review page scraping blocked | Use permitted alternative public sources or mark unavailable; do not bypass access controls |

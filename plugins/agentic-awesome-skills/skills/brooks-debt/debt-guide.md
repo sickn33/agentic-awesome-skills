@@ -90,9 +90,9 @@ a known temporary workaround during a migration).
 did not choose it and may not even know it exists. This is the kind Ward Cunningham's
 original definition warned against — not a tactical trade-off, but structural erosion.
 
-Mark each finding with `[intentional]` or `[accidental]` in the Debt Summary Table.
+Mark each finding with `[intentional]`, `[accidental]` or `[unknown intent]` in the Debt Summary Table.
 Intentional debt with no visible payback plan — no linked ticket, no code comment, no
-documented decision — should be treated as accidental for prioritization purposes.
+documented decision — has an unverified payback plan; do not infer the team's intent from missing records alone.
 Focus remediation energy on accidental debt first; intentional debt at least has an owner.
 
 ### Step 4: Group by Decay Risk

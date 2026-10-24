@@ -1,6 +1,7 @@
 ---
 title: "Pull-down buttons | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons
+---
 
 # Pull-down buttons
 
@@ -31,7 +32,7 @@ If you need to provide a list of mutually exclusive choices that aren’t comman
 
 **Display a succinct menu title only if it adds meaning.** In general, a pull-down button’s content — combined with descriptive menu items — provides all the context people need, making a menu title unnecessary.
 
-**Let people know when a pull-down button’s menu item is destructive, and ask them to confirm their intent.** Menus use red text to highlight actions that you identify as potentially destructive. When people choose a destructive action, the system displays an [action sheet](https://developer.apple.com/design/human-interface-guidelines/action-sheets) (iOS) or [popover](https://developer.apple.com/design/human-interface-guidelines/popovers) (iPadOS) in which they can confirm their choice or cancel the action. Because an action sheet appears in a different location from the menu and requires deliberate dismissal, it can help people avoid losing data by mistake.
+**Let people know when a pull-down button’s menu item is destructive, and ask them to confirm their intent.** Menus use red text to highlight actions that you identify as potentially destructive. A destructive role or red label does not automatically present confirmation. Implement an appropriate [confirmation dialog or action sheet](https://developer.apple.com/design/human-interface-guidelines/action-sheets) when the action’s consequences warrant it, or provide reliable undo for reversible actions. Because an action sheet appears in a different location from the menu and requires deliberate dismissal, it can help people avoid losing data by mistake.
 
 **Include an interface icon with a menu item when it provides value.** If you need to clarify an item’s meaning, you can display an [icon](https://developer.apple.com/design/human-interface-guidelines/icons) or image after its label. Using [SF Symbols](https://developer.apple.com/design/human-interface-guidelines/sf-symbols) for this purpose can help you provide a familiar experience while ensuring that the symbol remains aligned with the text at every scale.
 
@@ -63,9 +64,9 @@ You can also let people reveal a pull-down menu by performing a specific gesture
 
 #### [Developer documentation](https://developer.apple.com/design/human-interface-guidelines/pull-down-buttons#Developer-documentation)
 
-[`MenuPickerStyle`](https://developer.apple.com/documentation/SwiftUI/MenuPickerStyle) — SwiftUI
+[`Menu`](https://developer.apple.com/documentation/SwiftUI/Menu) — SwiftUI; use a Picker with a menu style for selection rather than a command menu
 
-[`showsMenuAsPrimaryAction`](https://developer.apple.com/documentation/UIKit/UIControl/showsMenuAsPrimaryAction) — UIKit
+[`showsMenuAsPrimaryAction`](https://developer.apple.com/documentation/UIKit/UIButton/showsMenuAsPrimaryAction) — UIKit
 
 [`pullsDown`](https://developer.apple.com/documentation/AppKit/NSPopUpButton/pullsDown) — AppKit
 

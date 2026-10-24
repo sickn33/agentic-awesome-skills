@@ -29,10 +29,10 @@ Peak multipliers by app type:
 
 ### Storage Estimation
 ```
-Storage per day    = requests_per_day × avg_payload_size
+Storage per day    = persisted_writes_per_day × stored_bytes_per_write
 Storage per year   = storage_per_day × 365
 With replication   = storage_per_year × replication_factor (3× typical)
-With CDN/cache     = reduce by cache_hit_ratio (80% hit = 20% origin load)
+Cache affects origin request load, not durable storage: estimate cache storage separately
 
 Common payload sizes:
   Tweet / short text:    500B
@@ -54,41 +54,15 @@ Convert: 1 Gbps = 125 MB/s
 
 ---
 
-## Known Scale Limits of Common Technologies
+## Establishing capacity limits
 
-### Databases
+There are no universal per-product throughput, memory or sharding limits without a tested workload. Record exact version/topology, hardware, record sizes, indexes, durability/replication, query mix, concurrency and p95/p99 latency/error targets. Increase load against representative data until a measured saturation constraint appears, then test a change and failover headroom.
 
-| Technology | Single Node Writes | Reads (with replicas) | Recommended Shard/Cluster Trigger |
-|------------|-------------------|----------------------|----------------------------------|
-| PostgreSQL | ~5K–20K writes/s | ~50K–200K reads/s | >5TB data or >20K writes/s |
-| MySQL | ~10K–25K writes/s | ~60K–250K reads/s | >5TB or >25K writes/s |
-| MongoDB | ~20K–50K writes/s | ~50K–100K reads/s | >100GB or >50K writes/s |
-| Cassandra | ~200K–1M writes/s | ~200K–500K reads/s | Almost never needs explicit sharding |
-| DynamoDB | Unlimited (managed) | Unlimited (managed) | Use provisioned capacity mode |
-| Redis | ~500K–1M ops/s | Same | >50GB data or cluster needed |
-| Elasticsearch | ~10K–50K docs/s | ~1K–10K queries/s | >100M documents per index |
+Managed services still have account, partition, regional and API quotas. SQS retention is configurable up to 14 days; throughput varies by queue type, region, batching and high-throughput settings. Do not label managed databases or queues unlimited. Kafka throughput depends on partitions, brokers, payload and durability; consumers in a group are limited by assigned partitions. In-memory caches are bounded by available memory, item/object overhead, eviction, network and workload.
 
-### Queues / Streams
+## Illustrative Capacity Scenarios
 
-| Technology | Max Throughput | Max Consumers | Retention |
-|------------|----------------|---------------|-----------|
-| Kafka | 1M+ msgs/s per cluster | Unlimited consumer groups | Configurable (days–forever) |
-| RabbitMQ | ~50K–100K msgs/s | Limited by connections | Until consumed |
-| SQS Standard | Unlimited (AWS-managed) | Unlimited | 14 days |
-| SQS FIFO | 3K msgs/s per queue | Per group | 14 days |
-| Redis Pub/Sub | ~1M msgs/s | Limited by subscribers | None (fire-and-forget) |
-
-### Caching
-
-| Technology | Max Memory (single) | Max Throughput | Latency |
-|------------|--------------------|--------------|----|
-| Redis | ~1TB RAM | ~1M ops/s | <1ms |
-| Memcached | ~64GB RAM | ~1M ops/s | <1ms |
-| In-process (Caffeine/Guava) | JVM heap | Unlimited (local) | <0.1ms |
-
----
-
-## Capacity Planning by User Scale
+The following DAU/RPS/storage/server/cost ranges are unvalidated teaching assumptions, not benchmarks, quotes or required architectures. Recompute from requests per user, durable-write fraction, bytes/retention and dated regional pricing, including egress, support, backups and operations.
 
 ### 1K DAU
 ```
@@ -141,13 +115,13 @@ Monthly cost:  $200K–2M+
 
 | Tier | Availability | Monthly Downtime Allowed |
 |------|-------------|--------------------------|
-| 99% | Basic | 7.2 hours/month |
+| 99% | Basic | 7.3 hours/month |
 | 99.9% (three nines) | Standard production | 43.8 minutes/month |
 | 99.95% | Important services | 21.9 minutes/month |
 | 99.99% (four nines) | Critical services | 4.38 minutes/month |
 | 99.999% (five nines) | Telecom / payments | 26 seconds/month |
 
-**Achieving four nines requires:** Multi-AZ deployment, automated failover, zero-downtime deploys, chaos engineering, 24/7 on-call.
+**Possible reliability measures to evaluate against a defined SLI/window (not a guarantee or universal requirement):** Multi-AZ deployment, automated failover, zero-downtime deploys, chaos engineering, 24/7 on-call.
 
 ---
 

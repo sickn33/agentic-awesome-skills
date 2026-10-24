@@ -151,7 +151,7 @@ What are you deploying?
 | **Vercel/Netlify** | Redeploy previous commit |
 | **Railway/Render** | Rollback in dashboard |
 | **VPS + PM2** | Restore backup, restart |
-| **Docker** | Previous image tag |
+| **Docker** | Verified previous immutable image digest |
 | **K8s** | kubectl rollout undo |
 
 ### Rollback Principles
@@ -188,8 +188,8 @@ What are you deploying?
 ### Service Down Priority
 
 1. **Assess**: What's the symptom?
-2. **Quick fix**: Restart if unclear
-3. **Rollback**: If restart doesn't help
+2. **Stabilize**: Preserve logs and identify impact; restart only when the approved incident procedure supports it
+3. **Rollback**: Use a verified compatible artifact and data migration plan when the rollback trigger is met
 4. **Investigate**: After stable
 
 ### Investigation Order

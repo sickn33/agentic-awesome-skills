@@ -4,6 +4,8 @@ This file defines the **public** score framework used by the skill.
 
 Important: production XVARY systems use proprietary calibrations. The equations below expose the logic shape, not private threshold tables.
 
+Without explicit weights, normalization rules and complete inputs, these shapes cannot produce reproducible numeric scores. Mark unavailable factors and scores N/A; do not reverse-engineer or fabricate proprietary calibrations. If the user supplies a rubric, label it as a user-defined illustrative score rather than a production XVARY result.
+
 ## Score Scale
 
 All scores are normalized to `0-100`.

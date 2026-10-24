@@ -1,5 +1,7 @@
 # Lab Research Patterns Reference
 
+> Review note: Research-inspired design sketches; the cited systems do not establish that Loki implements their training or safety results. Learned world-model simulation is different from container isolation, and neither debate nor a model score verifies correctness. Code uses illustrative/undefined components. Quantitative claims below are unverified here and must not be reported as Loki results. Re-review final fixes; backups and confidence do not authorize deployment, payments or other external effects. Prompt words such as thinking-level names do not configure provider inference settings.
+
 Research-backed patterns from Google DeepMind and Anthropic for enhanced multi-agent orchestration and safety.
 
 ---

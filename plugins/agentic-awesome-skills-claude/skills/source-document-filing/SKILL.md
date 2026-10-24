@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+The upstream shared execution contract is not bundled; follow the explicit intent, artifact and authorization rules below. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -118,7 +118,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Document Reference,Document Type,Document Number,Document Date,Party Name,Party PAN/VAT,Amount,Currency,Tax Amount,TDS Amount,Source Department,Index Key,Storage Location,Retention Period,Linked Voucher,Linked Transaction,Document Availability,Verification Status,Verified By,Verified Date,Notes,Document Filing ID
-DOC-2026-0442,Purchase Invoice,INV-8841,2026-08-14,Bluepeak Supplies,29ABCDE1234F1Z5,84500.00,INR,15210.00,2112.50,Purchase,2026/08/BLUEPEAK,Rack B / Folder 7,8 years,VCH-2026-0912,PUR-2026-0041,Original on file,In progress,Sneha Iyer,2026-08-15,Challan and PO filed together with the invoice.,
+DOC-2026-0442,Purchase Invoice,INV-8841,2026-08-14,Bluepeak Supplies,MASKED-TAX-ID,84500.00,INR,15210.00,2112.50,Purchase,2026/08/BLUEPEAK,Rack B / Folder 7,8 years,VCH-2026-0912,PUR-2026-0041,Original on file,In progress,Sneha Iyer,2026-08-15,Challan and PO filed together with the invoice.,FILE-0442
 ```
 
 ```sql
@@ -144,7 +144,7 @@ CREATE TABLE source_document_filing (
   verified_by VARCHAR(255),
   verified_date DATE,
   notes TEXT,
-  document_filing_id SERIAL PRIMARY KEY,
+  document_filing_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -178,7 +178,7 @@ CREATE TABLE source_document_filing (
       "Verified By": { "type": "string" },
       "Verified Date": { "type": "string", "format": "date" },
       "Notes": { "type": "string" },
-      "Document Filing ID": { "type": "integer" }
+      "Document Filing ID": { "type": "string" }
   },
   "required": [
       "Document Type",
@@ -221,16 +221,20 @@ CREATE TABLE source_document_filing (
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+`period/party` is a filing category, not a unique document key; multiple invoices share it. Preserve a stable source filing ID/reference and distinguish duplicates/versions before relinking records. Never build a filesystem path directly from untrusted party/document text. The8-year retention value is fictional context, not legal guidance: confirm jurisdiction, start event, legal holds, access restrictions and authorized disposal. Do not store signed URLs, credentials or unnecessarily identifying tax numbers in a widely shared register.
+
+Unknown numeric/date values must be absent/null in a draft schema, never the literal string `Unknown` or a fabricated zero/date. The concrete SQL/JSON below describes a complete record: incomplete documents must remain blocked/draft until required facts are verified. `Done` requires actual document checks, verifier identity and verified date; schema presence alone does not verify authenticity. Amount/tax/TDS examples do not establish local rates or whether amount is gross/net.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Document Reference | `text` | `VARCHAR(255)` | `string` | Text | `DOC-2026-0442` |
+| 1 | Document Reference | `text` | `VARCHAR(255)` | `string` | Title | `DOC-2026-0442` |
 | 2 | Document Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Purchase Invoice` |
 | 3 | Document Number | `text` | `VARCHAR(255)` | `string` | Text | `INV-8841` |
 | 4 | Document Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-14` |
 | 5 | Party Name | `text` | `VARCHAR(255)` | `string` | Text | `Bluepeak Supplies` |
-| 6 | Party PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `29ABCDE1234F1Z5` |
+| 6 | Party PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `MASKED-TAX-ID` |
 | 7 | Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `84500.00` |
 | 8 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 9 | Tax Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `15210.00` |
@@ -246,7 +250,7 @@ and anything pointing at another table stays `relation`.
 | 19 | Verified By | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 20 | Verified Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-15` |
 | 21 | Notes | `long_text` | `TEXT` | `string` | Text | `Challan and PO filed together with the invoice.` |
-| 22 | Document Filing ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 22 | Document Filing ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `FILE-0442` |
 
 ## Select Options
 
@@ -354,7 +358,7 @@ Our accountant keeps asking for supporting documents and nobody can find them.
 
 - @accounting-audit-system-builder - routes to this skill and the other accounting modules.
 - @purchase-accounting - the purchase entries these documents support.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/sales-accounting/SKILL.md) - the sales entries these documents support.
+- [sales-accounting](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/sales-accounting/SKILL.md) - the sales entries these documents support.
 - @payment-accounting - the payment entries these documents support.
 - @audit-preparation - reads this register to answer evidence requests.
 

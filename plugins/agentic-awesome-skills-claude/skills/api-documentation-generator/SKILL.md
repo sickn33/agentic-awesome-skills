@@ -27,6 +27,8 @@ Perfect for REST APIs, GraphQL APIs, and WebSocket APIs.
 
 ### Step 1: Analyze the API Structure
 
+Bind documentation to the actual source revision, routing/middleware/schema and verified examples. Mark missing or inferred behavior; do not invent rate limits, password policy, token expiry or exhaustive error coverage. Use synthetic data and secret placeholders. Public user creation must not accept an arbitrary client-supplied admin role: omit it unless a separately authorized admin endpoint validates that capability. Generated OpenAPI fragments need complete referenced schemas/responses and spec validation; interactive Try It calls are real operations requiring an approved sandbox.
+
 First, I'll examine your API codebase to understand:
 - Available endpoints and routes
 - HTTP methods (GET, POST, PUT, DELETE, etc.)
@@ -108,7 +110,7 @@ Creates a new user account.
   "email": "user@example.com",      // Required: Valid email address
   "password": "SecurePass123!",     // Required: Min 8 chars, 1 uppercase, 1 number
   "name": "John Doe",               // Required: 2-50 characters
-  "role": "user"                    // Optional: "user" or "admin" (default: "user")
+  "role": "user"                    // Server-assigned output; do not accept admin from public registration
 }
 \`\`\`
 

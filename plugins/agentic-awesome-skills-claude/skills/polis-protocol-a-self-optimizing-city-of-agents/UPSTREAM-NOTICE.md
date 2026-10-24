@@ -16,3 +16,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/amendments.md` | `references/amendments.md` | `fafbe26a8fbfce330a160bd906d923eecbbc49c7` | text-only trailing whitespace and EOF blank lines normalized |
 | `scripts/init_polis.py` | `scripts/init_polis.py` | `c0cfc4e1505eac4db7e6c6fbb223efc9a6f4c8e4` | content unchanged |
 | `templates/POLIS_CONSTITUTION.md` | `templates/POLIS_CONSTITUTION.md` | `7996a6b9efdccbb7bbe7032eea1102f9d30b8084` | text-only trailing whitespace and EOF blank lines normalized |
+
+Local review modifications: scope/privacy/concurrency and heuristic-policy guidance revised; offline initializer made complete for its bundled templates, exclusive and symlink-refusing; implicit router import replaced by an explicit missing-dependency notice. Original upstream hashes above describe imported sources, not the modified current files.

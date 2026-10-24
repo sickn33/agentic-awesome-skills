@@ -1,6 +1,6 @@
 ---
 name: defi-protocol-templates
-description: "Implement DeFi protocols with production-ready templates for staking, AMMs, governance, and lending systems. Use when building decentralized finance applications or smart contract protocols."
+description: "Implement DeFi protocols with educational templates for staking, AMMs, governance, and lending systems. Use when building decentralized finance applications or smart contract protocols."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -24,7 +24,7 @@ Ask for the original supporting material or an existing installation before usin
 
 # DeFi Protocol Templates
 
-Production-ready templates for common DeFi protocols including staking, AMMs, governance, lending, and flash loans.
+Educational examples for common DeFi protocols including staking, AMMs, governance, lending, and flash loans.
 
 ## Do not use this skill when
 
@@ -46,50 +46,44 @@ Production-ready templates for common DeFi protocols including staking, AMMs, go
 - Integrating flash loan functionality
 - Launching yield farming platforms
 
+These inline contracts are incomplete teaching examples, not audited/funded protocols. They use OpenZeppelin4.x import/inheritance APIs; pin a reviewed compatible version rather than installing5.x blindly. Never deploy with user funds. Staking’s fixed unbounded reward rate has no funding/period management; AMM lacks production-grade reserve/oracle/LP safeguards; governor has no quorum/timelock/action payload; flash loans require a receiver-specific trusted callback. Compile, property/fuzz-test accounting/reentrancy/rounding and obtain independent review before designing a deployment. Token units/decimals differ and fee-on-transfer/rebasing tokens are unsupported.
+
 ## Staking Contract
 
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
 contract StakingRewards is ReentrancyGuard, Ownable {
+    using SafeERC20 for IERC20;
     IERC20 public stakingToken;
     IERC20 public rewardsToken;
-
     uint256 public rewardRate = 100; // Rewards per second
     uint256 public lastUpdateTime;
     uint256 public rewardPerTokenStored;
-
     mapping(address => uint256) public userRewardPerTokenPaid;
     mapping(address => uint256) public rewards;
     mapping(address => uint256) public balances;
-
     uint256 private _totalSupply;
-
     event Staked(address indexed user, uint256 amount);
     event Withdrawn(address indexed user, uint256 amount);
     event RewardPaid(address indexed user, uint256 reward);
-
     constructor(address _stakingToken, address _rewardsToken) {
         stakingToken = IERC20(_stakingToken);
         rewardsToken = IERC20(_rewardsToken);
     }
-
     modifier updateReward(address account) {
         rewardPerTokenStored = rewardPerToken();
         lastUpdateTime = block.timestamp;
-
         if (account != address(0)) {
             rewards[account] = earned(account);
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
         }
         _;
     }
-
     function rewardPerToken() public view returns (uint256) {
         if (_totalSupply == 0) {
             return rewardPerTokenStored;
@@ -97,38 +91,33 @@ contract StakingRewards is ReentrancyGuard, Ownable {
         return rewardPerTokenStored +
             ((block.timestamp - lastUpdateTime) * rewardRate * 1e18) / _totalSupply;
     }
-
     function earned(address account) public view returns (uint256) {
         return (balances[account] *
             (rewardPerToken() - userRewardPerTokenPaid[account])) / 1e18 +
             rewards[account];
     }
-
     function stake(uint256 amount) external nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
         _totalSupply += amount;
         balances[msg.sender] += amount;
-        stakingToken.transferFrom(msg.sender, address(this), amount);
+        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
         emit Staked(msg.sender, amount);
     }
-
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
         _totalSupply -= amount;
         balances[msg.sender] -= amount;
-        stakingToken.transfer(msg.sender, amount);
+        stakingToken.safeTransfer(msg.sender, amount);
         emit Withdrawn(msg.sender, amount);
     }
-
     function getReward() public nonReentrant updateReward(msg.sender) {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            rewardsToken.transfer(msg.sender, reward);
+            rewardsToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
-
     function exit() external {
         withdraw(balances[msg.sender]);
         getReward();
@@ -141,16 +130,15 @@ contract StakingRewards is ReentrancyGuard, Ownable {
 ```solidity
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
-
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-contract SimpleAMM {
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+contract SimpleAMM is ReentrancyGuard {
+    using SafeERC20 for IERC20;
     IERC20 public token0;
     IERC20 public token1;
-
     uint256 public reserve0;
     uint256 public reserve1;
-
     uint256 public totalSupply;
     mapping(address => uint256) public balanceOf;
 
@@ -163,9 +151,9 @@ contract SimpleAMM {
         token1 = IERC20(_token1);
     }
 
-    function addLiquidity(uint256 amount0, uint256 amount1) external returns (uint256 shares) {
-        token0.transferFrom(msg.sender, address(this), amount0);
-        token1.transferFrom(msg.sender, address(this), amount1);
+    function addLiquidity(uint256 amount0, uint256 amount1) external nonReentrant returns (uint256 shares) {
+        token0.safeTransferFrom(msg.sender, address(this), amount0);
+        token1.safeTransferFrom(msg.sender, address(this), amount1);
 
         if (totalSupply == 0) {
             shares = sqrt(amount0 * amount1);
@@ -186,7 +174,7 @@ contract SimpleAMM {
         emit Mint(msg.sender, shares);
     }
 
-    function removeLiquidity(uint256 shares) external returns (uint256 amount0, uint256 amount1) {
+    function removeLiquidity(uint256 shares) external nonReentrant returns (uint256 amount0, uint256 amount1) {
         uint256 bal0 = token0.balanceOf(address(this));
         uint256 bal1 = token1.balanceOf(address(this));
 
@@ -198,13 +186,14 @@ contract SimpleAMM {
         _burn(msg.sender, shares);
         _update(bal0 - amount0, bal1 - amount1);
 
-        token0.transfer(msg.sender, amount0);
-        token1.transfer(msg.sender, amount1);
+        token0.safeTransfer(msg.sender, amount0);
+        token1.safeTransfer(msg.sender, amount1);
 
         emit Burn(msg.sender, shares);
     }
 
-    function swap(address tokenIn, uint256 amountIn) external returns (uint256 amountOut) {
+    function swap(address tokenIn, uint256 amountIn, uint256 minAmountOut, uint256 deadline) external nonReentrant returns (uint256 amountOut) {
+        require(block.timestamp <= deadline && amountIn > 0, "Expired or zero input");
         require(tokenIn == address(token0) || tokenIn == address(token1), "Invalid token");
 
         bool isToken0 = tokenIn == address(token0);
@@ -212,13 +201,14 @@ contract SimpleAMM {
             ? (token0, token1, reserve0, reserve1)
             : (token1, token0, reserve1, reserve0);
 
-        tokenIn_.transferFrom(msg.sender, address(this), amountIn);
+        tokenIn_.safeTransferFrom(msg.sender, address(this), amountIn);
 
         // 0.3% fee
         uint256 amountInWithFee = (amountIn * 997) / 1000;
         amountOut = (resOut * amountInWithFee) / (resIn + amountInWithFee);
 
-        tokenOut.transfer(msg.sender, amountOut);
+        require(amountOut >= minAmountOut && amountOut > 0, "Slippage or zero output");
+        tokenOut.safeTransfer(msg.sender, amountOut);
 
         _update(
             token0.balanceOf(address(this)),
@@ -342,7 +332,8 @@ contract Governor is Ownable {
 
     function vote(uint256 proposalId, bool support) external {
         Proposal storage proposal = proposals[proposalId];
-        require(block.number >= proposal.startBlock, "Voting not started");
+        require(proposalId > 0 && proposalId <= proposalCount, "Unknown proposal");
+        require(block.number > proposal.startBlock, "Snapshot not yet historical");
         require(block.number <= proposal.endBlock, "Voting ended");
         require(!proposal.hasVoted[msg.sender], "Already voted");
 
@@ -366,11 +357,7 @@ contract Governor is Ownable {
         require(!proposal.executed, "Already executed");
         require(proposal.forVotes > proposal.againstVotes, "Proposal failed");
 
-        proposal.executed = true;
-
-        // Execute proposal logic here
-
-        emit ProposalExecuted(proposalId);
+        revert("Teaching stub: no action execution/quorum/timelock implemented");
     }
 }
 ```
@@ -382,6 +369,7 @@ contract Governor is Ownable {
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 interface IFlashLoanReceiver {
     function executeOperation(
@@ -392,7 +380,10 @@ interface IFlashLoanReceiver {
     ) external returns (bool);
 }
 
-contract FlashLoanProvider {
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+contract FlashLoanProvider is ReentrancyGuard {
+    using SafeERC20 for IERC20;
     IERC20 public token;
     uint256 public feePercentage = 9; // 0.09% fee
 
@@ -406,14 +397,14 @@ contract FlashLoanProvider {
         address receiver,
         uint256 amount,
         bytes calldata params
-    ) external {
+    ) external nonReentrant {
         uint256 balanceBefore = token.balanceOf(address(this));
         require(balanceBefore >= amount, "Insufficient liquidity");
 
         uint256 fee = (amount * feePercentage) / 10000;
 
         // Send tokens to receiver
-        token.transfer(receiver, amount);
+        token.safeTransfer(receiver, amount);
 
         // Execute callback
         require(
@@ -436,17 +427,21 @@ contract FlashLoanProvider {
 
 // Example flash loan receiver
 contract FlashLoanReceiver is IFlashLoanReceiver {
+    using SafeERC20 for IERC20;
+    address public immutable provider;
+    constructor(address trustedProvider) { provider = trustedProvider; }
     function executeOperation(
         address asset,
         uint256 amount,
         uint256 fee,
         bytes calldata params
     ) external override returns (bool) {
+        require(msg.sender == provider, "Untrusted lender");
         // Decode params and execute arbitrage, liquidation, etc.
         // ...
 
-        // Approve repayment
-        IERC20(asset).approve(msg.sender, amount + fee);
+        // This lender checks its final balance; approval alone does not repay.
+        IERC20(asset).safeTransfer(provider, amount + fee);
 
         return true;
     }

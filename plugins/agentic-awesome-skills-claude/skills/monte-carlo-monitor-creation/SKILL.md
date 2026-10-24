@@ -14,7 +14,10 @@ tools: [claude, cursor, codex]
 
 # Monte Carlo Monitor Creation Skill
 
-This skill teaches you to create Monte Carlo monitors correctly via MCP. Every creation tool runs in **dry-run mode** and returns monitors-as-code (MaC) YAML. No monitors are created directly -- the user applies the YAML via the Monte Carlo CLI or CI/CD.
+This skill teaches you to create Monte Carlo monitors correctly via MCP. The documented `*Mac` tools generate monitors-as-code (MaC) YAML. Verify the
+connected tool schema and dry-run behavior before calling them; tool names alone
+are not proof of read-only behavior. Deployment via CLI/CI is a separate action
+requiring the user's authorized target and scope.
 
 Reference files live next to this skill file. **Use the Read tool** (not MCP resources) to access them:
 
@@ -141,7 +144,10 @@ Based on the monitor type, read the detailed reference for parameter guidance:
 
 **Skip this step for table monitors.** Table monitors do not support the `schedule` field in MaC YAML — adding it will cause a validation error on `montecarlo monitors apply`. Table monitor scheduling is managed automatically by Monte Carlo.
 
-For all other monitor types, the creation tools default to a fixed schedule running every 60 minutes. Present these options:
+For other monitor types, check the loaded reference and connected tool schema
+for valid scheduling defaults. Metric aggregation can require a longer interval;
+do not overwrite a valid generated schedule with a generic 60-minute value.
+Present supported options:
 
 1. **Fixed interval** -- any integer for `interval_minutes` (30, 60, 90, 120, 360, 720, 1440, etc.)
 2. **Dynamic** -- MC auto-determines when to run based on table update patterns.

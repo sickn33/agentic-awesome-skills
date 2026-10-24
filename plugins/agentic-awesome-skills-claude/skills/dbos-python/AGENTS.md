@@ -1,6 +1,6 @@
 # dbos-python
 
-> **Note:** `CLAUDE.md` is a symlink to this file.
+> **Note:** `CLAUDE.md` is a regular navigation file linking to this guide.
 
 ## Overview
 
@@ -12,7 +12,7 @@ DBOS Python SDK for building reliable, fault-tolerant applications with durable 
 dbos-python/
   SKILL.md       # Main skill file - read this first
   AGENTS.md      # This navigation guide
-  CLAUDE.md      # Symlink to AGENTS.md
+  CLAUDE.md      # Navigation link to AGENTS.md
   references/    # Detailed reference files
 ```
 

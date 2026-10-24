@@ -11,7 +11,7 @@
 
 ```bash
 # 打开页面
-agent-browser open "https://target.com/login"
+agent-browser open "https://authorized-lab.example/login"
 
 # 等待页面加载完成
 agent-browser wait --load networkidle
@@ -40,7 +40,7 @@ agent-browser click @e1
 agent-browser fill @e2 "admin"
 
 # 逐字符输入（适合有 JS 监听的输入框）
-agent-browser type @e2 "password123"
+agent-browser type @e2 "synthetic-test-text"
 
 # 按键
 agent-browser press Enter
@@ -88,10 +88,10 @@ agent-browser wait --load domcontentloaded
 ### 自动化登录
 
 ```bash
-agent-browser open "https://target.com/login"
+agent-browser open "https://authorized-lab.example/login"
 agent-browser snapshot -i
 agent-browser fill @username "admin"
-agent-browser fill @password "password123"
+# Enter test credentials through an approved secret-entry UI; do not pass secrets as CLI arguments.
 agent-browser click @login_button
 agent-browser wait --load networkidle
 agent-browser get url                    # 确认是否跳转到后台
@@ -100,7 +100,7 @@ agent-browser get url                    # 确认是否跳转到后台
 ### XSS Payload 注入
 
 ```bash
-agent-browser open "https://target.com/search"
+agent-browser open "https://authorized-lab.example/search"
 agent-browser snapshot -i
 agent-browser fill @search_input "<script>alert(1)</script>"
 agent-browser click @search_button
@@ -113,7 +113,7 @@ agent-browser snapshot                   # 检查 payload 是否被渲染
 ```powershell
 $payloads = @("' OR 1=1--", "<img src=x onerror=alert(1)>", "{{7*7}}")
 foreach ($p in $payloads) {
-    agent-browser open "https://target.com/form"
+    agent-browser open "https://authorized-lab.example/form"
     agent-browser snapshot -i
     agent-browser fill @input "$p"
     agent-browser click @submit
@@ -141,11 +141,11 @@ const { chromium } = require('playwright');
     
     // 提取 cookies
     const cookies = await context.cookies();
-    console.log(JSON.stringify(cookies, null, 2));
+    console.log({ cookieCount: cookies.length }); // Never print values
     
     // 提取 localStorage
     const storage = await page.evaluate(() => JSON.stringify(localStorage));
-    console.log(storage);
+    console.log({ storagePresent: storage !== "{}" }); // Do not export tokens
     
     await browser.close();
 })();
@@ -155,7 +155,7 @@ const { chromium } = require('playwright');
 
 ```bash
 # agent-browser 模式
-agent-browser open "https://target.com/admin"
+agent-browser open "https://authorized-lab.example/admin"
 agent-browser wait --load networkidle
 # 截图功能取决于 agent-browser 版本
 ```
@@ -180,7 +180,7 @@ const { chromium } = require('playwright');
         // proxy: { server: 'http://127.0.0.1:8080' }  // 走 Burp 代理
     });
     const context = await browser.newContext({
-        ignoreHTTPSErrors: true,  // 忽略证书错误
+        ignoreHTTPSErrors: false, // Preserve TLS verification
         userAgent: 'Mozilla/5.0 ...',
     });
     const page = await context.newPage();
@@ -215,7 +215,7 @@ await page.click('form >> input[type="submit"]');
 ```javascript
 // 拦截请求
 await page.route('**/api/**', route => {
-    console.log('API call:', route.request().url());
+    console.log('API call path:', new URL(route.request().url()).pathname);
     route.continue();
 });
 
@@ -247,7 +247,7 @@ const [response] = await Promise.all([
     page.waitForResponse('**/api/login'),
     page.click('#login-btn'),
 ]);
-console.log(response.status(), await response.json());
+console.log(response.status()); // Response bodies may contain credentials
 
 // 等待导航
 await Promise.all([
@@ -373,7 +373,7 @@ openreverse network stop
 | agent-browser 无响应 | 进程泄漏 | 先 `agent-browser close`，再重新 open |
 | 元素引用失效 | 页面已刷新 | 重新 `snapshot -i` 获取新引用 |
 | 填表无效 | JS 监听 input 事件 | 用 `type` 代替 `fill` |
-| HTTPS 证书错误 | 自签名证书 | Playwright: `ignoreHTTPSErrors: true` |
+| HTTPS 证书错误 | 自签名证书 | 配置受信任的实验室CA；不要默认绕过TLS验证 |
 | 页面加载超时 | 网络慢/资源多 | 增加 timeout 或用 `domcontentloaded` |
 | UIA 找不到控件 | 应用使用自绘控件 | 切换到 CUA 模式 |
 | CUA 点击偏移 | 分辨率/DPI 不匹配 | 先 screenshot 确认坐标 |
@@ -423,3 +423,5 @@ npm run doctor:network
 | OpenReverse | 桌面自动化框架 | https://github.com/zhexulong/openreverse |
 | mitmproxy | HTTP/HTTPS 代理 | https://mitmproxy.org/ |
 | Windows UI Automation | UIA 文档 | https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32 |
+
+Element references such as @username are illustrative, not returned snapshot IDs: resolve each from a fresh snapshot. A rendered payload string or changed local response role is not proof of XSS or server authorization bypass; demonstrate a harmless controlled effect in the approved lab. Use try/finally to close only the browser/session owned by this task, not unrelated user sessions. Prefer locators and specific assertions to networkidle and waitForNavigation. The storage snippet opens a fresh unauthenticated context; it does not recover another user’s browser session. Plugin install and OpenReverse commands are version-dependent external prerequisites.

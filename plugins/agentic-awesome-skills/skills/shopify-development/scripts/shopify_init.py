@@ -109,7 +109,10 @@ class EnvLoader:
         config = EnvConfig()
 
         # Load from .env files (reverse priority order)
-        for env_path in reversed(EnvLoader.get_env_paths(skill_dir)):
+        # Files may be inspected, but ambient parent .env files are not loaded
+        # unless the caller explicitly opts in for this process.
+        env_paths = EnvLoader.get_env_paths(skill_dir) if os.environ.get('SHOPIFY_LOAD_ENV_FILES') == '1' else []
+        for env_path in reversed(env_paths):
             env_vars = EnvLoader.load_env_file(env_path)
             if 'SHOPIFY_API_KEY' in env_vars:
                 config.shopify_api_key = env_vars['SHOPIFY_API_KEY']
@@ -182,7 +185,7 @@ class ShopifyInitializer:
                 if 1 <= choice <= len(options):
                     return options[choice - 1]
                 print(f"Please select 1-{len(options)}")
-            except (ValueError, KeyboardInterrupt):
+            except ValueError:
                 print("Invalid input")
 
     def check_cli_installed(self) -> bool:
@@ -212,6 +215,9 @@ class ShopifyInitializer:
             app_name: Application name
             scopes: Access scopes
         """
+        for value in (app_name, scopes, self.config.shopify_api_key or '', self.config.shop_domain or ''):
+            if any(c in value for c in '\r\n"\\'):
+                raise ValueError("Unsafe TOML string")
         config_content = f"""# Shopify App Configuration
 name = "{app_name}"
 client_id = "{self.config.shopify_api_key or 'YOUR_API_KEY'}"
@@ -232,13 +238,13 @@ api_version = "2026-01"
 topics = ["app/uninstalled"]
 uri = "/webhooks/app/uninstalled"
 
-[webhooks.privacy_compliance]
-customer_data_request_url = "/webhooks/gdpr/data-request"
-customer_deletion_url = "/webhooks/gdpr/customer-deletion"
-shop_deletion_url = "/webhooks/gdpr/shop-deletion"
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+uri = "/webhooks/privacy"
 """
         config_path = project_dir / 'shopify.app.toml'
-        config_path.write_text(config_content)
+        with config_path.open("x", encoding="utf-8") as output:
+            output.write(config_content)
         print(f"✓ Created {config_path}")
 
     def create_extension_config(self, project_dir: Path, extension_name: str, extension_type: str) -> None:
@@ -250,6 +256,10 @@ shop_deletion_url = "/webhooks/gdpr/shop-deletion"
             extension_name: Extension name
             extension_type: Extension type
         """
+        if not __import__('re').fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', extension_name):
+            raise ValueError("Invalid extension name")
+        if extension_type in ('function', 'theme_app'):
+            raise ValueError("Use Shopify CLI to scaffold this extension type")
         target_map = {
             'checkout': 'purchase.checkout.block.render',
             'admin_action': 'admin.product-details.action.render',
@@ -260,22 +270,23 @@ shop_deletion_url = "/webhooks/gdpr/shop-deletion"
             'theme_app': 'theme-app-extension'
         }
 
-        config_content = f"""name = "{extension_name}"
+        config_content = f"""api_version = "2026-01"
+
+[[extensions]]
+name = "{extension_name}"
 type = "ui_extension"
 handle = "{extension_name.lower().replace(' ', '-')}"
 
-[extension_points]
-api_version = "2026-01"
-
-[[extension_points.targets]]
+[[extensions.targeting]]
 target = "{target_map.get(extension_type, 'purchase.checkout.block.render')}"
 
-[capabilities]
-network_access = true
-api_access = true
+[extensions.capabilities]
+network_access = false
+api_access = false
 """
         config_path = project_dir / 'shopify.extension.toml'
-        config_path.write_text(config_content)
+        with config_path.open("x", encoding="utf-8") as output:
+            output.write(config_content)
         print(f"✓ Created {config_path}")
 
     def create_readme(self, project_dir: Path, project_type: str, project_name: str) -> None:
@@ -298,14 +309,14 @@ Shopify {project_type.capitalize()} project.
 npm install
 
 # Start development
-shopify {project_type} dev
+{('shopify theme dev' if project_type == 'theme' else 'shopify app dev')}
 ```
 
 ## Deployment
 
 ```bash
 # Deploy to Shopify
-shopify {project_type} deploy
+{('shopify theme push --development' if project_type == 'theme' else 'shopify app deploy')}
 ```
 
 ## Resources
@@ -314,7 +325,8 @@ shopify {project_type} deploy
 - [Shopify CLI](https://shopify.dev/docs/api/shopify-cli)
 """
         readme_path = project_dir / 'README.md'
-        readme_path.write_text(content)
+        with readme_path.open("x", encoding="utf-8") as output:
+            output.write(content)
         print(f"✓ Created {readme_path}")
 
     def init_app(self) -> None:
@@ -325,7 +337,11 @@ shopify {project_type} deploy
         scopes = self.prompt("Access scopes", self.config.scopes or "read_products,write_products")
 
         project_dir = Path.cwd() / app_name
-        project_dir.mkdir(exist_ok=True)
+        if not __import__('re').fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', project_dir.name):
+            raise ValueError("Use a lowercase alphanumeric/hyphen project name")
+        if project_dir.parent != Path.cwd() or project_dir.name in ('.', '..'):
+            raise ValueError("Project must be a direct child of the working directory")
+        project_dir.mkdir(exist_ok=False)
 
         print(f"\nCreating app in {project_dir}...")
 
@@ -344,7 +360,7 @@ shopify {project_type} deploy
         (project_dir / 'package.json').write_text(json.dumps(package_json, indent=2))
         print(f"✓ Created package.json")
 
-        print(f"\n✓ App '{app_name}' initialized successfully!")
+        print(f"\n✓ App configuration sketch '{app_name}' written; no server scaffold was generated.")
         print(f"\nNext steps:")
         print(f"  cd {app_name}")
         print(f"  npm install")
@@ -368,14 +384,18 @@ shopify {project_type} deploy
         extension_name = self.prompt("Extension name", "my-extension")
 
         project_dir = Path.cwd() / extension_name
-        project_dir.mkdir(exist_ok=True)
+        if not __import__('re').fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', project_dir.name):
+            raise ValueError("Use a lowercase alphanumeric/hyphen project name")
+        if project_dir.parent != Path.cwd() or project_dir.name in ('.', '..'):
+            raise ValueError("Project must be a direct child of the working directory")
+        project_dir.mkdir(exist_ok=False)
 
         print(f"\nCreating extension in {project_dir}...")
 
         self.create_extension_config(project_dir, extension_name, extension_type)
         self.create_readme(project_dir, "extension", extension_name)
 
-        print(f"\n✓ Extension '{extension_name}' initialized successfully!")
+        print(f"\n✓ Extension configuration sketch '{extension_name}' written; generate real source with Shopify CLI inside an app.")
         print(f"\nNext steps:")
         print(f"  cd {extension_name}")
         print(f"  shopify app dev")

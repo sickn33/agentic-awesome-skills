@@ -46,6 +46,12 @@ function Composer({
 ```tsx
 const ComposerContext = createContext<ComposerContextValue | null>(null)
 
+function useComposer() {
+  const value = use(ComposerContext)
+  if (value === null) throw new Error('Composer provider is required')
+  return value
+}
+
 function ComposerProvider({ children, state, actions, meta }: ProviderProps) {
   return (
     <ComposerContext value={{ state, actions, meta }}>
@@ -63,7 +69,7 @@ function ComposerInput() {
     state,
     actions: { update },
     meta: { inputRef },
-  } = use(ComposerContext)
+  } = useComposer()
   return (
     <TextInput
       ref={inputRef}
@@ -76,7 +82,7 @@ function ComposerInput() {
 function ComposerSubmit() {
   const {
     actions: { submit },
-  } = use(ComposerContext)
+  } = useComposer()
   return <Button onPress={submit}>Send</Button>
 }
 
@@ -85,6 +91,7 @@ const Composer = {
   Provider: ComposerProvider,
   Frame: ComposerFrame,
   Input: ComposerInput,
+  Context: ComposerContext,
   Submit: ComposerSubmit,
   Header: ComposerHeader,
   Footer: ComposerFooter,

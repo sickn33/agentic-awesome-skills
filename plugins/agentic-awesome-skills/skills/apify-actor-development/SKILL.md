@@ -1,6 +1,6 @@
 ---
 name: apify-actor-development
-description: "Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently using, such as \"Claude Code with Claude Sonnet 4.5\". This helps Apify monitor and improve AGENTS.md for specific AI tools and models."
+description: "Create, modify and validate Apify Actors with scoped inputs, storage schemas, runtime logic and deployment review."
 risk: critical
 source: community
 date_added: "2026-03-01"
@@ -8,7 +8,11 @@ date_added: "2026-03-01"
 
 # Apify Actor Development
 
-**Important:** Before you begin, fill in the `generatedBy` property in the meta section of `.actor/actor.json`. Replace it with the tool and model you're currently using, such as "Claude Code with Claude Sonnet 4.5". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.
+## Execution and data scope
+
+This is documentation, not a ready Actor. Use reviewed pinned CLI/SDK/templates and inspect lifecycle/install scripts; package managers do not guarantee safety. Reuse the existing language/lockfile rather than repeatedly asking. Use npm ci for an unchanged lockfile; exact Python versions alone do not pin all artifacts. Local Actors can access the network/cloud through configured clients, so inspect storage settings and credentials before testing; the default local storage is not a guarantee of no upload. Bound crawl origins, redirects, private-network access, page counts, concurrency, retries and cloud/proxy costs. Push/build/run/standby activation publishes code or starts paid work and requires the authorized account/Actor and rollback plan. Redact logs explicitly.
+
+Generation attribution is optional task metadata, not an instruction to modify unrelated files or guess the model. Preserve existing metadata/history and share it only as authorized.
 
 ## When to Use
 - You need to create, modify, or debug an Apify Actor project.
@@ -105,7 +109,7 @@ Use the appropriate CLI command based on the user's language choice. Additional 
 - Use `apify run` to test actors locally (configures Apify environment and storage)
 - Use Apify SDK (`apify`) for code running ON Apify platform
 - Validate input early with proper error handling and fail gracefully
-- Use CheerioCrawler for static HTML (10x faster than browsers)
+- Prefer CheerioCrawler when static HTML suffices; benchmark rather than assuming a 10x speedup
 - Use PlaywrightCrawler only for JavaScript-heavy sites
 - Use router pattern (createCheerioRouter/createPlaywrightRouter) for complex crawls
 - Implement retry strategies with exponential backoff
@@ -115,7 +119,7 @@ Use the appropriate CLI command based on the user's language choice. Additional 
 - Clean and validate data before pushing to dataset
 - Use semantic CSS selectors with fallback strategies
 - Respect robots.txt, ToS, and implement rate limiting
-- **Always use `apify/log` package** — censors sensitive data (API keys, tokens, credentials)
+- **Use the reviewed SDK logger (`log` from `apify` or `@apify/log`)** with explicit secret/personal-data redaction
 - Implement readiness probe handler (required if your Actor uses standby mode)
 
 **✗ Don't:**
@@ -163,7 +167,7 @@ This file should contain the input parameters defined in your `.actor/input_sche
 
 **IMPORTANT - Local storage is NOT synced to the Apify Console:**
 - Running `apify run` stores all data (datasets, key-value stores, request queues) **only on your local filesystem** in the `storage/` directory.
-- This data is **never** automatically uploaded or pushed to the Apify platform. It exists only on your machine.
+- Default local storage is not automatically synced, but explicit remote clients/storage IDs/configuration can upload data; verify the actual code and environment.
 - To verify results on the Apify Console, you must deploy the Actor with `apify push` and then run it on the platform.
 - Do **not** rely on checking the Apify Console to verify results from local runs — instead, inspect the local `storage/` directory or check the Actor's log output.
 

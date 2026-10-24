@@ -1,7 +1,9 @@
 # short-positions
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 ```
-Short selling open interest — undisclosed short positions held over time
+Short selling open interest — reported aggregate short positions held over time
 
 Supports US and HK markets; market is inferred from the symbol suffix.
 
@@ -43,7 +45,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge short-positions --format json
+longbridge short-positions AAPL.US --format json
 
 # See all options
 longbridge short-positions --help

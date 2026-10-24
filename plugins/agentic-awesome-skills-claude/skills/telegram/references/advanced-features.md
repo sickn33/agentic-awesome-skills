@@ -96,7 +96,7 @@ async def successful_payment(update: Update, context):
     payment = update.message.successful_payment
     await update.message.reply_text(
         f"Pagamento recebido! {payment.total_amount} Stars. "
-        f"Seu acesso premium foi ativado."
+        f"A ativacao deve ser confirmada pelo sistema de assinaturas."
     )
 
 app.add_handler(PreCheckoutQueryHandler(precheckout))
@@ -353,3 +353,7 @@ def stream_response(chat_id, full_text):
 ```
 
 **Nota:** `sendMessageDraft` e um metodo recente. Verifique disponibilidade na versao da API que esta usando.
+
+## Limites dos exemplos
+
+Os exemplos sao fragmentos: pagamentos exigem verificacao de moeda, importe, usuario e pedido, armazenamento duravel do identificador da cobranca e entrega idempotente antes de afirmar ativacao. Nao confie em dados WebApp para autenticar usuarios ou conceder acesso; valide o esquema e a autenticacao no servidor. Configure consentimento e retencao antes de enviar mensagens a um provedor de IA. Bibliotecas instaladas podem nao suportar metodos recentes da Bot API; confirme nomes e parametros na documentacao oficial.

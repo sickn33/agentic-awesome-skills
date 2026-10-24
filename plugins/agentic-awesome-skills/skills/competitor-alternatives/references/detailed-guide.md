@@ -99,7 +99,7 @@ Before creating competitor pages, understand:
 **Page structure**:
 1. Why people look for alternatives (common pain points)
 2. What to look for in an alternative (criteria framework)
-3. List of alternatives (you first, but include real options)
+3. List of alternatives (rank by disclosed criteria and disclose your affiliation; do not imply an independent ranking if self-positioned)
 4. Comparison table (summary)
 5. Detailed breakdown of each alternative
 6. Recommendation by use case
@@ -107,7 +107,7 @@ Before creating competitor pages, understand:
 
 **Tone**: Objective guide, you're one option among several (but positioned well)
 
-**Important**: Include 4-7 real alternatives. Being genuinely helpful builds trust and ranks better.
+**Important**: Include 4-7 real alternatives. Choose enough genuinely relevant alternatives; list length does not guarantee search ranking.
 
 ---
 
@@ -308,77 +308,29 @@ competitor_data/
 **Per competitor, document**:
 
 ```yaml
-name: Notion
-website: notion.so
-tagline: "The all-in-one workspace"
-founded: 2016
-headquarters: San Francisco
-
-# Positioning
-primary_use_case: "docs + light databases"
-target_audience: "teams wanting flexible workspace"
-market_position: "premium, feature-rich"
-
-# Pricing
-pricing_model: per-seat
-free_tier: true
-free_tier_limits: "limited blocks, 1 user"
-starter_price: $8/user/month
-business_price: $15/user/month
-enterprise: custom
-
-# Features (rate 1-5 or describe)
-features:
-  documents: 5
-  databases: 4
-  project_management: 3
-  collaboration: 4
-  integrations: 3
-  mobile_app: 3
-  offline_mode: 2
-  api: 4
-
-# Strengths (be honest)
-strengths:
-  - Extremely flexible and customizable
-  - Beautiful, modern interface
-  - Strong template ecosystem
-  - Active community
-
-# Weaknesses (be fair)
-weaknesses:
-  - Can be slow with large databases
-  - Learning curve for advanced features
-  - Limited automations compared to dedicated tools
-  - Offline mode is limited
-
-# Best for
-best_for:
-  - Teams wanting all-in-one workspace
-  - Content-heavy workflows
-  - Documentation-first teams
-  - Startups and small teams
-
-# Not ideal for
-not_ideal_for:
-  - Complex project management needs
-  - Large databases (1000s of rows)
-  - Teams needing robust offline
-  - Enterprise with strict compliance
-
-# Common complaints (from reviews)
-common_complaints:
-  - "Gets slow with lots of content"
-  - "Hard to find things as workspace grows"
-  - "Mobile app is clunky"
-
-# Migration notes
+# Fictional illustration only; replace every product fact with dated evidence.
+name: Example Workspace A
+website: https://workspace-a.example
+checked_at: null
+primary_use_case: null
+pricing:
+  source_url: null
+  region: null
+  currency: null
+  billing_period: null
+  seat_minimum: null
+  taxes_addons: null
+  amount: null
+features: [] # each: claim, plan/version/platform, source_url, checked_at, limitations
+strengths: [] # evidence-supported and scoped
+weaknesses: [] # distinguish observed limitation from review opinion
+best_for: [] # criteria-based editorial recommendation, not universal fact
 migration_from:
-  difficulty: medium
-  data_export: "Markdown, CSV, HTML"
-  what_transfers: "Pages, databases"
-  what_doesnt: "Automations, integrations setup"
-  time_estimate: "1-3 days for small team"
+  tested: false
+  export_formats: []
+  what_transfers: []
+  what_doesnt: []
+  time_estimate: null
 ```
 
 ### Your Product Data
@@ -628,7 +580,7 @@ Group features into meaningful categories:
 For each competitor, gather:
 
 1. **Product research**
-   - Sign up for free trial
+   - Read official public docs first; create a trial only when account/data/possible billing authority is explicit
    - Use the product yourself
    - Document features, UX, limitations
    - Take screenshots
@@ -646,7 +598,8 @@ For each competitor, gather:
    - Ratings by category
 
 4. **Customer feedback**
-   - Talk to customers who switched
+   - Use authorized interviews/feedback; do not contact customers without explicit messaging authorization
+   - Talk to customers who switched only within that authorization
    - Talk to prospects who chose competitor
    - Document real quotes
 
@@ -658,7 +611,7 @@ For each competitor, gather:
 
 ### Ongoing Updates
 
-Competitor pages need maintenance:
+Competitor pages need maintenance; recheck changeable pricing/features immediately before publication, not only on a quarterly timer:
 
 - **Quarterly**: Verify pricing, check for major feature changes
 - **When notified**: Customer mentions competitor change
@@ -687,7 +640,7 @@ Competitor pages need maintenance:
 
 ### Schema Markup
 
-Consider FAQ schema for common questions:
+Use FAQ markup only for visible genuine Q&A that meets the target search engine’s current eligibility requirements; it does not guarantee rich results. Do not add ratings/review markup for invented scores or self-serving testimonials:
 
 ```json
 {
@@ -754,3 +707,22 @@ If you need more context:
 - **copywriting**: For writing compelling comparison copy
 - **seo-audit**: For optimizing competitor pages
 - **schema-markup**: For FAQ and comparison schema
+
+## Evidence, rights and publication boundary
+
+Templates are drafts, not completed research or publication authority. Every current
+price/feature/security/compliance claim needs an official dated source and relevant
+plan/region/version; unavailable data is “not verified,” not “not available.” Reviews
+are attributed opinions from a disclosed sample/date, not representative user facts.
+Never fabricate quotations, switcher identities, outcomes or migration support. Use
+only consented, accurately quoted testimonials and appropriately licensed logos/
+screenshots; avoid implying competitor endorsement or independent analysis.
+
+For example, fictional A at 10 USD/seat/month billed annually for 10 seats is 1,200
+USD/year before tax/add-ons; fictional B at 120 USD/year per seat is also 1,200, not
+a “12× saving.” Compare equivalent quotas and billing commitments, then test migration
+on synthetic export/import fixtures including permissions, attachments, relations and
+automations. Do not promise 1–3 days or lossless transfer without measured scope.
+Keep a claim-to-source ledger and correction date; SEO/readability recommendations
+are hypotheses, not ranking or conversion guarantees. No trials, interviews, product
+checks, migration or publication occurred in this static review.

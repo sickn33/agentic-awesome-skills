@@ -170,7 +170,7 @@ def calculate_efficiency_score(metrics, task_complexity):
     # Calculate component scores (1.0 = at baseline, >1 = better, <1 = worse)
     time_score = min(1.0, baseline["time"] / max(metrics["wall_time_seconds"], 1))
     agent_score = min(1.0, baseline["agents"] / max(metrics["agents_spawned"], 1))
-    retry_score = 1.0 - (metrics["retry_count"] / (baseline["retries"] + 3))
+    retry_score = max(0.0, 1.0 - (metrics["retry_count"] / (baseline["retries"] + 3)))
 
     # Weighted average (time matters most)
     return (time_score * 0.5) + (agent_score * 0.3) + (retry_score * 0.2)
@@ -318,7 +318,7 @@ def infer_preference_reward(task_result, user_actions):
 def aggregate_rewards(outcome, efficiency, preference):
     """
     Combine rewards into single learning signal.
-    Weights based on ToolOrchestra findings.
+    Illustrative local weights, not reproduced ToolOrchestra findings.
     """
     # Outcome is most important (must succeed)
     # Efficiency secondary (once successful, optimize)
@@ -478,7 +478,7 @@ def select_agents_for_task(task, available_agents):
         if agent.role == "reviewer":
             agent.model = "opus"  # Always opus for reviews
         else:
-            agent.model = allocation["model"]
+            agent.model = allocation[agent.role]  # role must be planning/development/testing; validate first
 
     return selected
 
@@ -650,14 +650,14 @@ Based on [Measurement Imbalance research (arXiv 2506.02064)](https://arxiv.org/a
 
 > "Technical metrics dominate assessments (83%), while human-centered (30%), safety (53%), and economic (30%) remain peripheral"
 
-**Loki Mode tracks four evaluation axes:**
+**Proposed evaluation axes (schema does not prove implementation or coverage):**
 
 | Axis | Metrics | Current Coverage |
 |------|---------|------------------|
-| **Technical** | success_rate, efficiency_score, recovery_rate | Full |
+| **Technical** | success_rate, efficiency_score, recovery_rate | To verify |
 | **Human-Centered** | preference_reward, goal_adherence | Partial |
-| **Safety** | policy_adherence, quality_gates_passed | Full (via review system) |
-| **Economic** | model_usage, agents_spawned, wall_time | Full |
+| **Safety** | policy_adherence, quality_gates_passed | To verify with runtime evidence |
+| **Economic** | model_usage, agents_spawned, wall_time | To verify |
 
 ---
 
@@ -689,3 +689,5 @@ Based on [Measurement Imbalance research (arXiv 2506.02064)](https://arxiv.org/a
 - [Chain of Thought Monitoring](https://openai.com/index/chain-of-thought-monitoring/) - CoT monitorability for safety
 - [Agent Builder Safety](https://platform.openai.com/docs/guides/agent-builder-safety) - Human-in-loop patterns
 - [Agentic AI Foundation](https://openai.com/index/agentic-ai-foundation/) - Industry standards (MCP, AGENTS.md, goose)
+
+Metrics, weights, baselines and dashboard values are illustrative and uncalibrated. Capture measured denominators and unknown states; zero retries has no observed recovery rate. File-based scores do not train model weights or prove safety. Research performance figures are historical source claims, not reproduced Loki results; measure current models/costs. Implicit user actions are noisy preference signals and never authorization. Trace payloads require minimization, redaction, access control and retention.

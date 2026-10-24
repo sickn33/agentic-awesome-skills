@@ -23,7 +23,7 @@ from datetime import datetime
 
 # ── Configuration ──────────────────────────────────────────────────────────
 
-SKILLS_ROOT = Path(r"C:\Users\renat\skills")
+SKILLS_ROOT = (Path.cwd() / "skills").resolve()
 USER_HOME = Path(os.path.expanduser("~"))
 TEMP_DIR = Path(os.environ.get("TEMP", os.environ.get("TMP", str(USER_HOME / "AppData" / "Local" / "Temp"))))
 
@@ -34,12 +34,7 @@ INSTALLED_LOCATIONS = [
 ]
 
 # Default locations to scan for uninstalled skills
-DEFAULT_SCAN_LOCATIONS = [
-    USER_HOME / "Desktop",
-    USER_HOME / "Downloads",
-    USER_HOME / "Documents",
-    TEMP_DIR,
-]
+DEFAULT_SCAN_LOCATIONS = [Path.cwd()]
 
 # Additional locations for --all mode
 EXTENDED_SCAN_LOCATIONS = [
@@ -72,22 +67,28 @@ def parse_yaml_frontmatter(path: Path) -> dict:
 
     try:
         import yaml
-        return yaml.safe_load(match.group(1)) or {}
+        class UniqueLoader(yaml.SafeLoader):
+            pass
+        def mapping(loader, node):
+            result = {}
+            for key_node, value_node in node.value:
+                key = loader.construct_object(key_node)
+                if key in result:
+                    raise ValueError("Duplicate YAML key")
+                result[key] = loader.construct_object(value_node)
+            return result
+        UniqueLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, mapping)
+        data = yaml.load(match.group(1), Loader=UniqueLoader)
+        if not isinstance(data, dict):
+            return {}
+        if any(not isinstance(data.get(key), str) or not data[key].strip()
+               for key in ("name", "description")):
+            return {}
+        return data
+    except (ImportError, ValueError, TypeError):
+        return {}
     except Exception:
-        result = {}
-        block = match.group(1)
-        for key in ("name", "description", "version"):
-            m = re.search(rf'^{key}:\s*["\']?(.+?)["\']?\s*$', block, re.MULTILINE)
-            if m:
-                result[key] = m.group(1).strip()
-            else:
-                m2 = re.search(
-                    rf'^{key}:\s*>-?\s*\n((?:\s+.+\n?)+)', block, re.MULTILINE
-                )
-                if m2:
-                    lines = m2.group(1).strip().split("\n")
-                    result[key] = " ".join(line.strip() for line in lines)
-        return result
+        return {}
 
 
 # ── Core Functions ─────────────────────────────────────────────────────────
@@ -146,11 +147,17 @@ def find_skill_candidates(scan_locations: list[Path]) -> list[dict]:
 
             # Skip heavy directories
             skip_dirs = {".git", "__pycache__", "node_modules", ".venv", "venv", ".tox"}
-            dirs[:] = [d for d in dirs if d not in skip_dirs]
+            dirs[:] = [d for d in dirs if d not in skip_dirs and not (root_path / d).is_symlink()]
 
             if "SKILL.md" in files:
                 skill_md = root_path / "SKILL.md"
+                if skill_md.is_symlink():
+                    continue
                 resolved = skill_md.resolve()
+                try:
+                    resolved.relative_to(base.resolve())
+                except ValueError:
+                    continue
 
                 # Skip if already seen
                 if str(resolved) in seen_paths:
@@ -295,6 +302,9 @@ def main():
 
     if "--path" in sys.argv:
         idx = sys.argv.index("--path")
+        if idx + 1 >= len(sys.argv):
+            print(json.dumps({"error": "--path requires a directory"}))
+            sys.exit(2)
         if idx + 1 < len(sys.argv):
             p = Path(sys.argv[idx + 1]).resolve()
             if p.exists():

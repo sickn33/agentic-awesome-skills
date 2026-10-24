@@ -69,7 +69,7 @@ When are customers most likely to refer?
 
 ### Step 2: Design the Share Mechanism
 
-**Methods ranked by effectiveness:**
+**Methods to test (ordering is a hypothesis, not a universal conversion ranking):**
 
 1. **In-product sharing** — Highest conversion, feels native
 2. **Personalized link** — Easy to track, works everywhere
@@ -111,16 +111,18 @@ When are customers most likely to refer?
 
 **Calculate your maximum incentive:**
 ```
-Max Referral Reward = (Customer LTV × Gross Margin) - Target CAC
+Reward budget per acquired customer = Target referral CAC - Other acquisition/program costs
+Profitability ceiling = Contribution LTV - Required retained contribution - Other costs
 ```
 
 **Example:**
 - LTV: $1,200
 - Gross margin: 70%
 - Target CAC: $200
-- Max reward: ($1,200 × 0.70) - $200 = $640
+- If target total referral CAC is $200 and other costs are $50, the reward budget is $150.
+- $840 contribution LTV is a separate lifetime profitability input; it does not make a $640 reward compatible with a $200 CAC target. Include both-sided rewards, fraud, refunds and payout timing.
 
-**Typical referral rewards:**
+**Illustrative reward ranges (not sourced market benchmarks):**
 - B2C: $10-50 or 10-25% of first purchase
 - B2B SaaS: $50-500 or 1-3 months free
 - Enterprise: Higher, often custom
@@ -229,7 +231,7 @@ K < 1 = Amplified growth (referrals supplement other acquisition)
 Referral Rate = (Customers who refer) / (Total customers)
 ```
 
-Benchmarks:
+Illustrative ranges to validate locally:
 - Good: 10-25% of customers refer
 - Great: 25-50%
 - Exceptional: 50%+
@@ -239,7 +241,7 @@ Benchmarks:
 How many successful referrals does each referring customer generate?
 ```
 
-Benchmarks:
+Illustrative ranges to validate locally:
 - Average: 1-2 referrals per referrer
 - Good: 2-5
 - Exceptional: 5+
@@ -247,7 +249,8 @@ Benchmarks:
 ### Calculating Referral Program ROI
 
 ```
-Referral Program ROI = (Revenue from referred customers - Program costs) / Program costs
+Contribution ROI = (Incremental contribution from referred customers - Program costs) / Program costs
+# Define horizon/counterfactual and avoid double-counting costs; undefined if costs=0.
 
 Program costs = Rewards paid + Tool costs + Management time
 ```
@@ -312,6 +315,8 @@ Program costs = Rewards paid + Tool costs + Management time
 ---
 
 
+Before tracking cookies/device fingerprints or importing contact lists, verify applicable privacy permissions and retention. Referrers must not enroll friends into marketing without appropriate permission. Require clear affiliate/reward disclosures and program terms; incentives do not authorize misleading reviews. IP/device signals are imperfect and need human appeal/review before blocking or clawbacks. Do not reveal a referred person's identity/activity to a referrer without authorization.
+
 ## Fraud Prevention
 
 ### Common Referral Fraud
@@ -370,7 +375,7 @@ Program costs = Rewards paid + Tool costs + Management time
 - Tapfiliate — Simple SaaS affiliate tracking
 - FirstPromoter — SaaS affiliate management
 
-**Self-hosted:**
+**Other vendor integrations (verify hosting and current capabilities):**
 - Rewardful — Stripe-integrated affiliates
 - Refersion — E-commerce affiliates
 
@@ -458,10 +463,7 @@ Track referred customers separately:
 - Do they refer others at higher rates?
 - Do they churn less?
 
-Typical findings:
-- Referred customers have 16-25% higher LTV
-- Referred customers have 18-37% lower churn
-- Referred customers refer others at 2-3x rate
+Treat higher LTV, lower churn and repeat referrals as hypotheses to measure with matched cohorts and uncertainty; no universal uplift is established here.
 
 ---
 

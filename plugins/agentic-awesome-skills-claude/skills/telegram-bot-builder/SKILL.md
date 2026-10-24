@@ -175,6 +175,8 @@ Making money from Telegram bots
 | Affiliate | Product recommendations | Low |
 
 ### Telegram Payments
+
+Premium bot access is a digital service: [Telegram requires Stars/XTR](https://core.telegram.org/bots/payments-stars) for digital goods/services sold inside Telegram. Handle `pre_checkout_query` within the documented deadline, validate the server-owned order/payload, currency and amount, and grant entitlement idempotently only after `successful_payment`, persisting its charge ID. A fixed payload and `activatePremium` placeholder alone are not a payment system.
 ```javascript
 // Create invoice
 bot.command('buy', (ctx) => {
@@ -182,14 +184,14 @@ bot.command('buy', (ctx) => {
     title: 'Premium Access',
     description: 'Unlock all features',
     payload: 'premium_monthly',
-    provider_token: process.env.PAYMENT_TOKEN,
-    currency: 'USD',
-    prices: [{ label: 'Premium', amount: 999 }], // $9.99
+    provider_token: "",
+    currency: 'XTR',
+    prices: [{ label: 'Premium', amount: 100 }], // Illustrative Stars amount, not USD
   });
 });
 
 // Handle successful payment
-bot.on('successful_payment', (ctx) => {
+bot.on('successful_payment', async (ctx) => {
   const payment = ctx.message.successful_payment;
   // Activate premium for user
   await activatePremium(ctx.from.id);
@@ -237,6 +239,10 @@ Production bot deployment
 |--------|----------|
 | Polling | Development, simple bots |
 | Webhooks | Production, scalable |
+
+### Webhook trust
+
+Verify the configured webhook secret header before accepting updates, deduplicate update/payment IDs, validate callback data against the authenticated Telegram user, and protect the bot token. Sending broadcasts or configuring a production webhook requires applicable user authorization. Polling and webhooks are alternative delivery modes; do not run both for one bot. The snippets omit production error/rate-limit handling and are not deployment certification.
 
 ### Express + Webhook
 ```javascript

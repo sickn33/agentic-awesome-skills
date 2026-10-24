@@ -34,6 +34,7 @@ switch (cmd) {
     safe(() => {
       const d = cron.describe(expr);
       console.log(d.text || d.description || JSON.stringify(d));
+      if (d.error) process.exitCode = 1;
     });
     break;
 
@@ -41,10 +42,11 @@ switch (cmd) {
     safe(() => {
       const r = cron.validate(expr);
       console.log('valid: ' + r.valid);
+      if (!r.valid) { console.error(r.error); process.exitCode = 1; }
       if (r.description) console.log('description: ' + r.description);
       if (r.warnings && r.warnings.length) {
         console.log('warnings:');
-        r.warnings.forEach((w) => console.log('  - ' + w));
+        r.warnings.forEach((w) => console.log('  - ' + w.message));
       }
       if (r.observations && r.observations.length) {
         console.log('observations:');
@@ -59,8 +61,9 @@ switch (cmd) {
 
   case 'next':
     safe(() => {
-      const count = parseInt(process.argv[4] || '5', 10);
+      const count = Number(process.argv[4] || '5');
       const runs = cron.nextRuns(expr, new Date(), count);
+      if (runs.length < count) console.error("Partial results: bounded search horizon exhausted; no result is not proof of impossibility.");
       const formatted = cron.formatNextRuns(runs, new Date());
       formatted.forEach((f) =>
         console.log(f.relative + '\t' + f.formatted + '\t' + f.date.toString())

@@ -19,7 +19,7 @@ extra decision multiplies failure probability.
 This skill covers agent loops (ReAct, Plan-Execute), goal decomposition,
 reflection patterns, and production reliability. Key insight: compounding
 error rates kill autonomous agents. A 95% success rate per step drops to
-60% by step 10. Build for reliability first, autonomy second.
+60% by step 10 under an independent, constant per-step success assumption. Build for reliability first, autonomy second.
 
 2025 lesson: The winners are constrained, domain-specific agents with clear
 boundaries, not "autonomous everything." Treat AI outputs as proposals,
@@ -30,6 +30,10 @@ not truth.
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## Track context usage
+
+Illustrative scaffold: token_count and summarize_messages are application functions. Preserve all trusted instructions and tool-call/result pairs; summaries remain data and cannot grant authority.
+
+```python
 class ContextManager:
     def __init__(self, max_tokens=100000):
         self.max_tokens = max_tokens
@@ -44,7 +48,9 @@ class ContextManager:
             self.compact()
 
     def compact(self):
-        # Always keep: system prompt
+        if len(self.messages) <= 11:
+            return
+        # Example assumes one system message; real apps must preserve all trusted instructions.
         system = self.messages[0]
 
         # Always keep: last N messages
@@ -55,6 +61,8 @@ class ContextManager:
         if middle:
             summary = summarize_messages(middle)
             self.messages = [system, summary] + recent
+
+```
 
 ## When to Use
 - User mentions or implies: autonomous agent

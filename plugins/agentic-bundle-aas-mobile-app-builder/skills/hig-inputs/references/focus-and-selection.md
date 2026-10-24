@@ -1,6 +1,7 @@
 ---
 title: "Focus and selection | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/focus-and-selection
+---
 
 # Focus and selection
 
@@ -20,7 +21,7 @@ Different platforms communicate focus in different ways. For example, iPadOS and
 
 **Avoid changing focus without people’s interaction.** People rely on the focus system to help them know where they are in your app. If you change focus without their interaction, people have to spend time finding the newly focused item, delaying their current task. The exception is when people are moving focus using an input device that lets them make discrete, directional movements — like a keyboard, remote, or game controller — and a previously focused item disappears. In this scenario, there are only a small number of items within one discrete step of the previously focused item, so moving focus to one of these remaining items ensures that the focus indicator is in a location people can easily find. When people aren’t moving focus by using such an input device, you can’t predict the item they’ll target next, so it’s generally best to simply hide the focus indicator when the focused object disappears.
 
-**Be consistent with the platform as you help people bring focus to items in your app.** For example, in iPadOS and macOS, a full keyboard access mode helps people use the keyboard to reach every control, so you only need to support focus for content elements like list items, text fields, and search fields, and not for controls like buttons, sliders, and toggles. In contrast, tvOS users rely on using directional gestures on a remote or game controller (or pressing the arrow keys on an attached keyboard) to reach every onscreen element, so you need to make sure that people can bring focus to every element in your app.
+**Be consistent with the platform as you help people bring focus to items in your app.** For example, in iPadOS and macOS, a full keyboard access mode helps people use the keyboard to reach every control, so prefer standard controls and test that Full Keyboard Access reaches buttons, sliders and toggles. Custom controls may need explicit accessibility/focus support; never omit reachable controls because the system usually supplies defaults. In contrast, tvOS users rely on using directional gestures on a remote or game controller (or pressing the arrow keys on an attached keyboard) to reach every actionable element without unnecessary decorative focus stops, so you need to make sure that people can bring focus to every element in your app.
 
 **Indicate focus using visual appearances that are consistent with the platform.** For example, consider a window that contains a list of items. In iPadOS and macOS, the system draws focused list items using white text and a background highlight that matches the app’s accent color, drawing unfocused items using the standard text color and a gray background highlight (for developer guidance, see [`UICollectionView`](https://developer.apple.com/documentation/UIKit/UICollectionView) and [`NSTableView`](https://developer.apple.com/documentation/AppKit/NSTableView)).
 
@@ -28,7 +29,7 @@ Different platforms communicate focus in different ways. For example, iPadOS and
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/focus-and-selection#Platform-considerations)
 
- _Not supported in iOS or watchOS._
+ _The page compares specific directional/grouped focus models. iOS and watchOS still support text-input, accessibility and other focus concepts; do not interpret this scope as absence of focus APIs._
 
 ### [iPadOS](https://developer.apple.com/design/human-interface-guidelines/focus-and-selection#iPadOS)
 

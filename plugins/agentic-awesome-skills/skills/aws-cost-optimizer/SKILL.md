@@ -1,7 +1,7 @@
 ---
 name: aws-cost-optimizer
 description: "Comprehensive AWS cost analysis and optimization recommendations using AWS CLI and Cost Explorer"
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -33,6 +33,10 @@ Use this skill when you need to analyze AWS spending, identify cost optimization
 - Recommend instance rightsizing based on CloudWatch metrics
 - Identify resources in expensive regions
 - Calculate potential savings with specific actions
+
+## Analysis and change boundary
+
+Confirm AWS account/profile, regions and reporting dates. Examples use GNU date (`-d`), not macOS BSD date. Cost Explorer end dates are exclusive and usage data can lag. Low CPU or unattached state alone does not establish deletion safety; check owners, recovery retention, I/O/network/memory and business cycles. Deletion, termination, rightsizing and commitment purchases require explicit authorized scope and a recovery plan.
 
 ## AWS CLI Commands
 
@@ -97,7 +101,7 @@ aws cloudwatch get-metric-statistics \
   --start-time $(date -u -d '30 days ago' +%Y-%m-%dT%H:%M:%S) \
   --end-time $(date -u +%Y-%m-%dT%H:%M:%S) \
   --period 86400 \
-  --statistics Average,Maximum
+  --statistics Average Maximum
 ```
 
 ## Optimization Workflow
@@ -107,7 +111,7 @@ aws cloudwatch get-metric-statistics \
    - Identify top 5 spending services
    - Calculate growth rate
 
-2. **Quick Wins**
+2. **Candidate savings requiring owner review**
    - Delete unattached EBS volumes
    - Release unused Elastic IPs
    - Stop/terminate idle EC2 instances

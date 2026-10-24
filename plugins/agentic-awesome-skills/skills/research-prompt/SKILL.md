@@ -35,7 +35,7 @@ Goal: turn a vague research need into ONE self-contained paragraph that a resear
 - **Source hierarchy.** Prefer primary sources (official docs, GitHub, papers, filings, changelogs); forums/X/Reddit are weak signal only, never factual proof.
 - **Contradiction handling.** If sources conflict, separate confirmed facts / inference / unresolved uncertainty — don't force fake consensus. Flag low-confidence claims for verification.
 - **Completion bar (define "done").** Don't stop at the first plausible answer. Corroborate each key claim with multiple independent primary sources where they exist; where sources are scarce, say so explicitly instead of padding. Keep going until every numbered sub-question is covered to this bar.
-- **Gap round before finishing.** Require a final self-critique pass: list gaps, contradictions, and any single-source claims, then run another round of searches to close them — repeat until clean.
+- **Gap round before finishing.** List gaps, contradictions and single-source claims, then make a bounded targeted search pass. Stop when additional searches do not change the evidence, and report unresolved uncertainty rather than looping until an impossible clean result.
 - **Constrain output hard, method loosely.** Be strict on the deliverable; leave the search path flexible so the researcher can explore.
 - **Demand a fixed output per finding:** source link + specific claim + one-line "why it matters / why a viewer should care".
 - Verifiable, citable facts only. No opinions.
@@ -55,7 +55,7 @@ Goal: turn a vague research need into ONE self-contained paragraph that a resear
 
 ## Executing the prompt
 
-To run the finished prompt with an AI researcher, execute it via DeepAPI `POST /v1/research/deep` — follow the `deep-research` skill.
+A prompt-drafting request does not authorize execution, paid provider calls or private-context transmission. If research execution is separately requested, discover an authorized available provider and its actual schema/cost/data boundary; follow the matching installed skill without assuming DeepAPI availability.
 
 ## Example
 

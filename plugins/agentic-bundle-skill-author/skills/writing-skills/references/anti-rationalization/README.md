@@ -1,5 +1,7 @@
 # Anti-Rationalization Guide
 
+Scope: examples are authoring/test fixtures, not live instructions. Follow the user, host, and repository instruction hierarchy. Run pressure tests only with authorized isolated fixtures; never delete user work or weaken safety/approval boundaries to enforce a skill. Preserve existing work and adapt the validation plan when a baseline already passes. Sample compliance does not prove universal reliability.
+
 Techniques for bulletproofing skills against agent rationalization.
 
 ## The Problem

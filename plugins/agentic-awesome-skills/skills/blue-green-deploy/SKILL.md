@@ -157,18 +157,21 @@ spec:
 #!/bin/bash
 # blue-green-switch.sh
 
+set -euo pipefail
+NEW_VERSION=${1:?Usage: blue-green-switch.sh blue|green}
+case "$NEW_VERSION" in blue|green) ;; *) echo "Invalid color" >&2; exit 2 ;; esac
+
 CURRENT=$(kubectl get svc myapp -o jsonpath='{.spec.selector.version}')
-NEW_VERSION=$1
 
 echo "Current version: $CURRENT"
 echo "Switching to: $NEW_VERSION"
 
 # Verify new deployment is ready
-kubectl rollout status deployment/myapp-$NEW_VERSION
+kubectl rollout status "deployment/myapp-$NEW_VERSION" --timeout=300s
 
 # Check health
-HEALTH=$(kubectl exec -it deployment/myapp-$NEW_VERSION -- curl -s localhost:8080/health)
-if [ "$HEALTH" != "ok" ]; then
+HEALTH=$(kubectl exec "deployment/myapp-$NEW_VERSION" -- curl --fail --silent --show-error --max-time 5 localhost:8080/ready)
+if ! printf '%s' "$HEALTH" | jq -e '.status == "healthy"' >/dev/null; then
   echo "Health check failed"
   exit 1
 fi
@@ -199,6 +202,8 @@ Hooks:
   - BeforeAllowTraffic: "LambdaFunctionToValidateBeforeAllowTraffic"
   - AfterAllowTraffic: "LambdaFunctionToValidateAfterAllowTraffic"
 ```
+
+The switch example assumes curl inside the application container and local jq. Test the green endpoint separately, preserve the old selector for rollback, and verify service endpoints and external health after switching. The Istio example below needs a service selecting both stable and canary pods; do not reuse the color-restricted blue/green selector.
 
 ## Canary Deployment
 
@@ -386,6 +391,9 @@ kubectl rollout history deployment/myapp
 from flask import Flask, jsonify
 import psycopg2
 import redis
+import os
+DATABASE_URL = os.environ["DATABASE_URL"]
+REDIS_URL = os.environ["REDIS_URL"]
 
 app = Flask(__name__)
 
@@ -401,20 +409,20 @@ def ready():
     
     # Database check
     try:
-        conn = psycopg2.connect(DATABASE_URL)
+        conn = psycopg2.connect(DATABASE_URL, connect_timeout=3)
         conn.close()
         checks['database'] = 'ok'
     except Exception as e:
-        checks['database'] = str(e)
+        checks['database'] = 'unavailable'
         return jsonify({'status': 'unhealthy', 'checks': checks}), 503
     
     # Redis check
     try:
-        r = redis.from_url(REDIS_URL)
+        r = redis.from_url(REDIS_URL, socket_connect_timeout=3, socket_timeout=3)
         r.ping()
         checks['redis'] = 'ok'
     except Exception as e:
-        checks['redis'] = str(e)
+        checks['redis'] = 'unavailable'
         return jsonify({'status': 'unhealthy', 'checks': checks}), 503
     
     return jsonify({'status': 'healthy', 'checks': checks}), 200

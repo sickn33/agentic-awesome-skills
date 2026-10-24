@@ -158,7 +158,7 @@ crate_resource("self://resources/icons/icon.svg")   // CORRECT
 
 ```rust
 script_mod!{
-    // 1. Imports (MUST come first - no comments before this!)
+    // Imports first are a diagnostic workaround in some revisions.
     use mod.prelude.widgets.*        // App development
     use mod.prelude.widgets_internal.*  // Widget library development
     use mod.widgets.*                // Access registered widgets
@@ -328,7 +328,7 @@ Dock{
     center_tabs := DockTabs{ tabs: [@edit_tab] selected: 0 }
 
     files_tab := DockTab{ name: "Files" template := FilesTab kind := FilesContent }
-    edit_tab := DockTab{ name: "Edit" template := EditTab kind := EditContent }
+    edit_tab := DockTab{ name: "Edit" template := FilesTab kind := EditContent }
 
     FilesContent := View{ width: Fill height: Fill Label{text: "Files"} }
     EditContent := View{ width: Fill height: Fill Label{text: "Editor"} }

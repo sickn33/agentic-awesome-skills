@@ -1,6 +1,6 @@
-# Playwright Skill - Complete API Reference
+# Playwright Skill - Selected API Patterns
 
-This document contains the comprehensive Playwright API reference and advanced patterns. For quick-start execution patterns, see [SKILL.md](SKILL.md).
+This document contains the selected Playwright API patterns and advanced patterns. For quick-start execution patterns, see [SKILL.md](SKILL.md).
 
 ## Table of Contents
 
@@ -36,9 +36,11 @@ Before using this skill, ensure Playwright is available:
 npm list playwright 2>/dev/null || echo "Playwright not installed"
 
 # Install (if needed)
-cd ~/.claude/skills/playwright-skill
+cd "$SKILL_DIR"
 npm run setup
 ```
+
+The following test-runner examples require `@playwright/test` in a separate test project; `axe-playwright` is also needed for that optional accessibility example. This skill’s setup installs only `playwright`. Authentication states and traces require private storage. Treat example imports, baseURL, scripts and project files as prerequisites, not bundled functionality.
 
 ### Basic Configuration
 
@@ -97,7 +99,7 @@ const { chromium } = require('playwright');
 
   // Navigate
   await page.goto('https://example.com', {
-    waitUntil: 'networkidle'  // Wait for network to be idle
+    waitUntil: 'domcontentloaded'  // Then assert the required UI state
   });
 
   // Your automation here
@@ -271,7 +273,7 @@ await page.waitForURL('**/success');
 await page.waitForURL(url => url.pathname === '/dashboard');
 
 // Wait for network
-await page.waitForLoadState('networkidle');
+// Network idle is not a general readiness assertion; wait for the required UI state.
 await page.waitForLoadState('domcontentloaded');
 
 // Wait for function
@@ -420,7 +422,7 @@ PW_HEADER_NAME=X-Automated-By PW_HEADER_VALUE=playwright-skill
 PW_EXTRA_HEADERS='{"X-Automated-By":"playwright-skill","X-Request-ID":"123"}'
 ```
 
-These headers are automatically applied to all requests when using:
+Do not use context-wide headers for secrets when pages can request other origins. These headers apply to all requests when using:
 - `helpers.createContext(browser)` - headers merged automatically
 - `getContextOptionsWithHeaders(options)` - utility injected by run.js wrapper
 
@@ -478,7 +480,7 @@ npx playwright test --debug
 npx playwright test --headed
 
 # Slow motion
-npx playwright test --headed --slowmo=1000
+npx playwright test --headed # Configure launchOptions.slowMo in playwright.config.ts
 ```
 
 ### In-Code Debugging
@@ -562,8 +564,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers

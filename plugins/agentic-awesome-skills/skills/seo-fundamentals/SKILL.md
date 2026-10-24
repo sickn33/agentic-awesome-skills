@@ -110,7 +110,7 @@ Structured data helps search engines **understand meaning**, not boost rankings 
 | Review         | Ratings context        |
 | BreadcrumbList | Site structure         |
 
-> Schema enables eligibility for rich results but does not guarantee them.
+> Only currently supported Google structured-data features create rich-result eligibility; FAQ rich results were retired in May 2026. Generic schema vocabulary alone does not create eligibility.
 
 ---
 
@@ -177,6 +177,8 @@ This skill is applicable to execute the workflow or actions described in the ove
 **User request:**
 
 > Review this campaign asset with @seo-fundamentals, identify the main conversion problem, and produce an improved version grounded in the available evidence.
+
+The bundled seo_checker.py is an advisory source-text heuristic, limited to 50 candidate files. It cannot resolve rendered/framework metadata or certify indexability, ranking or accessibility. Empty alt text can correctly mark decorative images. A no-file result is not a passed audit. Validate findings against rendered pages and current primary search documentation.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

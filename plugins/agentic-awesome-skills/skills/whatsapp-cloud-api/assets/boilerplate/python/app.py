@@ -18,6 +18,7 @@ from webhook_handler import (
 load_dotenv()
 
 app = Flask(__name__)
+app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024
 logger = logging.getLogger(__name__)
 
 # Initialize WhatsApp client
@@ -42,6 +43,9 @@ def webhook_verify():
 @validate_hmac_signature()
 def webhook_receive():
     """Handle incoming messages and status updates."""
+    if os.environ.get("DEMO_AUTOREPLY") != "true":
+        # Disabled demo: no external API effects. Add durable queue/worker before production.
+        return "OK", 200
     data = request.get_json()
 
     # Parse webhook payload
@@ -55,7 +59,7 @@ def webhook_receive():
     for status in parsed["statuses"]:
         handle_status_update(status)
 
-    # Always return 200 within 5 seconds
+    # Local demo is synchronous and may exceed the provider deadline; do not deploy unchanged
     return "OK", 200
 
 
@@ -120,4 +124,4 @@ if __name__ == "__main__":
     logger.info("Webhook URL: http://localhost:%s/webhook", port)
     logger.info("Health check: http://localhost:%s/health", port)
     # Keep debug disabled by default so the boilerplate is safe in shared environments.
-    app.run(host="0.0.0.0", port=port, debug=_is_debug_enabled())
+    app.run(host="127.0.0.1", port=port, debug=_is_debug_enabled())

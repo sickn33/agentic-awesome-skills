@@ -52,7 +52,7 @@ The router classifies every request and routes it:
 
 **Naming trap.** The `apify` npm package is the **SDK for building** Actors (Route 2). The `apify-client` package is the **API client for calling** Actors (Route 3). Never confuse them.
 
-**Auth per route:** Route 1 (MCP) OAuth via browser prompt, never ask for a token; Route 1 CLI fallback + Route 2 `apify login --token <TOKEN>` once (the CLI ignores `APIFY_TOKEN`); Route 3 the `APIFY_TOKEN` env var.
+**Auth per route:** Route 1 (MCP) OAuth via browser prompt, never ask for a token; Route 1 CLI fallback + Route 2 interactive `apify login` where supported (avoid token arguments in process lists/history) (verify the installed CLI's documented environment support before choosing an authentication method); Route 3 the `APIFY_TOKEN` env var.
 
 ## A.3 Definition of done (Approach A)
 
@@ -110,7 +110,7 @@ Do **not** use the synchronous `run-sync-get-dataset-items` endpoint - its 300-s
 
 There are no separate Agent Skills inside a harness plugin - the tool description plus the `discover` action provide all the guidance the agent needs. Embed, in plain text:
 
-- A directive to **delegate to a sub-agent** that returns only relevant extracted fields, not raw dataset dumps - keeping the parent agent's context window clean.
+- An optional, explicitly user-authorized delegation path to a sub-agent that returns only relevant extracted fields, not raw dataset dumps - keeping the parent agent's context window clean.
 - A **batching** instruction: most Actors accept arrays of URLs/queries; one run with 5 URLs is cheaper and faster than 5 runs with 1 URL each.
 - A compact **known-actors list** (Instagram, Facebook, TikTok, YouTube, Twitter/X, Google Maps, Booking, TripAdvisor, etc.) so the agent can pick a familiar Actor without a discovery round-trip.
 - The Actor ID format, the discover -> start -> collect workflow, and a support contact for user-facing issues.
@@ -134,7 +134,7 @@ Every handler catches broadly and returns a **JSON error object**, never a raise
 
 ```
 except Exception as exc:
-    return {'error': str(exc)}
+    return {'error': sanitized_error_message(exc)}  # redact tokens, URLs and private data
 ```
 
 Why: a raised exception **crashes the tool call** from the harness's perspective. Returning `{'error': ...}` lets the LLM read the failure, explain it to the user, and decide whether to retry or stop. Extend this to per-run granularity in `start`: a batch can partially succeed, so each failed spec becomes an entry in an `errors` array while successful ones populate `runs`. The LLM can then report "7 of 10 started, 3 failed with these messages" without a second call.
@@ -143,8 +143,8 @@ Why: a raised exception **crashes the tool call** from the harness's perspective
 
 - API key resolution order: plugin config field -> `APIFY_API_KEY` (or `APIFY_TOKEN`) env var. Normalize pasted input - strip line/paragraph separators and trim whitespace (defends against copy-paste artifacts).
 - The key is **never** included in tool output, **never** logged, only passed to the client constructor.
-- Validate `baseUrl` against an allowlist prefix (`https://api.apify.com`) to prevent SSRF - a misconfigured plugin must not point at an arbitrary host.
-- Ship a `setup` CLI command that prompts for the key, **verifies it against the live API** (`GET /v2/users/me`), and writes config. **Reuse the host's config-merge logic** for enabling the toolset - do not reimplement it. Host internals reconcile disabled-toolsets, preserve MCP server entries, and handle bookkeeping a from-scratch reimplementation would silently break. If the config-write API is unavailable or fails, fall back to printing the exact config block the user should add manually. Treat setup failures as non-fatal: the token is already saved, so the user can flip the toolset on themselves.
+- Parse `baseUrl` and require exact HTTPS origin `https://api.apify.com`, no userinfo, and an expected API path; reject redirects to another origin (a string prefix also accepts `api.apify.com.evil.example`) to prevent credential leakage and SSRF - a misconfigured plugin must not point at an arbitrary host.
+- Ship a `setup` CLI command that prompts for the key, **verifies it against the live API** (`GET /v2/users/me`), and writes config. **Reuse the host's config-merge logic** for enabling the toolset - do not reimplement it. Host internals reconcile disabled-toolsets, preserve MCP server entries, and handle bookkeeping a from-scratch reimplementation would silently break. If the config-write API is unavailable or fails, fall back to printing the exact config block the user should add manually. Report exactly which setup steps succeeded. If credential storage or verification fails, do not claim the token was saved; retain existing configuration and avoid printing secrets.
 
 If the harness's `register()` is synchronous and the loader does not `await` it (a common gotcha), keep registration fully synchronous - build the tool (construct a client + schema, no I/O) and register inline. Any network call happens later inside a tool `execute` or CLI action, where async is expected.
 

@@ -184,7 +184,9 @@ attachments/
 
 ---
 
-## 4. CVSS 速查表（按漏洞类型预填）
+## 4. CVSS 示例（不能仅按漏洞类型预填）
+
+下列向量是假设场景，不是当前目标评分。逐项依据已验证的可达性、权限、交互和影响选值，并用对应版本官方计算器复核。
 
 ```
 未授权 RCE                AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H = 9.8
@@ -270,7 +272,7 @@ Resolved（1–60 天）：开发修复
   ↓
 赏金（修复后或 triage 后）
   ↓
-Disclosure（默认 90 天后或厂商同意）
+Disclosure（仅按项目披露政策和明确授权；不存在通用默认 90 天许可）
 ```
 
 被 closed-as-duplicate / 信息不全：
@@ -323,9 +325,8 @@ source IP 3.x.x.x 经反查为 target.com 的出口 IP。
 全部成功，平均触发延时 < 1s。
 
 ## 影响
-1. 远程代码执行（基于 Log4Shell 经典 chain）
-2. 完整服务器控制
-3. 可读取 /etc/passwd、配置文件、AWS 元数据等
+1. 观察到与请求关联的 DNS 查询；尚未证明代码执行或服务器控制。
+2. 说明尚未验证的影响与环境前提，不将经典攻击链当作本目标证据。
 
 ## 我未做的事
 - 未实际加载远程类 / 反弹 shell
@@ -333,9 +334,8 @@ source IP 3.x.x.x 经反查为 target.com 的出口 IP。
 - 未读取任何配置文件
 
 ## 修复建议
-1. 立即升级 log4j-core 至 2.17.1+
-2. 设置 -Dlog4j2.formatMsgNoLookups=true
-3. 部署 WAF 规则拦截 ${jndi: 模式
+1. 根据当前 [Apache 安全公告](https://logging.apache.org/security.html) 选择受支持且覆盖相关漏洞修复的版本。
+2. 不将历史开关 `formatMsgNoLookups` 或 WAF 规则当作完整修复；验证依赖树和实际部署。
 
 ## 附件
 - 01-burp-poc.png（请求 + 响应）

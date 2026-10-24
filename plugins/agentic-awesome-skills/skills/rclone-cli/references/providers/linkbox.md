@@ -17,6 +17,10 @@ You will need:
 - An API token from https://www.linkbox.to/admin/account
 - The email and password for your Linkbox account
 
+This bundled reference mixes versioned setup and option snapshots. Follow
+the installed version's prompts; do not infer that every listed field is
+available in an older build.
+
 **Note:** As of v1.74, email and password are required in addition to
 the API token. The API token is used for uploads and modifications,
 while email/password authentication is used for listing and
@@ -47,7 +51,7 @@ Type of storage to configure.
 Choose a number from below, or type in your own value.
 XX / Linkbox
    \ (linkbox)
-Storage> XX
+Storage> linkbox
 
 Option token.
 Token from https://www.linkbox.to/admin/account
@@ -70,7 +74,7 @@ Options:
 - token: XXXXXXXXXXX
 - email: your@email.com
 - password: *** ENCRYPTED ***
-Keep this "linkbox" remote?
+Keep this "remote" remote?
 y) Yes this is OK (default)
 e) Edit this remote
 d) Delete this remote

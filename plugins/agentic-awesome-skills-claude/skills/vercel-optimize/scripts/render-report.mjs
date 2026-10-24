@@ -14,6 +14,7 @@ const HARD_REGEN_TRIGGERS = new Set([
   'project_config_contradiction',
   'cache_vary_safety',
   'semantic_safety',
+  'pass_rate_below_threshold',
 ]);
 
 async function main() {
@@ -46,7 +47,8 @@ async function main() {
     ...(Array.isArray(gateRaw.toLaunch) ? gateRaw.toLaunch : []),
     ...(Array.isArray(gateRaw.platform) ? gateRaw.platform : []),
   ];
-  const enforceCurrentGate = !Array.isArray(recsRaw) && activeCandidates.length > 0;
+  if (Array.isArray(recsRaw)) throw new Error('Run verify-and-regen.mjs first; raw drafts cannot be rendered as ready recommendations.');
+  const enforceCurrentGate = true;
   const staleRecommendationDrops = [];
   const wrapperRecommendations = Array.isArray(recsRaw.renderableRecommendations)
     ? recsRaw.renderableRecommendations
@@ -263,7 +265,7 @@ function publicHardRegenReason(plan) {
 
 function recommendationMatchesActiveCandidate(rec, candidates) {
   const ref = parseCandidateRef(rec?.candidateRef);
-  if (!ref) return true;
+  if (!ref) return false;
   return candidates.some((candidate) => candidateMatchesRef(candidate, ref));
 }
 
@@ -278,7 +280,7 @@ function candidateMatchesRef(candidate, ref) {
   if (!candidate || candidate.kind !== ref.kind) return false;
   if (candidate.scope === 'account' || ref.target === '<account>') return true;
 
-  const candidateTarget = candidate.route ?? candidate.hostname ?? candidate.file ?? candidate.target ?? null;
+  const candidateTarget = candidate.route ?? candidate.hostname ?? candidate.file ?? candidate.files?.[0] ?? candidate.target ?? null;
   if (!candidateTarget || !ref.target) return false;
 
   const a = String(candidateTarget);

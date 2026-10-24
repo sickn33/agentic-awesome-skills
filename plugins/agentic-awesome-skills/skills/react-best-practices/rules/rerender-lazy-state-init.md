@@ -31,11 +31,11 @@ function UserProfile() {
 }
 ```
 
-**Correct (runs only once):**
+**Lazy initialization (not repeated on ordinary re-renders):**
 
 ```tsx
 function FilteredList({ items }: { items: Item[] }) {
-  // buildSearchIndex() runs ONLY on initial render
+  // Initial value; Strict Mode may call this initializer twice in development
   const [searchIndex, setSearchIndex] = useState(() => buildSearchIndex(items))
   const [query, setQuery] = useState('')
   
@@ -43,7 +43,7 @@ function FilteredList({ items }: { items: Item[] }) {
 }
 
 function UserProfile() {
-  // JSON.parse runs only on initial render
+  // Browser-only sketch; SSR and invalid storage require guards
   const [settings, setSettings] = useState(() => {
     const stored = localStorage.getItem('settings')
     return stored ? JSON.parse(stored) : {}
@@ -56,3 +56,5 @@ function UserProfile() {
 Use lazy initialization when computing initial values from localStorage/sessionStorage, building data structures (indexes, maps), reading from the DOM, or performing heavy transformations.
 
 For simple primitives (`useState(0)`), direct references (`useState(props.value)`), or cheap literals (`useState({})`), the function form is unnecessary.
+
+Initializers must be pure and may run more than once in development Strict Mode. They do not update when items changes: derive the index with useMemo([items]) when that is required. Storage remains unavailable during SSR, can throw, and may contain invalid JSON; hydrate preferences from a deterministic server-compatible initial value or a tested client-only boundary.

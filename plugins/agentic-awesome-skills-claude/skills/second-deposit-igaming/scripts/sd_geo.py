@@ -83,8 +83,8 @@ def is_banned(rules, code, mtype):
 
 
 def allowed(rules, code, mtype):
-    """Можно ли подсказать способ этого типа в стране. Тип неизвестен: можно, решает оператор."""
-    return not is_banned(rules, code, mtype)
+    """Фильтр справочника: неизвестная страна или тип не дают разрешения на рекомендацию."""
+    return bool(rule(rules, code)) and mtype in TYPES and not is_banned(rules, code, mtype)
 
 
 def preferred(rules, code):

@@ -22,7 +22,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 
 ## Visual DNA
 - **Colors**: Works excellently with **Desert Mirage** or **Minimalist Slate**. Utilize primary, secondary, surface, and error semantic mapping.
-- **Typography**: `Roboto` or `Google Sans` (or equivalent clean geometric sans). Stick strictly to the Material Type Scale (H1-H6, Subtitle, Body, Caption, Overline).
+- **Typography**: `Roboto` or `Google Sans` (or equivalent clean geometric sans). Choose one Material generation: M2 uses H1–H6 and related roles; M3 uses display, headline, title, body and label roles. Do not mix the scales.
 - **Shapes**: Moderately rounded corners (4px to 16px).
 
 ## Web Implementation
@@ -160,14 +160,14 @@ class MaterialScreen extends StatelessWidget {
   }
 }
 ```
-- **Flutter is the native home of Material Design.** Use `MaterialApp`, `ThemeData(useMaterial3: true)`, and standard widgets.
+- **Flutter offers Material components.** Use `MaterialApp`, `ThemeData(useMaterial3: true)`, and standard widgets.
 - Map the universal palette via `colorSchemeSeed` or manually build a `ColorScheme`.
 - Use the Material type scale via `Theme.of(context).textTheme`.
 - Ripple effects come free with `InkWell` and `ElevatedButton`.
 
 ### React Native
 ```jsx
-import { Provider as PaperProvider, Card, Button, Title, Paragraph } from 'react-native-paper';
+import { Provider as PaperProvider, MD3LightTheme as DefaultTheme, Card, Button, Text } from 'react-native-paper';
 
 const materialTheme = {
   ...DefaultTheme,
@@ -185,8 +185,8 @@ const MaterialScreen = () => (
     <ScrollView style={{ flex: 1, padding: 16 }}>
       <Card style={{ marginBottom: 16 }} elevation={2}>
         <Card.Content>
-          <Title>Material Card</Title>
-          <Paragraph>Digital paper and ink. Shadows communicate hierarchy.</Paragraph>
+          <Text variant="titleLarge">Material Card</Text>
+          <Text variant="bodyMedium">Digital paper and ink. Shadows communicate hierarchy.</Text>
         </Card.Content>
         <Card.Actions>
           <Button mode="text" onPress={() => {}}>ACTION</Button>
@@ -209,7 +209,7 @@ const MaterialScreen = () => (
 - Use `react-native-paper` — it implements Material Design 3 natively for React Native.
 - Configure the theme to map your universal palettes to Material semantic colors.
 - Use `Card` (with `elevation` prop), `Button` (with `mode` prop), and `TextInput` for correct Material behavior.
-- Ripple effects on Android come free via `Pressable`; on iOS, use `react-native-paper`'s `TouchableRipple`.
+- Core Pressable needs its `android_ripple` configured; for themed feedback use `react-native-paper`'s `TouchableRipple`.
 
 ### Jetpack Compose
 ```kotlin
@@ -261,7 +261,7 @@ fun MaterialScreen() {
     }
 }
 ```
-- **Jetpack Compose is Material Design.** Use `MaterialTheme`, `Card`, `Scaffold`, `TopAppBar`, and `FloatingActionButton` as-is.
+- **Compose offers Material components through its Material library.** Use `MaterialTheme`, `Card`, `Scaffold`, `TopAppBar`, and `FloatingActionButton` as-is.
 - Map the universal palette into `lightColorScheme()` or `darkColorScheme()`.
 - Use `MaterialTheme.typography` for the complete type scale.
 - Motion uses `animateFloatAsState` with Material easing: `FastOutSlowInEasing` (equivalent to `cubic-bezier(0.4, 0.0, 0.2, 1)`).

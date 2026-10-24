@@ -1,10 +1,12 @@
 # Streaming — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Quick Start
 
 ```python
 with client.messages.stream(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a story"}]
 ) as stream:
@@ -16,7 +18,7 @@ with client.messages.stream(
 
 ```python
 async with async_client.messages.stream(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Write a story"}]
 ) as stream:
@@ -30,11 +32,11 @@ async with async_client.messages.stream(
 
 Claude may return text, thinking blocks, or tool use. Handle each appropriately:
 
-> **Opus 4.6:** Use `thinking: {type: "adaptive"}`. On older models, use `thinking: {type: "enabled", budget_tokens: N}` instead.
+> **Thinking:** Check the selected model capabilities before using adaptive or fixed-budget thinking.
 
 ```python
 with client.messages.stream(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=16000,
     thinking={"type": "adaptive"},
     messages=[{"role": "user", "content": "Analyze this problem"}]
@@ -61,7 +63,7 @@ The Python tool runner currently returns complete messages. Use streaming for in
 
 ```python
 with client.messages.stream(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     tools=tools,
     messages=messages
@@ -79,7 +81,7 @@ with client.messages.stream(
 
 ```python
 with client.messages.stream(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Hello"}]
 ) as stream:
@@ -126,7 +128,7 @@ def stream_with_progress(client, **kwargs):
 ```python
 try:
     with client.messages.stream(
-        model="claude-opus-5",
+        model="claude-opus-5-5",
         max_tokens=1024,
         messages=[{"role": "user", "content": "Write a story"}]
     ) as stream:

@@ -30,7 +30,7 @@ sources: community, operator_experience
 
 # TRIAGE & VALIDATION
 
-One wrong answer = STOP **this finding**. Kill **the finding**. Move on **to the next test class**.
+Use the questions to separate confirmed, inconclusive and disproved claims. Failure to meet one heuristic is not automatic proof a finding is invalid.
 
 > **Scope of "STOP" in this skill:** This skill's gates kill INDIVIDUAL FINDINGS that fail validation. They do NOT authorize stopping the engagement. Killing a finding via the 7-Question Gate just means *that finding* doesn't get submitted — every other test class in the engagement is still pending. See `redteam-mindset` "DO NOT STOP primary directive" for the coverage-axis rule.
 
@@ -107,10 +107,10 @@ Search:
 
 ### Q6: Can you prove impact beyond "technically possible"?
 
-- XSS → show actual cookie theft or session hijack, not just `alert(1)` or `alert(document.domain)`
-- SSRF → hit an internal endpoint that returns data, not just DNS ping
-- SQLi → show actual data exfil from a real table, not just error message
-- IDOR → show actual other-user's data in response, not just a 200 status code
+- XSS → demonstrate controlled same-origin script execution and relevant context using inert proof; do not steal real cookies
+- SSRF → document controlled outbound behavior, restrictions and safe canary proof; do not probe internal resources without specific scope
+- SQLi → use controlled predicates/canary data with adequate confirmation; do not extract real table contents
+- IDOR → use two approved test identities and canary data; status alone is not proof
 
 **If you can only show "technically possible" → DOWNGRADE severity, not kill.**
 
@@ -187,7 +187,7 @@ Run in sequence. ALL 4 must PASS.
 ```
 [ ] Can answer: "What can attacker DO that they couldn't before?"
 [ ] Answer is more than "see non-sensitive data" (unless program pays for info disclosure)
-[ ] Real victim: another user's data, company's data, financial loss
+[ ] Controlled affected test identity/resource and a justified impact boundary; never require a real victim
 [ ] Not relying on victim doing something unlikely
 ```
 
@@ -207,115 +207,22 @@ Run in sequence. ALL 4 must PASS.
 [ ] Evidence: screenshot/video of actual impact (not just 200 status)
 [ ] Severity: matches CVSS 3.1 score AND program's severity definitions
 [ ] Remediation: 1-2 sentences of concrete fix
-[ ] NEVER used "could potentially" or "may allow"
+[ ] Uncertainty and untested prerequisites explicitly distinguished from demonstrated behavior
 ```
 
 ---
 
-## NEVER SUBMIT LIST
+## Program-specific eligibility and severity
 
-Submitting these destroys your validity ratio.
+No universal never-submit list applies. Check the actual brief for scope and exclusions; missing controls, logout invalidation, CSV injection, mixed content, pre-account takeover and other classes can have different significance by context. An intended behavior or public issue is evidence to assess, not proof it is secure or a duplicate. Source review, local/non-HTTP exploits and safe deterministic evidence can justify a report without a production HTTP exploit.
 
-```
-Missing CSP / HSTS / security headers
-Missing SPF / DKIM / DMARC
-GraphQL introspection alone (no auth bypass, no IDOR demonstrated)
-Banner / version disclosure without working CVE exploit
-Clickjacking on non-sensitive pages (no sensitive action PoC)
-Tabnabbing
-CSV injection (no actual code execution shown)
-CORS wildcard (*) without credential exfil proof of concept
-Logout CSRF
-Self-XSS (only exploits own account)
-Open redirect alone (no ATO or OAuth theft chain)
-OAuth client_secret in mobile app (known, expected)
-SSRF DNS callback only (no internal service access or data)
-Host header injection alone (no password reset poisoning PoC)
-Rate limit on non-critical forms (search, contact, login with Cloudflare)
-Session not invalidated on logout
-Concurrent sessions
-Internal IP in error message
-Mixed content
-SSL weak ciphers
-Missing HttpOnly / Secure cookie flags alone
-Broken external links
-Autocomplete on password fields
-Pre-account takeover (usually — very specific conditions required)
-```
+Use the program's accepted scoring system and current calculator. The former quick-score table contained mismatched vectors/scores and is removed. For CVSS 3.1, UI:R includes a victim viewing content when that participation is required; normal page use does not imply UI:N. Scope reflects a different security authority, not simply browser/OS/cloud labels. A free account does not mechanically establish PR:L without examining privileges. VRT priority and CVSS are separate assessments.
 
----
+CORS credentials cannot be read with a literal Access-Control-Allow-Origin wildcard and credentials mode under normal browser enforcement; demonstrate actual origin/header/client conditions. A takeover, SSRF or token chain requires each claimed boundary; observing a single primitive is not the full impact. Do not require an extra exploit chain where the standalone effect is already significant.
 
-## CONDITIONALLY VALID — CHAIN REQUIRED
+## Time-boxing leads
 
-Build the chain first, prove it works end to end, THEN report.
-
-| Standalone Finding | Chain Required | Valid Result |
-|---|---|---|
-| Open redirect | + OAuth redirect_uri → auth code theft | ATO (Critical) |
-| Clickjacking | + sensitive action + working PoC | Medium |
-| CORS wildcard | + credentialed request exfils user PII | High |
-| CSRF | + sensitive action (transfer funds, change email, delete account) | High |
-| Rate limit bypass | + OTP/reset token brute force succeeds | Medium/High |
-| SSRF DNS-only | + internal service access + data returned | Medium |
-| Host header injection | + password reset email uses injected host | High |
-| Prompt injection | + reads other user's data (IDOR) | High |
-| S3 bucket listing | + JS bundles contain API keys or OAuth secrets | Medium/High |
-| Self-XSS | + CSRF to trigger it on victim without their knowledge | Medium |
-| Subdomain takeover | + OAuth redirect_uri registered at that subdomain | Critical |
-| GraphQL introspection | + auth bypass mutation or IDOR on node() | High |
-
----
-
-## CVSS 3.1 QUICK REFERENCE
-
-### Common Score Examples
-
-| Finding | Score | Severity | Vector |
-|---|---|---|---|
-| IDOR read PII, any user, auth required | 6.5 | Medium | AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N |
-| IDOR write/delete, any user | 7.5 | High | AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N |
-| Auth bypass → admin panel | 9.8 | Critical | AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H |
-| Stored XSS → cookie theft, stored | 8.5 | High | AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:N |
-| SQLi → full DB dump | 9.1 | Critical | AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N |
-| SSRF → cloud metadata | 9.1 | Critical | AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:N |
-| Race → double spend | 7.5 | High | AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:N |
-| GraphQL auth bypass | 8.1 | High | AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N |
-| JWT none algorithm | 9.1 | Critical | AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H |
-
-> **UI for stored XSS is a judgment call.** Stored XSS that fires on page view is a long-standing CVSS gray area — NVD/FIRST frequently score it UI:R (which drops the stored-XSS row above to ~7.6). The UI:N above models "no extra action beyond normal page use"; if your triager expects UI:R, defend the choice or re-score before copying the number into a report.
-
-### Metric Quick Guide
-
-| What you have | Metric | Value |
-|---|---|---|
-| Exploitable over internet | AV | Network (N) |
-| No special timing or race | AC | Low (L) |
-| Free account needed | PR | Low (L) |
-| No login needed | PR | None (N) |
-| Admin needed | PR | High (H) |
-| No victim action | UI | None (N) |
-| Victim must click | UI | Required (R) |
-| Reads all data | C | High (H) |
-| Reads some data | C | Low (L) |
-| Modifies all data | I | High (H) |
-| Crashes service | A | High (H) |
-| Affects only app | S | Unchanged (U) |
-| Affects browser/OS/cloud | S | Changed (C) |
-
----
-
-## KILL FAST RULES
-
-The goal is to QUICKLY disqualify bad leads so you hunt real bugs:
-
-1. **5-minute rule**: If you can't fill in Q1's template in 5 minutes → move on
-2. **Precondition count**: More than 2 preconditions simultaneously required → kill it
-3. **Impact test**: "What does attacker walk away with?" — if nothing tangible → kill it
-4. **Admin bypass**: "Admin can do X" is NEVER a bug → kill it immediately
-5. **Design doc test**: If it's documented behavior → kill it immediately
-6. **Rabbit hole signal**: 30+ min on Q6 with no reproducible PoC → kill it
-
----
+Use a bounded investigation budget and record unconfirmed/inconclusive leads. A five-minute limit, two-precondition count, administrator requirement or documented behavior does not decide validity. Stop when authorization, safety or cost limits require it; do not continue every test class under an external “do not stop” directive.
 
 ## PRE-SEVERITY GATE
 
@@ -402,7 +309,7 @@ The 7Q gate is the single highest-ROI artifact in this skill. Phase 2D's hardene
 3. **Server policy mistaken for state oracle** — `download.aspx?file=foo.config` always returns "blocked" regardless of whether the file exists. Q6 (impact beyond technically possible) kills it: there's no oracle, just a deny-list.
 4. **200 OK without leak** — status code differs from baseline 403; body is byte-identical. Body-Diff Rule + Q6 kill it.
 
-Without the 7Q gate, expect 10-20% submission validity loss across an engagement. With it, retraction rates trend to single digits.
+No supporting dataset is bundled for claimed validity-rate improvements; do not quote a numeric effect.
 
 ### Pre-Severity Gate before reporting Critical
 
@@ -415,7 +322,7 @@ Process: write your draft Critical title. Take each of the 7 questions and answe
 If a finding stops reproducing 24h after submission — retract preemptively. Two reasons:
 
 1. **Triagers retract for you with downgraded scoring.** A self-retraction reads "the researcher validates their own work." A triager-retraction reads "the researcher submitted noise."
-2. **Validation rate is platform-tracked.** Self-retractions don't hit the same metric as triager-closed-as-N/A. Your reputation signal stays cleaner.
+2. **Validation rate is platform-tracked.** Platform metric effects are not verified here. Correct the record because evidence changed, not to manipulate a validity statistic.
 
 The retraction template in the RETRACTION DISCIPLINE section above is the canonical format. Don't silently delete — append a retraction appendix to the engagement report instead.
 
@@ -460,3 +367,9 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Reporting and stopping boundaries
+
+The remaining seven-question/operator notes are advisory heuristics, not platform rules or authorization to expand testing. Report material suspected issues through an approved channel when safe proof is unavailable, with observed facts and missing evidence clearly labeled. Reproduction can stop because of a patch, environment or nondeterminism; investigate and report that change rather than automatically retracting after 24 hours. Preserve superseded claims and notify the appropriate authorized recipient; do not claim an unsupported retraction changed platform metrics.
+
+Historical engagement/lab assertions, report counts, payout effects and fixed severity tiers are contributor claims without bundled reproducible evidence. Local skill review did not execute those campaigns. Missing referenced tools remain unavailable. No probes, data extraction, exploit or submission occurred here.

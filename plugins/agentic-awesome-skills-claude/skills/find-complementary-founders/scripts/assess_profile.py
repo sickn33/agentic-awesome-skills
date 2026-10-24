@@ -114,6 +114,8 @@ def validate_url(value: object, field: str, *, contact: bool = False) -> str:
     parsed = urlparse(url)
     if parsed.scheme != "https" or not parsed.hostname or parsed.username:
         raise ProfileError(f"{field} must be a credential-free HTTPS URL")
+    if parsed.password or parsed.port is not None or any(ord(c) < 32 for c in url):
+        raise ProfileError(f"{field} contains unsafe URL authority or controls")
     if parsed.query or parsed.fragment:
         raise ProfileError(f"{field} must not contain a query string or fragment")
     if contact:
@@ -258,6 +260,8 @@ def validate_evidence(values: object) -> tuple[list[dict], list[dict]]:
         note = require_string(
             raw.get("private_note"), f"evidence[{index}].private_note", maximum=1000
         )
+        if "share" in raw and not isinstance(raw["share"], bool):
+            raise ProfileError("share must be a boolean")
         share = raw.get("share") is True
         private_items.append(
             {
@@ -315,6 +319,8 @@ def compute_vectors(evidence: list[dict], dimensions: tuple[str, ...]) -> dict:
     output: dict[str, dict] = {}
     for dimension in dimensions:
         score = min(100, round(raw_scores[dimension] / 15 * 100))
+        if strong_counts[dimension] < 2:
+            score = min(score, 49)
         output[dimension] = {
             "score": score,
             "level": score_label(score),
@@ -372,6 +378,10 @@ def validate_contact(value: object) -> dict:
         raise ProfileError(
             "public_contact.type must be github_issues or github_discussions"
         )
+    expected = "issues" if contact_type == "github_issues" else "discussions"
+    parsed = urlparse(value.get("url", ""))
+    if len(parsed.path.split("/")) < 4 or parsed.path.split("/")[3] != expected:
+        raise ProfileError("public_contact.type and URL path disagree")
     return {
         "type": contact_type,
         "url": validate_url(value.get("url"), "public_contact.url", contact=True),
@@ -393,6 +403,8 @@ def public_vectors(vectors: dict) -> dict:
 def write_json(path: Path, data: dict, *, private: bool) -> None:
     if private and not path.name.endswith(".private.json"):
         raise ProfileError("private output filename must end in .private.json")
+    for parent in path.parents:
+        if parent.is_symlink(): raise ProfileError("Symlink output parent refused")
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.is_symlink():
         raise ProfileError(f"Refusing to write through symlink: {path}")

@@ -4,40 +4,23 @@
 
 ## Secret Rotation with Cloud Functions
 
-```python
-"""cloud_function_rotation.py - Triggered by Pub/Sub on secret rotation events."""
+Rotation notifications do not rotate an external credential by themselves. A
+production handler needs these explicit steps:
 
-import functions_framework
-from google.cloud import secretmanager
-import secrets
-import string
+1. Authenticate the delivery and parse its documented Pub/Sub envelope/attributes;
+   match the exact allowed secret resource and SECRET_ROTATE event. The CloudEvent
+   does not supply a top-level name field as assumed by a generic handler.
+2. Acquire an idempotency/rotation lock keyed to the event ID and secret. Pub/Sub
+   can redeliver; retries must not create uncontrolled versions.
+3. Generate a secret using the target system's accepted policy and update that
+   system through a supported rotation mechanism with overlap/rollback support.
+4. Store the new version, verify access and health with staging consumers, then
+   roll out a pinned numeric version. Revoke the old target credential only after
+   successful adoption. Record metadata/status without secret payloads.
+5. Alert and retain an auditable pending/failed state when any step fails; no
+   success message can substitute for verified target-system rotation.
 
-@functions_framework.cloud_event
-def rotate_secret(cloud_event):
-    """Handle secret rotation events from Pub/Sub."""
-    data = cloud_event.data
-    secret_name = data.get("name", "")
-
-    if "db-password" not in secret_name:
-        print(f"Skipping non-DB secret: {secret_name}")
-        return
-
-    client = secretmanager.SecretManagerServiceClient()
-
-    alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
-    new_password = ''.join(secrets.choice(alphabet) for _ in range(32))
-
-    parent = "/".join(secret_name.split("/")[:4])
-    client.add_secret_version(
-        request={
-            "parent": parent,
-            "payload": {"data": new_password.encode("UTF-8")},
-        }
-    )
-    print(f"Rotated secret: {parent}")
-```
-
-### Rotation Schedule with Cloud Scheduler
+### Secret Manager rotation notification schedule (not a Cloud Scheduler job)
 
 ```bash
 # Create a Pub/Sub topic for rotation events
@@ -45,12 +28,11 @@ gcloud pubsub topics create secret-rotation
 
 # Configure secret to publish rotation events
 gcloud secrets update db-password \
-  --add-topics="projects/my-project/topics/secret-rotation" \
-  --event-types="SECRET_ROTATE"
+  --add-topics="projects/my-project/topics/secret-rotation"
 
 # Set up rotation schedule
 gcloud secrets update db-password \
-  --next-rotation-time="2025-04-01T00:00:00Z" \
+  --next-rotation-time="2030-04-01T00:00:00Z" \
   --rotation-period="2592000s"  # 30 days
 ```
 
@@ -72,7 +54,7 @@ resource "google_secret_manager_secret" "db_password" {
   }
 
   rotation {
-    next_rotation_time = "2025-04-01T00:00:00Z"
+    next_rotation_time = "2030-04-01T00:00:00Z"
     rotation_period    = "2592000s"
   }
 
@@ -129,3 +111,5 @@ resource "google_secret_manager_secret_iam_member" "app_accessor" {
 - aws-secrets-manager (`aws-secrets-manager`) - AWS secret management
 - azure-keyvault (`azure-keyvault`) - Azure secret management
 
+
+Primary references: [rotation recommendations](https://cloud.google.com/secret-manager/docs/rotation-recommendations), [version aliases](https://cloud.google.com/secret-manager/docs/assign-alias-to-secret-version), [IAM](https://cloud.google.com/secret-manager/docs/access-control). Rotation topics require the Secret Manager service agent to publish and a configured subscriber; this guide does not deploy them. Date placeholders must be replaced with valid future RFC3339 values before CLI/Terraform validation. Labels do not enable rotation or prove a password changed.

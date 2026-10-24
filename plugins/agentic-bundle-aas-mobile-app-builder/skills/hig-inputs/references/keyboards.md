@@ -1,6 +1,7 @@
 ---
 title: "Keyboards | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/keyboards
+---
 
 # Keyboards
 
@@ -28,7 +29,7 @@ Although iPadOS supports keyboard navigation in text fields, text views, and sid
 
 **In general, don’t repurpose standard keyboard shortcuts for custom actions.** People can get confused when the shortcuts they know work differently in your app or game. Only consider redefining a standard shortcut if its action doesn’t make sense in your experience. For example, if your app doesn’t support text editing, it doesn’t need a text-styling command like Italic, so you might repurpose Command–I for an action that has more relevance, like Get Info.
 
-People expect each of the following standard keyboard shortcuts to perform the action listed in the table below.
+The following is a mixed historical macOS shortcut snapshot, not a cross-platform contract. Verify current OS, keyboard layout, accessibility settings and app context; do not install handlers for system-reserved shortcuts.
 
 Primary key| Keyboard shortcut| Action  
 ---|---|---  
@@ -59,7 +60,7 @@ F8| | Varies.
 F9| | Varies.  
 F10| | Varies.  
 F11| | Show desktop.  
-F12| | Hide or display Dashboard.  
+F12| | Historical Dashboard binding; do not implement as a current system action.
 Grave accent (`)| Command-Grave accent| Activate the next open window in the frontmost app.  
 | Shift-Command-Grave accent| Activate the previous open window in the frontmost app.  
 | Option-Command-Grave accent| Move focus to the window drawer.  
@@ -67,7 +68,7 @@ Hyphen (-)| Command-Hyphen| Decrease the size of the selection.
 | Option-Command-Hyphen| Zoom out when screen zooming is on.  
 Left bracket ({)| Command-Left bracket| Left-align a selection.  
 Right bracket (})| Command-Right bracket| Right-align a selection.  
-Pipe (|)| Command-Pipe| Center-align a selection.  
+Pipe (\|)| Command-Pipe| Center-align a selection.
 Colon (:)| Command-Colon| Display the Spelling window.  
 Semicolon (;)| Command-Semicolon| Find misspelled words in the document.  
 Comma (,)| Command-Comma| Open the app’s settings window.  
@@ -130,12 +131,12 @@ W| Command-W| Close the active window.
 X| Command-X| Remove the selection and store on the Clipboard.  
 Z| Command-Z| Undo the previous operation.  
 | Shift-Command-Z| Redo (when Undo and Redo are separate commands rather than toggled using Command-Z).  
-Right arrow| Command-Right arrow| Change the keyboard layout to current layout of Roman script.  
+Right arrow| Command-Right arrow| Move to the end of the current line in standard text editing.
 | Shift-Command-Right arrow| Extend selection to the next semantic unit, typically the end of the current line.  
 | Shift-Right arrow| Extend selection one character to the right.  
 | Option-Shift-Right arrow| Extend selection to the end of the current word, then to the end of the next word.  
 | Control-Right arrow| Move focus to another value or cell within a view, such as a table.  
-Left arrow| Command-Left arrow| Change the keyboard layout to current layout of system script.  
+Left arrow| Command-Left arrow| Move to the beginning of the current line in standard text editing.
 | Shift-Command-Left arrow| Extend selection to the previous semantic unit, typically the beginning of the current line.  
 | Shift-Left arrow| Extend selection one character to the left.  
 | Option-Shift-Left arrow| Extend selection to the beginning of the current word, then to the beginning of the previous word.  
@@ -156,8 +157,8 @@ Keyboard shortcut| Action
 Control-Space| Toggle between the current and last input source.  
 Control-Option-Space| Switch to the next input source in the list.  
 [Modifier key]-Command-Space| Varies.  
-Command-Right arrow| Change keyboard layout to current layout of Roman script.  
-Command-Left arrow| Change keyboard layout to current layout of system script.  
+Command-Right arrow| Standard text-editing line-end navigation; not an input-source shortcut.
+Command-Left arrow| Standard text-editing line-start navigation; not an input-source shortcut.
   
 ## [Custom keyboard shortcuts](https://developer.apple.com/design/human-interface-guidelines/keyboards#Custom-keyboard-shortcuts)
 
@@ -182,7 +183,7 @@ Some languages require modifier keys to generate certain characters. For example
 
 **Avoid adding Shift to a shortcut that uses the upper character of a two-character key.** People already understand that they must hold the Shift key to type the upper character of a two-character key, so it’s clearer to simply list the upper character in the shortcut. For example, the keyboard shortcut for Hide Status Bar is Command-Slash, whereas the keyboard shortcut for Help is Command-Question mark, not Shift-Command-Slash.
 
-**Let the system localize and mirror your keyboard shortcuts as needed.** The system automatically localizes a shortcut’s primary and modifier keys to support the currently connected keyboard; if your app or game switches to a right-to-left layout, the system automatically mirrors the shortcut. For guidance, see [Right to left](https://developer.apple.com/design/human-interface-guidelines/right-to-left).
+**Let the system localize and mirror your keyboard shortcuts as needed.** Use system command APIs for localization and directional mirroring where supported. Test keyboard layouts and right-to-left behavior; arbitrary custom/raw-key shortcuts are not guaranteed to localize or mirror automatically. For guidance, see [Right to left](https://developer.apple.com/design/human-interface-guidelines/right-to-left).
 
 **Avoid creating a new shortcut by adding a modifier to an existing shortcut for an unrelated command.** For example, because people are accustomed to using Command-Z for undoing an action, it would be confusing to use Shift-Command-Z as the shortcut for a command that’s unrelated to undo and redo.
 

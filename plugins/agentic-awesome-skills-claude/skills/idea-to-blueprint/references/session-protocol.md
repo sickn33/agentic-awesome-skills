@@ -28,7 +28,7 @@ CLAUDE.md              Claude Code entry point: same content
 
 **Orient (agent)**
 1. Read `AGENTS.md`/`CLAUDE.md`, then `docs/PROGRESS.md` entirely, then `docs/BLUEPRINT.md` sections 12–16, 18, 21 and the target epic in section 17 (and any flow/screen/copy sections the epic references).
-2. Verify preconditions: previous epics DONE in PROGRESS.md; `git status` clean on the main branch; `check` green on a clean tree; env vars listed in the epic's preconditions present locally; every `[VERIFY-AT-BUILD]` item the epic depends on re-checked (see §10) and the result recorded in PROGRESS.md.
+2. Verify preconditions: previous epics DONE in PROGRESS.md; working tree and branch inspected; preserve unrelated or uncommitted work and use the authorized topic branch/worktree; `check` green on a clean tree; env vars listed in the epic's preconditions present locally; every `[VERIFY-AT-BUILD]` item the epic depends on re-checked (see §10) and the result recorded in PROGRESS.md.
 3. If a precondition fails: stop, report exactly what fails and the fix, do not start building. The user decides.
 
 **Plan (agent)**
@@ -37,8 +37,8 @@ CLAUDE.md              Claude Code entry point: same content
 6. Wait for "go" unless the user pre-approved ("plan and build without stopping").
 
 **Build (agent)** — for each story in order:
-7. Create a branch `epic/E03` (once per epic) if not on trunk-only.
-8. Write the tests for the story's ACs first; run `check`; the new tests must fail.
+7. Use an authorized topic branch/worktree following the current repository policy; never switch/reset a dirty tree.
+8. Write the tests for the story's ACs first; run `check`; new tests should fail for the intended missing behavior; existing regression tests may already pass.
 9. Implement the tasks; run `check` after each task or story; keep it green. Copy strings come from the copy table by ID — no improvised strings.
 10. Commit per story: `feat(auth): request OTP by phone [E02-S01]` (type/scope per BLUEPRINT §13.7). Record the story as DONE in PROGRESS.md with one evidence line per AC (test name, or manual-check result).
 11. Any decision not covered by the blueprint (a library detail, a schema nuance) → add `DR-nn` to DECISIONS.md in the same commit. Any AC that turns out wrong or impossible → §7, never a silent change.
@@ -116,7 +116,7 @@ Ask the user before amending anything that changes user-visible behaviour, money
 
 ## 8. Recovery
 
-- **Session crashed or was terminated mid-epic**: the next session reads PROGRESS.md, runs `git status` and `git log`, inspects the epic branch, runs `check`, and resumes from the first story/AC without evidence. Uncommitted work is inspected and either committed with a WIP note or discarded, stated in PROGRESS.md.
+- **Session crashed or was terminated mid-epic**: the next session reads PROGRESS.md, runs `git status` and `git log`, inspects the epic branch, runs `check`, and resumes from the first story/AC without evidence. Inspect and preserve uncommitted work; resume applicable work and report unrelated changes. Discard only with explicit authorization.
 - **`check` red at boot**: the previous session violated a gate. Fix the red first as a hotfix story `E03-S00 — restore green` with its own evidence, then continue.
 - **Blueprint defect found** (missing ID, contradictory ACs): treat as §7; if blocking, stop and ask.
 - **Environment broken** (missing service, credentials expired): record in PROGRESS.md, report, stop.
@@ -125,7 +125,7 @@ Ask the user before amending anything that changes user-visible behaviour, money
 
 - Both read a root instructions file: Claude Code reads `CLAUDE.md`; Codex reads `AGENTS.md`. Keep both, identical in content, pointing at the docs.
 - Skills: Claude Code discovers `SKILL.md` folders under `.claude/skills/` (project) and `~/.claude/skills/` (personal); Codex discovers the same open skill format from its skills locations (`~/.codex/skills/`, `.codex/skills/`, and `.agents/skills/` in recent versions — confirm against the current Codex docs when installing). The session protocol does not depend on skills at build time; it depends only on the repo files.
-- Invocation: paste the session prompt as the first message in either tool. If the harness exposes an effort/thinking level, set it to the maximum for planning and verification steps.
+- Invocation: paste the session prompt as the first message in either tool. Keep the user’s configured model, effort and budget settings.
 - Verification commands must be runnable by the agent without interaction (no prompts, no watch mode). Provide a `check` that exits non-zero on failure.
 
 ## 10. `[VERIFY-AT-BUILD]` re-check rule

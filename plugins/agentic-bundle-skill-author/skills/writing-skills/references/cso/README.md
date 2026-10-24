@@ -1,5 +1,7 @@
 # CSO Guide - Claude Search Optimization
 
+Treat the examples below as editorial heuristics, not controlled evidence of model behavior. Include both what the skill does and when to use it. Discovery, metadata injection, context costs, naming preferences, and @ syntax depend on the host; test the actual integration.
+
 Advanced techniques for making skills discoverable by agents.
 
 ## The Discovery Problem
@@ -8,7 +10,7 @@ You have 100+ skills. Agent receives a task. How does it find the RIGHT skill?
 
 **Answer**: The `description` field.
 
-## Critical Rule: Description = Triggers, NOT Workflow
+## Describe the capability and use conditions
 
 ### The Trap
 
@@ -178,7 +180,7 @@ metadata:
 
 ## Third Person Rule
 
-Description is injected into system prompt. Inconsistent POV breaks discovery.
+Metadata loading depends on the host. Keep descriptions clear and consistent; no wording guarantees discovery.
 
 ```yaml
 # ❌ BAD: First person
@@ -213,7 +215,7 @@ See test-driven-development skill for context.
 @skills/testing/test-driven-development/SKILL.md
 ```
 
-**Why no @ links**: `@` syntax force-loads files immediately, consuming tokens before needed.
+**Why prefer Markdown links**: `@` interpretation depends on the host and may eagerly load files. Markdown links are more portable.
 
 ## Verification Checklist
 
@@ -221,7 +223,7 @@ Before deploying:
 
 - [ ] Description starts with "Use when..."?
 - [ ] Description is <500 characters?
-- [ ] Description lists ONLY triggers, not workflow?
+- [ ] Description states the capability and specific use conditions without replacing the full workflow?
 - [ ] Includes 3+ keywords (errors/symptoms/tools)?
 - [ ] Third person throughout?
 - [ ] Name uses gerund or verb-first format?

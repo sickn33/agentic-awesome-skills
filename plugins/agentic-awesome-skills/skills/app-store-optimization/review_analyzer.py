@@ -102,7 +102,7 @@ class ReviewAnalyzer:
             'average_rating': round(avg_rating, 2),
             'sentiment_distribution': sentiment_distribution,
             'sentiment_counts': sentiment_counts,
-            'sentiment_trend': self._assess_sentiment_trend(sentiment_distribution),
+            'sentiment_trend': self._assess_sentiment_trend(sentiment_distribution) if total else 'insufficient_data',
             'detailed_sentiments': detailed_sentiments[:50]  # Limit output
         }
 
@@ -442,10 +442,10 @@ class ReviewAnalyzer:
             return 'very_positive'
         elif positive > 50:
             return 'positive'
-        elif negative > 30:
-            return 'concerning'
         elif negative > 50:
             return 'critical'
+        elif negative > 30:
+            return 'concerning'
         else:
             return 'mixed'
 
@@ -676,8 +676,10 @@ class ReviewAnalyzer:
             insights.append("Positive trend: User satisfaction is increasing over time")
         elif trend_direction == 'declining':
             insights.append("WARNING: User satisfaction is declining - immediate action needed")
+        elif trend_direction == "insufficient_data":
+            insights.append("Insufficient time periods to establish a trend")
         else:
-            insights.append("Sentiment is stable - maintain current quality")
+            insights.append("Sentiment is stable in the supplied sample")
 
         # Review velocity insight
         if len(trends) >= 2:

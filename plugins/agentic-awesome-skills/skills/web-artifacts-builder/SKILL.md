@@ -1,6 +1,6 @@
 ---
 name: web-artifacts-builder
-description: "To build powerful frontend claude.ai artifacts, follow these steps:"
+description: "Create React frontend artifacts and bundle a reviewed project into a shareable HTML file."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -15,7 +15,11 @@ To build powerful frontend claude.ai artifacts, follow these steps:
 4. Display artifact to user
 5. (Optional) Test the artifact
 
-**Stack**: React 18 + TypeScript + Vite + Parcel (bundling) + Tailwind CSS + shadcn/ui
+**Stack**: version-selected React/TypeScript/Vite scaffold plus Parcel, Tailwind 3.x and a bundled shadcn-style component snapshot. Mixed snapshot/dependency versions require build verification.
+
+Catalog modification notice: repaired initialization path/version handling, preserved existing outputs, and added explicit checks for the bundled component snapshot. The Apache-2.0 license text is retained. Archive members have no per-file upstream notices/pinned source in this tree; their full provenance/license compatibility is unresolved, so do not claim a complete third-party license audit.
+
+Resolve scripts from the installed skill directory and run initialization in a disposable output parent. Install/build commands fetch packages and may run lifecycle scripts; review selected versions and preserve the lockfile. Supply an explicitly reviewed CREATE_VITE_VERSION and a compatible supported Node/pnpm toolchain. Never embed credentials/private data in client bundles; self-contained HTML still executes JavaScript and may request external resources.
 
 ## Design & Style Guidelines
 
@@ -27,7 +31,7 @@ VERY IMPORTANT: To avoid what is often referred to as "AI slop", avoid using exc
 
 Run the initialization script to create a new React project:
 ```bash
-bash scripts/init-artifact.sh <project-name>
+CREATE_VITE_VERSION=<reviewed-version> bash "$SKILL_DIR/scripts/init-artifact.sh" <project-name>
 cd <project-name>
 ```
 
@@ -38,7 +42,7 @@ This creates a fully configured project with:
 - ✅ 40+ shadcn/ui components pre-installed
 - ✅ All Radix UI dependencies included
 - ✅ Parcel configured for bundling (via .parcelrc)
-- ✅ Node 18+ compatibility (auto-detects and pins Vite version)
+- Requires a supported Node toolchain compatible with the explicitly selected scaffold; no blanket Node 18 compatibility
 
 ### Step 2: Develop Your Artifact
 
@@ -48,10 +52,10 @@ To build the artifact, edit the generated files. See **Common Development Tasks*
 
 To bundle the React app into a single HTML artifact:
 ```bash
-bash scripts/bundle-artifact.sh
+bash "$SKILL_DIR/scripts/bundle-artifact.sh"
 ```
 
-This creates `bundle.html` - a self-contained artifact with all JavaScript, CSS, and dependencies inlined. This file can be directly shared in Claude conversations as an artifact.
+This creates `bundle.html` with bundleable JavaScript/CSS/assets inlined. Verify dynamic URLs, fonts, images, worker chunks and runtime requests before describing it as self-contained or offline. This file can be directly shared in Claude conversations as an artifact.
 
 **Requirements**: Your project must have an `index.html` in the root directory.
 
@@ -67,9 +71,9 @@ Finally, share the bundled HTML file in conversation with the user so they can v
 
 ### Step 5: Testing/Visualizing the Artifact (Optional)
 
-Note: This is a completely optional step. Only perform if necessary or requested.
+Run the generated project's type/build checks and a representative browser check before describing it as working. Verify main interactions, keyboard/focus behavior, responsive layout and the final bundled file (not only Vite development mode). If a check cannot run, state that limitation when sharing the artifact. Publication or external uploads require the requested authorization.
 
-To test/visualize the artifact, use available tools (including other Skills or built-in tools like Playwright or Puppeteer). In general, avoid testing the artifact upfront as it adds latency between the request and when the finished artifact can be seen. Test later, after presenting the artifact, if requested or if issues arise.
+Bundled snapshot caveats: calendar styles include newer Tailwind syntax that may not work with Tailwind 3.4.1; resizable-panel APIs are version-sensitive; the initializer patches a missing Progress value forwarding and a Menubar displayName typo. Form helpers require FormProvider/FormField/FormItem composition, and dialogs/command dialogs need accessible titles/descriptions. These are starting components, not a certified accessible component suite.
 
 ## Reference
 

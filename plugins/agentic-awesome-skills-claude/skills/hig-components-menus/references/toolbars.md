@@ -1,6 +1,7 @@
 ---
 title: "Toolbars | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/toolbars
+---
 
 # Toolbars
 
@@ -58,13 +59,13 @@ The system automatically adds an overflow menu in macOS or iPadOS when items no 
 
 **Don’t title windows with your app name.** Your app’s name doesn’t provide useful information about your content hierarchy or any window or area in your app, so it doesn’t work well as a title.
 
-**Write a concise title.** Aim for a word or short phrase that distills the purpose of the window or view, and keep the title under 15 characters long so you leave enough room for other controls.
+**Write a concise title.** Aim for a word or short phrase that distills the purpose of the window or view, and keep it short enough for the available width and localization rather than treating 15 characters as a universal limit so you leave enough room for other controls.
 
 ## [Navigation](https://developer.apple.com/design/human-interface-guidelines/toolbars#Navigation)
 
 A toolbar with navigation controls appears at the top of a window, helping people move through a hierarchy of content. A toolbar also often contains a [search field](https://developer.apple.com/design/human-interface-guidelines/search-fields) for quick navigation between areas or pieces of content. In iOS, a navigation-specific toolbar is sometimes called a navigation bar.
 
-**Use the standard Back and Close buttons.** People know that the standard Back button lets them retrace their steps through a hierarchy of information, and the standard Close button closes a modal view. Prefer the standard symbols for each, and don’t use a text label that says _Back_ or _Close_. If you create a custom version of either, make sure it still looks the same, behaves as people expect, and matches the rest of your interface, and ensure you consistently implement it throughout your app or game. For guidance, see [Icons](https://developer.apple.com/design/human-interface-guidelines/icons).
+**Use the standard Back and Close buttons.** People know that the standard Back button lets them retrace their steps through a hierarchy of information, and the standard Close button closes a modal view. Prefer the standard symbols for each, and follow the target OS presentation. Preserve localized accessibility labels even when the visible control uses only a symbol. If you create a custom version of either, make sure it still looks the same, behaves as people expect, and matches the rest of your interface, and ensure you consistently implement it throughout your app or game. For guidance, see [Icons](https://developer.apple.com/design/human-interface-guidelines/icons).
 
 ![An illustration of a capsule-shape Back button that includes the Back symbol on the leading side, grouped with Back in text on the trailing side.](https://docs-assets.developer.apple.com/published/de859b5c4d42c9df2e92c680d48a37b2/toolbars-navigation-action-back-incorrect%402x.png)
 
@@ -98,7 +99,7 @@ A toolbar with navigation controls appears at the top of a window, helping peopl
 
 ![A checkmark in a circle to indicate correct usage.](https://docs-assets.developer.apple.com/published/88662da92338267bb64cd2275c84e484/checkmark%402x.png)
 
-**Use the`.prominent` style for key actions such as Done or Submit.** This separates and tints the action so there’s a clear focal point. Only specify one primary action, and put it on the trailing side of the toolbar.
+**Use the supported prominent/default-action style for key actions such as Done or Submit.** This separates and tints the action so there’s a clear focal point. Only specify one primary action, and put it on the trailing side of the toolbar.
 
 ![An illustration of two toolbar items, with a Filter button on the leading side and a Done button on the trailing side. The buttons are ungrouped, and the Done button has the prominent style applied to indicate that it's the primary action.](https://docs-assets.developer.apple.com/published/36c552c629c8a980c83501134e53d749/toolbars-prominent-action-tinted%402x.png)
 
@@ -110,7 +111,7 @@ You can position toolbar items in three locations: the leading edge, center area
 
   * **Center area.** Common, useful controls appear in the center area, and the view title can appear here if it’s not on the leading edge. In macOS and iPadOS, people can add, remove, and rearrange items here if you let them customize the toolbar, and items in this section automatically collapse into the system-managed overflow menu when the window shrinks enough in size.
 
-  * **Trailing edge.** The trailing edge contains important items that need to remain available, buttons that open nearby inspectors, an optional search field, and the More menu that contains additional items and supports toolbar customization. It also includes a primary action like Done when one exists. Items on the trailing edge remain visible at all window sizes.
+  * **Trailing edge.** The trailing edge contains important items that need to remain available, buttons that open nearby inspectors, an optional search field, and the More menu that contains additional items and supports toolbar customization. It also includes a primary action like Done when one exists. Prioritize essential trailing items, but verify constrained windows, large text and localization; placement alone does not guarantee visibility at every size.
 
 
 

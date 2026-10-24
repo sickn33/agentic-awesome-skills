@@ -11,10 +11,9 @@ AWS Cognito has two distinct services often confused: **User Pools** (auth provi
 The IdentityPoolId is a **public identifier** by AWS design (`<region>:<UUID>` format). The find:
 
 ```bash
-# JS bundle / SPA regex (against *.js, *.html, source-map files)
-grep -ErohE "identityPoolId[\"'`\s:=]+[\"'] ([a-z]{2}-[a-z]+-[0-9]:[0-9a-f-]{36})[\"']" .
-grep -ErohE "IdentityPoolId[\"'`\s:=]+[\"'] ([a-z]{2}-[a-z]+-[0-9]:[0-9a-f-]{36})[\"']" .
-grep -ErohE "\"PoolId\"\s*:\s*\"([a-z]{2}-[a-z]+-[0-9]:[0-9a-f-]{36})\"" .
+# Search local, authorized bundles without evaluating their contents.
+rg -n 'identityPoolId|IdentityPoolId|PoolId' --glob '*.js' --glob '*.html' .
+# Inspect matches and validate the region:UUID format; public IDs are not credentials.
 
 # Mobile APK (after jadx decompile)
 grep -rEi "identity[_-]?pool[_-]?id" decoded/
@@ -86,7 +85,7 @@ Blackbox (the normal case) — fire a permission probe across high-value service
 | Unauth role with `s3:PutObject` on web-hosting bucket | **High** (8.1) | Stored XSS / supply-chain |
 | Unauth role with `kms:Decrypt` on a customer CMK | **High** (7.5-8.5) | Depends on ciphertext reachability |
 | Unauth role with read-only on a single hardcoded non-sensitive resource | **Medium** (5.3) | Limited business impact |
-| Unauth identities enabled but role policy denies everything | **Informational** | Best-practice deviation only |
+| Unauth identities intentionally enabled with least privilege | **Expected behavior** | Not a vulnerability by itself |
 
 ### Disclosed cases / authoritative writeups
 
@@ -101,10 +100,10 @@ Blackbox (the normal case) — fire a permission probe across high-value service
 
 Always include in the report:
 - `sts get-caller-identity` output (proves the role ARN + account ID)
-- Pacu `iam__enum_permissions` JSON output (proves the granted actions)
-- A concrete data-pull PoC (one sample S3 object listing, one DynamoDB record with PII redacted)
+- Scoped policy/effective-permission evidence (brute-force calls do not exhaust all policy conditions)
+- A harmless owner-approved canary proof, if authorized; no production secret/PII pull
 
-Without all three, triagers downgrade to Medium. The 60-second test is `GetId → GetCredentialsForIdentity → sts get-caller-identity`. If you reach step 3 anonymously, you have a finding.
+Do not retrieve production PII merely to satisfy this checklist; use an owner-provided canary or policy evidence and disclose untested impact. The 60-second test is `GetId → GetCredentialsForIdentity → sts get-caller-identity`. Anonymous temporary credentials are an intended guest-access feature; report only unintended permissions or exposure with scoped evidence.
 
 Cross-reference: `hunt-cloud-misconfig` → `CloudWatch RUM weaponization` covers the specific RUM-embedded variant of this attack class.
 

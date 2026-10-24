@@ -1,5 +1,9 @@
 # Partition Key Strategies
 
+
+Review corrections (2026-10-23): these snippets are incomplete application starters. Initialize the synchronous client during startup outside the event loop, serialize initialization and close client/credential on shutdown. A cached failed initialization needs an explicit bounded recovery path. `azure.cosmos.aio` is also available; the SDK is not synchronous-only. Enforce tenant authorization independently of partition routing; the bundled client assumes `/workspaceId`. Never accept caller SQL fragments. Distinguish unavailable storage (503) from not-found (404) and empty data; the older graceful-default examples below illustrate a policy to avoid for authoritative reads. Use ETag conditional writes to prevent lost updates, enforce uniqueness atomically, and implement cross-partition moves with conflict-aware compensation; read-then-upsert/delete is not atomic. No live Cosmos behavior is verified by these templates.
+
+
 ## Table of Contents
 
 1. [Partition Key Fundamentals](#partition-key-fundamentals)
@@ -91,7 +95,7 @@ user = await query_documents(
 )
 ```
 
-**Use for**: Entities accessed independently of hierarchy (users, groups, permissions)
+**Use only for**: deliberately small bounded datasets. A constant key creates a hot logical partition and does not scale cross-workspace authorization. Every document must actually contain the configured partition property (for example `partitionKey: "global"`).
 
 ### Strategy Summary
 
@@ -127,7 +131,7 @@ async def query_documents(
         query += f" {extra_filter}"
         query_params.extend(parameters or [])
 
-    if partition_key:
+    if partition_key is not None:
         # Efficient single-partition query
         items = container.query_items(
             query=query,
@@ -156,8 +160,8 @@ async def query_documents(
 
 ### Performance Considerations
 
-- **Single-partition**: ~1-5 RU per query
-- **Cross-partition**: ~N × single-partition RU (N = physical partitions)
+- **Single-partition**: measure request charge for the actual query; no fixed 1–5 RU guarantee
+- **Cross-partition**: fan-out can increase RU; measure query metrics rather than assuming a linear multiplier
 - Index cross-partition query fields for better performance
 
 ---

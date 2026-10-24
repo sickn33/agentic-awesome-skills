@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-toolization-accessibility-pack` 和 `framework-use-discipline-pack`。
+`v5-toolization-accessibility-release-pack` 和 `v5-use-boundary-governance-pack`。
 
 ## 证据要求
 

@@ -58,6 +58,10 @@ Complete guide to observability patterns for Istio, Linkerd, and service mesh de
 
 ## Templates
 
+These are version-specific fragments, not a complete deployable stack. Pin mesh/collector/operator versions, export or render the supported schema and review manifests before applying. Supply Services, RBAC and receiver/provider wiring separately; a ServiceMonitor for istiod does not by itself scrape every workload proxy. Thresholds are examples requiring service-specific SLOs.
+
+Keep tracing/tap output inside authorized environments, redact sensitive attributes and restrict access. The anonymous Kiali example is for isolated trusted development only; configure authenticated access and narrow namespace/RBAC scope before shared use; see [Kiali authentication](https://kiali.io/docs/configuration/authentication/anonymous/).
+
 ### Template 1: Istio with Prometheus & Grafana
 
 ```yaml
@@ -279,6 +283,8 @@ spec:
 
 ### Template 7: OpenTelemetry Integration
 
+Use OTLP to a Jaeger OTLP-enabled receiver and expose its 4317 Service port. The native Jaeger Collector exporter was removed from standard distributions; see [OpenTelemetry migration](https://opentelemetry.io/docs/compatibility/migration/). Plaintext `insecure: true` below is an isolated-network example; use authenticated TLS for untrusted links. Configure the referenced Istio `otel` extension provider separately.
+
 ```yaml
 # OpenTelemetry Collector for mesh
 apiVersion: v1
@@ -302,8 +308,8 @@ data:
         timeout: 10s
 
     exporters:
-      jaeger:
-        endpoint: jaeger-collector:14250
+      otlp/jaeger:
+        endpoint: jaeger-collector:4317
         tls:
           insecure: true
       prometheus:
@@ -314,7 +320,7 @@ data:
         traces:
           receivers: [otlp, zipkin]
           processors: [batch]
-          exporters: [jaeger]
+          exporters: [otlp/jaeger]
         metrics:
           receivers: [otlp]
           processors: [batch]

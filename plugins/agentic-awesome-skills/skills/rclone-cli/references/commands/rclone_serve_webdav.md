@@ -28,41 +28,15 @@ supported hash on the backend or you can use a named hash such as
 "MD5" or "SHA-1". Use the [hashsum](/commands/rclone_hashsum/) command
 to see the full list.
 
-## Access WebDAV on Windows
+## Access WebDAV on Windows and Office
 
-WebDAV shared folder can be mapped as a drive on Windows, however the default
-settings prevent it. Windows will fail to connect to the server using insecure
-Basic authentication. It will not even display any login dialog. Windows
-requires SSL / HTTPS connection to be used with Basic. If you try to connect
-via Add Network Location Wizard you will get the following error:
-"The folder you entered does not appear to be valid. Please choose another".
-However, you still can connect if you set the following registry key on a
-client machine:
-`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WebClient\Parameters\BasicAuthLevel`
-to 2. The BasicAuthLevel can be set to the following values:
+Use an HTTPS endpoint with a certificate trusted by the client for Basic
+authentication. Keep Windows WebClient and Office restrictions against Basic
+authentication over plaintext HTTP enabled; do not set registry values to allow
+non-TLS authentication as a routine compatibility workaround.
 
-```text
-0 - Basic authentication disabled
-1 - Basic authentication enabled for SSL connections only
-2 - Basic authentication enabled for SSL connections and for non-SSL connections
-```
-
-If required, increase the FileSizeLimitInBytes to a higher value.
-Navigate to the Services interface, then restart the WebClient service.
-
-## Access Office applications on WebDAV
-
-Navigate to following registry
-`HKEY_CURRENT_USER\Software\Microsoft\Office\[14.0/15.0/16.0]\Common\Internet`
-Create a new DWORD BasicAuthLevel with value 2.
-
-```text
-0 - Basic authentication disabled
-1 - Basic authentication enabled for SSL connections only
-2 - Basic authentication enabled for SSL and for non-SSL connections
-```
-
-<https://learn.microsoft.com/en-us/office/troubleshoot/powerpoint/office-opens-blank-from-sharepoint>
+If transfers exceed a client limit, inspect the relevant WebClient setting and
+restart that service only after assessing the system-wide effect.
 
 ## Serving over a unix socket
 
@@ -78,8 +52,9 @@ and connect to it like this using rclone and the webdav backend:
 rclone --webdav-unix-socket /tmp/my.socket --webdav-url http://localhost lsf :webdav:
 ```
 
-Note that there is no authentication on http protocol - this is expected to be
-done by the permissions on the socket.
+This example configures no HTTP authentication. Create the socket in a private
+directory with restrictive permissions, or explicitly configure authentication;
+HTTP itself can authenticate and using a Unix socket does not add it.
 
 ## Server options
 
@@ -144,7 +119,7 @@ It can be configured with .socket and .service unit files as described in
 Socket activation can be tested ad-hoc with the `systemd-socket-activate`command
 
 ```console
-systemd-socket-activate -l 8000 -- rclone serve
+systemd-socket-activate -l 127.0.0.1:8000 -- rclone serve webdav remote:path
 ```
 
 This will socket-activate rclone on the first connection to port 8000 over TCP.
@@ -321,8 +296,8 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and metadata remain intact.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -432,7 +407,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not
@@ -713,9 +688,8 @@ rclone will use that program to generate backends on the fly which
 then are used to authenticate incoming requests.  This uses a simple
 JSON based protocol with input on STDIN and output on STDOUT.
 
-**PLEASE NOTE:** `--auth-proxy` and `--authorized-keys` cannot be used
-together, if `--auth-proxy` is set the authorized keys option will be
-ignored.
+WebDAV uses HTTP authentication. SFTP-specific `--authorized-keys` and
+SSH public-key authentication do not apply to this listener.
 
 There is an example program
 [bin/test_proxy.py](https://github.com/rclone/rclone/blob/master/bin/test_proxy.py)
@@ -743,16 +717,6 @@ process (on STDIN) would look similar to this:
 {
   "user": "me",
   "pass": "mypassword"
-}
-```
-
-If public-key authentication was used by the client, input to the
-proxy process (on STDIN) would look similar to this:
-
-```json
-{
-  "user": "me",
-  "public_key": "AAAAB3NzaC1yc2EAAAADAQABAAABAQDuwESFdAe14hVS6omeyX7edc...JQdf"
 }
 ```
 

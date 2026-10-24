@@ -72,13 +72,13 @@ VALUES (?, ?, ?);
 
 ```kotlin
 // commonMain — Database driver expect/actual
-expect class DatabaseDriverFactory {
+interface DatabaseDriverFactory {
     fun createDriver(): SqlDriver
 }
 
 // androidMain
-actual class DatabaseDriverFactory(private val context: Context) {
-    actual fun createDriver(): SqlDriver =
+class AndroidDatabaseDriverFactory(private val context: Context) : DatabaseDriverFactory {
+    override fun createDriver(): SqlDriver =
         AndroidSqliteDriver(AppDatabase.Schema, context, "app.db")
 }
 ```
@@ -107,11 +107,12 @@ class ItemRepositoryImpl(
 ## Android ViewModel consuming shared Flow
 
 ```kotlin
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel(
     private val observeItems: ObserveItemsUseCase,    // from shared module
     private val refreshItems: RefreshItemsUseCase     // from shared module
 ) : ViewModel() {
+
+    fun refresh() { viewModelScope.launch { refreshItems() } }
 
     val uiState = observeItems()
         .map { HomeUiState.Success(it) as HomeUiState }
@@ -128,7 +129,6 @@ class HomeViewModel @Inject constructor(
 ```kotlin
 // commonMain — shared Koin modules
 val sharedModule = module {
-    single { DatabaseDriverFactory(get()) }
     single { AppDatabase(get<DatabaseDriverFactory>().createDriver()) }
     single<ItemRepository> { ItemRepositoryImpl(get(), get()) }
     factory { ObserveItemsUseCase(get()) }
@@ -138,6 +138,7 @@ val sharedModule = module {
 // androidApp — Android-specific module
 val androidModule = module {
     single<Context> { androidApplication() }
+    single<DatabaseDriverFactory> { AndroidDatabaseDriverFactory(get()) }
     viewModel { HomeViewModel(get(), get()) }
 }
 

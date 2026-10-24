@@ -11,47 +11,23 @@ import json
 import requests
 from typing import Optional, Dict, List, Any
 
-import os
-import uuid
 
 # API配置
 API_BASE_URL = "https://agskills.moontai.top"
 
 
-# 归因配置：渠道标识 + 安装uuid，由中转服务烘焙进 CPS sid 做归因
-CHANNEL = "trip"
-
-
-def _load_install_id() -> str:
-    """首次运行生成uuid并持久化到 scripts/.install_id，用于渠道归因。"""
-    id_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.install_id')
-    try:
-        with open(id_file, 'r', encoding='utf-8') as f:
-            install_id = f.read().strip()
-            if install_id:
-                return install_id
-    except OSError:
-        pass
-    install_id = uuid.uuid4().hex
-    try:
-        with open(id_file, 'w', encoding='utf-8') as f:
-            f.write(install_id)
-    except OSError:
-        pass
-    return install_id
-
+# Attribution is optional and does not create a persistent installation ID.
+CHANNEL = 'trip'
 
 
 class CouponFetcher:
     """出行优惠券获取器"""
 
-    def __init__(self, base_url: str = API_BASE_URL):
+    def __init__(self, base_url: str = API_BASE_URL, attribution: bool = False):
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
-        self.session.params.update({
-            'ch': CHANNEL,
-            'u': _load_install_id(),
-        })
+        if attribution:
+            self.session.params.update({'ch': CHANNEL})
         self.session.headers.update({
             'Content-Type': 'application/json',
             'User-Agent': 'XiaFan-CouponFetcher/2.0'
@@ -74,17 +50,15 @@ class CouponFetcher:
         endpoint = f"{self.base_url}/coupon/trip"
 
         try:
-            response = self.session.get(endpoint, timeout=10)
+            response = self.session.get(endpoint, timeout=10, allow_redirects=False)
+            if 300 <= response.status_code < 400:
+                raise ValueError("Unexpected redirect; no automatic follow")
             response.raise_for_status()
             data = response.json()
-            # 确保返回的是列表
-            if isinstance(data, dict):
-                return [data]
-            elif isinstance(data, list):
-                return data
-            else:
-                return []
-        except requests.RequestException as e:
+            if not isinstance(data, list) or any(not isinstance(item, dict) for item in data):
+                raise ValueError("Expected an array of coupon objects")
+            return data
+        except (requests.RequestException, ValueError) as e:
             return [{
                 "error": True,
                 "message": f"API请求失败: {str(e)}"
@@ -93,12 +67,25 @@ class CouponFetcher:
     def get_didi_coupons(self) -> List[Dict[str, Any]]:
         """获取滴滴出行优惠券"""
         all_coupons = self.get_coupons()
-        return [c for c in all_coupons if '滴滴' in c.get('title', '')]
+        return [c for c in all_coupons if c.get('error') or '滴滴' in str(c.get('title', ''))]
 
     def get_xiecheng_coupons(self) -> List[Dict[str, Any]]:
         """获取携程礼包优惠券"""
         all_coupons = self.get_coupons()
-        return [c for c in all_coupons if '携程' in c.get('title', '')]
+        return [c for c in all_coupons if c.get('error') or '携程' in str(c.get('title', ''))]
+
+
+def display_url(value):
+    from urllib.parse import urlsplit
+    if not isinstance(value, str) or any(ord(c) < 33 for c in value):
+        return "[invalid link omitted]"
+    try:
+        parsed = urlsplit(value)
+        if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+            return "[invalid link omitted]"
+    except ValueError:
+        return "[invalid link omitted]"
+    return value
 
 
 def format_coupon_display(coupon: Dict[str, Any], platform: str) -> str:
@@ -112,10 +99,12 @@ def format_coupon_display(coupon: Dict[str, Any], platform: str) -> str:
     Returns:
         格式化的字符串
     """
+    if coupon.get("error"):
+        return "获取失败: " + str(coupon.get("message", "未知错误"))
     title = coupon.get("title", "优惠券")
     # coupon_url 和 coupon_qrcode_img_url 必须原样呈现，禁止修改任何字符
-    coupon_url = coupon.get("coupon_url", "")
-    coupon_qrcode_img_url = coupon.get("coupon_qrcode_img_url", "")
+    coupon_url = display_url(coupon.get("coupon_url", ""))
+    coupon_qrcode_img_url = display_url(coupon.get("coupon_qrcode_img_url", coupon.get("coupon_h5_qrcode_img_url", "")))
     guideline = coupon.get("guideline", "")
 
     lines = [
@@ -146,6 +135,9 @@ def format_coupons_list(coupons: List[Dict[str, Any]]) -> str:
         return "暂无可用优惠券"
 
     result = []
+
+    if any(coupon.get("error") for coupon in coupons):
+        return "获取失败: " + str(next(c["message"] for c in coupons if c.get("error")))
 
     for i, coupon in enumerate(coupons, 1):
         # 判断平台
@@ -182,9 +174,10 @@ if __name__ == "__main__":
     parser.add_argument("--json", "-j", action="store_true",
                         help="输出原始JSON数据")
 
+    parser.add_argument("--attribution", action="store_true", help="Opt in to channel attribution; no installation identifier")
     args = parser.parse_args()
 
-    fetcher = CouponFetcher()
+    fetcher = CouponFetcher(attribution=args.attribution)
 
     if args.json:
         # 输出原始JSON

@@ -1,22 +1,9 @@
 // Rule: precision for performance, magnitudes for cost. Customer-facing phrases never contain $N literals.
 
 export function impactMagnitude({ currentCost, impactTier }) {
-  const fraction = { high: 0.4, medium: 0.2, low: 0.1 }[impactTier] ?? 0.2;
-  const estUsd = (currentCost ?? 0) * fraction;
-
-  if (estUsd < 5) {
-    return { magnitude: 'negligible', phrase: 'small cost impact at current traffic' };
-  }
-  if (estUsd < 50) {
-    return { magnitude: 'small', phrase: 'low-tens of dollars per month at current traffic' };
-  }
-  if (estUsd < 500) {
-    return { magnitude: 'medium', phrase: 'hundreds of dollars per month at current traffic' };
-  }
-  if (estUsd < 5000) {
-    return { magnitude: 'large', phrase: 'low-thousands of dollars per month at current traffic' };
-  }
-  return { magnitude: 'very-large', phrase: 'thousands+ of dollars per month at current traffic' };
+  // Billed spend and an impact tier cannot establish a savings fraction or a monthly rate.
+  // Preserve the public shape while withholding a fabricated savings magnitude.
+  return { magnitude: 'unmeasured', phrase: 'cost savings require before-and-after measurement' };
 }
 
 // Preserves Postgres placeholders ($1, $2, …) — digits with no comma/period/k/m suffix.

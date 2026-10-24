@@ -30,7 +30,7 @@ allowed-tools: Read, Grep, Glob, Bash, WebFetch, Write
 
 ## Purpose
 
-Technical SEO forms the foundation of both traditional search visibility and AI search citation. A technically broken site cannot be crawled, indexed, or cited by any platform. This skill audits 8 categories of technical health with specific attention to GEO requirements — most critically, **server-side rendering** (AI crawlers do not execute JavaScript) and **AI crawler access** (many sites inadvertently block AI crawlers in robots.txt).
+Technical SEO forms the foundation of both traditional search visibility and AI search citation. A technically broken site cannot be crawled, indexed, or cited by any platform. This skill audits 8 categories of technical health with specific attention to GEO requirements — including content available in raw HTML and platform-specific crawler access. Rendering and retrieval capabilities vary; crawler permission alone does not ensure indexing or citation.
 
 
 ## Contents

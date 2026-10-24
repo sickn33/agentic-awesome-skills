@@ -83,8 +83,8 @@ for more info.
 
 **Note**: Use the `-P`/`--progress` flag to view real-time transfer statistics.
 
-**Note**: Use the `--dry-run` or the `--interactive`/`-i` flag to test without
-copying anything.
+**Note**: Use `--dry-run` to preview without copying. The `--interactive`/`-i`
+flag prompts before operations; confirming a prompt performs the copy.
 
 ## Logger Flags
 

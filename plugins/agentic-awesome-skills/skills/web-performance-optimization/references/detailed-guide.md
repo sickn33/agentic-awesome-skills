@@ -56,6 +56,10 @@ Measure impact of changes:
 - Test on different devices and networks
 
 
+Separate repeatable lab tests from real-user field metrics; record test conditions and use the 75th percentile field LCP/INP/CLS for Core Web Vitals assessment. Lab Lighthouse scores alone do not certify field INP. Numeric image/bundle budgets below are project examples, not universal thresholds.
+
+Caching must distinguish immutable public assets from personalized/API responses; never publicly cache secrets or authenticated user data. Test service-worker update/rollback and cache invalidation. Third-party analytics require privacy/consent review; defer is not consent.
+
 ## Best Practices
 
 ### ✅ Do This
@@ -142,7 +146,7 @@ export async function getStaticProps() {
   const data = await fetchData();
   return {
     props: { data },
-    revalidate: 60 // Regenerate every 60 seconds
+    revalidate: 60 // Pages Router: eligible for revalidation after 60s; not a timer guarantee
   };
 }
 ```
@@ -228,4 +232,4 @@ export async function getStaticProps() {
 
 ---
 
-**Pro Tip:** Focus on Core Web Vitals (LCP, INP, CLS) first - they have the biggest impact on user experience and SEO rankings!
+Prioritize observed user bottlenecks; Core Web Vitals are useful signals, not a ranking or conversion guarantee.

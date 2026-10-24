@@ -32,6 +32,8 @@ TRL is built on top of Hugging Face Transformers and Accelerate, providing seaml
 
 ## Core Commands
 
+Pin compatible TRL/Transformers/Accelerate versions and check each command’s help: flags, reward adapters and dataset schemas vary by release; the RLOO sentiment shortcut below is version-dependent, not a generic model ID. Validate data/model licenses, consent and sensitive-data handling. Start with a bounded local smoke run and agreed compute budget; reporting integrations can upload metrics or samples. Hub publication is a separate authorized action; examples intentionally omit `--push_to_hub`.
+
 ### trl sft - Supervised Fine-Tuning
 
 Fine-tune language models on instruction-following or conversational datasets.
@@ -50,8 +52,7 @@ trl sft \
   --eos_token '<|im_end|>' \
   --eval_strategy steps \
   --eval_steps 100 \
-  --output_dir Qwen2-0.5B-SFT \
-  --push_to_hub
+  --output_dir Qwen2-0.5B-SFT
 ```
 
 **Train with LoRA adapters:**
@@ -71,8 +72,7 @@ trl sft \
   --use_peft \
   --lora_r 32 \
   --lora_alpha 16 \
-  --output_dir Qwen2-0.5B-SFT \
-  --push_to_hub
+  --output_dir Qwen2-0.5B-SFT
 ```
 
 ### trl dpo - Direct Preference Optimization
@@ -127,8 +127,7 @@ trl grpo \
   --model_name_or_path Qwen/Qwen2.5-0.5B \
   --dataset_name trl-lib/gsm8k \
   --reward_funcs accuracy_reward \
-  --output_dir Qwen2-0.5B-GRPO \
-  --push_to_hub
+  --output_dir Qwen2-0.5B-GRPO
 ```
 
 ### trl rloo - Reinforce Leave One Out
@@ -142,8 +141,7 @@ trl rloo \
   --model_name_or_path Qwen/Qwen2.5-0.5B \
   --dataset_name trl-lib/tldr \
   --reward_model_name_or_path sentiment-analysis:nlptown/bert-base-multilingual-uncased-sentiment \
-  --output_dir Qwen2-0.5B-RLOO \
-  --push_to_hub
+  --output_dir Qwen2-0.5B-RLOO
 ```
 
 ### trl reward - Reward Model Training
@@ -267,7 +265,7 @@ trl sft --config sft_config.yaml --accelerate_config zero3
 - Reduce `--per_device_train_batch_size` and increase `--gradient_accumulation_steps`
 - Enable `--use_peft` for LoRA training
 - Use `--gradient_checkpointing` to save memory
-- Try smaller model or longer sequence truncation
+- Try a smaller model or a shorter maximum sequence length
 
 ### Dataset Loading Issues
 
@@ -305,7 +303,7 @@ trl sft --config sft_config.yaml --accelerate_config zero3
 
 ## Best Practices
 
-1. **Start with SFT**: Always fine-tune base models with SFT before preference alignment
+1. **Start with SFT**: Consider SFT before preference alignment when the starting model and task require it
 2. **Use LoRA for efficiency**: Enable `--use_peft` for faster training and lower memory
 3. **Monitor training**: Use `--report_to trackio` (or `--report_to wandb` or `--report_to tensorboard`) for tracking
 4. **Save checkpoints**: TRL automatically saves checkpoints in `--output_dir`

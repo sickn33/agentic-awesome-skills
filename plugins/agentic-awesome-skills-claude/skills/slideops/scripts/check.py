@@ -16,7 +16,7 @@ commits that did it, the corrected citation) so a refresh reads only the slides 
 actually drifted.
 
 Statuses:
-    CURRENT       the cited lines are byte-identical to what they were
+    CURRENT       normalized decoded text lines match the recorded hash prefix
     MOVED         the same lines still exist, at different line numbers (update data-src)
     CHANGED       the cited lines differ; the slide may now be wrong
     MISSING       the file is gone
@@ -33,6 +33,7 @@ import argparse
 import difflib
 import hashlib
 import html
+from html.parser import HTMLParser
 import json
 import re
 import subprocess
@@ -131,32 +132,35 @@ def git(repo: Path, *args: str) -> str | None:
 
 
 def find_citations(deck_html: str) -> list[Citation]:
-    """Attach each citation to the slide it sits on, using the slide-index comments."""
-    slides: list[tuple[int, int, str]] = [
-        (m.start(), int(m.group("index")), m.group("label").strip()) for m in SLIDE_COMMENT_RE.finditer(deck_html)
-    ]
+    """Parse real HTML attributes in either order; ignore commented-out examples."""
+    class CitationParser(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.index = None
+            self.label = ""
+            self.citations = []
 
-    citations: list[Citation] = []
-    for match in CITATION_RE.finditer(deck_html):
-        index, label = None, ""
-        for position, slide_index, slide_label in slides:
-            if position <= match.start():
-                index, label = slide_index, slide_label
-            else:
-                break
-        path, start, end = parse_src(match.group("src"))
-        citations.append(
-            Citation(
-                src=match.group("src"),
-                path=path,
-                start=start,
-                end=end,
-                recorded_sha=(match.group("sha") or "").lower() or None,
-                slide_index=index,
-                slide_label=label,
-            )
-        )
-    return citations
+        def handle_comment(self, data):
+            match = re.fullmatch(r"\s*(\d+):\s*(.+?)\s*", data)
+            if match:
+                self.index, self.label = int(match[1]), match[2]
+
+        def handle_starttag(self, tag, attrs):
+            values = dict(attrs)
+            src = values.get("data-src")
+            if src is None:
+                return
+            path, start, end = parse_src(src)
+            sha = values.get("data-sha256") or ""
+            sha = sha.lower() if re.fullmatch(r"[0-9a-fA-F]{12,64}", sha) else None
+            self.citations.append(Citation(src=src, path=path, start=start, end=end,
+                recorded_sha=sha, slide_index=self.index, slide_label=self.label))
+
+        handle_startendtag = handle_starttag
+
+    parser = CitationParser()
+    parser.feed(deck_html)
+    return parser.citations
 
 
 def locate_moved(current_text: str, original: list[str]) -> tuple[int, int] | None:
@@ -233,7 +237,7 @@ def check_citation(citation: Citation, repo: Path, build_commit: str | None) -> 
 
     if original is not None:
         moved_to = locate_moved(current_text, original)
-        if moved_to:
+        if moved_to and hash_lines(original) == citation.recorded_sha[:HASH_LENGTH]:
             citation.status = "MOVED"
             citation.new_range = moved_to
             citation.current_lines = original
@@ -279,6 +283,8 @@ def check_deck(deck: Path, repo: Path) -> DeckReport:
         build_commit = None
 
     report.citations = find_citations(deck_html)
+    if not report.citations:
+        report.error = "No verifiable citations found"
     for citation in report.citations:
         check_citation(citation, repo, build_commit)
     return report
@@ -290,7 +296,7 @@ def looks_like_deck(path: Path) -> bool:
         head = path.read_text(errors="replace")
     except OSError:
         return False
-    return bool(BUILD_META_RE.search(head) or CITATION_RE.search(head))
+    return bool(BUILD_META_RE.search(head) or find_citations(head))
 
 
 def collect_decks(targets: list[Path]) -> tuple[list[Path], list[str]]:
@@ -319,7 +325,7 @@ def collect_decks(targets: list[Path]) -> tuple[list[Path], list[str]]:
 
 
 def print_deck(report: DeckReport, repo: Path, quiet: bool, multi: bool) -> None:
-    shown = report.stale if quiet else report.citations
+    shown = report.stale + report.unverified if quiet else report.citations
     if quiet and not shown:
         return
 
@@ -344,7 +350,7 @@ def print_deck(report: DeckReport, repo: Path, quiet: bool, multi: bool) -> None
             print("  see references/freshness.md.")
         return
 
-    width = max(len(c.src) for c in shown)
+    width = max((len(c.src) for c in shown), default=0)
     for citation in shown:
         line = (
             f"  slide {citation.display_slide:>3}  {citation.slide_label:<14} "
@@ -501,11 +507,11 @@ def main(argv: list[str]) -> int:
             for report in reports:
                 print_suggestions(report, multi)
 
-    if any(r.error for r in reports):
+    if problems or any(r.error for r in reports):
         return 2
     if args.exit_zero:
         return 0
-    return 1 if any(r.stale for r in reports) else 0
+    return 1 if any(r.stale or r.unverified for r in reports) else 0
 
 
 if __name__ == "__main__":

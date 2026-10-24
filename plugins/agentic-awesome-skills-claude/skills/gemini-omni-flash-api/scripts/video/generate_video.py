@@ -17,6 +17,7 @@ import urllib.request
 import urllib.error
 import urllib.parse
 import uuid
+import math
 from google import genai
 
 # Load local upload helper logic inline to prevent dependency issues
@@ -103,7 +104,7 @@ def parse_and_validate_duration(value):
         except ValueError:
             raise ValueError(f"Invalid duration value: '{value}'. Must be an integer (e.g., 5, 10).")
 
-    if not val.is_integer():
+    if not math.isfinite(val) or not val.is_integer():
         raise ValueError(f"Duration must be an integer, not a float (e.g., got {value}).")
 
     val_int = int(val)
@@ -133,11 +134,11 @@ def resolve_or_upload_asset(asset_path, mime_type, api_key, strip_audio=False):
         normalized = normalize_file_uri(asset_path)
         print(f"Using existing File URI: {normalized}")
         if strip_audio:
-            print("Warning: --strip-audio was specified but the video input is an existing remote File URI. "
-                  "Audio cannot be stripped from remote files automatically.")
+            raise ValueError("--strip-audio requires a local video; remote input cannot be stripped.")
         return normalized, mime_type
 
-    if os.path.exists(asset_path):
+    asset_path = str(safe_user_path(asset_path))
+    if os.path.isfile(asset_path):
         upload_path = asset_path
         temp_stripped_path = None
 
@@ -167,8 +168,7 @@ def resolve_or_upload_asset(asset_path, mime_type, api_key, strip_audio=False):
                 print(f"Successfully stripped audio. Temporary video file created at: {temp_stripped_path}")
                 upload_path = temp_stripped_path
             except Exception as e:
-                print(f"Error stripping audio using ffmpeg: {e}", file=sys.stderr)
-                print("Falling back to uploading the original video with audio.", file=sys.stderr)
+                raise RuntimeError(f"Audio stripping failed; original video was not uploaded: {e}") from e
 
         print(f"Uploading asset '{upload_path}'...")
         file_meta = upload_file(upload_path, api_key=api_key)
@@ -196,16 +196,23 @@ def download_video_file(file_uri, output_path, api_key):
     download_url = media_download_url(file_uri)
 
     print(f"Downloading video from {file_uri} to {output_path} in chunked mode...")
+    output_path = str(safe_user_path(output_path))
+    if Path(output_path).exists():
+        raise FileExistsError(f"Refusing to overwrite output: {output_path}")
     req = urllib.request.Request(download_url)
     req.add_header("x-goog-api-key", api_key)
 
     try:
-        with urllib.request.urlopen(req, timeout=480) as resp:
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl):
+                raise RuntimeError("Refusing redirect of authenticated media download")
+        opener = urllib.request.build_opener(NoRedirect())
+        with opener.open(req, timeout=480) as resp:
             parent_dir = os.path.dirname(output_path)
             if parent_dir:
                 os.makedirs(parent_dir, exist_ok=True)
 
-            with safe_user_path(output_path).open("wb") as f:
+            with safe_user_path(output_path).open("xb") as f:
                 while True:
                     chunk = resp.read(8192)
                     if not chunk:
@@ -218,6 +225,11 @@ def download_video_file(file_uri, output_path, api_key):
 def generate_video(prompt, api_key, model="gemini-omni-flash-preview", aspect_ratio="16:9", duration=None, image_path=None, video_path=None, output_path="output.mp4", strip_audio=False, previous_interaction_id=None):
     """Creates an interaction with the video model and downloads the resulting video using the official google-genai SDK."""
     duration = parse_and_validate_duration(duration)
+    output_path = str(safe_user_path(output_path))
+    if Path(output_path).exists():
+        raise FileExistsError(f"Refusing to overwrite output: {output_path}")
+    if aspect_ratio not in {"16:9", "9:16"}:
+        raise ValueError("Unsupported aspect ratio")
     input_parts = []
 
     # 1. Resolve and add image inputs (reference/start/end frames)
@@ -325,7 +337,7 @@ def run_job(job, api_key):
     previous_interaction_id = job.get("previous_interaction_id")
 
     if not output_path:
-        output_path = f"media/output_{slugify(prompt)}.mp4"
+        output_path = f"media/output_{slugify(prompt)}_{uuid.uuid4().hex}.mp4"
 
     print(f"[Parallel] Dispatching: '{prompt}' (Output: {output_path})")
 
@@ -366,6 +378,8 @@ def main():
     parser.add_argument("--concurrency", type=int, default=3, help="Maximum number of concurrent executions (default: 3)")
 
     args = parser.parse_args()
+    if not 1 <= args.concurrency <= 16:
+        parser.error("--concurrency must be between 1 and 16")
 
     api_key = get_api_key(args)
     if not api_key:
@@ -442,6 +456,13 @@ def main():
         print("Warning: No valid jobs found to execute.")
         sys.exit(0)
 
+    if not all(isinstance(job, dict) for job in jobs):
+        parser.error("Every batch job must be an object")
+    outputs = [str(safe_user_path(job["output"])) for job in jobs if job.get("output")]
+    if len(outputs) != len(set(outputs)):
+        parser.error("Batch output paths must be distinct")
+    if any(Path(output).exists() for output in outputs):
+        parser.error("Batch output already exists; choose new paths before any API calls")
     results = []
     with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
         futures = {executor.submit(run_job, job, api_key): job for job in jobs}

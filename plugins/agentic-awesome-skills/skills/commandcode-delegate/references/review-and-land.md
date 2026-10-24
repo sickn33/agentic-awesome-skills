@@ -6,7 +6,7 @@ against reality, never against the self-report — and read the diff as generate
 ways a green gate can't see.**
 
 One thing to add to the usual routine here: the run had no sandbox. An implementation dispatch goes out
-under `--yolo`, so "did it stay inside the brief's paths?" is a question you answer from `touchedFiles`,
+under `--yolo`, so "did it stay inside the brief's paths?" is a question requiring more than `touchedFiles`,
 not one the tooling answered for you.
 
 ## Check the tests before trusting the gates
@@ -55,7 +55,7 @@ for:
   anticipate. Don't just accept it because it looks reasonable; understand it and decide.
 - **A commit it made itself** — the brief forbids it, but nothing enforced that. Compare `HEAD` with
   the pre-dispatch baseline, then inspect status, staged and unstaged diffs, and the intervening log.
-  If the whole range belongs to the run, `git reset --soft <recorded-baseline>` and review it as a diff.
+  Review the full baseline-to-HEAD range directly and preserve a recovery ref before any optional soft reset on an isolated unshared branch. Never uncommit unrelated/shared history.
 
 ## The implementer sweep
 
@@ -75,7 +75,7 @@ a diff whose tests are all green. Walk them against every diff before you commit
 - **A second way to do what the file already does** — a new HTTP client, error idiom, or logging style
   introduced beside the existing one instead of reusing it.
 - **New tests that assert internals** — asserting that an internal helper was called, or mocking the
-  project's own functions to isolate a "unit." Green, brittle, and worthless as regression cover.
+  project's own functions to isolate a "unit." Assess whether the mock tests a real external boundary or only mirrors internals; prefer observable behavior for regression coverage.
 - **Near-duplicate test bodies** differing by one value — fold into one data-driven test or drop the
   copies; bloat reads as coverage but isn't.
 - **Speculative surface** — optional parameters, config flags, or abstractions with no caller in this

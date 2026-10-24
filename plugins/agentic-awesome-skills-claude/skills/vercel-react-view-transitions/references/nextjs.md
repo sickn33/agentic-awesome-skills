@@ -2,6 +2,8 @@
 
 ## Setup
 
+Version-specific upstream patterns follow; verify the exact Next.js flag and Link prop against the installed release. A grep hit in internal code is not proof of supported public behavior. Keep hooks at component/custom-hook top level and preserve browser history, keyboard focus and scroll behavior.
+
 `<ViewTransition>` works out of the box for `startTransition`/`Suspense` updates. To also animate `<Link>` navigations:
 
 ```js
@@ -62,12 +64,12 @@ Replaces the manual pattern of `onNavigate` + `startTransition` + `addTransition
 import { useRouter } from 'next/navigation';
 import { startTransition, addTransitionType } from 'react';
 
-function handleNavigate(href: string) {
+function NavigateButton({ href }: { href: string }) {
   const router = useRouter();
-  startTransition(() => {
+  return <button onClick={() => startTransition(() => {
     addTransitionType('nav-forward');
     router.push(href);
-  });
+  })}>Open</button>;
 }
 ```
 
@@ -83,11 +85,11 @@ For search/sort/filter that re-renders on the server (via URL params), use `star
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
 
-function handleSort(sort: string) {
+function SortButton({ sort }: { sort: string }) {
   const router = useRouter();
-  startTransition(() => {
-    router.replace(`?sort=${sort}`);
-  });
+  return <button onClick={() => startTransition(() => {
+    router.replace(`?sort=${encodeURIComponent(sort)}`);
+  })}>Sort</button>;
 }
 ```
 

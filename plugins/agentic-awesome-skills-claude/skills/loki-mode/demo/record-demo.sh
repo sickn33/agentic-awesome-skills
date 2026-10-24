@@ -7,6 +7,10 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DEMO_TYPE="${1:-simple-todo}"
+case "$DEMO_TYPE" in
+    simple-todo|full-stack) ;;
+    *) echo "Unsupported demo type" >&2; exit 2 ;;
+esac
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 
 # Ensure recordings directory exists
@@ -45,9 +49,9 @@ echo "Press Enter to start recording..."
 read -r
 
 # Record the demo
-$ASCIINEMA_PATH rec \
+"$ASCIINEMA_PATH" rec \
     --title "Loki Mode Demo - $DEMO_TYPE" \
-    --command "$SCRIPT_DIR/run-demo.sh $DEMO_TYPE" \
+    --command "bash $(printf '%q' "$SCRIPT_DIR/run-demo.sh") $(printf '%q' "$DEMO_TYPE")" \
     --idle-time-limit 3 \
     "$OUTPUT_FILE"
 

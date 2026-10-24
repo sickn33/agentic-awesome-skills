@@ -181,7 +181,7 @@ Every summary follows this comprehensive structure:
 
 - **Python 3.x** (usually pre-installed on macOS/Linux)
 - **pip** (Python package manager)
-- **[youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api)** by [Julien Depoix](https://github.com/jdepoix) (installed automatically by the skill)
+- **[youtube-transcript-api](https://github.com/jdepoix/youtube-transcript-api)** by [Julien Depoix](https://github.com/jdepoix) (installed only when authorized, in a project virtual environment)
 
 ### Manual Installation (Optional)
 
@@ -214,7 +214,7 @@ The skill recognizes these YouTube URL formats:
 
 ### Videos That Don't Work
 
-❌ Private or unlisted videos  
+❌ Private videos; unlisted videos may work when the user supplies an accessible URL  
 ❌ Videos with transcripts disabled  
 ❌ Age-restricted videos (may require authentication)  
 ❌ Videos without any captions/subtitles
@@ -284,7 +284,7 @@ Possible reasons:
 
 ### Q: Does this download the video?
 
-**A:** No. Only the text transcript is extracted via YouTube's API. No video files are downloaded.
+**A:** No. Only text captions are fetched using an unofficial library; access can fail or change. No video files are downloaded.
 
 ### Q: Can I save the summary to a file?
 

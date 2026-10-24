@@ -13,4 +13,4 @@ Never claim the workbook has automation, integrations or live synchronisation. I
 none, and this skill creates no `.xlsx` by writing to any external system.
 
 
-See the [Common Pitfalls](references/common-pitfalls.md) reference for the full guidance.
+See the [Common Pitfalls](common-pitfalls.md) reference for the full guidance.

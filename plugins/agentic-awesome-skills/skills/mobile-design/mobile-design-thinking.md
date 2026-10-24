@@ -8,7 +8,7 @@
 
 ## 🧠 DEEP MOBILE THINKING PROTOCOL
 
-### This Process is Mandatory Before Every Mobile Project
+### Use this outline for a new or substantially changed mobile flow
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -185,7 +185,7 @@ Ask these questions for every default pattern:
 │    → If YES: Step back, do decomposition.                       │
 │                                                                 │
 │  □ Did I consider an alternative approach?                      │
-│    → If NO: Think of at least 2 alternatives, then decide.      │
+│    → If NO: Compare alternatives only when the choice is material or uncertain.      │
 │                                                                 │
 │  □ Did I think platform-specifically?                           │
 │    → If NO: Analyze iOS and Android separately.                 │
@@ -333,7 +333,7 @@ Platform: iOS / Android / Both
 
 ---
 
-## 🚨 MANDATORY: Before Every Mobile Work
+## Task-scoped review before implementation
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -347,7 +347,7 @@ Platform: iOS / Android / Both
 │  □ Did I analyze Interaction Breakdown?                         │
 │  □ Did I fill the Mobile Design Commitment?                     │
 │                                                                 │
-│  ⚠️ Do not write code without completing these!                 │
+│  ⚠️ Use only checks relevant to the change; reuse established project context.                 │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```

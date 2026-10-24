@@ -51,7 +51,7 @@ Content-Security-Policy: frame-ancestors 'none'     # CSP equivalent of DENY
 Content-Security-Policy: frame-ancestors 'self'     # CSP equivalent of SAMEORIGIN
 ```
 
-If NEITHER is present, the page is frameable from any origin.
+If neither effective framing policy is present, investigate actual framing behavior; other controls may still prevent an actionable attack.
 
 ## How to Test
 
@@ -62,7 +62,7 @@ Header-absence is the **trigger for investigation, not the finding**. Two steps:
 ```
 curl -sI https://target.example/account/transfer | grep -iE 'x-frame-options|content-security-policy'
 ```
-If BOTH `X-Frame-Options` and CSP `frame-ancestors` are absent, the page is a *candidate*. If either is present and restrictive (`DENY`/`SAMEORIGIN`/`frame-ancestors 'none'|'self'`), stop — it's protected.
+If BOTH `X-Frame-Options` and CSP `frame-ancestors` are absent, the page is a *candidate*. If either appears restrictive, verify the effective enforced policy in the target browser before concluding protection. An enforced frame-ancestors policy takes precedence over X-Frame-Options in supporting browsers; report-only policies and meta tags do not provide the same protection.
 
 **Step 2 — Prove it actually frames and clicks (required for a real finding).** Build a minimal PoC and load it in a real browser:
 

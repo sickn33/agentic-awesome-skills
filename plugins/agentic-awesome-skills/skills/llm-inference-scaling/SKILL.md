@@ -195,7 +195,7 @@ metadata:
   name: cluster-autoscaler-priority-config
 data:
   priorities: |
-    10:  # low priority = prefer
+    10:  # lower priority; higher numeric priority is preferred
     - .*spot.*
     50:
     - .*on-demand.*
@@ -267,7 +267,7 @@ histogram_quantile(0.99, rate(vllm:time_to_first_token_seconds_bucket[5m]))
 
 - Set `minReplicaCount: 1` to avoid cold starts; scale to 0 only for batch jobs.
 - Use `PodDisruptionBudget` with `minAvailable: 1` to survive spot evictions.
-- Pre-pull model weights into a shared PVC to speed up pod startup by 5–10×.
+- Pre-pull model weights into a shared PVC to potentially reduce model download time; measure startup on the actual cluster.
 - Separate model families across node pools (A10G for 7B, A100 for 70B).
 - Use Kubernetes VPA for CPU/memory right-sizing alongside KEDA for replica count.
 
@@ -284,3 +284,4 @@ histogram_quantile(0.99, rate(vllm:time_to_first_token_seconds_bucket[5m]))
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+PodDisruptionBudgets constrain voluntary disruptions, not spot preemption or node failure. GPU workers need explicit `nvidia.com/gpu` resource requests/limits and a compatible device plugin; a ScaledJob example without them is incomplete. Aggregate classic Prometheus histogram buckets with `sum by (le)` before `histogram_quantile`. Pin reviewed images, validate metric labels/scaler schemas and bound cost before autoscaling.

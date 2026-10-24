@@ -1,3 +1,5 @@
+> Review contract: follow the current SKILL.md authority and budget rules. Recipes below are illustrative; use a private run directory, quote paths, do not change global permissions, and use only authorized tools/parallelism. Unknown evidence stays unknown (never false); snippets and synthetic named-vendor examples are not verified facts. Do not publish, contact anyone or infer approval from silence. Dates must be observed, not invented from a year in a URL.
+
 # Example Competitor Research File
 
 ## Contents

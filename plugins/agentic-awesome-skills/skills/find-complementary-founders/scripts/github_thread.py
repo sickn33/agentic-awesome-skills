@@ -13,7 +13,16 @@ import re
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+def urlopen(request, timeout):
+    return build_opener(NoRedirect()).open(request, timeout=timeout)
+
 
 REPOSITORY = "merc1305/findMate"
 ISSUE_NUMBER = 2
@@ -175,6 +184,15 @@ def validate_draft(draft: dict, supplied_hash: str) -> dict:
         raise GitHubThreadError("Draft approval_hash does not match its payload")
     if not hmac.compare_digest(supplied_hash, expected):
         raise GitHubThreadError("Supplied approval hash does not match the draft")
+    inline, error = extract_inline_profile(body)
+    if error: raise GitHubThreadError("Invalid inline profile")
+    if inline is not None:
+        try: PROFILE_VALIDATOR.validate_profile(inline)
+        except PROFILE_VALIDATOR.ValidationError as exc: raise GitHubThreadError(str(exc)) from exc
+    expiry = EXPIRY_PATTERN.findall(body)
+    if len(expiry) != 1: raise GitHubThreadError("Profile expiry required")
+    from datetime import date, datetime, timezone
+    if date.fromisoformat(expiry[0]) < datetime.now(timezone.utc).date(): raise GitHubThreadError("Profile draft has expired")
     return payload
 
 
@@ -210,7 +228,7 @@ def github_request(
             value = json.loads(raw.decode("utf-8"))
             return value, dict(response.headers.items())
     except HTTPError as exc:
-        detail = exc.read(400).decode("utf-8", errors="replace")
+        detail = "response body omitted"
         raise GitHubThreadError(
             f"GitHub returned HTTP {exc.code}: {detail}"
         ) from exc
@@ -356,6 +374,7 @@ def read_thread(token: str | None) -> dict:
         "issue_number": ISSUE_NUMBER,
         "issue_url": f"https://github.com/{REPOSITORY}/issues/{ISSUE_NUMBER}",
         "total_comments_read": len(comments),
+        "possibly_truncated": len(comments) >= MAX_PAGES * 100,
         "marked_owner_profile_comments": len(marked),
         "syntactically_eligible_comments": sum(
             1 for item in marked if item["syntactically_eligible"]

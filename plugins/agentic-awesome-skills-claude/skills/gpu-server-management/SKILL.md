@@ -39,9 +39,9 @@ Use this skill when:
 ## Driver Installation (Ubuntu)
 
 ```bash
-# Remove old drivers
-sudo apt purge -y 'nvidia*' 'cuda*' 'libcuda*'
-sudo apt autoremove -y
+# Inspect the installed driver/CUDA stack and running workloads first.
+# Driver removal requires an approved maintenance window and recovery plan;
+# do not purge the existing GPU stack as a default installation step.
 
 # Add NVIDIA package repository
 distribution=$(. /etc/os-release; echo $ID$VERSION_ID)
@@ -54,7 +54,8 @@ curl -s -L https://nvidia.github.io/libnvidia-container/$distribution/libnvidia-
 
 sudo apt update
 
-# Install latest driver (560.x as of 2025)
+# Historical version example only: select a reviewed driver/CUDA pair from the
+# current compatibility matrix for this exact OS/GPU before installation.
 sudo apt install -y nvidia-driver-560 cuda-toolkit-12-6
 
 # Install NVIDIA Container Toolkit (Docker GPU support)
@@ -77,8 +78,8 @@ sudo nvidia-smi -pm 1
 # Set power limit (reduce heat/noise on inference servers)
 sudo nvidia-smi -pl 350          # watts; check TDP for your GPU model
 
-# Disable ECC on inference servers (frees ~6% VRAM, less safe)
-sudo nvidia-smi --ecc-config=0   # requires reboot
+# Preserve ECC by default; changes require a workload-specific integrity
+# assessment and approved maintenance window.
 
 # Enable P2P for multi-GPU NVLink training
 sudo nvidia-smi topo -m          # check NVLink topology
@@ -146,8 +147,8 @@ nvidia-smi mig -lgip
 # 3g.40gb   — 3 slices, 40GB (max 2 instances)
 # 7g.80gb   — full GPU, 80GB (max 1 instance)
 
-# Create MIG instances (e.g., 3× 2g.20gb + 1× 2g.20gb = multi-tenant)
-sudo nvidia-smi mig -cgi 2g.20gb,2g.20gb,2g.20gb,2g.20gb -C
+# Example only if this exact GPU reports the profile and placement as valid:
+sudo nvidia-smi mig -cgi 2g.20gb,2g.20gb,2g.20gb -C
 
 # List created instances
 nvidia-smi mig -lgi
@@ -173,15 +174,9 @@ echo '* hard nofile 1048576' | sudo tee -a /etc/security/limits.conf
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/defrag
 
-# Persist via rc.local or systemd unit:
-cat <<'EOF' | sudo tee /etc/rc.local
-#!/bin/bash
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-echo never > /sys/kernel/mm/transparent_hugepage/defrag
-nvidia-smi -pm 1
-exit 0
-EOF
-sudo chmod +x /etc/rc.local
+# Persistence: prepare a dedicated reviewed systemd unit/drop-in, preserving
+# existing boot configuration. Do not overwrite /etc/rc.local.
+# Validate on the actual kernel/workload and retain a rollback plan.
 
 # PCIe performance mode
 sudo nvidia-smi --auto-boost-default=0
@@ -194,8 +189,7 @@ sudo nvidia-smi --auto-boost-permission=0
 # Check NVLink and PCIe topology
 nvidia-smi topo -m
 # Output shows interconnect type:
-# NV4 = NVLink 4.0 (H100 SXM)
-# NV2 = NVLink 2.0 (A100 SXM)
+# NV# denotes the number of bonded NVLinks, not the NVLink generation.
 # PHB = PCIe bus (slower; avoid for tensor parallel training)
 # PIX = same PCIe switch (fast)
 
@@ -234,3 +228,4 @@ nvidia-smi topo -m
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+Power/clock/THP and MIG changes can interrupt active jobs; inspect exact device IDs, supported profiles and workloads first, then apply only the approved settings. `nvidia-smi topo -m` observes topology and does not enable P2P. Review and pin repository keys/packages/container digests before privileged installation; the historical package URLs/versions are not a current compatibility guarantee. See the [NVIDIA MIG profiles](https://docs.nvidia.com/datacenter/tesla/mig-user-guide/supported-mig-profiles.html).

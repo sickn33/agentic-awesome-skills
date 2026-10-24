@@ -1,7 +1,7 @@
 ---
 title: Dependency-Based Parallelization
 impact: CRITICAL
-impactDescription: 2-10× improvement
+impactDescription: workload-dependent parallel latency reduction
 tags: async, parallelization, dependencies, better-all
 ---
 
@@ -34,3 +34,5 @@ const { user, config, profile } = await all({
 ```
 
 Reference: [https://github.com/shuding/better-all](https://github.com/shuding/better-all)
+
+Choose a reviewed dependency version compatible with the application; native Promise chains can express the same graph. Preserve authorization prerequisites and handle rejection of every started branch.

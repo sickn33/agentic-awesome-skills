@@ -44,7 +44,7 @@ Pest equivalent: `it('normalizes slug', ...)->with([...])`.
 - **Integration tests** (`WP_UnitTestCase` / `wp-env` / `wp-cli scaffold`): use the real WordPress test framework with factories — `self::factory()->post->create()`, `self::factory()->user->create()`. Don't mock `WP_Post` or `WP_User`; the factories exist precisely so you don't have to (Rule 8).
 - **Unit tests without WordPress loaded** (Brain Monkey / WP_Mock): mocking WordPress functions like `get_option()` or `apply_filters()` is a boundary mock and justified. But assert what *your code does* with the values, not that `get_option` was called with specific args (Rule 1).
 - Mock outbound HTTP with the `pre_http_request` filter rather than patching `wp_remote_get` internals.
-- Don't test that WordPress sanitizes, escapes, or that hooks fire — that's core's guarantee (Rule 7). Test your callback's behavior given an input.
+- Test that your integration applies the correct sanitization/escaping/capability checks in the right context and hooks. Avoid retesting the core primitive in isolation.
 
 ## WooCommerce notes
 
@@ -53,4 +53,4 @@ Pest equivalent: `it('normalizes slug', ...)->with([...])`.
 
 ## Rule 9: Real database
 
-`WP_UnitTestCase` already wraps each test in a transaction against a real schema — use it for query, meta, and persistence logic instead of mocking `$wpdb`. Mocking `$wpdb->prepare` or `$wpdb->get_results` to test a query builder tests nothing.
+`WP_UnitTestCase` provides real WordPress integration fixtures/cleanup; verify the actual harness and database isolation guarantees rather than assuming every change rolls back transactionally. Use it for query, meta, and persistence logic instead of mocking `$wpdb`. Mocking `$wpdb->prepare` or `$wpdb->get_results` to test a query builder tests nothing.

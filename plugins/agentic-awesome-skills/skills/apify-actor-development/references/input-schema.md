@@ -10,7 +10,7 @@ The input schema defines the input parameters for an Actor. It's a JSON object c
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        /* define input fields here */
+
     },
     "required": []
 }

@@ -27,6 +27,8 @@ export const pricingAgent = new Agent({
 
 ## 2. Wire observability to Mastra Studio
 
+Traces can disclose prompts, tool inputs, generated content and identifiers to a separate provider. Review collection, redaction, retention and authorization before enabling export.
+
 The `MastraPlatformExporter` (from `@mastra/observability`) sends traces to a Mastra Studio project. It reads `MASTRA_PLATFORM_ACCESS_TOKEN` and `MASTRA_PROJECT_ID` from the environment.
 
 Gotcha: `Observability` requires **at least one exporter** — passing an empty `exporters` array throws `OBSERVABILITY_INVALID_INSTANCE_CONFIG`. So omit the `observability` option entirely until the platform creds are present, keeping the app runnable before the Mastra project exists (and in local dev).
@@ -59,7 +61,7 @@ Agents must be **registered on the `Mastra` instance** (the `agents` map) for th
 
 ## 3. Structured output through the gateway
 
-The gateway does not enforce **native** structured output, so a bare `structuredOutput: { schema }` can come back missing fields (e.g. a nested `meta` object), failing Zod validation. Set `jsonPromptInjection: true` so Mastra injects the schema into the prompt and the model returns the full shape:
+The gateway does not enforce **native** structured output, so a bare `structuredOutput: { schema }` can come back missing fields (e.g. a nested `meta` object), failing Zod validation. Set `jsonPromptInjection: true` so Mastra injects the schema into the prompt to request the shape; this is not a guarantee. Validate output and handle schema failures:
 
 ```typescript
 const agent = mastra.getAgent("pricingAgent");
@@ -74,7 +76,7 @@ For resilience, register a second agent on a different model (e.g. `neon/claude-
 
 ## 4. Create the Mastra project + token with the CLI
 
-Install the Mastra CLI (`npm i -g mastra`) and authenticate. Project/token creation needs a **live login session**:
+Use a project-reviewed pinned Mastra CLI and authenticate. Project/token creation needs a **live login session**:
 
 ```bash
 mastra auth login        # opens a browser; required before the steps below
@@ -82,7 +84,7 @@ mastra auth whoami       # shows your user + org id (org_…)
 ```
 
 - **Access token (non-interactive):** `mastra auth tokens create <name>` prints a one-time secret (`sk_…`). This is your `MASTRA_PLATFORM_ACCESS_TOKEN`.
-- **Project:** the interactive `mastra studio projects create` TUI is hard to script. Instead, register the project as part of a Studio deploy, which is non-interactive with `-y` and writes the project id to `.mastra-project.json`:
+- **Project:** the interactive `mastra studio projects create` TUI is hard to script. If publishing a separate Mastra deployment is explicitly intended, register the project as part of a Studio deploy, which is non-interactive with `-y` and writes the project id to `.mastra-project.json`:
 
 ```bash
 mastra studio deploy --org org_xxx --project my-app -y

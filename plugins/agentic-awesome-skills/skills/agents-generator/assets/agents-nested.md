@@ -44,7 +44,7 @@ The root package manager: `pnpm`, `bun`, `npm`, `yarn`.
 
 - Monorepo with turborepo: `npx turbo run build --filter={{PACKAGE_NAME}}`
 - Monorepo with pnpm: `pnpm --filter {{PACKAGE_NAME}} build`
-- If no build script in sub-package: omit or say "`cd {{PACKAGE_RELATIVE_PATH}} && {{PM}} run build`"
+- If no build script in sub-package: omit; do not invent a build command.
 
 ### `{{DEV_COMMAND}}`
 

@@ -1,6 +1,9 @@
 # Schema do Banco SQLite — instagram.db
 
-Localização: `C:\Users\renat\skills\instagram\data\instagram.db`
+> Historical reference, not current Meta documentation. This bundle implements Facebook Login with a linked Page for both Business and Creator accounts. Verify the selected API version, permissions, media types, metrics, quotas and app-review requirements before use. Local scripts and their documented limitations take precedence over examples below.
+
+
+Localização: diretório externo definido por `AAS_INSTAGRAM_DATA_DIR` ou `config.py`; tokens/app secrets ficam em plaintext, com permissões locais privadas.
 Modo: WAL (Write-Ahead Logging) com foreign keys habilitadas.
 
 ## Diagrama ER
@@ -94,7 +97,7 @@ Modo: WAL (Write-Ahead Logging) com foreign keys habilitadas.
 ## Tabelas Detalhadas
 
 ### accounts
-Armazena contas Instagram configuradas. Multi-conta pronta desde o dia 1.
+Armazena contas Instagram configuradas. Múltiplas linhas são armazenadas, mas CLIs escolhem a primeira conta ativa; não é uma camada de isolamento multi-tenant.
 
 | Campo | Tipo | Constraint | Descrição |
 |-------|------|------------|-----------|
@@ -132,7 +135,7 @@ Pipeline de conteúdo com status machine.
 | error_msg | TEXT | | Mensagem de erro se failed |
 | created_at | TEXT | DEFAULT now | Timestamp de criação |
 
-**Índices:** `idx_posts_status`, `idx_posts_account`, `idx_posts_ig_media`
+**Índices:** `idx_posts_status`, `idx_posts_account`, `idx_posts_scheduled`
 
 ### comments
 Comentários dos posts, com tracking de respostas.
@@ -216,7 +219,7 @@ Audit log de todas as ações que modificam dados.
 | rate_remaining | TEXT | | JSON com rate limits restantes |
 | created_at | TEXT | DEFAULT now | Timestamp da ação |
 
-**Índice:** `idx_action_log_created`
+**Índice:** `idx_action_log_time`
 
 ## Queries Comuns
 

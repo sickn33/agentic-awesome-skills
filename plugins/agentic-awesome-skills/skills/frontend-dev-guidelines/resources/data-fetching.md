@@ -371,7 +371,7 @@ const updateMutation = useMutation({
 
     // Rollback on error
     onError: (err, newData, context) => {
-        queryClient.setQueryData(['entity', id], context.previousData);
+        queryClient.setQueryData(['entity', id], context?.previousData);
         showError('Update failed');
     },
 
@@ -464,24 +464,9 @@ import apiClient from '@/lib/apiClient';
 
 ## Error Handling in Queries
 
-### onError Callback
+### Query errors in TanStack Query v5
 
-```typescript
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
-
-const { showError } = useMuiSnackbar();
-
-const { data } = useSuspenseQuery({
-    queryKey: ['entity', id],
-    queryFn: () => myFeatureApi.getEntity(id),
-
-    // Handle errors
-    onError: (error) => {
-        showError('Failed to load entity');
-        console.error('Load error:', error);
-    },
-});
-```
+useQuery/useSuspenseQuery do not accept per-query onError callbacks in v5. Use QueryCache callbacks or an error boundary with QueryErrorResetBoundary for retries. Mutation onError callbacks remain supported.
 
 ### Error Boundaries
 
@@ -721,7 +706,7 @@ const queryClient = new QueryClient({
             staleTime: 1000 * 60 * 5,        // 5 minutes
             gcTime: 1000 * 60 * 10,           // 10 minutes (was cacheTime)
             refetchOnWindowFocus: false,       // Don't refetch on focus
-            refetchOnMount: false,             // Don't refetch on mount if fresh
+            refetchOnMount: false,             // Disable refetch on mount even when stale; choose deliberately
             retry: 1,                          // Retry failed queries once
         },
     },
@@ -764,4 +749,7 @@ useSuspenseQuery({
 **See Also:**
 - [component-patterns.md](component-patterns.md) - Suspense integration
 - [loading-and-error-states.md](loading-and-error-states.md) - SuspenseLoader usage
-- [complete-examples.md](complete-examples.md) - Full working examples
+- [complete-examples.md](complete-examples.md) - Illustrative application excerpts
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

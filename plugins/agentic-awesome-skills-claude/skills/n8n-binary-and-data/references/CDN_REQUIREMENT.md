@@ -30,7 +30,7 @@ Some surfaces accept bytes directly through a platform file API instead of a URL
 
 A place that serves the image over a fetchable URL. Ask what they already have, but lead with a recommendation:
 
-1. **A real object store / CDN (recommended).** Cloudflare R2, AWS S3 (+ CloudFront), Google Cloud Storage, Azure Blob, Backblaze B2, Vercel Blob, Supabase Storage, Bunny CDN. Direct URL embedding works once the object is public, edge caching keeps latency low, and signed-URL flows are first-class. Cloudflare R2 is the lowest-friction starting point if they have nothing — a few minutes to set up, generous free tier, no egress fees.
+1. **A real object store / CDN (recommended).** Cloudflare R2, AWS S3 (+ CloudFront), Google Cloud Storage, Azure Blob, Backblaze B2, Vercel Blob, Supabase Storage, Bunny CDN. Direct URL embedding works once the object is public, edge caching keeps latency low, and signed-URL flows are first-class. Compare providers against actual access, retention, region and current pricing requirements.
 2. **Drive-style services (fallback).** Dropbox, Google Drive, OneDrive, Box can produce shareable links, but the URL shape and whether it renders as an `<img src>` varies, and some need the share link converted to a direct-download URL first. Confirm the service can serve an inline-renderable URL before committing to it.
 3. **Self-hosted.** The user serves from their own domain. Fine if it already exists; don't propose standing one up just for this.
 
@@ -62,7 +62,7 @@ Concretely, uploading to an S3-compatible store (R2 here) via the HTTP Request n
 [Send to chat surface: imageUrl embedded — markdown, Block Kit image block, adaptive card, etc.]
 ```
 
-Upload mechanics vary by provider; most expose S3-compatible APIs usable through n8n's S3 node or HTTP Request with AWS auth. Confirm the upload node's field names (`contentType`, `binaryPropertyName`) with `get_node`, and **error-branch the upload** so a failed write surfaces instead of producing a reply that references a URL that was never written — see **n8n-error-handling**. The exact reply shape per platform is surface-specific (see `AGENT_TOOL_BINARY.md`).
+Upload mechanics vary by provider; some expose S3-compatible APIs usable through n8n's S3 node or HTTP Request with AWS auth. Confirm the upload node's field names (`contentType`, `binaryPropertyName`) with `get_node`, and **error-branch the upload** so a failed write surfaces instead of producing a reply that references a URL that was never written — see **n8n-error-handling**. The exact reply shape per platform is surface-specific (see `AGENT_TOOL_BINARY.md`).
 
 ---
 
@@ -83,7 +83,7 @@ There is no fallback that hides this — n8n won't host the file. If the user ha
 | **Public** | Anyone with the URL can fetch it; simplest | Non-sensitive content (already-public assets) |
 | **Signed, with expiry** | Per-request URL that expires (e.g. 1 hour) | Sensitive or user-specific content |
 
-For internal chat with scoped channels, public is usually fine — the URL only lives inside messages a known set of users sees. For compliance-sensitive content, default to signed URLs with a short expiry. A permanently public, unguessable-but-non-expiring URL is a slow leak for anything private.
+A restricted chat channel does not restrict a public storage URL. Keep private content private; chat membership is not storage authorization. For compliance-sensitive content, default to signed URLs with a short expiry. A permanently public, unguessable-but-non-expiring URL is a slow leak for anything private.
 
 ---
 

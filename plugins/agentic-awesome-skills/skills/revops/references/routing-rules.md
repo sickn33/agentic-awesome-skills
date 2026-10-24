@@ -33,6 +33,8 @@ Customize this tree for your business. The key principle: **route to the most sp
 
 ---
 
+> Product UI and subscription capabilities vary. These are architecture sketches, not verified current click paths. Prevent concurrent assignment races, keep existing owner precedence, and resolve retries idempotently.
+
 ## Round-Robin Configuration
 
 ### Basic Round-Robin Rules
@@ -53,7 +55,7 @@ Customize this tree for your business. The key principle: **route to the most sp
 - Add delay + task creation after assignment
 
 **Custom rotation with workflows:**
-1. Create a custom property "Rotation Counter" (number)
+1. Use a shared atomic assignment counter/queue, not a per-contact counter (which restarts for every new lead)
 2. Workflow trigger: New MQL created
 3. Branch by rotation counter value (0, 1, 2... for each rep)
 4. Set contact owner to corresponding rep
@@ -157,18 +159,9 @@ When multiple contacts from the same account engage:
 
 ## Speed-to-Lead Data
 
-### Response Time Impact on Conversion
+### Response Time Impact
 
-| Response Time | Relative Qualification Rate | Notes |
-|---------------|---------------------------|-------|
-| Under 5 minutes | **21x** more likely to qualify | Gold standard |
-| 5-10 minutes | 10x more likely | Still strong |
-| 10-30 minutes | 4x more likely | Acceptable for most |
-| 30 min - 1 hour | 2x more likely | Below best practice |
-| 1-24 hours | Baseline | Industry average |
-| 24+ hours | 60% lower than baseline | Lead is effectively cold |
-
-Source: Lead Connect, InsideSales.com
+Measure qualification and conversion by response-time cohort, channel and business hours. Historical vendor multipliers are not a transferable benchmark or causal proof. Choose SLAs based on coverage and local results.
 
 ### Implementing Speed-to-Lead
 

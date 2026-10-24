@@ -62,8 +62,8 @@ def send_test(to: str, message: str) -> None:
         "text": {"body": message},
     }
 
-    print(f"Sending message to: {to}")
-    print(f"Message: {message}")
+    print("Sending authorized test message (recipient/content omitted)")
+
     print()
 
     try:
@@ -88,13 +88,8 @@ def send_test(to: str, message: str) -> None:
             error = data.get("error", {})
             print(f"Error sending message:")
             print(f"  Code: {error.get('code', '?')}")
-            print(f"  Message: {error.get('message', 'Unknown error')}")
-            if error.get("error_data"):
-                print(f"  Details: {error['error_data'].get('details', '')}")
-
-        print()
-        print("Full response:")
-        print(json.dumps(_redact_json(data), indent=2))
+            print("  Error details omitted to protect sensitive data")
+            sys.exit(1)
 
     except httpx.ConnectError:
         print("Error: Connection failed. Check your internet connection.")
@@ -125,7 +120,11 @@ def main():
         help="Path to .env file (default: .env)",
     )
 
+    parser.add_argument("--send", action="store_true", help="Actually send to this exact authorized recipient; default is local preview")
     args = parser.parse_args()
+    if not args.send:
+        print("Local preview only; add --send after authorizing recipient/content and checking consent/window.")
+        return
 
     # Load environment
     if load_dotenv:

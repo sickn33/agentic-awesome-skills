@@ -76,7 +76,7 @@ For re-attaching binary, you want position-based combination:
 | `combineAll` | Cartesian product (N×M items) | ❌ No — explodes the item count |
 | `append` | Concatenates inputs end to end | ❌ No — doesn't pair items |
 
-`combineByPosition` is the right default: it keeps the item count at N and pairs each transformed JSON item with its corresponding binary-bearing original. For this to work, both branches must emit items in the same order and count — which they do when they share a single source.
+`combineByPosition` is the right default: it keeps the item count at N and pairs each transformed JSON item with its corresponding binary-bearing original. For this to work, both branches must emit items in the same order and count — sharing a source alone does not guarantee this after filtering, sorting or retries. Prefer a stable session/item key when either can change.
 
 ---
 

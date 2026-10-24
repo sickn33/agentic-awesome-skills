@@ -11,7 +11,7 @@ Distributed task queue system, dead letter handling, and circuit breakers.
   "id": "uuid",
   "idempotencyKey": "hash-of-task-content",
   "type": "eng-backend|eng-frontend|ops-devops|...",
-  "priority": 1-10,
+  "priority": 5,
   "dependencies": ["task-id-1", "task-id-2"],
   "payload": {
     "action": "implement|test|deploy|...",
@@ -37,7 +37,7 @@ Distributed task queue system, dead letter handling, and circuit breakers.
   "result": {
     "status": "success|failed",
     "output": "What was produced",
-    "decisionReport": { ... }
+    "decisionReport": {}
   }
 }
 ```
@@ -73,6 +73,8 @@ def claim_task(agent_id, agent_capabilities):
             if task.type not in agent_capabilities:
                 continue
             if task.claimedBy and not claim_expired(task):
+                continue
+            if task.availableAt and task.availableAt > now():
                 continue
             if not all_dependencies_completed(task.dependencies):
                 continue
@@ -148,7 +150,7 @@ def handle_failure(task):
         alert_orchestrator(f"Task {task.id} moved to dead letter queue")
     else:
         # Exponential backoff: 60s, 120s, 240s, ...
-        task.backoffSeconds = task.backoffSeconds * (2 ** (task.retries - 1))
+        task.backoffSeconds = min(60 * (2 ** (task.retries - 1)), 3600)
         task.availableAt = now() + task.backoffSeconds
         move_task(task, "in-progress", "pending")
         log(f"Task {task.id} retry {task.retries}, backoff {task.backoffSeconds}s")
@@ -180,7 +182,9 @@ Tasks in dead letter queue require manual review:
 ```python
 def enqueue_task(task):
     # Generate idempotency key from content
-    task.idempotencyKey = hash(json.dumps(task.payload, sort_keys=True))
+    task.idempotencyKey = hashlib.sha256(
+        json.dumps(task.payload, sort_keys=True).encode("utf-8")
+    ).hexdigest()
 
     # Check if already exists
     for queue in ["pending", "in-progress", "completed"]:
@@ -210,7 +214,7 @@ def cancel_task(task_id, reason):
 
                 # Cancel dependent tasks too
                 for dep_task in find_tasks_depending_on(task_id):
-                    cancel_task(dep_task.id, f"Parent {task_id} cancelled")
+                    cancel_task_under_existing_lock(dep_task.id, f"Parent {task_id} cancelled")
 
                 return True
         return False
@@ -359,3 +363,7 @@ def calculate_exponential_backoff(attempt=1, base=60, max_wait=3600):
 | 1-2 | Background | Nice-to-have improvements |
 
 Tasks are always processed in priority order within their type.
+
+## Implementation boundaries
+
+These are pseudocode contracts, not a distributed transaction implementation. `file_lock`, object adapters, atomic multi-file moves, durable writes and circuit state helpers must be implemented and tested. Use one canonical queue schema: the current runner initializes arrays, while the Bash sketch expects a `tasks` object. Never mix them. The Bash claim illustrates one locked read/write only; it omits dependencies, availability, priority, cross-queue movement and crash recovery and must not be used as the full claim algorithm. Use private unpredictable temporary files and atomic replacement, not predictable `.tmp` files. `flock` availability varies. Serialize enqueue duplicate checks with writes, scope keys to project/action/target, import hashlib/json, and use a single transaction for recursive cancellation with cycle detection; never reacquire a non-reentrant lock. Retry delays do not make side effects idempotent.

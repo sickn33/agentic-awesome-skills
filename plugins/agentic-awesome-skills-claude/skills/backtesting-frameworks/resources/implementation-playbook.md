@@ -122,6 +122,12 @@ class Portfolio:
 
     def process_fill(self, fill: Fill) -> None:
         position = self.get_position(fill.order.symbol)
+        if fill.fill_quantity <= 0 or fill.fill_price <= 0 or fill.commission < 0:
+            raise ValueError("Require positive fill quantity/price and nonnegative commission")
+        if fill.order.side == OrderSide.SELL and fill.fill_quantity > position.quantity:
+            raise ValueError("Short positions are not implemented")
+        if fill.order.side == OrderSide.BUY and fill.fill_price * fill.fill_quantity + fill.commission > self.cash:
+            raise ValueError("Insufficient cash; leverage is not implemented")
         position.update(fill)
 
         if fill.order.side == OrderSide.BUY:
@@ -132,7 +138,8 @@ class Portfolio:
     def get_equity(self, prices: Dict[str, Decimal]) -> Decimal:
         equity = self.cash
         for symbol, position in self.positions.items():
-            if position.quantity != 0 and symbol in prices:
+            if position.quantity != 0:
+                if symbol not in prices: raise ValueError(f"Missing mark for {symbol}")
                 equity += position.quantity * prices[symbol]
         return equity
 
@@ -184,8 +191,10 @@ class Backtester:
         self,
         strategy: Strategy,
         execution_model: ExecutionModel,
+        symbol: str,
         initial_capital: Decimal = Decimal("100000")
     ):
+        self.symbol = symbol
         self.strategy = strategy
         self.execution_model = execution_model
         self.portfolio = Portfolio(cash=initial_capital)
@@ -197,6 +206,9 @@ class Backtester:
         pending_orders: List[Order] = []
 
         for timestamp, bar in data.iterrows():
+            # Single-symbol, long-only illustration; reject other symbols.
+            if any(o.symbol != self.symbol for o in pending_orders):
+                raise ValueError("Order symbol differs from supplied OHLCV series")
             # Execute pending orders at today's prices
             for order in pending_orders:
                 fill = self.execution_model.execute(order, bar)
@@ -208,7 +220,7 @@ class Backtester:
             pending_orders.clear()
 
             # Get current prices for equity calculation
-            prices = {data.index.name or "default": Decimal(str(bar["close"]))}
+            prices = {self.symbol: Decimal(str(bar["close"]))}
             equity = self.portfolio.get_equity(prices)
             self.equity_curve.append((timestamp, float(equity)))
 
@@ -264,10 +276,12 @@ class VectorizedBacktester:
         signals = signal_func(prices).shift(1).fillna(0)
 
         # Calculate returns
-        returns = prices["close"].pct_change()
+        if prices.empty or not prices.index.is_monotonic_increasing or prices.index.has_duplicates:
+            raise ValueError("Require nonempty, ordered, unique price timestamps")
+        returns = prices["close"].pct_change(fill_method=None).fillna(0)
 
         # Calculate strategy returns with costs
-        position_changes = signals.diff().abs()
+        position_changes = signals.diff().abs().fillna(signals.abs())
         trading_costs = position_changes * (self.commission + self.slippage)
 
         strategy_returns = signals * returns - trading_costs
@@ -313,7 +327,7 @@ class VectorizedBacktester:
             "sharpe_ratio": sharpe,
             "max_drawdown": max_drawdown,
             "win_rate": win_rate,
-            "num_trades": int((returns != 0).sum())
+            "nonzero_return_periods": int((returns != 0).sum())
         }
 
 # Example usage
@@ -365,10 +379,9 @@ class WalkForwardOptimizer:
         splits = []
         n = len(data)
 
-        if self.n_splits:
-            step = (n - self.train_period) // self.n_splits
-        else:
-            step = self.test_period
+        if self.train_period <= 0 or self.test_period <= 0 or (self.n_splits is not None and self.n_splits <= 0):
+            raise ValueError("Positive periods and split count required")
+        step = self.test_period # non-overlapping test windows
 
         start = 0
         while start + self.train_period + self.test_period <= n:
@@ -385,6 +398,8 @@ class WalkForwardOptimizer:
 
             splits.append((train_data, test_data))
             start += step
+            if self.n_splits is not None and len(splits) >= self.n_splits:
+                break
 
         return splits
 
@@ -456,6 +471,8 @@ class WalkForwardOptimizer:
                 best_metric = results["metrics"][metric]
                 best_params = params
 
+        if best_params is None:
+            raise ValueError("No valid parameter/metric result")
         return best_params, best_metric
 
     def _combine_equity_curves(
@@ -463,8 +480,10 @@ class WalkForwardOptimizer:
         results: List[Dict]
     ) -> pd.Series:
         """Combine equity curves from all test periods."""
-        combined = pd.concat([r["equity"] for r in results])
-        return combined
+        if not results: raise ValueError("No out-of-sample results")
+        returns = pd.concat([r["returns"] for r in results]).sort_index()
+        if returns.index.has_duplicates: raise ValueError("Overlapping test windows")
+        return (1 + returns).cumprod() # normalized wealth, not reset account balances
 ```
 
 ### Pattern 4: Monte Carlo Analysis
@@ -521,7 +540,7 @@ class MonteCarloAnalyzer:
 
         max_drawdowns = []
         for sim_returns in simulations:
-            equity = (1 + sim_returns).cumprod()
+            equity = np.concatenate(([1.0], (1 + sim_returns).cumprod()))
             rolling_max = np.maximum.accumulate(equity)
             drawdowns = (equity - rolling_max) / rolling_max
             max_drawdowns.append(drawdowns.min())
@@ -561,7 +580,7 @@ class MonteCarloAnalyzer:
         returns: pd.Series,
         periods: int = 252
     ) -> Dict[str, float]:
-        """Calculate confidence interval for future returns."""
+        """Conditional IID-bootstrap simulation quantiles, not a forecast confidence guarantee."""
         simulations = self.bootstrap_returns(returns, periods)
         total_returns = (1 + simulations).prod(axis=1) - 1
 
@@ -590,12 +609,13 @@ def calculate_metrics(returns: pd.Series, rf_rate: float = 0.02) -> Dict[str, fl
     annual_vol = returns.std() * np.sqrt(ann_factor)
 
     # Risk-adjusted returns
-    sharpe = (annual_return - rf_rate) / annual_vol if annual_vol > 0 else 0
+    rf_per_period = (1 + rf_rate) ** (1 / ann_factor) - 1
+    excess = returns - rf_per_period
+    sharpe = excess.mean() / excess.std() * np.sqrt(ann_factor) if excess.std() > 0 else float("nan")
 
     # Sortino (downside deviation)
-    downside_returns = returns[returns < 0]
-    downside_vol = downside_returns.std() * np.sqrt(ann_factor)
-    sortino = (annual_return - rf_rate) / downside_vol if downside_vol > 0 else 0
+    downside_vol = np.sqrt(np.mean(np.minimum(excess, 0) ** 2)) * np.sqrt(ann_factor)
+    sortino = excess.mean() * ann_factor / downside_vol if downside_vol > 0 else float("nan")
 
     # Calmar ratio
     equity = (1 + returns).cumprod()
@@ -620,7 +640,7 @@ def calculate_metrics(returns: pd.Series, rf_rate: float = 0.02) -> Dict[str, fl
         "max_drawdown": max_drawdown,
         "win_rate": win_rate,
         "profit_factor": profit_factor,
-        "num_trades": int((returns != 0).sum())
+        "nonzero_return_periods": int((returns != 0).sum())
     }
 ```
 

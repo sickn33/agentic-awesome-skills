@@ -1,8 +1,9 @@
 # Team and Agency Model — Hire for Strategy, Outsource Execution
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 The marketing operations stack (Section 11 of every plan) describes *what* gets done. This doc describes *who does it* — the operating principle, the org shape, the first hire, the agency model, and how it evolves as the company scales.
 
-Excerpted and adapted from *Founding Marketing* by Corey Haines.
+Community planning guidance attributed upstream to *Founding Marketing* by Corey Haines. This package does not provide a verified edition/page citation; do not present these heuristics as quoted book text or empirical findings.
 
 ## The principle
 
@@ -13,7 +14,7 @@ Two failure modes are common when founders ignore this:
 1. **Hire junior tactician first.** Founder hits a milestone, raises a round, hires a junior to "do marketing" (run ads, write blogs, post on social). Six months later: scattered tactics, no coherent strategy, disappointing results.
 2. **Hire expensive agency for strategy.** Burns cash while the internal team struggles to execute on recommendations they don't fully understand. Strategic insight gathers dust; tactical needs go unmet.
 
-The traditional advice — "hire full-time for competitive advantages, only use agencies for commoditized work" — made sense when marketing moved slowly and talent stayed for decades. That world is gone. Full-time hires take months to ramp and years to develop deep expertise. The best agencies and contractors deliver results immediately, with cross-industry pattern recognition you couldn't build in-house affordably.
+The traditional advice — "hire full-time for competitive advantages, only use agencies for commoditized work" — made sense when marketing moved slowly and talent stayed for decades. That world is gone. Full-time hires take months to ramp and years to develop deep expertise. Agencies and contractors also require context, access and ramp time; evaluate measured outcomes rather than promising immediate results, with cross-industry pattern recognition you couldn't build in-house affordably.
 
 ## What stays in-house
 
@@ -25,7 +26,7 @@ The strategic heart of the marketing operation. Specifically:
 - **Core product and service delivery** — the heart of the value proposition
 - **Long-term institutional knowledge** — the compound interest of experience
 
-These are not delegatable. An external partner can sharpen the articulation, but the underlying conviction must come from the team.
+Keep internal accountability for these decisions; external specialists can contribute research and strategy under an explicit brief. An external partner can sharpen the articulation, but the underlying conviction must come from the team.
 
 ## What's safe to outsource
 
@@ -79,7 +80,7 @@ These three functions are interconnected. Growth without story is performance wi
 
 The most consequential decision in building the marketing engine isn't about channels or technology — it's who leads.
 
-**The first marketing hire should be a strategist, not a tactician.** Counterintuitive when there's a mountain of tactical work to ship. Essential for sustainable growth.
+**Choose the first hire against the binding capability gap; a strategic builder is one common option.** Counterintuitive when there's a mountain of tactical work to ship. Essential for sustainable growth.
 
 ### Look for π-shaped, not T-shaped
 
@@ -161,7 +162,7 @@ Needs to be well-maintained and properly tuned. Right processes, tools, people i
 How you know if you're heading in the right direction.
 
 - Metrics track performance (measuring what matters)
-- Attribution shows what works (cause and effect)
+- Attribution estimates credited touchpoints; causal effect requires an appropriate experiment or causal design
 - Data informs decisions (evidence over opinion)
 
 Without good instrumentation, flying blind. Need both leading and lagging indicators.
@@ -264,7 +265,7 @@ The metaphor: a symphony orchestra. The internal team conducts. External partner
 | Section | What to include |
 |---|---|
 | **3 (Current state)** | Team composition — every person who touches marketing, what they own. Identify where the team is π-shaped vs. T-shaped vs. tactical-only. Flag gaps. |
-| **9 (90-day roadmap)** | If the team is missing the strategic owner, the first move is the first marketing hire (Lead or Manager). If the team has strategy but no execution capacity, the first move is the first contractor or specialized agency. |
+| **9 (90-day roadmap)** | If strategic ownership is missing, assign an interim accountable owner and compare affordable hiring or external support options. If the team has strategy but no execution capacity, the first move is the first contractor or specialized agency. |
 | **10 (12-month outlook)** | Map team evolution against funding-stage capability unlocks (see `funding-stage-unlocks.md`). When does the second hire come in? When does an agency relationship deepen? |
 | **11 (Marketing operations stack)** | RACI is more honest with this model: "owned by" = internal strategic role; "executed by" = internal IC, contractor, or agency. The plan should make it explicit who does what. |
 | **13 (Open decisions)** | If "first marketing hire" is open, name it as a top-three decision. If "in-house vs agency" for a specific function is open, frame the tradeoff using this doc's heuristics. |
@@ -274,5 +275,7 @@ The metaphor: a symphony orchestra. The internal team conducts. External partner
 - **Don't title-inflate the first hire.** It paints the org into a corner.
 - **Don't outsource positioning.** Even the best agency can articulate it back to you, but only if the conviction came from the team.
 - **Don't full-time hire for a six-month sprint.** Use a contractor. The hidden cost of full-time is the months of ramp + the awkwardness of letting them go if the work doesn't compound.
-- **Don't agency-hire to delay a strategy conversation.** Agencies execute; they don't replace strategic owners. If the internal team can't tell the agency what to do, the agency can't help.
+- **Don't agency-hire to delay a strategy conversation.** Agencies may advise or execute, while the client retains accountable ownership. If the internal team can't tell the agency what to do, the agency can't help.
 - **Don't measure team size as a success metric.** Measure output, not headcount. A 4-person team with the right π-shaped leader and great external partners out-performs a 15-person team without strategic clarity.
+
+The π/T labels describe possible skill coverage, not validated hiring scores or limits on a person’s competence. Compare actual work samples, scope, compensation, supervision and runway. Role titles and reporting hierarchies vary. Share only necessary authorized data with vendors, define access/retention and security obligations, and avoid claiming agencies are universally safe or superior.

