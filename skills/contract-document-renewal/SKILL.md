@@ -40,7 +40,8 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+The upstream shared execution contract is not bundled; follow this file's
+intent, placeholder-only output and target-specific external-write rules. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -106,17 +107,21 @@ never goes red. Store the deadline in `Notice Deadline` and calculate it, never 
 Notice Deadline = End Date - Renewal Notice (Days)
 ```
 
-Treat the difference as calendar days, count the deadline day itself as day 1, and store the result as a plain
-date in ISO `YYYY-MM-DD`. A notice period is a count of days, not a date, so never accept a date typed into
-`Renewal Notice (Days)` and never accept a deadline typed into `Notice Deadline` - the two disagree silently and
-the register misses the reminder. If the contract auto-renews and no notice is served, `Notice Deadline` is the
-last day the user may still act; after it passes, `Auto-Renew` TRUE means the contract has renewed by operation of
-its own terms and `Status` must not still read `In Renewal`.
+This subtraction is a planning example only for an explicitly confirmed calendar-
+day clause. Do not count the deadline day again: subtraction already defines the
+date arithmetic (2027-03-31 minus 60 days = 2027-01-30). Actual deadlines may depend
+on business days, receipt/service rules, timezone, holidays, contract amendments
+and jurisdiction. Record a professionally verified deadline rather than overruling
+it with a generic formula; if the clause/basis is unknown, leave the deadline blank
+and flag review required. Do not infer that passing a date alone legally renewed
+or terminated a contract. `Auto-Renew` records a clause, not proof of its operation.
 
-**Status means one thing at a time.** `Expiring Soon` is the window between the notice deadline and the end date -
-action is still possible. `In Renewal` is only correct once a renewal has actually been agreed or served. A
-contract whose notice deadline has passed with no action recorded is `Expiring Soon` with the gap stated in
-`Notes`, never `In Renewal` and never silently `Renewed`.
+**Status definitions must be agreed.** `Expiring Soon` is an owner-chosen review
+window, preferably before the verified notice deadline; after that deadline,
+permitted action is uncertain and needs review. `In Renewal` means a documented
+ongoing renewal process, not an executed renewal. Only set `Renewed`/`Terminated`
+with confirmed evidence. The schema has no Notes field: report unresolved issues
+separately or add an explicit notes field consistently when requested.
 
 **Money basis:** this module does not assume that `Contract Value` is tax-inclusive or tax-exclusive. Record the
 basis in `Tax Basis` and leave it `Not confirmed` until the user says, rather than deducing it from the currency
@@ -146,7 +151,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Contract Title,Counterparty,Contract Type,Owner,Department,Start Date,End Date,Renewal Notice (Days),Notice Deadline,Auto-Renew,Contract Value,Tax Basis,Currency,Linked Legal Record,Status,Contract ID
-Example Master Services Agreement,Example Customer Ltd,Customer,Example Owner,Delivery,2026-04-01,2027-03-31,60,2027-01-30,FALSE,120000.00,Not confirmed,INR,DOC-EXAMPLE-001,Active,(blank)
+Example Master Services Agreement,Example Customer Ltd,Customer,Example Owner,Delivery,2026-04-01,2027-03-31,60,2027-01-30,FALSE,120000.00,Not confirmed,INR,DOC-EXAMPLE-001,Active,CONTRACT-EXAMPLE-001
 
 ```
 
@@ -157,17 +162,17 @@ CREATE TABLE contract_document_renewal (
   contract_type VARCHAR(100) NOT NULL,
   owner VARCHAR(255),
   department VARCHAR(255),
-  start_date DATE NOT NULL,
-  end_date DATE NOT NULL,
-  renewal_notice_days NUMERIC NOT NULL,
+  start_date DATE,
+  end_date DATE,
+  renewal_notice_days INTEGER,
   notice_deadline DATE,
   auto_renew BOOLEAN,
-  contract_value NUMERIC(14,2) NOT NULL,
+  contract_value NUMERIC(14,2),
   tax_basis VARCHAR(100) NOT NULL,
   currency VARCHAR(255),
   linked_legal_record VARCHAR(255),
   status VARCHAR(100) NOT NULL,
-  contract_id SERIAL PRIMARY KEY,
+  contract_id VARCHAR(100) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   -- The notice window is the whole point of this register, so the two dates must be in order.
@@ -175,7 +180,7 @@ CREATE TABLE contract_document_renewal (
   CHECK (renewal_notice_days >= 0),
   CHECK (status IN ('Active', 'Expiring Soon', 'In Renewal', 'Renewed', 'Expired', 'Terminated')),
   CHECK (tax_basis IN ('Not confirmed', 'Tax-inclusive', 'Tax-exclusive')),
-  -- The deadline is derived, so it is never NOT NULL and never typed in by hand.
+  -- Allow a verified contract-specific deadline; generic subtraction is not legal validation.
   CHECK (notice_deadline IS NULL OR notice_deadline <= end_date)
   -- Renaming a relation to text is a data decision, not a formatting one:
   -- Linked Legal Record is VARCHAR(255) naming a document reference. If the signed-document
@@ -184,7 +189,6 @@ CREATE TABLE contract_document_renewal (
 
 CREATE INDEX idx_contract_document_renewal_status ON contract_document_renewal (status);
 CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (notice_deadline);
-```
 ```
 
 ```json
@@ -201,7 +205,7 @@ CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (
       "Department": { "type": "string" },
       "Start Date": { "type": "string", "format": "date" },
       "End Date": { "type": "string", "format": "date" },
-      "Renewal Notice (Days)": { "type": "number" },
+      "Renewal Notice (Days)": { "type": "integer", "minimum": 0 },
       "Notice Deadline": { "type": "string", "format": "date" },
       "Auto-Renew": { "type": "boolean" },
       "Contract Value": { "type": "number" },
@@ -209,14 +213,11 @@ CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (
       "Currency": { "type": "string" },
       "Linked Legal Record": { "type": "string" },
       "Status": { "type": "string" },
-      "Contract ID": { "type": "integer" }
+      "Contract ID": { "type": "string", "minLength": 1 }
   },
   "required": [
+    "Contract ID",
     "Contract Type",
-    "Start Date",
-    "End Date",
-    "Renewal Notice (Days)",
-    "Contract Value",
     "Tax Basis",
     "Status"
   ]
@@ -234,7 +235,7 @@ CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (
 | Start Date | Date | Convert to Date |
 | End Date | Date | Convert to Date |
 | Renewal Notice (Days) | Number | Convert to Number. A whole number of days, never a date; the date is derived |
-| Notice Deadline | Date | Convert to Date. Calculated, not typed: End Date minus Renewal Notice (Days) |
+| Notice Deadline | Date | Convert to Date. Use verified clause-specific deadline; plain Date imports do not recalculate automatically |
 | Auto-Renew | Checkbox | Convert to Checkbox |
 | Contract Value | Number (format: currency) | Convert to Number, set format to Currency |
 | Tax Basis | Select | Add options: "Not confirmed", "Tax-inclusive", "Tax-exclusive" |
@@ -243,23 +244,32 @@ CREATE INDEX idx_contract_document_renewal_notice ON contract_document_renewal (
 | Status | Select | Add options: "Active", "Expiring Soon", "In Renewal", "Renewed", "Expired", "Terminated" |
 | Contract ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
-```
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
-and anything pointing at another table stays `relation`.
+the documented Linked Legal Record remains a text reference until its target exists.
+
+## Artifact limitations
+
+SQL is PostgreSQL-specific; its checks validate shape/order only, not legal dates.
+`updated_at DEFAULT NOW()` does not update automatically. Text IDs are preserved
+across formats; JSON Schema `format` needs an enforcing validator. No reminder or
+Notion formula is created by a static Date mapping. Confirm currency precision and
+contract-value period; restrict confidential documents and prevent spreadsheet
+formula injection in text cells. Do not send renewal/termination notices without
+authorization for the exact recipient and approved wording/delivery method.
 
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Contract Title | `text` | `VARCHAR(255)` | `string` | Text | `Example Master Services Agreement` |
+| 1 | Contract Title | `text` | `VARCHAR(255)` | `string` | Title | `Example Master Services Agreement` |
 | 2 | Counterparty | `text` | `VARCHAR(255)` | `string` | Text | `Example Customer Ltd` |
 | 3 | Contract Type | `select` | `VARCHAR(100)` | `string` | Select | `Customer` |
 | 4 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 5 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 6 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-04-01` |
 | 7 | End Date | `date` | `DATE` | `string, format: date` | Date | `2027-03-31` |
-| 8 | Renewal Notice (Days) | `number | `NUMERIC` | `number` | Number | `60` |
+| 8 | Renewal Notice (Days) | `integer` | `INTEGER` | `integer` | Number | `60` |
 | 9 | Notice Deadline | `date` | `DATE` | `string, format: date` | Date | `2027-01-30` |
 | 10 | Auto-Renew | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 11 | Contract Value | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `120000.00` |
@@ -267,7 +277,7 @@ and anything pointing at another table stays `relation`.
 | 13 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 14 | Linked Legal Record | `text` | `VARCHAR(255)` | `string` | Text | `DOC-EXAMPLE-001` |
 | 15 | Status | `select` | `VARCHAR(100)` | `string` | Select | `Active` |
-| 16 | Contract ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | (blank) |
+| 16 | Contract ID | `id` | `VARCHAR(100) PRIMARY KEY` | `string` | Text (preserve source ID) | CONTRACT-EXAMPLE-001 |
 
 ## Select Options
 
@@ -335,7 +345,7 @@ A vendor contract renewed automatically at a higher price because nobody tracked
 - Build when requested; recommend and offer a build for advice-only requests.
 - One question per message. A batched intake reads as a form and gets guessed at.
 - Keep display names identical across CSV and JSON; document normalized SQL identifiers.
-- Use `relation` for anything that points at another table, `text` only for free text.
+- Use real relations only when the target exists; preserve this document-reference field as text.
 - Money fields are `currency`, never `text`. Dates are `date`, never free text.
 - If the user requests an example row, keep it obviously fake so nobody imports it as real data.
 
@@ -373,9 +383,9 @@ A vendor contract renewed automatically at a higher price because nobody tracked
 - **Problem:** all four artifacts drift apart.
   **Solution:** derive all four from the field list in this file, never by hand.
 - **Problem:** a renewal was missed even though the notice period was recorded.
-  **Solution:** `Renewal Notice (Days)` is an input that never goes red on its own. `Notice Deadline` is the date to watch; if it was left empty, the register was watching the wrong field.
+  **Solution:** `Renewal Notice (Days)` is an input that never goes red on its own. `Notice Deadline` is the date to watch; if it is unknown, flag owner review rather than inventing a deadline.
 - **Problem:** a contract reads `In Renewal` with no renewal agreed.
-  **Solution:** `In Renewal` claims a renewal has been agreed or served. Between the notice deadline and the end date the correct value is `Expiring Soon`, with the reason in `Notes`. Never promote a record to `Renewed` to make a spreadsheet look tidy.
+  **Solution:** Use the agreed status meanings and documented evidence. A passed notice deadline needs review; it does not prove there is still time to act or that renewal occurred.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 

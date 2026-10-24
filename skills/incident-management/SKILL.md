@@ -30,6 +30,10 @@ Implement effective incident management processes including severity definitions
 - Building on-call schedules and notification workflows
 - Meeting compliance requirements for incident response (SOC 2, HIPAA, PCI DSS)
 
+Severity/timing/staffing numbers are example policy, not universal compliance requirements. Classify security/privacy impact independently of availability and invoke the authorized security/legal response path when needed. Do not wait for a service-wide outage or a timer before escalating suspected compromise.
+
+Creating channels, paging people, publishing status/customer notices and changing production require the user's authorized incident scope and designated owner. Drafts are not sent notifications. Preserve evidence and restricted/redacted logs before destructive recovery when feasible; containment and safety may take priority over restoration. State confirmed impact separately from hypotheses, use UTC plus dates, and verify both service recovery and security containment before closure.
+
 ## Severity Levels
 
 ```yaml
@@ -464,7 +468,7 @@ incident_management_checklist:
 - Focus on mitigation first, root cause second: restore service before investigating why it failed
 - Run blameless post-mortems: the goal is to improve systems, not to assign fault to individuals
 - Track post-mortem action items to completion: an unfinished action item means the same incident can recur
-- Monitor incident metrics (MTTR, MTTD, frequency) as leading indicators of system reliability
+- Monitor incident metrics (MTTR, MTTD, frequency) as historical indicators of system reliability
 - Protect on-call health: track page volume per person and redistribute if someone is overburdened
 - Separate the incident commander role from the technical lead role in SEV1/2 incidents
 - Practice incident response regularly with game days or chaos engineering exercises

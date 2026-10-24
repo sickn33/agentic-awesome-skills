@@ -2,6 +2,8 @@
 
 > Extended reference content for `change-management`, kept under `references/` so the entrypoint stays within the audit budget.
 
+Dates, percentages, lead times and retention below are illustrative policy inputs. Set evidence retention from actual legal/contractual obligations; measure failed/partial changes and denominators consistently.
+
 ## Change Freeze Policy
 
 ```yaml
@@ -93,7 +95,7 @@ change_management_checklist:
 ## Best Practices
 
 - Classify changes by risk level to apply proportionate controls without slowing low-risk work
-- Automate risk classification based on files changed, services affected, and deployment scope
+- Use automated risk signals based on files changed, services affected, and deployment scope as advisory input to accountable review
 - Use PR approvals as the native change approval mechanism for code-driven changes
 - Require rollback plans for every change and test rollback procedures periodically
 - Track emergency changes as a key metric: a high rate indicates systemic process issues

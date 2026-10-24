@@ -1,7 +1,7 @@
 ---
 name: skin-health-analyzer
 description: Analyze skin health data, identify skin problem patterns, assess skin health status. Supports correlation analysis with nutrition, chronic diseases, and medication data.
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-06"
 ---
@@ -13,7 +13,7 @@ date_added: "2026-03-06"
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## When to Use
-Use this skill when tackling tasks related to its primary domain or functionality as described above.
+Use for organizing user-supplied skin symptom/lesion diaries and preparing questions for a clinician. Do not diagnose lesions, assign cancer probabilities or prescribe treatment. Obtain permission before reading linked medical records or transmitting photos to any external service.
 
 ## Example
 

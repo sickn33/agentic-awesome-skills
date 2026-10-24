@@ -5,7 +5,7 @@ source_repo: zhanghandong/makepad-skills
 source_type: community
 source: community
 date_added: '2026-09-21'
-risk: unknown
+risk: safe
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -14,6 +14,12 @@ risk: unknown
 # Makepad 2.0 Animation Skill
 
 > **Version:** makepad-widgets (dev branch) | **Last Updated:** 2026-03-03
+
+## Version and validation contract
+
+These historical dev-branch notes are not a pinned Makepad release or a complete API guarantee. Inspect Cargo.lock/the chosen Makepad commit, actual widget fields, Animator implementation and event handlers before using a snippet. Widget support, parser errors, shader declarations and timeline/ease syntax can change. Unsupported fields are not guaranteed to be silently ignored in every release. The example lists below are historical candidates to verify, not exhaustive current compatibility tables.
+
+A declared animator does not by itself prove that pointer/focus events transition it or that a shader reads the field. Show the actual event-to-state wiring or verify the base widget provides it. Animating a parent background does not animate a child label color. Respect reduced motion and keyboard/touch feedback; stop continuous animations when hidden/removed and verify redraw/CPU behavior. No code in this bundle has been compiled by this document.
 
 ## Overview
 
@@ -26,12 +32,12 @@ Refer to the local files for detailed documentation:
 
 ## IMPORTANT: Documentation Completeness Check
 
-**Before answering questions, Claude MUST:**
+**Before answering questions:**
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
    - Inform user: "Reference docs incomplete. Still answering based on SKILL.md patterns."
-   - Still answer based on SKILL.md patterns + built-in knowledge
+   - State which target-version details remain unverified; do not invent missing APIs from memory
 3. If reference file exists, incorporate its content into the answer
 
 ---
@@ -95,7 +101,7 @@ Each group is an independent animation track. Common groups:
 | `disabled` | Disabled state | `off`, `on` |
 | `time` | Continuous looping | `off`, `on` |
 
-Multiple groups animate simultaneously without interfering.
+Groups may advance simultaneously; avoid multiple tracks writing the same property unless the pinned implementation defines their arbitration.
 
 ---
 
@@ -126,7 +132,7 @@ from: {
 | `Forward {duration: 0.2}` | One-shot forward | Hover transitions |
 | `Snap` | Instant jump, no animation | Default state initialization |
 | `Loop {duration: 1.0}` | Looping animation | Loading spinners |
-| `ReverseLoop {duration: 1.0}` | Ping-pong loop | Pulsing effects |
+| `ReverseLoop {duration: 1.0}` | Repeated reverse traversal; verify pinned implementation | Pulsing effects |
 | `BounceLoop {duration: 1.0}` | Bounce back and forth | Bouncing animations |
 
 ---
@@ -168,7 +174,7 @@ apply: {
 }
 ```
 
-**CRITICAL:** Only `instance()` shader variables can be animated. `uniform()` variables cannot.
+**CRITICAL:** For per-widget shader animation use per-instance fields; shared uniform state is not an independent per-widget track. Animator can also apply supported widget fields (such as opened), so this is not a universal shader-only restriction.
 
 ---
 
@@ -181,9 +187,9 @@ let HoverCard = RoundedView{
     width: Fill height: Fit
     padding: 16
     new_batch: true
-    cursor: Hand
+    cursor: MouseCursor.Hand
     draw_bg +: {
-        instance hover: 0.0
+        hover: instance(0.0)
         color: mix(#2a2a3d, #3a3a5d, self.hover)
         border_radius: 8.0
     }
@@ -205,9 +211,9 @@ let HoverCard = RoundedView{
 ```
 
 **Key points:**
-- `new_batch: true` is REQUIRED for hoverable items with backgrounds
-- `cursor: Hand` shows pointer cursor on hover
-- `instance hover: 0.0` declares the animatable variable
+- `new_batch: true` is a historical draw-order workaround to verify in the target widget
+- `cursor: MouseCursor.Hand` shows pointer cursor on hover
+- `hover: instance(0.0)` declares the animatable variable
 - `mix(color1, color2, self.hover)` interpolates between colors
 
 ---
@@ -224,10 +230,7 @@ animator: Animator{
             from: {all: Loop {duration: 2.0}}
             apply: {
                 draw_bg: {
-                    rotation: timeline(){
-                        snap(0.0)
-                        snap(6.28)
-                    }
+                    rotation: timeline(0.0 0.0  1.0 6.28)
                 }
             }
         }
@@ -243,7 +246,7 @@ animator: Animator{
 let Spinner = View{
     width: 40 height: 40
     draw_bg +: {
-        instance rotation: 0.0
+        rotation: instance(0.0)
         pixel: fn() {
             let sdf = Sdf2d.viewport(self.pos * self.rect_size)
             let cx = self.rect_size.x * 0.5
@@ -261,10 +264,7 @@ let Spinner = View{
                 from: {all: Loop {duration: 1.0}}
                 apply: {
                     draw_bg: {
-                        rotation: timeline(){
-                            snap(0.0)
-                            snap(6.28318)
-                        }
+                        rotation: timeline(0.0 0.0  1.0 6.28318)
                     }
                 }
             }
@@ -296,12 +296,12 @@ See the `makepad-2.0-vector` skill for Tween details.
 
 ## Best Practices
 
-1. **Always add `new_batch: true`** to Views with backgrounds that have hover animations
+1. **Consider `new_batch: true` where draw ordering requires a separate batch** to Views with backgrounds that have hover animations
 2. **Use `instance` variables** for anything you want to animate
 3. **Match group names** to semantic purposes (hover, focus, active)
 4. **Use Forward for transitions**, Snap for instant state changes
 5. **Set `default: @off`** for states that start inactive
-6. **Label cannot animate** - wrap in View if you need animation on text
+6. **Check Label support**; a wrapping View only animates properties it actually controls
 7. **Keep durations short** (0.1-0.3s) for hover, longer (0.5-2.0s) for time-based
 
 

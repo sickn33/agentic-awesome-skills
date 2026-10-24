@@ -10,7 +10,7 @@
 - Batch writes and transactions for consistency
 - Use offline persistence wisely - it's not free
 - Cloud Functions for what clients shouldn't do
-- Environment-based config, never hardcode keys in client
+- Firebase web configuration is public identifiers, not authorization; never expose Admin/service-account/private provider credentials in client code
 
 
 ## Capabilities
@@ -109,8 +109,7 @@ Secure your data with proper rules from day one
 # FIRESTORE SECURITY RULES:
 
 """
-Rules are your last line of defense. Every read and write
-goes through them. Get them wrong, and your data is exposed.
+Rules are your last line of defense. Client reads/writes are evaluated by rules; Admin/server access instead uses IAM and bypasses Firestore rules. Get them wrong, and your data is exposed.
 """
 
 rules_version = '2';
@@ -123,17 +122,17 @@ service cloud.firestore {
     }
 
     function isOwner(userId) {
-      return request.auth.uid == userId;
+      return request.auth != null && request.auth.uid == userId;
     }
 
     function isAdmin() {
-      return request.auth.token.admin == true;
+      return request.auth != null && request.auth.token.admin == true;
     }
 
     // Users collection
     match /users/{userId} {
-      // Anyone can read public profile
-      allow read: if true;
+      // Private user record; split public profiles into a separate allowlisted schema.
+      allow read: if isOwner(userId);
 
       // Only owner can write their own data
       allow write: if isOwner(userId);
@@ -155,7 +154,9 @@ service cloud.firestore {
                     && request.resource.data.authorId == request.auth.uid;
 
       // Only author can update/delete
-      allow update, delete: if isOwner(resource.data.authorId);
+      allow update: if isOwner(resource.data.authorId)
+                    && request.resource.data.authorId == resource.data.authorId;
+      allow delete: if isOwner(resource.data.authorId);
     }
 
     // Admin-only collection
@@ -249,6 +250,7 @@ function useDocument(path) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    setData(null); setLoading(true); setError(null);
     const docRef = doc(db, path);
 
     // Subscribe to document
@@ -256,7 +258,7 @@ function useDocument(path) {
       docRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          setData({ id: snapshot.id, ...snapshot.data() });
+          setData({ ...snapshot.data(), id: snapshot.id });
         } else {
           setData(null);
         }
@@ -284,7 +286,7 @@ function UserProfile({ userId }) {
 }
 
 // Collection with query
-function usePosts(limit = 10) {
+function usePosts(pageSize = 10) {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -292,7 +294,7 @@ function usePosts(limit = 10) {
       collection(db, 'posts'),
       where('published', '==', true),
       orderBy('createdAt', 'desc'),
-      limit(limit)
+      limit(pageSize)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -304,7 +306,7 @@ function usePosts(limit = 10) {
     });
 
     return () => unsubscribe();
-  }, [limit]);
+  }, [pageSize]);
 
   return posts;
 }
@@ -325,7 +327,8 @@ V2 uses more standard Node.js patterns and better scaling.
 import { onRequest } from 'firebase-functions/v2/https';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
+import { getAuth } from 'firebase-admin/auth';
 import { initializeApp } from 'firebase-admin/app';
 
 initializeApp();
@@ -364,7 +367,7 @@ export const onUserCreated = onDocumentCreated(
     const userData = snapshot.data();
 
     // Send welcome email, create related documents, etc.
-    await db.collection('notifications').add({
+    await db.collection('notifications').doc(`welcome-${event.id}`).set({
       userId,
       type: 'welcome',
       message: `Welcome, ${userData.name}!`,
@@ -405,7 +408,7 @@ Atomic writes and transactions for consistency
 """
 Batches: Multiple writes that all succeed or all fail.
 Transactions: Read-then-write operations with consistency.
-Max 500 operations per batch/transaction.
+Operation/request limits depend on SDK/service constraints; check current quotas, document sizes and rules access-call limits. Do not assume one universal transaction count.
 """
 
 import {
@@ -503,7 +506,7 @@ async function signInWithGoogle() {
 const githubProvider = new GithubAuthProvider();
 githubProvider.addScope("read:user");
 
-// APPLE (Required for iOS apps!)
+// APPLE (requirements depend on app sign-in features and current store policy)
 const appleProvider = new OAuthProvider("apple.com");
 appleProvider.addScope("email");
 appleProvider.addScope("name");
@@ -515,7 +518,7 @@ When to use popup vs redirect for OAuth
 **When to use**: Choosing authentication flow
 
 # Popup: Desktop, SPA (simpler, can be blocked)
-# Redirect: Mobile, iOS Safari (always works)
+# Redirect: verify current browser storage/auth-domain configuration; not guaranteed
 
 async function signIn(provider) {
   if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
@@ -544,24 +547,14 @@ Link multiple providers to one account
 
 import { fetchSignInMethodsForEmail, linkWithCredential } from "firebase/auth";
 
-async function handleAccountConflict(error) {
-  const email = error.customData?.email;
-  const pendingCred = OAuthProvider.credentialFromError(error);
-  const methods = await fetchSignInMethodsForEmail(auth, email);
-
-  if (methods.includes("google.com")) {
-    alert("Sign in with Google to link accounts");
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    await linkWithCredential(result.user, pendingCred);
-    return result.user;
-  }
-}
-
-// Link new provider
-await linkWithPopup(auth.currentUser, new GithubAuthProvider());
-
-// Unlink provider (keep at least one!)
-await unlink(auth.currentUser, "github.com");
+Account linking requires an explicit user action and recent authenticated session.
+Do not infer account ownership from email strings or provider-method enumeration;
+email-enumeration protection can change/disable `fetchSignInMethodsForEmail` behavior.
+Use the actual provider’s credential extractor, validate non-null credentials, retain
+them only in short-lived private memory, then authenticate the intended existing
+account and confirm before linking. Never silently attach credentials to whatever
+account a popup returns. Keep a verified recovery/sign-in method before unlinking.
+The required linking UI/error recovery adapter is not bundled.
 
 ### Auth State Persistence
 
@@ -621,24 +614,23 @@ import { getIdToken, onIdTokenChanged } from "firebase/auth";
 // Get token (auto-refreshes if expired)
 const token = await getIdToken(auth.currentUser);
 
-// API helper with auto-retry
-async function apiCall(url, opts = {}) {
+// API helper sketch: only an explicitly approved same-origin relative endpoint.
+async function apiCall(path, opts = {}) {
+  const url = new URL(path, window.location.origin);
+  if (url.origin !== window.location.origin) throw new Error("Unapproved API origin");
+  if (!auth.currentUser) throw new Error("Sign-in required");
   const token = await getIdToken(auth.currentUser);
-  const res = await fetch(url, {
-    ...opts,
-    headers: { ...opts.headers, Authorization: "Bearer " + token }
-  });
-  if (res.status === 401) {
-    const newToken = await getIdToken(auth.currentUser, true);
-    return fetch(url, { ...opts, headers: { ...opts.headers, Authorization: "Bearer " + newToken }});
-  }
-  return res;
+  const headers = new Headers(opts.headers);
+  headers.set("Authorization", "Bearer " + token);
+  return fetch(url, { ...opts, headers, redirect: "error" });
 }
+// Do not blindly replay writes/stream bodies after 401. Reauthentication and retries
+// require operation idempotency, fresh auth state and explicit failure handling.
 
-// Sync to cookie for SSR
-onIdTokenChanged(auth, async u => {
-  document.cookie = u ? "__session=" + await u.getIdToken() : "__session=; max-age=0";
-});
+// SSR sessions: send an ID token once through an HTTPS, CSRF-protected approved
+// session endpoint; server verifies it and creates a bounded HttpOnly/Secure/SameSite
+// session cookie using Admin APIs. Never set bearer-token cookies via document.cookie.
+// Verify session/revocation policy server-side and clear the cookie on logout.
 
 // Check admin claim
 const { claims } = await auth.currentUser.getIdTokenResult();
@@ -660,3 +652,24 @@ const isAdmin = claims.admin === true;
 ## Related Skills
 
 Works well with: `nextjs-app-router`, `react-patterns`, `authentication-oauth`, `stripe`
+
+## Example integration boundaries
+
+These mixed-language snippets are alternatives with imports/UI/schema omitted, not a
+bundled tested application. Rules need field allowlists/types, server-owned role and
+counter protection, size bounds and create/update/delete/query tests in the Emulator
+Suite (including anonymous, owner, other user and admin cases). A query on posts with
+authorId is valid; denormalization is a tradeoff, not a rule that normalized data is
+wrong. Rules are not filters: queries must prove their constraints. Backend Admin
+paths must separately enforce verified identity, object/tenant authorization and IAM.
+
+For example, user A updating B’s private user document must fail; A changing a post’s
+authorId must fail; a retried welcome event must retain one notification. The event-ID
+set avoids duplicate documents but timestamp replay and external email delivery need
+transactional idempotency/reconciliation. Scheduled cleanup deletes only one bounded
+batch here, not all old logs; approve retention/legal holds, dry-run IDs and checkpoint
+subsequent batches before deployment. Persistent client caches may retain prior-user
+data on shared devices; reset session-scoped state and verify cache behavior.
+Budget alerts are not hard spending caps. Do not log full document/user data as the
+introductory console sketch does in production. No deployment, billing or auth/rules
+tests were run; verify current Firebase/browser/store requirements before use.

@@ -1,6 +1,6 @@
 # Temporal Go Implementation Playbook
 
-This playbook provides production-ready patterns and deep technical guidance for implementing durable orchestration with the Temporal Go SDK.
+This playbook provides illustrative patterns and deep technical guidance for implementing durable orchestration with the Temporal Go SDK.
 
 ## Table of Contents
 
@@ -55,7 +55,7 @@ In Go, workflows are state machines that must replay identically. Violating thes
 
 ## 2. Workflow Versioning
 
-When you need to change logic in a running workflow, you MUST use `workflow.GetVersion`.
+When you need to change logic in a running workflow, use an appropriate replay-compatible patching or worker-versioning strategy; `workflow.GetVersion` is one option.
 
 ### Pattern: Safe Logic Update
 
@@ -69,7 +69,7 @@ func MyWorkflow(ctx workflow.Context) error {
         // Old logic: kept alive until all pre-existing workflow runs complete.
         return workflow.ExecuteActivity(ctx, OldActivity).Get(ctx, nil)
     }
-    // New logic: all new and resumed workflow runs use this path.
+    // New logic: new runs use this path; existing histories follow their recorded version.
     return workflow.ExecuteActivity(ctx, NewActivity).Get(ctx, nil)
 }
 ```
@@ -96,7 +96,7 @@ Activities can execute multiple times. They must be idempotent.
 
 ### Pattern: Upsert instead of Insert
 
-Instead of a simple `INSERT`, use `UPSERT` or "Check-then-Act" with an idempotency key (like `WorkflowID` or `RunID`).
+Instead of a simple `INSERT`, use an atomic unique idempotency record tied to the logical business operation; check-then-act alone races and a WorkflowID alone collapses distinct charges.
 
 ```go
 func (a *Activities) ProcessPayment(ctx context.Context, req PaymentRequest) error {
@@ -116,7 +116,7 @@ func (a *Activities) ProcessPayment(ctx context.Context, req PaymentRequest) err
 w := worker.New(c, "task-queue", worker.Options{
     MaxConcurrentActivityExecutionSize:      100, // Limit based on resource constraints
     MaxConcurrentWorkflowTaskExecutionSize:  50,
-    WorkerActivitiesPerSecond:               200, // Rate limit for this worker cluster
+    WorkerActivitiesPerSecond:               200, // Rate limit for this worker process; not cluster-wide
     WorkerStopTimeout:                       time.Minute, // Allow activities to finish
 })
 ```
@@ -199,7 +199,7 @@ w := worker.New(c, "task-queue", worker.Options{
 
 ## Anti-Patterns to Avoid
 
-1.  **Massive Workflows:** Keeping too much state in a single workflow. Use `ContinueAsNew` if event history exceeds 50K events.
+1.  **Massive Workflows:** Keeping too much state in a single workflow. Use `ContinueAsNew` before approaching configured history limits, rather than after exceeding them.
 2.  **Fat Activities:** Doing orchestration inside an activity. Activities should be unit-of-work.
 3.  **Global Variables:** Using global variables in workflows. They will not be preserved across worker restarts.
 4.  **Native Concurrency in Workflows:** Using `go` routines, `mutexes`, or `channels` will cause race conditions and determinism errors during replay.
@@ -236,7 +236,9 @@ encodedFlag := workflow.MutableSideEffect(ctx, "feature-flag-v2",
     func(a, b interface{}) bool { return a.(bool) == b.(bool) },
 )
 var enabled bool
-encodedFlag.Get(&enabled)
+if err := encodedFlag.Get(&enabled); err != nil {
+    return err
+}
 ```
 
 > **Warning:** Do NOT use `SideEffect` as a workaround to call external APIs (HTTP, DB) inside a workflow. All external I/O must still go through Activities.

@@ -14,7 +14,7 @@ author: Conner K Ward
 # Design system
 ## When to Use
 
-Use this skill when you need mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems. (Aesthetic direction lives in...
+Use this skill when you need mechanical implementation invariants for frontend design: token architecture, typography hierarchy, loading order, FOUT prevention, chrome stability, motion timing, color semantics. Use with design when building components, pages, or design systems. Aesthetic direction is separate from these implementation guidelines.
 
 
 Apply with **design** when implementing UI: components, pages, or design systems. Every color, type, and motion choice should trace back to these rules.
@@ -48,11 +48,11 @@ The first viewport must paint complete and correct, fast. Order every resource b
 - **Below the fold:** `loading="lazy" decoding="async"` on images; `preload="none"` (or `"metadata"`) on video; `defer` non-critical JS. Always reserve space (`aspect-ratio`, or `width`+`height`) so deferred media can't shift layout (CLS).
 - Keep the render-blocking head minimal: inline critical CSS, defer the rest.
 
-## Never let fonts pop in (no FOUT) — ever
+## Font loading — readable content and stable metrics
 
-`font-display: swap` **is** the pop — it paints a fallback face, then swaps to the webfont and reflows. Do not use it for any text the user watches load (titles, wordmarks, hero copy). The rule is absolute: title/display text must never flash a fallback or reflow.
+`font-display: swap` **is** the pop — it paints a fallback face, then swaps to the webfont and reflows. Do not use it for any text the user watches load (titles, wordmarks, hero copy). Balance visual stability with immediate readability; do not hide essential headings or controls while awaiting a font.
 
-- **Gate visibility on the real font.** Synchronously in `<head>`, add a `fonts-pending` class to `<html>` that holds the display-font text at `opacity: 0`. On `document.fonts.ready` — kick it with `document.fonts.load('<weight> 1em "Family"')` for each critical face — swap to `fonts-ready` and fade the text in (~0.5s). Always include a safety timeout (~2.5s) that reveals regardless, so a font failure can never leave text permanently hidden.
+- **For nonessential decorative display text only, optionally gate visibility on the real font.** Synchronously in `<head>`, add a `fonts-pending` class to `<html>` that holds the display-font text at `opacity: 0`. On `document.fonts.ready` — kick it with `document.fonts.load('<weight> 1em "Family"')` for each critical face — swap to `fonts-ready` and fade the text in (~0.5s). Always include a safety timeout (~2.5s) that reveals regardless, so a font failure can never leave text permanently hidden.
 - Pair this with preload + WOFF2 (above) so the hidden window is a few hundred ms, not seconds — the fade reads as intentional, not as a stall.
 - For body text where a sub-perceptual swap is tolerable, at minimum kill the reflow: define a fallback `@font-face` (or `font-family` fallback) tuned with `size-adjust` / `ascent-override` / `descent-override` so the fallback occupies the same metrics as the webfont and the swap shifts nothing.
 
@@ -84,7 +84,7 @@ Rule of thumb: if a user could screenshot the page mid-load and you'd be embarra
 
 Persistent chrome (headers, nav, toolbars, search bars, status regions) must hold a **constant height** no matter what text lands in it. Transient status / loading / explanatory copy — "loading model…", "N matching · M indexed", empty-state hints — must not wrap to a second line and shove adjacent controls down. A status region that grows and shrinks as its message changes is a layout-jank bug, not dynamic content.
 
-- **Constrain to one line:** `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` so the longest message truncates instead of wrapping.
+- **For optional status summaries only, constrain to one line:** `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` so the longest message truncates instead of wrapping.
 - **Reserve the space up front:** give the container a fixed `height` (or `min-height`) sized for the message, so the shortest and longest states — and the empty state — occupy the same footprint.
 
 Only the content area should move while chrome stays fixed; layout shift from transient text reads as broken polish. (Concrete failure this prevents: in a search app, a model-loading message wrapping to two lines and pushing the search bar downward.)
@@ -115,7 +115,7 @@ another (a button in a card, an inset panel in a container). When nested:
 
 - **Child radius ≤ parent radius**, never larger (a child corner rounder than its parent looks
   like it's bulging out).
-- **Concentric** is the ideal: `child_radius = parent_radius − gap` (the padding between them),
+- **Concentric** is the ideal: `child_radius = max(0, parent_radius − gap)` (the padding between them),
   so the two curves run parallel and the inner corner echoes the outer. Flat/unrounded children
   in a rounded parent are fine; what reads as broken is mismatched, non-concentric curves.
 
@@ -124,7 +124,7 @@ another (a button in a card, an inset panel in a container). When nested:
 - **Palette from domain**: colors should feel like they came *from* the product's world, not applied on top.
 - **Beyond temperature**: quiet vs loud, dense vs spacious, serious vs playful, geometric vs organic — not just warm/cool.
 - **Color carries meaning**: gray builds structure; color communicates status, action, emphasis, identity. Unmotivated color is noise. (Restraint — one accent, not five — is a direction principle; see design-thinking → *reserve impact for punctuation*.)
-- **Contrast — APCA for decisions, WCAG for the gate.** For *perceptual* contrast judgments (is this text comfortably readable on this surface?) prefer **APCA** ([apcacontrast.com](https://apcacontrast.com/)) — it models lightness perception far better than the WCAG 2 ratio, which mis-rates light-on-dark and mid-tones. Keep **WCAG 2 (4.5 / 3:1) as the compliance floor** — it's what `design-spatial`'s `layout-audit.js` gates on and what accessibility standards require. Use APCA to design, WCAG to certify.
+- **Contrast — APCA for decisions, WCAG for the gate.** For *perceptual* contrast judgments (is this text comfortably readable on this surface?) prefer **APCA** ([apcacontrast.com](https://apcacontrast.com/)) — it models lightness perception far better than the WCAG 2 ratio, which mis-rates light-on-dark and mid-tones. Keep **WCAG 2 (4.5 / 3:1) as the compliance floor** — it's what `design-spatial`'s `layout-audit.js` gates on and what accessibility standards require. APCA can inform design, but WCAG conformance requires all applicable criteria, not contrast ratios alone.
 - **Interactive states gain contrast.** `:hover`, `:active`, `:focus` must read as *more* prominent than rest — more contrast, not less. A hover that lowers contrast (e.g. lightens text toward the bg) reads as disabled.
 
 Avoiding the generic/trend look (Inter, purple-on-white, the same dark-glass card) and varying across generations is **design-spatial §2** — not restated here.
@@ -144,3 +144,7 @@ Atmosphere over flat fills — but matched to the chosen aesthetic, not a defaul
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Accessibility and fallback requirements
+
+Keep essential text visible with a readable fallback and failure/no-JavaScript path; font loading must not delay task access or leave focusable invisible controls. Font conversion/self-hosting requires license permission and does not guarantee fixed byte savings or identical rendering. Preserve full status/error text through accessible expansion or equivalent visible detail; do not clip critical messages at zoom, narrow widths or localization. Respect reduced-motion preferences for all users, avoid hiding information during transitions, and provide a static, keyboard-accessible narrative alternative to sticky scrollytelling. A contrast-only audit cannot certify WCAG: test keyboard/focus, semantics, reflow, text alternatives and applicable criteria. External design siblings and layout-audit helpers are not bundled in this tree; verify availability before invoking.

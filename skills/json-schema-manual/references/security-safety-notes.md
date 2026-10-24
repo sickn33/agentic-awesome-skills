@@ -10,4 +10,4 @@ If the user pastes a real payload to debug it, describe the failing rule instead
 echoing unnecessary personal data. Do not claim that deleting a message erases service storage.
 
 
-See the [Common Pitfalls](references/common-pitfalls.md) reference for the full guidance.
+See the [Common Pitfalls](common-pitfalls.md) reference for the full guidance.

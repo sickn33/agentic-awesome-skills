@@ -23,6 +23,8 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use when debugging performance bottlenecks
 - Use when preparing for performance audits
 
+Examples below are hypothetical teaching scenarios, not measured results or guaranteed savings. Measure comparable builds/devices/networks and field distributions; do not infer INP from bundle bytes alone. Pin project-compatible tools before installs; preserve originals and review dependency/API changes.
+
 ## Examples
 
 ### Example 1: Optimizing Core Web Vitals
@@ -266,13 +268,13 @@ module.exports = {
 
 \`\`\`html
 <!-- Before: Loads immediately -->
-<script src="https://analytics.com/script.js"></script>
+<script src="https://analytics.example/script.js"></script>
 
 <!-- After: Load after page interactive -->
 <script>
   window.addEventListener('load', () => {
     const script = document.createElement('script');
-    script.src = 'https://analytics.com/script.js';
+    script.src = 'https://analytics.example/script.js';
     script.async = true;
     document.body.appendChild(script);
   });
@@ -331,10 +333,16 @@ async function optimizeImage(inputPath, outputDir) {
 }
 
 // Process all images
-const images = fs.readdirSync('./images');
-images.forEach(img => {
-  optimizeImage(\`./images/\${img}\`, './images/optimized');
-});
+fs.mkdirSync('./images/optimized', { recursive: true });
+async function main() {
+  const images = fs.readdirSync('./images', { withFileTypes: true });
+  for (const entry of images) {
+    if (entry.isFile() && /\.(png|jpe?g|webp)$/i.test(entry.name)) {
+      await optimizeImage(path.join('./images', entry.name), './images/optimized');
+    }
+  }
+}
+main().catch(error => { console.error(error.message); process.exitCode = 1; });
 \`\`\`
 
 #### 2. Implement Responsive Images

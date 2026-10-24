@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Overview
 
-Expert-level guide for building resilient, scalable, and deterministic distributed systems using the Temporal Go SDK. This skill transforms vague orchestration requirements into production-grade Go implementations, focusing on durable execution, strict determinism, and enterprise-scale worker configuration.
+Expert-level guide for building resilient, scalable, and deterministic distributed systems using the Temporal Go SDK. This skill transforms vague orchestration requirements into Go implementation sketches requiring project-specific validation, focusing on durable execution, strict determinism, and enterprise-scale worker configuration.
 
 ## When to Use This Skill
 
@@ -53,7 +53,7 @@ Expert-level guide for building resilient, scalable, and deterministic distribut
 ### Advanced Workflow Patterns
 
 - **Durable Concurrency**: Using `workflow.Go`, `workflow.Channel`, and `workflow.Selector` instead of native primitives.
-- **Versioning**: Implementing safe code evolution using `workflow.GetVersion` and `workflow.GetReplaySafeLogger`.
+- **Versioning**: Implementing safe code evolution using `workflow.GetVersion` and `workflow.GetLogger`.
 - **Large-scale Processing**: Pattern for `ContinueAsNew` to manage history size limits (defaults: 50MB or 50K events).
 - **Child Workflows**: Managing lifecycle, cancellation, and parent-child signal propagation.
 
@@ -140,6 +140,7 @@ func RunSecureWorker() error {
 
     w := worker.New(c, "payment-queue", worker.Options{})
     w.RegisterWorkflow(SubscriptionWorkflow)
+    w.RegisterActivity(ChargePaymentActivity) // implement with a stable per-charge idempotency key
 
     if err := w.Run(worker.InterruptCh()); err != nil {
         return fmt.Errorf("worker run failed: %w", err)
@@ -162,7 +163,7 @@ func ApprovalWorkflow(ctx workflow.Context) (string, error) {
     })
 
     // Add 72-hour timeout timer
-    s.AddReceive(workflow.NewTimer(ctx, 72*time.Hour).GetChannel(), func(c workflow.ReceiveChannel, _ bool) {
+    s.AddFuture(workflow.NewTimer(ctx, 72*time.Hour), func(f workflow.Future) {
         approved = false
     })
 
@@ -198,9 +199,9 @@ func ApprovalWorkflow(ctx workflow.Context) (string, error) {
 - Does not cover Temporal Cloud UI navigation or TLS certificate provisioning workflows.
 - Does not cover Temporal Java, Python, or TypeScript SDKs; refer to their dedicated `-pro` skills.
 - Assumes Temporal Server v1.20+ and Go SDK v1.25+; older SDK versions may have different APIs.
-- Does not cover experimental Temporal features (e.g., Nexus, Multi-cluster Replication).
+- Does not cover Nexus or multi-cluster replication; check current support status in the pinned SDK/server documentation.
 - Does not address global namespace configuration or multi-region failover setup.
-- Does not cover Temporal Worker versioning via the `worker-versioning` feature flag (experimental).
+- Does not cover current Worker Deployment/Versioning APIs; choose an upgrade strategy from the pinned version’s documentation.
 
 ## Resources
 
@@ -214,3 +215,7 @@ func ApprovalWorkflow(ctx workflow.Context) (string, error) {
 - `grpc-golang` - Internal transport protocol and Protobuf design.
 - `golang-pro` - General Go performance tuning and advanced syntax.
 - `workflow-orchestration-patterns` - Language-agnostic orchestration strategy.
+
+## Production boundaries
+
+Examples omit imports, activity types and durable storage and are not a compiled application. Register every referenced Activity. The billing loop uses 28/30-day durations, not calendar months; carry an explicit logical charge ID into an atomic provider/database idempotency contract so retries do not double-charge and different periods do not collapse. Sagas require compensation design and cannot promise rollback of arbitrary external effects. Configure HeartbeatTimeout for heartbeat-based detection/cancellation, and distinguish worker-local rates from task-queue-wide rate limits. Cancel unused timers and handle workflow cancellation distinctly from rejection. Pin SDK/server versions and verify APIs, deployment/version retention, reset/replay needs and actual history limits before migration; no-current-running-instance alone is insufficient to discard all replay compatibility. Encrypt/minimize sensitive history payloads and protect exported histories/certificates; never disable TLS verification.

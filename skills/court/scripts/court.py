@@ -22,6 +22,7 @@ import random
 import re
 import sys
 import time
+from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = ".court"
@@ -41,17 +42,40 @@ def load_jurors():
         return json.load(f)
 
 
+def checked_run_dir(raw):
+    root = Path(ROOT).absolute()
+    candidate = Path(raw).absolute()
+    try:
+        candidate.relative_to(root)
+    except ValueError as exc:
+        raise ValueError("Trial directory must stay inside .court") from exc
+    if candidate == root or any(p.is_symlink() for p in [candidate, *candidate.parents]):
+        raise ValueError("Trial path must be a non-symlink child of .court")
+    return str(candidate)
+
+
 def run_dir():
     if not os.path.exists(LATEST):
         sys.exit("court: no trial yet. Run: court.py init --case-file .court/case.md")
+    if Path(LATEST).is_symlink():
+        raise ValueError("LATEST must not be a symlink")
     with open(LATEST) as f:
-        return f.read().strip()
+        return checked_run_dir(f.read().strip())
 
 
 def load_state(rd=None):
-    rd = rd or run_dir()
-    with open(os.path.join(rd, "state.json")) as f:
-        return json.load(f)
+    rd = checked_run_dir(rd or run_dir())
+    state_path = Path(rd) / "state.json"
+    if state_path.is_symlink():
+        raise ValueError("state.json must not be a symlink")
+    with open(state_path) as f:
+        state = json.load(f)
+    if checked_run_dir(state["dir"]) != rd:
+        raise ValueError("State directory does not match selected trial")
+    state["dir"] = rd
+    if not isinstance(state.get("jury"), list) or not 3 <= len(state["jury"]) <= 12:
+        raise ValueError("Invalid jury size in state")
+    return state
 
 
 def save_state(state):
@@ -62,7 +86,8 @@ def save_state(state):
 def jury_size(args):
     if getattr(args, "quick", False):
         return QUICK_JURY
-    n = getattr(args, "jury", None) or DEFAULT_JURY
+    requested = getattr(args, "jury", None)
+    n = DEFAULT_JURY if requested is None else requested
     if n < 3 or n > 12:
         sys.exit("court: the jury must be 3 to 12 Claudes")
     return n
@@ -120,7 +145,7 @@ def brief_text(state, phase, job):
                 "- 3 to 5 numbered charges. Each names one concrete way the case fails, the evidence for it from "
                 "the case file (quote it), and what it would cost if you are right.\n"
                 "- Attack the case as the user actually wrote it, never a weaker version of it.\n"
-                "- No insults, no hedging, no praise. 350 words at most.\n")
+                "- No insults or invented certainty; state evidence limits. 350 words at most.\n")
         return head + (
             "You are the DEFENSE. Build the strongest honest case that the charge does NOT hold: the case "
             "should go ahead as described.\n\n"
@@ -176,15 +201,23 @@ FIELD_RE = r"^\s*\**%s\**\s*:\s*(.+)$"
 
 
 def parse_vote(text):
-    m = VOTE_RE.search(text or "")
-    if not m:
+    lines = [line.strip() for line in (text or "").splitlines() if line.strip()]
+    if len(lines) != 4:
         return None
-    vote = "NOT GUILTY" if "NOT" in m.group(1).upper() else "GUILTY"
-    out = {"vote": vote}
-    for key, name in (("reason", "REASON"), ("fact", "DECIDING FACT"), ("flip", "WOULD FLIP IF")):
-        f = re.search(FIELD_RE % name, text, re.I | re.M)
-        out[key] = f.group(1).strip().strip("*").strip() if f else ""
-    return out
+    parsed = {}
+    for line, field in zip(lines, ("VOTE", "REASON", "DECIDING FACT", "WOULD FLIP IF")):
+        prefix = field + ":"
+        if not line.upper().startswith(prefix):
+            return None
+        value = line[len(prefix):].strip()
+        if not value:
+            return None
+        parsed[field] = value
+    vote = parsed["VOTE"].upper()
+    if vote not in ("GUILTY", "NOT GUILTY"):
+        return None
+    return {"vote": vote, "reason": parsed["REASON"],
+            "fact": parsed["DECIDING FACT"], "flip": parsed["WOULD FLIP IF"]}
 
 
 def tally(state):
@@ -197,9 +230,9 @@ def tally(state):
                      "flip": v["flip"] if v else ""})
     guilty = sum(1 for r in rows if r["vote"] == "GUILTY")
     not_guilty = sum(1 for r in rows if r["vote"] == "NOT GUILTY")
-    if guilty > not_guilty:
+    if guilty > len(rows) / 2:
         verdict = "GUILTY"
-    elif not_guilty > guilty:
+    elif not_guilty > len(rows) / 2:
         verdict = "NOT GUILTY"
     else:
         verdict = "HUNG JURY"

@@ -31,3 +31,5 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The bundled examples span client versions and require migration and application integration. Confirm the pinned SDK, least-privilege credentials, private-record policy and task completion behavior before any remote index change.

@@ -115,3 +115,11 @@ Assistant: Follow the workflow in this skill, cite limitations, and ask before r
 
 - Imported upstream skill; verify credentials, permissions, and safety boundaries before execution.
 - Does not replace environment-specific validation, testing, or maintainer review.
+
+## Contract and data limits
+
+Use the instrument identifiers returned by the provider; OSI/OCC display conventions and adjusted contracts differ. Verify multiplier, deliverable, exercise style, settlement, expiry and currency rather than assuming every contract covers 100 shares. Warrants and CBBCs are distinct issuer products, not interchangeable calls/puts; CBBC mandatory-call events can terminate them before expiry. HK-listed products may reference overseas assets, so HK-only coverage does not prove HK-only underlyings.
+
+Every quote needs source timestamp, entitlement/delay, bid/ask and liquidity context; a last price or missing Greek must not be invented as live/executable data. IV percentile needs historical IV of a comparable tenor/moneyness; IV/HV thresholds in the references are illustrative, not validated trade signals. Different-expiry calendars cannot be priced at one common expiry using intrinsic value for every leg. Scale Greeks by signed quantity/multiplier and identify provider units; a Black–Scholes estimate requires explicit inputs and model/exercise limitations. Covered calls still retain substantial stock downside; assignment, margin, dividends, gaps and transaction costs can alter modeled outcomes.
+
+No CLI, MCP, ChatGPT connection or entitlement is supplied by this skill; discover actual tools and obtain approval before installing or connecting. Analysis permission does not authorize orders, hedges or credential changes. No market data was fetched and no trade or strategy performance was validated during this review.

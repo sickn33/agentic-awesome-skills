@@ -13,7 +13,10 @@ from pathlib import Path
 
 # Diretorio de dados
 DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+# Import has no filesystem side effect. Logging is opt-in to a private chosen path.
+if os.environ.get("LEILOEIRO_LOG_DIR"):
+    DATA_DIR = Path(os.environ["LEILOEIRO_LOG_DIR"]).expanduser()
+
 
 LOG_FILE = DATA_DIR / "action_log.jsonl"
 RATE_LIMIT_WINDOW = 60  # segundos
@@ -26,9 +29,16 @@ def log_action(action: str, details: dict | None = None) -> dict:
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
         "action": action,
-        "details": details or {},
+        "details": {},  # Never persist arbitrary document/party data from callers.
     }
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
+    if not os.environ.get("LEILOEIRO_LOG_DIR"):
+        return entry
+    DATA_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    log_path = DATA_DIR / "action_log.jsonl"
+    if log_path.is_symlink():
+        raise ValueError("Refusing symlink log")
+    fd = os.open(log_path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+    with os.fdopen(fd, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     return entry
 
@@ -44,7 +54,7 @@ def check_rate(action: str = "query") -> bool:
             try:
                 entry = json.loads(line)
                 ts = datetime.fromisoformat(entry["timestamp"])
-                if (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
+                if 0 <= (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
                     count += 1
             except (json.JSONDecodeError, KeyError, ValueError):
                 continue

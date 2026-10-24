@@ -2,7 +2,7 @@
 name: anti-slop-design
 description: "Autonomous Principal Design Technologist. Cures vibe-coded software from AI frontend slop using curated token archetypes and 7-axis quality gating."
 category: frontend
-risk: safe
+risk: critical
 source: community
 source_repo: wwewtech/anti-slop-design
 source_type: community
@@ -81,10 +81,10 @@ Every meaningful screen zone or component container must follow the 1-to-3 scali
 - **Max 3 Secondary Logics** (Supporting metadata, controls, or links).
 - *Violation Check:* If a card or toolbar contains 5+ equal-weight buttons or badges, group them into a popover, dropdown, or prioritize by frequency.
 
-### Axiom 2: The 85% Statistical Prioritization Law
+### Axiom 2: Prioritize measured usage
 Design interfaces for real usage frequency, not theoretical edge cases:
-- Identify the **Primary Scenario** used by 85% of users (e.g., "Create Short Link", "Run Report", "Track Shipment"). Make this action prominent, instantaneous, and zero-click accessible.
-- Secondary actions (used by 15% of users) must have reduced visual weight and be neatly tucked into popovers or secondary tabs.
+- Identify the **Primary Scenario** supported by actual usage research (e.g., "Create Short Link", "Run Report", "Track Shipment"). Make this action prominent, instantaneous, and zero-click accessible.
+- Lower-frequency actions (verify with actual usage) must have reduced visual weight and be neatly tucked into popovers or secondary tabs.
 - Never place high-frequency controls (e.g., Billing & Usage) inside monthly configuration screens (e.g., General Profile Settings).
 
 ### Axiom 3: The Strict Ban on Duplication
@@ -162,7 +162,7 @@ When restyling an application, select one of these 4 production archetypes while
   --bg-surface-elevated: #18181c;
   --border-subtle: rgba(255, 255, 255, 0.08);
   --border-hover: rgba(255, 255, 255, 0.16);
-  --accent-primary: #3b82f6; /* Electric Cobalt */
+  --accent-primary: #1d4ed8; /* Darkened cobalt for white foreground */
   --accent-foreground: #ffffff;
   --text-primary: #f4f4f5;
   --text-secondary: #a1a1aa;
@@ -214,7 +214,7 @@ When restyling an application, select one of these 4 production archetypes while
   --bg-canvas: #f4f4f0;
   --bg-surface: #ffffff;
   --border-subtle: #e2e1db;
-  --border-hover: #cbcaa;
+  --border-hover: #cbcaca;
   --accent-primary: #d97706; /* Warm Ochre */
   --text-primary: #1c1917;
   --text-secondary: #78716c;
@@ -233,7 +233,7 @@ When restyling an application, select one of these 4 production archetypes while
 
 ### Cure 7: Cognitive Noise De-Cluttering (The Annotation Pass)
 Systematically audit the interface and strip away decorative ballast:
-1. **Redundant Badges:** Remove "Active", "Live", "Status" pill badges when the data itself or a clean colored status dot (`w-2 h-2 rounded-full bg-emerald-500`) conveys the state.
+1. **Redundant Badges:** Remove redundant badges only if a text or accessible status name remains; a colored dot alone cannot convey status.
 2. **Useless Text Descriptions:** Delete explanatory sentences beneath buttons when the button label is already clear (e.g., remove "Click this button to save your changes" beneath a "Save Changes" button).
 3. **Ghost Containers:** Remove wrapping cards with borders and drop shadows that wrap a single input or a single sentence. Let whitespace define grouping.
 
@@ -280,7 +280,7 @@ Static buttons and dead inputs immediately betray amateur AI generation. Every i
   font-weight: 500;
   line-height: 1.25rem;
   border-radius: var(--radius-sm, 6px);
-  background: var(--accent-primary, #3b82f6);
+  background: var(--accent-primary, #1d4ed8);
   color: var(--accent-foreground, #ffffff);
   border: 1px solid transparent;
   cursor: pointer;
@@ -293,7 +293,7 @@ Static buttons and dead inputs immediately betray amateur AI generation. Every i
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid var(--accent-primary, #3b82f6);
+  outline: 2px solid var(--accent-primary, #1d4ed8);
   outline-offset: 2px;
 }
 
@@ -305,6 +305,11 @@ Static buttons and dead inputs immediately betray amateur AI generation. Every i
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary { transition: none; }
+  .btn-primary:active { transform: none; }
 }
 ```
 
@@ -321,7 +326,7 @@ flowchart TD
     P3 --> P4["Phase 4: Component Craft & 8-State Feedback"]
     P4 --> P5{"Phase 5: 7-Axis Pre-Emit Quality Gate"}
     P5 -- "Score < 4 on any axis" --> P3
-    P5 -- "All axes >= 4" --> Output["Ship Production Code"]
+    P5 -- "All axes >= 4" --> Output["Deliver Reviewable Code"]
 ```
 
 ### Phase 1: Diagnostic Audit & Clutter Strip
@@ -360,8 +365,8 @@ Score the resulting code from 1 to 5 across all 7 axes. **Every axis must achiev
 | **3. Typographic Discipline** | Personality & hierarchy | [ ] Maximum 2 font families<br>[ ] Tabular numbers enabled on all metrics (`tabular-nums`)<br>[ ] Body text line length $\le 75\text{ch}$<br>[ ] Sentence case used on labels; no tracked-out all-caps screaming |
 | **4. Spacing & Geometric Math** | Spatial cadence & alignment | [ ] Strict 4px/8pt grid adherence<br>[ ] Nested corner radius formula respected: $R_{\text{inner}} = R_{\text{outer}} - P$<br>[ ] No cramped cards; minimum 16px internal card padding<br>[ ] Optical centering on icon-text pairs |
 | **5. Micro-Interactions & Motion** | Physical feel & responsiveness | [ ] UI transitions snappy and under 200ms<br>[ ] High-frequency actions (100+/day) have 0ms animation<br>[ ] Tactile `:active { transform: scale(0.97) }` feedback present<br>[ ] No sluggish `ease-in` curves |
-| **6. Accessibility & Keyboard Flow** | WCAG 2.1 AA Compliance | [ ] Visible focus rings on all interactive elements (`:focus-visible`)<br>[ ] No `outline: none` without focus replacement ring<br>[ ] Icon-only buttons have `aria-label`<br>[ ] Semantic HTML tags (`<button>`, `<a>`, `<nav>`, `<main>`, `<header>`) |
-| **7. Mobile & Responsive Linearity** | Cross-device stability | [ ] Clean vertical stacking on mobile viewports<br>[ ] Zero horizontal scroll overflows (`overflow-x: hidden` / flex wrapping)<br>[ ] Minimum 44x44px touch targets on mobile<br>[ ] Table data switches to cards or clean scroll containers |
+| **6. Accessibility & Keyboard Flow** | Accessibility checks (partial, not conformance) | [ ] Visible focus rings on all interactive elements (`:focus-visible`)<br>[ ] No `outline: none` without focus replacement ring<br>[ ] Icon-only buttons have `aria-label`<br>[ ] Semantic HTML tags (`<button>`, `<a>`, `<nav>`, `<main>`, `<header>`) |
+| **7. Mobile & Responsive Linearity** | Cross-device stability | [ ] Clean vertical stacking on mobile viewports<br>[ ] No accidental overflow; fix layout rather than hiding clipped content, and preserve accessible wide-table scrolling<br>[ ] Minimum 44x44px touch targets on mobile<br>[ ] Table data switches to cards or clean scroll containers |
 
 ---
 
@@ -374,7 +379,7 @@ Use this transformation blueprint when refactoring vibe-coded components:
 | **Page Analytics Header** | Date filter embedded inside 4 individual cards; 3 duplicate click counters. | Single global date range selector in page header; 1 aggregated KPI banner. | Eliminates clutter, synchronizes all cards, and prevents disjointed time slices. |
 | **SaaS Sidebar** | Generic icons + emojis, glowing purple gradient on active link, redundant links. | Clean 240px sidebar, unified 1.5px stroke Lucide icons, subtle 1px hairline active border. | Reduces visual fatigue, establishes corporate credibility, and saves vertical space. |
 | **Data Comparison** | Huge decorative 3D globe / map widget showing zero regional percentages. | Compact horizontal bar comparison list with percentage deltas and tabular numbers. | Delivers actionable business utility instead of decorative CPU-hogging fluff. |
-| **Action Button** | `bg-indigo-600 hover:bg-indigo-700 transition-all duration-300`, no focus ring, no active state. | `bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.97] focus-visible:ring-2`, snappy 140ms ease-out. | Provides instant physical response, satisfies WCAG accessibility, feels human-crafted. |
+| **Action Button** | `bg-indigo-600 hover:bg-indigo-700 transition-all duration-300`, no focus ring, no active state. | `bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.97] focus-visible:ring-2`, snappy 140ms ease-out. | Provides instant physical response, improves focus feedback; requires full accessibility validation, feels human-crafted. |
 | **Settings & Billing** | 5 overlapping cards, billing buried inside random user profile settings. | Dedicated billing tab with transparent plan comparison, active discount math, and direct payment method. | High-frequency commercial tasks must be direct and unburied. |
 | **Landing Page Hero** | 140px headline split across 4 lines with 1 word bold-italic, 3 buttons, video preloader. | Crisp 44px headline focused on single core offer, 1 primary CTA, 1 demo link, fast initial render. | Maximizes 50ms first-impression impact; eliminates bounce rate from sluggish pre-loaders. |
 
@@ -391,3 +396,7 @@ Before delivering code, assert:
 - The seven-axis gate is a heuristic checklist, not a substitute for user research, usability testing, or brand/legal review.
 - Does not replace accessibility audits, performance profiling, or backend/API design work.
 - Archetype tokens and Tailwind examples assume a web stack; native mobile or desktop toolkits need separate patterns.
+
+## Refactor scope and verification limits
+
+Code edits are high impact even when described as visual polish. Preserve behavior, accessible names, required notices, filter scope, state and existing user work; obtain approval before removing functional controls or publishing. Aesthetic scores and preferred action counts are subjective heuristics, not statistical laws or production acceptance evidence. Validate actual contrast across token pairs/states, keyboard and screen-reader operation, zoom and reduced motion. Sample palettes and a focus ring do not prove WCAG conformance. The button CSS covers only several of the eight listed states; implement application-specific loading, error and success semantics and announce relevant status without fabricated telemetry.

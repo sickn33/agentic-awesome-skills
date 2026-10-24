@@ -21,6 +21,8 @@ metadata:
 
 Design and implement Azure network infrastructure including VNets, subnets, NSGs, VNet peering, private endpoints, Azure Firewall, and Application Gateway. Covers both az CLI commands and Terraform configurations for production hub-spoke topologies.
 
+Examples provision billable infrastructure and alter network access. Confirm tenant/subscription/region, CIDR overlap, target resources, approved exposure and rollback before mutation; inventory existing routes/rules first. These fragments are not a complete production topology.
+
 ## Prerequisites
 
 ```bash
@@ -191,6 +193,16 @@ az network nsg rule create \
   --protocol Tcp \
   --source-address-prefixes 10.1.2.0/24 \
   --destination-port-ranges 1433
+
+# Explicit deny is required for app/data isolation: default AllowVNetInBound
+# otherwise permits other VNet traffic despite the narrow allow rules above.
+for tier in app data; do
+  az network nsg rule create --resource-group networking-rg \
+    --nsg-name "${tier}-nsg" --name DenyOtherInbound --priority 4096 \
+    --direction Inbound --access Deny --protocol '*' \
+    --source-address-prefixes '*' --destination-port-ranges '*'
+done
+# Add required platform health/management exceptions before associating NSGs.
 
 # Associate NSG with subnet
 az network vnet subnet update \
@@ -382,6 +394,8 @@ az network vnet subnet update \
   --route-table spoke-route-table
 ```
 
+The private endpoints above do not automatically disable public network access. Configure and verify resource-level public access policy, private DNS zones/links/records for **each** service/subresource, approval state and allowed/denied-client resolution. Peering is not transitive; gateway transit requires an actual gateway and intended spoke settings. Validate return paths and effective routes before routing through the firewall.
+
 ## Application Gateway with WAF
 
 ```bash
@@ -399,6 +413,9 @@ az network vnet subnet create \
   --name AppGatewaySubnet \
   --address-prefix 10.1.10.0/24
 
+# HTTP-only illustrative gateway; port443 alone does not enable TLS.
+# For production configure a valid certificate/Key Vault identity, HTTPS listener,
+# approved TLS policy and backend TLS/health probes before exposing traffic.
 # Create Application Gateway with WAF v2
 az network application-gateway create \
   --resource-group networking-rg \
@@ -411,7 +428,7 @@ az network application-gateway create \
   --public-ip-address appgw-public-ip \
   --http-settings-port 80 \
   --http-settings-protocol Http \
-  --frontend-port 443 \
+  --frontend-port 80 \
   --servers 10.1.2.4 10.1.2.5
 
 # Enable WAF policy
@@ -424,6 +441,9 @@ az network application-gateway waf-policy managed-rule rule-set add \
   --policy-name myapp-waf-policy \
   --type OWASP \
   --version 3.2
+# Attach the policy (creation alone does not apply it).
+az network application-gateway update --resource-group networking-rg \
+  --name myapp-appgw --firewall-policy myapp-waf-policy
 ```
 
 

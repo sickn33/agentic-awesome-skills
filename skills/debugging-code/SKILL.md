@@ -29,7 +29,7 @@ evaluate arbitrary expressions against the live process — all without restarti
 This skill uses `dap`, a CLI tool that background daemon to interact with the debugger via the DAP Protocol, maintain
 the debugger state, so you can simply interact with it with multiple calls.
 
-If `dap` isn't installed (check: `command -v dap`), install it NOW.
+If `dap` isn't installed (check: `command -v dap`), check the project's approved installation method and version.
 Ask/notify the user before proceeding to install it.
 
 From Homebrew (macOS)
@@ -41,23 +41,32 @@ brew install AlmogBaku/tap/dap
 Installer script:
 
 ```bash
-bash scripts/install-dap.sh
+DAP_VERSION=REVIEWED_TAG DAP_SHA256=TRUSTED_PLATFORM_SHA256 bash /absolute/path/to/skill/scripts/install-dap.sh
 ```
 
 Install from sources:
 
 ```bash
-go install github.com/AlmogBaku/debug-skill/cmd/dap@latest
+go install github.com/AlmogBaku/debug-skill/cmd/dap@REVIEWED_TAG
 ```
 
-This tool is open-sourced and available on [GitHub](https://github.com/AlmogBaku/debug-skill), maintained and follows
-best practices.
+This tool is open-sourced and available on [GitHub](https://github.com/AlmogBaku/debug-skill), an external dependency requiring version/provenance review.
 
 Supports natively Python, Go, Node.js/TypeScript, Rust, C/C++, and any other language that supports DAP.
 
 If a debugger backend is missing or fails to start, see `references/installing-debuggers.md`
 
 For all commands and flags: `dap --help` or `dap <cmd> --help`.
+
+## Execution boundaries
+
+Launching/attaching runs or pauses real code. Confirm executable, process owner,
+arguments, environment and external side effects first; reproduce on isolated
+fixtures with no production credentials. Debugger ports allow code execution:
+bind locally, use authenticated tunnels if needed, and never expose adapters
+publicly. Variable inspection, properties and conditional breakpoints may invoke
+user-defined getters/functions; avoid printing tokens, personal data or full config.
+No debugger or language adapter is bundled; verify actual CLI help/version.
 
 ## Starting a Session
 
@@ -75,8 +84,9 @@ Choose your starting strategy based on what you know:
 - **Remote process** — `dap debug --attach host:port --backend <name>`
 - **Process already running (stuck server, live issue)** — attach without restarting:
   `dap debug --pid <PID> --backend <name>`
-  > **macOS + Go gotcha:** `dlv --pid` requires SIP disabled (`csrutil disable`).
-  > Prefer starting the program under the debugger instead or attaching to a remote debugger!
+  > Debugger attachment permissions vary by OS signing, process and backend.
+  > Do not disable SIP or other platform protections to make attachment work;
+  > use a signed development build launched under its approved debugger.
 
 **Session isolation:** `--session <name>` keeps concurrent agents from interfering.
 Tip: You might want to use your session id(${CLAUDE_SESSION_ID}) if available.
@@ -265,8 +275,7 @@ Root cause: None passed where list expected.
 
 ## Verify Your Fix
 
-While paused at the bug, use `eval` to test your proposed fix expression against the live state. If it
-works in eval, it'll work in code. Then edit and `dap restart` to confirm end-to-end.
+While paused at the bug, use `eval` to test your proposed fix expression against the live state. A successful eval tests only that paused state; it does not establish correctness in normal execution. Then edit and `dap restart` to confirm end-to-end.
 
 After applying a fix, re-run the same scenario to verify. `dap restart` re-runs with the same args and
 breakpoints — a fast feedback loop. Don't trust that a fix works until you've observed the correct

@@ -33,8 +33,10 @@ function copyDir(src, dest) {
     const destPath = path.join(dest, entry.name);
     if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
+    } else if (entry.isFile()) {
+      fs.copyFileSync(srcPath, destPath, fs.constants.COPYFILE_EXCL);
     } else {
-      fs.copyFileSync(srcPath, destPath);
+      throw new Error('Refusing symlink or special source entry');
     }
   }
 }
@@ -43,6 +45,15 @@ console.log(`\n Installing Subagent Orchestrator Skill for Antigravity 2.0`);
 console.log(`→ Target: ${targetDir}\n`);
 
 try {
+  // Refuse replacement and symlinked ancestors; installation is opt-in and additive.
+  let ancestor = path.parse(targetBase).root;
+  for (const segment of path.relative(ancestor, targetBase).split(path.sep).filter(Boolean)) {
+    ancestor = path.join(ancestor, segment);
+    if (fs.existsSync(ancestor) && fs.lstatSync(ancestor).isSymbolicLink()) throw new Error("Symlinked install ancestor");
+  }
+  if (fs.existsSync(targetDir) || (() => { try { fs.lstatSync(targetDir); return true; } catch (e) { if (e.code === "ENOENT") return false; throw e; } })()) throw new Error("Target already exists; preserve it and review a manual update");
+  fs.mkdirSync(targetBase, { recursive: true });
+  fs.mkdirSync(targetDir); // exclusive creation, no recursive overwrite
   copyDir(sourceDir, targetDir);
   console.log('✅ Skill installed successfully!');
   console.log('');

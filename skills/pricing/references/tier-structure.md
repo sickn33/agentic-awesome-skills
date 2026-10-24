@@ -171,7 +171,7 @@ Different customers have different:
 - Credit card optional vs. required trade-off
 
 **Credit card upfront:**
-- Higher trial-to-paid conversion (40-50% vs. 15-25%)
+- May increase observed trial-to-paid conversion through selection while reducing starts; measure total paid acquisition and refunds, not a universal benchmark.
 - Lower trial volume
 - Better qualified leads
 
@@ -230,3 +230,5 @@ Add "Contact Sales" when:
 **Value-based contracts:**
 - Price tied to customer's revenue/outcomes
 - Example: % of transactions, revenue share
+
+All product examples, prices, trial periods, enterprise ARR thresholds and 2-3x ratios are illustrative, requiring current validation. Essential security/accessibility controls should not be withheld merely to create a price anchor. Disclose trial renewal/charge terms and cancellation clearly; obtain consent required in the applicable market. Company size and income labels are hypotheses, not proof of willingness to pay.

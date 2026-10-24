@@ -37,7 +37,7 @@ A great playground removes uncertainty. Developers should be able to validate th
 1. Pre-load a working example (not an empty editor)
 2. Let users run examples without signup
 3. Add "Copy as cURL" button for every example
-4. Show real API responses (not mocked data)
+4. Label live versus mocked responses clearly; use synthetic fixtures where privacy/cost requires
 5. Create shareable playground URLs
 
 ## Related Skills

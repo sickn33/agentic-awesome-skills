@@ -2,6 +2,12 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Data, outreach and offer boundaries
+
+Use authorized minimized usage/community data; public posts are not permission to profile across identities or republish personal details. Keep the tracker private, obtain permission for attribution/photos and honor opt-outs. Draft invitations, posts, payments and offers locally until explicitly authorized for the recipient/action/budget. Vendor names are examples requiring current access/capability verification. Missing companion skills are optional, not authority to install or delegate automatically.
+
+All scores, timing, response commitments, benefits and bounty amounts are synthetic planning examples, not validated benchmarks or approved offers. A high usage score does not establish willingness to promote or financial value. Ask the person what they want; public recognition is optional.
+
 ## Before You Start
 
 1. **Load your developer audience context**:
@@ -98,7 +104,8 @@ Create a simple tracker:
 | @john | Agency Y | Heavy usage, feature requests | 65 | Engaged user |
 | @sam | Corp Z | Multiple repos using product | 58 | Advocate candidate |
 
-**Score calculation**:
+**Illustrative score calculation (unvalidated)**:
+Normalize each rule, define missing data, deduplicate signals and calibrate against a separate outcome. The synthetic92/65/58 rows above are illustrative placeholders, not outputs of this multiples-of5 rubric.
 - Usage in top 10%: +20
 - Community active: +15
 - Created content: +25
@@ -213,7 +220,7 @@ If you think you qualify, email champions@[product].com
 
 ### CONTRIBUTING.md Template
 
-```markdown
+````markdown
 # Contributing to [PROJECT]
 
 Thanks for your interest in contributing!
@@ -258,7 +265,7 @@ All contributors are:
 
 - Discord: [link]
 - Email: contributors@[project].com
-```
+````
 
 ### Contributor Recognition
 
@@ -288,7 +295,7 @@ All contributors are:
 
 **Passive encouragement**:
 - Showcase existing content prominently
-- Retweet/share everything created about you
+- Share permitted, useful content after checking rights, accuracy and attribution
 - Feature creators in changelog and newsletters
 
 **Active encouragement**:
@@ -388,7 +395,7 @@ Refer a developer to [PRODUCT]:
 You get: $50 in credits
 They get: $50 in credits + extended trial
 
-No limits. Stack as many as you want.
+Subject to approved per-user/program caps, eligible referrals, fraud review and current terms.
 ```
 
 **Why this works**:
@@ -413,8 +420,8 @@ No limits. Stack as many as you want.
 - Credits apply to future bills (never cash out)
 - Referred user must be new (no existing accounts)
 - Referred user must become paying customer
-- No limit on referrals
-- Credits never expire
+- Referral cap and total budget: [APPROVED TERMS]
+- Credit expiry, refunds/reversals and self-referral exclusions: [APPROVED TERMS]
 
 ## Your Referral Link
 
@@ -543,7 +550,8 @@ Champion value (estimate):
 - Social mentions: 100
 - Brand value: Hard to quantify
 
-Estimated ROI: ~3x (conservative)
+Synthetic gross attributed value = $65,000. Value/cost =65,000/27,000 ≈2.41x; arithmetic ROI=(65,000-27,000)/27,000 ≈140.7%, before any omitted costs.
+This is not measured incremental profit: LTV must use contribution margin, avoid overlap between acquisition/content/support value and validate the counterfactual. Do not call it conservative without evidence.
 ```
 
 ---

@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+The upstream shared contract is not bundled; follow the explicit intake, artifact and authorization rules below. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -122,21 +122,21 @@ that need a number, date or currency format applied.
 
 ```csv
 Full Name,Annual CTC,Currency,Date of Birth,Department,Email,Accounts,Emergency Contact,Emergency Phone,Employee ID,Employment Type,End Date,Grade Level,KPIs,Job Title,Access Role,LinkedIn,Manager,Nationality,Notes,Phone,Probation Status,Profile Photo URL,Skills,Start Date,Status,Time Zone,Work Location
-Aarav Sharma,1200000.00,INR,1991-04-18,Delivery,aarav.sharma@example.com,"Payroll portal, HRIS",Anil Sharma,+91 98xxxxxx34,,Full Time,2027-03-31,L1,On-time delivery %,Delivery Manager,Line manager,https://linkedin.com/in/aarav-sharma-example,Sneha Iyer,Indian,Joined from a competitor; notice period is one month.,+91 98xxxxxx21,Passed,https://example.com/photo.jpg,"Excel, SQL, Client Handling",2021-03-08,Active,IST (UTC+5:30),Bengaluru
+Aarav Sharma,1200000.00,INR,1991-04-18,Delivery,aarav.sharma@example.com,"Payroll portal, HRIS",Anil Sharma,+91 98xxxxxx34,EMP-001,Full Time,2027-03-31,L1,On-time delivery %,Delivery Manager,Line manager,https://linkedin.com/in/aarav-sharma-example,Sneha Iyer,Indian,Joined from a competitor; notice period is one month.,+91 98xxxxxx21,Passed,https://example.com/photo.jpg,"Excel, SQL, Client Handling",2021-03-08,Active,IST (UTC+5:30),Bengaluru
 ```
 
 ```sql
 CREATE TABLE people_directory (
   full_name VARCHAR(255),
-  annual_ctc NUMERIC(14,2) NOT NULL,
+  annual_ctc NUMERIC(14,2),  -- optional restricted HR data, omit from shared directory
   currency VARCHAR(255),
-  date_of_birth DATE NOT NULL,
+  date_of_birth DATE,  -- optional restricted HR data, omit from shared directory
   department VARCHAR(255),
   email VARCHAR(255),
   accounts VARCHAR(255),
   emergency_contact VARCHAR(255),
   emergency_phone VARCHAR(255),
-  employee_id SERIAL PRIMARY KEY,
+  employee_id VARCHAR(255) PRIMARY KEY,
   employment_type VARCHAR(100) NOT NULL,
   end_date DATE,
   grade_level VARCHAR(100) NOT NULL,
@@ -199,7 +199,7 @@ CREATE INDEX idx_people_directory_status ON people_directory (status);
       "type": "string"
     },
     "Employee ID": {
-      "type": "integer"
+      "type": "string"
     },
     "Employment Type": {
       "type": "string"
@@ -261,8 +261,7 @@ CREATE INDEX idx_people_directory_status ON people_directory (status);
     }
   },
   "required": [
-    "Annual CTC",
-    "Date of Birth",
+    "Employee ID",
     "Employment Type",
     "Grade Level",
     "Probation Status",
@@ -308,13 +307,15 @@ CREATE INDEX idx_people_directory_status ON people_directory (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+The comprehensive example is an **HR-restricted master template**, not a company-wide directory. Default shared output must omit compensation, birth date, nationality, emergency contacts, private phones and free-text HR notes unless explicitly needed and access-controlled. Hidden Notion properties/views are not a confidentiality boundary; use a separate restricted database/schema with real access controls. Keep only required data with an approved retention/deletion policy. An `Access Role` text field does not provision permissions. Preserve stable source employee IDs across formats; do not renumber on reimport. CSV phone/text values beginning with `=`, `+`, `-` or `@` require safe text import/formula-injection handling without silently changing canonical values.
+
 ## Field Reference
 
 `End Date` may be absent before the relevant lifecycle stage or when no verified source exists. Do not invent values to satisfy a schema.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Full Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
+| 1 | Full Name | `text` | `VARCHAR(255)` | `string` | Title | `Aarav Sharma` |
 | 2 | Annual CTC | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1200000.00` |
 | 3 | Currency | `text` | `VARCHAR(255)` | `string` | Text | `INR` |
 | 4 | Date of Birth | `date` | `DATE` | `string, format: date` | Date | `1991-04-18` |
@@ -323,7 +324,7 @@ and anything pointing at another table stays `relation`.
 | 7 | Accounts | `text` | `VARCHAR(255)` | `string` | Text | `Payroll portal, HRIS` |
 | 8 | Emergency Contact | `text` | `VARCHAR(255)` | `string` | Text | `Anil Sharma` |
 | 9 | Emergency Phone | `text` | `VARCHAR(255)` | `string` | Text | `+91 98xxxxxx34` |
-| 10 | Employee ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 10 | Employee ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `EMP-001` |
 | 11 | Employment Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Full Time` |
 | 12 | End Date | `date` | `DATE` | `string, format: date` | Date | `2027-03-31` |
 | 13 | Grade Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `L1` |
@@ -444,7 +445,7 @@ Our employee list lives in three spreadsheets and none agree.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

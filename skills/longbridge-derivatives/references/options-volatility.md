@@ -25,13 +25,13 @@ longbridge kline --help
 
 1. **Resolve symbol** to `<CODE>.<MARKET>` format (e.g. `TSLA.US`, `700.HK`).
 2. **Fetch option chain** for the nearest liquid expiry to get IV by strike.
-3. **Fetch daily kline** (60 bars) and compute HV:
+3. **Fetch daily kline** (at least 61 valid closes for 60 returns) and compute HV:
    - Daily log returns: `r_i = ln(close_i / close_{i-1})`
    - HV (annualised): `σ_HV = std(r) × √252`
-4. **Compute IV percentile** using the ATM IV from the chain. Compare against the 60-day kline range as a rough proxy if historical IV series is unavailable.
+4. **Compute IV percentile** using the ATM IV from the chain. Use a comparable historical IV series; if unavailable, report IV percentile unavailable. A stock-price range or realized-volatility history is not an IV percentile proxy.
 5. **Build smile / skew**:
    - Sort chain rows by strike; extract call IV and put IV at each strike.
-   - Put skew = (OTM put IV − ATM IV); if put skew > 0 the market fears downside.
+   - Put-wing premium = (OTM put IV − ATM IV), within matched expiry; it can reflect multiple risk/market effects, not a proven investor motive.
 6. **Output** structured report (template below). Cite Longbridge Securities.
 
 ## Output template
@@ -44,8 +44,8 @@ longbridge kline --help
 - 60-day HV: X%
 - IV/HV ratio: X  → {rich / fair / cheap}
 
-[IV Percentile (60-day proxy)]
-- Estimated percentile: ~N-th  (low <30 / mid 30–70 / high >70)
+[IV Percentile (comparable historical IV observations only)]
+- Percentile: N-th or unavailable  (low <30 / mid 30–70 / high >70)
 
 [Vol Smile / Skew]
 - Put skew (OTM put IV − ATM IV): +X pp  → {downside fear / balanced}

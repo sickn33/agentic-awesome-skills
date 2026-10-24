@@ -36,8 +36,10 @@ If the `android` tool is not in the path, download the platform installer to a p
 
 ```bash
 tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/android-cli.XXXXXX")" || exit 1
-curl -fsSL https://dl.google.com/android/cli/latest/linux_x86_64/install.sh -o "$tmpdir/install.sh"
-sed -n '1,160p' "$tmpdir/install.sh"
+curl --fail --show-error --silent --location --max-time 30 https://dl.google.com/android/cli/latest/linux_x86_64/install.sh -o "$tmpdir/install.sh"
+# Read the ENTIRE downloaded file and any secondary fetches it performs.
+# Record its digest; first 160 lines alone are not a complete review.
+cat "$tmpdir/install.sh"
 # After review and explicit user confirmation:
 bash "$tmpdir/install.sh"
 ```
@@ -76,7 +78,7 @@ The `docs` command searches authoritative, high-quality Android developer docume
 By providing a few keywords, this tool will return high quality articles that contain examples or guidance on how to use Android APIs or libraries.
 Use this tool to obtain additional information on how to achieve Android-specific tasks or to know more about Android APIs, surfaces, libraries, or devices.
 
-Always use this tool to get the most up-to-date information about Android concepts. Typical good use cases are:
+Use installed-version help and dated official Android documentation; a returned search result is not guaranteed current or authoritative for the exact SDK. Typical good use cases are:
   - Finding migration guides for APIs.
   - Finding examples for APIs.
   - Finding up-to-date information about Android APIs.
@@ -112,7 +114,15 @@ Update the Android CLI using the `android update` command.
 - Device, emulator, SDK, and documentation commands can depend on local Android SDK state, network access, and attached hardware.
 - Treat generated commands as environment-sensitive: inspect paths, package names, device serials, and install/update targets before running them.
 
-## Android Help Output
+## Historical Android Help Output
+
+Snapshot only: compare `android --version` and relevant `--help` output before
+using flags; do not confuse this CLI with the deprecated SDK `android` tool.
+Official CLI source documentation: https://developer.android.com/tools/agents/android-cli
+and https://developer.android.com/tools/agents/android-cli/download .
+Installing/updating and `init`/`skills` can modify local tools or agent configuration;
+review destination, provenance, downloads and telemetry settings first. Do not
+automatically change global tools, licenses or persistent agent instructions.
 
 ```text
 Usage: android [-hV] [--sdk=PARAM] [COMMAND]
@@ -249,3 +259,13 @@ update
           Update the Android CLI
                 --url=PARAM   The URL to download the update from
 ```
+
+## Device and data boundaries
+
+Select a single authorized test serial for BOTH `android --device` and `adb -s`;
+never rely on a default when several devices are connected. Install/run/uninstall,
+SDK removal, emulator deletion and UI actions can change data or cause purchases,
+messages or account operations. Use synthetic test accounts and scoped approval.
+Screenshots/layout dumps may expose passwords, tokens, notifications or third-party
+content; store privately with bounded retention and redact before sharing.
+No installation/device/journey was run by this static guide review.

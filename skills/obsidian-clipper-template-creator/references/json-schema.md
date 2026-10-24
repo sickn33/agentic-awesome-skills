@@ -19,7 +19,7 @@ The Obsidian Web Clipper imports templates via JSON files.
 
 ### Fields
 
-*   **`schemaVersion`**: Always "0.1.0".
+*   **`schemaVersion`**: "0.1.0" in these examples; compare an export from the installed Web Clipper version before import.
 *   **`name`**: The display name of the template in the Clipper.
 *   **`behavior`**: How the note is created.
     *   `create`: Create a new note.
@@ -35,7 +35,7 @@ The Obsidian Web Clipper imports templates via JSON files.
     *   For `append-specific` behavior: The *full file path* of the note to append to (e.g., `Databases/Recipes.md`).
 *   **`triggers`**: Array of strings to automatically select this template.
     *   **URL Patterns**: `["https://www.youtube.com/watch"]` (Simple string or Regex).
-    *   **Schema Types**: `["schema:Recipe"]` (Triggers if the page contains this Schema.org type).
+    *   **Schema Types**: `["schema:@Recipe"]` (Triggers if the page contains this Schema.org type).
 
 ## Properties
 

@@ -4,7 +4,7 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 Implement minimal code to make failing tests pass in TDD green phase:
 
-[Extended thinking: This tool uses the test-automator agent to implement the minimal code necessary to make tests pass. It focuses on simplicity, avoiding over-engineering while ensuring all tests become green.]
+The agent/tool names below are optional environment-specific examples, not installed or executed components.
 
 ## Use this skill when
 
@@ -32,7 +32,7 @@ Implement minimal code to make failing tests pass in TDD green phase:
 
 ## Implementation Process
 
-Use Task tool with subagent_type="unit-testing::test-automator" to implement minimal passing code.
+Implement directly using available tools; delegate only if explicitly authorized and the named tool exists.
 
 Prompt: "Implement MINIMAL code to make these failing tests pass: $ARGUMENTS. Follow TDD green phase principles:
 
@@ -56,7 +56,7 @@ Prompt: "Implement MINIMAL code to make these failing tests pass: $ARGUMENTS. Fo
    - Use simple data structures initially
    - Defer architectural decisions until refactor phase
    - Keep methods/functions small and focused
-   - Don't add error handling unless tests require it
+   - Preserve required safety/error handling even if tests omit it; add missing behavior tests in the red phase.
 
 4. **Language-Specific Patterns**
    - **JavaScript/TypeScript**: Simple functions, avoid classes initially
@@ -210,13 +210,13 @@ class UserService {
 ```
 *In-memory storage. Tests pass. Good enough for green phase.*
 
-**Stage 3: Production-Ready (Refactor Phase)**
+**Stage 3: Persistence Sketch (requires new behavior/integration tests)**
 ```typescript
 class UserService {
   constructor(private db: Database) {}
 
   async create(data: { email: string; name: string }) {
-    const existing = await this.db.query('SELECT * FROM users WHERE email = ?', [data.email]);
+    const existing = await this.db.queryOne('SELECT * FROM users WHERE email = ?', [data.email]);
     if (existing) throw new Error('User exists');
 
     const id = await this.db.insert('users', data);
@@ -228,7 +228,7 @@ class UserService {
   }
 }
 ```
-*Database integration, error handling, validation - saved for refactor phase.*
+*Database integration and validation change behavior and need their own tests; this is not production-ready.*
 
 ### Example 2: API-First Implementation (Express)
 
@@ -330,7 +330,7 @@ class Product(models.Model):
 ```
 *All tests pass. Minimal validation logic added.*
 
-**Stage 3: Rich Domain Model (Refactor)**
+**Stage 3: New Domain Behavior (new red/green cycle)**
 ```python
 class Product(models.Model):
     name = models.CharField(max_length=200)
@@ -348,8 +348,10 @@ class Product(models.Model):
         if self.price > 10000:
             raise ValidationError("Price exceeds maximum")
 
-    def apply_discount(self, percentage: float) -> Decimal:
-        return self.price * (1 - percentage / 100)
+    def apply_discount(self, percentage: Decimal) -> Decimal:
+        if not percentage.is_finite() or not Decimal("0") <= percentage <= Decimal("100"):
+            raise ValueError("Invalid percentage")
+        return self.price * (Decimal("1") - percentage / Decimal("100"))
 ```
 *Additional features, indexes, business logic added when needed.*
 
@@ -373,7 +375,7 @@ describe('UserProfile', () => {
 **Stage 1: Minimal JSX**
 ```typescript
 interface UserProfileProps {
-  user: { name: string; email: string };
+  user: { name: string; email: string; bio?: string };
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => (
@@ -396,16 +398,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user }) => (
 ```
 *Added semantic HTML, className for styling hook.*
 
-**Stage 3: Production Component (Refactor)**
+**Stage 3: Expanded Component Sketch (new interaction tests required)**
 ```typescript
 const UserProfile: React.FC<UserProfileProps> = ({ user }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  // Editing UI, state imports and behavior are omitted; do not ship the button below as functional.
 
   return (
     <div className="user-profile" role="article" aria-label="User profile">
       <header>
         <h2>{user.name}</h2>
-        <button onClick={() => setIsEditing(true)} aria-label="Edit profile">
+        <button disabled aria-label="Edit profile">
           Edit
         </button>
       </header>
@@ -449,7 +451,7 @@ Complex  → REAL    | FAKE, evaluate alternatives
 
 **Simplicity Score Calculation:**
 ```
-Score = (Lines of Code) + (Cyclomatic Complexity × 2) + (Dependencies × 3)
+Illustrative local score = (Lines of Code) + (Cyclomatic Complexity × 2) + (Dependencies × 3)
 
 < 20  → Simple enough, implement directly
 20-50 → Consider simpler alternative
@@ -472,7 +474,7 @@ function calculateShipping(weight: number, distance: number, express: boolean): 
   return express ? 50 : 25; // Fake it until more tests drive real logic
 }
 ```
-*Choose Option B for green phase, evolve to Option A as tests require.*
+*Use a fake only for a disposable initial test; do not replace required shipping behavior merely to lower a heuristic score.*
 
 ### Framework 3: Performance Consideration Timing
 
@@ -551,9 +553,10 @@ class ProductListView(View):
         return JsonResponse({'products': list(products.values())})
 
 # Refactor: Generic view
-class ProductListView(ListView):
-    model = Product
-    context_object_name = 'products'
+class ProductListView(View):
+    def get(self, request):
+        products = Product.objects.all()
+        return JsonResponse({'products': list(products.values())})
 ```
 
 ### Express Patterns
@@ -562,7 +565,7 @@ class ProductListView(ListView):
 ```javascript
 // Green Phase: Inline logic
 app.post('/api/users', (req, res) => {
-  const user = { id: Date.now(), ...req.body };
+  const user = { id: crypto.randomUUID(), email: req.body.email, name: req.body.name }; // validate fields before creation
   users.push(user);
   res.json(user);
 });
@@ -592,14 +595,13 @@ function calculateTotal(items: Item[]): number {
   return items.reduce((sum, item) => sum + item.price, 0);
 }
 
-// Refactoring: Add tax calculation (keep interface)
+// Refactoring: extract subtotal with the same output
 function calculateTotal(items: Item[]): number {
   const subtotal = items.reduce((sum, item) => sum + item.price, 0);
-  const tax = subtotal * 0.1;
-  return subtotal + tax;
+  return subtotal;
 }
 
-// Tests still green because return type/behavior unchanged
+// Tax would change behavior; equal return types do not prove equivalence.
 ```
 
 ### Pattern 2: Parallel Implementation
@@ -609,9 +611,8 @@ Run old and new implementations side by side:
 ```python
 def process_order(order):
     # Old implementation (tests depend on this)
+    # Compare only pure calculations or isolated disposable snapshots, never duplicate real order/payment side effects.
     result_old = legacy_process(order)
-
-    # New implementation (testing in parallel)
     result_new = new_process(order)
 
     # Verify they match
@@ -664,7 +665,7 @@ class DatabaseUserRepository implements UserRepository {
   constructor(private db: Database) {}
 
   async findById(id: string) {
-    return this.db.query('SELECT * FROM users WHERE id = ?', [id]);
+    return this.db.queryOne('SELECT * FROM users WHERE id = ?', [id]);
   }
 
   async save(user: User) {
@@ -794,7 +795,7 @@ Given these failing tests:
 [paste tests]
 
 Provide the MINIMAL implementation that makes tests pass.
-Do not add error handling, validation, or features beyond test requirements.
+Preserve authorization, validation, error handling and other existing requirements even if these tests are incomplete.
 Focus on simplicity over completeness.
 ```
 
@@ -838,7 +839,7 @@ class CacheService {
 ```typescript
 class OrderService {
   async createOrder(data: CreateOrderDto): Promise<Order> {
-    console.log('[OrderService] Creating order', { data }); // Simple logging
+    console.log('[OrderService] Creating order'); // never log full private order payloads
 
     const order = { id: '123', ...data };
 
@@ -853,13 +854,14 @@ class OrderService {
   constructor(private logger: Logger) {}
 
   async createOrder(data: CreateOrderDto): Promise<Order> {
-    this.logger.info('order.create.start', { data });
+    const start = performance.now();
+    this.logger.info('order.create.start');
 
     const order = await this.repository.save(data);
 
     this.logger.info('order.create.success', {
       orderId: order.id,
-      duration: Date.now() - start
+      duration: performance.now() - start
     });
 
     return order;
@@ -868,3 +870,9 @@ class OrderService {
 ```
 
 Tests to make pass: $ARGUMENTS
+
+## Limits of the examples
+
+Fakes, fixed IDs and memory stores are test scaffolding, not implementations of persistence/uniqueness contracts. Existing requirements still apply even when tests are weak. Demonstrate a meaningful red failure first; do not weaken assertions or fabricate all-green output. Record exactly the commands/results observed, including skipped suites. A 100% pass rate or coverage number cannot certify correctness.
+
+Application imports/models/DTOs/database adapters and fixtures are omitted. Django save/clean hooks can be bypassed by bulk update; enforce required invariants in the database and relevant write paths. Price examples require Decimal imports and decimal inputs. Database uniqueness needs constraints and race-safe error handling, not check-then-insert alone. JavaScript-labelled TypeScript class annotations must be compiled as TypeScript. React disabled editing is a placeholder; enabling it needs functional UI/tests. Cache miss/error/serialization and async contracts differ across Redis and Map and are not automatic refactors. No runtime test was executed during this content review.

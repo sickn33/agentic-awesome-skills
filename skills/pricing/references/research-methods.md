@@ -20,7 +20,7 @@ Ask each respondent:
 
 ### How to Analyze
 
-1. Plot cumulative distributions for each question
+1. Validate respondent price ordering, units/currency and sampling; plot increasing cumulative expensive/too-expensive curves and reverse cumulative cheap/too-cheap curves.
 2. Find the intersections:
    - **Point of Marginal Cheapness (PMC):** "Too cheap" crosses "Expensive"
    - **Point of Marginal Expensiveness (PME):** "Too expensive" crosses "Cheap"
@@ -28,10 +28,10 @@ Ask each respondent:
    - **Indifference Price Point (IDP):** "Expensive" crosses "Cheap"
 
 **The acceptable price range:** PMC to PME
-**Optimal pricing zone:** Between OPP and IDP
+OPP and IDP are descriptive perception intersections; they do not identify profit-maximizing prices.
 
 ### Survey Tips
-- Need 100-300 respondents for reliable data
+- Plan sample size for segmentation, precision and design; 100-300 is illustrative and cannot guarantee reliability.
 - Segment by persona (different willingness to pay)
 - Use realistic product descriptions
 - Consider adding purchase intent questions
@@ -46,9 +46,9 @@ Optimal Price Point:          $49/mo
 Indifference Price Point:     $59/mo
 Point of Marginal Expensiveness: $79/mo
 
-Recommended range: $49-59/mo
-Current price: $39/mo (below optimal)
-Opportunity: 25-50% price increase without significant demand impact
+Illustrative perception range: $49-59/mo
+Current price: $39/mo (below those illustrative intersections)
+Hypothesis: test higher prices; this survey cannot predict a demand-neutral increase.
 ```
 
 ---
@@ -105,7 +105,7 @@ Features are ranked by utility score:
 "Would you buy [product] at [$X]?" (Yes/No)
 Vary price across respondents to build demand curve.
 
-**Even better: Conjoint analysis:**
+**Alternative when the design supports it: Conjoint analysis:**
 Show product bundles at different prices
 Respondents choose preferred option
 Statistical analysis reveals price sensitivity per feature
@@ -150,3 +150,5 @@ Insight: Value correlates with team adoption (users)
 
 Recommendation: Price per user, gate integrations to higher tiers
 ```
+
+MaxDiff measures relative preference within the tested set, not willingness to pay or universal must-have status. Percentile packaging cutoffs above are illustrative; validate table-stakes/security needs and segment demand independently. Usage/retention correlations are not causal evidence that gating integrations or raising seat prices improves outcomes; account for tenure, segment and survivorship.

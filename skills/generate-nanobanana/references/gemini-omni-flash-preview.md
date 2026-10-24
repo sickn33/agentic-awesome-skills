@@ -99,7 +99,8 @@ from google import genai
 client = genai.Client()
 
 video_file = client.files.upload(file="Video.mp4")
-while video_file.state == "PROCESSING":
+deadline = time.monotonic() + 600
+while video_file.state == "PROCESSING" and time.monotonic() < deadline:
     time.sleep(10)
     video_file = client.files.get(name=video_file.name)
 if video_file.state == "FAILED":
@@ -108,7 +109,7 @@ if video_file.state == "FAILED":
 interaction = client.interactions.create(
     model="gemini-omni-flash-preview",
     input=[
-        {"type": "document", "uri": video_file.uri},
+        {"type": "video", "uri": video_file.uri},
         {"type": "text", "text": "When the person touches the mirror, make the mirror ripple beautifully like liquid, and the person's arm turns into reflective mirror material"},
     ],
 )
@@ -133,7 +134,8 @@ interaction = client.interactions.create(
 video_output = interaction.output_video
 file_name = video_output.uri.split("/")[-1]
 
-while True:
+deadline = time.monotonic() + 600
+while time.monotonic() < deadline:
     f_info = client.files.get(name=f"files/{file_name}")
     if f_info.state.name == "ACTIVE":
         break
@@ -158,3 +160,5 @@ curl -X POST "https://generativelanguage.googleapis.com/v1beta/interactions" \
 ```
 
 The response's `output_video.data` field holds base64-encoded video bytes (or `output_video.uri` when `delivery: "uri"` was requested); decode/download and write to the target file. The response envelope also includes an `id` field — log it so multi-turn edits can chain via `previous_interaction_id`.
+
+These snippets omit robust output existence/MIME/schema checks and protected no-overwrite writes; they are not ready-made production helpers. Raw REST resource shape can differ from SDK convenience properties, so inspect actual response steps/metadata and the pinned reference. Use secure header/config input rather than exposing API keys in process arguments. A polling deadline is not remote cancellation.

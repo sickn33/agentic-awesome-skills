@@ -9,7 +9,7 @@
 
 - Define explicit saga state machine.
 - Define timeout policy per step.
-- Define compensation action for each irreversible step.
+- Define compensation for reversible effects; use forward recovery/manual escalation for irreversible steps.
 - Use idempotency keys for command handling.
 - Store correlation IDs across all events and logs.
 

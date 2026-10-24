@@ -116,7 +116,7 @@
 - 相关系数（-1到1）
 - 相关性强度（弱/中/强）
 - 统计显著性
-- 因果关系推断
+- 关联假设（观察性记录不能建立因果关系）
 - 实践建议
 
 ### 5. 个性化建议生成
@@ -141,7 +141,7 @@
 
 - **补充剂建议**（仅供参考）：
   - 基于缺乏风险的补充剂建议
-  - 补充剂剂量和时机
+  - 整理已由医生/营养师确认的补充剂剂量和时机，不自行开具
   - 相互作用警示
 
 **建议依据**：
@@ -199,12 +199,8 @@
 ```python
 rda_achievement = (actual_intake / rda_value) * 100
 
-status_classification:
-- < 50%: 严重缺乏
-- 50-75%: 不足
-- 75-100%: 接近目标
-- 100-150%: 充足（理想范围）
-- > 150%: 过量（注意安全上限UL）
+# 仅报告相对所选参考值的比例；不能据此诊断缺乏、充足或毒性。
+# UL 与 RDA/AI 是不同概念，适用人群及摄入来源必须单独核对。
 ```
 
 **营养密度评分**：
@@ -298,8 +294,8 @@ nutrient_density_score = (
 - **血清水平变化**：
   - 基线（2025-05）：18 ng/mL
   - 当前（2025-06）：22 ng/mL
-  - 目标：30-100 ng/mL
-- **解读**：✅ 补充剂起效，但需继续监测
+  - 目标：由临床医生结合适用标准确定
+- **解读**：记录上升，但不能由本示例确定补充剂疗效
 
 ### 维生素C
 - **趋势**：⬆️ 改善
@@ -407,10 +403,10 @@ nutrient_density_score = (
    - 钾/钠比从1.0升至1.5，仍低于目标2.0
    - 建议：继续增加高钾食物（香蕉、橙子、土豆、菠菜）
 
-4. **维生素D补充剂有效**
+4. **维生素D记录变化，疗效未经本示例证实**
    - 血清水平从18升至22 ng/mL（4周+4ng）
-   - 预计3-4个月可达目标范围
-   - 建议：继续补充，定期监测
+   - 不线性外推达到血清目标的时间
+   - 建议：由临床医生复核是否补充及监测安排
 
 ### 优先级行动计划
 
@@ -435,7 +431,7 @@ nutrient_density_score = (
 
 **监测计划**：
 - 3个月后复查血清水平
-- 目标：40-60 ng/mL
+- 目标：由临床医生确定
 - 根据结果调整剂量
 
 ## 营养目标进度
@@ -445,7 +441,7 @@ nutrient_density_score = (
 | 卡路里 | 2100 | 1950 | 1800-2000 | 100% | ✅ 达标 |
 | 蛋白质 | 75g | 82g | 80g | 100% | ✅ 达标 |
 | 膳食纤维 | 18g | 22g | 30g | 73% | ⚠️ 进行中 |
-| 维生素D | 18 ng/mL | 22 ng/mL | 30-100 | 20% | ⚠️ 改善中 |
+| 维生素D | 18 ng/mL | 22 ng/mL | 临床确认 | 不适用 | ⚠️ 改善中 |
 | 钠摄入 | 2800mg | 2100mg | <2300 | 100% | ✅ 达标 |
 | Omega-3 | 150mg | 850mg | 500-1000mg | 100% | ✅ 达标 |
 
@@ -551,26 +547,15 @@ def calculate_rda_achievement(actual_intake, rda_value, ul_value=None):
     - achievement_rate: 达成率百分比
     - status: 状态标签
     """
+    if rda_value <= 0 or actual_intake < 0:
+        raise ValueError("Require positive reference and nonnegative intake")
     achievement_rate = (actual_intake / rda_value) * 100
-
-    if ul_value and actual_intake > ul_value:
-        status = "exceeds_ul"
-        category = "过量（危险）"
-    elif achievement_rate < 50:
-        status = "severe_deficiency"
-        category = "严重缺乏"
-    elif achievement_rate < 75:
-        status = "insufficient"
-        category = "不足"
+    if ul_value is not None and actual_intake > ul_value:
+        status, category = "above_selected_ul", "高于所选UL，需专业评估"
     elif achievement_rate < 100:
-        status = "approaching_target"
-        category = "接近目标"
-    elif achievement_rate <= 150:
-        status = "adequate"
-        category = "充足"
+        status, category = "below_reference", "低于所选参考值，不是缺乏诊断"
     else:
-        status = "high_intake"
-        category = "较高"
+        status, category = "at_or_above_reference", "达到或高于参考值，不代表临床充足"
 
     return {
         'achievement_rate': round(achievement_rate, 1),
@@ -633,10 +618,12 @@ def calculate_nutrient_density_score(meal_data):
 ```python
 def calculate_healthy_eating_index(daily_data):
     """
-    计算健康饮食指数（HEI-2015改编）
+    自定义教学评分，不是经过验证的 HEI-2015 实现
 
     评分范围：0-100分
     """
+    if daily_data['total_calories'] <= 0:
+        raise ValueError("Require positive calorie total")
     score = 0
 
     # 充足性成分（满分50分）
@@ -678,11 +665,11 @@ def calculate_healthy_eating_index(daily_data):
     score += max(10 - sodium_g * 2, 0)
 
     # 10. 添加糖（10分，越少越好）
-    added_sugars_pct = daily_data['added_sugars_g'] / (daily_data['total_calories'] / 100)
+    added_sugars_pct = daily_data['added_sugars_g'] * 4 / daily_data['total_calories'] * 100
     score += max(10 - added_sugars_pct * 10, 0)
 
     # 11. 饱和脂肪（10分，越少越好）
-    saturated_fat_pct = daily_data['saturated_fat_g'] / (daily_data['total_calories'] / 100)
+    saturated_fat_pct = daily_data['saturated_fat_g'] * 9 / daily_data['total_calories'] * 100
     score += max(10 - saturated_fat_pct * 10, 0)
 
     return round(score, 1)
@@ -699,13 +686,13 @@ def calculate_healthy_eating_index(daily_data):
 
 ### 分析能力范围
 
-✅ **能做到**：
+✅ **可协助整理（不保证临床有效性）**：
 - 营养数据统计和分析
 - 趋势识别和可视化
 - RDA达成率计算
 - 营养缺乏风险评估
 - 一般性营养建议
-- 补充剂相互作用检查
+- 收集补充剂清单并交专业人员核对相互作用
 
 ❌ **不做到**：
 - 诊断营养缺乏疾病
@@ -716,29 +703,7 @@ def calculate_healthy_eating_index(daily_data):
 
 ### 危险信号检测
 
-在分析过程中检测以下危险信号：
-
-1. **营养素过量**：
-   - 维生素A > 3000μg（长期）
-   - 维生素D > 100μg（长期）
-   - 铁 > 45mg（长期）
-   - 硒 > 400μg
-   - 钠 > 2300mg（持续）
-
-2. **营养素缺乏**：
-   - 维生素D < 10μg/天（血清<12 ng/mL）
-   - 维生素B12 < 1.5μg/天（素食者）
-   - 铁 < 6mg/天（育龄女性）
-   - 钙 < 500mg/天
-
-3. **能量摄入异常**：
-   - 持续<1200卡/天（可能营养不良）
-   - 持续>3500卡/天（可能超重）
-
-4. **饮食模式异常**：
-   - 膳食纤维<10g/天
-   - 添加糖>25%热量
-   - 饱和脂肪>15%热量
+不要用固定热量、单日摄入或 RDA 百分比自动诊断营养不良、肥胖、缺乏或中毒。核对年龄、生理阶段、肾功能、用药、单位和参考标准；有症状、异常化验或疑似过量时请医疗专业人员评估。高钾食物/补充剂并不适合所有肾病或相关用药人群。
 
 ### 建议分级
 

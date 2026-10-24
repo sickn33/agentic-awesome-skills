@@ -10,11 +10,7 @@ If a command fails with exit code 2 (authentication error), ask the user to set 
 2. Connect their LinkedIn account
 3. Copy the **Linked API Token** and **Identification Token** from the dashboard
 
-Once the user provides the tokens, run:
-
-```bash
-linkedin setup --linked-api-token=TOKEN --identification-token=TOKEN
-```
+Do not ask the user to paste tokens into chat or pass them in command-line arguments. Have the user configure them directly through the installed tool's documented private setup or secret-provider mechanism. Confirm credential-storage permissions and redaction without printing token values. If the installed version offers only argument-based setup, explain the exposure and use the user's approved local setup procedure outside chat; do not invent unsupported environment flags.
 
 ### When to Use
 Use this skill when you need to **orchestrate LinkedIn actions from scripts or an AI agent** instead of clicking through the web UI:
@@ -195,7 +191,7 @@ linkedin company search --term "fintech" --sizes "11-50,51-200" --json -q
 linkedin message send <person-url> '<text>' --json -q
 ```
 
-Text up to 1900 characters. Wrap the message in single quotes to avoid shell interpretation issues.
+The contributed guide lists a 1900-character text limit; confirm the installed version. Pass user text as one structured argv value, not shell source.
 
 ```bash
 linkedin message send https://www.linkedin.com/in/username 'Hey, loved your latest post!' --json -q
@@ -514,7 +510,7 @@ linkedin reset --all                             # Remove all accounts
 - **Sequential execution.** All operations for an account run one at a time. Multiple requests queue up.
 - **Not instant.** A real browser navigates LinkedIn – expect 30 seconds to several minutes per operation.
 - **Timestamps in UTC.** All dates and times are in UTC.
-- **Single quotes for text arguments.** Use single quotes around message text, post text, and comments to avoid shell interpretation issues with special characters.
+- **Text arguments.** Use structured argv arrays. Literal apostrophes break hand-written single-quoted shell strings; examples are static demonstrations, not a safe interpolation template.
 - **Action limits.** Per-account limits are configurable on the platform. A `limitExceeded` error means the limit was reached.
 - **URL normalization.** All LinkedIn URLs in responses are normalized to `https://www.linkedin.com/...` format without trailing slashes.
 - **Null fields.** Fields that are unavailable are returned as `null` or `[]`, not omitted.

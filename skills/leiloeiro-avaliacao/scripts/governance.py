@@ -1,106 +1,102 @@
-"""
-Modulo de governanca para leiloeiro-ia.
-
-Implementa action_log, rate_limit, confirmation_request e warning_threshold
-para skills baseadas em conhecimento (knowledge-only).
-"""
+"""Optional local advisory bookkeeping; no automatic authorization or atomic rate enforcement."""
 from __future__ import annotations
-
+from collections import deque
+from datetime import datetime, timezone
 import json
+import math
 import os
-from datetime import datetime
 from pathlib import Path
 
-# Diretorio de dados
-DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+RATE_LIMIT_WINDOW = 60
+RATE_LIMIT_MAX = 30
+WARNING_THRESHOLD = 0.8
+MAX_LOG_BYTES = 1_000_000
 
-LOG_FILE = DATA_DIR / "action_log.jsonl"
-RATE_LIMIT_WINDOW = 60  # segundos
-RATE_LIMIT_MAX = 30  # max acoes por janela
-WARNING_THRESHOLD = 0.8  # 80% do limite
+
+def _log_path():
+    configured = os.environ.get("LEILOEIRO_LOG_DIR")
+    if not configured:
+        return None
+    directory = Path(configured).expanduser().absolute()
+    if any(p.is_symlink() for p in (directory, *directory.parents)):
+        raise ValueError("Log directory must not contain symlinks")
+    path = directory / "action_log.jsonl"
+    if path.is_symlink():
+        raise ValueError("Refusing symlink log")
+    return path
 
 
 def log_action(action: str, details: dict | None = None) -> dict:
-    """Registra acao no action_log para auditoria."""
-    entry = {
-        "timestamp": datetime.utcnow().isoformat(),
-        "action": action,
-        "details": details or {},
-    }
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+    # Never persist arbitrary action strings, documents or party identifiers.
+    safe_action = action if action in {"query", "review", "draft", "check"} else "unspecified"
+    entry = {"timestamp": datetime.now(timezone.utc).isoformat(), "action": safe_action, "details": {}}
+    path = _log_path()
+    if path is None:
+        return entry
+    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+    if path.exists() and path.stat().st_size >= MAX_LOG_BYTES:
+        raise ValueError("Log size limit reached; apply approved retention")
+    fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(fd, "a", encoding="utf-8") as stream:
+        stream.write(json.dumps(entry) + "\n")
     return entry
 
 
-def check_rate(action: str = "query") -> bool:
-    """Verifica rate_limit — retorna True se dentro do limite."""
-    if not LOG_FILE.exists():
-        return True
-    now = datetime.utcnow()
-    count = 0
-    with open(LOG_FILE, "r", encoding="utf-8") as f:
-        for line in f:
+def get_recent_actions(limit: int = 20) -> list:
+    if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 1000:
+        raise ValueError("Limit must be1..1000")
+    path = _log_path()
+    if path is None or not path.exists():
+        return []
+    if path.stat().st_size > MAX_LOG_BYTES:
+        raise ValueError("Log size limit exceeded")
+    entries = deque(maxlen=limit)
+    with path.open(encoding="utf-8") as stream:
+        for line in stream:
             try:
-                entry = json.loads(line)
-                ts = datetime.fromisoformat(entry["timestamp"])
-                if (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
-                    count += 1
-            except (json.JSONDecodeError, KeyError, ValueError):
+                item = json.loads(line)
+                if isinstance(item, dict) and isinstance(item.get("timestamp"), str):
+                    entries.append({"timestamp": item["timestamp"], "action": "recorded", "details": {}})
+            except (ValueError, TypeError):
                 continue
+    return list(entries)
+
+
+def check_rate(action: str = "query") -> bool:
+    """Advisory count of prior local records only; not a reservation or spend limiter."""
+    now = datetime.now(timezone.utc)
+    count = 0
+    for entry in get_recent_actions(1000):
+        try:
+            ts = datetime.fromisoformat(entry["timestamp"])
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
+            if 0 <= (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
+                count += 1
+        except (ValueError, TypeError):
+            continue
     if count >= RATE_LIMIT_MAX:
-        raise RateLimitExceeded(f"Rate limit excedido: {count}/{RATE_LIMIT_MAX} em {RATE_LIMIT_WINDOW}s")
+        raise RateLimitExceeded("Advisory local action count exceeded")
     return True
 
 
 def requires_confirmation(action: str, risk_level: str = "alto") -> dict:
-    """Gera confirmation_request para acoes de alto risco."""
-    return {
-        "type": "confirmation_request",
-        "action": action,
-        "risk_level": risk_level,
-        "message": f"Acao '{action}' requer confirmacao do usuario (risco: {risk_level})",
-        "confirmed": False,
-    }
+    return {"type": "confirmation_request", "confirmed": False,
+            "message": "Obtain actual user authorization in the host; this object is not approval."}
 
 
 def check_warning_threshold(current_value: float, threshold: float = WARNING_THRESHOLD) -> list:
-    """Verifica warning_threshold e retorna warnings se ultrapassado."""
-    warnings = []
-    if current_value >= threshold:
-        warnings.append({
-            "type": "RATE_LIMIT_WARNING",
-            "message": f"warning_threshold atingido: {current_value:.0%} do limite",
-            "threshold": threshold,
-            "current": current_value,
-        })
-    return warnings
-
-
-def get_recent_actions(limit: int = 20) -> list:
-    """Retorna acoes recentes do audit_log."""
-    if not LOG_FILE.exists():
-        return []
-    actions = []
-    with open(LOG_FILE, "r", encoding="utf-8") as f:
-        for line in f:
-            try:
-                actions.append(json.loads(line))
-            except json.JSONDecodeError:
-                continue
-    return actions[-limit:]
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in (current_value, threshold)):
+        raise ValueError("Finite ratios required")
+    if current_value < 0 or not 0 <= threshold <= 1:
+        raise ValueError("Invalid ratio/threshold")
+    return ([{"type": "RATE_LIMIT_WARNING", "threshold": threshold, "current": current_value}]
+            if current_value >= threshold else [])
 
 
 class RateLimitExceeded(Exception):
-    """Excecao quando rate limit e excedido."""
     pass
 
 
 if __name__ == "__main__":
-    import sys
-    recent = get_recent_actions(20)
-    if recent:
-        for a in recent:
-            print(f"[{a['timestamp']}] {a['action']}: {a.get('details', {})}")
-    else:
-        print("Nenhuma acao registrada.")
+    print(f"Recent local records: {len(get_recent_actions())}; no details displayed.")

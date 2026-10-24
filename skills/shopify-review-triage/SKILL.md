@@ -80,7 +80,7 @@ owned: Example Popup App, Example Currency App
 competitors: Rival Popup App, Rival Currency App
 ```
 
-This is the only thing that makes tie-break 4 (*a competitor's incident never becomes your P0*)
+Use ownership already supplied in the conversation; ask only for missing names. This is what makes tie-break 4 (*a competitor's incident never becomes your P0*)
 applicable, so collect it first. It stays public data: app names as published on their listings,
 nothing about accounts, merchants, org structure, or internal identifiers. Do not ask for more
 than the names, and do not infer ownership from the review text, the first-person voice in a
@@ -144,8 +144,7 @@ support theme. Repetition is the signal, not volume of adjectives.
 
 #### P2 · Pricing confusion
 
-What the merchant expected to pay and what happened diverged. Usually a copy problem in the
-listing, the plan limits, or the upgrade prompts — not a code problem.
+What the merchant expected to pay and what happened diverged. Possible causes include listing copy, plan limits, billing defects or platform timing. A keyword match cannot establish which applies.
 
 **Suggested action.** Compare what the reviewer expected with the listing's pricing section and in-app upgrade prompts; clarify the copy where they diverge.
 
@@ -423,3 +422,9 @@ places:
 - [Two worked sample briefs over real public reviews](https://alfredtech2026.github.io/shopify-app-review-brief/#samples)
 
 Upstream source repository: [alfredtech2026/shopify-app-review-brief](https://github.com/alfredtech2026/shopify-app-review-brief) (MIT).
+
+## Counting and uncertainty rules
+
+Missing dates cannot support the 60-day escalation or age discount; leave both unapplied and state date not supplied. Deduplicate identical supplied rows before treating them as independent repetition, preserve their source references, and group themes per owned app before cross-portfolio aggregation. Do not infer multiple merchants or recurrent defects from duplicate text. P1 means a friction candidate on first pass, not confirmed recurrence. Escalation thresholds are this rubric’s queue policy, not validated incident severity.
+
+A missing action owner remains `unassigned` with assignment as the next action; do not invent a name or omit the row. Human verification can be recorded as a minimal outcome supplied by the team without requesting private tickets or telemetry. Public text can still contain personal details: exclude unnecessary identifiers from the brief. No resources, worksheet output or real reviews were fetched or verified in this review.

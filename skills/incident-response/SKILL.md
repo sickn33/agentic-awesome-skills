@@ -74,6 +74,10 @@ phases:
 
 ## Severity Classification
 
+The targets below (and the 72-hour retrospective target) are examples to agree with
+the organization, not notification deadlines or guarantees. Classify phishing by
+actual access/data/business impact, not automatically Medium.
+
 | Level | Impact | Response Time | Examples |
 |-------|--------|---------------|----------|
 | Critical (P1) | Active data breach, full outage, ransomware | Immediate (< 15 min) | Data exfiltration in progress, ransomware spreading |
@@ -81,220 +85,68 @@ phases:
 | Medium (P3) | Limited impact, contained | < 4 hours | Phishing compromise (single user), policy violation |
 | Low (P4) | Minimal impact | Next business day | Failed brute force, blocked scanning activity |
 
-## Evidence Collection Scripts
+## Evidence collection and containment
 
-### Linux Evidence Collection
+Live collection changes a host and may run attacker-controlled binaries. Use a
+trusted forensic workstation/toolkit, approved scope and a private encrypted evidence
+volume; record collector identity, UTC time/clock offset, source, tool/version,
+commands, errors and custody transfers. Hashes detect later byte changes but do not
+prove an honest source, completeness or chain of custody. Active containment may take
+priority over preservation to prevent ongoing harm; record that decision.
+
+### Bounded Linux collection example
+
+On an approved Linux test host with GNU tools, a minimal metadata collection is:
 
 ```bash
-#!/bin/bash
-# linux-evidence-collect.sh - Collect forensic evidence from a Linux host
-# Run with sudo. Preserves evidence with timestamps and hashes.
-
 set -euo pipefail
-
-EVIDENCE_DIR="/evidence/$(hostname)-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$EVIDENCE_DIR"
-LOGFILE="$EVIDENCE_DIR/collection.log"
-
-log() { echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $*" | tee -a "$LOGFILE"; }
-
-log "Starting evidence collection on $(hostname)"
-log "Collector: $(whoami)"
-log "System time: $(date -u)"
-
-# System information
-log "Collecting system information..."
+umask 077
+# EVIDENCE_PARENT must already be an approved private evidence volume.
+: "${EVIDENCE_PARENT:?Set approved evidence volume}"
+EVIDENCE_DIR=$(mktemp -d "$EVIDENCE_PARENT/collection.XXXXXXXX")
+date -u +%Y-%m-%dT%H:%M:%SZ > "$EVIDENCE_DIR/collection-time.txt"
 uname -a > "$EVIDENCE_DIR/uname.txt"
-cat /etc/os-release > "$EVIDENCE_DIR/os-release.txt"
-uptime > "$EVIDENCE_DIR/uptime.txt"
-date -u > "$EVIDENCE_DIR/system-time.txt"
-
-# Running processes (full command line)
-log "Collecting process list..."
-ps auxwwf > "$EVIDENCE_DIR/processes.txt"
-ps -eo pid,ppid,user,args --sort=-pcpu > "$EVIDENCE_DIR/processes-by-cpu.txt"
-
-# Network connections
-log "Collecting network state..."
-ss -tulnp > "$EVIDENCE_DIR/listening-ports.txt"
-ss -anp > "$EVIDENCE_DIR/all-connections.txt"
-ip addr show > "$EVIDENCE_DIR/ip-addresses.txt"
-ip route show > "$EVIDENCE_DIR/routes.txt"
-iptables -L -n -v > "$EVIDENCE_DIR/iptables.txt" 2>&1 || true
-cat /etc/resolv.conf > "$EVIDENCE_DIR/dns-config.txt"
-
-# User activity
-log "Collecting user activity..."
-last -a > "$EVIDENCE_DIR/login-history.txt"
-lastb > "$EVIDENCE_DIR/failed-logins.txt" 2>&1 || true
-who > "$EVIDENCE_DIR/currently-logged-in.txt"
-w > "$EVIDENCE_DIR/user-activity.txt"
-cat /etc/passwd > "$EVIDENCE_DIR/passwd.txt"
-cat /etc/shadow > "$EVIDENCE_DIR/shadow.txt" 2>/dev/null || true
-cat /etc/group > "$EVIDENCE_DIR/group.txt"
-
-# Scheduled tasks
-log "Collecting scheduled tasks..."
-for user in $(cut -f1 -d: /etc/passwd); do
-  crontab -u "$user" -l 2>/dev/null >> "$EVIDENCE_DIR/crontabs.txt" && \
-    echo "--- $user ---" >> "$EVIDENCE_DIR/crontabs.txt"
-done
-ls -la /etc/cron.* > "$EVIDENCE_DIR/cron-dirs.txt" 2>&1
-
-# File system state
-log "Collecting filesystem state..."
-find /tmp /var/tmp /dev/shm -type f -ls > "$EVIDENCE_DIR/temp-files.txt" 2>/dev/null
-find / -name "*.sh" -mtime -7 -ls > "$EVIDENCE_DIR/recent-scripts.txt" 2>/dev/null
-find / -perm -4000 -type f -ls > "$EVIDENCE_DIR/suid-files.txt" 2>/dev/null
-find /home -name ".*history" -ls > "$EVIDENCE_DIR/history-files.txt" 2>/dev/null
-
-# Loaded kernel modules
-log "Collecting kernel modules..."
-lsmod > "$EVIDENCE_DIR/kernel-modules.txt"
-
-# Open files
-log "Collecting open files..."
-lsof -n > "$EVIDENCE_DIR/open-files.txt" 2>/dev/null
-
-# Systemd services
-log "Collecting service state..."
-systemctl list-units --type=service --all > "$EVIDENCE_DIR/services.txt"
-systemctl list-timers --all > "$EVIDENCE_DIR/timers.txt"
-
-# Log preservation
-log "Preserving system logs..."
-tar czf "$EVIDENCE_DIR/var-log.tar.gz" /var/log/ 2>/dev/null
-
-# Docker containers (if present)
-if command -v docker &>/dev/null; then
-  log "Collecting Docker state..."
-  docker ps -a > "$EVIDENCE_DIR/docker-containers.txt"
-  docker images > "$EVIDENCE_DIR/docker-images.txt"
-  docker network ls > "$EVIDENCE_DIR/docker-networks.txt"
-fi
-
-# Kubernetes (if kubectl available)
-if command -v kubectl &>/dev/null; then
-  log "Collecting Kubernetes state..."
-  kubectl get pods --all-namespaces > "$EVIDENCE_DIR/k8s-pods.txt" 2>/dev/null
-  kubectl get events --all-namespaces --sort-by=.lastTimestamp > "$EVIDENCE_DIR/k8s-events.txt" 2>/dev/null
-fi
-
-# Hash all evidence files
-log "Computing evidence hashes..."
-find "$EVIDENCE_DIR" -type f ! -name "checksums.sha256" -exec sha256sum {} \; > "$EVIDENCE_DIR/checksums.sha256"
-
-log "Evidence collection complete: $EVIDENCE_DIR"
-echo "Total files collected: $(find "$EVIDENCE_DIR" -type f | wc -l)"
+ps -eo pid,ppid,user,comm > "$EVIDENCE_DIR/process-names.txt"
+# Write the final log before hashing it; never append to hashed evidence afterward.
+for name in collection-time.txt uname.txt process-names.txt; do
+  (cd "$EVIDENCE_DIR" && sha256sum "$name")
+done > "$EVIDENCE_DIR/checksums.sha256"
+(cd "$EVIDENCE_DIR" && sha256sum -c checksums.sha256)
 ```
 
-### Memory Acquisition
+This omits memory, full command lines, credential databases, logs, containers and
+remote clusters deliberately: each requires explicit data scope, retention/access
+controls and an independently tracked outcome. A missing tool/error is partial
+collection, not a clean host. Avoid unlimited whole-filesystem walks or collecting
+`/etc/shadow` by default. Bound disk/time and do not hide permission failures.
 
-```bash
-#!/bin/bash
-# memory-capture.sh - Capture volatile memory for forensic analysis
+### Memory acquisition
 
-EVIDENCE_DIR="/evidence/memory-$(hostname)-$(date +%Y%m%d-%H%M%S)"
-mkdir -p "$EVIDENCE_DIR"
+Use a reviewed kernel-compatible acquisition tool only under the IR plan: loading
+LiME modifies kernel state and may crash a system. `/proc/kcore` is not always
+available and copying its enormous virtual address space is not a reliable generic
+memory dump. Record hashes, kernel/tool version, errors and approved size/time bounds;
+no successful memory capture is implied by a printed message.
 
-# Using LiME (Linux Memory Extractor)
-if [ -f /lib/modules/$(uname -r)/extra/lime.ko ]; then
-  insmod /lib/modules/$(uname -r)/extra/lime.ko "path=$EVIDENCE_DIR/memory.lime format=lime"
-  echo "Memory captured with LiME"
-fi
+### AWS evidence and isolation runbook
 
-# Alternative: /proc/kcore (partial, but always available)
-cp /proc/kcore "$EVIDENCE_DIR/kcore" 2>/dev/null
-
-# Capture /proc/meminfo for context
-cat /proc/meminfo > "$EVIDENCE_DIR/meminfo.txt"
-
-# Hash the memory dump
-sha256sum "$EVIDENCE_DIR"/* > "$EVIDENCE_DIR/checksums.sha256"
-```
-
-### AWS Evidence Collection
-
-```bash
-#!/bin/bash
-# aws-evidence-collect.sh - Collect evidence from compromised AWS resources
-
-INCIDENT_ID="${1:?Usage: $0 <incident-id>}"
-INSTANCE_ID="${2:?Usage: $0 <incident-id> <instance-id>}"
-EVIDENCE_BUCKET="s3://incident-evidence-${AWS_ACCOUNT_ID}"
-EVIDENCE_PREFIX="${INCIDENT_ID}/$(date +%Y%m%d-%H%M%S)"
-
-echo "=== AWS Evidence Collection ==="
-echo "Incident: $INCIDENT_ID"
-echo "Instance: $INSTANCE_ID"
-
-# Snapshot EBS volumes
-echo "Creating EBS snapshots..."
-VOLUMES=$(aws ec2 describe-volumes \
-  --filters "Name=attachment.instance-id,Values=${INSTANCE_ID}" \
-  --query 'Volumes[].VolumeId' --output text)
-
-for vol in $VOLUMES; do
-  SNAP_ID=$(aws ec2 create-snapshot \
-    --volume-id "$vol" \
-    --description "IR Evidence - ${INCIDENT_ID} - ${vol}" \
-    --tag-specifications "ResourceType=snapshot,Tags=[{Key=IncidentId,Value=${INCIDENT_ID}},{Key=Purpose,Value=forensic-evidence}]" \
-    --query 'SnapshotId' --output text)
-  echo "  Snapshot created: $SNAP_ID for volume $vol"
-done
-
-# Capture instance metadata
-echo "Capturing instance metadata..."
-aws ec2 describe-instances --instance-ids "$INSTANCE_ID" \
-  > "/tmp/${INCIDENT_ID}-instance-describe.json"
-aws s3 cp "/tmp/${INCIDENT_ID}-instance-describe.json" \
-  "${EVIDENCE_BUCKET}/${EVIDENCE_PREFIX}/instance-describe.json"
-
-# Capture security group rules
-SG_IDS=$(aws ec2 describe-instances --instance-ids "$INSTANCE_ID" \
-  --query 'Reservations[].Instances[].SecurityGroups[].GroupId' --output text)
-for sg in $SG_IDS; do
-  aws ec2 describe-security-group-rules --filters "Name=group-id,Values=${sg}" \
-    > "/tmp/${INCIDENT_ID}-sg-${sg}.json"
-  aws s3 cp "/tmp/${INCIDENT_ID}-sg-${sg}.json" \
-    "${EVIDENCE_BUCKET}/${EVIDENCE_PREFIX}/sg-${sg}.json"
-done
-
-# Collect CloudTrail events for the instance
-echo "Collecting CloudTrail events..."
-aws cloudtrail lookup-events \
-  --lookup-attributes "AttributeKey=ResourceName,AttributeValue=${INSTANCE_ID}" \
-  --start-time "$(date -d '7 days ago' -u +%Y-%m-%dT%H:%M:%SZ)" \
-  > "/tmp/${INCIDENT_ID}-cloudtrail.json"
-aws s3 cp "/tmp/${INCIDENT_ID}-cloudtrail.json" \
-  "${EVIDENCE_BUCKET}/${EVIDENCE_PREFIX}/cloudtrail.json"
-
-# Collect VPC flow logs
-echo "Collecting VPC flow logs..."
-ENI_ID=$(aws ec2 describe-instances --instance-ids "$INSTANCE_ID" \
-  --query 'Reservations[].Instances[].NetworkInterfaces[0].NetworkInterfaceId' --output text)
-aws ec2 describe-flow-logs --filter "Name=resource-id,Values=${ENI_ID}" \
-  > "/tmp/${INCIDENT_ID}-flow-logs.json"
-aws s3 cp "/tmp/${INCIDENT_ID}-flow-logs.json" \
-  "${EVIDENCE_BUCKET}/${EVIDENCE_PREFIX}/flow-logs-config.json"
-
-# Isolate the instance (move to quarantine security group)
-echo "Isolating instance..."
-QUARANTINE_SG=$(aws ec2 create-security-group \
-  --group-name "quarantine-${INCIDENT_ID}" \
-  --description "Quarantine SG for incident ${INCIDENT_ID}" \
-  --vpc-id "$(aws ec2 describe-instances --instance-ids "$INSTANCE_ID" \
-    --query 'Reservations[].Instances[].VpcId' --output text)" \
-  --query 'GroupId' --output text)
-
-# Quarantine SG: deny all inbound, allow outbound only to evidence bucket
-aws ec2 modify-instance-attribute \
-  --instance-id "$INSTANCE_ID" \
-  --groups "$QUARANTINE_SG"
-
-echo "Instance isolated with quarantine SG: $QUARANTINE_SG"
-echo "Evidence stored at: ${EVIDENCE_BUCKET}/${EVIDENCE_PREFIX}/"
-```
+1. Confirm account, region, instance and every attached volume/ENI from a read-only
+   inventory. Preserve that inventory and request IDs in private evidence storage.
+2. Snapshot the approved volume set consistently (multi-volume/application consistency
+   needs planning), record IDs and wait for completed/error states. Creation is a
+   billable write; an accepted request is not a completed forensic image.
+3. Export the relevant log data and query/time coverage. `describe-flow-logs` exports
+   configuration, not packets or historical flow records. CloudTrail event history
+   lookup is not complete data-event or organization-wide incident coverage.
+4. Separately approve containment and preserve original SG/ENI configurations plus
+   rollback/recovery path. A newly created SG has default outbound allow rules:
+   attaching it alone does **not** isolate egress. Security groups are stateful and
+   existing connections may persist; use the organization’s tested quarantine controls
+   across every ENI/route/connection path, preserving authorized evidence access.
+5. Verify observed isolation from controlled test points and monitor before declaring
+   containment. Store evidence in an existing restricted encrypted retention-controlled
+   destination; never derive arbitrary public bucket names or reuse predictable `/tmp`
+   evidence files.
 
 ## Forensics Commands Reference
 
@@ -305,7 +157,9 @@ dd if=/dev/sda of=/evidence/disk.img bs=4M status=progress
 sha256sum /evidence/disk.img > /evidence/disk.img.sha256
 
 # Mount forensic image read-only
-mount -o ro,loop,noexec /evidence/disk.img /mnt/forensic
+# Mount a working copy with filesystem-specific no-journal-replay options
+# and a write blocker where applicable; ro alone may permit journal recovery.
+# Do not mount an untrusted image on the production host.
 
 # Find recently modified files
 find /mnt/forensic -type f -mtime -3 -ls | sort -k11
@@ -339,7 +193,7 @@ tcpdump -r /evidence/capture.pcap -nn 'udp port 53' | awk '{print $NF}' | sort |
 # --- Malware analysis ---
 # Check file for known malware hashes
 sha256sum suspicious_file
-# Compare against VirusTotal: https://www.virustotal.com
+# Query only a hash if disclosure is approved; never upload confidential samples automatically.
 
 # Strings analysis
 strings suspicious_file | grep -iE "(http|ftp|ssh|password|key|token)"
@@ -413,7 +267,8 @@ Expected at: YYYY-MM-DD HH:MM UTC
 
 ### External Breach Notification (if required)
 
-```markdown
+The external notice is a draft in [the reference](references/details.md); legal/communications
+owners must verify facts, jurisdiction-specific deadlines and recipients before sending.
 
 ## Contents
 
@@ -442,7 +297,7 @@ Use this skill when:
 
 ```bash
 # Read-only first: inventory before any active step.
-which <tool> && <tool> --help | head -n 20
+command -v sha256sum # availability only; not evidence of collection success
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.

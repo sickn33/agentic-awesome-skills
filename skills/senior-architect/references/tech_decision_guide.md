@@ -1,103 +1,20 @@
-# Tech Decision Guide
+# Technology decision guide
 
-## Overview
+Compare technologies only after identifying the actual constraints. Record the exact evaluated release and primary documentation date; do not choose a framework because it appears in a default stack.
 
-This reference guide provides comprehensive information for senior architect.
+Decision record:
 
-## Patterns and Practices
-
-### Pattern 1: Best Practice Implementation
-
-**Description:**
-Detailed explanation of the pattern.
-
-**When to Use:**
-- Scenario 1
-- Scenario 2
-- Scenario 3
-
-**Implementation:**
-```typescript
-// Example code implementation
-export class Example {
-  // Implementation details
-}
+```text
+Problem and measured constraint:
+Existing platform and team skills:
+Options (including no change):
+Required functionality and compatibility:
+Failure/recovery, data and authorization boundaries:
+Operating cost, maintenance and licensing:
+Validation workload and actual result:
+Selected option and rejected alternatives:
+Migration/rollback limits and owner:
+Unknowns and reconsideration trigger:
 ```
 
-**Benefits:**
-- Benefit 1
-- Benefit 2
-- Benefit 3
-
-**Trade-offs:**
-- Consider 1
-- Consider 2
-- Consider 3
-
-### Pattern 2: Advanced Technique
-
-**Description:**
-Another important pattern for senior architect.
-
-**Implementation:**
-```typescript
-// Advanced example
-async function advancedExample() {
-  // Code here
-}
-```
-
-## Guidelines
-
-### Code Organization
-- Clear structure
-- Logical separation
-- Consistent naming
-- Proper documentation
-
-### Performance Considerations
-- Optimization strategies
-- Bottleneck identification
-- Monitoring approaches
-- Scaling techniques
-
-### Security Best Practices
-- Input validation
-- Authentication
-- Authorization
-- Data protection
-
-## Common Patterns
-
-### Pattern A
-Implementation details and examples.
-
-### Pattern B
-Implementation details and examples.
-
-### Pattern C
-Implementation details and examples.
-
-## Anti-Patterns to Avoid
-
-### Anti-Pattern 1
-What not to do and why.
-
-### Anti-Pattern 2
-What not to do and why.
-
-## Tools and Resources
-
-### Recommended Tools
-- Tool 1: Purpose
-- Tool 2: Purpose
-- Tool 3: Purpose
-
-### Further Reading
-- Resource 1
-- Resource 2
-- Resource 3
-
-## Conclusion
-
-Key takeaways for using this reference guide effectively.
+Keep evidence and assumptions separate. A proof of concept must include representative failures and relevant integration checks; a demo or an empty analyzer result does not establish throughput, safety or supportability. Pin dependencies after verifying compatibility and license obligations; installation and external account changes require user authority.

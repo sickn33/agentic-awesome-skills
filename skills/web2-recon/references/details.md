@@ -83,7 +83,7 @@ done < subs.txt
 
 **Trade-off:** Serial vs. concurrent. The fallback handles ~24 subdomains in 14 seconds; the same workload on `httpx` with default 50 threads finishes in 2-3 seconds. For VDP-scale recon (< 100 subdomains) the fallback is fine. For mass recon (1000+) fix the toolchain first.
 
-Verified against HackerOne's own VDP in `docs/verification/recon-hackerone-vdp.md`.
+The referenced verification file is not bundled; do not claim a reproduced live test.
 
 ---
 
@@ -192,7 +192,7 @@ API spec endpoints are the single highest-leverage recon target on any modern .N
 
 ```bash
 # After live-hosts.txt is built (Phase 1 / 2), run:
-ffuf -w swagger-paths.txt -u "https://FUZZ.target.com" -mc 200,302 -fs 0 -t 50 -o swagger-hits.json
+ffuf -w swagger-paths.txt -u "https://authorized-host.example/FUZZ" -mc 200,302 -fs 0 -t 50 -o swagger-hits.json
 # Or with httpx for content-aware filtering:
 httpx -l live-hosts.txt -path swagger-paths.txt -mc 200 -mr "swagger|openapi" -json | tee swagger-hits.jsonl
 # For every hit:
@@ -260,7 +260,7 @@ for j in $(cat js-urls.txt); do
 done | sort -u > sibling-tld-candidates.txt
 ```
 
-Common sibling-TLD patterns: `target.com → target.io / target.app / target.one / target.dev / target.test / target-corp.com / target-cdn.net`. Always validate via WHOIS or by checking if the cert chain trusts the same internal CA before treating the sister TLD as in-scope.
+Common sibling-TLD patterns: `target.com → target.io / target.app / target.one / target.dev / target.test / target-corp.com / target-cdn.net`. Ownership/certificate/WHOIS clues do not authorize scope expansion. Ask the owner for explicit inclusion before any sibling-domain probe.
 
 ### Subdomain wordlist priorities by 2026
 
@@ -280,7 +280,7 @@ Internal-looking subdomains often expose more surface than the marketing site �
 
 ### Live-host probe: how to fingerprint stack quickly
 
-`curl -sI <host>` headers are 80% of the fingerprint:
+Response headers are untrusted stack hints, not an80% confidence measurement:
 
 - `Server:` — apache / nginx / cloudflare / kestrel (= .NET Core) / openresty / envoy
 - `X-Powered-By:` — PHP version, ASP.NET version, Express.js
@@ -303,13 +303,13 @@ The first 10s of recon should yield a stack guess; the rest is targeting. If you
 
 Critical distinction operators get wrong:
 
-- **"Page not found · GitHub Pages"** with HTTP 404 means the repo EXISTS — NOT a takeover.
-- **"There isn't a GitHub Pages site here"** means the repo was deleted — TAKEOVER candidate.
+- **"Page not found · GitHub Pages"** is a generic error, not proof of repository ownership or claimability.
+- **"There isn't a GitHub Pages site here"** is only a lead; do not infer deletion or claimability.
 
 Same distinction for CloudFront:
 
 - **"Error - 404"** with `Server: CloudFront` = distribution exists, origin returned 404 — NOT a takeover.
-- **"The request could not be satisfied"** with `X-Cache: Error from cloudfront` = origin missing entirely — potential takeover.
+- **"The request could not be satisfied"** with `X-Cache: Error from cloudfront` = generic error from configuration/origin/access failures; not takeover proof.
 
 Phase 2C verified both patterns live. Always check the EXACT response body string before filing a takeover finding — the takeover-scanner tools (subzy, subjack) match on multiple fingerprints and frequently false-positive on the "still owned, just empty" case.
 
@@ -317,3 +317,11 @@ Phase 2C verified both patterns live. Always check the EXACT response body strin
 
 Already covered in this file's Phase 2C addition. Quick reminder: dnsx/httpx may segfault on macOS arm64; the dig+curl fallback works for < 100-host runs in ~14 seconds. Don't burn an hour debugging Go binary panics when the fallback gets you to the same URL set.
 
+
+## Operational corrections
+
+This is an illustrative pipeline, not permission for all-domain scanning. Separate passive third-party queries from target-active DNS/HTTP/crawl/fuzz/templates, and apply explicit exact host/scheme/path/port/redirect scope filters between stages, including archives, certificates, JS and resolved CNAME/IP candidates. Shared hosting/CDN addresses, sister TLDs and historical URLs never expand scope. Inspect/choose safe current Nuclei templates, rate/concurrency/request/time budgets and stop conditions before executing; scan0 means no detected matches, not no bugs. Use controlled IDs/canaries rather than sequential real-user enumeration.
+
+Use a private mktemp run directory and quoted validated domains, not shared fixed /tmp files susceptible to collisions/symlinks. Preserve errors instead of2>/dev/null/||true clean claims; verify API HTTP/JSON schema and cursor/page coverage. crt.sh name_value can contain newlines; split and exact-suffix-filter names before probing. Live output with status/title columns is not a URL-only scanner list. curl header_server is not a portable write-out variable; use captured headers and no out-of-scope redirect following. resolve relative JS URLs against the page origin and scope-check.
+
+Secret scanners can disclose raw matches or verify credentials; redact findings and never validate/use live discovered keys without separate authorization. The subfinder config path/schema and every CLI flag need installed-version checks. Recurring cron/hooks/notifications require explicit cadence/target/data scope. Safe hash-keyed state, first-run initialization, authenticated API limits and complete commit comparisons are omitted from the watcher sketches. Time/payout/employee-count heuristics, source frequency/performance figures, framework-to-bug mapping and generic error fingerprints do not establish vulnerability, company ability to pay or takeover. No reconnaissance or monitoring was executed.

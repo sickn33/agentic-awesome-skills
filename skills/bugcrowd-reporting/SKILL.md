@@ -28,7 +28,7 @@ Bugcrowd's submission form requires a single VRT (Vulnerability Rating Taxonomy)
 
 > Note: VRT default severities are not fixed constants. Bugcrowd revises the VRT schema across versions, and individual programs can remap defaults via their own priority configuration. The P-values shown in the examples below (e.g., "No Rate Limiting on Form → Login" defaulting to P4) are the typical baseline at time of writing — always read the severity the *current* form actually auto-suggests for *this* program rather than assuming the value here.
 
-### 1.1 Search hierarchy (try in order, pick the highest-severity match that still describes the bug)
+### 1.1 Search hierarchy (try in order, pick the most specific accurate match)
 
 For any finding, search the VRT dropdown with these terms in this order:
 
@@ -38,7 +38,7 @@ For any finding, search the VRT dropdown with these terms in this order:
 4. **The endpoint type** — e.g., `no rate limiting on form > login`, `no rate limiting on form > change password`
 5. **The generic parent node** — e.g., `Server Security Misconfiguration > Other`, `Broken Access Control > Other`
 
-### 1.2 Pick the highest-severity match that still accurately describes the bug
+### 1.2 Pick the most specific accurate match
 
 Never select a VRT that misrepresents the bug just to get a higher default severity. Triagers will reassign and may flag the misrepresentation. The discipline is: pick the most specific *accurate* VRT, then use §2 (Manual Severity Override) if the default is wrong.
 
@@ -87,7 +87,7 @@ P1 inflation is the fastest way to lose triager trust. Reserve P1 for ATO withou
 
 ## 3. Severity-Request Paragraph — Always First in the Body
 
-When the VRT default underrates impact, the FIRST section of the description body should be a severity-request paragraph. This is the first thing the triager reads and it pre-empts the auto-close that often happens when triagers see "P4" in the form.
+When the VRT default underrates impact, use a concise evidence-based severity rationale where the program template permits; do not displace reproduction and demonstrated impact. No evidence here establishes automatic closure behavior or a wording that prevents it.
 
 ### 3.1 Template
 
@@ -119,9 +119,9 @@ The "P4 = No Rate Limiting on Login Form" default applies to ordinary login page
 
 ### 3.3 Tone guidelines
 
-- Open with *"Severity request — please review carefully before applying VRT default"* (literal phrase). Triagers recognize this and don't auto-close.
+- Open with *"Severity request — please review carefully before applying VRT default"* (literal phrase). This wording has no guaranteed effect on triage.
 - Use **bold** sparingly; one or two phrases per reason at most.
-- Never use "could potentially" or "may allow" — these are downgrade-bait.
+- State demonstrated impact directly and label uncertainty/prerequisites explicitly; do not remove accurate qualifiers to seek higher priority.
 - Cite the program's own Focus Areas / accepted-impact list by exact name.
 - Cross-reference linked submissions by full submission ID (UUID format).
 
@@ -183,10 +183,7 @@ Many high-impact findings are chains of two or more standalone primitives (oracl
 
 ### 5.1 Filing strategy for chains
 
-1. **Identify the highest-severity chained outcome** (typically the one that maps to a P1/P2 example in the program's Focus Areas).
-2. **File the chain primitives FIRST** as separate reports — each at its standalone severity (typically P3/P4). A submission's UUID only exists *after* it is filed, so the primitives must exist before anything can reference them. Leave the cross-reference line in each primitive's body as a placeholder for now.
-3. **File the chain consumer** — the report whose body describes the full ATO/RCE/etc. impact at the chained severity (e.g., P1). Because the primitives already exist, fill in their real UUIDs in the consumer's "Chain partners" block (per §5.2).
-4. **Edit each primitive after filing the consumer** to backfill the consumer's UUID: *"Chain partner: submission [UUID] for the full impact narrative."* (The reference is bidirectional, so one report must be edited after the other is filed — Bugcrowd allows post-submission edits to the description body.)
+Follow the actual program brief for combined versus separate reports. Prefer one clear chain report when needed to demonstrate impact, unless the program requests separate independently actionable findings. Do not create an extra consumer report merely to multiply bounties. Use actual existing IDs only; before filing, label cross-references as unfiled internal references. Official reporting documentation says submitted reports cannot be edited; do not depend on backfilling the body. Use an available authorized comment/follow-up path for corrections after submission.
 
 ### 5.2 Cross-reference template
 
@@ -213,7 +210,7 @@ This finding is the [N]th of [M] independent primitives that together produce [i
 
 - Don't paste the entire chain narrative into every primitive's body. Cross-reference instead.
 - Don't claim each primitive is independently P1 — overclaiming damages credibility for all linked reports.
-- Don't ask for a single combined bounty for the chain. The program's "one fix = one bounty" rule means each independent fix surface is a separate bounty. Frame the chain as a severity-amplifier, not a merge request.
+- Don't ask for a single combined bounty for the chain. No universal "one fix = one bounty" entitlement exists; the program decides grouping and rewards. Frame the chain as a severity-amplifier, not a merge request.
 
 ---
 
@@ -227,7 +224,7 @@ Programs that scope both production and QA assets (e.g., `app.target.com` vs. `a
 |---|---|---|
 | Production app/API | The production target | Most accurate; signals the impact landed on real users |
 | QA app/API (per program rules for non-US researchers) | The QA target (e.g., `Sign In - (QA)`, `Enrollment - (QA)`) | Accurate per program rules; signals friendly tester |
-| QA but no specific QA target exists | Closest matching production target with a clear QA disclaimer in the body | Triager will reassign correctly if needed |
+| QA but no specific QA target exists | Other if offered and the QA host is in scope; otherwise ask the program through its approved channel | Triager will reassign correctly if needed |
 | Cross-asset finding (multiple targets affected) | The asset where the bug originates / has the highest impact | Add list of other affected targets in the body |
 
 ### 6.2 QA-disclaimer paragraph (when filing a QA-tested finding)
@@ -249,7 +246,7 @@ These are program-rule items that affect submission quality even though they're 
 
 ### 7.1 Account email — Bugcrowdninja alias
 
-Most Bugcrowd-managed programs ask researchers to use their `@bugcrowdninja.com` alias as the account email on the target. This flags traffic as friendly-tester to the target's fraud team. Steps:
+Some programs may ask researchers to use their `@bugcrowdninja.com` alias as the account email on the target. This flags traffic as friendly-tester to the target's fraud team. Steps:
 
 1. Sign up for the target using your Bugcrowd alias (looks like `username@bugcrowdninja.com`)
 2. If you already have an account, update the email to the alias before testing
@@ -260,7 +257,7 @@ Most Bugcrowd-managed programs ask researchers to use their `@bugcrowdninja.com`
 
 After demonstrating any state-changing action (password change, email change, device removal, money transfer):
 
-1. Restore the account to its pre-PoC state immediately (e.g., revert the password to what it was)
+1. Restore approved non-secret test state when safe; replace exposed passwords with fresh values and revoke test sessions rather than restoring exposed secrets
 2. Document the restoration in the report — *"Account state was restored immediately after the PoC."*
 3. If restoration is impossible (e.g., a sent email cannot be unsent), document the residual state honestly
 
@@ -269,7 +266,7 @@ After demonstrating any state-changing action (password change, email change, de
 After submitting any report that includes session-cookie-derived evidence:
 
 1. Log out and log back in to rotate the session cookie
-2. Any cookie value visible in screenshots / HARs you submitted is now dead
+2. Verify server-side revocation or expiration; logging out and back in alone does not prove old credentials are invalid
 3. Optionally, rotate the test-account password to a fresh value not used elsewhere — that way passwords visible in PoC screenshots are also dead
 
 ### 7.4 If the test account gets locked
@@ -286,10 +283,7 @@ When you have multiple findings from a single engagement, the order matters.
 
 ### 8.1 Recommended order
 
-1. **Chain primitives before their consumer.** A consumer references the primitives' report UUIDs, which only exist once the primitives are filed (see §5.1). File the best-evidenced primitive first to lock your timestamp, then the rest of the chain's primitives.
-2. **The chain consumer next** — fill in the real primitive UUIDs, then edit each primitive to backfill the consumer's UUID (Bugcrowd allows post-submission body edits).
-3. **Standalone P3 findings next.** Order by quality of evidence: best-evidenced first, riskier (OOS-adjacent) findings later.
-4. **OOS-risky findings last.** By the time these land, you've established a credible track record on this engagement.
+Prioritize urgent demonstrated impact and the program's reporting requirements. Prepare self-contained chain evidence before filing; submitted-body editing cannot be assumed. Scope uncertainty is resolved before testing or submission, not made acceptable by filing a stronger report first.
 
 ### 8.2 Tracking submission IDs
 
@@ -297,8 +291,8 @@ Maintain a simple text file with each submission's UUID, severity, and one-line 
 
 ### 8.3 What to avoid
 
-- Don't file all findings in a single batch within minutes. Triagers see this as low-effort spam.
-- Don't file an OOS-risky finding before a clean P3 from the same engagement. The clean one establishes credibility; the risky one benefits from being read in that context.
+- Do not delay an urgent report to manipulate perceived submission order; submit complete evidence under the program rules.
+- Do not use an earlier accepted report to justify an out-of-scope target or technique.
 - Don't disclose any findings publicly until the program explicitly says it's OK. Bugcrowd's confidentiality applies to both unresolved AND resolved issues.
 
 ---
@@ -349,3 +343,9 @@ Apply this skill's checklist to the current engagement notes and report gaps.
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Evidence and platform limits
+
+The mapping table is a set of hypotheses, not verified current VRT nodes or fixed priorities. Missing MFA on one action, an oracle, schema discovery or an APQ bypass does not establish takeover/authorization bypass without its required attacker capability and reachable effect. An unknown mutation is not an unauthorized mutation. Public real names are not automatically secret or equivalent to recovery-control bypass. Do not choose Application-Level DoS for state desynchronization without actual availability impact.
+
+The contributed form/separate-severity-override and post-submission-edit claims are not verified; use the current form and official reporting documentation. Severity requests are optional evidence-based explanations, and historical bounties are not proof. Missing end-to-end proof does not authorize accessing real victim data; document the bounded observation and ask through the program’s approved disclosure path when safe proof is unavailable. Testing, submission, attachments and outbound contact each require their actual authorization. No report was filed, account changed, target tested or bounty outcome verified in this review.

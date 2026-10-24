@@ -98,7 +98,7 @@ Objection — Frida 增强层（无需写脚本）：
 
 Frida Gadget（免 Root/越狱）：
 □ 注入 frida-gadget.so / FridaGadget.dylib 到 APK/IPA
-□ 重新签名 → 安装 → 无需设备权限即可 Hook
+□ 重新签名并满足设备/开发签名、调试及安装条件后测试；不代表绕过系统权限或所有平台完整性校验
 □ objection patchapk --source app.apk（全自动）
 ```
 
@@ -167,7 +167,8 @@ Java.perform(function() {
         return this.getInstance(algo);
     };
     Cipher.init.overload('int', 'java.security.Key').implementation = function(mode, key) {
-        console.log("[Cipher] Key: " + bytesToHex(key.getEncoded()));
+        var encoded = key.getEncoded();
+        console.log("[Cipher] encoded key available: " + (encoded !== null)); // do not log real key bytes
         return this.init(mode, key);
     };
 });
@@ -176,7 +177,7 @@ Java.perform(function() {
 Interceptor.attach(Module.findExportByName("libcommonCrypto.dylib", "CCCrypt"), {
     onEnter: function(args) {
         console.log("CCCrypt op: " + args[0] + " alg: " + args[1]);
-        console.log("Key: " + hexdump(args[3], { length: args[4].toInt32() }));
+        console.log("Key length: " + args[4].toInt32()); // capture only approved synthetic-key metadata
     }
 });
 ```
@@ -220,3 +221,9 @@ Interceptor.attach(Module.findExportByName("libcommonCrypto.dylib", "CCCrypt"), 
 - Bypass techniques break with app-shield vendor updates.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).
+
+## Instrumentation and evidence limits
+
+Use approved app builds and dedicated test devices/accounts; obtaining an APK/IPA from a mirror does not establish provenance, license or permission. Store original hashes/signatures and label patched/re-signed builds. Re-signing changes entitlements, keychain/access groups, integrity checks and update behavior; results do not automatically reproduce in the production build. Pinning/root-detection bypass demonstrates a local instrumentation capability, not a server authorization failure or a universal Play Integrity bypass. Restore trust stores/hooks after the authorized test; never globally disable TLS validation on a daily-use device.
+
+The scripts and tool-index/RULES ecosystem named in the guide are not bundled. Frida APIs/Java/ObjC bridges and Objection commands vary by version; verify the installed implementation, target ABI, module/class/method availability and overload before hooking. Several examples remain pseudocode (empty callbacks, missing bytesToHex helper and app-specific symbols). Hardware-backed keys may have getEncoded() return null. dsymutil cannot recreate stripped debug information; demangling does not undo semantic obfuscation. Avoid real key/keychain/cookie dumps and validate with canary material, keeping artifacts private. No app, device, hook, proxy or bypass ran during review.

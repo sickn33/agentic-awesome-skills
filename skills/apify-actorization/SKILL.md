@@ -10,6 +10,8 @@ date_added: "2026-03-01"
 
 Actorization converts existing software into reusable serverless applications compatible with the Apify platform. Actors are programs packaged as Docker images that accept well-defined JSON input, perform an action, and optionally produce structured JSON output.
 
+Before initialization/install/deploy, inspect existing files and preserve their state. Confirm target account/Actor, source license, uploaded files/secrets, network targets and spending/charging limits. Authorizing local conversion does not authorize cloud upload, Store publication or monetization. Pin reviewed SDK/CLI/base images and verify schemas against that version.
+
 ## Quick Start
 
 1. Run `apify init` in project root
@@ -130,7 +132,7 @@ Or use an input file:
 apify run --input-file ./test-input.json
 ```
 
-**Important:** Always use `apify run`, not `npm start` or `python main.py`. The CLI sets up the proper environment and storage.
+Use the documented local CLI flow for the selected language; inspect storage purge defaults and preserve unrelated local data. Direct SDK/test execution may also be appropriate. Local execution can still make network requests or use cloud storage when configured; use synthetic fixtures and a test account.
 
 ## Step 8: Deploy
 
@@ -150,7 +152,7 @@ After deploying, you can monetize your actor in the Apify Store. The recommended
 
 Configure PPE in the Apify Console under Actor > Monetization. Charge for events in your code with `await Actor.charge('result')`.
 
-Other options: **Rental** (monthly subscription) or **Free** (open source).
+Other options: other currently supported Store models or free execution. A free Actor is not automatically open-source; license and source availability are separate.
 
 ## Pre-Deployment Checklist
 

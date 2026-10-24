@@ -8,7 +8,7 @@ Subcommands: `quote`, `chain`, `volume`
 
 `<TICKER><YYMMDD><C|P><STRIKE×1000, 8 digits>`
 
-Example: `AAPL240119C190000` = AAPL, expires 2024-01-19, Call, strike $190.00.
+Example: `AAPL240119C00190000` = AAPL, expires 2024-01-19, Call, strike $190.00.
 
 ## Two-step option discovery
 
@@ -22,8 +22,8 @@ Example: `AAPL240119C190000` = AAPL, expires 2024-01-19, Call, strike $190.00.
 
 | User says | Term |
 |---|---|
-| 认购证 / 牛证 / call | Call |
-| 认沽证 / 熊证 / put | Put |
+| call / listed call option | Call option; 认购证 is a warrant, 牛证 is a CBBC |
+| put / listed put option | Put option; 认沽证 is a warrant, 熊证 is a CBBC |
 | 行权价 / strike | Strike |
 | 到期日 / expiry | Expiry |
 | 隐含波动率 / IV | Implied volatility |

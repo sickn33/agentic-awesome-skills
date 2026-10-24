@@ -41,13 +41,14 @@ class PRAnalyzer:
     
     def _get_changed_files(self, base_branch):
         """Get list of changed files with statistics"""
-        cmd = f"git diff --name-status {base_branch}...HEAD"
-        result = subprocess.run(cmd.split(), capture_output=True, text=True)
+        base_sha = subprocess.run(["git", "rev-parse", "--verify", f"{base_branch}^{{commit}}"], check=True, capture_output=True, text=True).stdout.strip()
+        result = subprocess.run(["git", "diff", "--name-status", "--no-renames", "-z", f"{base_sha}...HEAD", "--"], check=True, capture_output=True, text=True)
         
         files = []
-        for line in result.stdout.strip().split('\n'):
-            if line:
-                status, filename = line.split('\t', 1)
+        fields = result.stdout.rstrip('\0').split('\0') if result.stdout else []
+        for index in range(0, len(fields), 2):
+            if fields[index]:
+                status, filename = fields[index:index + 2]
                 files.append({
                     'filename': filename,
                     'status': self._parse_status(status),
@@ -58,8 +59,8 @@ class PRAnalyzer:
     
     def _get_change_stats(self, base_branch):
         """Get detailed change statistics"""
-        cmd = f"git diff --shortstat {base_branch}...HEAD"
-        result = subprocess.run(cmd.split(), capture_output=True, text=True)
+        base_sha = subprocess.run(["git", "rev-parse", "--verify", f"{base_branch}^{{commit}}"], check=True, capture_output=True, text=True).stdout.strip()
+        result = subprocess.run(["git", "diff", "--shortstat", f"{base_sha}...HEAD", "--"], check=True, capture_output=True, text=True, env={**__import__("os").environ, "LC_ALL": "C"})
         
         # Parse output like: "10 files changed, 450 insertions(+), 123 deletions(-)"
         stats_pattern = r'(\d+) files? changed(?:, (\d+) insertions?\(\+\))?(?:, (\d+) deletions?\(-\))?'
@@ -79,8 +80,8 @@ class PRAnalyzer:
     def _categorize_file(self, filename):
         """Categorize file by type"""
         categories = {
+            'test': ['.test.', '.spec.', '/tests/', '/test/'],
             'source': ['.js', '.ts', '.py', '.java', '.go', '.rs'],
-            'test': ['test', 'spec', '.test.', '.spec.'],
             'config': ['config', '.json', '.yml', '.yaml', '.toml'],
             'docs': ['.md', 'README', 'CHANGELOG', '.rst'],
             'styles': ['.css', '.scss', '.less'],
@@ -374,19 +375,19 @@ Large PRs are harder to review and more likely to introduce bugs.
 
 ### How to Split:
 
-1. Create feature branch from current branch
+1. Create each independent feature branch from the agreed base SHA (or explicitly document stacked dependencies)
 2. Cherry-pick commits for first logical unit
 3. Create PR for first unit
 4. Repeat for remaining units
 
 ```bash
 # Example split workflow
-git checkout -b feature/part-1
+git switch --create feature/part-1 <verified-base-sha>
 git cherry-pick <commit-hashes-for-part-1>
 git push origin feature/part-1
-# Create PR for part 1
+# Create an authorized PR for part 1 after validation
 
-git checkout -b feature/part-2
+git switch --create feature/part-2 <verified-base-sha>
 git cherry-pick <commit-hashes-for-part-2>
 git push origin feature/part-2
 # Create PR for part 2
@@ -471,7 +472,10 @@ def generate_coverage_report(base_branch='main'):
     before_coverage = get_coverage_for_branch(base_branch)
     after_coverage = get_coverage_for_branch('HEAD')
     
-    coverage_diff = after_coverage - before_coverage
+    metrics = ("lines", "functions", "branches")
+    if not all(isinstance(report.get(k), (int, float)) for report in (before_coverage, after_coverage) for k in metrics):
+        raise ValueError("Comparable numeric coverage evidence required")
+    coverage_diff = {k: after_coverage[k] - before_coverage[k] for k in metrics}
     
     report = f"""
 ## Test Coverage

@@ -31,7 +31,7 @@ Developer churn is different from typical SaaS churn:
 | Monthly churn cycles | Project-based churn |
 | Competitor marketing works | Peer recommendations work |
 
-**Key insight**: Developers don't leave because of price. They leave because of friction, frustration, or finding something better.
+**Key insight**: Price, friction, frustration, project needs and alternatives can all drive churn; establish causes from the affected cohort rather than this taxonomy.
 
 ---
 
@@ -179,7 +179,7 @@ Developer churn is different from typical SaaS churn:
 
 ### Engagement Scoring
 
-Create a simple health score:
+Illustrative unvalidated score: normalize every component to 0–100 first, define missing-data handling, then compute the weighted sum. Calibrate against historical outcomes on a held-out time window; a score is not an observed probability.
 
 | Signal | Weight | Calculation |
 |--------|--------|-------------|
@@ -189,7 +189,7 @@ Create a simple health score:
 | Support sentiment | 15% | Positive/negative ticket ratio |
 | Billing health | 15% | Payment success, plan changes |
 
-**Health score thresholds**:
+**Illustrative thresholds, not validated cutoffs**:
 - **80-100**: Healthy - continue nurturing
 - **60-79**: Watch - proactive outreach
 - **40-59**: At-risk - intervention needed
@@ -342,7 +342,7 @@ Focus energy on actionable categories with high impact.
 
 ### Win-Back Sequence
 
-**Timing**: Start 30-60 days after churn. Not sooner.
+**Illustrative timing**: choose a permitted cadence based on consent, reason for leaving and recipient preference. Stop immediately on opt-out.
 
 **Email 1: What's new (Day 30)**
 
@@ -466,7 +466,7 @@ Weekly review:
 
 ## Reducing Involuntary Churn
 
-Involuntary churn (payment failures) is often 20-40% of total churn. Fix it.
+Measure payment-failure churn separately; its share depends on your customer base and billing model.
 
 ### Prevention
 
@@ -526,7 +526,7 @@ Final notice: Your account will be paused on [DATE].
 This means:
 - API keys will stop working
 - Webhooks will be disabled
-- Your data stays safe (we keep it for 90 days)
+- Your data retention follows [ACTUAL APPROVED POLICY AND DATE]
 
 Update your payment: [LINK]
 
@@ -544,9 +544,9 @@ Your [PRODUCT] account is now paused due to payment failure.
 
 To reactivate:
 1. Update your payment method: [LINK]
-2. Your service will resume immediately
+2. Your service will resume after [ACTUAL REACTIVATION CONDITIONS]
 
-Your data is safe and will be kept for 90 days.
+Data retention follows [ACTUAL APPROVED POLICY AND DATE].
 
 Questions? Reply to this email.
 
@@ -568,12 +568,14 @@ Questions? Reply to this email.
 
 ## Churn Metrics Dashboard
 
+Targets, category shares and scores below are synthetic examples, not benchmarks. Define the starting eligible cohort, denominator, window, censoring and reactivation rule; do not count new users in the starting-user denominator.
+
 ### Key Metrics
 
 | Metric | How to Calculate | Target |
 |--------|------------------|--------|
 | Monthly churn rate | Churned users / Starting users | <5% |
-| Net revenue churn | Lost revenue - expansion / Starting MRR | <2% |
+| Net revenue churn | (Churned MRR + contraction MRR - expansion MRR) / Starting MRR | <2% |
 | Time to churn | Avg days from signup to churn | Increasing |
 | Win-back rate | Returned users / Churned users | >5% |
 | Involuntary churn % | Payment churn / Total churn | <20% |

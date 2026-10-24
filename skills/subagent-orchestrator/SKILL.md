@@ -1,6 +1,6 @@
 ---
 name: subagent-orchestrator
-risk: safe
+risk: critical
 source: community
 date_added: "2026-05-21"
 description: Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.
@@ -57,8 +57,7 @@ AGENTS:
 ─────────────────────────────────────────
 ```
 
-**Wait for user to approve the Mission Brief before proceeding.**
-If the user edits it, update and re-confirm. Never skip this step.
+Present the Mission Brief before delegation. Proceed when the user already authorized parallel work within that scope; otherwise obtain authorization. Material new scope, cost or external writes require the relevant approval.
 
 ---
 
@@ -74,11 +73,11 @@ Is this task > 20 files OR > 500 lines of new code?
           NO  → Use Gemini Flash for everything.
 ```
 
-**Model cost rules (never violate these):**
+**Historical model preferences (verify availability, cost and user choice):**
 - Claude Opus → NEVER use in subagents. Too expensive.
 - Claude Sonnet → Max 1 subagent per mission.
 - Gemini Flash → Default for all subagents. Fast, cheap, separate quota pool.
-- Browser subagent → Always runs on its own pool. Use sparingly (1 per mission max).
+- Browser subagent → Do not assume a separate quota pool. Use sparingly (1 per mission max).
 
 ---
 
@@ -95,7 +94,7 @@ Do NOT read: [explicitly exclude irrelevant files]
 Knowledge: [paste only the relevant section of GEMINI.md]
 ```
 
-Rule: If an agent doesn't need `node_modules`, `package-lock.json`, `.next/`, or `dist/` — add them to a `.antigravityignore` before the agent runs.
+Rule: If an agent doesn't need `node_modules`, `package-lock.json`, `.next/`, or `dist/` — exclude them in the supported context mechanism when appropriate; do not hide the lockfile or files needed for the actual task.
 
 ---
 
@@ -149,7 +148,7 @@ After all agents complete, run a final integration sweep:
 - [ ] No hardcoded values that should be env variables
 - [ ] No `console.log` left in production files
 - [ ] Types are consistent across components (TypeScript)
-- [ ] Build would succeed (`npm run build` mentally verified)
+- [ ] Run the project’s actual relevant build/tests when available; distinguish inspection from executed results
 
 If any check fails, spawn one final repair agent scoped to the exact issue.
 
@@ -168,10 +167,10 @@ Track estimated usage throughout the mission:
 | Browser subagent activated | HIGH |
 | Thinking mode enabled | VERY HIGH |
 
-If estimated usage crosses 60% of sprint quota mid-mission:
-- Pause and report: "Quota checkpoint: ~60% of sprint used. Continue or defer remaining agents?"
+If verified provider usage approaches the user’s actual limit/budget:
+- Pause and report: "Quota checkpoint: the verified usage/budget boundary reached. Continue or defer remaining agents?"
 - Switch remaining agents to Gemini Flash
-- Disable browser subagent if not yet started
+- Avoid unnecessary browser work without dropping required validation
 
 ---
 
@@ -200,3 +199,7 @@ See `examples/` folder:
 - This skill coordinates agent planning; it does not provide a runtime scheduler or enforce quota limits automatically.
 - Parallel agents still need explicit scoping, review, and integration by the parent agent.
 - Do not use it when a single focused edit or direct answer would be faster and clearer.
+
+## Capability and integration boundaries
+
+This is planning guidance, not a scheduler, model router or quota monitor. Use only the host’s exposed delegation tools and user-authorized model choices; Gemini/Claude availability, costs and quota separation are not established here. Numeric percentages in examples are invented planning illustrations and must not be reported as measured. Partition write ownership, use isolated worktrees when needed, and bind integration checks to the actual combined diff; spot checks alone do not prove correctness. Read-only reviewers must not repair files without reassignment. Scope repairs to the real contract and run relevant checks; no placeholder exports or mental build pass. The installer now refuses an existing destination and source symlinks/special files; it is not transactional and may leave a partial new directory on failure, so inspect before any manual retry. Assumes a trusted, non-concurrently-mutated parent directory; do not claim hostile-filesystem race protection or automatically alter global agent setup.

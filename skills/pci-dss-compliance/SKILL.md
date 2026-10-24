@@ -3,7 +3,7 @@ name: pci-dss-compliance
 description: Implement PCI DSS requirements for payment card data. Configure cardholder
   data environment and security controls. Use when processing payment cards.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -19,7 +19,7 @@ metadata:
 
 # PCI DSS Compliance
 
-Implement PCI DSS v4.0 requirements for protecting cardholder data across the Cardholder Data Environment (CDE), including network segmentation, encryption, access controls, and ongoing testing.
+Implement PCI DSS v4.0.1 control planning for protecting cardholder data across the Cardholder Data Environment (CDE), including network segmentation, encryption, access controls, and ongoing testing.
 
 ## When to Use
 
@@ -28,6 +28,21 @@ Implement PCI DSS v4.0 requirements for protecting cardholder data across the Ca
 - Selecting the appropriate Self-Assessment Questionnaire (SAQ)
 - Implementing network segmentation to reduce CDE scope
 - Preparing for QSA assessment or ASV scanning
+
+## Assessment boundaries
+
+Use the current PCI SSC standard and SAQ documents, not this abbreviated checklist,
+for exact wording/applicability and testing frequencies. Confirm SAQ eligibility
+with the entity accepting it; question counts and hosted redirects alone do not
+select an SAQ. Embedded payment forms have additional script-attack eligibility
+criteria; [PCI SSC FAQ 1588](https://www.pcisecuritystandards.org/faqs/1588/)
+explains the distinction. The [v4.0.1 bulletin](https://www.pcisecuritystandards.org/wp-content/uploads/2024/10/SAQs_for_PCI_DSS_v4.0.1_Bulletin.pdf)
+links the authoritative selection process. Never copy real PAN, CVV or keys into
+prompts, logs or evidence; use synthetic test cards in approved sandbox systems.
+Network/scanning/configuration examples require account, target and change scope,
+rollback and maintenance windows. New security groups allow outbound traffic by
+default; inbound examples alone do not implement CDE egress segmentation.
+Cryptographic examples are design choices, not sufficient compliance evidence.
 
 ## SAQ Types and Applicability
 
@@ -39,7 +54,6 @@ saq_types:
       - All payment processing fully outsourced to PCI-compliant third party
       - No electronic storage, processing, or transmission of cardholder data
       - Only payment page redirects or iframes from compliant provider
-    requirements: ~22 questions
 
   SAQ_A_EP:
     description: "E-commerce merchants with website that affects payment security"
@@ -47,15 +61,13 @@ saq_types:
       - E-commerce channel only
       - Website controls redirect to or loads payment page from third party
       - No direct processing but website could affect transaction security
-    requirements: ~191 questions
 
   SAQ_B:
     description: "Merchants with only imprint machines or standalone terminals"
     applies_when:
-      - Only standalone POS terminals (dial-out or IP connected)
+      - Only imprint machines or standalone dial-out terminals; IP terminals require separate B-IP eligibility
       - No electronic cardholder data storage
       - No e-commerce channel
-    requirements: ~41 questions
 
   SAQ_C:
     description: "Merchants with payment application systems connected to internet"
@@ -63,10 +75,9 @@ saq_types:
       - Payment application connected to internet
       - No electronic cardholder data storage
       - No e-commerce channel
-    requirements: ~160 questions
 
   SAQ_D:
-    description: "All other merchants and all service providers"
+    description: "Other merchants and eligible service providers; confirm reporting route with acquirer/brands"
     applies_when:
       - Stores cardholder data electronically
       - Does not fit any other SAQ type
@@ -80,7 +91,7 @@ saq_types:
     - Implement network segmentation to isolate CDE
 ```
 
-## PCI DSS v4.0 Requirements Overview
+## PCI DSS v4.0.1 Planning Overview
 
 ```yaml
 requirements:
@@ -99,7 +110,7 @@ requirements:
     "3.1": "Processes for protecting stored account data defined"
     "3.2": "Storage of account data is minimized"
     "3.3": "Sensitive authentication data not stored after authorization"
-    "3.4": "PAN masked when displayed (first 6, last 4 maximum)"
+    "3.4": "PAN masked when displayed (BIN and last four maximum, except documented legitimate business access; stricter receipt rules may apply)"
     "3.5": "PAN secured wherever stored"
     "3.6": "Cryptographic keys managed securely"
     "3.7": "Key management procedures documented"
@@ -146,9 +157,9 @@ requirements:
     "10.2": "Audit logs record required events"
     "10.3": "Audit logs protected from destruction and modification"
     "10.4": "Audit logs reviewed for anomalies"
-    "10.5": "Audit log history retained"
+    "10.5": "Audit log history retained (12 months, at least 3 immediately available)"
     "10.6": "Time synchronization mechanisms configured"
-    "10.7": "Audit logs retained for at least 12 months (3 months immediately available)"
+    "10.7": "Failures of critical security control systems detected, reported and addressed"
 
   req_11_testing:
     "11.1": "Security testing processes defined"
@@ -243,17 +254,17 @@ encryption_requirements:
         - PIN / PIN block
 
     pan_display_masking:
-      rule: "Show maximum first 6 and last 4 digits"
+      rule: "Default to last four only; never exceed BIN and last four without documented business need"
       examples:
         masked: "4111 11** **** 1111"
-        acceptable_for_business: "First 6 and last 4"
+        acceptable_for_business: "BIN and last four, subject to stricter display rules"
       implementation: "Apply masking at application layer before rendering"
 
     key_management_req_3_6:
       - Generate keys using approved random number generator
       - Protect keys with key-encrypting keys (KEKs)
       - Store key components separately (split knowledge, dual control)
-      - Rotate keys at least annually (or per crypto period)
+      - Define and enforce a justified cryptoperiod and compromise-triggered replacement
       - Retire and replace keys when compromised
       - Document key custodian responsibilities
 
@@ -279,7 +290,7 @@ encryption_requirements:
       - Token-to-PAN mapping encrypted and access-controlled
       - De-tokenization requires authenticated API call
       - Log all de-tokenization requests
-    scope_benefit: "Systems using only tokens are out of PCI scope"
+    scope_benefit: "Tokenization may reduce scope; vault, detokenization and systems that can affect CDE security still need assessment"
 ```
 
 ## Vulnerability Management and Testing
@@ -287,8 +298,8 @@ encryption_requirements:
 ```bash
 # Req 11.3 - Internal vulnerability scanning (quarterly minimum)
 # Using OpenVAS or Nessus
-openvas-cli --scan-target 10.10.0.0/24 --scan-name "CDE-Quarterly-Scan" \
-  --profile "PCI DSS" --output pci-scan-$(date +%Y%m%d).xml
+# Use the installed scanner's documented authenticated scan profile against an
+# explicitly authorized test range; no generic openvas-cli invocation is provided.
 
 # Req 11.3 - External ASV scanning (quarterly, must pass)
 # Schedule with Approved Scanning Vendor (Qualys, Tenable, etc.)
@@ -297,7 +308,7 @@ openvas-cli --scan-target 10.10.0.0/24 --scan-name "CDE-Quarterly-Scan" \
 # Req 6.3 - Patch management
 # Check for critical patches on CDE systems
 yum check-update --security  # RHEL/CentOS
-apt list --upgradable 2>/dev/null | grep -i security  # Debian/Ubuntu
+apt list --upgradable  # Package candidates only; use distro security metadata for classification
 
 # Req 11.4 - Penetration testing (annual for external, internal, and segmentation)
 # Must be performed by qualified internal resource or third party
@@ -322,21 +333,21 @@ aide --check  # Compare against baseline
 
 ```yaml
 required_audit_events:
-  "10.2.1": "All individual user accesses to cardholder data"
-  "10.2.2": "All actions taken by any individual with root or admin privileges"
-  "10.2.3": "Access to all audit trails"
-  "10.2.4": "Invalid logical access attempts"
-  "10.2.5": "Changes to identification and authentication credentials"
-  "10.2.6": "Initialization, stopping, or pausing of audit logs"
-  "10.2.7": "Creation and deletion of system-level objects"
+  "10.2.1.1": "All individual user accesses to cardholder data"
+  "10.2.1.2": "All actions taken by any individual with root or admin privileges"
+  "10.2.1.3": "Access to all audit trails"
+  "10.2.1.4": "Invalid logical access attempts"
+  "10.2.1.5": "Changes to identification and authentication credentials"
+  "10.2.1.6": "Initialization, stopping, or pausing of audit logs"
+  "10.2.1.7": "Creation and deletion of system-level objects"
 
-log_entry_requirements:
-  "10.3.1": "User identification"
-  "10.3.2": "Type of event"
-  "10.3.3": "Date and time"
-  "10.3.4": "Success or failure indication"
-  "10.3.5": "Origination of event"
-  "10.3.6": "Identity or name of affected data/resource"
+log_entry_requirements:  # Required event details are under current Req 10.2.2, not 10.3.
+  "field_1": "User identification"
+  "field_2": "Type of event"
+  "field_3": "Date and time"
+  "field_4": "Success or failure indication"
+  "field_5": "Origination of event"
+  "field_6": "Identity or name of affected data/resource"
 
 retention:
   minimum: "12 months total"
@@ -377,7 +388,7 @@ pci_dss_checklist:
     - [ ] Rules reviewed semi-annually
 
   data_protection:
-    - [ ] PAN masked when displayed (first 6, last 4 max)
+    - [ ] PAN masked when displayed (BIN and last four max with documented exceptions)
     - [ ] Stored PAN encrypted with AES-256 or equivalent
     - [ ] Sensitive auth data not stored after authorization
     - [ ] Encryption keys managed per Req 3.6/3.7
@@ -408,7 +419,7 @@ pci_dss_checklist:
     - [ ] Internal penetration test annually
     - [ ] External penetration test annually
     - [ ] Segmentation test annually (or after changes)
-    - [ ] Web application assessment annually (or WAF deployed)
+    - [ ] Applicable public-web-app protections and assessments verified against current 6.4 requirements; a WAF is not a blanket testing substitute
     - [ ] IDS/IPS monitoring all CDE network traffic
 
   policies:

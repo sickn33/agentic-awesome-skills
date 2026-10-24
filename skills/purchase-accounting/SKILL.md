@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No separate shared execution contract is bundled; follow this file and the host repository/user instructions. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -118,7 +118,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Purchase Number,Supplier,Supplier PAN/VAT,Purchase Order,Delivery Challan,Supplier Invoice Number,Invoice Date,Item/Expense Description,Quantity,UOM,Rate,Gross Amount,VAT Rate %,VAT Amount,TDS Rate %,TDS Amount,Net Payable,Classification,Ledger Account,Source Document,Payment Status,Amount Paid,Balance,VAT Register Updated,Entry Verified,Prepared By,Verified By,Notes,Purchase ID
-PUR-2026-0041,Bluepeak Supplies,29ABCDE1234F1Z5,PO-2026-0187,DC-2026-0902,INV-8841,2026-08-14,Corrugated cartons 3 ply,500,Nos,169.00,84500.00,18,15210.00,2.5,2112.50,97597.50,Inventory/Purchase,Purchases - Cartons,DOC-2026-0442,Part Paid,50000.00,47597.50,Done,In progress,Ananya Rao,Vikram Singh,Rate compared against PO-2026-0187; quantity matched with DC-2026-0902.,
+PUR-2026-0041,Bluepeak Supplies,SYNTHETIC-TAX-ID,PO-2026-0187,DC-2026-0902,INV-8841,2026-08-14,Corrugated cartons 3 ply,500,Nos,169.00,84500.00,18,15210.00,2.5,2112.50,97597.50,Inventory/Purchase,Purchases - Cartons,DOC-2026-0442,Part Paid,50000.00,47597.50,Done,In progress,Ananya Rao,Vikram Singh,Rate compared against PO-2026-0187; quantity matched with DC-2026-0902.,PUR-ID-0041
 ```
 
 ```sql
@@ -131,27 +131,27 @@ CREATE TABLE purchase_accounting (
   supplier_invoice_number VARCHAR(255),
   invoice_date DATE NOT NULL,
   item_expense_description VARCHAR(255),
-  quantity NUMERIC NOT NULL,
+  quantity NUMERIC,
   uom VARCHAR(100) NOT NULL,
-  rate NUMERIC(14,2) NOT NULL,
-  gross_amount NUMERIC(14,2) NOT NULL,
-  vat_rate_pct NUMERIC NOT NULL,
-  vat_amount NUMERIC(14,2) NOT NULL,
-  tds_rate_pct NUMERIC NOT NULL,
-  tds_amount NUMERIC(14,2) NOT NULL,
-  net_payable NUMERIC(14,2) NOT NULL,
+  rate NUMERIC(14,2),
+  gross_amount NUMERIC(14,2),
+  vat_rate_pct NUMERIC,
+  vat_amount NUMERIC(14,2),
+  tds_rate_pct NUMERIC,
+  tds_amount NUMERIC(14,2),
+  net_payable NUMERIC(14,2),
   classification VARCHAR(100) NOT NULL,
   ledger_account VARCHAR(255),
   source_document VARCHAR(255),  -- relation -> target record
   payment_status VARCHAR(100) NOT NULL,
-  amount_paid NUMERIC(14,2) NOT NULL,
-  balance NUMERIC(14,2) NOT NULL,
+  amount_paid NUMERIC(14,2),
+  balance NUMERIC(14,2),
   vat_register_updated VARCHAR(100) NOT NULL,
   entry_verified VARCHAR(100) NOT NULL,
   prepared_by VARCHAR(255),
   verified_by VARCHAR(255),
   notes TEXT,
-  purchase_id SERIAL PRIMARY KEY,
+  purchase_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -172,27 +172,27 @@ CREATE TABLE purchase_accounting (
       "Supplier Invoice Number": { "type": "string" },
       "Invoice Date": { "type": "string", "format": "date" },
       "Item/Expense Description": { "type": "string" },
-      "Quantity": { "type": "number" },
+      "Quantity": { "type": ["number", "null"] },
       "UOM": { "type": "string" },
-      "Rate": { "type": "number" },
-      "Gross Amount": { "type": "number" },
-      "VAT Rate %": { "type": "number" },
-      "VAT Amount": { "type": "number" },
-      "TDS Rate %": { "type": "number" },
-      "TDS Amount": { "type": "number" },
-      "Net Payable": { "type": "number" },
+      "Rate": { "type": ["number", "null"] },
+      "Gross Amount": { "type": ["number", "null"] },
+      "VAT Rate %": { "type": ["number", "null"] },
+      "VAT Amount": { "type": ["number", "null"] },
+      "TDS Rate %": { "type": ["number", "null"] },
+      "TDS Amount": { "type": ["number", "null"] },
+      "Net Payable": { "type": ["number", "null"] },
       "Classification": { "type": "string" },
       "Ledger Account": { "type": "string" },
       "Source Document": { "type": "string" },
       "Payment Status": { "type": "string" },
-      "Amount Paid": { "type": "number" },
-      "Balance": { "type": "number" },
+      "Amount Paid": { "type": ["number", "null"] },
+      "Balance": { "type": ["number", "null"] },
       "VAT Register Updated": { "type": "string" },
       "Entry Verified": { "type": "string" },
       "Prepared By": { "type": "string" },
       "Verified By": { "type": "string" },
       "Notes": { "type": "string" },
-      "Purchase ID": { "type": "integer" }
+      "Purchase ID": { "type": "string" }
   },
   "required": [
       "Invoice Date",
@@ -252,13 +252,21 @@ CREATE TABLE purchase_accounting (
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+## Record grain and calculation contract
+
+The synthetic row assumes one invoice with one uniform item/tax basis: 500 × 169 = 84,500; illustrative VAT = 15,210 and withholding = 2,112.50 both use that gross base; payable = 84,500 + 15,210 - 2,112.50 = 97,597.50, and balance = 97,597.50 - 50,000 = 47,597.50. These rates, bases and labels do not establish tax applicability. Confirm jurisdiction, currency, recoverability, rounding and legal sections with the owner/professional before a real design. Split invoice lines and header/payment allocations when rates, classification, POs or receipts differ; do not duplicate invoice totals per line.
+
+Unknown numeric amounts use SQL NULL / JSON null / empty CSV cells and a documented missing-data state; never insert the word Unknown into numeric cells or substitute zero. The generic NUMERIC/number Field Reference denotes non-null values; nullability is defined above. A required key may have a null value while review stays incomplete. Keep source IDs stable strings in all formats, and ensure Purchase Number is the Notion Title. Define source/period and cross-field validation before treating Paid, VAT updated or Entry verified as complete; review status does not evidence legal filing or actual payment. updated_at needs an application/trigger update, not just a default.
+
+Spreadsheet-safe export must handle formula-leading text without corrupting original identifiers; preserve raw source separately and document the export transformation.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Purchase Number | `text` | `VARCHAR(255)` | `string` | Text | `PUR-2026-0041` |
+| 1 | Purchase Number | `text` | `VARCHAR(255)` | `string` | Title | `PUR-2026-0041` |
 | 2 | Supplier | `text` | `VARCHAR(255)` | `string` | Text | `Bluepeak Supplies` |
-| 3 | Supplier PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `29ABCDE1234F1Z5` |
+| 3 | Supplier PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `SYNTHETIC-TAX-ID` |
 | 4 | Purchase Order | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `PO-2026-0187` |
 | 5 | Delivery Challan | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DC-2026-0902` |
 | 6 | Supplier Invoice Number | `text` | `VARCHAR(255)` | `string` | Text | `INV-8841` |
@@ -284,7 +292,7 @@ and anything pointing at another table stays `relation`.
 | 26 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
 | 27 | Verified By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
 | 28 | Notes | `long_text` | `TEXT` | `string` | Text | `Rate compared against PO-2026-0187; quantity matched with DC-2026-0902.` |
-| 29 | Purchase ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 29 | Purchase ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `PUR-ID-0041` |
 
 ## Select Options
 

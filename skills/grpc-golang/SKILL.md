@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Overview
 
-Comprehensive guide for designing and implementing production-grade gRPC services in Go. Covers contract standardization with Buf, transport layer security via mTLS, and deep observability with OpenTelemetry interceptors.
+Comprehensive guide for designing and implementing production-grade gRPC services in Go. Covers contract standardization with Buf, transport layer security via mTLS, and deep observability with OpenTelemetry instrumentation.
 
 ## Use this skill when
 
@@ -84,7 +84,7 @@ message GetUserResponse {
 
 - Does not cover service mesh traffic routing (Istio/Linkerd configuration).
 - Does not cover gRPC-Web or browser-based gRPC integration.
-- Assumes Go 1.21+ and gRPC-Go v1.60+; older versions may have different APIs (e.g., `grpc.Dial` vs `grpc.NewClient`).
+- Version-specific sketches, not a supported-version matrix; verify current Go/gRPC-Go module requirements and APIs (e.g., `grpc.Dial` vs `grpc.NewClient`).
 - Does not cover L7 gRPC-aware load balancer configuration (e.g., Envoy, NGINX).
 - Does not address Protobuf schema registry or large-scale schema governance beyond Buf lint.
 

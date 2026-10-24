@@ -38,7 +38,7 @@ E - Elevation of   → Authorization threats
 | **Spoofing** | Can attacker pretend to be someone else? | Authentication |
 | **Tampering** | Can attacker modify data in transit/rest? | Integrity |
 | **Repudiation** | Can attacker deny actions? | Logging/Audit |
-| **Info Disclosure** | Can attacker access unauthorized data? | Encryption |
+| **Info Disclosure** | Can attacker access unauthorized data? | Authorization, minimization, encryption |
 | **DoS** | Can attacker disrupt availability? | Rate limiting |
 | **Elevation** | Can attacker gain higher privileges? | Authorization |
 
@@ -174,7 +174,7 @@ K   Crit  4    8   12    16
 
 | Rank | Threat | Risk Score | Priority |
 |------|--------|------------|----------|
-| 1 | SQL Injection (T1) | 12 | Critical |
+| 1 | SQL Injection (T1) | 8 | High |
 | 2 | IDOR (E1) | 9 | High |
 | 3 | Credential Stuffing (S3) | 9 | High |
 | 4 | Data Breach (I1) | 8 | High |
@@ -317,7 +317,7 @@ class ThreatModel:
 
 
 class StrideAnalyzer:
-    """Automated STRIDE analysis helper."""
+    """Questionnaire helper; does not detect or verify vulnerabilities."""
 
     STRIDE_QUESTIONS = {
         StrideCategory.SPOOFING: [
@@ -425,7 +425,7 @@ class StrideAnalyzer:
 
 ```python
 from dataclasses import dataclass
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Dict
 from enum import Enum
 
 class ElementType(Enum):
@@ -466,6 +466,8 @@ class DFDAnalyzer:
         self.elements[element.id] = element
 
     def add_flow(self, flow: DataFlow) -> None:
+        if flow.source not in self.elements or flow.destination not in self.elements:
+            raise ValueError("Both flow endpoints must be declared")
         self.flows.append(flow)
 
     def find_trust_boundary_crossings(self) -> List[Tuple[DataFlow, int]]:
@@ -524,7 +526,7 @@ class DFDAnalyzer:
         return risky_flows
 
     def generate_threat_enumeration(self) -> List[Dict]:
-        """Generate comprehensive threat enumeration."""
+        """Generate candidate prompts, not verified or comprehensive threats."""
         threats = []
         element_threats = self.identify_threats_per_element()
 
@@ -598,7 +600,9 @@ class StridePerInteraction:
         threats = []
         key = (source_type, target_type)
 
-        applicable_threats = self.INTERACTION_THREATS.get(key, {})
+        if key not in self.INTERACTION_THREATS:
+            raise ValueError(f"Unmodeled interaction type: {key}; review explicitly")
+        applicable_threats = self.INTERACTION_THREATS[key]
 
         for stride_code, description in applicable_threats.items():
             threats.append({
@@ -617,7 +621,7 @@ class StridePerInteraction:
         interactions: List[Interaction],
         element_types: Dict[str, str]
     ) -> List[Dict]:
-        """Generate complete threat matrix for all interactions."""
+        """Generate candidate entries for the modeled supported interactions."""
         all_threats = []
 
         for interaction in interactions:
